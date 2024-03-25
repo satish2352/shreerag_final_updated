@@ -78,7 +78,7 @@ padding-left: 20px !important;
                                     data-toolbar="#toolbar">
                                     <thead>
                                         <tr>
-                                            <th data-field="state" data-checkbox="true"></th>
+                                            
                                             <th data-field="id">ID</th>
                                             <th data-field="store_date" data-editable="true">Date</th>
                                             <!-- <th data-field="receipt_no" data-editable="true">Receipt No.</th> -->
@@ -101,7 +101,7 @@ padding-left: 20px !important;
                                     <tbody>
                                        
                                         <tr>
-                                            <td></td>
+                                            
                                             <td>1</td>
                                             <td>date</td>
                                             <td>name</td>

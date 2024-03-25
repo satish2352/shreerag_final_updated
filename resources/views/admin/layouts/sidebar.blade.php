@@ -204,6 +204,12 @@
                                     class="mini-click-non">Revised Design List</span></a>
                         </li>
 
+                         <li>
+                            <a class="has-arrow" href="{{ route('list-material-recived') }}" aria-expanded="false"><i
+                                    class="fa big-icon fa-envelope icon-wrap"></i> <span
+                                    class="mini-click-non">Material Received For Production</span></a>
+                        </li>
+
                         {{-- <li>
                             <a class="has-arrow" href="{{ route('list-purchases') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-envelope icon-wrap"></i> <span
@@ -295,16 +301,16 @@
                         <li>
                             <a class="has-arrow" href="{{ route('list-accepted-design-from-prod') }}"
                                 aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span
-                                    class="mini-click-non">List All New Requirements</span></a>
+                                    class="mini-click-non">All List</span></a>
                             <ul class="submenu-angle" aria-expanded="false">
                                 <li><a title="Inbox" href="{{ route('list-accepted-design-from-prod') }}"><i
                                             class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                                            class="mini-sub-pro">Satish List All New Requirements</span></a></li>
+                                            class="mini-sub-pro">List All New Requirements</span></a></li>
+                                <li><a title="Inbox" href="{{ route('list-material-sent-to-prod') }}"><i
+                                            class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                            class="mini-sub-pro">Requirements Sent To Production</span></a></li>
                             </ul>
                         </li>
-
-
-                        
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.HR'))
                         <li>
@@ -364,14 +370,7 @@
                                 <div class="col-lg-6 col-md-7 col-sm-6 col-xs-12">
                                     <div class="header-top-menu tabl-d-n">
                                         <ul class="nav navbar-nav mai-top-nav">
-                                            <li class="nav-item"><a href="#" class="nav-link">Home</a>
-                                            </li>
-                                            <li class="nav-item"><a href="#" class="nav-link">About</a>
-                                            </li>
-                                            <li class="nav-item"><a href="#" class="nav-link">Services</a>
-                                            </li>
-                                            <li class="nav-item"><a href="#" class="nav-link">Support</a>
-                                            </li>
+                                         
                                         </ul>
                                     </div>
                                 </div>
@@ -728,10 +727,7 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                             <div class="breadcome-heading">
-                                <form role="search" class="">
-                                    <input type="text" placeholder="Search..." class="form-control">
-                                    <a href=""><i class="fa fa-search"></i></a>
-                                </form>
+
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">

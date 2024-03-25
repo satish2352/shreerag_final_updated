@@ -23,7 +23,6 @@
             text-align: left;
         }
     </style>
-
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">
@@ -86,30 +85,18 @@
                                                 <th data-field="grn_number" data-editable="true">Title</th>
                                                 <th data-field="grn_date" data-editable="true">Description</th>
                                                 <th data-field="purchase_id" data-editable="true">Remark</th>
-                                                <th data-field="reject_reason" data-editable="true">Reject Reason</th>
                                                 <th data-field="design_image" data-editable="false">Design Layout</th>
                                                 <th data-field="bom_image" data-editable="false">BOM</th>
-                                                <th data-field="design_image_re" data-editable="false">Revised Design Layout
-                                                </th>
-                                                <th data-field="bom_image_re" data-editable="false">Revised BOM</th>
-                                                <th data-field="action" data-editable="false">Action</th>
                                             </tr>
-
                                         </thead>
-
-
-
                                         <tbody>
                                             @foreach ($data_output as $data)
-                                                <?php //dd($data['design_image']);
-                                                ?>
                                                 <tr>
-                                                    
+                                                    <td></td>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ ucwords($data->title) }}</td>
                                                     <td>{{ ucwords($data->descriptions) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
-                                                    <td>{{ ucwords($data->reject_reason_prod) }}</td>
                                                     <td> <img class="img-size"
                                                             src="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
                                                             alt="No Image" />
@@ -118,28 +105,7 @@
                                                             src="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
                                                             alt="No Image" />
                                                     </td>
-
-                                                    <td> <img class="img-size"
-                                                            src="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_design_image'] }}"
-                                                            alt="No Image" />
-                                                    </td>
-                                                    <td> <img class="img-size"
-                                                            src="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_bom_image'] }}"
-                                                            alt="No Image" />
-                                                    </td>
-
-                                                    <td>
-                                                        <div style="display: flex; align-items: center;">
-
-                                                            <a
-                                                                href="{{ route('accept-design', base64_encode($data->productionId)) }} "><button
-                                                                    data-toggle="tooltip" title="Trash"
-                                                                    class="pd-setting-ed"><i class="fa fa-check"
-                                                                        aria-hidden="true"></i></button></a>
-                                                        </div>
-                                                    </td>
-
-
+                                                 
 
                                                 </tr>
                                             @endforeach

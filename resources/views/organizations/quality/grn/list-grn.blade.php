@@ -78,7 +78,7 @@ padding-left: 20px !important;
                                     data-toolbar="#toolbar">
                                     <thead>
                                         <tr>
-                                            <th data-field="state" data-checkbox="true"></th>
+                                            
                                             <th data-field="id">ID</th>
                                             <th data-field="grn_number" data-editable="true">GRN No.</th>
                                             <th data-field="grn_date" data-editable="true">GRN Date</th>
@@ -96,7 +96,7 @@ padding-left: 20px !important;
                                     <tbody>
                                        
                                         <tr>
-                                            <td></td>
+                                            
                                             <td>1</td>
                                             <td>GRN No.</td>
                                             <td>GRN Date</td>

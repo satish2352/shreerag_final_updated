@@ -4,111 +4,33 @@ use Illuminate\Database\QueryException;
 use DB;
 use Illuminate\Support\Carbon;
 use App\Models\ {
-PurchaseModel
-};
+    Business, 
+    DesignModel,
+    BusinessApplicationProcesses,
+    ProductionModel,
+    DesignRevisionForProd
+    };
 use Config;
 
-class StoreRepository  {
+class StoreRepository {
 
-
-    public function getAll(){
+    public function orderAcceptedAndMaterialForwareded($id){
         try {
-            $data_output= PurchaseModel::get();
-            return $data_output;
+
+            $business_application = BusinessApplicationProcesses::where('business_id', $id)->first();
+            if ($business_application) {
+                $business_application->business_id = $id;
+                
+                $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION');
+                $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.ACCEPTED_DESIGN_BY_PRODUCTION');
+                $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.LIST_BOM_PART_MATERIAL_RECIVED_FROM_STORE_DEPT_FOR_PRODUCTION');
+                $business_application->store_material_sent_date = date('d-m-Y');
+                $business_application->store_status_id = config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION');
+                $business_application->save();
+            }
         } catch (\Exception $e) {
             return $e;
         }
-    }
-
-
-public function addAll($request)
-{
-    try {
-        $dataOutput = new PurchaseModel();
-        $dataOutput->name = $request->name;
-        $dataOutput->email = $request->email;
-        $dataOutput->price = $request->price;
-        $dataOutput->contact=$request->contact;
-        $dataOutput->save();
-
-        return [
-            'msg' => 'Data Added Successfully',
-            'status' => 'success'
-        ];
-
-    } catch (\Exception $e) {
-        return [
-            'msg' => $e->getMessage(),
-            'status' => 'error'
-        ];
-    }
-}
-    
-
-    public function getById($id){
-    try {
-            $dataOutputByid = PurchaseModel::find($id);
-            if ($dataOutputByid) {
-                return $dataOutputByid;
-            } else {
-                return null;
-            }
-        } catch (\Exception $e) {
-            return [
-                'msg' => $e,
-                'status' => 'error'
-            ];
-        }
-    }
-
-        public function updateAll($request){
-        try { 
-            $dataOutput = PurchaseModel::find($request->id);
-            // dd($dataOutput);
-
-            if (!$dataOutput) {
-                return [
-                    'msg' => 'Update Data not found.',
-                    'status' => 'error'
-                ];
-            }
-
-            $dataOutput->name = $request->name;
-            $dataOutput->email = $request->email;
-            $dataOutput->price = $request->price;
-            $dataOutput->contact=$request->contact;
-            
-
-            $dataOutput->save();
-
-            return [
-            'msg' => 'Data Added Successfully',
-            'status' => 'success'
-        ];
-        
-        } catch (\Exception $e) {
-            return [
-                'msg' => 'Failed to Update Data.',
-                'status' => 'error',
-                'error' => $e->getMessage() // Return the error message for debugging purposes
-            ];
-        }
-    }
-
-
-    public function deleteById($id){
-            try {
-                $deleteDataById = PurchaseModel::find($id);
-                
-                if ($deleteDataById) {
-                    $deleteDataById->delete();
-                    return $deleteDataById;
-                } else {
-                    return null;
-                }
-            } catch (\Exception $e) {
-                return $e;
-            }
-    }
+    } 
 
 }

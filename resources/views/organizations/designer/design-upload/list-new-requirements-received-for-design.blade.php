@@ -83,7 +83,7 @@ padding-left: 20px !important;
                                     
                                     <thead>
                                         <tr>
-                                            <th data-field="state" data-checkbox="true"></th>
+                                            
                                             <th data-field="id">ID</th>
                                             <th data-field="grn_number" data-editable="true">Title</th>
                                             <th data-field="grn_date" data-editable="true">Description</th>
@@ -98,7 +98,7 @@ padding-left: 20px !important;
                                         <tr>
 
 
-                                            <td></td>
+                                            
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ucwords($data->title)}}</td>
                                             <td>{{ucwords($data->descriptions)}}</td>

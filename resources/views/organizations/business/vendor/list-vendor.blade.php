@@ -78,8 +78,7 @@ padding-left: 20px !important;
                                     data-toolbar="#toolbar">
                                     <thead>
                                         <tr>
-                                            <th data-field="state" data-checkbox="true"></th>
-                                            <th data-field="id">ID</th>
+                                            <th data-field="id">Sr.No.</th>
                                             <th data-field="vendor_name" data-editable="true">Vendor Name</th>
                                             <th data-field="address" data-editable="true">Address</th>
                                             <th data-field="gst_no" data-editable="true">GST No.</th>
@@ -96,7 +95,7 @@ padding-left: 20px !important;
                                     <tbody>
                                        
                                         <tr>
-                                            <td></td>
+                                            
                                             <td>1</td>
                                             <td>vender name</td>
                                             <td>address</td>

@@ -26,7 +26,6 @@ class ProductionController extends Controller
             $acceptdesign = base64_decode($id);
             $update_data = $this->service->acceptdesign($acceptdesign);
             return redirect('list-accept-design');
-            return view('organizations.productions.product.list-design-accepted', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
         }

@@ -67,5 +67,13 @@ class AllListServices
         }
     }
 
+    public function getAllListMaterialRecievedToProduction(){
+        try {
+            return $this->repo->getAllListMaterialRecievedToProduction();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
 
 }

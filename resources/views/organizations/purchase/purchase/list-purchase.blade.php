@@ -78,7 +78,7 @@ padding-left: 20px !important;
                                     data-toolbar="#toolbar">
                                     <thead>
                                         <tr>
-                                            <th data-field="state" data-checkbox="true"></th>
+                                            
                                             <th data-field="id">ID</th>
                                             <th data-field="po_date" data-editable="true">PO Date</th>
                                             <th data-field="vendor_id" data-editable="true">Vendor</th>
@@ -92,7 +92,7 @@ padding-left: 20px !important;
                                     <tbody>
                                         @foreach($getOutput as $data)
                                         <tr>
-                                            <td></td>
+                                            
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ucwords($data->po_date)}}</td>
                                             <td>{{ucwords($data->vendor_id)}}</td>

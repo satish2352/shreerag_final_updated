@@ -78,7 +78,7 @@ padding-left: 20px !important;
                                     data-toolbar="#toolbar">
                                     <thead>
                                         <tr>
-                                            <th data-field="state" data-checkbox="true"></th>
+                                            
                                             <th data-field="id">ID</th>
                                             <th data-field="department_id" data-editable="true">Department</th>
                                             <th data-field="grn_image" data-editable="true">GRN Image</th>
@@ -92,7 +92,7 @@ padding-left: 20px !important;
                                     <tbody>
                                        
                                         <tr>
-                                            <td></td>
+                                            
                                             <td>1</td>
                                             <td>department</td>
                                             <td>grn image</td>

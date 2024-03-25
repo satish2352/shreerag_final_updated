@@ -80,7 +80,7 @@
                                         data-click-to-select="true" data-toolbar="#toolbar">
                                         <thead>
                                             <tr>
-                                                <th data-field="state" data-checkbox="true"></th>
+                                                
                                                 <th data-field="id">ID</th>
                                                 <th data-field="grn_number" data-editable="true">Title</th>
                                                 <th data-field="grn_date" data-editable="true">Description</th>
@@ -93,7 +93,7 @@
                                         <tbody>
                                             @foreach ($data_output as $data)
                                                 <tr>
-                                                    <td></td>
+                                                    
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ ucwords($data->title) }}</td>
                                                     <td>{{ ucwords($data->descriptions) }}</td>
@@ -111,8 +111,8 @@
                                                             <a
                                                                 href="{{ route('accepted-and-material-sent', base64_encode($data->productionId)) }} "><button
                                                                     data-toggle="tooltip" title="Trash"
-                                                                    class="pd-setting-ed"><i class="fa fa-check"
-                                                                        aria-hidden="true"></i></button></a>
+                                                                    class="pd-setting-ed"><i class="fa fa-check" title="Accepted and requirement forwareded to production department"
+                                                                        aria-hidden="true"></i>Accepted and requirement forwareded to production department</button></a>
 
                                                             <a
                                                                 href="{{ route('need-to-create-req', base64_encode($data->productionId)) }} "><button

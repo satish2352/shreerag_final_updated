@@ -1,6 +1,6 @@
 <?php
-namespace App\Http\Services\Organizations\Productions;
-use App\Http\Repository\Organizations\Productions\ProductionRepository;
+namespace App\Http\Services\Organizations\Store;
+use App\Http\Repository\Organizations\Store\StoreRepository;
 use Carbon\Carbon;
 use App\Models\ {
     DesignModel
@@ -11,24 +11,17 @@ class StoreServices
 {
     protected $repo;
     public function __construct(){
-        $this->repo = new ProductionRepository();
+        $this->repo = new StoreRepository();
     }
 
-    public function acceptdesign($id){
+    public function orderAcceptedAndMaterialForwareded($id){
         try {
-            $update_data = $this->repo->acceptdesign($id);
+            $update_data = $this->repo->orderAcceptedAndMaterialForwareded($id);
         } catch (\Exception $e) {
             return $e;
         }
     } 
 
 
-    public function rejectdesign($request) {
-        try {
-            $update_data = $this->repo->rejectdesign($request);
-        } catch (\Exception $e) {
-            return $e;
-        }
-    } 
-
+  
 }

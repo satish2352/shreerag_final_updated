@@ -26,6 +26,14 @@ class AllListServices
         }
     }
 
+    public function getAllListMaterialSentToProduction(){
+        try {
+            return $this->repo->getAllListMaterialSentToProduction();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
 
 
 }

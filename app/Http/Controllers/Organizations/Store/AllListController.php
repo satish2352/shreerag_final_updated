@@ -25,4 +25,16 @@ class AllListController extends Controller
         }
     } 
 
+    public function getAllListMaterialSentToProduction(Request $request){
+        try {
+            $data_output = $this->service->getAllListMaterialSentToProduction();
+        
+            return view('organizations.store.list.list-material-sent-to-prod', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
+
+    
+
 }

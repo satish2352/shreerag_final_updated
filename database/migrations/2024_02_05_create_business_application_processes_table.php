@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('design_status_id');
             $table->string('production_id');
             $table->string('production_status_id');
+            $table->string('store_material_sent_date');
+            $table->string('store_status_id');
             $table->boolean('is_approve')->default(false);
             $table->boolean('is_active')->default(true);
             $table->boolean('is_deleted')->default(false);

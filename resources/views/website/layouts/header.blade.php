@@ -54,9 +54,9 @@
 
     <!-- Header start -->
     <header class="transperant-head transition-4  ">
-        <div class="container-fluid  nvvv">
-            <div class="row align-items-center">
-                <div class="col-lg-2 col-md-4 col-sm-4 col-3">
+        <div class="container-fluid d-flex  justify-content-center   nvvv">
+            <div class="row align-items-center tab-navbar">
+                <div class="col-lg-2 col-md-5 col-sm-4 col-3">
                     <div class="logo transition-4">
                         <a href="{{url('/')}}">
                             <img src="{{ asset('website/assets/img/logo/LANSCAPE LOG.png')}}" class="transition-4" alt="logo">
@@ -64,11 +64,11 @@
                     </div>
                 </div>
                 <!-- <div class="col-md-1"> </div> -->
-                <div class="col-lg-10 col-md-8 col-sm-8 col-7">
-                    {{-- <div class="icon-links d-flex align-items-start">
+                <div class="col-lg-10 col-md-7 col-sm-8">
+                    <!-- {{-- <div class="icon-links d-flex align-items-start">
                 
                         <a href="{{url('/contact')}}" class="btn btn-round d-none d-sm-block blob-small">Contact Us</a>
-                    </div> --}}
+                    </div> --}} -->
                     <div class="menu-links">
                         <nav class="main-menu white">
                             <ul>
@@ -95,9 +95,9 @@
                                     </ul>
                                 </li>
                                 <li>
-                                    <a href="{{url('/contact')}}" class="btn btn-round2 d-none d-sm-block ">Contact Us</a>
+                                    <a href="{{url('/contact')}}" class="btn btn-round2 d-md-none d-sm-none d-lg-block navcont">Contact Us</a>
 
-                                    <a href="{{url('/contact')}}" class="d-lg-none d-md-none d-sm-block">Contact us</a>
+                                    <a href="{{url('/contact')}}" class="d-lg-none ">Contact us</a>
                                     
                                     <ul class="">
                                         

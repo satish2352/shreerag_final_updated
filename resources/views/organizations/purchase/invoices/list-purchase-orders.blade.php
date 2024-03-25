@@ -92,7 +92,7 @@
                   data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
                   <thead>
                     <tr>
-                      <th data-field="state" data-checkbox="true"></th>
+                      
                       <th data-field="#">#</th>
                       <th data-field="po_id">ID</th>
                       <th data-field="name" data-editable="true"> Name</th>
@@ -110,7 +110,7 @@
                   <tbody>
                     @foreach($getOutput as $data)
                     <tr>
-                      <td></td>
+                      
                       <td>{{ $loop->iteration }}</td>
                       <td>
                         <a href="{{ route('show-purchase-order', base64_encode($data->id))}}"

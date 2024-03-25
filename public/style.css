@@ -778,8 +778,8 @@ ul.setting-panel-list li{
 
 
 .breadcome-list {
-    padding-top:30px;
-	padding-bottom:100px;
+    padding-top: -3px;
+    padding-bottom: 10px;
 }
 .breadcome-heading .form-control, .breadcome-heading .form-control:focus {
     border: 1px solid #ececec;

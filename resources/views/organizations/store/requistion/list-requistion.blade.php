@@ -78,8 +78,7 @@ padding-left: 20px !important;
                                     data-toolbar="#toolbar">
                                     <thead>
                                         <tr>
-                                            <th data-field="state" data-checkbox="true"></th>
-                                            <th data-field="id">ID</th>
+                                            <th data-field="id">Sr.No.</th>
                                             <th data-field="description_id" data-editable="true">Description id</th>
                                             <th data-field="req_name" data-editable="true">Requistion Name</th>
                                             <th data-field="req_number" data-editable="true">Requistion No.</th>
@@ -94,7 +93,7 @@ padding-left: 20px !important;
                                     <tbody>
                                        
                                         <tr>
-                                            <td></td>
+                                            
                                             <td>1</td>
                                             <td>description_id</td>
                                             <td>req name</td>

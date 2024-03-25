@@ -90,12 +90,12 @@
 </section> -->
 <!-- end history -->
     <!-- Director Desk -->
-    <section class="paddiall paddiall2" id="direct">
+    <section class="paddiall00 paddiall00" id="direct">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xl-12">
-                        <div class="fancy-head text-center relative z-5   wow fadeInDown">
-                            <h1>Director Desk</h1>
+                        <div class="fancy-head text-center relative z-5    wow fadeInDown">
+                            <h1 class="f-800">Director Desk</h1>
                         </div>
                     </div>
                 </div>  
@@ -122,10 +122,10 @@
                            <div class="row">
                                <div class="col-lg-4 col-md-4 col-sm-4">
                                     <img src="{{ asset('website/assets/img/about/doottt.png')}}" class=" pl-20 ml-10" alt="">
-                                   <img src="{{ asset('website/assets/img/about/director1.png')}}" style="top:120px; left:70px; position:absolute; " alt="">
+                                   <img src="{{ asset('website/assets/img/about/director1.png')}}" style="top:120px; left:60px; position:absolute; " alt="">
                                </div>
-                               <div class="col-lg-6 col-md-8 col-sm-8 ml-30 deskk">
-                                   <h3 class="white">Lorem ipsum dolor adipisicing elit. provident cupiditate blanditiis harum neque ipsum!</h3>     
+                               <div class="col-lg-6 col-md-8 col-sm-8 ml-30 ">
+                                   <h3 class="white text-justify">Lorem ipsum dolor adipisicing elit. provident cupiditate blanditiis harum neque ipsum!</h3>     
                                    </div>
                                </div>
                            </div>
@@ -140,13 +140,14 @@
                            <div class="row">
                                <div class="col-lg-4 col-md-4 col-sm-4">
                                 <img src="{{ asset('website/assets/img/about/doottt.png')}}" class="pl-10 ml-10" alt="">
-                                <img src="{{ asset('website/assets/img/about/director1.png')}}" id="ddimg1" style="top:120px; left:70px; position:absolute; " alt="">
+                                <img src="{{ asset('website/assets/img/about/director1.png')}}" id="ddimg1" class="ddimg1" style="top:120px; left:60px; position:absolute; " alt="">
                                </div>
-                               <div class="col-lg-8 col-md-8 col-sm-8 text-break text-center  p-5">
-                                <h4 class="white" id="texxttt">Lorem ipsum dolor sit amet, nisi lorem egestas vitae scelerisque enim ligula venenatis dolor. Maecenas nisl est, ultrices nec congue eget<span id="dots">...</span><span id="more"> imperdiet sed  congue eros non fermentum.</span></h4>
+                               <div class="col-lg-8 col-md-8 col-sm-8 text-break mtopDD p-5">
+                                <h4 class="white ppp" id="texxttt">Lorem ipsum dolor sit amet, nisi lorem egestas vitae scelerisque enim ligula venenatis dolor. Maecenas nisl est, ultrices nec congue eget<span id="dots">...</span><span id="more"> imperdiet sed  congue eros non fermentum.</span></h4>
                                 <br>
+                                <div class="text-center ">
                                 <h5 class="white" onclick="myFunction()" id="myBtn">Read more</h5>
-                                   </div>
+                                </div> </div>
                                   
                                    
                                </div>
@@ -175,11 +176,11 @@
                     <div class="row">
                     <div class="col-lg-5 text-center">
                         <div class="">
-                            <h2 class="f-700 p-4">VISION</h2>
+                            <h1 class="f-800 p-4">VISION</h1>
                         </div>
                         <img src="{{ asset('website/assets/img/about/vission.png')}}" id="vision_mision" alt="">
                     </div>
-                    <div class="col-lg-6 pt-60 pb-50 vison">
+                    <div class="col-lg-6 pt-60 pb-50 vison align-items-center d-flex">
                     <h4 class="clrtext">Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum, assumenda quam placeat porro soluta quod sapiente accusamus consectetur excepturi nobis tenetur culpa veniam qui, provident cupiditate blanditiis harum neque ipsum!</h4>
                     </div>
                     
@@ -187,10 +188,10 @@
                     
                         <img src="{{ asset('website/assets/img/about/mission.png')}}" id="vision_mision" alt="">
                         <div class="">
-                            <h2 class="f-700">MISSION</h2>
+                            <h1 class="f-800">MISSION</h1>
                         </div>
                     </div>
-                    <div class="col-lg-6 pt-30 order-md-1 misn1">
+                    <div class="col-lg-6 pt-30 order-md-1 misn1 ">
                     <h4 class="clrtext">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit explicabo pariatur odio. Placeat vitae temporibus suscipit harum doloremque, ipsum corrupti, quis tempore, cumque dignissimos sunt quia laborum? Ducimus, alias quidem?</h4>
                     </div>
                     </div>
@@ -208,8 +209,9 @@
             <div class="container">
                 <div class="row">
                     <div class="col-xl-12">
-                        <div class="fancy-head text-center relative z-5 mb-20 wow fadeInDown">
-                            <h1>Team</h1>
+                        <div class=" text-center relative z-5 mb-20 wow fadeInDown">
+                            <h1 class="f-800" >Team</h1>
+                           
                         </div>
                     </div>
                 </div>        
@@ -360,7 +362,7 @@
                     </div>
                 </div>
 
-                <div class="col-xl-4 col-lg-4 col-md-6 pb-60">
+                <div class="col-xl-4 col-lg-4 col-md-6 ">
                     <div class="each-team-3 team_shadow fix">
                         <div class="image-team-3 relative">
                             <a><img src="{{ asset('website/assets/img/team/team6b.png')}}" class="pt-3 pl-3 pr-3" alt=""></a>
