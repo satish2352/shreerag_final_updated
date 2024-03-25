@@ -597,6 +597,14 @@ pre code {
     .container {
         max-width: 540px
     }
+    
+    .cent {
+        padding: 0px !important;
+    }
+    .nomp{
+        padding-right: 0px !important;
+        padding-left: 0px !important;
+    }
 }
 
 @media (min-width:768px) {

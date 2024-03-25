@@ -28,13 +28,23 @@
     .coming-soon[data-overlay]::before {
         height: 100vh;
     }
-    .copyrt{
+    /* .copyrt{
+        margin-left: 40px;
+    } */
+    .copyrt1{
         margin-left: 40px;
     }
     
    
 }
 
+@media only screen and (min-width: 1298px){
+    .ptb{
+        padding-top: 20px;
+        padding-bottom: 20px
+    }
+
+}
 
 /*end*/
 @media only screen and (min-width: 1600px) {
@@ -55,9 +65,9 @@
         margin: -25px 1px 5px 52px; */
 
     }
-    .copyrt{
+    /* .copyrt{
         margin-left: 90px;
-    }
+    } */
     .hrline{
         margin-right: 108px;
     }
@@ -67,12 +77,65 @@
         background-size: 100% 100%;
     }
 }
+@media only screen and (max-width: 992px)  {
+    .tab-navbar{
+        width: 100% !important;
+    }
+}
+@media only screen and (min-width: 1300px){
+    .mthtext{
+        font-size: 65px !important;
+    }
+}
 
 /* Large devices (Above 1200px) */
+@media only screen and (min-width: 1301px) and (max-width: 1599px){
+    .flogo {
+        margin-top: 27px;
+        /* display: none; */
+        width: 347px;
+        height: 347px;
+        margin-left: -139px;
+        position: absolute;
+    }
+}
+@media only screen and (min-width: 1301px) and (max-width: 1920px){
+    .foottitle1{
+        margin-left: -76px;
+    }
+ 
+    
+}
 
-@media only screen and (min-width: 1000px) {
+@media only screen and (min-width: 992px) and (max-width: 1300px) {
+    .flogo{
+        margin-top: 83px;
+        /* display: none */
+    width: 300px;
+    height: 300px;
+   margin-left: -110px;
+    position: absolute;
+    }
+    .footercoloums{
+        padding-left: 0;
+        padding-right: 0px;
+    }
+    .foottitle1{
+        margin-left: -76px;
+    }
+    .footercoloums1{
+        padding-left: 53px;
+    }
+
+}
+
+@media only screen and (min-width: 992px)  {
     .footbak{
         border-radius: 250px 0px 0px 250px;
+    }
+   
+    .colconvert{
+        columns: 12;
     }
 
   
@@ -96,15 +159,18 @@
         background-image: url("../img/banner/SERVICES BACKGROUND.png");
         background-size: 98% 100%;
     }
-    .copyrt{
+    /* .copyrt{
         margin-left: 82px;
-    }
+    } */
  
     .pfonts{
         height: 8pc;
         opacity: 67%;
         color: #fff;
         font-size: 21px;
+           /* padding-right: 95px!important;
+        padding-left: 100px !important; */
+     
     }
    
     .footlogocol{
@@ -120,15 +186,16 @@
     .hrline{
         margin-right: 65px;
     }
-    .copyrt{
+    /* .copyrt{
         margin-left: 0px;
-    }
+    } */
     .addrescard{
         color: #444;
         top: -38pc;
         position: relative;
         left: 57pc;
         margin-left: -16pc;
+        display: none;
     
     }
   
@@ -141,11 +208,21 @@
         margin-bottom: 10px;
     
     }
+    .pfots{
+        padding-right: 95px!important;
+        padding-left: 100px !important;
+    }
  
 }
 /*end*/
 
 @media only screen and (min-width: 992px) {
+
+    .topbottom{
+        margin-top: 20px;
+        margin-bottom: 20px;
+
+    }
     .transperant-head.fixed-nav {
         position: fixed;
         -webkit-transition: all .4s;
@@ -163,8 +240,8 @@
         -webkit-transition: all .4s;
         transition: all .4s;
     }
-    .paddiall{
-        padding-top: 100px;
+    .paddiall00{
+        padding-top: 50px;
         padding-bottom: 100px; 
     
     }
@@ -213,6 +290,7 @@
         color: #fff;
         line-height: normal;
         font-size: 24px;
+        margin-top: 50px;
        
 
     }
@@ -228,23 +306,43 @@
         margin-left: 80px;
     }
     .testmo{
-        padding-left: 100px;
-        padding-right: 100px;
+        padding-left: 50px;
+        padding-right: 50px;
     }
     .card-info1{
         height: auto;
         background: #243772; 
     }
+    .mtopDD{
+        margin-top: 40px;
+    }
+    .ppp{
+        margin-left: 10px;
+    }
    
     .testmo1{
-        padding-left: 200px;
-        padding-right: 200px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        padding-left: 150px;
+        padding-right: 150px;
+    }
+    .fontsize30{
+        font-size: 35px;
+    }
+    .imgnag{
+        margin-top: -30px;
     }
     .fs1{
         font-size: 47px;
     }
     .fs2{
-        font-size: 30px;
+        font-size: 24px;
+    }
+    .pptt{
+        padding-top: 10px ;
+    }
+    .exp{
+        padding: 1.5rem !important;
     }
     .fs3{
         font-size: 45px;
@@ -284,8 +382,8 @@
     .fixed-bottom1{
         position: fixed;
         right: 0;
-        bottom: 15px;
-        left: 12px;
+        bottom: -16px;
+        left: 0px;
         z-index: 1030;
     
     }
@@ -294,8 +392,8 @@
         opacity: 67%;
         color: #fff;
         font-size: 20px;
-        padding-left: 1px;
         padding-right: 1px;
+        padding-left: 1px;
     }
     h2{
         font-size: 25px;
@@ -421,7 +519,9 @@
         margin-bottom: 10px;
     
     } */
-   
+    .flogo{
+
+    }
 }
 
 /* Large devices (Desktop ,Laptop) */
@@ -511,6 +611,10 @@
 }
 
 @media only screen and (max-width: 991px) {
+
+    .hidd{
+        display: none;
+    }
     .slider-area {
         min-height: 650px;
     }
@@ -518,9 +622,10 @@
         /* margin-top: 10px; */
         padding: 15px 12px;
     }
+   
  
     .servicebnnr{
-        padding-top: 10px;
+        /* padding-top: 10px; */
         padding-bottom: 10px;
         background-color: #029A99;
 
@@ -563,7 +668,7 @@
     .fixed-bottom1{
         position: fixed;
         right: 0;
-        bottom: 15px;
+        bottom: 5px;
         left: 12px;
         z-index: 1030;
     
@@ -572,9 +677,9 @@
         display: none;
     }
 
-    .paddiall2{
-        padding-top: 30px;
-        padding-bottom: 30px; 
+    .paddiall2 {
+        /* padding-top: 30px; */
+        margin-bottom: 30px !important; 
     
     }
     .mobmaterl{
@@ -861,12 +966,13 @@
     height: 210px;
     }
 
-    #ddimg1{
-        margin-left: -2pc;
+    /* #ddimg1{
+
+        margin-left: 4  pc;
         height: 248px;
         margin-top: -2pc;
     
-    }
+    } */
     #texxttt {
         font-size: 14px;
         margin-top: 11rem;
@@ -893,7 +999,7 @@
     }
     .footer-area1{
         position: relative;
-        padding: 45% 6% 0% 12%;
+        padding: 20% 6% 0% 12%;
         border-radius: 279px 261px 0px 0px;
     }
     /* director deskkk */
@@ -1024,7 +1130,7 @@
         margin: 20px 0px;
     }
     .mean-container a.meanmenu-reveal {
-        margin-top: -68px;
+        /* margin-top: -68px; */
     }
     .line-head .line {
         display: none;
@@ -1301,13 +1407,114 @@
 ::::::::::::::::::::::::::::::::::::::::::::::::::::
 Custom media queries
 */
+
+@media only screen and (min-width: 391px ) and (max-width: 490px) {
+    #ddimg1{
+        margin-left: 20px !important;
+    }
+   
+
+}
+
+@media only screen and (min-width: 370px ) and (max-width: 490px) {
+    .contbak{
+        height:45rem !important;
+    }
+    .mhmi{
+        margin-top: -25px !important;
+        margin-bottom: -50px;
+    }
+    .indexlastimg{
+        padding-bottom: 20px !important;
+    }
+}
+
+
+@media only screen and (max-width: 767px) {
+    #ddimg1{
+     
+        height: 180px !important ;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+    }
+    #texxttt{
+        margin-top: 150px;
+    }
+    
+}
+
+@media only screen and (max-width: 575px)  {
+
+    .navcont{
+      display: none !important;
+    }
+}
+@media only screen  and (max-width: 768px){
+    .addrescard{
+        left: 18pc !important;
+    }
+    .contcatcontainer{
+        left: 4pc !important;
+    }
+    .contnom{
+        margin-top: 40px !important;
+    }
+}
+
+@media only screen  and (max-width: 540px){
+    #ddimg1 {
+        top: 115px !important;
+        left: 123px !important;
+        height: 213px !important;
+    }
+}
+
+@media only screen  and (max-width: 412px){
+    #ddimg1{
+        left: 43px !important;
+        top: 103px !important;
+    }
+}
+
+@media only screen  and (min-width: 240px) and (max-width: 340px){
+    .logo img{
+        max-width: 213px !important;
+    }
+    #ddimg1{
+        top: 79px !important;
+        left: 31px !important;
+        height: 150px !important;
+    }
+    #texxttt {
+        font-size: 13px;
+        margin-top: 120px;
+    }
+    .director {
+        height: 530px;
+    }
+    .hptext{
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .hptext1{
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+        font-weight: 500 !important;
+    }
+    .indexlastimg{
+        padding-bottom: 20px !important;
+    }
+
+}
+
 @media only screen and (min-width: 767px) and (max-width: 991px){
     
     .addrescard{
         color: #444;
         top: -38pc;
         position: relative;
-        left: 40pc;
+        left: 22pc;
         margin-left: -16pc;
     
     }
@@ -1337,8 +1544,8 @@ Custom media queries
         color: #444;
         top: -38pc;
         position: relative;
-        left: 57pc;
-        margin-left: -16pc;
+        left: 47pc;
+        margin-left: -11pc;
     
     }
   
@@ -1352,7 +1559,7 @@ Custom media queries
         position: relative;
         width: 500px;
         top: -37pc;
-        left: 20pc;
+        left: 12pc;
         margin-bottom: 10px;
     
     }
@@ -1363,7 +1570,7 @@ Custom media queries
         color: #444;
         top: -38pc;
         position: relative;
-        left: 68pc;
+        left: 58pc;
         margin-left: -16pc;
     
     }
@@ -1383,7 +1590,7 @@ Custom media queries
         color: #444;
         top: -38pc;
         position: relative;
-        left: 70pc;
+        left: 60pc;
         margin-left: -16pc;
     
     }
@@ -1401,26 +1608,100 @@ Custom media queries
         height: 478px;
     }
 
- }
+}
+@media only screen and (min-width: 1910px){
+    /* .cardwidth{
+        width: 500px;
+    
+    } */
+    .mtopDD{
+        margin-top: 50px;
 
+    }
+
+    /* .flogo{
+        height: 425px !important;
+      
+    } */
+
+    .bigfont{
+        font-size: 27px;
+        line-height: 40px;
+        padding-left:40px ;
+        padding-right: 40px;
+    }
+    .servicetext h2{
+        font-size: 35px;
+    }
+    .fontsize30{
+        font-size: 50px;
+    }
+    .footerleftmargin {
+        margin-left: 160px;
+    }
+    .colpadding{
+        padding-left: 100px;
+    }
+    .paddiall4{
+        padding-top: 120px;
+        padding-bottom: 120px;
+    }
+    .imgnag{
+        margin-top: -30px;
+    }
+    .testmo1{
+        padding-top: 50px;
+        padding-bottom: 50px;
+        padding-left: 350px;
+        padding-right: 350px;
+    }
+    h1{
+        font-size: 56px;
+    }
+
+}
 
 @media only screen and (min-width: 1600px) and (max-width: 1920px){ 
     .addrescard{
         color: #444;
         top: -38pc;
         position: relative;
-        left: 74pc;
+        left: 70pc;
         margin-left: -16pc;
+        
     
     }
+    .misn1{
+        margin-top: 80px !important;
+    }
+    .flogo{
+        top: -11px;
+        right: -40px;
+        height: 410;
+        padding-left: 0px;
+        position: absolute;
+    }
+   
     
     .servicebnnr{
        
         background-size: 100% 116%;
         background-image: url('../img/banner/Frame 11.png');
+        margin-bottom: 25px;
     
     }
-   
+   .pfonts{
+    /* padding-right: 95px;
+    padding-left: 100px; */
+   }
+   .cardwidth{
+    width: 350px;
+
+}
+.marginleft75{
+    margin-left: 75px;
+}
+ 
     .contcatcontainer{
         position: relative;
         width: 500px;
@@ -1429,11 +1710,14 @@ Custom media queries
         margin-bottom: 10px;
     
     }
-      .copyrt{
+      /* .copyrt{
         margin-left: 90px;
-    }
+    } */
     .hrline{
-        margin-right: 108px;
+        margin-right: 207px;
+    }
+    .ftc{
+        padding-left: 73px;
     }
     #ddimg{
         height: 480px;
@@ -1448,7 +1732,18 @@ Custom media queries
  }
 
  /* iPad Air */
-@media only screen and (min-width: 768px) and (max-width: 1024px) { 
+ @
+
+ @media only screen and (min-width: 576px) and (max-width: 1024px){
+    #ddimg1{
+        margin-left: -2pc;
+        height: 180px !important ; ;
+        margin-top: -3pc;
+    
+    }
+ }
+
+@media only screen and (min-width: 576px) and (max-width: 1024px) { 
     .footlogocol1 .shreelogo{
         display: none;
     }
@@ -1474,12 +1769,12 @@ Custom media queries
     }
     #ddimg1{
         margin-left: -2pc;
-        height: 211px;
+      
         margin-top: -3pc;
     
     }
     #texxttt {
-        font-size: 16px;
+        font-size: 14px;
         margin-top: 0rem;
     }
     .director {
@@ -1513,9 +1808,9 @@ Custom media queries
     }
   
 
-    .copyrt{
+    /* .copyrt{
         margin-left: 48px;
-    }
+    } */
     .hrline{
         margin-right: 60px;
     }

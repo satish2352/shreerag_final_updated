@@ -822,7 +822,7 @@ label {
 /*mobile menu*/
 
 .mean-container a.meanmenu-reveal {
-    margin-top: -80px;
+    margin-top: -58px;
     right: 0;
 }
 
@@ -2407,6 +2407,20 @@ p.big-p {
     background-color: #fff;
 }
 
+.social-links1 .social-icons .email a i{
+    background-color: #e5eaf0 ;
+    color: #010101 ;
+    font-size: large;
+    font-weight: bolder;
+}
+
+.social-links1 .social-icons .email a:hover i {
+    transform: none;
+    color: #ffffff;
+    background-color: #029A99;
+}
+
+
 .links-list li {
     color: #e5eaf0;
     margin-bottom: 10px;
@@ -3705,6 +3719,7 @@ non use css
     background: rgba(4, 170, 109, 0.1);
     background-size:  100% 101%;;
     background-image: url('../img/banner/HOME_PAGE3.png');
+    /* background-size: cover; */
 }
 
 #instaimg{
@@ -3773,8 +3788,12 @@ ul.theme-ul li img {
 /* footer */
 .hrline{
     border:1px solid #029A99;
-    width: 82%;
+    width: 85%;
     margin-right: 100px;
+    margin-right: 250px;
+}
+.pll-0{
+    padding-left: 0px;
 }
 
 /* .desktopfoot{
@@ -3788,9 +3807,12 @@ ul.theme-ul li img {
 
 
 .contbak{
-    height: 50rem;
+    height: 51rem;
     background-image: url('../img/banner/shreerag contact map background.png');
 
+}
+.pd00{
+    padding: 0.375rem 0.75rem !important;
 }
 
 /* .dirim {

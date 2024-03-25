@@ -92,3 +92,18 @@
 #sidebar.active .metismenu li .submenu-angle li .mini-sub-pro {
     display:none;
 }
+.sidebar-nav .metismenu li .has-arrow {
+    display: flex;
+    /* align-items: center; */
+}
+
+.sidebar-nav .metismenu li .sidebarmenumain {
+    display: flex;
+    /* align-items: center; */
+    
+}
+
+.sidebar-nav .metismenu li .sidebarmenumain div i
+{
+    padding-top: 5px;
+}
