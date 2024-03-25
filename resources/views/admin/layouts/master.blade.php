@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Super Admin</title>
+    <title>Shreerag Engg.</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- favicon
@@ -65,5 +65,6 @@
 <body>
 @include('admin.layouts.sidebar')
 @yield('content')
-</body>
 @extends('admin.layouts.footer')
+
+

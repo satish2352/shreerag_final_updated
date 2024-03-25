@@ -1,15 +1,15 @@
-        <div class="footer-copyright-area">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="footer-copy-right">
-                            <p>Copyright &copy; 2018 <a href="#">NKS</a> All rights reserved.</p>
-                        </div>
-                    </div>
+<div class="footer-copyright-area">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="footer-copy-right">
+                    <p>Copyright &copy; {{ date('Y') }} <a href="https://www.sumagoinfotech.com"
+                            target="_blank"> Made with Passion by Sumago Infotech.</a></p>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 <script src="{{ asset('js/vendor/jquery-1.11.3.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}"></script>
@@ -51,8 +51,8 @@
 <script src="{{ asset('js/chart/jquery.peity.min.js') }}"></script>
 <script src="{{ asset('js/peity/peity-active.js') }}"></script>
 <script src="{{ asset('js/tab.js') }}"></script>
-<link rel="stylesheet" href="{{ asset('https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css')}}">
-<script src="{{ asset('https://cdn.jsdelivr.net/npm/flatpickr')}}"></script>
+<link rel="stylesheet" href="{{ asset('https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css') }}">
+<script src="{{ asset('https://cdn.jsdelivr.net/npm/flatpickr') }}"></script>
 
 </body>
 
