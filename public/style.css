@@ -91,7 +91,8 @@ body {}
     min-width: 200px;
     /* new */
     width: 16%;
-    background: #fff;
+    /* background: #fff; */
+    background: #f5f5f5;
     color: #fff;
 	position:fixed;
     transition: all 0.3s;
@@ -3317,4 +3318,7 @@ div#sparklinehome canvas {
 .sidebar-menu .active a {
     background-color: #243772;
     color: #fff; 
+}
+.navbar-fixed-bottom{
+    z-index: 0 !important;
 }
