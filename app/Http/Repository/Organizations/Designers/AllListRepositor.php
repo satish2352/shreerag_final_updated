@@ -43,6 +43,7 @@ class AllListRepositor  {
               'production.business_id',
               'design_revision_for_prod.reject_reason_prod',
               'design_revision_for_prod.id as design_revision_for_prod_id',
+              'design_revision_for_prod.id as reject_reason_prod',
               'designs.bom_image',
               'designs.design_image'
 
