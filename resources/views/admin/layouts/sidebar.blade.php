@@ -245,7 +245,7 @@
                                     class="mini-sub-pro">List Purchase</span></a></li>
                     </ul>
                 </li> --}}
-                        <li>
+                        <!-- <li>
                             <a class="has-arrow" href="{{ route('list-requistion') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-envelope icon-wrap"></i> <span
                                     class="mini-click-non">Requistion</span></a>
@@ -274,10 +274,10 @@
                                             class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                             class="mini-sub-pro">List Document Upload to Fianace</span></a></li>
                             </ul>
-                        </li>
+                        </li> -->
 
 
-                        <li>
+                        <!-- <li>
                             <a class="has-arrow" href="{{ route('list-accepted-design-from-prod') }}"
                                 aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span
                                     class="mini-click-non">All List</span></a>
@@ -289,6 +289,21 @@
                                             class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                             class="mini-sub-pro">Requirements Sent To Production</span></a></li>
                             </ul>
+                        </li> -->
+
+                        <li class="{{ request()->is('list-accepted-design-from-prod') ? 'active' : '' }}">
+                            <a href="{{ route('list-accepted-design-from-prod') }}">
+                                <i class="fa big-icon fa-envelope icon-wrap"></i>
+                                <span class="mini-click-non">All New Requirements</span>
+                            </a>
+                        </li>
+
+
+                        <li class="{{ request()->is('list-material-sent-to-prod') ? 'active' : '' }}">
+                            <a href="{{ route('list-material-sent-to-prod') }}">
+                                <i class="fa big-icon fa-envelope icon-wrap"></i>
+                                <span class="mini-click-non">Requirements Sent To Production</span>
+                            </a>
                         </li>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.HR'))
@@ -421,7 +436,7 @@
                                                     aria-expanded="false" class="nav-link dropdown-toggle">
                                                     <i class="fa fa-user adminpro-user-rounded header-riht-inf"
                                                         aria-hidden="true"></i>
-                                                    <span class="admin-name">Advanda Cro</span>
+                                                    <span class="admin-name"></span>
                                                     <i class="fa fa-angle-down adminpro-icon adminpro-down-arrow"></i>
                                                 </a>
                                                 <ul role="menu"
