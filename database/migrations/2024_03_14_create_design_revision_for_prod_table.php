@@ -14,10 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('design_revision_for_prod', function (Blueprint $table) {
-            $table->id();
-            $table->string('business_id');
-            $table->string('design_id');
-            $table->string('production_id');
+            $table->bigIncrements();
+            $table->bigIncrements('business_id');
+            $table->bigIncrements('design_id');
+            $table->bigIncrements('production_id');
             $table->string('reject_reason_prod')->nullable();
             $table->string('remark_by_design');
             $table->string('design_image')->nullable();

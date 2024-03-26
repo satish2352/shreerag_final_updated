@@ -17,8 +17,8 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('organization_id'); 
             $table->string('employee_name');
-            $table->string('role_id');
-            $table->string('department_id');
+            $table->unsignedBigInteger('role_id');
+            $table->unsignedBigInteger('department_id');
             $table->string('email');
             $table->string('mobile_number');
             $table->string('address');
