@@ -203,9 +203,11 @@ class AllListRepository  {
               'design_revision_for_prod.reject_reason_prod',
               'design_revision_for_prod.bom_image as re_bom_image',
               'design_revision_for_prod.design_image as re_design_image',
+              'design_revision_for_prod.remark_by_design',
               'designs.bom_image',
               'designs.design_image',
               'production.id as productionId',
+              
 
           )->get();
 

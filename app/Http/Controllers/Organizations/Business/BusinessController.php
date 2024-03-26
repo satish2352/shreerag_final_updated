@@ -54,7 +54,7 @@ class BusinessController extends Controller
                       ->withErrors($validation);
               } else {
                   $add_record = $this->service->addAll($request);
-                
+
                   if ($add_record) {
                       $msg = $add_record['msg'];
                       $status = $add_record['status'];

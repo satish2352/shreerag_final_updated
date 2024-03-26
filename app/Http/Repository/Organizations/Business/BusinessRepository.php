@@ -67,8 +67,8 @@ public function addAll($request)
         $business_application->business_status_id =config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
         $business_application->design_id =$design_data->id;
         $business_application->design_status_id =config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN');
-        $business_application->production_id ='';
-        $business_application->production_status_id ='';
+        $business_application->production_id ='0';
+        $business_application->production_status_id ='0';
         $business_application->save();
 
         return [
@@ -77,6 +77,7 @@ public function addAll($request)
         ];
 
     } catch (\Exception $e) {
+        dd($e);
         return [
             'msg' => $e->getMessage(),
             'status' => 'error'

@@ -81,7 +81,7 @@
                                         <thead>
                                             <tr>
                                                 
-                                                <th data-field="id">ID</th>
+                                                <th data-field="id">Sr.No.</th>
                                                 <th data-field="grn_number" data-editable="true">Title</th>
                                                 <th data-field="grn_date" data-editable="true">Description</th>
                                                 <th data-field="purchase_id" data-editable="true">Remark</th>
@@ -92,7 +92,6 @@
                                         <tbody>
                                             @foreach ($data_output as $data)
                                                 <tr>
-                                                    <td></td>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ ucwords($data->title) }}</td>
                                                     <td>{{ ucwords($data->descriptions) }}</td>

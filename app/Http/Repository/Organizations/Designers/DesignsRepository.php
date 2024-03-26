@@ -142,6 +142,18 @@ class DesignsRepository  {
                 $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_PRODUCTION');
                 $business_application->save();
 
+
+                $designRevisionForProdIDInsert = new DesignRevisionForProd();
+                $designRevisionForProdIDInsert->business_id = $dataOutput->business_id;
+                $designRevisionForProdIDInsert->design_id = $dataOutput->id;
+                $designRevisionForProdIDInsert->production_id = $production_data->id;
+                $designRevisionForProdIDInsert->reject_reason_prod = '';
+                $designRevisionForProdIDInsert->remark_by_design = '';
+                $designRevisionForProdIDInsert->design_image = $designImageName;
+                $designRevisionForProdIDInsert->bom_image = $bomImageName;
+
+                $designRevisionForProdIDInsert->save();
+
             }
     
             $return_data['designImageName'] = $designImageName;
