@@ -28,7 +28,7 @@ padding-left: 20px !important;
                 <div class="sparkline13-list">
                     <div class="sparkline13-hd">
                         <div class="main-sparkline13-hd">
-                            <h1>Design Upload <span class="table-project-n">Data</span> Table</h1>
+                            <h1>Corected Design Need To Upload <span class="table-project-n"></span></h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2" >
                                         {{-- <div class="login-horizental cancel-wp pull-left">
@@ -85,6 +85,7 @@ padding-left: 20px !important;
                                             <th data-field="purchase_id" data-editable="true">Remark</th>                                         
                                             <th data-field="design_image" data-editable="false">Design Layout</th>
                                             <th data-field="bom_image" data-editable="false">BOM</th>                                                                                                                           
+                                            <th data-field="reject_reason_prod" data-editable="false">Remark By Production Department</th>                                                                                                                           
                                             <th data-field="action">Action</th>
                                         </tr>
 
@@ -110,6 +111,7 @@ padding-left: 20px !important;
                                                 alt="No Image" />
                                         </td>
                                             
+                                        <td>{{ucwords($data->reject_reason_prod)}}</td>
                                         <td>
                                                 <div class="col-lg-2" >
                                                     <div class="login-horizental cancel-wp pull-left">

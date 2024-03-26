@@ -31,7 +31,7 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Design Upload <span class="table-project-n">Data</span> Table</h1>
+                                <h1>Material Recived From<span class="table-project-n">Store</span> Department</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
                                         {{-- <div class="login-horizental cancel-wp pull-left">
@@ -85,7 +85,7 @@
                                                 <th data-field="grn_number" data-editable="true">Title</th>
                                                 <th data-field="grn_date" data-editable="true">Description</th>
                                                 <th data-field="purchase_id" data-editable="true">Remark</th>
-                                                <th data-field="store_material_sent_date" data-editable="true">Matrial Sent Date</th>
+                                                <th data-field="store_material_sent_date" data-editable="true">Matrial Recieved Date</th>
                                                 <th data-field="design_image" data-editable="false">Design Layout</th>
                                                 <th data-field="bom_image" data-editable="false">BOM</th>
 
