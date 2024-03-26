@@ -82,7 +82,7 @@
                 <div class="text-center m-b-md custom-login">
                     <hr>
                     <h1>Super Admin Login</h1><hr>
-                    <p>This is the best app ever!</p>
+                    <p></p>
                 </div>
                 <div class="hpanel">
                     <div class="panel-body">
@@ -109,7 +109,7 @@
         </div>
         <div class="row">
             <div class="col-md-12 col-md-12 col-sm-12 col-xs-12 text-center">
-                <p>Copyright &copy; 2024 <a href="#">NKS</a> All rights reserved.</p>
+                <p>Copyright &copy; {{date('Y')}} <a href="#">Shreerag</a> All rights reserved.</p>
             </div>
         </div>
     </div>
