@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('design_revision_for_prod', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigIncrements('business_id');
-            $table->bigIncrements('design_id');
-            $table->bigIncrements('production_id');
+            $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('design_id');
+            $table->unsignedBigInteger('production_id');
             $table->string('reject_reason_prod')->nullable();
             $table->string('remark_by_design');
             $table->string('design_image')->nullable();
