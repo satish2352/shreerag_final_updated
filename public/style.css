@@ -80,8 +80,7 @@ body {}
 /*  8. Menu collapse Area
 /*----------------------------------------*/
 .all-content-wrapper {
-    margin-left: 264px;
-    /* position: fixed; */
+    margin-left: 205px;
     transition: all 0.3s;
 }
 .left-sidebar-pro {
@@ -89,8 +88,9 @@ body {}
     width: 240px;
 }
 #sidebar {
-    /* min-width: 200px; */
-    width: 270px;
+    min-width: 200px;
+    /* new */
+    width: 16%;
     background: #fff;
     color: #fff;
 	position:fixed;
@@ -125,6 +125,9 @@ body {}
 
 #sidebar .sidebar-header {
     padding: 1px 0px;
+    /* new */
+    /* background: #1963AB; */
+    background: #1963abab;
 }
 
 #sidebar .sidebar-header strong {
@@ -239,8 +242,10 @@ body {}
 	border:none;
 }
 .footer-copyright-area {
-    background: -webkit-linear-gradient(178deg, #e12503 0%, #85060c 100%);
-    background: linear-gradient(178deg, #e12503 0%, #85060c 100%);
+    /* background: -webkit-linear-gradient(178deg, #e12503 0%, #85060c 100%);
+    background: linear-gradient(178deg, #e12503 0%, #85060c 100%); */
+    /* new */
+    background: linear-gradient(178deg, #175CA2 0%, #121416 100%);
     padding: 20px 0px;
     text-align: center;
 }
@@ -1025,10 +1030,12 @@ ul.two-part-sp li{
 }
 .header-top-area {
     position: fixed;
-    background: -webkit-linear-gradient(178deg, #e12503 0%, #85060c 100%);
-    background: linear-gradient(178deg, #e12503 0%, #85060c 100%);
+    /* background: -webkit-linear-gradient(178deg, #e12503 0%, #85060c 100%);
+    background: linear-gradient(178deg, #e12503 0%, #85060c 100%); */
+    /* new */
+    background: linear-gradient(178deg, #997be5 0%, #40424f 100%);
     z-index: 99;
-    left: 264px;
+    left: 200px;
     right: 0;
     top: 0;
     margin: 0 auto;
@@ -3305,7 +3312,4 @@ element.style {
 }
 div#sparklinehome canvas {
     width: 100% !important;
-}
-.red-text{
-    color: red !important;
 }
