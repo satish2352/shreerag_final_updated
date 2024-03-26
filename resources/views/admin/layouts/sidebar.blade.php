@@ -181,35 +181,42 @@
                         </li> --}}
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.PRODUCTION'))
-                        <li>
-                            <a class="has-arrow" href="{{ route('list-new-requirements-received-for-production') }}"
-                                aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span
-                                    class="mini-click-non">New Design List</span></a>
+                    <ul class="sidebar-menu">
+                        <li class="{{ request()->is('list-new-requirements-received-for-production') ? 'active' : '' }}">
+                            <a href="{{ route('list-new-requirements-received-for-production') }}">
+                                <i class="fa big-icon fa-envelope icon-wrap"></i>
+                                <span class="mini-click-non">New Design List</span>
+                            </a>
                         </li>
-
-                        <li class="{{ request()->is('list-accept-design*') ? 'has-arrow"' : '' }}">
-                            <a class="has-arrow " href="{{ route('list-accept-design') }}" aria-expanded="false"><i
-                                    class="fa big-icon fa-envelope icon-wrap"></i> <span
-                                    class="mini-click-non">Accepted Design List</span></a>
+                        
+                        <li class="{{ request()->is('list-accept-design*') ? 'active' : '' }}">
+                            <a href="{{ route('list-accept-design') }}">
+                                <i class="fa big-icon fa-envelope icon-wrap"></i>
+                                <span class="mini-click-non">Accepted Design List</span>
+                            </a>
                         </li>
-
-                        <li>
-                            <a class="has-arrow" href="{{ route('list-reject-design') }}" aria-expanded="false"><i
-                                    class="fa big-icon fa-envelope icon-wrap"></i> <span
-                                    class="mini-click-non">Rejected Design List</span></a>
+                        
+                        <li class="{{ request()->is('list-reject-design') ? 'active' : '' }}">
+                            <a href="{{ route('list-reject-design') }}">
+                                <i class="fa big-icon fa-envelope icon-wrap"></i>
+                                <span class="mini-click-non">Rejected Design List</span>
+                            </a>
                         </li>
-
-                        <li>
-                            <a class="has-arrow" href="{{ route('list-revised-design') }}" aria-expanded="false"><i
-                                    class="fa big-icon fa-envelope icon-wrap"></i> <span
-                                    class="mini-click-non">Revised Design List</span></a>
+                        
+                        <li class="{{ request()->is('list-revised-design') ? 'active' : '' }}">
+                            <a href="{{ route('list-revised-design') }}">
+                                <i class="fa big-icon fa-envelope icon-wrap"></i>
+                                <span class="mini-click-non">Revised Design List</span>
+                            </a>
                         </li>
-
-                        <li>
-                            <a class="has-arrow" href="{{ route('list-material-recived') }}"
-                                aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span
-                                    class="mini-click-non">Material Received For Production</span></a>
+                        
+                        <li class="{{ request()->is('list-material-recived') ? 'active' : '' }}">
+                            <a href="{{ route('list-material-recived') }}">
+                                <i class="fa big-icon fa-envelope icon-wrap"></i>
+                                <span class="mini-click-non">Material Received For Production</span>
+                            </a>
                         </li>
+                    </ul>
 
                         {{-- <li>
                             <a class="has-arrow" href="{{ route('list-purchases') }}" aria-expanded="false"><i
