@@ -418,7 +418,8 @@ body {}
    left:-134px;
 }
 .header-right-info ul.header-right-menu li .author-log{
-   left:-2px;
+    /* new comment */
+   /* left:-2px; */
 }
 .header-right-info ul.header-right-menu li.open .author-message-top, .header-right-info ul.header-right-menu li.open .notification-author, .header-right-info ul.header-right-menu li.open .author-log{
    opacity:1;
