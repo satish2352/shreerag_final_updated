@@ -83,16 +83,16 @@
                             <a title="Inbox" href="{{ route('organizations-list-employees') }}"><i class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span class="mini-sub-pro">Add Employees</span></a>
                         </li>
                         <li class="{{ request()->is('list-business') ? 'active' : '' }}">
-                            <a title="Inbox" href="{{ route('list-business') }}"><i class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span class="mini-sub-pro">Business List</span></a>
+                            <a title="Inbox" href="{{ route('list-business') }}"><i class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span class="mini-sub-pro">Business</span></a>
                         </li>
                         <li class="{{ request()->is('list-forwarded-to-design') ? 'active' : '' }}">
-                            <a href="{{ route('list-forwarded-to-design') }}" aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">List Business Sent For Design</span></a>
+                            <a href="{{ route('list-forwarded-to-design') }}" aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">Business Sent For Design</span></a>
                         </li>
                         <li class="{{ request()->is('list-design-upload') ? 'active' : '' }}">
-                            <a href="{{ route('list-design-upload') }}" aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">List Design Received For Production</span></a>
+                            <a href="{{ route('list-design-upload') }}" aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">Design Received For Production</span></a>
                         </li>
                         <li class="{{ request()->is('list-design-correction') ? 'active' : '' }}">
-                            <a href="{{ route('list-design-correction') }}" aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">List Design Received For Design Correction</span></a>
+                            <a href="{{ route('list-design-correction') }}" aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">Design Received For Design Correction</span></a>
                         </li>
                     </ul>
                     @endif
@@ -125,7 +125,7 @@
                         <li class="nav-item {{ Request::is('list-new-requirements-received-for-design') ? 'active' : '' }}">
                             <a class="" href="{{ route('list-new-requirements-received-for-design') }}"
                                 aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span
-                                    class="mini-click-non">List New Requirements <br> Received For Design</span></a>
+                                    class="mini-click-non">New Business<br> Received For Design</span></a>
                         </li>
                         <li class="nav-item {{ Request::is('list-design-upload') ? 'active' : '' }}">
                             <a class="" href="{{ route('list-design-upload') }}" aria-expanded="false"><i
@@ -163,21 +163,21 @@
                         <li class="{{ request()->is('list-accept-design*') ? 'active' : '' }}">
                             <a href="{{ route('list-accept-design') }}">
                                 <i class="fa big-icon fa-envelope icon-wrap"></i>
-                                <span class="mini-click-non">Accepted Design List</span>
+                                <span class="mini-click-non">Accepted Design</span>
                             </a>
                         </li>
                         
                         <li class="{{ request()->is('list-reject-design') ? 'active' : '' }}">
                             <a href="{{ route('list-reject-design') }}">
                                 <i class="fa big-icon fa-envelope icon-wrap"></i>
-                                <span class="mini-click-non">Rejected Design List</span>
+                                <span class="mini-click-non">Rejected Design</span>
                             </a>
                         </li>
                         
                         <li class="{{ request()->is('list-revised-design') ? 'active' : '' }}">
                             <a href="{{ route('list-revised-design') }}">
                                 <i class="fa big-icon fa-envelope icon-wrap"></i>
-                                <span class="mini-click-non">Revised Design List</span>
+                                <span class="mini-click-non">Revised Design</span>
                             </a>
                         </li>
                         
