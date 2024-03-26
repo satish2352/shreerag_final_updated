@@ -19,11 +19,7 @@ class ProductionRepository  {
 
     public function acceptdesign($id){
         try {
-            // $production_data = ProductionModel::where('business_id', $id)->first();
-            // $production_data->business_id = $id;
-            // $production_data->design_id = $dataOutput->id;
-            // $production_data->save();
-
+          
             $business_application = BusinessApplicationProcesses::where('business_id', $id)->first();
             if ($business_application) {
                 $business_application->business_id = $id;
@@ -34,6 +30,20 @@ class ProductionRepository  {
                 $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION');
                 $business_application->save();
             }
+            $designRevisionForProdID = DesignRevisionForProd::where('production_id', $business_application->production_id)->orderBy('id','desc')->first();
+
+            $dataOutput = DesignModel::where('business_id', $business_application->business_id)->first();
+            // Check if the record was found
+            if (!$dataOutput) {
+                return [
+                    'msg' => 'Record not found',
+                    'status' => 'error',
+                ];
+            }
+            $dataOutput->design_image = $designRevisionForProdID->design_image;
+            $dataOutput->bom_image = $designRevisionForProdID->bom_image;
+            $dataOutput->save();
+
         } catch (\Exception $e) {
             return $e;
         }
@@ -42,7 +52,7 @@ class ProductionRepository  {
 
     public function rejectdesign($request){
         try {
-// dd("ok");
+
             $idtoedit = base64_decode($request->business_id);
 
             $production_data = ProductionModel::where('id', $idtoedit)->first();
@@ -67,8 +77,6 @@ class ProductionRepository  {
                 $designRevisionForProdIDInsert->save();
 
             }
-            
-            
 
             $business_application = BusinessApplicationProcesses::where('business_id', $production_data->business_id)->first();
             
@@ -82,7 +90,6 @@ class ProductionRepository  {
             }
 
         } catch (\Exception $e) {
-            dd($e);
             return $e;
         }
     } 

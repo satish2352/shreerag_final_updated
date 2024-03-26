@@ -29,6 +29,19 @@ class StoreController extends Controller
         }
     } 
 
+
+    public function createRequesition($id){
+        try {
+            $acceptdesign = base64_decode($id);
+            $update_data = $this->service->orderAcceptedAndMaterialForwareded($acceptdesign);
+            return redirect('list-accepted-design-from-prod');
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
+
+
+    
     
  
 

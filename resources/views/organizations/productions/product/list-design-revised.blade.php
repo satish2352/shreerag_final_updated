@@ -92,6 +92,7 @@
                                                 <th data-field="design_image_re" data-editable="false">Revised Design Layout
                                                 </th>
                                                 <th data-field="bom_image_re" data-editable="false">Revised BOM</th>
+                                                <th data-field="remark_by_design" data-editable="true">Design Team Remark</th>
                                                 <th data-field="action" data-editable="false">Action</th>
                                             </tr>
 
@@ -127,7 +128,7 @@
                                                             src="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_bom_image'] }}"
                                                             alt="No Image" />
                                                     </td>
-
+                                                    <td>{{ ucwords($data->remark_by_design) }}</td>
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
 
