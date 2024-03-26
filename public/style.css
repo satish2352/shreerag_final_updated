@@ -3322,3 +3322,12 @@ div#sparklinehome canvas {
 .navbar-fixed-bottom{
     z-index: 0 !important;
 }
+.nav-item.active a {
+    background-color: #243772;
+    color: #fff; 
+}
+
+.sidebar-nav .metismenu .nav-item.active a {
+    background-color: #243772;
+    color: #fff; 
+}

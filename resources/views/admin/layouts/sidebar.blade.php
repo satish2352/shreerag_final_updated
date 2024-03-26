@@ -10,27 +10,38 @@
 
                 <ul class="metismenu" id="menu1">
                     @if (session()->get('role_id') == config('constants.ROLE_ID.SUPER'))
-                        <li>
-                            <a class="has-arrow" href="{{ route('list-organizations') }}" aria-expanded="false"><i
-                                    class="fa big-icon fa-envelope icon-wrap"></i> <span
-                                    class="mini-click-non">Organizations</span></a>
-                            <ul class="submenu-angle" aria-expanded="false">
-                                <li><a title="Inbox" href="{{ route('list-organizations') }}"><i
-                                            class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                                            class="mini-sub-pro">List Organizations</span></a></li>
-                                <li><a title="Inbox" href="{{ route('organizations-list-employees') }}"><i
-                                            class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                                            class="mini-sub-pro">List Employees</span></a>
-                                </li>
-                                <li><a title="Inbox" href="{{ route('list-departments') }}"><i
-                                            class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                                            class="mini-sub-pro">List Departments</span></a>
-                                </li>
-                                <li><a title="Inbox" href="{{ route('list-roles') }}"><i
-                                            class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                                            class="mini-sub-pro">List Roles</span></a></li>
-                            </ul>
-                        </li>
+                    <li class="{{ Request::is('list-organizations', 'organizations-list-employees', 'list-departments', 'list-roles') ? 'active' : '' }}">
+                        <a class="has-arrow" href="{{ route('list-organizations') }}" aria-expanded="false">
+                            <i class="fa big-icon fa-envelope icon-wrap"></i>
+                            <span class="mini-click-non">Organizations</span>
+                        </a>
+                        <ul class="submenu-angle" aria-expanded="false">
+                            <li class="nav-item {{ Request::is('list-organizations') ? 'active' : '' }}">
+                                <a title="Inbox" href="{{ route('list-organizations') }}">
+                                    <i class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i>
+                                    <span class="mini-sub-pro">List Organizations</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('organizations-list-employees') ? 'active' : '' }}">
+                                <a title="Inbox" href="{{ route('organizations-list-employees') }}">
+                                    <i class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i>
+                                    <span class="mini-sub-pro">List Employees</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('list-departments') ? 'active' : '' }}">
+                                <a title="Inbox" href="{{ route('list-departments') }}">
+                                    <i class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i>
+                                    <span class="mini-sub-pro">List Departments</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('list-roles') ? 'active' : '' }}">
+                                <a title="Inbox" href="{{ route('list-roles') }}">
+                                    <i class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i>
+                                    <span class="mini-sub-pro">List Roles</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 
                         <!-- <li class="">
                             <a class="has-arrow" href="index.html">
@@ -67,103 +78,63 @@
                     @endif
 
                     @if (session()->get('role_id') == config('constants.ROLE_ID.HIGHER_AUTHORITY'))
-                        <li>
-                            <a class="has-arrow" href="{{ route('organizations-list-employees') }}"
-                                aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span
-                                    class="mini-click-non">Employees</span></a>
-                            <ul class="submenu-angle" aria-expanded="false">
-                                <li><a title="Inbox" href="{{ route('organizations-list-employees') }}"><i
-                                            class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                                            class="mini-sub-pro">Add Employees</span></a></li>
-                            </ul>
+                    <ul class="sidebar-menu" id="nav-accordion">
+                        <li class="{{ request()->is('organizations-list-employees') ? 'active' : '' }}">
+                            <a title="Inbox" href="{{ route('organizations-list-employees') }}"><i class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span class="mini-sub-pro">Add Employees</span></a>
                         </li>
-
-                        <li>
-                            <a class="has-arrow" href="{{ route('list-business') }}" aria-expanded="false"><i
-                                    class="fa big-icon fa-envelope icon-wrap"></i> <span
-                                    class="mini-click-non">Business</span></a>
-                            <ul class="submenu-angle" aria-expanded="false">
-                                <li><a title="Inbox" href="{{ route('list-business') }}"><i
-                                            class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                                            class="mini-sub-pro">Business List</span></a></li>
-                            </ul>
+                        <li class="{{ request()->is('list-business') ? 'active' : '' }}">
+                            <a title="Inbox" href="{{ route('list-business') }}"><i class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span class="mini-sub-pro">Business List</span></a>
                         </li>
-
-                        <li>
-                            <a class="has-arrow" href="{{ route('list-forwarded-to-design') }}"
-                                aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span
-                                    class="mini-click-non">List Business Sent For Design</span></a>
+                        <li class="{{ request()->is('list-forwarded-to-design') ? 'active' : '' }}">
+                            <a href="{{ route('list-forwarded-to-design') }}" aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">List Business Sent For Design</span></a>
                         </li>
-
-                        <li>
-                            <a class="has-arrow" href="{{ route('list-design-upload') }}" aria-expanded="false"><i
-                                    class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">List
-                                    Design Received <br> For Production</span></a>
+                        <li class="{{ request()->is('list-design-upload') ? 'active' : '' }}">
+                            <a href="{{ route('list-design-upload') }}" aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">List Design Received For Production</span></a>
                         </li>
-
-                        <li>
-                            <a class="has-arrow" href="{{ route('list-design-correction') }}"
-                                aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span
-                                    class="mini-click-non">List Design Received <br> For Design Correction</span></a>
+                        <li class="{{ request()->is('list-design-correction') ? 'active' : '' }}">
+                            <a href="{{ route('list-design-correction') }}" aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">List Design Received For Design Correction</span></a>
                         </li>
+                    </ul>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.PURCHASE'))
-                        {{-- <li>
-                        <a class="has-arrow" href="{{ route('list-purchase') }}" aria-expanded="false"><i
-                                class="fa big-icon fa-envelope icon-wrap"></i> <span
-                                class="mini-click-non">Purchase</span></a>
-                        <ul class="submenu-angle" aria-expanded="false">
-                            <li><a title="Inbox" href="{{ route('list-purchase') }}"><i
-                                        class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                                        class="mini-sub-pro">List Purchase</span></a></li>
-                        </ul>
-                    </li> --}}
-                        <li>
+                        
+                        <li class="{{ Request::is('list-purchase') ? 'active' : '' }}">
                             <a class="has-arrow" href="{{ route('list-purchase') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-envelope icon-wrap"></i> <span
                                     class="mini-click-non">Purchase
                                     Orders</span></a>
                             <ul class="submenu-angle" aria-expanded="false">
-                                <li><a title="Inbox" href="{{ route('list-purchase') }}"><i
+                                <li class="nav-item {{ Request::is('list-purchase') ? 'active' : '' }}"><a title="Inbox" href="{{ route('list-purchase') }}"><i
                                             class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                             class="mini-sub-pro">List Purchase Orders</span></a></li>
                             </ul>
                         </li>
-                        <li>
+                        <li class="{{ Request::is('list-vendor') ? 'active' : '' }}">
                             <a class="has-arrow" href="{{ route('list-vendor') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-envelope icon-wrap"></i> <span
                                     class="mini-click-non">Vendor</span></a>
                             <ul class="submenu-angle" aria-expanded="false">
-                                <li><a title="Inbox" href="{{ route('list-vendor') }}"><i
+                                <li class="nav-item {{ Request::is('list-vendor') ? 'active' : '' }}"><a title="Inbox" href="{{ route('list-vendor') }}"><i
                                             class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                             class="mini-sub-pro">Vendor List</span></a></li>
                             </ul>
                         </li>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.DESIGNER'))
-                        {{-- <li>
-                            <a class="has-arrow" href="{{ route('list-designs') }}" aria-expanded="false"><i
-                                    class="fa big-icon fa-envelope icon-wrap"></i> <span
-                                    class="mini-click-non">Designs</span></a>
-                            <ul class="submenu-angle" aria-expanded="false">
-                                <li><a title="Inbox" href="{{ route('list-designs') }}"><i
-                                            class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                                            class="mini-sub-pro">List Designs</span></a></li>
-                            </ul>
-                        </li> --}}
-                        <li>
-                            <a class="has-arrow" href="{{ route('list-new-requirements-received-for-design') }}"
+                        
+                        <li class="nav-item {{ Request::is('list-new-requirements-received-for-design') ? 'active' : '' }}">
+                            <a class="" href="{{ route('list-new-requirements-received-for-design') }}"
                                 aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span
                                     class="mini-click-non">List New Requirements <br> Received For Design</span></a>
                         </li>
-                        <li>
-                            <a class="has-arrow" href="{{ route('list-design-upload') }}" aria-expanded="false"><i
+                        <li class="nav-item {{ Request::is('list-design-upload') ? 'active' : '' }}">
+                            <a class="" href="{{ route('list-design-upload') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-envelope icon-wrap"></i> <span
                                     class="mini-click-non">Designs Sent To Porduction</span></a>
                         </li>
 
-                        <li>
-                            <a class="has-arrow" href="{{ route('list-reject-design-from-prod') }}"
+                        <li class="nav-item {{ Request::is('list-reject-design-from-prod') ? 'active' : '' }}">
+                            <a class="" href="{{ route('list-reject-design-from-prod') }}"
                                 aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span
                                     class="mini-click-non">Rejected Design List</span></a>
                         </li>
