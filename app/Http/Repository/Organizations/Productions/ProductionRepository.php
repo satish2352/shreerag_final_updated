@@ -62,7 +62,7 @@ class ProductionRepository  {
                 $designRevisionForProdIDInsert->business_id = $production_data->business_id;
                 $designRevisionForProdIDInsert->design_id = $production_data->design_id;
                 $designRevisionForProdIDInsert->production_id = $production_data->business_id;
-                $designRevisionForProdIDInsert->reject_reason_prod = $production_data->reject_reason_prod;
+                $designRevisionForProdIDInsert->reject_reason_prod = $request->reject_reason_prod;
                 $designRevisionForProdIDInsert->remark_by_design = '';
                 $designRevisionForProdIDInsert->save();
 

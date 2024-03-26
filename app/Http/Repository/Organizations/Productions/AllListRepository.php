@@ -110,6 +110,9 @@ class AllListRepository  {
             ->leftJoin('business_application_processes', function($join) {
               $join->on('production.business_id', '=', 'business_application_processes.business_id');
             })
+            ->leftJoin('designs', function($join) {
+              $join->on('business_application_processes.business_id', '=', 'designs.business_id');
+            })
             ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
             ->where('businesses.is_active',true)
             ->select(
@@ -118,7 +121,9 @@ class AllListRepository  {
                 'businesses.descriptions',
                 'businesses.remarks',
                 'businesses.is_active',
-                'production.business_id'
+                'production.business_id',
+                'designs.bom_image',
+                'designs.design_image',
 
             )->get();
           return $data_output;
