@@ -1,5 +1,5 @@
 </div>
-<div class="footer-copyright-area">
+<div class="footer-copyright-area navbar-fixed-bottom">
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">

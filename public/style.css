@@ -126,8 +126,8 @@ body {}
 #sidebar .sidebar-header {
     padding: 1px 0px;
     /* new */
-    /* background: #1963AB; */
-    background: #1963abab;
+    background: #1963AB;
+    /* background: #1963abab; */
 }
 
 #sidebar .sidebar-header strong {
@@ -1033,7 +1033,7 @@ ul.two-part-sp li{
     /* background: -webkit-linear-gradient(178deg, #e12503 0%, #85060c 100%);
     background: linear-gradient(178deg, #e12503 0%, #85060c 100%); */
     /* new */
-    background: linear-gradient(178deg, #997be5 0%, #40424f 100%);
+    background: #243772;
     z-index: 99;
     left: 200px;
     right: 0;
