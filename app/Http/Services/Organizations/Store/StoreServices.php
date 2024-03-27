@@ -22,6 +22,27 @@ class StoreServices
         }
     } 
 
+    public function addAll($request){
+        try {
+            $last_id = $this->repo->addAll($request);
+            // dd($last_id);
+
+            $path = Config::get('FileConstant.REQUISITION_ADD');
+            $ImageName = $last_id['ImageName'];
+            uploadImage($request, 'bom_file', $path, $ImageName);
+            
+            if ($last_id) {
+                return ['status' => 'success', 'msg' => 'Data Added Successfully.'];
+            } else {
+                return ['status' => 'error', 'msg' => ' Data Not Added.'];
+            }  
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }      
+    }
+
+    
+
 
   
 }

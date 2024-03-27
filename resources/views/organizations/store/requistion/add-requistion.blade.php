@@ -100,75 +100,20 @@ label.error {
                                             {{-- =================== --}}
 
                                             <div class="row">
+                                               
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                   <label for="req_name">Requistion Name :</label>
-                                                    <input type="text" class="form-control" id="req_name"
-                                                        name="req_name" placeholder="Enter your requistion name ">
-                                                </div>
-
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                   <label for="req_number">Requistion Number :</label>
-                                                    <input type="text" class="form-control" id="req_number"
-                                                        name="req_number" placeholder="Enter your requistion number ">
-                                                </div>
-
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                   <label for="req_date">Requistion Date :</label>
-                                                    <input type="date" class="form-control" id="req_date"
-                                                        name="req_date" placeholder="Enter requistion date ">
-                                                </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="signature">Signature :</label>
-                                                     <input type="file" class="form-control" accept="image/*" id="signature"
-                                                         name="signature" placeholder="Enter signature">
+                                                    <label for="bom_file_req">Bill Of Material :</label>
+                                                     <input type="file" class="form-control" accept="image/*" id="bom_file_req"
+                                                         name="bom_file_req" placeholder="Enter bom_file_req">
+                                                         <input type="hidden" class="form-control" id="production_id"
+                                                        name="production_id" value="{{$createRequesition}}" placeholder="Enter your requistion number ">
                                                  </div>
                                                 </div>
 
 
                                                 <div style="margin-top:30px;" >
                                                 <!-- <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 " > -->                                    
-                                                <table class="table table-bordered" id="dynamicTable">
-
-                                                    <tr>
-                                                        <th>Description</th>
-                                                        <th>Quantity</th>
-                                                        <th>Unit</th>
-                                                        <th>Day</th>
-                                                        <th>Remark</th>
-                                                        <th>Stock</th>
-                                                        <th>Action</th>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td><input type="text" name="addmore[0][description]"
-                                                                placeholder="Enter your description" class="form-control" />
-                                                        </td>
-
-                                                        <td><input type="text" name="addmore[0][quantity]"
-                                                                placeholder="Enter your quntity" class="form-control" />
-                                                        </td>
-
-                                                        <td><input type="text" name="addmore[0][unit]"
-                                                                placeholder="Enter your unit" class="form-control" />
-                                                        </td>
-                                                        <td><input type="text" name="addmore[0][day]"
-                                                                placeholder="Enter your day" class="form-control" />
-                                                        </td>
-                                                        <td><input type="text" name="addmore[0][remark]"
-                                                                placeholder="Enter your remark" class="form-control" />
-                                                        </td>
-                                                        <td><input type="text" name="addmore[0][stock]"
-                                                                placeholder="Enter your stock" class="form-control" />
-                                                        </td>
-
-                                                        <td><button type="button" name="add" id="add"
-                                                                class="btn btn-success">Add More</button></td>
-
-                                                    </tr>
-
-                                                </table>
-                                                <!-- </div> -->
-                                                </div>
+                                                                                                </div>
                                             <div class="login-btn-inner">
                                                 <div class="row">
                                                     <div class="col-lg-5"></div>
@@ -177,8 +122,8 @@ label.error {
                                                             <a href="{{ route('list-requistion') }}" class="btn btn-white"
                                                                 style="margin-bottom:50px">Cancel</a>
                                                             <button class="btn btn-sm btn-primary login-submit-cs"
-                                                                type="submit" style="margin-bottom:50px">Save
-                                                                Data</button>
+                                                                type="submit" style="margin-bottom:50px">Submit Requisition Details To Production 
+                                                                </button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -237,7 +182,7 @@ jQuery(document).ready(function($) {
             req_name: {
                 required: true,
             },
-            req_number: {
+            production_id: {
                 required: true,
             },
             req_date: {
@@ -276,7 +221,7 @@ jQuery(document).ready(function($) {
             req_name: {
                 required: "Please enter requistion name.",
             },
-            req_number: {
+            production_id: {
                 required: "Please enter requistion number.",
             },
             req_date: {

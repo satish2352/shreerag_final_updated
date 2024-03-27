@@ -14,14 +14,13 @@ return new class extends Migration
     public function up()
     {
         Schema::create('requisition', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('req_name');
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('design_id');
             $table->unsignedBigInteger('production_id');
             $table->string('req_date');
-            $table->string('signature')->nullable();
-            $table->boolean('is_approve')->default(false);
+            $table->string('bom_file')->nullable();
             $table->boolean('is_deleted')->default(false);
             $table->boolean('is_active')->default(true);
             $table->timestamps();

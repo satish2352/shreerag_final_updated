@@ -8,7 +8,8 @@ use App\Models\ {
     DesignModel,
     BusinessApplicationProcesses,
     ProductionModel,
-    DesignRevisionForProd
+    DesignRevisionForProd,
+    Requisition
     };
 use Config;
 
@@ -32,5 +33,51 @@ class StoreRepository {
             return $e;
         }
     } 
+
+    public function addAll($request)
+    {
+        try {
+            $business_application = BusinessApplicationProcesses::where('production_id', $request->production_id)->first();
+            $dataOutput = new Requisition();
+            $dataOutput->business_id = $business_application->business_id;
+            $dataOutput->design_id = $business_application->design_id;
+            $dataOutput->production_id = $business_application->production_id;
+            $dataOutput->req_date= date('Y-m-d');
+            $dataOutput->bom_file= 'null';
+            $dataOutput->save();
+            $last_insert_id = $dataOutput->id;
+        
+            // Updating image name in requisition
+            $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->bom_file->extension();
+            $finalOutput = Requisition::find($last_insert_id);
+            $finalOutput->bom_file = $imageName;
+            $finalOutput->save();
+
+
+            if ($business_application) {
+                $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE');
+                // $business_application->design_id = $dataOutput->id;
+                $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.ACCEPTED_DESIGN_BY_PRODUCTION');
+                // $business_application->production_id = $production_data->id;
+                $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.BOM_SENT_TO_STORE_DEPT_FOR_CHECKING');
+                $business_application->store_status_id = config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE');
+                $business_application->requisition_id = $last_insert_id;
+                $dataOutput->purchase_dept_req_sent_date= date('Y-m-d');
+                $business_application->purchase_status_id = config('constants.PUCHASE_DEPARTMENT.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE');
+                $business_application->save();
+
+            }
+
+            return [
+                'ImageName' => $imageName,
+                'status' => 'success'
+            ];
+        } catch (\Exception $e) {
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error'
+            ];
+        }
+    }
 
 }

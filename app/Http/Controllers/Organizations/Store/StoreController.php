@@ -12,14 +12,16 @@ use Carbon;
 
 
 class StoreController extends Controller
-{ 
-    public function __construct(){
+{
+    public function __construct()
+    {
         $this->service = new StoreServices();
     }
 
 
 
-    public function orderAcceptedAndMaterialForwareded($id){
+    public function orderAcceptedAndMaterialForwareded($id)
+    {
         try {
             $acceptdesign = base64_decode($id);
             $update_data = $this->service->orderAcceptedAndMaterialForwareded($acceptdesign);
@@ -27,23 +29,68 @@ class StoreController extends Controller
         } catch (\Exception $e) {
             return $e;
         }
-    } 
+    }
 
 
-    public function createRequesition($id){
+    public function createRequesition($createRequesition)
+    {
         try {
-            $acceptdesign = base64_decode($id);
-            $update_data = $this->service->orderAcceptedAndMaterialForwareded($acceptdesign);
-            return redirect('list-accepted-design-from-prod');
+            return view('organizations.store.requistion.add-requistion', compact('createRequesition'));
         } catch (\Exception $e) {
             return $e;
         }
-    } 
+    }
 
 
-    
-    
- 
+
+    public function store(Request $request)
+    {
+        $rules = [
+            'production_id' => 'required|string',
+            'bom_file_req' => 'required|image|mimes:jpeg,png,jpg|',
+        ];
+
+        $rules['bom_file_req'] = 'required|image|mimes:xls,xlsx|max:' . Config::get("AllFileValidation.REQUISITION_IMAGE_MAX_SIZE") . '|min:' . Config::get("AllFileValidation.REQUISITION_IMAGE_MIN_SIZE");
+
+        //|dimensions:min_width=1500,min_height=500,max_width=2000,max_height=1000
+
+        $messages = [
+            'production_id.required' => 'Please Enter Requisition number.',
+            'production_id.string' => 'The Requisition number must be a valid string.',
+
+            'bom_file_req.required' => 'The image is required.',
+            'bom_file_req.mimes' => 'The image must be excel format.',
+            'bom_file_req.max' => 'The image size must not exceed ' . Config::get("AllFileValidation.REQUISITION_IMAGE_MAX_SIZE") . 'KB .',
+            'bom_file_req.min' => 'The image size must not be less than ' . Config::get("AllFileValidation.REQUISITION_IMAGE_MIN_SIZE") . 'KB .',
+        ];
+
+
+        try {
+            $validation = Validator::make($request->all(), $rules, $messages);
+
+            if ($validation->fails()) {
+                return redirect('add-requsition')
+                    ->withInput()
+                    ->withErrors($validation);
+            } else {
+                $add_record = $this->service->addAll($request);
+
+                if ($add_record) {
+                    $msg = $add_record['msg'];
+                    $status = $add_record['status'];
+
+                    if ($status == 'success') {
+                        return redirect('list-requistion')->with(compact('msg', 'status'));
+                    } else {
+                        return redirect('add-requistion')->withInput()->with(compact('msg', 'status'));
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            return redirect('add-requistion')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+        }
+    }
+
 
 
 }
