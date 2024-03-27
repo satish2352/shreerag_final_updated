@@ -58,23 +58,19 @@ class DesignUploadController extends Controller
     public function update(Request $request){
             
         $rules = [
-            // 'design_image' => 'required|image|mimes:jpeg,png,jpg|max:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'|dimensions:min_width=300,min_height=300,max_width=2000,max_height=2000|min:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'',
-            // 'bom_image' => 'required|image|mimes:jpeg,png,jpg|max:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'|dimensions:min_width=300,min_height=300,max_width=2000,max_height=2000|min:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'',
+            'design_image' => 'required|image|mimes:pdf|max:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'',
+            'bom_image' => 'required|image|mimes:xls,xlsx|max:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'',
          ];
 
          $messages = [
-            // 'design_image.required' => 'The design image is required.',
-            // 'design_image.image' => 'The design image must be a valid image file.',
-            // 'design_image.mimes' => 'The design image must be in JPEG, PNG, JPG format.',
-            // 'design_image.max' => 'The design image size must not exceed '.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'KB .',
-            // 'design_image.min' => 'The design image size must not be less than '.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'KB .',
-            // 'design_image.dimensions' => 'The design image dimensions must be between 300x300 and 2000x2000 pixels.',
-            // 'bom_image.required' => 'The bom image is required.',
-            // 'bom_image.image' => 'The bom image must be a valid image file.',
-            // 'bom_image.mimes' => 'The bom image must be in JPEG, PNG, JPG format.',
-            // 'bom_image.max' => 'The bom image size must not exceed '.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'KB .',
-            // 'bom_image.min' => 'The image bom size must not be less than '.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'KB .',
-            // 'bom_image.dimensions' => 'The bom image dimensions must be between 300x300 and 2000x2000 pixels.',
+            'design_image.required' => 'The design pdf is required.',
+            'design_image.mimes' => 'The design pdf must be in PDF format.',
+            'design_image.max' => 'The design pdf size must not exceed '.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'KB .',
+            'design_image.min' => 'The design pdf size must not be less than '.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'KB .',
+            'bom_image.required' => 'The bill of material excel sheet is required.',
+            'bom_image.mimes' => 'The bill of material excel sheet must be in XLS XLSX format.',
+            'bom_image.max' => 'The bill of material excel sheet size must not exceed '.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'KB .',
+            'bom_image.min' => 'The bill of material excel size must not be less than '.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'KB .',
                  ];
  
          try {
@@ -115,12 +111,12 @@ class DesignUploadController extends Controller
          ];
 
          $messages = [
-            // 'design_image.required' => 'The design image is required.',
-            // 'design_image.image' => 'The design image must be a valid image file.',
-            // 'design_image.mimes' => 'The design image must be in JPEG, PNG, JPG format.',
-            // 'design_image.max' => 'The design image size must not exceed '.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'KB .',
-            // 'design_image.min' => 'The design image size must not be less than '.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'KB .',
-            // 'design_image.dimensions' => 'The design image dimensions must be between 300x300 and 2000x2000 pixels.',
+            // 'design_image.required' => 'The design pdf is required.',
+            // 'design_image.image' => 'The design pdf must be a valid image file.',
+            // 'design_image.mimes' => 'The design pdf must be in JPEG, PNG, JPG format.',
+            // 'design_image.max' => 'The design pdf size must not exceed '.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'KB .',
+            // 'design_image.min' => 'The design pdf size must not be less than '.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'KB .',
+            // 'design_image.dimensions' => 'The design pdf dimensions must be between 300x300 and 2000x2000 pixels.',
             // 'bom_image.required' => 'The bom image is required.',
             // 'bom_image.image' => 'The bom image must be a valid image file.',
             // 'bom_image.mimes' => 'The bom image must be in JPEG, PNG, JPG format.',

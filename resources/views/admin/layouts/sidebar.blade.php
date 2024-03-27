@@ -79,19 +79,19 @@
 
                     @if (session()->get('role_id') == config('constants.ROLE_ID.HIGHER_AUTHORITY'))
                     <ul class="sidebar-menu" id="nav-accordion">
-                        <li class="{{ request()->is('organizations-list-employees') ? 'active' : '' }}">
+                        <li class="{{ request()->is('owner/organizations-list-employees') ? 'active' : '' }}">
                             <a title="Inbox" href="{{ route('organizations-list-employees') }}"><i class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span class="mini-sub-pro">Add Employees</span></a>
                         </li>
-                        <li class="{{ request()->is('list-business') ? 'active' : '' }}">
+                        <li class="{{ request()->is('owner/list-business') ? 'active' : '' }}">
                             <a title="Inbox" href="{{ route('list-business') }}"><i class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span class="mini-sub-pro">Business</span></a>
                         </li>
-                        <li class="{{ request()->is('list-forwarded-to-design') ? 'active' : '' }}">
+                        <li class="{{ request()->is('owner/list-forwarded-to-design') ? 'active' : '' }}">
                             <a href="{{ route('list-forwarded-to-design') }}" aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">Business Sent For Design</span></a>
                         </li>
-                        <li class="{{ request()->is('list-design-upload') ? 'active' : '' }}">
+                        <li class="{{ request()->is('owner/list-design-upload') ? 'active' : '' }}">
                             <a href="{{ route('list-design-upload') }}" aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">Design Received For Production</span></a>
                         </li>
-                        <li class="{{ request()->is('list-design-correction') ? 'active' : '' }}">
+                        <li class="{{ request()->is('owner/list-design-correction') ? 'active' : '' }}">
                             <a href="{{ route('list-design-correction') }}" aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">Design Received For Design Correction</span></a>
                         </li>
                     </ul>

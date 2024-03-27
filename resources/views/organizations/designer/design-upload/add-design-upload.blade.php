@@ -73,15 +73,15 @@
                                                 <div class="row">
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="design_image">Upload Design Layout:</label>
-                                                        <input type="file" class="form-control" accept="image/*"
+                                                        <input type="file" class="form-control" accept="application/pdf"
                                                             id="design_image" name="design_image">
                                                         @if ($errors->has('design_image'))
                                                             <span class="red-text"><?php echo $errors->first('design_image', ':message'); ?></span>
                                                         @endif
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="bom_image">upload BOM:</label>
-                                                        <input type="file" class="form-control" accept="image/*"
+                                                        <label for="bom_image">Upload BOM:</label>
+                                                        <input type="file" class="form-control" accept=".xls, .xlsx"
                                                             id="bom_image" name="bom_image">
                                                         @if ($errors->has('bom_image'))
                                                             <span class="red-text"><?php echo $errors->first('bom_image', ':message'); ?></span>
@@ -126,21 +126,21 @@
                 rules: {
                     design_image: {
                         required: true,
-                        accept: "image/*",
+                        accept: "application/pdf", // Specify PDF MIME type
                     },
                     bom_image: {
                         required: true,
-                        accept: "image/*",
+                        accept: ".xls,.xlsx",
                     },
                 },
                 messages: {
                     design_image: {
-                        required: "Please select design layout image .",
-                        accept: "Please select an  design layout image file.",
+                        required: "Please select design layout pdf .",
+                        accept: "Please select an  design layout pdf file.",
                     },
                     bom_image: {
-                        required: "Please select bom image .",
-                        accept: "Please select an bom image file.",
+                        required: "Please select bom excel .",
+                        accept: "Please select an bom excel file.",
                     },
                 },
             });
