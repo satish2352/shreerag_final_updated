@@ -29,13 +29,15 @@ padding-left: 20px !important;
                     <div class="sparkline13-hd">
                         <div class="main-sparkline13-hd">
                             <h1>New Design Recived For Production <span class="table-project-n"></span></h1>
-                                <div class="form-group-inner login-btn-inner row">
-                                    <div class="col-lg-2" >
-                                        {{-- <div class="login-horizental cancel-wp pull-left">
-                                                <a href="{{ route('add-design-upload') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Design</button></a>
-                                        </div> --}}
-                                    </div>
-                                <div class="col-lg-10"></div>
+                            <div class="form-group-inner login-btn-inner row">
+                                <div class="col-lg-2" >
+                                    {{-- <div class="login-horizental cancel-wp pull-left">
+                                            <a href="{{ route('add-design-upload') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Design</button></a>
+                                    </div> --}}
+                                </div>
+                                <div class="col-lg-10">
+                                    
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -104,11 +106,11 @@ padding-left: 20px !important;
                                             <td> <img class="img-size"
                                                 src="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
                                                 alt="No Image" />
-                                        </td>
-                                        <td> <img class="img-size"
-                                                src="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                alt="No Image" />
-                                        </td>
+                                            </td>
+                                            <td> <img class="img-size"
+                                                    src="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
+                                                    alt="No Image" />
+                                            </td>
                                             
                                             <td>
                                                 <div style="display: flex; align-items: center;">
@@ -116,7 +118,7 @@ padding-left: 20px !important;
                                                     <a href="{{route('accept-design', base64_encode($data->productionId))}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i></button></a>
                                                 </div>
                                             </td>
-                                           </tr>
+                                        </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
