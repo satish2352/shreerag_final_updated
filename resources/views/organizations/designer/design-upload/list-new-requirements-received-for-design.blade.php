@@ -106,10 +106,10 @@ padding-left: 20px !important;
                                             
                                             {{-- <td><img style="max-width:250px; max-height:150px;" src="{{ Config::get('DocumentConstant.DESIGNS_VIEW') . $data->image }}" alt="{{ strip_tags($data['company_name']) }} Image" /></td> --}}
                                             <td>
-                                                <div class="col-lg-2" >
-                                                    <div class="login-horizental cancel-wp pull-left">
+                                                {{-- <div class="col-lg-2" >
+                                                    <div class="login-horizental cancel-wp pull-left"> --}}
                                                             <a href="{{ route('add-design-upload', base64_encode($data->business_id)) }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Design</button></a>
-                                                    </div>
+                                                    {{-- </div> --}}
                                                 </div>
                                                 {{-- <div style="display: flex; align-items: center;">
                                                     <a href="{{route('edit-designs', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>

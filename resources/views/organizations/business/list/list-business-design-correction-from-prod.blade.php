@@ -102,11 +102,11 @@ padding-left: 20px !important;
                                             <td>{{ucwords($data->remarks)}}</td>
                                             <td>{{ucwords($data->reject_reason_prod)}}</td>
                                             <td> <img class="img-size"
-                                                src="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
+                                                href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
                                                 alt="No Image" />
                                         </td>
                                         <td> <img class="img-size"
-                                                src="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
+                                                href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
                                                 alt="No Image" />
                                         </td>
                                             

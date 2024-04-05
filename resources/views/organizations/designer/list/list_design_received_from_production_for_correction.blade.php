@@ -102,26 +102,23 @@ padding-left: 20px !important;
                                             <td>{{ucwords($data->title)}}</td>
                                             <td>{{ucwords($data->descriptions)}}</td>
                                             <td>{{ucwords($data->remarks)}}</td>
-                                            <td> <img class="img-size"
-                                                src="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
-                                                alt="No Image" />
+                                            <td> <a class="img-size" target="_blank"
+                                                href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
+                                                alt="Design"> Click to view</a>
                                         </td>
-                                        <td> <img class="img-size"
-                                                src="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                alt="No Image" />
+                                        <td> <a class="img-size"
+                                                href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
+                                                alt="bill of material" >Click to download</a>
                                         </td>
                                             
                                         <td>{{ucwords($data->reject_reason_prod)}}</td>
                                         <td>
                                                 <div class="col-lg-2" >
                                                     <div class="login-horizental cancel-wp pull-left">
-                                                            <a href="{{ route('add-re-upload-design', base64_encode($data['design_revision_for_prod_id'])) }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Design</button></a>
+                                                            <a href="{{ route('add-re-upload-design', base64_encode($data['design_revision_for_prod_id'])) }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Revised Design</button></a>
                                                     </div>
                                                 </div>
-                                                {{-- <div style="display: flex; align-items: center;">
-                                                    <a href="{{route('edit-designs', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                                    <a href="{{route('delete-designs', base64_encode($data->id))}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash" aria-hidden="true"></i></button></a>
-                                                </div> --}}
+                                              
                                             </td>
                                            </tr>
                                         @endforeach

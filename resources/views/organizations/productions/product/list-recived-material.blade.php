@@ -103,14 +103,14 @@
                                                     <td>{{ ucwords($data->descriptions) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                     <td>{{ ucwords($data->store_material_sent_date) }}</td>
-                                                    <td> <img class="img-size"
-                                                            src="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
-                                                            alt="No Image" />
-                                                    </td>
-                                                    <td> <img class="img-size"
-                                                            src="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                            alt="No Image" />
-                                                    </td>
+                                                    <td> <a class="img-size" target="_blank"
+                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
+                                                        alt="Design"> Click to view</a>
+                                                </td>
+                                                <td> <a class="img-size"
+                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
+                                                        alt="bill of material" >Click to download</a>
+                                                </td>
 
                                                    
 

@@ -58,8 +58,8 @@ class DesignUploadController extends Controller
     public function update(Request $request){
             
         $rules = [
-            'design_image' => 'required|image|mimes:pdf|max:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'',
-            'bom_image' => 'required|image|mimes:xls,xlsx|max:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'',
+            'design_image' => 'required|mimes:pdf|max:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'',
+            // 'bom_image' => 'required|mimes:xls,xlsx|max:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'',
          ];
 
          $messages = [
@@ -68,13 +68,14 @@ class DesignUploadController extends Controller
             'design_image.max' => 'The design pdf size must not exceed '.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'KB .',
             'design_image.min' => 'The design pdf size must not be less than '.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'KB .',
             'bom_image.required' => 'The bill of material excel sheet is required.',
-            'bom_image.mimes' => 'The bill of material excel sheet must be in XLS XLSX format.',
+            // 'bom_image.mimes' => 'The bill of material excel sheet must be in XLS XLSX format.',
             'bom_image.max' => 'The bill of material excel sheet size must not exceed '.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'KB .',
             'bom_image.min' => 'The bill of material excel size must not be less than '.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'KB .',
                  ];
  
          try {
              $validation = Validator::make($request->all(),$rules, $messages);
+            //  dd($validation);
              if ($validation->fails()) {
                  return redirect()->back()
                      ->withInput()

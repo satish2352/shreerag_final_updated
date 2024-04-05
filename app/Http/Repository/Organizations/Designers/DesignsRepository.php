@@ -103,10 +103,10 @@ class DesignsRepository  {
                     'status' => 'error',
                 ];
             }
-            
+
             // Store the design and bom image names
-            $designImageName = $dataOutput->id . '_' . rand(100000, 999999) . '_design.' . $request->design_image->extension();
-            $bomImageName = $dataOutput->id . '_' . rand(100000, 999999) . '_bom.' . $request->bom_image->extension();
+            $designImageName = $dataOutput->id . '_' . rand(100000, 999999) . '_design.' . $request->design_image->getClientOriginalExtension();
+            $bomImageName = $dataOutput->id . '_' . rand(100000, 999999) . '_bom.' . $request->file('bom_image')->getClientOriginalExtension();
             
             // Update the design image and bom image fields in the DesignModel
             $dataOutput->design_image = $designImageName;

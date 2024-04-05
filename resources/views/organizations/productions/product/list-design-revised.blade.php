@@ -111,23 +111,23 @@
                                                     <td>{{ ucwords($data->descriptions) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                     <td>{{ ucwords($data->reject_reason_prod) }}</td>
-                                                    <td> <img class="img-size"
-                                                            src="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
-                                                            alt="No Image" />
-                                                    </td>
-                                                    <td> <img class="img-size"
-                                                            src="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                            alt="No Image" />
-                                                    </td>
+                                                    <td> <a class="img-size" target="_blank"
+                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
+                                                        alt="Design"> Click to view</a>
+                                                </td>
+                                                <td> <a class="img-size"
+                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
+                                                        alt="bill of material" >Click to download</a>
+                                                </td>
 
-                                                    <td> <img class="img-size"
-                                                            src="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_design_image'] }}"
-                                                            alt="No Image" />
-                                                    </td>
-                                                    <td> <img class="img-size"
-                                                            src="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_bom_image'] }}"
-                                                            alt="No Image" />
-                                                    </td>
+                                                <td> <a class="img-size" target="_blank"
+                                                    href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_design_image'] }}"
+                                                    alt="Design"> Click to view</a>
+                                            </td>
+                                            <td> <a class="img-size"
+                                                    href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_bom_image'] }}"
+                                                    alt="bill of material" >Click to download</a>
+                                            </td>
                                                     <td>{{ ucwords($data->remark_by_design) }}</td>
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
