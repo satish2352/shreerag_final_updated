@@ -44,7 +44,7 @@ class organizationRepository  {
 
             $dataOutput->save();
             $last_insert_id = $dataOutput->id;
-            $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->extension();
+            $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
 
             $finalOutput = OrganizationModel::find($last_insert_id);
             $finalOutput->image = $imageName;

@@ -55,7 +55,7 @@ class EmployeesRepository  {
             $dataOutput->organization_id = $request->session()->get('org_id');
             $dataOutput->save();
             $last_insert_id = $dataOutput->id;
-            $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->extension();
+            $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
 
             $finalOutput = EmployeesModel::find($last_insert_id);
             $finalOutput->emp_image = $imageName;

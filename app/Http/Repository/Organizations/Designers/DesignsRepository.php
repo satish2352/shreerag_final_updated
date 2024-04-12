@@ -183,8 +183,8 @@ class DesignsRepository  {
 
                 $designRevisionForProd->remark_by_design = $request->remark_by_design;
 
-                $designImageName = $designRevisionForProd->id . '_' . rand(100000, 999999) . '_re_design.' . $request->design_image->extension();
-                $bomImageName = $designRevisionForProd->id . '_' . rand(100000, 999999) . '_re_bom.' . $request->bom_image->extension();
+                $designImageName = $designRevisionForProd->id . '_' . rand(100000, 999999) . '_re_design.' . $request->design_image->getClientOriginalExtension();
+                $bomImageName = $designRevisionForProd->id . '_' . rand(100000, 999999) . '_re_bom.' . $request->bom_image->getClientOriginalExtension();
                 
                 // Update the design image and bom image fields in the DesignModel
                 $designRevisionForProd->design_image = $designImageName;

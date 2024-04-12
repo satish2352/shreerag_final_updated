@@ -54,7 +54,7 @@ class RegisterServices
                 $last_id = $this->repo->register($request);
                 $path = Config::get('DocumentConstant.USER_PROFILE_ADD');
                 //"\all_web_data\images\home\slides\\"."\\";
-                $userProfile = $last_id . '_english.' . $request->user_profile->extension();
+                $userProfile = $last_id . '_english.' . $request->user_profile->getClientOriginalExtension();
                 uploadImage($request, 'user_profile', $path, $userProfile);
              
                 if ($last_id) {
@@ -121,7 +121,7 @@ class RegisterServices
 
                 }
     
-                $englishImageName = $return_data['last_insert_id'] . '_english.' . $request->user_profile->extension();
+                $englishImageName = $return_data['last_insert_id'] . '_english.' . $request->user_profile->getClientOriginalExtension();
                 uploadImage($request, 'user_profile', $path, $englishImageName);
                 $slide_data = User::find($return_data['last_insert_id']);
                 $slide_data->user_profile = $englishImageName;
@@ -152,7 +152,7 @@ class RegisterServices
 
             }
 
-            $englishImageName = $return_data['last_insert_id'] . '_english.' . $request->user_profile->extension();
+            $englishImageName = $return_data['last_insert_id'] . '_english.' . $request->user_profile->getClientOriginalExtension();
             uploadImage($request, 'user_profile', $path, $englishImageName);
             $profile = User::find($return_data['last_insert_id']);
             $profile->user_profile = $englishImageName;
