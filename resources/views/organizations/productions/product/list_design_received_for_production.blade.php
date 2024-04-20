@@ -19,6 +19,12 @@ padding-left: 20px !important;
     font-size: 14px;
     text-align: left;
 }
+.mb-4{
+    margin-bottom:4%;
+}
+button.pd-setting-ed {
+    border: 1px solid rgb(0 0 0 / 39%) !important;
+}
 </style>
 
 <div class="data-table-area mg-tb-15">
@@ -114,8 +120,14 @@ padding-left: 20px !important;
                                             
                                             <td>
                                                 <div style="display: inline-block; align-items: center;">
-                                                    <a href="{{route('reject-design-edit', base64_encode($data->productionId))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Reject</button></a> &nbsp;
-                                                    <a href="{{route('accept-design', base64_encode($data->productionId))}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i> Accept </button></a>
+                                                    <a href="{{route('reject-design-edit', base64_encode($data->productionId))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed mb-4"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Reject</button></a> &nbsp;
+                                                    <a href="{{ route('accept-design', base64_encode($data->productionId)) }}"
+                                                        onclick="return confirmAccept('{{ route('accept-design', base64_encode($data->productionId)) }}')"
+                                                        class="pd-setting-ed"
+                                                        data-toggle="tooltip"
+                                                        title="Trash">
+                                                        <button><i class="fa fa-check" aria-hidden="true"></i> Accept </button>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -130,5 +142,28 @@ padding-left: 20px !important;
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+    function confirmAccept(acceptUrl) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to accept this design and send for production ?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, accept it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If user confirms, redirect to the accept URL
+                window.location.href = acceptUrl;
+            }
+        });
+        // Prevent the default link action until the user confirms
+        return false;
+    }
+</script>
 
 @endsection

@@ -72,7 +72,7 @@
                                                                                 value="{{ $idtoedit }}">
                                                                             <label for="remarks">Remark</label>
                                                                             <textarea class="form-control" rows="3" type="text" class="form-control" id="reject_reason_prod"
-                                                                                name="reject_reason_prod" placeholder="Enter Remark">{{ old('reject_reason_prod') }}</textarea>
+                                                                                name="reject_reason_prod" placeholder="Enter Remark" required>{{ old('reject_reason_prod') }}</textarea>
                                                                         </div>
                                                                         <div class="form-group">
                                                                             <div class="pwstrength_viewport_progress">
@@ -91,9 +91,7 @@
                                                                     <a href="{{ route('list-business') }}"
                                                                         class="btn btn-white"
                                                                         style="margin-bottom:50px">Cancel</a>
-                                                                    <button class="btn btn-sm btn-primary login-submit-cs"
-                                                                        type="submit" style="margin-bottom:50px">Save
-                                                                        Data</button>
+                                                                        <button class="btn btn-sm btn-primary login-submit-cs" id="saveButton" type="button" style="margin-bottom:50px">Save Data</button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -114,6 +112,8 @@
         <script src="{{ asset('js/password-meter/password-meter-active.js') }}"></script>
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
         <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+
         <script>
             jQuery.noConflict();
             jQuery(document).ready(function($) {
@@ -125,7 +125,7 @@
                         descriptions: {
                             required: true,
                         },
-                        remarks: {
+                        reject_reason_prod: {
                             required: true,
                         },
 
@@ -137,7 +137,7 @@
                         descriptions: {
                             required: "Please enter Description.",
                         },
-                        remarks: {
+                        reject_reason_prod: {
                             required: "Please enter Remark.",
                         },
 
@@ -145,4 +145,26 @@
                 });
             });
         </script>
+
+<script>
+    jQuery.noConflict();
+    jQuery(document).ready(function($) {
+        $("#saveButton").click(function() {
+            // Use SweetAlert to show a confirmation dialog
+            Swal.fire({
+                icon: 'question',
+                title: 'Are you sure?',
+                text: 'Do you want to reject this design and resend to Design Department ?',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    // If user clicks "Yes", submit the form
+                    $("#addEmployeeForm").submit();
+                }
+            });
+        });
+    });
+</script>
     @endsection

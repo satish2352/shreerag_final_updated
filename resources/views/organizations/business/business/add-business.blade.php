@@ -14,6 +14,7 @@
         align-items: center;
         }
     </style>
+    <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list">
@@ -119,11 +120,13 @@
             </div>
         </div>
     </div>
+    </div>
     <script src="{{ asset('js/password-meter/pwstrength-bootstrap.min.js') }}"></script>
     <script src="{{ asset('js/password-meter/zxcvbn.js') }}"></script>
     <script src="{{ asset('js/password-meter/password-meter-active.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
     <script>
         jQuery.noConflict();
         jQuery(document).ready(function($) {
@@ -152,7 +155,23 @@
                     },
 
                 },
-            });
+                submitHandler: function(form) {
+                // Use SweetAlert to show a confirmation dialog
+                Swal.fire({
+                    icon: 'question',
+                    title: 'Are you sure?',
+                    text: 'You want to submit this business to Design Department ?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No',
+                }).then(function(result) {
+                    if (result.isConfirmed) {
+                        // If user clicks "Yes", submit the form
+                        form.submit();
+                    }
+                });
+            }
         });
+    });
     </script>
 @endsection

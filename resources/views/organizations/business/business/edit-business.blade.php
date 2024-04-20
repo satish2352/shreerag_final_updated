@@ -47,7 +47,7 @@
                             <div class="all-form-element-inner">
                                 <div class="row d-flex justify-content-center form-display-center">
                                     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 ">
-                                <form action="{{ route('update-business') }}" method="POST" enctype="multipart/form-data">
+                                <form action="{{ route('update-business') }}" method="POST" enctype="multipart/form-data" id="editEmployeeForm">
                                     @csrf
                                     <div class="form-group-inner">
                                         <input type="hidden" class="form-control"
@@ -103,88 +103,46 @@
     <script src="{{ asset('js/password-meter/password-meter-active.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-    {{-- <script>
-   jQuery.noConflict();
-   jQuery(document).ready(function ($) {
-      $("#addEmployeeForm").validate({
-            rules: {
-                employee_name: {
-                    required: true,
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+    <script>
+        jQuery.noConflict();
+        jQuery(document).ready(function($) {
+            $("#editEmployeeForm").validate({
+                rules: {
+                    title: {
+                        required: true,
+                    },
+                    descriptions: {
+                        required: true,
+                    },
+                    remarks: {
+                        required: true,
+                    },
+
                 },
-                email: {
-                    required: true,
-                    email: true,
+                messages: {
+                    title: {
+                        required: "Please enter Title.",
+                    },
+                    descriptions: {
+                        required: "Please enter Description.",
+                    },
+                    remarks: {
+                        required: "Please enter Remark.",
+                    },
+
                 },
-                mobile_number: {
-                    required: true,
-                },
-                address: {
-                    required: true,
-                },
-                department_id: {
-                    required: true,
-                },
-                role_id: {
-                    required: true,
-                },
-                image: {
-                    required: true,
-                    accept: "image/*",
-                },
-                password: {
-                    required: true,
-                },
-            },
-            messages: {
-                employee_name: {
-                    required: "Please enter employee name.",
-                },
-                email: {
-                    required: "Please enter a valid email address.",
-                    email: "Please enter a valid email address.",
-                },
-                mobile_number: {
-                    required: "Please enter mobile number.",
-                },
-                address: {
-                    required: "Please enter employee address.",
-                },
-                department_id: {
-                    required: "Please select a department.",
-                },
-                role_id: {
-                    required: "Please select a role.",
-                },
-                image: {
-                    required: "Please select an image.",
-                    accept: "Please select a valid image file.",
-                },
-                password: {
-                    required: "Please enter a password.",
-                },
-            },
+                submitHandler: function(form) {
+                // Use SweetAlert to show a success message
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Form submitted successfully.',
+                }).then(function() {
+                    form.submit(); // Submit the form after the user clicks OK
+                });
+            }
         });
     });
-    $("#image").change(function () {
-        readURL(this);
-    });
-
-    function readURL(input) {
-        var oldImageName = "@if (isset($editData)) {{ $editData->image }} @endif";
-        $("#image").val(oldImageName);
-        $("#oldImageDisplay img").show(); // Show the old image
-        $("#selectedImageDisplay").hide(); // Hide the selected image display
-
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                $("#selectedImageDisplay img").attr('src', e.target.result);
-                $("#oldImageDisplay img").hide(); // Hide the old image
-                $("#selectedImageDisplay").show(); // Show the selected image
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-});
-</script> --}}
+    </script>
 @endsection

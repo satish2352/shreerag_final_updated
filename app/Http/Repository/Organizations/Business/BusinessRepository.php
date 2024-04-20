@@ -72,7 +72,7 @@ public function addAll($request)
         $business_application->save();
 
         return [
-            'msg' => 'Data Added Successfully',
+            'msg' => 'This business send to Design Department Successfully',
             'status' => 'success'
         ];
 
@@ -122,7 +122,7 @@ public function addAll($request)
             $dataOutput->save();
 
             return [
-            'msg' => 'Data Added Successfully',
+            'msg' => 'This business send to Design Department Successfully',
             'status' => 'success'
         ];
         
