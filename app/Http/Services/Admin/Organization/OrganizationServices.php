@@ -63,12 +63,12 @@ class OrganizationServices
 
                 }
                 if ($request->hasFile('image')) {
-                    $englishImageName = $return_data['last_insert_id'] . '_' . rand(100000, 999999) . '_image.' . $request->file('image')->extension();
+                    $englishImageName = $return_data['last_insert_id'] . '_' . rand(100000, 999999) . '_image.' . $request->file('image')->getClientOriginalExtension();
                     
                 } else {
                     
                 }                
-                // $englishImageName = $return_data['last_insert_id'] . '_' . rand(100000, 999999) . '_image.' . $request->image->extension();
+                // $englishImageName = $return_data['last_insert_id'] . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
                 uploadImage($request, 'image', $path, $englishImageName);
                 $slide_data = OrganizationModel::find($return_data['last_insert_id']);
                 $slide_data->image = $englishImageName;

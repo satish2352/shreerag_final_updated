@@ -100,7 +100,7 @@ class RegisterRepository
 		$last_insert_id = $user_data->id;
 		// $this->insertRolesPermissions($request, $last_insert_id);
 
-		$imageProfile = $last_insert_id . '_english.' . $request->user_profile->extension();
+		$imageProfile = $last_insert_id . '_english.' . $request->user_profile->getClientOriginalExtension();
         
         $user_detail = User::find($last_insert_id); // Assuming $request directly contains the ID
         $user_detail->user_profile = $imageProfile; // Save the image filename to the database

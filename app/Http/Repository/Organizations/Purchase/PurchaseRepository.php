@@ -56,7 +56,7 @@ public function addAll($request)
         }
 
         // Updating image name in PurchaseOrderModel
-        $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->extension();
+        $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
         $finalOutput = PurchaseOrderModel::find($last_insert_id);
         $finalOutput->image = $imageName;
         $finalOutput->save();
@@ -140,7 +140,7 @@ public function addAll($request)
     
             // Updating image name in PurchaseOrderModel if a new image is uploaded
             if ($request->hasFile('image')) {
-                $imageName = $dataOutput->id . '_' . rand(100000, 999999) . '_image.' . $request->image->extension();
+                $imageName = $dataOutput->id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
                 $dataOutput->image = $imageName;
                 $dataOutput->save();
             }

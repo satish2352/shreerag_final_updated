@@ -61,7 +61,7 @@ class EmployeesHrServices
 
                 }
                 if ($request->hasFile('image')) {
-                    $englishImageName = $return_data['last_insert_id'] . '_' . rand(100000, 999999) . '_image.' . $request->file('image')->extension();
+                    $englishImageName = $return_data['last_insert_id'] . '_' . rand(100000, 999999) . '_image.' . $request->file('image')->getClientOriginalExtension();
                     
                 } else {
                     
