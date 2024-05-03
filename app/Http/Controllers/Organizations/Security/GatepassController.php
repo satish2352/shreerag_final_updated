@@ -21,6 +21,14 @@ class GatepassController extends Controller
     // }
 
 
+    
+    public function searchByPONo(){
+        try {
+            return view('organizations.security.search-by-pono');
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }  
 
     public function index(){
         try {

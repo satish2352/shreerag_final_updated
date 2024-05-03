@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::create('purchase_orders', function (Blueprint $table) {
                 $table->id();
+                $table->unsignedBigInteger('purchase_orders_id');
+                $table->unsignedBigInteger('requisition_id');
+                $table->unsignedBigInteger('business_id');
+                $table->unsignedBigInteger('production_id');
                 $table->string('po_date')->nullable();
                 $table->string('vendor_id')->nullable();
                 $table->string('terms_condition')->nullable();
