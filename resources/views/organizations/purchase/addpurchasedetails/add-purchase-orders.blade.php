@@ -102,14 +102,13 @@
                           <th class="col-md-2">Quantity</th>
                           <th class="col-md-2">Rate</th>
                           <th>Amount</th>
-                          <th><button type="button" class="btn btn-sm btn-success font-18 mr-1" title="Add"
-                              data-repeater-create>
+                          <th><button type="button" class="btn btn-sm btn-success font-18 mr-1" title="Add" data-repeater-create>
                               <i class="fa fa-plus"></i>
                             </button> </th>
                         </tr>
                       </thead>
-                      <tbody data-repeater-list="items">
-                        <tr data-repeater-item>
+                      <tbody >
+                        <tr >
                           <td>
                             <input type="text" name="id" class="form-control" style="min-width:50px" readonly value="1">
                           </td>
@@ -188,112 +187,7 @@
             </form>
           </div>
         </div>
-        @endsection
 
+       
 
-        @section('scripts')
-        <!-- Select2 JS -->
-        <script src="{{asset('assets/plugins/select2/select2.min.js')}}"></script>
-        <script src="{{asset('assets/js/bootstrap-datetimepicker.min.js')}}"></script>
-        <script src="{{asset('assets/plugins/jquery-repeater/jquery.repeater.min.js')}}"></script>
-        <script>
-        $(document).ready(function() {
-          'use strict';
-          var index = 0;
-
-          var tax = $('#inv_tax').val();
-
-          function dateTime() {
-            $('.datetimepicker').datetimepicker({
-              format: 'YYYY-MM-DD ', // Adjust the format as needed
-              showClear: true,
-              showClose: true,
-              icons: {
-                time: 'fa fa-clock-o',
-                date: 'fa fa-calendar',
-                up: 'fa fa-chevron-up',
-                down: 'fa fa-chevron-down',
-                previous: 'fa fa-chevron-left',
-                next: 'fa fa-chevron-right',
-                today: 'fa fa-crosshairs',
-                clear: 'fa fa-trash',
-                close: 'fa fa-times',
-              },
-              useCurrent: false, // Do not default to the current date
-              widgetPositioning: {
-                horizontal: 'auto',
-                vertical: 'bottom',
-              },
-            });
-          }
-
-          $('table.repeater').repeater({
-
-            show: function() {
-              var id = $(`input[name="items[${index}][id]"]`);
-              var part_no = $(`input[name="items[${index}][part_no]"]`);
-              var description = $(`input[name="items[${index}][description]"]`);
-              var due_date = $(`input[name="items[${index}][due_date]"]`);
-              var hsn = $(`input[name="items[${index}][hsn]"]`);
-              var quantity = $(`input[name="items[${index}][quantity]"]`);
-              var rate = $(`input[name="items[${index}][rate]"]`);
-              var amount = $(`input[name="items[${index}][amount]"]`);
-              var item_amount = rate.val() * quantity.val();
-              console.log(amount.val(item_amount))
-              amount.val(item_amount);
-
-              due_date.datetimepicker({
-                format: 'YYYY-MM-DD HH:mm', // Adjust the format as needed
-                showClear: true,
-                showClose: true,
-                icons: {
-                  time: 'fa fa-clock-o',
-                  date: 'fa fa-calendar',
-                  up: 'fa fa-chevron-up',
-                  down: 'fa fa-chevron-down',
-                  previous: 'fa fa-chevron-left',
-                  next: 'fa fa-chevron-right',
-                  today: 'fa fa-crosshairs',
-                  clear: 'fa fa-trash',
-                  close: 'fa fa-times'
-                },
-                useCurrent: false, // Do not default to the current date
-                widgetPositioning: {
-                  horizontal: 'auto',
-                  vertical: 'bottom'
-                }
-              });
-              index++;
-              id.val(index).trigger('change');
-              $(this).slideDown();
-              dateTime();
-            },
-
-            hide: function(deleteElement) {
-              index--;
-              $(this).slideUp(deleteElement);
-            },
-          });
-
-          dateTime();
-
-          $('#forms').validate({
-            rules: {
-              client_name: {
-                required: true,
-              },
-            },
-            messages: {
-              client_name: {
-                required: 'Please enter client name',
-              },
-
-            },
-            submitHandler: function(form) {
-              // Form submission logic (e.g., AJAX request)
-              form.submit();
-            },
-          });
-        });
-        </script>
         @endsection

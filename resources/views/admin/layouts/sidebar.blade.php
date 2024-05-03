@@ -305,6 +305,13 @@
                                 <span class="mini-click-non">Requirements Sent To Production</span>
                             </a>
                         </li>
+
+                        <li class="{{ request()->is('list-material-sent-to-purchase') ? 'active' : '' }}">
+                            <a href="{{ route('list-material-sent-to-purchase') }}">
+                                <i class="fa big-icon fa-envelope icon-wrap"></i>
+                                <span class="mini-click-non">Requirements Sent To Purchase</span>
+                            </a>
+                        </li>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.HR'))
                         <li>

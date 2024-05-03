@@ -17,7 +17,7 @@ class PurchaseOrderController extends Controller
     {
         $title = 'Purchase Orders';
         $getOutput = PurchaseOrdersModel::get();
-        return view('organizations.purchase.invoices.list-purchase-orders',compact(
+        return view('organizations.purchase.addpurchasedetails.list-purchase-orders',compact(
             'title','getOutput'
         ));
     }
@@ -30,7 +30,7 @@ class PurchaseOrderController extends Controller
     public function create()
     {
         $title = 'create invoice';
-        return view('organizations.purchase.invoices.add-purchase-orders',compact(
+        return view('organizations.purchase.addpurchasedetails.add-purchase-orders',compact(
             'title'
         ));
     }
@@ -101,7 +101,7 @@ class PurchaseOrderController extends Controller
         $invoice = PurchaseOrdersModel::find($show_data_id);
         // dd($invoice);
         $title = 'view invoice';
-        return view('organizations.purchase.invoices.show-purchase-orders',compact('invoice','title'));
+        return view('organizations.purchase.addpurchasedetails.show-purchase-orders',compact('invoice','title'));
     }
 
     public function show21(Request $request)
@@ -110,7 +110,7 @@ class PurchaseOrderController extends Controller
         $invoice = PurchaseOrdersModel::find($show_data_id);
         // dd($invoice);
         $title = 'view invoice';
-        return view('organizations.purchase.invoices.show-purchase-orders21',compact('invoice','title'));
+        return view('organizations.purchase.addpurchasedetails.show-purchase-orders21',compact('invoice','title'));
     }
 
     public function showpurchase(Request $request)
@@ -119,7 +119,7 @@ class PurchaseOrderController extends Controller
         $invoice = PurchaseOrdersModel::find($show_data_id);
         dd($invoice);
         $title = 'view invoice';
-        return view('organizations.purchase.invoices.show-purchase-orders1',compact('invoice','title'));
+        return view('organizations.purchase.addpurchasedetails.show-purchase-orders1',compact('invoice','title'));
     }
 
      
@@ -129,7 +129,7 @@ class PurchaseOrderController extends Controller
         $invoice = PurchaseOrdersModel::find($show_data_id);
         // dd($invoice);
         $title = 'edit invoice';
-        return view('organizations.purchase.invoices.edit-purchase-orders',compact(
+        return view('organizations.purchase.addpurchasedetails.edit-purchase-orders',compact(
             'title','invoice'
         ));
     }

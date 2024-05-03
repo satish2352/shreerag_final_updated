@@ -35,5 +35,14 @@ class AllListServices
     }
 
 
+    public function getAllListMaterialSentToPurchase(){
+        try {
+            return $this->repo->getAllListMaterialSentToPurchase();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+
 
 }
