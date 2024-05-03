@@ -118,6 +118,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <script>
         jQuery.noConflict();
@@ -143,6 +144,22 @@
                         accept: "Please select an bom excel file.",
                     },
                 },
+                submitHandler: function(form) {
+                    // Use SweetAlert to show a confirmation dialog
+                    Swal.fire({
+                        icon: 'question',
+                        title: 'Are you sure?',
+                        text: 'You want to send this design to Production Department ?',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No',
+                    }).then(function(result) {
+                        if (result.isConfirmed) {
+                            // If user clicks "Yes", submit the form
+                            form.submit();
+                        }
+                    });
+                }
             });
         });
     </script>
