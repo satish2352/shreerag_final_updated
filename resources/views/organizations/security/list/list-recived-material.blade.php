@@ -31,7 +31,7 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Material Recived From<span class="table-project-n">Store</span> Department</h1>
+                                <h1>Material Recived <span class="table-project-n">And Need To Forward To Store</span> Department</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
                                         {{-- <div class="login-horizental cancel-wp pull-left">
@@ -86,8 +86,8 @@
                                                 <th data-field="grn_date" data-editable="true">Description</th>
                                                 <th data-field="purchase_id" data-editable="true">Remark</th>
                                                 <th data-field="store_material_sent_date" data-editable="true">Matrial Recieved Date</th>
-                                                <th data-field="design_image" data-editable="false">Design Layout</th>
-                                                <th data-field="bom_image" data-editable="false">BOM</th>
+                                                <th data-field="design_image" data-editable="false">Purchase order</th>
+                                                <th data-field="bom_image" data-editable="false">Genrate Gate Pass</th>
 
                                             </tr>
 
@@ -107,10 +107,12 @@
                                                         href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
                                                         alt="Design"> Click to view</a>
                                                 </td>
-                                                <td> <a class="img-size"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                        alt="bill of material" >Click to download</a>
-                                                </td>
+
+                                                <td> <a class="btn btn-sm btn-primary login-submit-cs" type="button"
+                                                    href="{{route('add-gatepass-with-po', base64_encode($data->purchase_orders_id))}}"
+                                                    alt="Design">Ganerate Gate Pass New</a>
+                                            </td>
+                                             
 
                                                    
 

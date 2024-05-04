@@ -31,7 +31,7 @@ class AllListController extends Controller
               ->leftJoin('businesses', function($join) {
                 $join->on('business_application_processes.business_id', '=', 'businesses.id');
               })
-              ->where('purchase_orders_id', 'like', '%' . $request->purchase_orders_id . '%')
+              ->where('purchase_orders.purchase_orders_id', 'like', '%' . $request->purchase_orders_id . '%')
               ->where('businesses.is_active',true)
               ->select(
                   'businesses.id',
@@ -41,6 +41,7 @@ class AllListController extends Controller
                   'businesses.is_active',
                   'production.business_id',
                   'production.id as productionId',
+                  'purchase_orders.purchase_orders_id'
                 //   'design_revision_for_prod.reject_reason_prod',
                 //   'design_revision_for_prod.id as design_revision_for_prod_id',
                 //   'designs.bom_image',
