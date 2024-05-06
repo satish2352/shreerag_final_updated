@@ -26,6 +26,16 @@ return new class extends Migration
                 $table->string('transport_dispatch')->nullable();
                 $table->string('image');
                 $table->string('status')->nullable();
+                $table->string('client_name');
+                $table->string('phone_number');
+                $table->string('email');
+                $table->string('tax');
+                $table->string('invoice_date');
+                $table->string('gst_number');
+                $table->string('payment_terms');
+                $table->string('client_address');
+                $table->string('discount');
+                $table->string('note');
                 $table->boolean('is_approve')->default(false);
                 $table->boolean('is_active')->default(true);
                 $table->boolean('is_deleted')->default(false);

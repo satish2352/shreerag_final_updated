@@ -4,15 +4,16 @@ namespace App\Http\Controllers\Organizations\Purchase;
 
 use App\Models\PurchaseOrdersModel;
 use Illuminate\Http\Request;
+use App\Http\Services\Organizations\Purchase\PurchaseOrderServices;
 use App\Http\Controllers\Controller;
+use Validator;
 
 class PurchaseOrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct(){
+        $this->service = new PurchaseOrderServices();
+    }
+
     public function index()
     {
         $title = 'Purchase Orders';
@@ -22,11 +23,6 @@ class PurchaseOrderController extends Controller
         ));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $title = 'create invoice';
@@ -41,19 +37,77 @@ class PurchaseOrderController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $this->validate($request, [
+
+     public function store(Request $request){
+        $rules = [
             'client_name' => 'required',
-            'po_number' => 'required',
+            'phone_number' => 'required',
             'email' => 'required',
             'tax' => 'required',
-            'client_address' => 'required',
-            'gst_number' => 'required',
             'invoice_date' => 'required',
-            'items' => 'required',
+            'gst_number' => 'required',
+            'payment_terms' => 'required',
+            'client_address' => 'required',
+            'discount' => 'required',
+            'status' => 'required',
             'note' => 'nullable',
-        ]);
+            ];
+
+            $messages = [
+                        'client_name.required' => 'The Client Name is required.',
+                        'phone_number.required' => 'The Phone Number is required.',
+                        'email.required' => 'The Email is required.',
+                        'tax.required' => 'The Tax is required.',
+                        'invoice_date.required' => 'The Invoice Date is required.',
+                        'gst_number.required' => 'The GST Number is required.',
+                        'payment_terms.required' => 'The Payment Terms is required.',
+                        'client_address.required' => 'The Client Address is required.',
+                        'discount.required' => 'The Discount is required.',
+                        'status.required' => 'The Status is required.',
+                        'note.required' => 'The Note is required.',
+                                            ];
+  
+          try {
+              $validation = Validator::make($request->all(), $rules, $messages);
+              
+              if ($validation->fails()) {
+                  return redirect('add-purchase-order')
+                      ->withInput()
+                      ->withErrors($validation);
+              } else {
+                  $add_record = $this->service->submitBOMToOwner($request);
+
+                  if ($add_record) {
+                      $msg = $add_record['msg'];
+                      $status = $add_record['status'];
+  
+                      if ($status == 'success') {
+                          return redirect('list-purchase-order')->with(compact('msg', 'status'));
+                      } else {
+                          return redirect('add-purchase-order')->withInput()->with(compact('msg', 'status'));
+                      }
+                  }
+              }
+          } catch (Exception $e) {
+              return redirect('add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+          }
+      }
+
+    public function store_old(Request $request)
+    {
+        $rules = [
+            'client_name' => 'required',
+            'phone_number' => 'required',
+            'email' => 'required',
+            'tax' => 'required',
+            'invoice_date' => 'required',
+            'gst_number' => 'required',
+            'payment_terms' => 'required',
+            'client_address' => 'required',
+            'discount' => 'required',
+            'status' => 'required',
+            'note' => 'nullable',
+            ];
 
        
         $amount = 0;
