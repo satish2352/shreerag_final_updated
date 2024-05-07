@@ -76,7 +76,7 @@ class PurchaseOrderController extends Controller
                       ->withErrors($validation);
               } else {
                   $add_record = $this->service->submitBOMToOwner($request);
-
+// dd($add_record);
                   if ($add_record) {
                       $msg = $add_record['msg'];
                       $status = $add_record['status'];

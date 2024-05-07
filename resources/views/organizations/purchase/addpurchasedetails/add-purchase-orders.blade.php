@@ -129,11 +129,11 @@
                             <input class="form-control " name="addmore[0][description]" type="text" style="min-width:150px">
                           </td>
                           <td>
-                          <input type="date" class="form-control mb-2" placeholder="YYYY-MM-DD"
+                          <!-- <input type="date" class="form-control mb-2" placeholder="YYYY-MM-DD"
                                                 name="addmore[0][due_date]" id="due_date"
-                                                value="">
-                            <!-- <input class="form-control datetimepicker" name="addmore[0][due_date]" type="text"
-                              style="min-width:150px"> -->
+                                                value=""> -->
+                            <input class="form-control" placeholder="YYYY-MM-DD" name="addmore[0][due_date]" type="date"
+                              style="min-width:150px" value="">
                           </td>
                           <td>
                             <input class="form-control" name="addmore[0][hsn]" style="width:100px" type="text">

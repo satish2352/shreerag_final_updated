@@ -22,11 +22,11 @@ public function getDetailsForPurchase($id) {
 public function submitBOMToOwner($request)
 {
         // dd($request);
-
+        $purchase_orderid=str_replace(array("-",":"),"",date('Y-m-d').time());
     try {
         $dataOutput = new PurchaseOrdersModel();
         // dd($dataOutput);
-        $dataOutput->purchase_orders_id = '123';
+        $dataOutput->purchase_orders_id = $purchase_orderid;
         $dataOutput->requisition_id = '234';
         $dataOutput->business_id = '345';
         $dataOutput->production_id = '456';
@@ -74,9 +74,9 @@ public function submitBOMToOwner($request)
         // $finalOutput = PurchaseOrderModel::find($last_insert_id);
         // $finalOutput->image = $imageName;
         // $finalOutput->save();
-dd('kkkkkkkkkkkkk');
+// dd('kkkkkkkkkkkkk');
         return [
-            'ImageName' => $imageName,
+            // 'ImageName' => $imageName,
             'status' => 'success'
         ];
     } catch (\Exception $e) {
