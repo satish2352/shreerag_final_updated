@@ -49,7 +49,7 @@ class BusinessController extends Controller
               $validation = Validator::make($request->all(), $rules, $messages);
               
               if ($validation->fails()) {
-                  return redirect('add-business')
+                  return redirect('owner/add-business')
                       ->withInput()
                       ->withErrors($validation);
               } else {
@@ -60,14 +60,14 @@ class BusinessController extends Controller
                       $status = $add_record['status'];
   
                       if ($status == 'success') {
-                          return redirect('list-business')->with(compact('msg', 'status'));
+                          return redirect('owner/list-forwarded-to-design')->with(compact('msg', 'status'));
                       } else {
-                          return redirect('add-business')->withInput()->with(compact('msg', 'status'));
+                          return redirect('owner/add-business')->withInput()->with(compact('msg', 'status'));
                       }
                   }
               }
           } catch (Exception $e) {
-              return redirect('add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+              return redirect('owner/add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
           }
       }
       public function edit(Request $request){
@@ -107,7 +107,7 @@ class BusinessController extends Controller
                     $msg = $update_data['msg'];
                     $status = $update_data['status'];
                     if ($status == 'success') {
-                        return redirect('list-business')->with(compact('msg', 'status'));
+                        return redirect('owner/list-business')->with(compact('msg', 'status'));
                     } else {
                         return redirect()->back()
                             ->withInput()
@@ -129,7 +129,7 @@ class BusinessController extends Controller
                 $msg = $delete_record['msg'];
                 $status = $delete_record['status'];
                 if ($status == 'success') {
-                    return redirect('list-business')->with(compact('msg', 'status'));
+                    return redirect('owner/list-business')->with(compact('msg', 'status'));
                 } else {
                     return redirect()->back()
                         ->withInput()
