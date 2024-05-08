@@ -5,7 +5,8 @@ use DB;
 use Illuminate\Support\Carbon;
 use App\Models\ {
 PurchaseOrdersModel,
-PurchaseOrderDetailsModel
+PurchaseOrderDetailsModel,
+Requisition
 };
 use Config;
 
@@ -24,13 +25,17 @@ public function submitBOMToOwner($request)
         // dd($request);
         $purchase_orderid=str_replace(array("-",":"),"",date('Y-m-d').time());
     try {
+
+        $requistition_id = base64_decode($request->requistition_id);
+        
+        $data_for_requistition = Requisition::where('id',$requistition_id)->first();
+
         $dataOutput = new PurchaseOrdersModel();
-        // dd($dataOutput);
         $dataOutput->purchase_orders_id = $purchase_orderid;
-        $dataOutput->requisition_id = '234';
-        $dataOutput->business_id = '345';
-        $dataOutput->production_id = '456';
-        $dataOutput->po_date = '';
+        $dataOutput->requisition_id = $requistition_id;
+        $dataOutput->business_id = $data_for_requistition->business_id;
+        $dataOutput->production_id = $data_for_requistition->production_id;
+        $dataOutput->po_date = date('m-d-Y');
         $dataOutput->vendor_id = '';
         $dataOutput->terms_condition = '';
         $dataOutput->remark = '';
@@ -80,6 +85,7 @@ public function submitBOMToOwner($request)
             'status' => 'success'
         ];
     } catch (\Exception $e) {
+        dd($e);
         return [
             'msg' => $e->getMessage(),
             'status' => 'error'

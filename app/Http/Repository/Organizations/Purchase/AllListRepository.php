@@ -100,8 +100,7 @@ class AllListRepository  {
 
   public function getAllListMaterialReceivedForPurchase(){
     try {
-
-        $array_to_be_check = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
+        $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE')];
         
         $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
           $join->on('business_application_processes.business_id', '=', 'production.business_id');
@@ -109,13 +108,16 @@ class AllListRepository  {
         ->leftJoin('designs', function($join) {
           $join->on('business_application_processes.business_id', '=', 'designs.business_id');
         })
+        ->leftJoin('requisition', function($join) {
+          $join->on('business_application_processes.business_id', '=', 'requisition.business_id');
+        })
         ->leftJoin('businesses', function($join) {
           $join->on('business_application_processes.business_id', '=', 'businesses.id');
         })
         ->leftJoin('design_revision_for_prod', function($join) {
           $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
         })
-        ->whereIn('business_application_processes.store_status_id',$array_to_be_check)
+        ->whereIn('business_application_processes.purchase_status_id',$array_to_be_check)
         ->where('businesses.is_active',true)
         ->select(
             'businesses.id',
@@ -128,7 +130,8 @@ class AllListRepository  {
             'design_revision_for_prod.reject_reason_prod',
             'design_revision_for_prod.id as design_revision_for_prod_id',
             'designs.bom_image',
-            'designs.design_image'
+            'designs.design_image',
+            'requisition.id as requistition_id',
 
         )
         ->get();

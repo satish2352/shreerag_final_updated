@@ -27,6 +27,7 @@ class AllListRepository  {
           ->leftJoin('designs', function($join) {
             $join->on('business_application_processes.business_id', '=', 'designs.business_id');
           })
+         
           ->leftJoin('businesses', function($join) {
             $join->on('business_application_processes.business_id', '=', 'businesses.id');
           })
@@ -101,6 +102,7 @@ class AllListRepository  {
   public function getAllListMaterialSentToPurchase(){
     try {
 
+      
         $array_to_be_check = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
         
         $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {

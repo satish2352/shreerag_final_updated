@@ -32,6 +32,9 @@ return new class extends Migration
             $table->date('purchase_dept_req_sent_date')->nullable();
             $table->unsignedBigInteger('purchase_status_id')->nullable();
 
+            $table->unsignedBigInteger('purchase_order_id')->nullable();
+            $table->date('purchase_order_submited_to_owner_date')->nullable();
+
             $table->boolean('is_approve')->default(false);
             $table->boolean('is_active')->default(true);
             $table->boolean('is_deleted')->default(false);

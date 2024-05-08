@@ -19,10 +19,12 @@ class PurchaseController extends Controller
 
 
 
-    public function index(){
+    public function index(Request $request){
         try {
             $getOutput = PurchaseModel::get();
-            return view('organizations.store.purchases.list-purchase', compact('getOutput'));
+            $requistition_id = $request->requistition_id;
+            dd($request);
+            return view('organizations.store.purchases.list-purchase', compact('getOutput','requistition_id'));
         } catch (\Exception $e) {
             return $e;
         }
@@ -81,7 +83,8 @@ class PurchaseController extends Controller
                       $status = $add_record['status'];
   
                       if ($status == 'success') {
-                          return redirect('list-store-purchase')->with(compact('msg', 'status'));
+                          $requistition_id = $request->requistition_id;
+                          return redirect('list-purchase-order')->with(compact('msg', 'status','requistition_id'));
                       } else {
                           return redirect('add-store-purchase')->withInput()->with(compact('msg', 'status'));
                       }

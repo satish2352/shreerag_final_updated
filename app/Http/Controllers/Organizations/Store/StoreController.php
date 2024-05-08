@@ -78,7 +78,7 @@ class StoreController extends Controller
                     $status = $add_record['status'];
 
                     if ($status == 'success') {
-                        return redirect('list-requistion')->with(compact('msg', 'status'));
+                        return redirect('list-material-sent-to-purchase')->with(compact('msg', 'status'));
                     } else {
                         return redirect('add-requistion')->withInput()->with(compact('msg', 'status'));
                     }

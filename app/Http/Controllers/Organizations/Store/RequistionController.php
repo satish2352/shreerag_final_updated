@@ -25,8 +25,8 @@ class RequistionController extends Controller
     public function index(){
         try {
           
-            $data_output = $this->service->getDataOutput();
-            return view('organizations.store.requistion.list-requistion',compact('data_output'));
+          
+            return view('organizations.store.requistion.list-requistion');
         } catch (\Exception $e) {
             return $e;
         }

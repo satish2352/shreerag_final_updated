@@ -46,8 +46,14 @@
               <div class="form-group-inner login-btn-inner row">
                 <div class="col-lg-2">
                   <div class="login-horizental cancel-wp pull-left">
-                    <a href="{{ route('add-purchase-order') }}"><button class="btn btn-sm btn-primary login-submit-cs"
-                        type="submit">Add Purchase</button></a>
+                    <form action="{{ route('add-purchase-order') }}" method="POST">
+                    @csrf
+             
+                    <input type="hidden" name="requistition_id" id="requistition_id" value="{{$requistition_id}}">
+                    <button class="btn btn-sm btn-primary login-submit-cs"
+                    type="submit">Add Purchase</button>
+
+                    </form>
                   </div>
                 </div>
                 <div class="col-lg-10"></div>
@@ -138,6 +144,14 @@
                   </tbody>
                 </table>
               </div>
+              <form action="{{ route('submit-purchase-order-to-owner-for-review') }}" method="POST">
+                @csrf
+         
+                <input type="hidden" name="requistition_id" id="requistition_id" value="{{$requistition_id}}">
+                <button class="btn btn-sm btn-primary login-submit-cs mt-0"
+                type="submit">Send to the owner for approval</button>
+
+                </form>
             </div>
           </div>
         </div>

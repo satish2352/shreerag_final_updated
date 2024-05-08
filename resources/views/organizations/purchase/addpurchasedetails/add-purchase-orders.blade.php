@@ -20,6 +20,9 @@
             </div><br>
             <form action="{{route('store-purchase-order')}} " id="forms" method="post" enctype="multipart/form-data">
               @csrf
+              
+              <input class="form-control" type="hidden" name="requistition_id" id="requistition_id" value="{{$requistition_id}}">
+              <input class="form-control" type="hidden" name="client_name" id="client_name">
               <div class="row">
                 <div class="col-sm-6 col-md-3">
                   <div class="form-group">
