@@ -20,6 +20,10 @@ return [
     'DESIGNS_DELETE'	         => '/all_web_data/images/designs/',
     'DESIGNS_VIEW'	         => env("FILE_VIEW").'/all_web_data/images/designs/',
 
+    'GRN_ADD'	         => "/all_web_data/images/grn/",
+    'GRN_DELETE'	         => '/all_web_data/images/grn/',
+    'GRN_VIEW'	         => env("FILE_VIEW").'/all_web_data/images/grn/',
+
 
     // 'DB_BACKUP'	 => "/all_web_data/DBBackup//",
 

@@ -60,26 +60,25 @@ public function submitBOMToOwner($request)
 
         // Save data into DesignDetailsModel
         foreach ($request->addmore as $index => $item) {
-    // dd($item);
 
             $designDetails = new PurchaseOrderDetailsModel();
+
             $designDetails->purchase_id = $last_insert_id;
             $designDetails->part_no = $item['part_no'];
             $designDetails->description = $item['description'];
+            $designDetails->qc_check_remark = '';
             $designDetails->due_date = $item['due_date'];
             $designDetails->hsn_no = $item['hsn'];
             $designDetails->quantity = $item['quantity'];
+            $designDetails->actual_quantity = '0';
+            $designDetails->accepted_quantity = '0';
+            $designDetails->rejected_quantity = '0';
             $designDetails->rate = $item['rate'];
-            $designDetails->amount = '99';
+            $designDetails->amount = $item['amount'];
             $designDetails->save();
         }
-        \Log::info($designDetails);
-        // Updating image name in PurchaseOrderModel
-        // $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
-        // $finalOutput = PurchaseOrderModel::find($last_insert_id);
-        // $finalOutput->image = $imageName;
-        // $finalOutput->save();
-// dd('kkkkkkkkkkkkk');
+       
+       
         return [
             // 'ImageName' => $imageName,
             'status' => 'success'

@@ -52,8 +52,7 @@ class PurchaseOrderController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $rules = [
             'client_name' => 'required',
             'phone_number' => 'required',
@@ -68,46 +67,44 @@ class PurchaseOrderController extends Controller
             'note' => 'nullable',
         ];
 
-        $messages = [
-            'client_name.required' => 'The Client Name is required.',
-            'phone_number.required' => 'The Phone Number is required.',
-            'email.required' => 'The Email is required.',
-            'tax.required' => 'The Tax is required.',
-            'invoice_date.required' => 'The Invoice Date is required.',
-            'gst_number.required' => 'The GST Number is required.',
-            'payment_terms.required' => 'The Payment Terms is required.',
-            'client_address.required' => 'The Client Address is required.',
-            'discount.required' => 'The Discount is required.',
-            'status.required' => 'The Status is required.',
-            'note.required' => 'The Note is required.',
-        ];
-
-        try {
-            $validation = Validator::make($request->all(), $rules, $messages);
-
-            if ($validation->fails()) {
-                return redirect('add-purchase-order')
-                    ->withInput()
-                    ->withErrors($validation);
-            } else {
-                $add_record = $this->service->submitBOMToOwner($request);
-                // //dd($add_record);
-                if ($add_record) {
-                    $msg = $add_record['msg'];
-                    $status = $add_record['status'];
-                    $requistition_id = $request->requistition_id;
-                    // dd($requistition_id);
-                    if ($status == 'success') {
-                        return redirect()->route('list-purchase-order',$requistition_id);//->with('requistition_id', $requistition_id);;
-                    } else {
-                        return redirect('add-purchase-order')->withInput()->with(compact('msg', 'status'));
-                    }
-                }
-            }
-        } catch (Exception $e) {
-            return redirect('add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
-        }
-    }
+            $messages = [
+                        'client_name.required' => 'The Client Name is required.',
+                        'phone_number.required' => 'The Phone Number is required.',
+                        'email.required' => 'The Email is required.',
+                        'tax.required' => 'The Tax is required.',
+                        'invoice_date.required' => 'The Invoice Date is required.',
+                        'gst_number.required' => 'The GST Number is required.',
+                        'payment_terms.required' => 'The Payment Terms is required.',
+                        'client_address.required' => 'The Client Address is required.',
+                        'discount.required' => 'The Discount is required.',
+                        'status.required' => 'The Status is required.',
+                        'note.required' => 'The Note is required.',
+                                            ];
+  
+          try {
+              $validation = Validator::make($request->all(), $rules, $messages);
+              
+              if ($validation->fails()) {
+                  return redirect('add-purchase-order')
+                      ->withInput()
+                      ->withErrors($validation);
+              } else {
+                  $add_record = $this->service->submitBOMToOwner($request);
+                  if ($add_record) {
+                      $msg = $add_record['msg'];
+                      $status = $add_record['status'];
+  
+                      if ($status == 'success') {
+                          return redirect('list-purchase-order')->with(compact('msg', 'status'));
+                      } else {
+                          return redirect('add-purchase-order')->withInput()->with(compact('msg', 'status'));
+                      }
+                  }
+              }
+          } catch (Exception $e) {
+              return redirect('add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+          }
+      }
 
     public function store_old(Request $request)
     {
