@@ -18,9 +18,13 @@ return new class extends Migration
             $table->unsignedBigInteger('purchase_id');
             $table->string('part_no');
             $table->string('description');
+            $table->string('qc_check_remark');
             $table->string('due_date');
             $table->string('hsn_no');
             $table->string('quantity');
+            $table->string('actual_quantity');
+            $table->string('accepted_quantity');
+            $table->string('rejected_quantity');
             $table->string('rate');
             $table->string('amount');
             $table->string('is_deleted')->default(false);

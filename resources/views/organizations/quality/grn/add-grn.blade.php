@@ -56,7 +56,7 @@ label.error {
                             @endif
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="all-form-element-inner">
-                                    <form action="" method="POST" id="addDesignsForm"
+                                    <form action="{{ route('store-grn') }}" method="POST" id="addDesignsForm"
                                         enctype="multipart/form-data">
                                         @csrf
                                         <div class="form-group-inner">
@@ -111,23 +111,28 @@ label.error {
 
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="grn_date">GRN Date:</label>
-                                                    <input type="date" class="form-control" id="grn_date"
-                                                        name="grn_date" placeholder="Enter GRN Date">
+                                                    <input type="date" class="form-control" id="grn_date" 
+                                                    name="grn_date" placeholder="Enter GRN Date" value="{{ date('Y-m-d') }}" readonly>
+
                                                 </div>
 
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="purchase_id">PO No.:</label>
                                                     <input type="text" class="form-control" id="purchase_id"
-                                                        name="purchase_id" placeholder="Enter Purchase No.">
+                                                        name="purchase_id" placeholder="Enter Purchase No." value="{{$purchase_order_data->purchase_orders_id}}" readonly>
                                                 </div>
 
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="po_date">PO Date :</label>
-                                                    <input type="date" class="form-control" id="po_date"
-                                                        name="po_date" placeholder="Enter PO Date">
+                                                    <!-- <input type="date" class="form-control" id="po_date"
+                                                        name="po_date" placeholder="Enter PO Date"> -->
+
+                                                    <input type="date" class="form-control" id="po_date" name="po_date" 
+                                                    placeholder="Enter PO Date" value="{{ $purchase_order_data->created_at->format('Y-m-d') }}" readonly>
+
                                                 </div>                                               
 
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <!-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="invoice_no">Invoice No.:</label>
                                                     <input type="text" class="form-control" id="invoice_no"
                                                         name="invoice_no" placeholder="Enter Invoice No">
@@ -137,7 +142,7 @@ label.error {
                                                     <label for="invoice_date">Invoice Date:</label>
                                                     <input type="date" class="form-control" id="invoice_date"
                                                         name="invoice_date" placeholder="Enter Invoice Date">
-                                                </div>
+                                                </div> -->
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="image">Signature:</label>
                                                     <input type="file" class="form-control" accept="image/*" id="image"
@@ -156,29 +161,32 @@ label.error {
                                                         <th>Rejected Quantity</th>
                                                         <th>Action</th>
                                                     </tr>
-
+                                                @foreach ($purchase_order_details_data as $item)
                                                     <tr>
+                                                    <input type="hidden" name="addmore[0][edit_id]"
+                                                                placeholder="Enter Description" class="form-control" value="{{ $item->id }}" readonly/>
                                                         <td><input type="text" name="addmore[0][description]"
-                                                                placeholder="Enter Description" class="form-control" />
+                                                                placeholder="Enter Description" class="form-control" value="{{ $item->description }}" readonly/>
                                                         </td>
                                                         <td><input type="text" name="addmore[0][qc_check_remark]"
                                                                 placeholder="Enter QC Check" class="form-control" />
                                                         </td>
                                                         <td><input type="text" name="addmore[0][chalan_quantity]"
-                                                                placeholder="Enter Chalan Qty" class="form-control" />
+                                                                placeholder="Enter Chalan Qty" class="form-control" value="{{ $item->quantity }}" readonly/>
                                                         </td>
                                                         <td><input type="text" name="addmore[0][actual_quantity]"
-                                                                placeholder="Enter Actual Qty" class="form-control" />
+                                                                placeholder="Enter Actual Qty" class="form-control actual_quantity" />
                                                         </td>
                                                         <td><input type="text" name="addmore[0][accepted_quantity]"
-                                                                placeholder="Enter Accepted Qty" class="form-control" />
+                                                                placeholder="Enter Accepted Qty" class="form-control accepted_quantity" />
                                                         </td>
                                                         <td><input type="text" name="addmore[0][rejected_quantity]"
-                                                                placeholder="Enter Rejected Qty" class="form-control" />
+                                                                placeholder="Enter Rejected Qty" class="form-control rejected_quantity" readonly/>
                                                         </td>
                                                         <td><button type="button" name="add" id="add"
                                                                 class="btn btn-success">Add More</button></td>
                                                     </tr>
+                                                @endforeach    
                                                 </table>
                                             </div>
 
@@ -253,6 +261,24 @@ $(document).on("click", ".remove-tr", function() {
     $(this).parents("tr").remove();
 });
 </script>
+
+<script>
+        $(document).ready(function(){
+                    $(document).on('keyup', '.actual_quantity, .accepted_quantity', function(e) {
+                var currentRow = $(this).closest("tr");
+                var current_row_actual_quantity=currentRow.find('.actual_quantity').val();
+        var current_row_accepted_quantity = currentRow.find('.accepted_quantity').val();
+        var new_rejected_quantity='0';
+        if(current_row_actual_quantity !='' && current_row_accepted_quantity!='')
+        {
+        var new_rejected_quantity=current_row_actual_quantity-current_row_accepted_quantity;
+        }
+
+        currentRow.find('.rejected_quantity').val(new_rejected_quantity);
+            });
+        });
+    </script>
+    
 <script>
 jQuery.noConflict();
 jQuery(document).ready(function($) {
