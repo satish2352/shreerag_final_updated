@@ -141,5 +141,25 @@ class BusinessController extends Controller
         }
     } 
 
+    public function acceptPurchaseOrder(Request $request){
+        $accept_id = base64_decode($request->id);
+        try {
+            $return_data = $this->service->acceptPurchaseOrder($accept_id);
+            if ($return_data) {
+                $msg = $return_data['msg'];
+                $status = $return_data['status'];
+                if ($status == 'success') {
+                    return redirect('owner/list-purchase-order')->with(compact('msg', 'status'));
+                } else {
+                    return redirect()->back()
+                        ->withInput()
+                        ->with(compact('msg', 'status'));
+                }
+            }
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
+
 
 }

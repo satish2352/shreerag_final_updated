@@ -75,4 +75,19 @@ public function addAll($request)
             return ['status' => 'error', 'msg' => $e->getMessage()];
         } 
     }
+
+    public function acceptPurchaseOrder($id)
+    {
+        try {
+            $delete = $this->repo->acceptPurchaseOrder($id);
+            // dd($delete);
+            if ($delete) {
+                return ['status' => 'success', 'msg' => 'Purchase order accepted.'];
+            } else {
+                return ['status' => 'error', 'msg' => ' Purchase order not accepted.'];
+            }  
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        } 
+    }
 }

@@ -151,4 +151,12 @@ public function addAll($request)
             }
     }
 
+    public function acceptPurchaseOrder($id){
+        try {
+         
+        } catch (\Exception $e) {
+            return $e;
+        }
+}
+
 }
