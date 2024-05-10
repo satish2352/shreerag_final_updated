@@ -33,5 +33,18 @@ class AllListController extends Controller
         } catch (\Exception $e) {
             return $e;
         }
-    } 
+    }
+    
+
+    
+    public function getAllListPurchaseOrder(Request $request){
+        try {
+            $data_output = $this->service->getAllListPurchaseOrder();
+        
+            return view('organizations.business.list.list-purchase-order-need-to-check', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    
 }

@@ -33,5 +33,14 @@ class AllListServices
         }
     } 
 
+    
+    public function getAllListPurchaseOrder(){
+        try {
+            return $this->repo->getAllListPurchaseOrder();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
+
 
 }

@@ -94,6 +94,10 @@
                         <li class="{{ request()->is('owner/list-design-correction') ? 'active' : '' }}">
                             <a href="{{ route('list-design-correction') }}" aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">Design Received For Design Correction</span></a>
                         </li>
+
+                        <li class="{{ request()->is('owner/list-purchase-order') ? 'active' : '' }}">
+                            <a href="{{ route('list-purchase-order') }}" aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">Purchase order need to check</span></a>
+                        </li>
                     </ul>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.PURCHASE'))
