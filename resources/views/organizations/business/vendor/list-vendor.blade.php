@@ -80,40 +80,39 @@ padding-left: 20px !important;
                                         <tr>
                                             <th data-field="id">Sr.No.</th>
                                             <th data-field="vendor_name" data-editable="true">Vendor Name</th>
-                                            <th data-field="address" data-editable="true">Address</th>
-                                            <th data-field="gst_no" data-editable="true">GST No.</th>
-                                            <th data-field="contact_no" data-editable="true">Conatct No.</th>
                                             <th data-field="email" data-editable="true">Email</th>
+                                            <th data-field="contact_no" data-editable="true">Conatct No.</th>
+                                            <th data-field="gst_no" data-editable="true">GST No.</th>
                                             <th data-field="quote_no" data-editable="true">Quote No.</th>
                                             <th data-field="payment_terms" data-editable="true">Payment terms</th> 
+                                            <th data-field="address" data-editable="true">Address</th>
                                             <th data-field="status" data-editable="true">Status</th> 
-                                            
                                             <th data-field="action">Action</th>
                                         </tr>
 
                                     </thead>
                                     <tbody>
-                                       
+                                       @foreach($data_output as $vendor_data)
                                         <tr>
                                             
-                                            <td>1</td>
-                                            <td>vender name</td>
-                                            <td>address</td>
-                                            <td>gst no</td>
-                                            <td>contact</td>
-                                            <td>email</td>
-                                            <td>quote no</td>
-                                            <td>payment terms</td>
-                                            <td>status</td>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $vendor_data->vendor_name }}</td>
+                                            <td>{{ $vendor_data->vendor_email }}</td>
+                                            <td>{{ $vendor_data->contact_no }}</td>
+                                            <td>{{ $vendor_data->gst_no }}</td>
+                                            <td>{{ $vendor_data->quote_no }}</td>
+                                            <td>{{ $vendor_data->payment_terms }}</td>
+                                            <td>{{ $vendor_data->vendor_address }}</td>
+                                            <td>{{ $vendor_data->is_active }}</td>
                                          
                                             <td>
                                                 <div style="display: flex; align-items: center;">
-                                                    <a href="{{route('edit-vendor')}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                                    {{-- <a href="{{route('delete-products')}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash" aria-hidden="true"></i></button></a> --}}
+                                                    <a href="{{route('edit-vendor', base64_encode($vendor_data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+                                                    <a href="{{route('delete-departments', base64_encode($vendor_data->id))}}" id="saveButton"><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash" aria-hidden="true"></i></button></a>
                                                 </div>
                                             </td>
                                            </tr>
-                                      
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -124,5 +123,37 @@ padding-left: 20px !important;
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="{{ asset('js/password-meter/pwstrength-bootstrap.min.js') }}"></script>
+            <script src="{{ asset('js/password-meter/zxcvbn.js') }}"></script>
+            <script src="{{ asset('js/password-meter/password-meter-active.js') }}"></script>
+            <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+
+            <script>
+    $.noConflict();
+    jQuery(document).ready(function($) {
+        $("#saveButton").click(function(event) {
+            event.preventDefault(); // Prevent the default behavior of anchor element
+            var deleteUrl = $(this).attr('href'); // Get the delete URL
+            
+            // Use SweetAlert to show a confirmation dialog
+            Swal.fire({
+                icon: 'question',
+                title: 'Are you sure?',
+                text: 'Do you want to delete this Vendor?',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    // If user clicks "Yes", navigate to the delete URL
+                    window.location.href = deleteUrl;
+                }
+            });
+        });
+    });
+</script>
 
 @endsection

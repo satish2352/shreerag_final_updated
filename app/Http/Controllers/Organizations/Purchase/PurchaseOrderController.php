@@ -20,7 +20,7 @@ class PurchaseOrderController extends Controller
 
     public function index(Request $request)
     {
-        //dd($request);
+        // dd($request);
         $requistition_id = $request->requistition_id;
         $title = 'Purchase Orders';
         $getOutput = PurchaseOrdersModel::get();

@@ -56,7 +56,7 @@ label.error {
                             @endif
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="all-form-element-inner">
-                                    <form action="{{ route('store-products') }}" method="POST" id="addDesignsForm"
+                                    <form action="{{ route('store-vendor') }}" method="POST" id="addDesignsForm"
                                         enctype="multipart/form-data">
                                         @csrf
                                         <div class="form-group-inner">
@@ -104,18 +104,12 @@ label.error {
                                                         <label for="vendor_name">Vendor Name:</label>
                                                         <input type="text" class="form-control" id="vendor_name"
                                                             name="vendor_name" placeholder="Enter your name">
-                                                </div>                                           
-
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="address">Address :</label>
-                                                    <input type="text" class="form-control" id="address"
-                                                        name="address" placeholder="Enter your address">
-                                                </div>    
+                                                </div>   
                                                 
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="gst_no">GST No:</label>
-                                                    <input type="text" class="form-control" id="gst_no"
-                                                        name="gst_no" placeholder="Enter GST number">
+                                                    <label for="vendor_email">Email:</label>
+                                                    <input type="email" class="form-control" id="vendor_email"
+                                                        name="vendor_email" placeholder="Enter your vendor_email">
                                                 </div>
 
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -125,9 +119,9 @@ label.error {
                                                 </div>
 
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="email">Address:</label>
-                                                    <input type="email" class="form-control" id="email"
-                                                        name="email" placeholder="Enter your email">
+                                                    <label for="gst_no">GST No:</label>
+                                                    <input type="text" class="form-control" id="gst_no"
+                                                        name="gst_no" placeholder="Enter GST number">
                                                 </div>
 
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -141,11 +135,23 @@ label.error {
                                                     <input type="text" class="form-control" id="payment_terms"
                                                         name="payment_terms" placeholder="Enter your payment terms">
                                                 </div>
-                                                                                                  
+
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                   <label for="status">Status :</label>
+                                                    <label for="vendor_address">Address :</label>
+                                                    <input type="text" class="form-control" id="vendor_address"
+                                                        name="vendor_address" placeholder="Enter your vendor_address">
+                                                </div>    
+                                                
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <label class="form-check-label">
+                                                <input type="checkbox" class="form-check-input" name="is_active"
+                                                    id="is_active" value="y" data-parsley-multiple="is_active"
+                                                    {{ old('is_active') ? 'checked' : '' }}>
+                                                Is Active
+                                                <i class="input-helper"></i><i class="input-helper"></i></label>
+                                                   <!-- <label for="status">Status :</label>
                                                     <input type="text" class="form-control" id="status"
-                                                        name="status" placeholder="Enter status here">
+                                                        name="status" placeholder="Enter status here"> -->
                                                 </div>
                                                
                                             </div>
@@ -214,7 +220,7 @@ jQuery(document).ready(function($) {
             vendor_name: {
             required: true,
             },
-            address: {
+            vendor_address: {
                 required: true,
                 // Add your custom validation rule if needed
             },
@@ -224,7 +230,7 @@ jQuery(document).ready(function($) {
             contact_no: {
                 required: true,
             },
-            email: {
+            vendor_email: {
                 required: true,
             },
             quote_no: {
@@ -241,8 +247,8 @@ jQuery(document).ready(function($) {
             vendor_name: {
                 required: "Please enter your name.",
             },
-            address: {
-                required: "Please enter your address.",
+            vendor_address: {
+                required: "Please enter your vendor_address.",
             },
             gst_no: {
                 required: "Please enter your GST No.",
@@ -250,7 +256,7 @@ jQuery(document).ready(function($) {
             contact_no: {
                 required: "Please enter a valid contact no.",
             },
-            email: {
+            vendor_email: {
                 required: "Please enter your valid email.",
             },
             quote_no: {

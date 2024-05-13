@@ -211,7 +211,7 @@ Route::group(['prefix' => 'owner'], function () {
     //ALL List
     Route::get('/list-forwarded-to-design', ['as' => 'list-forwarded-to-design', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListForwardedToDesign']);
     Route::get('/list-design-correction', ['as' => 'list-design-correction', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListCorrectionToDesignFromProduction']);
-    Route::get('/list-purchase-order', ['as' => 'list-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListPurchaseOrder']);
+    // Route::get('/list-purchase-order', ['as' => 'list-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListPurchaseOrder']);
 });
 // ========================OWNER Department End========
 
@@ -319,5 +319,10 @@ Route::get('/edit-store-receipt', ['as' => 'edit-store-receipt', 'uses' => 'App\
 
 Route::get('/list-vendor', ['as' => 'list-vendor', 'uses' => 'App\Http\Controllers\Organizations\Business\VendorController@index']);
 Route::get('/add-vendor', ['as' => 'add-vendor', 'uses' => 'App\Http\Controllers\Organizations\Business\VendorController@add']);
-Route::get('/edit-vendor', ['as' => 'edit-vendor', 'uses' => 'App\Http\Controllers\Organizations\Business\VendorController@edit']);
+Route::post('/store-vendor', ['as' => 'store-vendor', 'uses' => 'App\Http\Controllers\Organizations\Business\VendorController@store']);
+Route::get('/edit-vendor/{id}', ['as' => 'edit-vendor', 'uses' => 'App\Http\Controllers\Organizations\Business\VendorController@edit']);
+Route::post('/update-vendor', ['as' => 'update-vendor', 'uses' => 'App\Http\Controllers\Organizations\Business\VendorController@update']);
+Route::any('/delete-departments/{id}', ['as' => 'delete-departments', 'uses' => 'App\Http\Controllers\Organizations\Business\VendorController@destroy']);
+
+
 // ========================  End Vendor controller ========

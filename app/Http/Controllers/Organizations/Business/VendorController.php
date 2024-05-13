@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Organizations\Business;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-// use App\Http\Services\Organizations\Productions\ProductionServices;
+use App\Http\Services\Organizations\Business\VendorServices;
 use Session;
 use Validator;
 use Config;
@@ -16,17 +16,17 @@ use Carbon;
 
 class VendorController extends Controller
 { 
-    // public function __construct(){
-    //     $this->service = new ProductionServices();
-    // }
+    public function __construct(){
+        $this->service = new VendorServices();
+    }
 
 
 
     public function index(){
         try {
           
-          
-            return view('organizations.business.vendor.list-vendor');
+            $data_output = $this->service->getAll();
+            return view('organizations.business.vendor.list-vendor',compact('data_output'));
         } catch (\Exception $e) {
             return $e;
         }
@@ -41,11 +41,135 @@ class VendorController extends Controller
             return $e;
         }
     } 
-    public function edit(){
+
+    public function store(Request $request){
+        // dd($request);
+        $rules = [
+                'vendor_name' => 'required|string|max:255',
+                'vendor_email' => 'required',
+                'contact_no' => 'required',
+                'gst_no' => 'required',
+                'quote_no' => 'required',
+                'payment_terms' => 'required',
+                'vendor_address' => 'required',
+            ];
+
+            $messages = [
+                            'vendor_name.required' => 'The design vendor_name is required.',
+                            'vendor_name.string' => 'The design vendor_name must be a valid string.',
+                            'vendor_name.max' => 'The design vendor_name must not exceed 255 characters.',
+
+                            'vendor_email.required' => 'The vendor_email is required.',
+                            'contact_no.required' => 'The contact_no is required.',
+                            'gst_no.required' => 'The gst_no is required.',
+                            'quote_no.required' => 'The gst_no is required.',
+                            'vendor_address.required' => 'The gst_no is required.',
+                        ];
+  
+          try {
+              $validation = Validator::make($request->all(), $rules, $messages);
+              
+              if ($validation->fails()) {
+                  return redirect('add-vendor')
+                      ->withInput()
+                      ->withErrors($validation);
+              } else {
+                  $add_record = $this->service->addAll($request);
+
+                  if ($add_record) {
+                      $msg = $add_record['msg'];
+                      $status = $add_record['status'];
+  
+                      if ($status == 'success') {
+                          return redirect('list-vendor')->with(compact('msg', 'status'));
+                      } else {
+                          return redirect('add-vendor')->withInput()->with(compact('msg', 'status'));
+                      }
+                  }
+              }
+          } catch (Exception $e) {
+              return redirect('add-vendor')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+          }
+      }
+
+
+    public function edit(Request $request){
+        try {     
+
+            $edit_data_id = base64_decode($request->id);
+            $editData = $this->service->getById($edit_data_id);
+            // dd($editData);
+            return view('organizations.business.vendor.edit-vendor', compact('editData'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function update(Request $request){
+        $rules = [
+            'vendor_name' => 'required|string|max:255',
+            'vendor_email' => 'required',
+            'contact_no' => 'required',
+            'gst_no' => 'required',
+            'quote_no' => 'required',
+            'payment_terms' => 'required',
+            'vendor_address' => 'required',
+            ];       
+        $messages = [
+                        'vendor_name.required' => 'The design vendor_name is required.',
+                        'vendor_name.string' => 'The design vendor_name must be a valid string.',
+                        'vendor_name.max' => 'The design vendor_name must not exceed 255 characters.',
+
+                        'vendor_email.required' => 'The vendor_email is required.',
+                        'contact_no.required' => 'The contact_no is required.',
+                        'gst_no.required' => 'The gst_no is required.',
+                        'quote_no.required' => 'The gst_no is required.',
+                        'vendor_address.required' => 'The gst_no is required.',
+            ];
+
         try {
-          
-          
-            return view('organizations.business.vendor.edit-vendor');
+            $validation = Validator::make($request->all(),$rules, $messages);
+            if ($validation->fails()) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors($validation);
+            } else {
+                $update_data = $this->service->updateAll($request);
+                if ($update_data) {
+                    $msg = $update_data['msg'];
+                    $status = $update_data['status'];
+                    if ($status == 'success') {
+                        return redirect('list-vendor')->with(compact('msg', 'status'));
+                    } else {
+                        return redirect()->back()
+                            ->withInput()
+                            ->with(compact('msg', 'status'));
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+        }
+    }
+
+    public function destroy(Request $request){
+        $delete_data_id = base64_decode($request->id);
+        dd($delete_data_id);
+        try {
+            $delete_record = $this->service->deleteById($delete_data_id);
+            if ($delete_record) {
+                $msg = $delete_record['msg'];
+                $status = $delete_record['status'];
+                if ($status == 'success') {
+                    return redirect('list-vendor')->with(compact('msg', 'status'));
+                } else {
+                    return redirect()->back()
+                        ->withInput()
+                        ->with(compact('msg', 'status'));
+                }
+            }
         } catch (\Exception $e) {
             return $e;
         }
