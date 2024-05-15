@@ -95,8 +95,8 @@
                             <a href="{{ route('list-design-correction') }}" aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">Design Received For Design Correction</span></a>
                         </li>
 
-                        <li class="{{ request()->is('owner/list-purchase-order') ? 'active' : '' }}">
-                            <a href="{{ route('list-purchase-order') }}" aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">Purchase order need to check</span></a>
+                        <li class="{{ request()->is('owner/list-purchase-orders') ? 'active' : '' }}">
+                            <a href="{{ route('list-purchase-orders') }}" aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">Purchase order need to check</span></a>
                         </li>
                     </ul>
                     @endif

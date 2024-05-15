@@ -23,6 +23,7 @@ class PurchaseOrderController extends Controller
         // dd($request);
         $requistition_id = $request->requistition_id;
         $title = 'Purchase Orders';
+        $data_output = $this->service->getAll();
         $getOutput = PurchaseOrdersModel::get();
         return view('organizations.purchase.addpurchasedetails.list-purchase-orders', compact(
             'title',
@@ -35,7 +36,7 @@ class PurchaseOrderController extends Controller
     public function create(Request $request)
     {
         $requistition_id = $request->requistition_id;
-        //dd($requistition_id);
+        // dd($requistition_id);
         $title = 'create invoice';
         $title = 'create invoice';
         return view('organizations.purchase.addpurchasedetails.add-purchase-orders', compact(
@@ -53,6 +54,7 @@ class PurchaseOrderController extends Controller
      */
 
     public function store(Request $request){
+        // dd($request);
         $rules = [
             'client_name' => 'required',
             'phone_number' => 'required',
@@ -89,13 +91,15 @@ class PurchaseOrderController extends Controller
                       ->withInput()
                       ->withErrors($validation);
               } else {
+                $requi_id=$request->requistition_id;
+                // dd($requi_id);
                   $add_record = $this->service->submitBOMToOwner($request);
                   if ($add_record) {
                       $msg = $add_record['msg'];
                       $status = $add_record['status'];
-  
+//   dd($add_record);
                       if ($status == 'success') {
-                          return redirect('list-purchase-order')->with(compact('msg', 'status'));
+                          return redirect('list-purchase-order/'.$requi_id)->with(compact('msg', 'status'));
                       } else {
                           return redirect('add-purchase-order')->withInput()->with(compact('msg', 'status'));
                       }
