@@ -24,7 +24,7 @@ use Config;
 
     public function getAll(){
         try {
-            return $this->repo->getAll();
+            // return $this->repo->getAll();
         } catch (\Exception $e) {
             return $e;
         }

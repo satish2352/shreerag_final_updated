@@ -100,6 +100,11 @@ padding-left: 20px !important;
                                             <td>{{ucwords($data->vendor_id)}}</td>
                                             <td>{{ucwords($data->client_name)}}</td>
                                             
+                                            <td>
+                                                <div style="display: inline-block; align-items: center;">
+                                                    <a href="{{route('list-submit-final-purchase-order', base64_encode($data->purchase_status_id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Check Details</button></a> &nbsp; &nbsp; &nbsp;
+                                                </div>
+                                            </td>
                                             
                                           
                                            </tr>

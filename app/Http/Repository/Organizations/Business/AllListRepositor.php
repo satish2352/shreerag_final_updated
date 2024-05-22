@@ -107,6 +107,7 @@ class AllListRepositor  {
             ->whereIn('business_application_processes.purchase_status_id',$array_to_be_check)
             ->where('businesses.is_active',true)
             ->select(
+                'business_application_processes.purchase_status_id',
                 'businesses.id',
                 'businesses.title',
                 'businesses.descriptions',

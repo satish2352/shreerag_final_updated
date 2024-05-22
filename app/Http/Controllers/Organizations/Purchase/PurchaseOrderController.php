@@ -18,13 +18,10 @@ class PurchaseOrderController extends Controller
         $this->service = new PurchaseOrderServices();
     }
 
-    public function index(Request $request)
+    public function index($requistition_id)
     {
-        // dd($request);
-        $requistition_id = $request->requistition_id;
         $title = 'Purchase Orders';
-        $data_output = $this->service->getAll();
-        $getOutput = PurchaseOrdersModel::get();
+        $getOutput = PurchaseOrdersModel::where('requisition_id', base64_decode($requistition_id))->get();
         return view('organizations.purchase.addpurchasedetails.list-purchase-orders', compact(
             'title',
             'getOutput',
@@ -283,10 +280,11 @@ class PurchaseOrderController extends Controller
     public function submitPurchaseOrderToOwnerForReview(Request $request)
     {
         try {
-            
+            // dd($request);
             $requistition_id = base64_decode($request->requistition_id);
+            // dd($requistition_id);
             $data_for_purchase_order = PurchaseOrdersModel::where('requisition_id',$requistition_id)->first();
-
+            // dd($data_for_purchase_order);
             $business_application = BusinessApplicationProcesses::where('requisition_id',$requistition_id)->first();
            
             if ($business_application) {

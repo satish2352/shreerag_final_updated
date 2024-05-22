@@ -1,21 +1,24 @@
 <?php
 namespace App\Http\Repository\Organizations\Business;
+
 use Illuminate\Database\QueryException;
 use DB;
 use Illuminate\Support\Carbon;
-use App\Models\ {
-Business,
-DesignModel,
-BusinessApplicationProcesses
+use App\Models\{
+    Business,
+    DesignModel,
+    BusinessApplicationProcesses
 };
 use Config;
 
-class BusinessRepository  {
+class BusinessRepository
+{
 
 
-    public function getAll(){
+    public function getAll()
+    {
         try {
-            $data_output= Business::get();
+            $data_output = Business::get();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -23,70 +26,71 @@ class BusinessRepository  {
     }
 
 
-// public function addAll($request)
+    // public function addAll($request)
 // {
 //     try {
 //         $dataOutput = new Business();
 //         $dataOutput->title = $request->title;
 //         $dataOutput->descriptions = $request->descriptions;
 //         $dataOutput->remarks = $request->remarks;
-      
-//         $dataOutput->save();
 
-//         return [
+    //         $dataOutput->save();
+
+    //         return [
 //             'msg' => 'Data Added Successfully',
 //             'status' => 'success'
 //         ];
 
-//     } catch (\Exception $e) {
+    //     } catch (\Exception $e) {
 //         return [
 //             'msg' => $e->getMessage(),
 //             'status' => 'error'
 //         ];
 //     }
 // }
-    
-public function addAll($request)
-{
-    try {
-        $business_data = new Business();
-        $business_data->title = $request->title;
-        $business_data->descriptions = $request->descriptions;
-        $business_data->remarks = $request->remarks;
-        $business_data->save();
 
-        $design_data = new DesignModel();
-        $design_data->business_id=$business_data->id;
-        $design_data->design_image='';
-        $design_data->bom_image='';
-        $design_data->save();
+    public function addAll($request)
+    {
+        try {
+            $business_data = new Business();
+            $business_data->title = $request->title;
+            $business_data->descriptions = $request->descriptions;
+            $business_data->remarks = $request->remarks;
+            $business_data->save();
+
+            $design_data = new DesignModel();
+            $design_data->business_id = $business_data->id;
+            $design_data->design_image = '';
+            $design_data->bom_image = '';
+            $design_data->save();
 
 
-        $business_application = new BusinessApplicationProcesses();
-        $business_application->business_id =$business_data->id;
-        $business_application->business_status_id =config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
-        $business_application->design_id =$design_data->id;
-        $business_application->design_status_id =config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN');
-        $business_application->production_id ='0';
-        $business_application->production_status_id ='0';
-        $business_application->save();
+            $business_application = new BusinessApplicationProcesses();
+            $business_application->business_id = $business_data->id;
+            $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
+            $business_application->design_id = $design_data->id;
+            $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN');
+            $business_application->production_id = '0';
+            $business_application->production_status_id = '0';
+            $business_application->save();
 
-        return [
-            'msg' => 'This business send to Design Department Successfully',
-            'status' => 'success'
-        ];
+            return [
+                'msg' => 'This business send to Design Department Successfully',
+                'status' => 'success'
+            ];
 
-    } catch (\Exception $e) {
-        dd($e);
-        return [
-            'msg' => $e->getMessage(),
-            'status' => 'error'
-        ];
+        } catch (\Exception $e) {
+            dd($e);
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error'
+            ];
+        }
     }
-}
 
-    public function getById($id){
-    try {
+    public function getById($id)
+    {
+        try {
             $dataOutputByid = Business::find($id);
             // dd($dataOutputByid);
             if ($dataOutputByid) {
@@ -102,8 +106,9 @@ public function addAll($request)
         }
     }
 
-        public function updateAll($request){
-        try { 
+    public function updateAll($request)
+    {
+        try {
             $dataOutput = Business::find($request->id);
             // dd($dataOutput);
 
@@ -117,15 +122,15 @@ public function addAll($request)
             $dataOutput->title = $request->title;
             $dataOutput->descriptions = $request->descriptions;
             $dataOutput->remarks = $request->remarks;
-            
+
 
             $dataOutput->save();
 
             return [
-            'msg' => 'This business send to Design Department Successfully',
-            'status' => 'success'
-        ];
-        
+                'msg' => 'This business send to Design Department Successfully',
+                'status' => 'success'
+            ];
+
         } catch (\Exception $e) {
             return [
                 'msg' => 'Failed to Update Data.',
@@ -136,27 +141,40 @@ public function addAll($request)
     }
 
 
-    public function deleteById($id){
-            try {
-                $deleteDataById = Business::find($id);
-                
-                if ($deleteDataById) {
-                    $deleteDataById->delete();
-                    return $deleteDataById;
-                } else {
-                    return null;
-                }
-            } catch (\Exception $e) {
-                return $e;
-            }
-    }
-
-    public function acceptPurchaseOrder($id){
+    public function deleteById($id)
+    {
         try {
-         
+            $deleteDataById = Business::find($id);
+
+            if ($deleteDataById) {
+                $deleteDataById->delete();
+                return $deleteDataById;
+            } else {
+                return null;
+            }
         } catch (\Exception $e) {
             return $e;
         }
-}
+    }
+
+    public function acceptPurchaseOrder($purchase_status_id)
+    {
+        try {
+            $purchase_status_id = base64_decode($purchase_status_id);
+            $business_application = BusinessApplicationProcesses::where('purchase_order_id', $purchase_status_id)->first();
+
+            if ($business_application) {
+                $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.APPROVED_PO_FROM_PURCHASE');
+                $business_application->owner_po_action_date= date('Y-m-d');
+                $business_application->purchase_status_id = config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY');
+                $business_application->save();
+            }
+
+
+
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
 
 }
