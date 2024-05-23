@@ -110,7 +110,7 @@
                             <ul class="submenu-angle" aria-expanded="false">
                                 <li class="nav-item {{ Request::is('list-purchase') ? 'active' : '' }}"><a title="Inbox" href="{{ route('list-purchase') }}"><i
                                             class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                                            class="mini-sub-pro">List Purchase Orders</span></a></li>
+                                            class="mini-sub-pro">List Purchase Orders To Be Finalize</span></a></li>
                             </ul>
                         </li>
                         <li class="{{ Request::is('list-vendor') ? 'active' : '' }}">
@@ -121,6 +121,17 @@
                                 <li class="nav-item {{ Request::is('list-vendor') ? 'active' : '' }}"><a title="Inbox" href="{{ route('list-vendor') }}"><i
                                             class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                             class="mini-sub-pro">Vendor List</span></a></li>
+                            </ul>
+                        </li>
+
+                        <li class="{{ Request::is('list-approved-purchase-orders') ? 'active' : '' }}">
+                            <a class="has-arrow" href="{{ route('list-approved-purchase-orders') }}" aria-expanded="false"><i
+                                    class="fa big-icon fa-envelope icon-wrap"></i> <span
+                                    class="mini-click-non">Purchase Order Status</span></a>
+                            <ul class="submenu-angle" aria-expanded="false">
+                                <li class="nav-item {{ Request::is('list-approved-purchase-orders') ? 'active' : '' }}"><a title="Inbox" href="{{ route('list-approved-purchase-orders') }}"><i
+                                            class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                            class="mini-sub-pro">Purchase Order Approved</span></a></li>
                             </ul>
                         </li>
                     @endif

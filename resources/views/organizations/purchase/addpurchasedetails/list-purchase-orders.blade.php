@@ -46,7 +46,7 @@
               <div class="form-group-inner login-btn-inner row">
                 <div class="col-lg-2">
                   <div class="login-horizental cancel-wp pull-left">
-                    <form action="{{ route('add-purchase-order') }}" method="POST">
+                    <form action="{{ route('purchase.add-purchase-order') }}" method="POST">
                     @csrf
              
                     <input type="hidden" name="requistition_id" id="requistition_id" value="{{$requistition_id}}">

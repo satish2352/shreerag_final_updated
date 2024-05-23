@@ -18,7 +18,7 @@
             <div class="main-sparkline13-hd">
               <h1>Purchase Order <span class="table-project-n">Data</span> Table</h1>
             </div><br>
-            <form action="{{route('store-purchase-order')}} " id="forms" method="post" enctype="multipart/form-data">
+            <form action="{{route('purchase.store-purchase-order')}} " id="forms" method="post" enctype="multipart/form-data">
               @csrf
               
               <input class="form-control" type="hidden" name="requistition_id" id="requistition_id" value="{{$requistition_id}}">

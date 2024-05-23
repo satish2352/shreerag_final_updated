@@ -160,17 +160,17 @@ class BusinessRepository
     public function acceptPurchaseOrder($purchase_status_id)
     {
         try {
-            $purchase_status_id = base64_decode($purchase_status_id);
+            
             $business_application = BusinessApplicationProcesses::where('purchase_order_id', $purchase_status_id)->first();
-
+            
             if ($business_application) {
                 $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.APPROVED_PO_FROM_PURCHASE');
                 $business_application->owner_po_action_date= date('Y-m-d');
                 $business_application->purchase_status_id = config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY');
                 $business_application->save();
             }
-
-
+            
+            return $business_application;
 
         } catch (\Exception $e) {
             return $e;

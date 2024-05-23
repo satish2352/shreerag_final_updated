@@ -51,5 +51,15 @@ class AllListController extends Controller
 
 
     
+    public function getAllListApprovedPurchaseOrder(Request $request){
+        try {
+            $data_output = $this->service->getAllListApprovedPurchaseOrder();
+            return view('organizations.purchase.list.list-purchase-order-approved-need-to-check', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    
 
 }

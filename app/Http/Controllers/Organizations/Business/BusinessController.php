@@ -143,8 +143,8 @@ class BusinessController extends Controller
 
     
 
-    public function submitFinalPurchaseOrder($purchase_status_id){
-        $purchase_status_id = base64_decode($purchase_status_id);
+    public function submitFinalPurchaseOrder($purchase_order_id){
+
         try {
             // $delete_record =  $this->service->deleteById($delete_data_id);
             // if ($delete_record) {
@@ -159,7 +159,7 @@ class BusinessController extends Controller
             //     }
             // }
 
-            return view('organizations.business.purchase-order.purchase-order-details', compact('purchase_status_id'));
+            return view('organizations.business.purchase-order.purchase-order-details', compact('purchase_order_id'));
 
         } catch (\Exception $e) {
             return $e;
@@ -167,15 +167,19 @@ class BusinessController extends Controller
     } 
 
 
-    public function acceptPurchaseOrder($purchase_status_id)
+    public function acceptPurchaseOrder($purchase_order_id)
     {
         try {
-            $delete = $this->repo->acceptPurchaseOrder($purchase_status_id);
+            $delete = $this->service->acceptPurchaseOrder($purchase_order_id);
             if ($delete) {
-                return ['status' => 'success', 'msg' => 'Purchase order accepted.'];
+                $status = 'success';
+                $msg ='Purchase order accepted.';
             } else {
-                return ['status' => 'error', 'msg' => ' Purchase order not accepted.'];
+                $status = 'success';
+                $msg ='Purchase failed to accept.';
             }  
+
+            return redirect('owner/list-purchase-orders')->with(compact('msg', 'status'));
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         } 

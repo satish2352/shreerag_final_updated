@@ -22,7 +22,7 @@
 
 
 
-            <a href="{{route('accept-purchase-order', base64_encode($purchase_status_id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Check Details</button></a> &nbsp; &nbsp; &nbsp;
+            <a href="{{route('accept-purchase-order', $purchase_order_id)}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Check Details</button></a> &nbsp; &nbsp; &nbsp;
 
           </div>
         </div>
