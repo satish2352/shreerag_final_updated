@@ -102,7 +102,7 @@ padding-left: 20px !important;
                                             
                                             <td>
                                                 <div style="display: inline-block; align-items: center;">
-                                                    <a href="{{route('list-submit-final-purchase-order', $data->purchase_order_id)}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Check Details</button></a> &nbsp; &nbsp; &nbsp;
+                                                    <a href="{{route('list-check-final-purchase-order', $data->purchase_order_id)}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Check Details</button></a> &nbsp; &nbsp; &nbsp;
                                                 </div>
                                             </td>
                                             

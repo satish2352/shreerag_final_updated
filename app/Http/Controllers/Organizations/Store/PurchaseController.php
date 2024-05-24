@@ -23,7 +23,6 @@ class PurchaseController extends Controller
         try {
             $getOutput = PurchaseModel::get();
             $requistition_id = $request->requistition_id;
-            dd($request);
             return view('organizations.store.purchases.list-purchase', compact('getOutput','requistition_id'));
         } catch (\Exception $e) {
             return $e;
@@ -72,7 +71,7 @@ class PurchaseController extends Controller
               $validation = Validator::make($request->all(), $rules, $messages);
               
               if ($validation->fails()) {
-                  return redirect('add-store-purchase')
+                  return redirect('purchase/add-store-purchase')
                       ->withInput()
                       ->withErrors($validation);
               } else {
@@ -84,14 +83,14 @@ class PurchaseController extends Controller
   
                       if ($status == 'success') {
                           $requistition_id = $request->requistition_id;
-                          return redirect('list-purchase-order')->with(compact('msg', 'status','requistition_id'));
+                          return redirect('purchase/list-purchase-order')->with(compact('msg', 'status','requistition_id'));
                       } else {
-                          return redirect('add-store-purchase')->withInput()->with(compact('msg', 'status'));
+                          return redirect('purchase/add-store-purchase')->withInput()->with(compact('msg', 'status'));
                       }
                   }
               }
           } catch (Exception $e) {
-              return redirect('add-purchase')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+              return redirect('purchase/add-purchase')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
           }
       }
 
@@ -151,7 +150,7 @@ class PurchaseController extends Controller
                         $msg = $update_data['msg'];
                         $status = $update_data['status'];
                         if ($status == 'success') {
-                            return redirect('list-store-purchase')->with(compact('msg', 'status'));
+                            return redirect('purchase/list-store-purchase')->with(compact('msg', 'status'));
                         } else {
                             return redirect()->back()
                                 ->withInput()
@@ -175,7 +174,7 @@ class PurchaseController extends Controller
                     $msg = $delete_record['msg'];
                     $status = $delete_record['status'];
                     if ($status == 'success') {
-                        return redirect('list-store-purchase')->with(compact('msg', 'status'));
+                        return redirect('purchase/list-store-purchase')->with(compact('msg', 'status'));
                     } else {
                         return redirect()->back()
                             ->withInput()

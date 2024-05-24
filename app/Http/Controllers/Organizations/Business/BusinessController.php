@@ -141,5 +141,48 @@ class BusinessController extends Controller
         }
     } 
 
+    
+
+    public function submitFinalPurchaseOrder($purchase_order_id){
+
+        try {
+            // $delete_record =  $this->service->deleteById($delete_data_id);
+            // if ($delete_record) {
+            //     $msg = $delete_record['msg'];
+            //     $status = $delete_record['status'];
+            //     if ($status == 'success') {
+            //         return redirect('owner/list-business')->with(compact('msg', 'status'));
+            //     } else {
+            //         return redirect()->back()
+            //             ->withInput()
+            //             ->with(compact('msg', 'status'));
+            //     }
+            // }
+
+            return view('organizations.business.purchase-order.purchase-order-details', compact('purchase_order_id'));
+
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
+
+
+    public function acceptPurchaseOrder($purchase_order_id)
+    {
+        try {
+            $delete = $this->service->acceptPurchaseOrder($purchase_order_id);
+            if ($delete) {
+                $status = 'success';
+                $msg ='Purchase order accepted.';
+            } else {
+                $status = 'success';
+                $msg ='Purchase failed to accept.';
+            }  
+
+            return redirect('owner/list-purchase-orders')->with(compact('msg', 'status'));
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        } 
+    }
 
 }

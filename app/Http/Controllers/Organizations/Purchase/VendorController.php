@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Organizations\Business;
+namespace App\Http\Controllers\Organizations\Purchase;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Services\Organizations\Business\VendorServices;
+use App\Http\Services\Organizations\Purchase\VendorServices;
 use Session;
 use Validator;
 use Config;
@@ -26,7 +26,7 @@ class VendorController extends Controller
         try {
           
             $data_output = $this->service->getAll();
-            return view('organizations.business.vendor.list-vendor',compact('data_output'));
+            return view('organizations.purchase.vendor.list-vendor',compact('data_output'));
         } catch (\Exception $e) {
             return $e;
         }
@@ -36,7 +36,7 @@ class VendorController extends Controller
         try {
           
           
-            return view('organizations.business.vendor.add-vendor');
+            return view('organizations.purchase.vendor.add-vendor');
         } catch (\Exception $e) {
             return $e;
         }
@@ -70,7 +70,7 @@ class VendorController extends Controller
               $validation = Validator::make($request->all(), $rules, $messages);
               
               if ($validation->fails()) {
-                  return redirect('add-vendor')
+                  return redirect('purchase/add-vendor')
                       ->withInput()
                       ->withErrors($validation);
               } else {
@@ -81,14 +81,14 @@ class VendorController extends Controller
                       $status = $add_record['status'];
   
                       if ($status == 'success') {
-                          return redirect('list-vendor')->with(compact('msg', 'status'));
+                          return redirect('purchase/list-vendor')->with(compact('msg', 'status'));
                       } else {
-                          return redirect('add-vendor')->withInput()->with(compact('msg', 'status'));
+                          return redirect('purchase/add-vendor')->withInput()->with(compact('msg', 'status'));
                       }
                   }
               }
           } catch (Exception $e) {
-              return redirect('add-vendor')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+              return redirect('purchase/add-vendor')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
           }
       }
 
@@ -99,7 +99,7 @@ class VendorController extends Controller
             $edit_data_id = base64_decode($request->id);
             $editData = $this->service->getById($edit_data_id);
             // dd($editData);
-            return view('organizations.business.vendor.edit-vendor', compact('editData'));
+            return view('organizations.purchase.vendor.edit-vendor', compact('editData'));
         } catch (\Exception $e) {
             return $e;
         }
@@ -139,7 +139,7 @@ class VendorController extends Controller
                     $msg = $update_data['msg'];
                     $status = $update_data['status'];
                     if ($status == 'success') {
-                        return redirect('list-vendor')->with(compact('msg', 'status'));
+                        return redirect('purchase/list-vendor')->with(compact('msg', 'status'));
                     } else {
                         return redirect()->back()
                             ->withInput()
@@ -156,14 +156,13 @@ class VendorController extends Controller
 
     public function destroy(Request $request){
         $delete_data_id = base64_decode($request->id);
-        dd($delete_data_id);
         try {
             $delete_record = $this->service->deleteById($delete_data_id);
             if ($delete_record) {
                 $msg = $delete_record['msg'];
                 $status = $delete_record['status'];
                 if ($status == 'success') {
-                    return redirect('list-vendor')->with(compact('msg', 'status'));
+                    return redirect('purchase/list-vendor')->with(compact('msg', 'status'));
                 } else {
                     return redirect()->back()
                         ->withInput()
@@ -177,7 +176,7 @@ class VendorController extends Controller
     
 
     // public function add(){
-    //     return view('organizations.business.products.add-products');
+    //     return view('organizations.purchase.products.add-products');
     // }
 
 

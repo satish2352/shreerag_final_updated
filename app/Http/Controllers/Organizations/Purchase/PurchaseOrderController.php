@@ -18,13 +18,10 @@ class PurchaseOrderController extends Controller
         $this->service = new PurchaseOrderServices();
     }
 
-    public function index(Request $request)
+    public function index($requistition_id)
     {
-        // dd($request);
-        $requistition_id = $request->requistition_id;
         $title = 'Purchase Orders';
-        $data_output = $this->service->getAll();
-        $getOutput = PurchaseOrdersModel::get();
+        $getOutput = PurchaseOrdersModel::where('requisition_id', base64_decode($requistition_id))->get();
         return view('organizations.purchase.addpurchasedetails.list-purchase-orders', compact(
             'title',
             'getOutput',
@@ -87,7 +84,7 @@ class PurchaseOrderController extends Controller
               $validation = Validator::make($request->all(), $rules, $messages);
               
               if ($validation->fails()) {
-                  return redirect('add-purchase-order')
+                  return redirect('purchase/add-purchase-order')
                       ->withInput()
                       ->withErrors($validation);
               } else {
@@ -99,14 +96,14 @@ class PurchaseOrderController extends Controller
                       $status = $add_record['status'];
 //   dd($add_record);
                       if ($status == 'success') {
-                          return redirect('list-purchase-order/'.$requi_id)->with(compact('msg', 'status'));
+                          return redirect('purchase/list-purchase-order/'.$requi_id)->with(compact('msg', 'status'));
                       } else {
-                          return redirect('add-purchase-order')->withInput()->with(compact('msg', 'status'));
+                          return redirect('purchase/add-purchase-order')->withInput()->with(compact('msg', 'status'));
                       }
                   }
               }
           } catch (Exception $e) {
-              return redirect('add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+              return redirect('purchase/add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
           }
       }
 
@@ -155,12 +152,12 @@ class PurchaseOrderController extends Controller
             $msg = 'Invoice has been created';
             $status = 'success';
 
-            return redirect('list-purchase-order')->with(compact('msg', 'status'));
+            return redirect('purchase/list-purchase-order')->with(compact('msg', 'status'));
         } else {
             $msg = 'Failed to create invoice';
             $status = 'error';
 
-            return redirect('add-purchase-order')->withInput()->with(compact('msg', 'status'));
+            return redirect('purchase/add-purchase-order')->withInput()->with(compact('msg', 'status'));
         }
     }
 
@@ -258,11 +255,11 @@ class PurchaseOrderController extends Controller
         if ($invoice->wasChanged()) {
             $msg = 'Invoice has been updated';
             $status = 'success';
-            return redirect('list-purchase-order')->with(compact('msg', 'status'));
+            return redirect('purchase/list-purchase-order')->with(compact('msg', 'status'));
         } else {
             $msg = 'No changes were made to the invoice';
             $status = 'error';
-            return redirect('list-purchase-order')->with(compact('msg', 'status'));
+            return redirect('purchase/list-purchase-order')->with(compact('msg', 'status'));
         }
     }
 
@@ -283,10 +280,11 @@ class PurchaseOrderController extends Controller
     public function submitPurchaseOrderToOwnerForReview(Request $request)
     {
         try {
-            
+            // dd($request);
             $requistition_id = base64_decode($request->requistition_id);
+            // dd($requistition_id);
             $data_for_purchase_order = PurchaseOrdersModel::where('requisition_id',$requistition_id)->first();
-
+            // dd($data_for_purchase_order);
             $business_application = BusinessApplicationProcesses::where('requisition_id',$requistition_id)->first();
            
             if ($business_application) {
@@ -300,7 +298,7 @@ class PurchaseOrderController extends Controller
 
             $msg = 'Purchase order submitted successfully';
             $status = 'success';
-            return redirect('list-purchase')->with(compact('msg', 'status'));
+            return redirect('purchase/list-purchase')->with(compact('msg', 'status'));
         } catch (\Exception $e) {
             return [
                 'msg' => $e->getMessage(),
@@ -308,6 +306,27 @@ class PurchaseOrderController extends Controller
             ];
         }
     }
+
+
+    public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id)
+    {
+        try {
+            $delete = $this->service->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id);
+            if ($delete) {
+                $status = 'success';
+                $msg ='Purchase order accepted.';
+            } else {
+                $status = 'success';
+                $msg ='Purchase failed to accept.';
+            }  
+
+            return redirect('purchase/list-purchase-order-approved-sent-to-vendor')->with(compact('msg', 'status'));
+           
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        } 
+    }
+
 
 
 }

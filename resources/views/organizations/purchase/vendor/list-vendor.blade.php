@@ -108,7 +108,7 @@ padding-left: 20px !important;
                                             <td>
                                                 <div style="display: flex; align-items: center;">
                                                     <a href="{{route('edit-vendor', base64_encode($vendor_data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                                    <a href="{{route('delete-departments', base64_encode($vendor_data->id))}}" id="saveButton"><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash" aria-hidden="true"></i></button></a>
+                                                    <a href="{{route('delete-vendor', base64_encode($vendor_data->id))}}" id="saveButton"><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash" aria-hidden="true"></i></button></a>
                                                 </div>
                                             </td>
                                            </tr>

@@ -24,7 +24,7 @@ use Config;
 
     public function getAll(){
         try {
-            return $this->repo->getAll();
+            // return $this->repo->getAll();
         } catch (\Exception $e) {
             return $e;
         }
@@ -58,4 +58,15 @@ use Config;
     //     }      
     // }
     
+
+    
+    public function submitAndSentEmailToTheVendorFinalPurchaseOrder($id)
+    {
+        try {
+            $submitAndSentEmailToTheVendorFinalPurchaseOrder = $this->repo->submitAndSentEmailToTheVendorFinalPurchaseOrder($id);
+            return $submitAndSentEmailToTheVendorFinalPurchaseOrder;
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
+    }
 }

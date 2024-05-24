@@ -43,6 +43,24 @@ class AllListServices
         }
     }
 
+    
+
+    public function getAllListApprovedPurchaseOrder(){
+        try {
+            return $this->repo->getAllListApprovedPurchaseOrder();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    
+    public function getAllListPurchaseOrderMailSentToVendor(){
+        try {
+            return $this->repo->getAllListPurchaseOrderMailSentToVendor();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
 
 
 }

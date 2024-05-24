@@ -40,11 +40,11 @@ class AllListController extends Controller
     public function getAllListPurchaseOrder(Request $request){
         try {
             $data_output = $this->service->getAllListPurchaseOrder();
-        
             return view('organizations.business.list.list-purchase-order-need-to-check', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
         }
     }
+
     
 }
