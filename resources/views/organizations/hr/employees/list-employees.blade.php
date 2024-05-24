@@ -25,14 +25,14 @@ padding-left: 20px !important;
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="sparkline13-list">
+                <div class="sparkline13-list" style="padding-bottom: 100px">
                     <div class="sparkline13-hd">
                         <div class="main-sparkline13-hd">
-                            <h1>Organization <span class="table-project-n">Data</span> Table</h1>
+                            <h1>Employee <span class="table-project-n">Data</span> Table</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2" >
                                         <div class="login-horizental cancel-wp pull-left">
-                                                <a href="{{ route('hr-add-employees') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Staffs</button></a>
+                                                <a href="{{ route('add-users') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Employee</button></a>
                                         </div>
                                     </div>
                                 <div class="col-lg-10"></div>
@@ -76,54 +76,76 @@ padding-left: 20px !important;
                                     data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true"
                                     data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true"
                                     data-toolbar="#toolbar">
+
                                     <thead>
                                         <tr>
-                                            
-                                            <th data-field="id">ID</th>
-                                            <th data-field="company_name" data-editable="true">Employee Name</th>
-                                            <th data-field="email" data-editable="true">Email</th>
-                                            <th data-field="mobile_number" data-editable="true">Mobile Number</th>
-                                            <th data-field="role_name" data-editable="true">Role Name</th>
-                                            <th data-field="department_name" data-editable="true">Department Name</th>
-                                            <th data-field="address" data-editable="true">Address</th>
-                                            <th data-field="aadhar_number" data-editable="true">Aadhar Number</th>
-                                            <th data-field="pancard_number" data-editable="true">Pancard Number</th>
-                                            <th data-field="total_experience" data-editable="true">Total Experience</th>
-                                            <th data-field="highest_qualification" data-editable="true">Highest Qualification</th>
-                                            <th data-field="gender" data-editable="true">Gender</th>
-                                            <th data-field="joining_date" data-editable="true">Joining Date</th>
-                                            <th data-field="image" data-editable="false">Image</th>
-                                            <th data-field="action">Action</th>
+                                            <th>Sr. No.</th>
+                                            <th>Name</th>
+                                            <th>Role</th>
+                                            {{-- <th>Status</th> --}}
+                                            <th>Action</th>
                                         </tr>
-
                                     </thead>
                                     <tbody>
-                                        @foreach($getOutput as $data)
-                                        <tr>
-                                            
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ucwords($data->employee_name)}}</td>
-                                            <td>{{ucwords($data->email)}}</td>
-                                            <td>{{ucwords($data->mobile_number)}}</td>
-                                            <td>{{ isset($data->department->department_name) ? $data->department->department_name : 'N/A' }}</td>
-                                            <td>{{ isset($data->role->role_name) ? $data->role->role_name : 'N/A' }}</td>
-                                            <td>{{ucwords($data->address)}}</td>
-                                            <td>{{ucwords($data->aadhar_number)}}</td>
-                                            <td>{{ucwords($data->pancard_number)}}</td>
-                                            <td>{{ucwords($data->total_experience)}}</td>
-                                            <td>{{ucwords($data->highest_qualification)}}</td>
-                                            <td>{{ucwords($data->gender)}}</td>
-                                            <td>{{ucwords($data->joining_date)}}</td>
-                                            <td><img style="max-width:250px; max-height:150px;" src="{{ Config::get('DocumentConstant.EMPLOYEES_VIEW') . $data->emp_image }}" alt="{{ strip_tags($data['company_name']) }} Image" /></td>
-                                            <td>
-                                                <div style="display: flex; align-items: center;">
-                                                    <a href="{{route('hr-edit-employees', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                                    <a href="{{route('hr-delete-employees', base64_encode($data->id))}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash" aria-hidden="true"></i></button></a>
-                                                </div>
-                                            </td>
-                                           </tr>
+                                        @foreach ($register_user as $item)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $item->f_name }} {{ $item->m_name }} {{ $item->l_name }}
+                                                    ({{ $item->u_email }})
+                                                </td>
+                                                <td>{{ $item->role_name }}</td>
+
+
+                                                {{-- <td>
+                                                    <label class="switch">
+                                                        <input data-id="{{ $item->id }}" type="checkbox"
+                                                            {{ $item->is_active ? 'checked' : '' }}
+                                                            class="active-btn btn btn-sm btn-outline-primary m-1"
+                                                            data-toggle="tooltip" data-placement="top"
+                                                            title="{{ $item->is_active ? 'Active' : 'Inactive' }}">
+                                                        <span class="slider round "></span>
+                                                    </label>
+
+                                                </td> --}}
+
+
+                                                {{-- <td>@if ($item->is_active)
+                                                <button type="button" class="btn btn-success btn-sm">Active</button>
+                                                @else 
+                                                <button type="button" class="btn btn-danger btn-sm">In Active</button>
+                                                
+                                                @endif</td> --}}
+                                                <td class="d-flex">
+
+                                                    <div style="display: flex; align-items: center;">
+                                                        <a href="{{route('edit-users', base64_encode($item->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+                                                        <a href="{{route('delete-users', base64_encode($item->id))}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash" aria-hidden="true"></i></button></a>
+                                                    </div>
+
+
+
+
+
+
+
+
+                                                    {{-- <a href="{{ route('edit-users', base64_encode($item->id)) }}"
+                                                        class="edit-btn btn btn-sm btn-outline-primary m-1"><i
+                                                            class="fas fa-pencil-alt"></i></a> --}}
+                                                    {{-- <a data-id="{{ $item->id }}"
+                                                        class="show-btn btn btn-sm btn-outline-primary m-1"><i
+                                                            class="fas fa-eye"></i></a> --}}
+                                                    {{-- <a data-id="{{ $item->id }}"
+                                                        class="delete-btn btn btn-sm btn-outline-danger m-1"
+                                                        title="Delete Tender"><i class="fas fa-archive"></i></a> --}}
+
+
+                                                </td>
+                                            </tr>
                                         @endforeach
+
                                     </tbody>
+                                    
                                 </table>
                             </div>
                         </div>
@@ -133,5 +155,22 @@ padding-left: 20px !important;
         </div>
     </div>
 </div>
+
+{{-- <form method="POST" action="{{ url('/delete-users') }}" id="deleteform">
+    @csrf
+    <input type="hidden" name="delete_id" id="delete_id" value="">
+</form>
+<form method="POST" action="{{ url('/show-users') }}" id="showform">
+    @csrf
+    <input type="hidden" name="show_id" id="show_id" value="">
+</form> --}}
+{{-- <form method="GET" action="{{ url('/edit-users') }}" id="editform">
+    @csrf
+    <input type="hidden" name="edit_id" id="edit_id" value="">
+</form> --}}
+{{-- <form method="POST" action="{{ url('/update-active-user') }}" id="activeform">
+    @csrf
+    <input type="hidden" name="active_id" id="active_id" value="">
+</form> --}}
 
 @endsection

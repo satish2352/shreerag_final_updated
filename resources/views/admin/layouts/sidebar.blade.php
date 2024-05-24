@@ -326,16 +326,50 @@
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.HR'))
                         <li>
-                            <a class="has-arrow" href="{{ route('hr-list-employees') }}" aria-expanded="false"><i
+                            <a class="has-arrow" href="{{ route('list-users') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-envelope icon-wrap"></i> <span
-                                    class="mini-click-non">Staffs</span></a>
+                                    class="mini-click-non">Employee</span></a>
                             <ul class="submenu-angle" aria-expanded="false">
-                                <li><a title="Inbox" href="{{ route('hr-list-employees') }}"><i
+                                <li><a title="Inbox" href="{{ route('list-users') }}"><i
                                             class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                                            class="mini-sub-pro">Add Staffs</span></a></li>
+                                            class="mini-sub-pro">Add Employee</span></a></li>
                             </ul>
                         </li>
+
+
+                        <li>
+                            <a class="has-arrow" href="{{ route('list-leaves-acceptedby-hr') }}" aria-expanded="false"><i
+                                    class="fa big-icon fa-envelope icon-wrap"></i> <span
+                                    class="mini-click-non">Leave Management</span></a>
+                            <ul class="submenu-angle" aria-expanded="false">
+                                <li><a title="Inbox" href="{{ route('list-leaves-acceptedby-hr') }}"><i
+                                            class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                            class="mini-sub-pro">Leave Request</span></a></li>
+
+                                <li><a title="Inbox" href="{{ route('list-leaves-approvedby-hr') }}"><i
+                                                class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                                class="mini-sub-pro">Leave Approved</span></a></li>
+
+                                                <li><a title="Inbox" href="{{ route('list-leaves-not-approvedby-hr') }}"><i
+                                                    class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                                    class="mini-sub-pro">Leave Not Approved</span></a></li>
+                            </ul>
+                        </li>                        
                     @endif
+
+
+                    @if (session()->get('user_id'))
+                    <li>
+                        <a class="has-arrow" href="{{ route('list-leaves') }}" aria-expanded="false"><i
+                                class="fa big-icon fa-envelope icon-wrap"></i> <span
+                                class="mini-click-non">Leaves Request</span></a>
+                        <ul class="submenu-angle" aria-expanded="false">
+                            <li><a title="Inbox" href="{{ route('list-leaves') }}"><i
+                                        class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                        class="mini-sub-pro">Add Leaves Request</span></a></li>
+                        </ul>
+                    </li>
+                @endif
                     {{-- =====sample routing============= --}}
                     {{-- <li>
                         <a class="has-arrow" href="{{ route('list-newproducts') }}" aria-expanded="false"><i
