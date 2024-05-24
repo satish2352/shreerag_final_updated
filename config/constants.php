@@ -35,6 +35,7 @@ return [
         // 'LIST_DESIGN_TO_BE_APPROVE_NEW_FROM_DESIGN'   => 111,
         // 'APPROVED_DESIGN_NEW_FROM_DESIGN'             => 111,
         // 'NOT_APPROVED_DESIGN_NEW_FROM_DESIGN'         => 1,
+        'LIST_APPROVED_PO_SENT_TO_VENDOR_BY_PURCHASE'  => 1129,
         'LIST_INVOICE_TO_BE_APPROVE_FINANCE'             => 1139,
         'APPROVED_INVOICE_FINANCE'                       => 1140,
         'NOT_APPROVED_INVOICE_FINANCE'                   => 1141,

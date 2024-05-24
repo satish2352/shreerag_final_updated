@@ -218,18 +218,25 @@ Route::group(['prefix' => 'purchase'], function () {
     Route::any('/delete-purchase-order/{id}', ['as' => 'delete-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@destroy']);
 
 
-    Route::get('/list-vendor', ['as' => 'list-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@index']);
-    Route::get('/add-vendor', ['as' => 'add-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@add']);
-    Route::post('/store-vendor', ['as' => 'store-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@store']);
-    Route::get('/edit-vendor/{id}', ['as' => 'edit-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@edit']);
-    Route::post('/update-vendor', ['as' => 'update-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@update']);
-    Route::any('/delete-vendor/{id}', ['as' => 'delete-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@destroy']);
+    Route::group(['prefix' => 'vendor'], function () {
+        Route::get('/list-vendor', ['as' => 'list-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@index']);
+        Route::get('/add-vendor', ['as' => 'add-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@add']);
+        Route::post('/store-vendor', ['as' => 'store-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@store']);
+        Route::get('/edit-vendor/{id}', ['as' => 'edit-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@edit']);
+        Route::post('/update-vendor', ['as' => 'update-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@update']);
+        Route::any('/delete-vendor/{id}', ['as' => 'delete-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@destroy']);
+    });
 
+    // Route::group(['prefix' => 'purchaseorderstatus'], function () {
+        Route::get('/list-approved-purchase-orders', ['as' => 'list-approved-purchase-orders', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListApprovedPurchaseOrder']);
+        Route::get('/list-check-final-purchase-order/{purchase_order_id}', ['as' => 'list-check-final-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@submitAndSentEmailToTheVendorFinalPurchaseOrder']);
 
-    Route::get('/list-approved-purchase-orders', ['as' => 'list-approved-purchase-orders', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListApprovedPurchaseOrder']);
+        Route::post('/submit-purchase-order-to-owner-for-review', ['as' => 'submit-purchase-order-to-owner-for-review', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@submitPurchaseOrderToOwnerForReview']);
 
-    Route::post('/submit-purchase-order-to-owner-for-review', ['as' => 'submit-purchase-order-to-owner-for-review', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@submitPurchaseOrderToOwnerForReview']);
+        Route::get('/list-purchase-order-approved-sent-to-vendor', ['as' => 'list-purchase-order-approved-sent-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListPurchaseOrderMailSentToVendor']);
+    // });
 });
+
 
 //==============================Purchases Department=============================
 

@@ -43,9 +43,12 @@ class DesignsRepository  {
 
     public function getAll(){
         try {
-            // $data_output= DesignModel::get();
 
-            $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN'),config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_PRODUCTION') ];
+            $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN'),
+            config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_PRODUCTION'),
+            config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECIVED_FROM_PRODUCTION_DEPT_REVISED'),
+        
+            ];
             $data_output= ProductionModel::leftJoin('businesses', function($join) {
                 $join->on('production.business_id', '=', 'businesses.id');
               })

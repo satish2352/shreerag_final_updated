@@ -60,6 +60,18 @@ class AllListController extends Controller
         }
     }
 
+
+
+    public function getAllListPurchaseOrderMailSentToVendor(Request $request){
+        try {
+
+            $data_output = $this->service->getAllListPurchaseOrderMailSentToVendor();
+            return view('organizations.purchase.list.list-purchase-order-approved-sent-to-vendor', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
     
 
 }

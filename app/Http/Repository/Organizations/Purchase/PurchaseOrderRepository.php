@@ -7,7 +7,8 @@ use Illuminate\Support\Carbon;
 use App\Models\{
     PurchaseOrdersModel,
     PurchaseOrderDetailsModel,
-    Requisition
+    Requisition,
+    BusinessApplicationProcesses
 };
 use Config;
 
@@ -92,6 +93,26 @@ class PurchaseOrderRepository
                 'msg' => $e->getMessage(),
                 'status' => 'error'
             ];
+        }
+    }
+
+
+    public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_status_id) {
+        try {
+            
+            $business_application = BusinessApplicationProcesses::where('purchase_order_id', $purchase_status_id)->first();
+            
+            if ($business_application) {
+                $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.LIST_APPROVED_PO_SENT_TO_VENDOR_BY_PURCHASE');
+                $business_application->purchase_order_mail_submited_to_vendor_date= date('Y-m-d');
+                $business_application->purchase_status_id = config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR');
+                $business_application->save();
+            }
+            
+            return $business_application;
+
+        } catch (\Exception $e) {
+            return $e;
         }
     }
 

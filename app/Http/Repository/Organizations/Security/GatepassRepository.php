@@ -4,7 +4,9 @@ use Illuminate\Database\QueryException;
 use DB;
 use Illuminate\Support\Carbon;
 use App\Models\ {
-Gatepass
+Gatepass,
+PurchaseOrderModel,
+BusinessApplicationProcesses
 };
 use Config;
 

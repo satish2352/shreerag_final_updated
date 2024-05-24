@@ -58,4 +58,15 @@ use Config;
     //     }      
     // }
     
+
+    
+    public function submitAndSentEmailToTheVendorFinalPurchaseOrder($id)
+    {
+        try {
+            $submitAndSentEmailToTheVendorFinalPurchaseOrder = $this->repo->submitAndSentEmailToTheVendorFinalPurchaseOrder($id);
+            return $submitAndSentEmailToTheVendorFinalPurchaseOrder;
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
+    }
 }
