@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('tbl_leaves', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('organization_id'); 
-            $table->string('name');
             $table->unsignedBigInteger('employee_id');
             $table->string('leave_start_date');
             $table->string('leave_end_date');

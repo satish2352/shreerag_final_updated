@@ -76,24 +76,15 @@
                                         @csrf
                                         <div class="form-group-inner">
                                             <div class="row">
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="name">Name:</label>
-                                                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter Employee name">
-                                                </div>
-
-                                                
-
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                     <div class="form-select-list">
                                                         <label for="leave_type">Select Leaves Type:</label>
                                                         <select class="form-control custom-select-value" name="leave_type" id="leave_type">
                                                             <option value="">Select Leaves Type</option>
-															<option value="1">anual leave</option>
-															<option value="2">casual leave</option>
-															<option value="3">emengercy leave</option>
-															<option value="4">family leave</option>
-															<option value="5">maternity leave</option>
-                                                            <option value="6">sick leave</option>
+															<option value="1">Casual Leave</option>
+                                                            <option value="2">Medical Leave</option>
+                                                            <option value="3">Early Going</option>
+														
                                                         </select>
                                                     </div>
                                                 </div>
@@ -104,7 +95,7 @@
                                                     <div class="form-select-list">
                                                         <label for="leave_day">Select Leaves Day:</label>
                                                         <select class="form-control custom-select-value" name="leave_day" id="leave_day">
-                                                            <option value="">Select Department</option>
+                                                            <option value="">Select Leaves Day</option>
 															<option value="full_day">Full Day</option>
 															<option value="half_day">Half Day</option>
 															
@@ -226,10 +217,6 @@
 
         $("#addForm").validate({
             rules: {
-                name: {
-                    required: true,
-                },
-               
                 leave_type: {
                     required: true,
                 },
@@ -252,10 +239,6 @@
                 },
             },
             messages: {
-                name: {
-                    required: "Please enter  name.",
-                },
-                
                 leave_type: {
                     required: "Please select leave type.",
                 },

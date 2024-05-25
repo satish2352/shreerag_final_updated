@@ -35,7 +35,7 @@ class LeavesController extends Controller
     public function getAllLeavesRequest(){
         try {
             $getOutput = $this->service->getAllLeavesRequest();
-            // dd($getOutput);
+            
             return view('organizations.hr.leaves.list-leaves-accepted', compact('getOutput'));
         } catch (\Exception $e) {
             return $e;

@@ -60,23 +60,14 @@
                                     <div class="form-group-inner">
                                         <input type="hidden" class="form-control" value="{{ $editData->id }}" id="id" name="id" >
                                         <div class="row">
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="name"> Name:</label>
-                                                <input type="text" class="form-control" value="{{ $editData->name }}" id="name" name="name" placeholder="Enter name">
-                                            </div>
-
-
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                 <div class="form-select-list">
                                                     <label for="leave_type">Select Leaves Type:</label>
                                                     <select class="form-control custom-select-value" name="leave_type" id="leave_type">
                                                         <option value="">Select Leaves Type</option>
-                                                        <option value="1" {{ $editData->leave_type == '1' ? 'selected' : '' }}>Annual leave</option>
-                                                        <option value="2" {{ $editData->leave_type == '2' ? 'selected' : '' }}>Casual leave</option>
-                                                        <option value="3" {{ $editData->leave_type == '3' ? 'selected' : '' }}>Emergency leave</option>
-                                                        <option value="4" {{ $editData->leave_type == '4' ? 'selected' : '' }}>Family leave</option>
-                                                        <option value="5" {{ $editData->leave_type == '5' ? 'selected' : '' }}>Maternity leave</option>
-                                                        <option value="6" {{ $editData->leave_type == '6' ? 'selected' : '' }}>Sick leave</option>
+                                                        <option value="1" {{ $editData->leave_type == '1' ? 'selected' : '' }}>Casual Leave</option>
+                                                        <option value="2" {{ $editData->leave_type == '2' ? 'selected' : '' }}>Medical Leave</option>
+                                                        <option value="3" {{ $editData->leave_type == '3' ? 'selected' : '' }}>Early Going</option>
                                                     </select>
                                                     
                                                 </div>
@@ -187,10 +178,6 @@ jQuery(document).ready(function ($) {
 
     $("#addForm").validate({
         rules: {
-            name: {
-                required: true,
-            },
-           
             leave_type: {
                 required: true,
             },
@@ -213,10 +200,6 @@ jQuery(document).ready(function ($) {
             },
         },
         messages: {
-            name: {
-                required: "Please enter  name.",
-            },
-            
             leave_type: {
                 required: "Please select leave type.",
             },

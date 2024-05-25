@@ -71,7 +71,6 @@ class LeavesRepository  {
 {   
     try {
         $dataOutput = new Leaves();
-        $dataOutput->name = $request->name;
         $dataOutput->employee_id = $request->session()->get('user_id');
         $dataOutput->leave_start_date = $request->leave_start_date;
         $dataOutput->leave_end_date = $request->leave_end_date;
@@ -123,7 +122,6 @@ class LeavesRepository  {
                 'status' => 'error'
             ];
         }
-        $dataOutput->name = $request->name;
         $dataOutput->employee_id = $request->session()->get('user_id');
         $dataOutput->leave_start_date = $request->leave_start_date;
         $dataOutput->leave_end_date = $request->leave_end_date;

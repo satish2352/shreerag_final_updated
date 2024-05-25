@@ -80,8 +80,6 @@ padding-left: 20px !important;
                                         <tr>
                                             
                                             <th data-field="id">ID</th>
-                                            <th data-field="name" data-editable="true">Employee Name</th>
-                                        
                                             <th data-field="leave_start_date" data-editable="true">Leave start Date</th>
                                             <th data-field="leave_end_date" data-editable="true">Leave End Date</th>
                                             <th data-field="leave_day" data-editable="true">Leave Day</th>
@@ -97,8 +95,6 @@ padding-left: 20px !important;
                                         <tr>
                                             
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ucwords($data->name)}}</td>
-                                            
                                             <td>{{ucwords($data->leave_start_date)}}</td>
                                             <td>{{ucwords($data->leave_end_date)}}</td>
                                             <td> @if($data->leave_day == 'half_day')
@@ -109,17 +105,11 @@ padding-left: 20px !important;
                                                   Unknown Status
                                               @endif</td>
                                             <td> @if($data->leave_type == 1)
-                                                anual leave
+                                                Casual Leave
                                               @elseif($data->leave_type == 2)
-                                              casual leave
+                                              Medical Leave
                                               @elseif($data->leave_type == 3)
-                                              emengercy leave
-                                                @elseif($data->leave_type == 4)
-                                                family leave
-                                                @elseif($data->leave_type == 5)
-                                                maternity leave
-                                                @elseif($data->leave_type == 6)
-                                                sick leave
+                                              Early Going
                                               @else
                                                   Unknown Status
                                               @endif
