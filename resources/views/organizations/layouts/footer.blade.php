@@ -11,7 +11,7 @@
         </div>
        
 
-        <script src="{{ asset('js/vendor/jquery-1.11.3.min.js') }}"></script>
+        {{-- <script src="{{ asset('js/vendor/jquery-1.11.3.min.js') }}"></script> --}}
         <script src="{{ asset('js/bootstrap.min.js') }}"></script>
         <script src="{{ asset('js/wow.min.js') }}"></script>
         <script src="{{ asset('js/jquery-price-slider.js') }}"></script>

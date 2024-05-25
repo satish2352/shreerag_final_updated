@@ -16,6 +16,10 @@ return [
     // 'EMPLOYEES_HR_DELETE'	         => '/all_web_data/images/hr/',
     // 'EMPLOYEES_HR_VIEW'	         => env("FILE_VIEW").'/all_web_data/images/hr/',
 
+    'USER_PROFILE_ADD'	         => "/all_web_data/images/userProfile/",
+    'USER_PROFILE_DELETE'	         => '/all_web_data/images/userProfile/',
+    'USER_PROFILE_VIEW'	         => env("FILE_VIEW").'/all_web_data/images/userProfile/',
+
     'DESIGNS_ADD'	         => "/all_web_data/images/designs/",
     'DESIGNS_DELETE'	         => '/all_web_data/images/designs/',
     'DESIGNS_VIEW'	         => env("FILE_VIEW").'/all_web_data/images/designs/',
@@ -38,6 +42,7 @@ return [
         'STORE'             => 7,
         'FINANCE'           => 8,
         'HR'                => 9,
+        'EMPOLYEE'          =>10,
     ],
     
     'HIGHER_AUTHORITY' => [
@@ -144,4 +149,11 @@ return [
         'INVOICE_PAID_AGAINST_PO'                                   => 1142
       
     ],
+
+
+
+    'EMPOLYEE' => [
+
+        
+    ]
 ];

@@ -12,7 +12,7 @@
 </style>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div class="sparkline12-list">
+        <div class="sparkline12-list"  style="padding-bottom: 100px">
             <div class="sparkline12-hd">
                 <div class="main-sparkline12-hd">
                     <center><h1>Edit Employee Data</h1></center>
@@ -55,126 +55,198 @@
                                 </div>
                             @endif
                             <div class="all-form-element-inner">
-                                <form action="{{ route('hr-update-employees') }}" id="editEmployeeForm" method="POST" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="form-group-inner">
-                                        <input type="hidden" class="form-control" value="{{ $editData->id }}" id="id" name="id" >
-                                        <div class="row">
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="employee_name">Employee Name:</label>
-                                                <input type="text" class="form-control" value="{{ $editData->employee_name }}" id="employee_name" name="employee_name" placeholder="Enter Employee name">
-                                            </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="email">Employee Email:</label>
-                                                <input type="email" class="form-control" id="email" value="{{ $editData->email }}" name="email" placeholder="Enter email">
-                                            </div>
+                                <form class="forms-sample" id="regForm" name="frm_register" method="post" role="form"
+                                action="{{ route('update-users') }}" enctype="multipart/form-data">
+                                <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
+                                <div class="row">
+                                    {{-- <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="u_email">Email ID</label>&nbsp<span class="red-text">*</span>
+                                        <input type="text" class="form-control" name="u_email" id="u_email"
+                                            placeholder="" value="{{$user_data['data_users']['u_email']}}">
+                                        @if ($errors->has('u_email'))
+                                        <span
+                                            class="red-text"><?php echo $errors->first('u_email', ':message'); ?></span>
+                                        @endif
+                                    </div>
+                                </div> 
+                                          <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="u_uname">User Name</label>&nbsp<span class="red-text">*</span>
+                                            <input type="text" class="form-control" name="u_uname" id="u_uname"
+                                                placeholder="" value="{{ $user_data['data_users']['u_uname'] }}">
+                                            @if ($errors->has('u_uname'))
+                                                <span class="red-text"><?php echo $errors->first('u_uname', ':message'); ?></span>
+                                            @endif
                                         </div>
+                                    </div> --}}
+                                    {{-- <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="u_password">Password</label>&nbsp<span class="red-text">*</span>
+                                        <input type="text" class="form-control" name="u_password" id="u_password"
+                                            placeholder="" value="{{decrypt($user_data['data_users']['u_password'])}}">
+                                        @if ($errors->has('u_password'))
+                                        <span
+                                            class="red-text"><?php echo $errors->first('u_password', ':message'); ?></span>
+                                        @endif
+                                    </div>
+                                </div> --}}
 
-                                        <div class="row">
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="mobile_number">Mobile Number:</label>
-                                                <input type="text" class="form-control" id="mobile_number" value="{{ $editData->mobile_number }}" name="mobile_number" placeholder="Enter mobile number">
-                                            </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="address">Employee Address:</label>
-                                                <input type="text" class="form-control" id="address" value="{{ $editData->address }}" name="address" placeholder="Enter company address">
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                                <div class="form-select-list">
-                                                    <label for="department_id">Select Department:</label>
-                                                    <select class="form-control custom-select-value" name="department_id">
-                                                        <option value="">Select Department</option>
-                                                        @foreach($dept as $data)
-                                                            <option value="{{ $data->id }}" {{ $data->id == $editData->department_id ? 'selected' : '' }}>
-                                                                {{ ucfirst($data->department_name) }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                                <div class="form-select-list">
-                                                    <label for="role_id">Select Role:</label>
-                                                    <select class="form-control custom-select-value" name="role_id">
-                                                        <option value="">Select Role</option>
-                                                        @foreach($roles as $data)
-                                                            <option value="{{ $data->id }}" {{ $data->id == $editData->role_id ? 'selected' : '' }}>
-                                                                {{ ucfirst($data->role_name) }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="aadhar_number">Aadhar Number:</label>
-                                                <input type="text" class="form-control" id="aadhar_number" value="{{ $editData->aadhar_number }}" name="aadhar_number" placeholder="Enter Aadhar number">
-                                            </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="pan_card">PAN Card:</label>
-                                                <input type="text" class="form-control" id="pancard_number" value="{{ $editData->pancard_number }}" name="pancard_number" placeholder="Enter PAN Card number">
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                                <div class="form-select-list">
-                                                    <label for="gender">Gender:</label>
-                                                    <select class="form-control custom-select-value" name="gender">
-                                                        <option value="male" {{ $editData->gender == 'male' ? 'selected' : '' }}>Male</option>
-                                                        <option value="female" {{ $editData->gender == 'female' ? 'selected' : '' }}>Female</option>
-                                                        <option value="other" {{ $editData->gender == 'other' ? 'selected' : '' }}>Other</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="joining_date">Joining Date:</label>
-                                                <input type="date" class="form-control" id="joining_date" name="joining_date" value="{{ old('joining_date') ?? $editData->joining_date }}" placeholder="Select joining date">
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="highest_qualification">Highest Qualification:</label>
-                                                <input type="text" class="form-control" id="highest_qualification" name="highest_qualification" value="{{ old('highest_qualification') ?? $editData->highest_qualification }}" placeholder="Enter highest qualification">
-                                            </div>
-                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="total_experience">Total Experience:<span><i>(in year)</i></span></label>
-                                                <input type="text" class="form-control" id="total_experience" name="total_experience" placeholder="Enter total experience" value="{{ old('total_experience') ?? $editData->total_experience }}">
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                             
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="image">Image:</label>
-                                                <input type="file" class="form-control" id="image" name="image" value="@if (old('emp_image')) {{ old('image') }}@else{{ $editData->emp_image }} @endif">
-                                                @if (old('image') || isset($editData))
-                                                    <div>
-                                                        <label>Old Image:  </label>
-                                                        <img src="@if (old('image')) {{ old('emp_image') }} @elseif(isset($editData)) {{ Config::get('DocumentConstant.EMPLOYEES_VIEW') . $editData->emp_image }} @endif" alt="Old Image" style="max-width: 100px;">
-                                                    </div>
-                                                @endif
-                                            </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="role_id">Role Type</label>&nbsp<span class="red-text">*</span>
+                                            <select class="form-control" id="role_id" name="role_id"
+                                                onchange="myFunction(this.value)">
+                                                <option>Select</option>
+                                                @foreach ($user_data['roles'] as $role)
+                                                    <option value="{{ $role['id'] }}"
+                                                        @if ($role['id'] == $user_data['data_users']['role_id']) <?php echo 'selected'; ?> @endif>
+                                                        {{ $role['role_name'] }}</option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('role_id'))
+                                                <span class="red-text"><?php echo $errors->first('role_id', ':message'); ?></span>
+                                            @endif
                                         </div>
                                     </div>
 
-                                    <div class="login-btn-inner">
-                                        <div class="row">
-                                            <div class="col-lg-5"></div>
-                                            <div class="col-lg-7">
-                                                <div class="login-horizental cancel-wp pull-left">
-                                                    <a href="{{ route('list-employees') }}"><button class="btn btn-white" style="margin-bottom:50px">Cancel</button></a>
-                                                    <button class="btn btn-sm btn-primary login-submit-cs" type="submit" style="margin-bottom:50px">Save Data</button>
-                                                </div>
-                                            </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="f_name">First Name</label>&nbsp<span class="red-text">*</span>
+                                            <input type="text" class="form-control mb-2" name="f_name" id="f_name"
+                                                placeholder="" value="{{ $user_data['data_users']['f_name'] }}"
+                                                oninput="this.value = this.value.replace(/[^a-zA-Z\s.]/g, '').replace(/(\..*)\./g, '$1');">
+                                            @if ($errors->has('f_name'))
+                                                <span class="red-text"><?php echo $errors->first('f_name', ':message'); ?></span>
+                                            @endif
                                         </div>
                                     </div>
-                                </form>
+
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="m_name">Middle Name</label>&nbsp<span class="red-text">*</span>
+                                            <input type="text" class="form-control mb-2" name="m_name" id="m_name"
+                                                placeholder="" value="{{ $user_data['data_users']['m_name'] }}"
+                                                oninput="this.value = this.value.replace(/[^a-zA-Z\s.]/g, '').replace(/(\..*)\./g, '$1');">
+                                            @if ($errors->has('m_name'))
+                                                <span class="red-text"><?php echo $errors->first('m_name', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="l_name">Last Name</label>&nbsp<span class="red-text">*</span>
+                                            <input type="text" class="form-control mb-2" name="l_name" id="l_name"
+                                                placeholder="" value="{{ $user_data['data_users']['l_name'] }}"
+                                                oninput="this.value = this.value.replace(/[^a-zA-Z\s.]/g, '').replace(/(\..*)\./g, '$1');">
+                                            @if ($errors->has('l_name'))
+                                                <span class="red-text"><?php echo $errors->first('l_name', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="number">Number</label>&nbsp<span class="red-text">*</span>
+                                            <input type="text" class="form-control mb-2" name="number" id="number"
+                                                placeholder="" value="{{ $user_data['data_users']['number'] }}"
+                                                onkeyup="editvalidateMobileNumber(this.value)"
+                                                pattern="[789]{1}[0-9]{9}" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');"  maxlength="10" minlength="10"
+                                                >
+                                            <span id="edit-message" class="red-text"></span>
+                                            @if ($errors->has('number'))
+                                                <span class="red-text"><?php echo $errors->first('number', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="designation">Designation</label>&nbsp<span class="red-text">*</span>
+                                            <input type="text" class="form-control mb-2" name="designation" id="designation"
+                                                placeholder="" value="{{ $user_data['data_users']['designation'] }}"
+                                                oninput="this.value = this.value.replace(/[^a-zA-Z\s.]/g, '').replace(/(\..*)\./g, '$1');">
+                                            @if ($errors->has('designation'))
+                                                <span class="red-text"><?php echo $errors->first('designation', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="address">Address</label>&nbsp<span class="red-text">*</span>
+                                            <input type="text" class="form-control mb-2" name="address" id="address"
+                                                placeholder="" value="{{ $user_data['data_users']['address'] }}">
+                                            @if ($errors->has('address'))
+                                                <span class="red-text"><?php echo $errors->first('address', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="state">State</label>&nbsp;<span class="red-text">*</span>
+                                            <select class="form-control mb-2" name="state" id="state">
+                                                <option value="">Select State</option>
+                                            </select>
+                                            @if ($errors->has('state'))
+                                                <span class="red-text"><?php echo $errors->first('state', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="city">City</label>&nbsp;<span class="red-text">*</span>
+                                            <select class="form-control mb-2" name="city" id="city">
+                                                <option value="">Select City</option>
+                                            </select>
+                                            @if ($errors->has('city'))
+                                                <span class="red-text"><?php echo $errors->first('city', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="pincode">Pincode</label>&nbsp<span class="red-text">*</span>
+                                            <input type="text" class="form-control mb-2" name="pincode" id="pincode"
+                                                placeholder="" value="{{ $user_data['data_users']['pincode'] }}"
+                                                onkeyup="editvalidatePincode(this.value)">
+                                            <span id="edit-message-pincode" class="red-text"></span>
+                                            @if ($errors->has('pincode'))
+                                                <span class="red-text"><?php //echo $errors->first('pincode', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    
+
+                                    <br>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group form-check form-check-flat form-check-primary">
+                                            <label class="form-check-label">
+                                                <input type="checkbox" class="form-check-input" name="is_active"
+                                                    id="is_active" value="y" data-parsley-multiple="is_active"
+                                                    @if ($user_data['data_users']['is_active']) <?php echo 'checked'; ?> @endif>
+                                                Is Active
+                                                <i class="input-helper"></i><i class="input-helper"></i></label>
+                                        </div>
+                                    </div>
+
+                                    {{-- <div class="col-lg-12 col-md-12 col-sm-12 user_tbl">
+                                        <div id="data_for_role">
+                                        </div>
+                                    </div> --}}
+
+                                    <div class="col-md-12 col-sm-12 text-center mt-3">
+                                        <input type="hidden" class="form-check-input" name="edit_id" id="edit_id"
+                                            value="{{ $user_data['data_users']['id'] }}">
+                                            <button type="submit" class="btn btn-sm btn-success" id="submitButton">
+                                                Save &amp; Update
+                                            </button>
+                                        {{-- <button type="reset" class="btn btn-sm btn-danger">Cancel</button> --}}
+                                        <span><a href="{{ route('list-users') }}"
+                                                class="btn btn-sm btn-primary ">Back</a></span>
+                                    </div>
+                                    
+                                </div>
+                            </form>
                             </div>
                         </div>
                     </div>
@@ -189,128 +261,278 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
 
 <script>
-    jQuery.noConflict();
-    jQuery(document).ready(function ($) {
-        $("#editEmployeeForm").validate({
+    function getStateCity(stateId, city_id) {
+        $('#city').html('<option value="">Select City</option>');
+        if (stateId !== '') {
+            $.ajax({
+                url: '{{ route('cities') }}',
+                type: 'GET',
+                data: { stateId: stateId },
+                success: function(response) {
+                    if (response.city.length > 0) {
+                        $.each(response.city, function(index, city) {
+                            $('#city').append('<option value="' + city.location_id + '">' + city.name + '</option>');
+                        });
+                        if (city_id != null) {
+                            $('#city').val(city_id);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    function getState(stateId) {
+        $('#state').html('<option value="">Select State</option>');
+        $.ajax({
+            url: '{{ route('states') }}',
+            type: 'GET',
+            success: function(response) {
+                if (response.state.length > 0) {
+                    $.each(response.state, function(index, state) {
+                        $('#state').append('<option value="' + state.location_id + '">' + state.name + '</option>');
+                    });
+                    $('#state').val(stateId);
+                }
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        getState('{{ $user_data['data_users']['state'] }}');
+        getStateCity('{{ $user_data['data_users']['state'] }}', '{{ $user_data['data_users']['city'] }}');
+
+        $("#state").on('change', function() {
+            getStateCity($(this).val(), '');
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    function submitRegister() {
+        document.getElementById("frm_register").submit();
+    }
+</script>
+<script>
+    function editvalidateMobileNumber(number) {
+        var mobileNumberPattern = /^\d*$/;
+        var validationMessage = document.getElementById("edit-message");
+
+        if (mobileNumberPattern.test(number)) {
+            validationMessage.textContent = "";
+        } else {
+            validationMessage.textContent = "Only numbers are allowed.";
+        }
+    }
+</script>
+<script>
+    function editvalidatePincode(number) {
+        var pincodePattern = /^\d*$/;
+        var validationMessage = document.getElementById("edit-message-pincode");
+
+        if (pincodePattern.test(number)) {
+            validationMessage.textContent = "";
+        } else {
+            validationMessage.textContent = "Only numbers are allowed.";
+        }
+    }
+</script>
+
+<script>
+    $(document).ready(function() {
+        myFunction($("#role_id").val());
+        getStateCity('{{ $user_data['data_users']['state'] }}', '{{ $user_data['data_users']['city'] }}');
+        getState('{{ $user_data['data_users']['state'] }}');
+
+        $("#state").on('change', function() {
+            getStateCity($("#state").val(),'');
+        });
+    });
+
+    
+</script>
+ <script>
+    $(document).ready(function() {
+        $.validator.addMethod('mypassword', function(value, element) {
+                return this.optional(element) || (value.match(/[a-z]/) && value.match(/[A-Z]/) && value
+                    .match(/[0-9]/));
+            },
+            'Password must contain at least one uppercase, lowercase and numeric');
+
+        $("#frm_register1").validate({
             rules: {
-                employee_name: {
-                    required: true,
+
+                u_password: {
+                    //required: true,
+                    minlength: 6,
+                    mypassword: true
+
                 },
-                email: {
-                    required: true,
-                    email: true,
-                },
-                mobile_number: {
-                    required: true,
-                },
-                address: {
-                    required: true,
-                },
-                department_id: {
-                    required: true,
-                },
-                role_id: {
-                    required: true,
-                },
-                aadhar_number: {
-                    required: true,
-                },
-                pancard_number: {
-                    required: true,
-                },
-                total_experience: {
-                    required: true,
-                },
-                highest_qualification: {
-                    required: true,
-                },
-                gender: {
-                    required: true,
-                },
-                image: {
-                    required: true,
-                    accept: "image/*",
-                },
-                password: {
-                    required: true,
+                password_confirmation: {
+                    //required: true,
+                    equalTo: "#u_password"
                 },
             },
             messages: {
-                employee_name: {
-                    required: "Please enter employee name.",
+                u_password: {
+                    required: "Please enter your new password",
+                    minlength: "Password should be minimum 8 characters"
                 },
-                email: {
-                    required: "Please enter a valid email address.",
-                    email: "Please enter a valid email address.",
-                },
-                mobile_number: {
-                    required: "Please enter mobile number.",
-                },
-                address: {
-                    required: "Please enter employee address.",
-                },
-                department_id: {
-                    required: "Please select a department.",
-                },
-                role_id: {
-                    required: "Please select a role.",
-                },
-                aadhar_number: {
-                    required: "Please enter Aadhar number.",
-                },
-                pancard_number: {
-                    required: "Please enter Pancard number.",
-                },
-                total_experience: {
-                    required: "Please enter total experience.",
-                },
-                joining_date: {
-                    required: "Please enter joining date.",
-                },
-                highest_qualification: {
-                    required: "Please enter highest qualification.",
-                },
-                gender: {
-                    required: "Please select gender.",
-                },
-                image: {
-                    required: "Please select an image.",
-                    accept: "Please select an image file.", 
-                },
-            },
-            submitHandler: function(form) {
-                // Use SweetAlert to show a success message
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'Employee update successfully.',
-                }).then(function() {
-                    form.submit(); // Submit the form after the user clicks OK
-                });
+                password_confirmation: {
+                    required: "Please Enter Password Same as New Password for Confirmation",
+                    equalTo: "Password does not Match! Please check the Password"
+                }
             }
         });
     });
- $("#image").change(function () {
-        readURL(this);
+</script>
+<script>
+    $(document).ready(function() {
+        $("#show_hide_password a").on('click', function(event) {
+            event.preventDefault();
+            if ($('#show_hide_password input').attr("type") == "text") {
+                $('#show_hide_password input').attr('type', 'password');
+                $('#show_hide_password i').addClass("bx-hide");
+                $('#show_hide_password i').removeClass("bx-show");
+            } else if ($('#show_hide_password input').attr("type") == "password") {
+                $('#show_hide_password input').attr('type', 'text');
+                $('#show_hide_password i').removeClass("bx-hide");
+                $('#show_hide_password i').addClass("bx-show");
+            }
+        });
     });
+</script>
+<script>
+$(document).ready(function() {
+// Function to check if all input fields are filled with valid data
+function checkFormValidity() {
+    const role_id = $('#role_id').val();
+    const f_name = $('#f_name').val();
+    const m_name = $('#m_name').val();
+    const l_name = $('#l_name').val();
+    const number = $('#number').val();
+    const designation = $('#designation').val();
+    const address = $('#address').val();
+    const state = $('#state').val();
+    const city = $('#city').val();
+    // const user_profile = $('#user_profile').val();
+    const pincode = $('#pincode').val();
+    
+}
 
-    function readURL(input) {
-        var oldImageName = "@if (isset($editData)) {{ $editData->image }} @endif";
-        $("#image").val(oldImageName);
-        $("#oldImageDisplay img").show(); // Show the old image
-        $("#selectedImageDisplay").hide(); // Hide the selected image display
+// Call the checkFormValidity function on file input change
+$('input, #english_image, #marathi_image').on('change', function() {
+    checkFormValidity();
+    validator.element(this); // Revalidate the file input
+});
+// Initialize the form validation
+var form = $("#regForm");
+var validator = form.validate({
+    rules: {
+        // u_email: {
+        //     required: true,
+        // },
+        role_id: {
+            required: true,
+        },
+        // u_password: {
+        //     required: true,
+        // },
+        // password_confirmation: {
+        //     required: true,
+        // },
+        f_name: {
+            required: true,
+        },
+        m_name: {
+            required: true,
+        },
+        l_name: {
+            required: true,
+        },
+        number: {
+            required: true,
+        },
+        designation: {
+            required: true,
+        },
+        address: {
+            required: true,
+        },
+        state: {
+            required: true,
+        },
+        city: {
+            required: true,
+        },
+        // user_profile: {
+        //     required: true,
+        // },
+        pincode: {
+            required: true,
+        },
+    },
+    messages: {
+        // u_email: {
+        //     required: "Please Enter the Eamil",
+        // },
+        role_id: {
+            required: "Please Select Role Name",
+        },
+        // u_password: {
+        //     required: "Please Enter the Password",
+        // },
+        // password_confirmation: {
+        //     required: "Please Enter the Confirmation Password",
+        // },
+        f_name: {
+            required: "Please Enter the First Name",
+        },
+        m_name: {
+            required: "Please Enter the Middle Name",
+        },
+        l_name: {
+            required: "Please Enter the Last Name",
+        },
+        number: {
+            required: "Please Enter the Number",
+        },
+        designation: {
+            required: "Please Enter the Designation",
+        },
+        address: {
+            required: "Please Enter the Address",
+        },
 
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                $("#selectedImageDisplay img").attr('src', e.target.result);
-                $("#oldImageDisplay img").hide(); // Hide the old image
-                $("#selectedImageDisplay").show(); // Show the selected image
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
+        state: {
+            required: "Please Select State",
+        },
+        city: {
+            required: "Please Select State",
+        },
+        // user_profile: {
+        //     required: "Upload Media File",
+        //     accept: "Only png, jpeg, and jpg image files are allowed.", // Update the error message for the accept rule
+        // },
+        pincode: {
+            required: "Please Enter the Pincode",
+        },
+    },
+    submitHandler: function(form) {
+        form.submit();
     }
 });
-    </script>
+
+// Submit the form when the "Update" button is clicked
+$("#submitButton").click(function() {
+    // Validate the form
+    if (form.valid()) {
+        form.submit();
+    }
+});
+});
+</script>    
+
+
 
 @endsection
