@@ -81,8 +81,8 @@ padding-left: 20px !important;
                                             <th data-field="id">Sr.No.</th> 
                                             <th data-field="grn_number" data-editable="true">Title</th>
                                             <th data-field="grn_date" data-editable="true">Description</th>
-                                            <th data-field="vendor_id" data-editable="true">Vendor</th>                                         
-                                            <th data-field="client_name" data-editable="true">Client Name</th>                                         
+                                            {{-- <th data-field="vendor_id" data-editable="true">Vendor</th>                                         
+                                            <th data-field="client_name" data-editable="true">Client Name</th>                                          --}}
                                         </tr>
 
                                     </thead>
@@ -97,12 +97,12 @@ padding-left: 20px !important;
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ucwords($data->title)}}</td>
                                             <td>{{ucwords($data->descriptions)}}</td>
-                                            <td>{{ucwords($data->vendor_id)}}</td>
-                                            <td>{{ucwords($data->client_name)}}</td>
+                                            {{-- <td>{{ucwords($data->vendor_id)}}</td>
+                                            <td>{{ucwords($data->client_name)}}</td> --}}
                                             
                                             <td>
                                                 <div style="display: inline-block; align-items: center;">
-                                                    <a href="{{route('list-check-final-purchase-order', $data->purchase_order_id)}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Check Details</button></a> &nbsp; &nbsp; &nbsp;
+                                                    <a href="{{route('list-check-final-purchase-order', $data->purchase_order_id)}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"> View Details</button></a> &nbsp; &nbsp; &nbsp;
                                                 </div>
                                             </td>
                                             
