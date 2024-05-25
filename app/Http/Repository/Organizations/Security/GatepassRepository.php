@@ -46,10 +46,10 @@ class GatepassRepository  {
             $purchase_orders_details = PurchaseOrderModel::where('purchase_orders_id', $request->purchase_orders_id)->first();
             $business_application = BusinessApplicationProcesses::where('business_id', $purchase_orders_details->business_id)->first();
             if ($business_application) {
-                $business_application->store_material_recived_date = date('Y-m-d');
-                $business_application->store_material_recived_status = config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION');
+                $business_application->store_material_recived_for_grn_date = date('Y-m-d');
+                $business_application->store_material_recived_status_id = config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION');
                 $business_application->security_material_recived_date = date('Y-m-d');
-                $business_application->security_material_recived_status = config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION');
+                $business_application->security_material_recived_status_id = config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION');
                 $business_application->save();
             }
 

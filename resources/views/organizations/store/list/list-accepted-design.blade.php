@@ -47,7 +47,7 @@
                                 <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
                                     <span class="icon-sc-cl" aria-hidden="true">&times;</span>
                                 </button>
-                                <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i>
+                                {{-- <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i> --}}
                                 <p><strong>Success!</strong> {{ Session::get('msg') }}</p>
                             </div>
                         @endif
@@ -111,14 +111,12 @@
                                                             <a
                                                                 href="{{ route('accepted-and-material-sent', base64_encode($data->productionId)) }} "><button
                                                                     data-toggle="tooltip" title="Trash"
-                                                                    class="pd-setting-ed"><i class="fa fa-check" title="Accepted and requirement forwareded to production department"
-                                                                        aria-hidden="true"></i>Accepted and requirement forwareded to production department</button></a>
+                                                                    class="pd-setting-ed">Requirement forwareded For production</button></a>
 
                                                             <a
                                                                 href="{{ route('need-to-create-req', base64_encode($data->productionId)) }} "><button
                                                                     data-toggle="tooltip" title="Trash"
-                                                                    class="pd-setting-ed"><i class="fa fa-check"
-                                                                        aria-hidden="true"></i></button></a>
+                                                                    class="pd-setting-ed">Need To Purchase</button></a>
                                                         </div>
                                                     </td>
 

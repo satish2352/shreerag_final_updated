@@ -73,5 +73,17 @@ class AllListController extends Controller
     }
 
     
+    
+    public function getAllListPurchaseOrderTowardsOwner(Request $request){
+        try {
+
+            $data_output = $this->service->getAllListPurchaseOrderTowardsOwner();
+            return view('organizations.purchase.list.list-purchase-order-need-to-check', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    
 
 }

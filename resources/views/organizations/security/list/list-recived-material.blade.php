@@ -48,7 +48,7 @@
                                 <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
                                     <span class="icon-sc-cl" aria-hidden="true">&times;</span>
                                 </button>
-                                <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i>
+                                {{-- <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i> --}}
                                 <p><strong>Success!</strong> {{ Session::get('msg') }}</p>
                             </div>
                         @endif

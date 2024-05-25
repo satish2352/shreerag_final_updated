@@ -30,7 +30,7 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                            <h1>Material Sent To <span class="table-project-n">Purchase</span> Department</h1>
+                            <h1>Material List Sent To <span class="table-project-n">Purchase</span> Department</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
                                         {{-- <div class="login-horizental cancel-wp pull-left">
@@ -47,7 +47,7 @@
                                 <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
                                     <span class="icon-sc-cl" aria-hidden="true">&times;</span>
                                 </button>
-                                <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i>
+                                {{-- <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i> --}}
                                 <p><strong>Success!</strong> {{ Session::get('msg') }}</p>
                             </div>
                         @endif

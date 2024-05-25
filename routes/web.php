@@ -196,6 +196,8 @@ Route::group(['prefix' => 'owner'], function () {
     Route::get('/list-forwarded-to-design', ['as' => 'list-forwarded-to-design', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListForwardedToDesign']);
     Route::get('/list-design-correction', ['as' => 'list-design-correction', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListCorrectionToDesignFromProduction']);
     Route::get('/list-purchase-orders', ['as' => 'list-purchase-orders', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListPurchaseOrder']);
+    Route::get('/list-approved-purchase-orders-owner', ['as' => 'list-approved-purchase-orders-owner', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListApprovedPurchaseOrderOwnerlogin']);
+    
 
 });
 // ========================OWNER Department End========
@@ -234,6 +236,9 @@ Route::group(['prefix' => 'purchase'], function () {
         Route::post('/submit-purchase-order-to-owner-for-review', ['as' => 'submit-purchase-order-to-owner-for-review', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@submitPurchaseOrderToOwnerForReview']);
 
         Route::get('/list-purchase-order-approved-sent-to-vendor', ['as' => 'list-purchase-order-approved-sent-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListPurchaseOrderMailSentToVendor']);
+        Route::get('/list-purchase-orders-sent-to-owner', ['as' => 'list-purchase-orders-sent-to-owner', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListPurchaseOrderTowardsOwner']);
+        Route::get('/list-purchase-orders-sent-to-owner-details/{purchase_order_id}', ['as' => 'list-purchase-orders-sent-to-owner-details', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@getAllListPurchaseOrderTowardsOwnerDetails']);
+        
     // });
 });
 

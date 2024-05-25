@@ -328,5 +328,16 @@ class PurchaseOrderController extends Controller
     }
 
 
+    public function getAllListPurchaseOrderTowardsOwnerDetails($purchase_order_id)
+    {
+        try {
+           
+            return view('organizations.purchase.addpurchasedetails.view-purchase-orders-details');
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        } 
+    }
+
+
 
 }

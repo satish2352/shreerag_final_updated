@@ -16,6 +16,20 @@ return [
         'FINANCE'           => 8,
         'HR'                => 9,
     ],
+
+
+    'ROLE_ID_NAME' => [
+        '111' => 'SUPER',
+        '1' => 'HIGHER AUTHORITY',
+        '2' => 'PURCHASE',
+        '3' => 'DESIGNER',          
+        '4' => 'PRODUCTION',
+        '5' => 'SECURITY',
+        '6' => 'QUALITY',
+        '7' => 'STORE',
+        '8' => 'FINANCE',
+        '9' => 'HR',
+    ],
     
     'HIGHER_AUTHORITY' => [
         'NEW_REQUIREMENTS'                            => 1111,

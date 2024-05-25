@@ -17,6 +17,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('business_id')->nullable();
             $table->date('business_sent_date')->nullable();
+            $table->date('owner_po_action_date')->nullable();
             $table->unsignedBigInteger('business_status_id')->nullable();
             $table->unsignedBigInteger('design_id')->nullable();
             $table->date('design_sent_date')->nullable();
@@ -37,7 +38,12 @@ return new class extends Migration
 
             $table->date('purchase_order_mail_submited_to_vendor_date')->nullable();
 
-            $table->date('owner_po_action_date')->nullable();
+            $table->unsignedBigInteger('store_material_recived_status_id')->nullable();
+            $table->date('store_material_recived_for_grn_date')->nullable();
+            
+            $table->unsignedBigInteger('security_material_recived_status_id')->nullable();
+            $table->date('security_material_recived_date')->nullable();
+
 
             $table->boolean('is_approve')->default(false);
             $table->boolean('is_active')->default(true);

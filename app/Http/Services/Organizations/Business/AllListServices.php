@@ -43,4 +43,14 @@ class AllListServices
     } 
 
 
+    
+    public function getAllListApprovedPurchaseOrderOwnerlogin(){
+        try {
+            return $this->repo->getAllListApprovedPurchaseOrderOwnerlogin();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+
 }

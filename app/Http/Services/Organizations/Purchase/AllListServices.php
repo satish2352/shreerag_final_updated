@@ -63,4 +63,14 @@ class AllListServices
     }
 
 
+    
+    public function getAllListPurchaseOrderTowardsOwner(){
+        try {
+            return $this->repo->getAllListPurchaseOrderTowardsOwner();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
+
+
 }

@@ -64,7 +64,7 @@ class PurchaseOrderRepository
 
             // Save data into DesignDetailsModel
             foreach ($request->addmore as $index => $item) {
-
+info( $item);
                 $designDetails = new PurchaseOrderDetailsModel();
 
                 $designDetails->purchase_id = $last_insert_id;
