@@ -28,6 +28,8 @@ class GatepassServices
         }
     }
 
+
+
     public function addAll($request)
     {
         try {

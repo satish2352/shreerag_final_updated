@@ -38,11 +38,16 @@ return new class extends Migration
 
             $table->date('purchase_order_mail_submited_to_vendor_date')->nullable();
 
-            $table->unsignedBigInteger('store_material_recived_status_id')->nullable();
+            $table->unsignedBigInteger('store_status_id')->nullable();
             $table->date('store_material_recived_for_grn_date')->nullable();
             
-            $table->unsignedBigInteger('security_material_recived_status_id')->nullable();
+            $table->unsignedBigInteger('security_status_id')->nullable();
             $table->date('security_material_recived_date')->nullable();
+
+            $table->unsignedBigInteger('quality_status_id')->nullable();
+            $table->date('quality_material_sent_to_store_date')->nullable();
+            $table->unsignedBigInteger('grn_no')->nullable();
+            
 
 
             $table->boolean('is_approve')->default(false);

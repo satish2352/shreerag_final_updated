@@ -46,7 +46,9 @@ class GatepassController extends Controller
     public function index()
     {
         try {
-            return view('organizations.security.gatepass.list-gatepass');
+            $all_gatepass = $this->service->getAll();
+
+            return view('organizations.security.gatepass.list-gatepass', compact('all_gatepass'));
         } catch (\Exception $e) {
             return $e;
         }
