@@ -44,5 +44,14 @@ class AllListServices
     }
 
 
+    public function getAllListMaterialReceivedFromQuality(){
+        try {
+            return $this->repo->getAllListMaterialReceivedFromQuality();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+
 
 }

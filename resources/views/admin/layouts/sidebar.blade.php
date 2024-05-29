@@ -286,6 +286,15 @@
                                 <span class="mini-click-non">Material For Purchase</span>
                             </a>
                         </li>
+
+
+                        <li class="{{ request()->is('list-material-received-from-quality') ? 'active' : '' }}">
+                            <a href="{{ route('list-material-received-from-quality') }}">
+                                <i class="fa big-icon fa-envelope icon-wrap"></i>
+                                <span class="mini-click-non">Material Received From Quality</span>
+                            </a>
+                        </li>
+
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.HR'))
                         <li>

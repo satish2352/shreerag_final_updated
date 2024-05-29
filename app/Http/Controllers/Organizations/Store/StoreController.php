@@ -71,23 +71,37 @@ class StoreController extends Controller
             //         ->withInput()
             //         ->withErrors($validation);
             // } else {
-                $add_record = $this->service->addAll($request);
+            $add_record = $this->service->addAll($request);
 
-                if ($add_record) {
-                    $msg = $add_record['msg'];
-                    $status = $add_record['status'];
+            if ($add_record) {
+                $msg = $add_record['msg'];
+                $status = $add_record['status'];
 
-                    if ($status == 'success') {
-                        return redirect('list-material-sent-to-purchase')->with(compact('msg', 'status'));
-                    } else {
-                        return redirect('add-requistion')->withInput()->with(compact('msg', 'status'));
-                    }
+                if ($status == 'success') {
+                    return redirect('list-material-sent-to-purchase')->with(compact('msg', 'status'));
+                } else {
+                    return redirect('add-requistion')->withInput()->with(compact('msg', 'status'));
                 }
+            }
             // }
         } catch (Exception $e) {
             return redirect('add-requistion')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
+
+
+
+    public function genrateStoreReciptAndForwardMaterialToTheProduction($id)
+    {
+        try {
+            $acceptdesign = base64_decode($id);
+            $update_data = $this->service->genrateStoreReciptAndForwardMaterialToTheProduction($acceptdesign);
+            return redirect('list-accepted-design-from-prod');
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
 
 
 
