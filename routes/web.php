@@ -362,6 +362,8 @@ Route::post('/list-all-po-number', ['as' => 'list-all-po-number', 'uses' => 'App
     Route::get('/list-material-sent-to-purchase', ['as' => 'list-material-sent-to-purchase', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialSentToPurchase']);
     Route::get('/list-material-received-from-quality', ['as' => 'list-material-received-from-quality', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialReceivedFromQuality']);
 
+    Route::get('/accepted-store-material-sent-to-production/{id}', ['as' => 'accepted-store-material-sent-to-production', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@genrateStoreReciptAndForwardMaterialToTheProduction']);
+
 // });
 
 // ========================  Start DocUploadFianace ========

@@ -91,6 +91,7 @@ class StoreRepository
         try {
 
             $business_application = BusinessApplicationProcesses::where('business_id', $id)->first();
+            $store_receipt_no  =  str_replace(array("-", ":"), "", date('Y-m-d') . time());
             if ($business_application) {
                 $business_application->business_id = $id;
 
@@ -101,12 +102,16 @@ class StoreRepository
                 $business_application->store_status_id = config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION');
 
 
+                $business_application->store_receipt_no = $store_receipt_no;
                 $business_application->finanace_store_receipt_generate_date = date('Y-m-d');
-                $business_application->finanace_store_receipt_status_id = config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION');
+                $business_application->finanace_store_receipt_status_id = config('constants.FINANCE_DEPARTMENT.LIST_STORE_RECIEPT_AND_GRN_RECEIVED_FROM_STORE_DEAPRTMENT');
 
 
                 $business_application->save();
+
             }
+
+            return "ok";
         } catch (\Exception $e) {
             return $e;
         }

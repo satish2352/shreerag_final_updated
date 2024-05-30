@@ -28,27 +28,22 @@ return new class extends Migration
             $table->date('store_material_recived_date')->nullable();
             $table->date('store_material_sent_date')->nullable();
             $table->unsignedBigInteger('store_status_id')->nullable();
-
             $table->unsignedBigInteger('requisition_id')->nullable();
             $table->date('purchase_dept_req_sent_date')->nullable();
             $table->unsignedBigInteger('purchase_status_id')->nullable();
-
             $table->unsignedBigInteger('purchase_order_id')->nullable();
             $table->date('purchase_order_submited_to_owner_date')->nullable();
-
             $table->date('purchase_order_mail_submited_to_vendor_date')->nullable();
-
             $table->unsignedBigInteger('store_status_id')->nullable();
             $table->date('store_material_recived_for_grn_date')->nullable();
-            
             $table->unsignedBigInteger('security_status_id')->nullable();
             $table->date('security_material_recived_date')->nullable();
-
             $table->unsignedBigInteger('quality_status_id')->nullable();
             $table->date('quality_material_sent_to_store_date')->nullable();
             $table->unsignedBigInteger('grn_no')->nullable();
-            
-
+            $table->unsignedBigInteger('store_receipt_no')->nullable();
+            $table->date('finanace_store_receipt_generate_date')->nullable();
+            $table->unsignedBigInteger('finanace_store_receipt_status_id')->nullable();
 
             $table->boolean('is_approve')->default(false);
             $table->boolean('is_active')->default(true);

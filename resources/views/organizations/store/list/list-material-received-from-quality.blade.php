@@ -109,7 +109,7 @@
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
                                                             <a
-                                                                href="{{ route('accepted-and-material-sent', base64_encode($data->productionId)) }} "><button
+                                                                href="{{ route('accepted-store-material-sent-to-production', base64_encode($data->productionId)) }} "><button
                                                                     data-toggle="tooltip" title="Trash"
                                                                     class="pd-setting-ed">Forwareded For production</button></a>
 

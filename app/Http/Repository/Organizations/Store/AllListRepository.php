@@ -144,9 +144,9 @@ class AllListRepository  {
   
   public function getAllListMaterialReceivedFromQuality(){
     try {
-
       
         $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
+        $array_not_to_be_check = ['',null,NULL];
         
         $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
           $join->on('business_application_processes.business_id', '=', 'production.business_id');
@@ -161,6 +161,7 @@ class AllListRepository  {
           $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
         })
         ->whereIn('business_application_processes.quality_status_id',$array_to_be_check)
+        ->whereNotIn('business_application_processes.store_receipt_no',$array_not_to_be_check)
         ->where('businesses.is_active',true)
         ->select(
             'businesses.id',
