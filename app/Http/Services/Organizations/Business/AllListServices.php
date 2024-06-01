@@ -52,5 +52,16 @@ class AllListServices
         }
     }
 
+    
+
+    public function listPOReceivedForApprovaTowardsOwner(){
+        try {
+            return $this->repo->listPOReceivedForApprovaTowardsOwner();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+
 
 }

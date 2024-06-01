@@ -175,4 +175,52 @@ class AllListRepositor
     }
   }
 
+  public function listPOReceivedForApprovaTowardsOwner()
+  {
+    try {
+
+      // $array_to_be_check = [config('constants.FINANCE_DEPARTMENT.LIST_STORE_RECIEPT_AND_GRN_RECEIVED_FROM_STORE_DEAPRTMENT')];
+      $array_to_be_check = [config('constants.FINANCE_DEPARTMENT.INVOICE_SENT_FOR_BILL_APPROVAL_TO_HIGHER_AUTHORITY')];
+
+      $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+        $join->on('business_application_processes.business_id', '=', 'production.business_id');
+      })
+        ->leftJoin('designs', function ($join) {
+          $join->on('business_application_processes.business_id', '=', 'designs.business_id');
+        })
+
+        ->leftJoin('businesses', function ($join) {
+          $join->on('business_application_processes.business_id', '=', 'businesses.id');
+        })
+        ->leftJoin('design_revision_for_prod', function ($join) {
+          $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
+        })
+        ->whereIn('business_application_processes.business_status_id', $array_to_be_check)
+        ->where('businesses.is_active', true)
+        ->select(
+          'business_application_processes.purchase_order_id',
+          'business_application_processes.store_receipt_no',
+          'business_application_processes.grn_no',
+          'businesses.id',
+          'businesses.title',
+          'businesses.descriptions',
+          'businesses.remarks',
+          'businesses.is_active',
+          'production.business_id',
+          'production.id as productionId',
+          'design_revision_for_prod.reject_reason_prod',
+          'design_revision_for_prod.id as design_revision_for_prod_id',
+          'designs.bom_image',
+          'designs.design_image'
+
+        )
+        ->get();
+      return $data_output;
+    } catch (\Exception $e) {
+      dd($e);
+      return $e;
+    }
+  }
+
+
 }

@@ -56,6 +56,16 @@ class AllListController extends Controller
         }
     }
 
+    public function listPOReceivedForApprovaTowardsOwner(Request $request){
+        try {
+            $data_output = $this->service->listPOReceivedForApprovaTowardsOwner();
+        
+            return view('organizations.business.list.list-po-received-for-sanction-towards-owner', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
+
 
     
 }

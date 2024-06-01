@@ -85,6 +85,14 @@
                                         class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                         class="mini-sub-pro">Purchase Order Approved</span></a>
                             </li>
+
+                            <li
+                                class="nav-item {{ Request::is('list-po-recived-for-approval-payment') ? 'active' : '' }}">
+                                <a title="Inbox"
+                                    href="{{ route('list-po-recived-for-approval-payment') }}"><i
+                                        class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                        class="mini-sub-pro">PO Payment Release Request</span></a>
+                            </li>
                         </ul>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.PURCHASE'))
@@ -294,7 +302,6 @@
                                 <span class="mini-click-non">Material Received From Quality</span>
                             </a>
                         </li>
-
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.HR'))
                         <li>
@@ -326,6 +333,30 @@
                                             class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                             class="mini-sub-pro">Leave Not Approved</span></a></li>
                             </ul>
+                        </li>
+                    @endif
+
+                    @if (session()->get('role_id') == config('constants.ROLE_ID.FINANCE'))
+                        <li class="{{ request()->is('list-sr-and-gr-genrated-business') ? 'active' : '' }}">
+                            <a href="{{ route('list-sr-and-gr-genrated-business') }}">
+                                <i class="fa big-icon fa-envelope icon-wrap"></i>
+                                <span class="mini-click-non">Need to check for Payment</span>
+                            </a>
+                        </li>
+
+                        <li class="{{ request()->is('list-po-sent-for-approval') ? 'active' : '' }}">
+                            <a href="{{ route('list-po-sent-for-approval') }}">
+                                <i class="fa big-icon fa-envelope icon-wrap"></i>
+                                <span class="mini-click-non">PO Submited For Sanction For Payment</span>
+                            </a>
+                        </li>
+
+
+                        <li class="{{ request()->is('list-po-sanction-and-need-to-do-payment-to-vendor') ? 'active' : '' }}">
+                            <a href="{{ route('list-po-sanction-and-need-to-do-payment-to-vendor') }}">
+                                <i class="fa big-icon fa-envelope icon-wrap"></i>
+                                <span class="mini-click-non">PO Pyament Need To Release</span>
+                            </a>
                         </li>
                     @endif
 
