@@ -101,12 +101,12 @@
                                                     <td>{{ ucwords($data->store_receipt_no) }}</td>
                                                     <td>{{ ucwords($data->title) }}</td>
                                                     <td>{{ ucwords($data->descriptions) }}</td>
-                                                    <td>{{ ucwords($data->remarks) }}</td>
+                                                    <td>{{ ucwords($data->remarks) }} ok Satish</td>
 
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
                                                             <a
-                                                                href="{{ route('list-accepted-grn-srn-finance', base64_encode($data->purchase_order_id)) }} "><button
+                                                                href="{{ route('accept-purchase-order', $data->purchase_order_id) }} "><button
                                                                     data-toggle="tooltip" title="Trash"
                                                                     class="pd-setting-ed">Check details</button></a>
 

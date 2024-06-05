@@ -162,17 +162,18 @@ class BusinessRepository
         try {
             
             $business_application = BusinessApplicationProcesses::where('purchase_order_id', $purchase_status_id)->first();
-            
+            // dd($business_application);
             if ($business_application) {
                 $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.APPROVED_PO_FROM_PURCHASE');
                 $business_application->owner_po_action_date= date('Y-m-d');
-                $business_application->purchase_status_id = config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY');
+                $business_application->finanace_store_receipt_status_id = config('constants.FINANCE_DEPARTMENT.INVOICE_APPROVED_FROM_HIGHER_AUTHORITY');
                 $business_application->save();
             }
             
             return $business_application;
 
         } catch (\Exception $e) {
+            dd($e);
             return $e;
         }
     }

@@ -106,7 +106,7 @@
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
                                                             <a
-                                                                href="{{ route('list-accepted-grn-srn-finance', base64_encode($data->purchase_order_id)) }} "><button
+                                                                href="{{ route('list-accepted-grn-srn-finance', $data->purchase_order_id) }} "><button
                                                                     data-toggle="tooltip" title="Trash"
                                                                     class="pd-setting-ed">Check details</button></a>
 

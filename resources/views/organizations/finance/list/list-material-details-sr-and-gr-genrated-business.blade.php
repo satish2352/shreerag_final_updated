@@ -76,7 +76,7 @@
 
                                     <div style="display: flex; align-items: center;">
                                         <a
-                                            href="{{ route('forward-the-purchase-order-to-the-owner-for-sanction', base64_encode('202405271716808167')) }} "><button
+                                            href="{{ route('forward-the-purchase-order-to-the-owner-for-sanction', $purchase_orders_id) }} "><button
                                                 data-toggle="tooltip" title="chekcdetails" class="pd-setting-ed">Forward
                                                 Towards Owner For Sanction</button></a>
                                         {{-- , base64_encode($data->purchase_order_id) --}}

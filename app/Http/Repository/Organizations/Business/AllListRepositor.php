@@ -180,7 +180,7 @@ class AllListRepositor
     try {
 
       // $array_to_be_check = [config('constants.FINANCE_DEPARTMENT.LIST_STORE_RECIEPT_AND_GRN_RECEIVED_FROM_STORE_DEAPRTMENT')];
-      $array_to_be_check = [config('constants.FINANCE_DEPARTMENT.INVOICE_SENT_FOR_BILL_APPROVAL_TO_HIGHER_AUTHORITY')];
+      $array_to_be_check = [config('constants.HIGHER_AUTHORITY.INVOICE_RECEIVED_FOR_BILL_APPROVAL_TO_HIGHER_AUTHORITY')];
 
       $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
         $join->on('business_application_processes.business_id', '=', 'production.business_id');

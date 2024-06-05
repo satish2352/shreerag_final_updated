@@ -35,10 +35,10 @@ class GRNRepository
     public function storeGRN($request)
     {
         try {
-            $grn_no = str_security_status_id(array("-", ":"), "", date('Y-m-d') . time());
+            $grn_no = str_replace(array("-", ":"), "", date('Y-m-d') . time());
             $dataOutput = new GRNModel();
             $dataOutput->purchase_orders_id = $request->purchase_orders_id;
-            $dataOutput->grn_no = $grn_no;
+            // $dataOutput->grn_no = $grn_no;
             $dataOutput->po_date = $request->po_date;
             $dataOutput->grn_date = $request->grn_date;
             $dataOutput->remark = $request->remark;
@@ -85,6 +85,7 @@ class GRNRepository
                 'status' => 'success'
             ];
         } catch (\Exception $e) {
+            dd($e->getMessage());
             return [
                 'msg' => $e->getMessage(),
                 'status' => 'error'

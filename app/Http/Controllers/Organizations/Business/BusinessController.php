@@ -170,6 +170,7 @@ class BusinessController extends Controller
     public function acceptPurchaseOrder($purchase_order_id)
     {
         try {
+            
             $delete = $this->service->acceptPurchaseOrder($purchase_order_id);
             if ($delete) {
                 $status = 'success';

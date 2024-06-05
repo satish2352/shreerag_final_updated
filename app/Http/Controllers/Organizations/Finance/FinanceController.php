@@ -20,11 +20,10 @@ class FinanceController extends Controller
 
 
 
-    public function forwardPurchaseOrderToTheOwnerForSanction($id)
+    public function forwardPurchaseOrderToTheOwnerForSanction($purchase_orders_id)
     {
         try {
-            $purchase_order_id = base64_decode($id);
-            $update_data = $this->service->forwardPurchaseOrderToTheOwnerForSanction($purchase_order_id);
+            $update_data = $this->service->forwardPurchaseOrderToTheOwnerForSanction($purchase_orders_id);
             return redirect('financedept/list-sr-and-gr-genrated-business');
         } catch (\Exception $e) {
             return $e;

@@ -25,11 +25,11 @@ class AllListController extends Controller
         }
     } 
 
-    public function listAcceptedGrnSrnFinance(Request $request){
+    public function listAcceptedGrnSrnFinance($purchase_orders_id){
         try {
             // $data_output = $this->service->listAcceptedGrnSrnFinance();
         // , compact('data_output')
-            return view('organizations.finance.list.list-material-details-sr-and-gr-genrated-business');
+            return view('organizations.finance.list.list-material-details-sr-and-gr-genrated-business',compact('purchase_orders_id'));
         } catch (\Exception $e) {
             return $e;
         }
