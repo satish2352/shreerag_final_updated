@@ -95,6 +95,7 @@ class AllListRepositor
   {
     try {
 
+      $array_not_to_be_check = [config('constants.HIGHER_AUTHORITY.LIST_PO_TO_BE_APPROVE_FROM_PURCHASE')];
       $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL')];
       $array_to_be_check_grn_no = ['0'];
 
@@ -111,6 +112,7 @@ class AllListRepositor
           $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
         })
         ->whereIn('business_application_processes.purchase_status_id', $array_to_be_check)
+        ->whereIn('business_application_processes.business_status_id', $array_not_to_be_check)
         ->whereIn('business_application_processes.grn_no', $array_to_be_check_grn_no)
         ->whereIn('business_application_processes.store_receipt_no', $array_to_be_check_grn_no)
         
