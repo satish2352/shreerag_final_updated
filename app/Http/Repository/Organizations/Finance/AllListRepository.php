@@ -164,7 +164,7 @@ class AllListRepository
   public function listPOSanctionAndNeedToDoPaymentToVendor()
   {
     try {
-// dd("ok");
+
       $array_to_be_check = [config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION')];
       $array_not_to_be_check = [config('constants.FINANCE_DEPARTMENT.INVOICE_PAID_AGAINST_PO')];
 
