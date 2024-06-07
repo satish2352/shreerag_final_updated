@@ -35,6 +35,26 @@ class AllListController extends Controller
         }
     }
     
+    public function materialAskByProdToStore(Request $request){
+        try {
+            $data_output = $this->service->materialAskByProdToStore();
+        
+            return view('organizations.business.list.list-material-ask-by-prod-to-store', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function getAllStoreDeptSentForPurchaseMaterials(Request $request){
+        try {
+            $data_output = $this->service->getAllStoreDeptSentForPurchaseMaterials();
+        
+            return view('organizations.business.list.list-material-list-from-store-to-purchase', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    
 
     
     public function getAllListPurchaseOrder(Request $request){

@@ -26,10 +26,10 @@ class StoreServices
         }
     }
 
-    public function addAll($request)
+    public function storeRequesition($request)
     {
         try {
-            $last_id = $this->repo->addAll($request);
+            $last_id = $this->repo->storeRequesition($request);
 
             $path = Config::get('FileConstant.REQUISITION_ADD');
             $ImageName = $last_id['ImageName'];

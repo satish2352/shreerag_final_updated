@@ -37,7 +37,7 @@ class StoreRepository
         }
     }
 
-    public function addAll($request)
+    public function storeRequesition($request)
     {
         try {
             $production_id = base64_decode($request->production_id);
@@ -66,6 +66,7 @@ class StoreRepository
                 $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.BOM_SENT_TO_STORE_DEPT_FOR_CHECKING');
                 $business_application->store_status_id = config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE');
                 $business_application->requisition_id = $last_insert_id;
+                $business_application->grn_no = '0';
                 $dataOutput->purchase_dept_req_sent_date = date('Y-m-d');
                 $business_application->purchase_status_id = config('constants.PUCHASE_DEPARTMENT.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE');
                 $business_application->save();
