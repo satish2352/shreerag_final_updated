@@ -76,21 +76,28 @@
                                         @csrf
                                         <div class="form-group-inner">
                                             <div class="row">
+
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                     <div class="form-select-list">
-                                                        <label for="leave_type">Select Leaves Type:</label>
-                                                        <select class="form-control custom-select-value" name="leave_type" id="leave_type">
-                                                            <option value="">Select Leaves Type</option>
-															<option value="1">Casual Leave</option>
-                                                            <option value="2">Medical Leave</option>
-                                                            <option value="3">Early Going</option>
-														
-                                                        </select>
+                                                        <label for="leave_type_id">Select Leaves Type : </label>&nbsp<span class="red-text">*</span>
+                                                        <select class="form-control" id="leave_type_id" name="leave_type_id"
+                                                        onchange="myFunction(this.value)">
+                                                        <option value="">Select</option>
+                                                        @foreach ($leaveManagment as $leaveType)
+                                                            @if (old('leave_type_id') == $leaveType['id'])
+                                                                <option value="{{ $leaveType['id'] }}" selected>
+                                                                    {{ $leaveType['name'] }}</option>
+                                                            @else
+                                                                <option value="{{ $leaveType['id'] }}">{{ $leaveType['name'] }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
+                                                        @if ($errors->has('leave_type_id'))
+                                                            <span class="red-text"><?php echo $errors->first('leave_type_id', ':message'); ?></span>
+                                                        @endif
                                                     </div>
                                                 </div>
-
-
-
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                     <div class="form-select-list">
                                                         <label for="leave_day">Select Leaves Day:</label>
@@ -217,7 +224,7 @@
 
         $("#addForm").validate({
             rules: {
-                leave_type: {
+                leave_type_id: {
                     required: true,
                 },
                 department_id: {
@@ -239,7 +246,7 @@
                 },
             },
             messages: {
-                leave_type: {
+                leave_type_id: {
                     required: "Please select leave type.",
                 },
                 leave_day: {

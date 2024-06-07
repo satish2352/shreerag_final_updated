@@ -12,7 +12,8 @@ use Carbon;
 use App\Models\DepartmentsModel;
 use App\Models\
 {
-    RolesModel,EmployeesModel, Leaves
+    RolesModel,EmployeesModel, Leaves,
+    LeaveManagement, FinancialYearLeaveRecord
 };
 
 class LeavesController extends Controller
@@ -35,7 +36,7 @@ class LeavesController extends Controller
     public function getAllLeavesRequest(){
         try {
             $getOutput = $this->service->getAllLeavesRequest();
-            
+          
             return view('organizations.hr.leaves.list-leaves-accepted', compact('getOutput'));
         } catch (\Exception $e) {
             return $e;
@@ -162,13 +163,33 @@ class LeavesController extends Controller
             }
     
             $leaves = Leaves::find($leaves_id);
-    
+             $employeeId = $leaves->employee_id;
+             $leaveType = $leaves->leave_type_id;
+
             if ($action === 'approve') {
                 if ($leaves->is_approved === 0) {
-                    $leaves->is_approved = 2; // Update status to approved
+                    $leaves->is_approved = 2;                
+                    $financialRecord = FinancialYearLeaveRecord::where('tbl_financial_year_leave_record.user_id', $employeeId)
+                    ->where('tbl_financial_year_leave_record.leave_management_id', $leaveType)
+                   ->first();
+                    if ($financialRecord) {
+                        $financialRecord->leave_balance -= $leaves->leave_count;
+                        $financialRecord->save();
+                    }
+
                 } elseif($leaves->is_approved === 1) {
                     $leaves->is_approved = 2;
+
+                //     $financialRecord = FinancialYearLeaveRecord::where('tbl_financial_year_leave_record.user_id', $employeeId)
+                //     ->where('tbl_financial_year_leave_record.leave_type_name', $leaveType)
+                //    ->first();
+                //     if ($financialRecord) {
+                //         $financialRecord->leave_balance -= $leaves->leave_count;
+                //         $financialRecord->save();
+                //     }
+
                     // return response()->json(['status' => 'false', 'message' => 'Leaves record is already approved'], 200);
+                                
                 }
             } elseif ($action === 'notapprove') {
                 if ($leaves->is_approved === 0) {
@@ -230,9 +251,13 @@ class LeavesController extends Controller
     
     
     public function add(){
+        $leaveManagment = LeaveManagement::where('is_active', true)
+        ->select('id','name')
+        ->get()
+        ->toArray();
             $dept=DepartmentsModel::get();
-            $roles=RolesModel::get();
-        return view('organizations.hr.leaves.add-leaves',compact('dept','roles'));
+            // $roles=RolesModel::get();
+        return view('organizations.hr.leaves.add-leaves',compact('dept','leaveManagment'));
     }
 
 
@@ -333,6 +358,38 @@ class LeavesController extends Controller
       
     //       return response()->json(['exists' => $exists]);
     //   }
+    // public function checkDates(Request $request)
+    // {
+    //     $request->validate([
+    //         'leave_start_date' => 'required|date',
+    //         'leave_end_date' => 'required|date|after_or_equal:leave_start_date',
+    //     ]);
+    
+    //     $existingLeave = Leaves::where(function ($query) use ($request) {
+    //         $query->where('is_approved', 0)
+    //             ->whereBetween('leave_start_date', [$request->leave_start_date, $request->leave_end_date])
+    //             ->orWhereBetween('leave_end_date', [$request->leave_start_date, $request->leave_end_date])
+    //             ->orWhere(function ($query) use ($request) {
+    //                 $query->where('leave_start_date', '<=', $request->leave_start_date)
+    //                     ->where('leave_end_date', '>=', $request->leave_end_date);
+    //             });
+    //     })->first();
+    
+    //     if ($existingLeave) {
+    //         return response()->json([
+    //             'message' => 'Leave request overlaps with an existing request and is not approved.',
+    //             'leave' => $existingLeave,
+    //             'status' => 'overlap'
+    //         ], 400);
+    //     }
+    
+    //     return response()->json([
+    //         'message' => 'Leave request does not overlap with existing requests.',
+    //         'status' => 'not_overlap'
+    //     ], 200);
+    // }
+    
+    
     public function checkDates(Request $request)
     {
         $request->validate([
@@ -340,15 +397,18 @@ class LeavesController extends Controller
             'leave_end_date' => 'required|date|after_or_equal:leave_start_date',
         ]);
     
-        $existingLeave = Leaves::where(function ($query) use ($request) {
-            $query->where('is_approved', 0)
-                ->whereBetween('leave_start_date', [$request->leave_start_date, $request->leave_end_date])
-                ->orWhereBetween('leave_end_date', [$request->leave_start_date, $request->leave_end_date])
-                ->orWhere(function ($query) use ($request) {
-                    $query->where('leave_start_date', '<=', $request->leave_start_date)
-                        ->where('leave_end_date', '>=', $request->leave_end_date);
-                });
-        })->first();
+        $employeeId = $request->session()->get('user_id');
+    
+        $existingLeave = Leaves::where('employee_id', $employeeId)
+            ->where('is_approved', 0)
+            ->where(function ($query) use ($request) {
+                $query->whereBetween('leave_start_date', [$request->leave_start_date, $request->leave_end_date])
+                    ->orWhereBetween('leave_end_date', [$request->leave_start_date, $request->leave_end_date])
+                    ->orWhere(function ($query) use ($request) {
+                        $query->where('leave_start_date', '<=', $request->leave_start_date)
+                            ->where('leave_end_date', '>=', $request->leave_end_date);
+                    });
+            })->first();
     
         if ($existingLeave) {
             return response()->json([
@@ -364,14 +424,17 @@ class LeavesController extends Controller
         ], 200);
     }
     
-    
-
   public function edit(Request $request){
+    $leaveManagment = LeaveManagement::where('is_active', true)
+    ->select('id','name')
+    ->get()
+    ->toArray();
+
     $edit_data_id = base64_decode($request->id);
     $editData = $this->service->getById($edit_data_id);
     $dept=DepartmentsModel::get();
-    $roles=RolesModel::get();
-    return view('organizations.hr.leaves.edit-leaves', compact('editData','dept','roles'));
+    // $roles=RolesModel::get();
+    return view('organizations.hr.leaves.edit-leaves', compact('editData','dept','leaveManagment'));
 }
 
 

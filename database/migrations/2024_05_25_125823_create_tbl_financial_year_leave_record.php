@@ -13,17 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tbl_leaves', function (Blueprint $table) {
+        Schema::create('tbl_financial_year_leave_record', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('organization_id'); 
-            $table->unsignedBigInteger('employee_id');
-            $table->unsignedBigInteger('leave_type_id');
-            $table->string('leave_start_date');
-            $table->string('leave_end_date');
-            $table->string('leave_day');
-            $table->string('leave_count');
-            $table->text('reason');
-            $table->boolean('is_approved')->default(false);
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('leave_management_id')->nullable();
+            $table->string('leave_type_name')->nullable();
+            $table->string('leave_balance')->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('is_deleted')->default(false);
             $table->timestamps();
@@ -37,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tbl_leaves');
+        Schema::dropIfExists('tbl_financial_year_leave_record');
     }
 };

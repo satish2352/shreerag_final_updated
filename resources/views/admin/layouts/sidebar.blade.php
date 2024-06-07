@@ -359,7 +359,11 @@
                                             class="mini-sub-pro">Add Employee</span></a></li>
                             </ul>
                         </li>
+                        <li><a title="Inbox" href="{{ route('list-yearly-leave-management') }}"><i
+                            class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                            class="mini-sub-pro">Add Yearly Leave</span></a></li>
 
+                        
 
                         <li>
                             <a class="has-arrow" href="{{ route('list-leaves-acceptedby-hr') }}" aria-expanded="false"><i

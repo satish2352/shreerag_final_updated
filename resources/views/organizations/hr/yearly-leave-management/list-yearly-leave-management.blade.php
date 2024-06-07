@@ -32,7 +32,7 @@ padding-left: 20px !important;
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2" >
                                         <div class="login-horizental cancel-wp pull-left">
-                                                <a href="{{ route('add-leaves') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Leaves</button></a>
+                                                <a href="{{ route('add-yearly-leave-management') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Leaves</button></a>
                                         </div>
                                     </div>
                                 <div class="col-lg-10"></div>
@@ -80,13 +80,9 @@ padding-left: 20px !important;
                                         <tr>
                                             
                                             <th data-field="id">ID</th>
-                                            <th data-field="leave_start_date" data-editable="true">Leave start Date</th>
-                                            <th data-field="leave_end_date" data-editable="true">Leave End Date</th>
-                                            <th data-field="leave_day" data-editable="true">Leave Day</th>
-                                            <th data-field="leave_type_id" data-editable="true">Leave Type</th>
-                                            <th data-field="leave_count" data-editable="true">Leave Count</th>
-                                            <th data-field="reason" data-editable="true">Reason</th>
-                                            <th data-field="is_approved" data-editable="true">Status</th>
+                                            <th data-field="leave_year" data-editable="true">Year</th>
+                                            <th data-field="name" data-editable="true">Name</th>
+                                            <th data-field="leave_count" data-editable="true">Count</th>
                                             <th data-field="action">Action</th>
                                         </tr>
 
@@ -96,45 +92,31 @@ padding-left: 20px !important;
                                         <tr>
                                             
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ucwords($data->leave_start_date)}}</td>
-                                            <td>{{ucwords($data->leave_end_date)}}</td>
-                                            <td> @if($data->leave_day == 'half_day')
-                                                Half Day
-                                              @elseif($data->leave_day == 'full_day')
-                                             Full Day
-                                              @else
-                                                  Unknown Status
-                                              @endif</td>
-                                              <td>{{ ucwords($data->leave_type_name) }}</td>
-                                              <td>{{ ucwords($data->leave_count) }}</td>
-                                            <td>{{ucwords($data->reason)}}</td>
-                                            <td>
-                                                @if($data->is_approved == 0)
-                                                  Send for Approval
-                                                @elseif($data->is_approved == 1)
-                                                   Not Approved 
-                                                @elseif($data->is_approved == 2)
-                                                  Approved 
-                                                @else
-                                                    Unknown Status
-                                                @endif
-                                            </td>
-                                            
+                                            <td>{{ucwords($data->leave_year)}}</td>
+                                            <td>{{ucwords($data->name)}}</td>
+                                            <td>{{ucwords($data->leave_count)}}</td>
                                             <td>
                                                 <div style="display: flex; align-items: center;">
                                                     @if($data->is_approved == 0)
-                                                        <a href="{{ route('edit-leaves', base64_encode($data->id)) }}">
+                                                        <a href="{{ route('edit-yearly-leave-management', base64_encode($data->id)) }}">
                                                             <button data-toggle="tooltip" title="Edit" class="pd-setting-ed" style="color: green;
                                                             border: 1px solid;">
                                                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                                             </button>
                                                         </a>
-                                                        <a href="{{ route('delete-leaves', base64_encode($data->id)) }}">
+                                                        {{-- <a href="{{ route('delete-yearly-leave-management', base64_encode($data->id)) }}">
                                                             <button data-toggle="tooltip" title="Trash" class="pd-setting-ed" style="color: red;
                                                             border: 1px solid;">
                                                                 <i class="fa fa-trash" aria-hidden="true"></i>
                                                             </button>
+                                                        </a> --}}
+
+                                                        <a href="{{ route('delete-yearly-leave-management', base64_encode($data->leave_year)) }}">
+                                                            <button data-toggle="tooltip" title="Trash" class="pd-setting-ed" style="color: red; border: 1px solid;">
+                                                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                                            </button>
                                                         </a>
+                                                        
                                                     @else
                                                         <button data-toggle="tooltip" title="Edit" class="pd-setting-ed" disabled>
                                                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
