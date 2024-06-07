@@ -311,6 +311,19 @@ class PurchaseOrderController extends Controller
     }
 
 
+    public function checkDetailsBeforeSendPOToVendor($purchase_order_id)
+    {
+        try {
+
+            return view('organizations.purchase.purchase-order-details.blade');
+           
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        } 
+    }
+
+
+
     public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id)
     {
         try {
