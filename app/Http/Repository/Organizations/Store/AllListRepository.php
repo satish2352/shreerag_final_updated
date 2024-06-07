@@ -119,7 +119,7 @@ class AllListRepository  {
           $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
         })
         ->whereIn('business_application_processes.store_status_id',$array_to_be_check)
-        ->whereNotIn('business_application_processes.grn_no',$array_not_to_be_check)
+        ->whereIn('business_application_processes.grn_no',$array_not_to_be_check)
         ->where('businesses.is_active',true)
         ->select(
             'businesses.id',
