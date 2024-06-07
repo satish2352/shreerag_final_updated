@@ -137,6 +137,7 @@ class AllListRepository
 
         ->where('businesses.is_active', true)
         ->select(
+          'business_application_processes.purchase_order_id',
           'businesses.id',
           'businesses.title',
           'businesses.descriptions',
@@ -163,8 +164,9 @@ class AllListRepository
   public function listPOSanctionAndNeedToDoPaymentToVendor()
   {
     try {
-
+// dd("ok");
       $array_to_be_check = [config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION')];
+      $array_not_to_be_check = [config('constants.FINANCE_DEPARTMENT.INVOICE_PAID_AGAINST_PO')];
 
 
       $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
@@ -180,9 +182,11 @@ class AllListRepository
           $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
         })
         ->whereIn('business_application_processes.store_status_id', $array_to_be_check)
+        ->whereNotIn('business_application_processes.finanace_store_receipt_status_id', $array_not_to_be_check)
 
         ->where('businesses.is_active', true)
         ->select(
+          'business_application_processes.purchase_order_id',
           'businesses.id',
           'businesses.title',
           'businesses.descriptions',

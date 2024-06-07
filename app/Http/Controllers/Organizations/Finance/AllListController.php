@@ -58,6 +58,8 @@ class AllListController extends Controller
         }
     } 
 
+    
+
 
     
     // public function getAllListMaterialSentToPurchase(){

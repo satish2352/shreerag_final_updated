@@ -23,7 +23,7 @@
 
 
                             <a href="{{ route('accept-purchase-order', $purchase_order_id) }}"><button data-toggle="tooltip"
-                                    title="Edit" class="pd-setting-ed">View Details</button></a> &nbsp; &nbsp; &nbsp;
+                                    title="Accept" class="pd-setting-ed">Accept</button></a> &nbsp; &nbsp; &nbsp;
 
                         </div>
                     </div>

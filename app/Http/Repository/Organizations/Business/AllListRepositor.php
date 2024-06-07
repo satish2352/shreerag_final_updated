@@ -96,6 +96,7 @@ class AllListRepositor
     try {
 
       $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL')];
+      $array_to_be_check_grn_no = [NULL];
 
       $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
         $join->on('business_application_processes.business_id', '=', 'production.business_id');
@@ -110,6 +111,9 @@ class AllListRepositor
           $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
         })
         ->whereIn('business_application_processes.purchase_status_id', $array_to_be_check)
+        ->whereIn('business_application_processes.grn_no', $array_to_be_check_grn_no)
+        ->whereIn('business_application_processes.store_receipt_no', $array_to_be_check_grn_no)
+        
         ->where('businesses.is_active', true)
         ->select(
           'business_application_processes.purchase_order_id',

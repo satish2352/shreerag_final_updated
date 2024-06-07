@@ -26,6 +26,15 @@ class FinanceServices
         }
     }
 
+    public function forwardedPurchaseOrderPaymentToTheVendor($purchase_order_id)
+    {
+        try {
+            $update_data = $this->repo->forwardedPurchaseOrderPaymentToTheVendor($purchase_order_id);
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
     // public function addAll($request)
     // {
     //     try {

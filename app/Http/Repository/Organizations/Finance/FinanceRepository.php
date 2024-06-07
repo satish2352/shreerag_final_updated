@@ -32,6 +32,23 @@ class FinanceRepository
         }
     }
 
+
+    public function forwardedPurchaseOrderPaymentToTheVendor($purchase_order_id)
+    {
+        try {
+            $business_application = BusinessApplicationProcesses::where('purchase_order_id', $purchase_order_id)->first();
+            if ($business_application) {
+                $business_application->purchase_order_id = $purchase_order_id;
+                $business_application->business_status_id = config('constants.FINANCE_DEPARTMENT.INVOICE_PAID_AGAINST_PO');
+                $business_application->finanace_store_receipt_status_id = config('constants.FINANCE_DEPARTMENT.INVOICE_PAID_AGAINST_PO');
+                $business_application->save();
+            }
+            return $business_application;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
     // public function addAll($request)
     // {
     //     try {

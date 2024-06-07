@@ -106,11 +106,9 @@
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
                                                             <a
-                                                                href="{{ route('list-accepted-grn-srn-finance', base64_encode($data->purchase_order_id)) }} "><button
-                                                                    data-toggle="tooltip" title="Trash"
-                                                                    class="pd-setting-ed">Check details</button></a>
-
-
+                                                                href="{{ route('send-payment-to-vendor', $data->purchase_order_id) }} "><button
+                                                                    data-toggle="tooltip" title="Payment Paid To Vendor"
+                                                                    class="pd-setting-ed">Payment Paid To Vendor</button></a>
                                                         </div>
                                                     </td>
 
