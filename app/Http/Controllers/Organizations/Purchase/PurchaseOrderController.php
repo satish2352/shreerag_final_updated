@@ -293,8 +293,8 @@ class PurchaseOrderController extends Controller
                 $business_application->purchase_order_submited_to_owner_date= date('Y-m-d');
                 $business_application->purchase_status_id = config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL');
                 
-                $business_application->grn_no = 'NULL';
-                $business_application->store_receipt_no = 'NULL';
+                $business_application->grn_no = '0';
+                $business_application->store_receipt_no = '0';
                 $business_application->save();
 
             }
