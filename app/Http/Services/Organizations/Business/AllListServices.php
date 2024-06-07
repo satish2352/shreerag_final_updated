@@ -33,6 +33,24 @@ class AllListServices
         }
     } 
 
+    public function materialAskByProdToStore(){
+        try {
+            return $this->repo->materialAskByProdToStore();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
+
+
+    public function getAllStoreDeptSentForPurchaseMaterials(){
+        try {
+            return $this->repo->getAllStoreDeptSentForPurchaseMaterials();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
+
+
     
     public function getAllListPurchaseOrder(){
         try {

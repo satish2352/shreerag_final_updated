@@ -73,6 +73,20 @@
                                         class="mini-click-non">Design Received For Design Correction</span></a>
                             </li>
 
+                            <li class="{{ request()->is('owner/material-ask-by-prod-to-store') ? 'active' : '' }}">
+                                <a href="{{ route('material-ask-by-prod-to-store') }}" aria-expanded="false"><i
+                                        class="fa big-icon fa-envelope icon-wrap"></i> <span
+                                        class="mini-click-non">Material Ask By Production To Store</span></a>
+                            </li>
+
+                            <li class="{{ request()->is('owner/material-ask-by-store-to-purchase') ? 'active' : '' }}">
+                                <a href="{{ route('material-ask-by-store-to-purchase') }}" aria-expanded="false"><i
+                                        class="fa big-icon fa-envelope icon-wrap"></i> <span
+                                        class="mini-click-non">Purchase Material Ask By Store To Purchase</span></a>
+                            </li>
+
+                            
+
                             <li class="{{ request()->is('owner/list-purchase-orders') ? 'active' : '' }}">
                                 <a href="{{ route('list-purchase-orders') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-envelope icon-wrap"></i> <span

@@ -71,7 +71,7 @@ class StoreController extends Controller
             //         ->withInput()
             //         ->withErrors($validation);
             // } else {
-            $add_record = $this->service->addAll($request);
+            $add_record = $this->service->storeRequesition($request);
 
             if ($add_record) {
                 $msg = $add_record['msg'];
