@@ -292,6 +292,9 @@ class PurchaseOrderController extends Controller
                 $business_application->purchase_order_id = $data_for_purchase_order->purchase_orders_id;
                 $business_application->purchase_order_submited_to_owner_date= date('Y-m-d');
                 $business_application->purchase_status_id = config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL');
+                
+                $business_application->grn_no = '0';
+                $business_application->store_receipt_no = '0';
                 $business_application->save();
 
             }
@@ -322,6 +325,17 @@ class PurchaseOrderController extends Controller
 
             return redirect('purchase/list-purchase-order-approved-sent-to-vendor')->with(compact('msg', 'status'));
            
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        } 
+    }
+
+
+    public function getAllListPurchaseOrderTowardsOwnerDetails($purchase_order_id)
+    {
+        try {
+           
+            return view('organizations.purchase.addpurchasedetails.view-purchase-orders-details');
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         } 

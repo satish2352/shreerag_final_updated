@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('grn_tbl', function (Blueprint $table) {
                 $table->id();
-                $table->unsignedBigInteger('purchase_id');
+                $table->unsignedBigInteger('purchase_orders_id');
                 $table->string('po_date')->nullable();
                 $table->string('grn_date')->nullable();
                 $table->string('image');

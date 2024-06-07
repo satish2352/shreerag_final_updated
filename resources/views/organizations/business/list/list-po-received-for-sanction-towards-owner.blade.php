@@ -23,7 +23,6 @@
             text-align: left;
         }
     </style>
-
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">
@@ -31,7 +30,7 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Material Recived From<span class="table-project-n">Store</span> Department</h1>
+                                <h1>PO Received For Sanction For Payment</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
                                         {{-- <div class="login-horizental cancel-wp pull-left">
@@ -81,42 +80,39 @@
                                         data-click-to-select="true" data-toolbar="#toolbar">
                                         <thead>
                                             <tr>
-                                                <th data-field="id">Sr.No.</th>
+
+                                                <th data-field="id">ID</th>
+                                                <th data-field="purchase_order_id" data-editable="true">Purchase Order No</th>
+                                                <th data-field="grn_no" data-editable="true">GRN No</th>
+                                                <th data-field="store_receipt_no" data-editable="true">SR No</th>
                                                 <th data-field="grn_number" data-editable="true">Title</th>
                                                 <th data-field="grn_date" data-editable="true">Description</th>
                                                 <th data-field="purchase_id" data-editable="true">Remark</th>
-                                                <th data-field="store_material_sent_date" data-editable="true">Matrial Recieved Date</th>
-                                                <th data-field="design_image" data-editable="false">Design Layout</th>
-                                                <th data-field="bom_image" data-editable="false">BOM</th>
-
+                                                <th data-field="action" data-editable="false">Action</th>
                                             </tr>
-
                                         </thead>
-
-
-
                                         <tbody>
                                             @foreach ($data_output as $data)
                                                 <tr>
+
                                                     <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ ucwords($data->purchase_order_id	) }}</td>
+                                                    <td>{{ ucwords($data->grn_no) }}</td>
+                                                    <td>{{ ucwords($data->store_receipt_no) }}</td>
                                                     <td>{{ ucwords($data->title) }}</td>
                                                     <td>{{ ucwords($data->descriptions) }}</td>
-                                                    <td>{{ ucwords($data->remarks) }}</td>
-                                                    <td>{{ ucwords($data->store_material_sent_date) }}</td>
-                                                    <td> <a class="img-size" target="_blank"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
-                                                        alt="Design"> Click to view</a>
-                                                </td>
-                                                <td> <a class="img-size"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                        alt="bill of material" >Click to download</a>
-                                                </td>
+                                                    <td>{{ ucwords($data->remarks) }} ok Satish</td>
 
-                                                   
-
-                                                
+                                                    <td>
+                                                        <div style="display: flex; align-items: center;">
+                                                            <a
+                                                                href="{{ route('accept-purchase-order', $data->purchase_order_id) }} "><button
+                                                                    data-toggle="tooltip" title="Trash"
+                                                                    class="pd-setting-ed">Check details</button></a>
 
 
+                                                        </div>
+                                                    </td>
 
                                                 </tr>
                                             @endforeach

@@ -1,29 +1,27 @@
 <?php
 namespace App\Http\Repository\Organizations\Security;
+
 use Illuminate\Database\QueryException;
 use DB;
 use Illuminate\Support\Carbon;
-use App\Models\ {
-Gatepass,
-PurchaseOrderModel,
-BusinessApplicationProcesses
+use App\Models\{
+    Gatepass,
+    PurchaseOrderModel,
+    BusinessApplicationProcesses
 };
 use Config;
 
-class GatepassRepository  {
+class GatepassRepository
+{
 
-    public function getAll(){
+    public function getAll()
+    {
         try {
-            $data_output= Gatepass::get();
+            $data_output = Gatepass::get();
 
-            // $data_output = Gatepass::leftJoin('purchase_order_details', 'purchase_orders.id', '=', 'purchase_order_details.store_receipt_id')
-            // ->select('purchase_order_details.*','purchase_order_details.id as designs_details_id', 'purchase_orders.id as purchase_main_id', 'purchase_orders.vendor_id', 'purchase_orders.po_date', 'purchase_orders.terms_condition', 'purchase_orders.image')
-            // ->where('purchase_orders.id', $id)
-            // ->get();
-          
             return $data_output;
         } catch (\Exception $e) {
-      
+
             return $e;
         }
     }
@@ -32,7 +30,7 @@ class GatepassRepository  {
     public function addAll($request)
     {
         try {
-            
+
             $dataOutput = new Gatepass();
             $dataOutput->purchase_orders_id = $request->purchase_orders_id;
             $dataOutput->gatepass_name = $request->gatepass_name;
@@ -46,10 +44,10 @@ class GatepassRepository  {
             $purchase_orders_details = PurchaseOrderModel::where('purchase_orders_id', $request->purchase_orders_id)->first();
             $business_application = BusinessApplicationProcesses::where('business_id', $purchase_orders_details->business_id)->first();
             if ($business_application) {
-                $business_application->store_material_recived_date = date('Y-m-d');
-                $business_application->store_material_recived_status = config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION');
+                // $business_application->store_material_recived_for_grn_date = date('Y-m-d');
+                // $business_application->store_status_id = config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION');
                 $business_application->security_material_recived_date = date('Y-m-d');
-                $business_application->security_material_recived_status = config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION');
+                $business_application->security_status_id = config('constants.QUALITY_DEPARTMENT.LIST_PO_RECEIVED_FROM_SECURITY');
                 $business_application->save();
             }
 
@@ -85,9 +83,10 @@ class GatepassRepository  {
     //         }
     //     }
 
-    public function getById($id) {
+    public function getById($id)
+    {
         try {
-           
+
             $dataOutputById = Gatepass::find($id);
             // dd($dataOutputById);
             // dd($dataOutputById);
@@ -106,9 +105,10 @@ class GatepassRepository  {
             ];
         }
     }
-    
-    public function updateAll($request){
-       
+
+    public function updateAll($request)
+    {
+
         try {
 
             // Update main design data
@@ -118,7 +118,7 @@ class GatepassRepository  {
             $dataOutput->gatepass_date = $request->gatepass_date;
             $dataOutput->gatepass_time = $request->gatepass_time;
             $dataOutput->remark = $request->remark;
-            $dataOutput->save();     
+            $dataOutput->save();
 
             // Returning success message
             return [
@@ -134,23 +134,24 @@ class GatepassRepository  {
             ];
         }
     }
-    
-    public function deleteById($id){
-            try {
-                $deleteDataById = Gatepass::find($id);
-                
-                if ($deleteDataById) {
-                    // if (file_exists_view(Config::get('FileConstant.STORE_RECEIPT_DELETE') . $deleteDataById->image)){
-                    //     removeImage(Config::get('FileConstant.STORE_RECEIPT_DELETE') . $deleteDataById->image);
-                    // }
-                    $deleteDataById->delete();
-                    
-                    return $deleteDataById;
-                } else {
-                    return null;
-                }
-            } catch (\Exception $e) {
-                return $e;
+
+    public function deleteById($id)
+    {
+        try {
+            $deleteDataById = Gatepass::find($id);
+
+            if ($deleteDataById) {
+                // if (file_exists_view(Config::get('FileConstant.STORE_RECEIPT_DELETE') . $deleteDataById->image)){
+                //     removeImage(Config::get('FileConstant.STORE_RECEIPT_DELETE') . $deleteDataById->image);
+                // }
+                $deleteDataById->delete();
+
+                return $deleteDataById;
+            } else {
+                return null;
             }
+        } catch (\Exception $e) {
+            return $e;
+        }
     }
 }

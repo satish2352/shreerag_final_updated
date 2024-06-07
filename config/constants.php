@@ -16,6 +16,20 @@ return [
         'FINANCE'           => 8,
         'HR'                => 9,
     ],
+
+
+    'ROLE_ID_NAME' => [
+        '111' => 'SUPER',
+        '1' => 'HIGHER AUTHORITY',
+        '2' => 'PURCHASE',
+        '3' => 'DESIGNER',          
+        '4' => 'PRODUCTION',
+        '5' => 'SECURITY',
+        '6' => 'QUALITY',
+        '7' => 'STORE',
+        '8' => 'FINANCE',
+        '9' => 'HR',
+    ],
     
     'HIGHER_AUTHORITY' => [
         'NEW_REQUIREMENTS'                            => 1111,
@@ -23,34 +37,21 @@ return [
         'NEW_REQUIREMENTS_SENT_TO_PRODUCTION_DEPARTMENT'  => 1113,
         'NEW_REQUIREMENTS_STARTED_WORKING_BY_PRODUCTION_DEPARTMENT'  => 1114,
         'LIST_DESIGN_RECIEVED_FROM_PROD_DEPT_FOR_REVISED'    => 1115,
-        // 'NEW_REQUIREMENTS_FROM_PROD_TO_DESIGN_DEPT_FOR_REVISED'   => 1115,
         'DESIGN_SENT_TO_PROD_DEPT_REVISED'    => 1116,
         'LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION'          => 1118,
         'LIST_PO_TO_BE_APPROVE_FROM_PURCHASE'         => 1126,
         'APPROVED_PO_FROM_PURCHASE'               => 1127,
         'NOT_APPROVED_PO_FROM_PURCHASE'           => 1128,
-        // 'LIST_PO_TO_BE_APPROVE_NEW_MATERIAL'          => 111,
-        // 'APPROVED_PO_NEW_MATERIAL'                    => 111,
-        // 'NOT_APPROVED_PO_NEW_MATERIAL'                => 1,
-        // 'LIST_DESIGN_TO_BE_APPROVE_NEW_FROM_DESIGN'   => 111,
-        // 'APPROVED_DESIGN_NEW_FROM_DESIGN'             => 111,
-        // 'NOT_APPROVED_DESIGN_NEW_FROM_DESIGN'         => 1,
         'LIST_APPROVED_PO_SENT_TO_VENDOR_BY_PURCHASE'  => 1129,
         'LIST_INVOICE_TO_BE_APPROVE_FINANCE'             => 1139,
         'APPROVED_INVOICE_FINANCE'                       => 1140,
         'NOT_APPROVED_INVOICE_FINANCE'                   => 1141,
         'ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_DEPARTMENT'   => 1121,
         'LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE'         => 1123,
+        'INVOICE_RECEIVED_FOR_BILL_APPROVAL_TO_HIGHER_AUTHORITY'        => 1138,
     ],
 
     'PUCHASE_DEPARTMENT' => [
-        // 'LIST_PO_RECEIVED_NEW'                              => 222,
-       
-        // 'PO_RECEIVED_NEW_MATERIAL'                          => 111,
-        // 'PO_RECEIVED_NEW_MATERIAL_VENDOR_ADDED'             => 111,
-        // 'PO_NEW_MATERIAL_SENT_TO_HIGHER_AUTH_FOR_APPROVAL'  => 111,
-        // 'PO_NEW_MATERIAL_SENT_TO_VENDOR'                    => 111,
-        // 'PO_SENT_TO_DESIGN_DEPT'                            => 1,
 
         'LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE'         => 1123,
         'REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE_VENDOR_FINAL' => 1125,
@@ -66,8 +67,6 @@ return [
     'DESIGN_DEPARTMENT' => [
         'LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN'              => 1111,
         'NEW_REQUIREMENTS_DESIGN_DEPARTMENT_STARTED_DESIGN'      => 1112,
-        // 'PO_RECEIVED_FOR_DESIGN'              => 111,
-        // 'PO_RECEIVED_SENT_FOR_APPROVAL'       => 111,
         'DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME' => 1113,
         'LIST_DESIGN_RECIEVED_FROM_PROD_DEPT_FOR_REVISED'    => 1115,
         'DESIGN_SENT_TO_PROD_DEPT_REVISED'    => 1116,
@@ -108,7 +107,6 @@ return [
         'LIST_BOM_RECIVED_TO_STORE_DEPT_FOR_CHECKING'   => 1117,
         'LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION'          => 1118,
         'LIST_BOM_ALL_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION'           => 1119,
-        // 'LIST_PART_MATERIAL_REQUEST_NOTE_SENT_TO_PROD_DEPT_FOR_PURCHASE'   => 1122,
         'LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE'         => 1123,
         
         'LIST_PO_RECEIVED_FROM_QUALITY_DEPARTMENT'              => 1134,

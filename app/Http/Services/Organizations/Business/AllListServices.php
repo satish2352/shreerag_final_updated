@@ -43,4 +43,25 @@ class AllListServices
     } 
 
 
+    
+    public function getAllListApprovedPurchaseOrderOwnerlogin(){
+        try {
+            return $this->repo->getAllListApprovedPurchaseOrderOwnerlogin();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    
+
+    public function listPOReceivedForApprovaTowardsOwner(){
+        try {
+            return $this->repo->listPOReceivedForApprovaTowardsOwner();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+
+
 }

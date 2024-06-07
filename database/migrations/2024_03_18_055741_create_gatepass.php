@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('gatepass_date');
             $table->string('gatepass_time');
             $table->text('remark');
-            $table->boolean('is_approve')->default(false);
+            $table->boolean('is_checked_by_quality')->default(false);
             $table->string('is_deleted')->default(false);
             $table->boolean('is_active')->default(true);
             $table->timestamps();

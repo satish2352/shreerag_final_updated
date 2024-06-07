@@ -1,86 +1,96 @@
 <?php
 namespace App\Http\Repository\Organizations\Quality;
+
 use Illuminate\Database\QueryException;
 use DB;
 use Illuminate\Support\Carbon;
-use App\Models\ {
+use App\Models\{
     GRNModel,
-PurchaseOrderDetailsModel
+    PurchaseOrderDetailsModel,
+    Gatepass,
+    PurchaseOrderModel,
+    BusinessApplicationProcesses
 };
 use Config;
 
-class GRNRepository  {
-
-
-
-public function getDetailsForPurchase($id) {
-
-    return PurchaseOrdersModel::where('id', '=', $id)->first();
-   
-}
-    // repository
-public function storeGRN($request)
+class GRNRepository
 {
-        // dd($request);
-        // $purchase_orderid=str_replace(array("-",":"),"",date('Y-m-d').time());
-    try {
-        $dataOutput = new GRNModel();
-        // dd($dataOutput);
-        $dataOutput->purchase_id = $request->purchase_id;
-        $dataOutput->po_date = $request->po_date;
-        $dataOutput->grn_date = $request->grn_date;
-        $dataOutput->remark = $request->remark;
-        $dataOutput->image = 'null';
-        $dataOutput->is_approve = '0';
-        $dataOutput->is_active = '1';
-        $dataOutput->is_deleted = '0';
-        $dataOutput->save();
-        $last_insert_id = $dataOutput->id;
 
-        // Save data into DesignDetailsModel
-        foreach ($request->addmore as $index => $item) {
-    // dd($item);
+    public function getAll()
+    {
+        try {
+            $data_output = Gatepass::where('is_checked_by_quality',false)->get();
 
-    //         $designDetails = new PurchaseOrderDetailsModel();
-    //         $designDetails->purchase_id = $last_insert_id;
-    //         $designDetails->part_no = $item['part_no'];
-    //         $designDetails->description = $item['description'];
-    //         $designDetails->due_date = $item['due_date'];
-    //         $designDetails->hsn_no = $item['hsn'];
-    //         $designDetails->quantity = $item['quantity'];
-    //         $designDetails->rate = $item['rate'];
-    //         $designDetails->amount = '99';
-    //         $designDetails->save();
-
-
-    $user_data = PurchaseOrderDetailsModel::where('id',$item['edit_id']) 
-						->update([
-							// 'u_uname' => $request['u_uname'],
-							'qc_check_remark' => $item['qc_check_remark'],
-							'actual_quantity' => $item['actual_quantity'],
-							'accepted_quantity' => $item['accepted_quantity'],
-							'rejected_quantity' => $item['rejected_quantity'],
-						]);
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
         }
-        // dd($user_data);
-        // dd('jjjjjjjjjjjjjjjjj');
-        // \Log::info($designDetails);
-        // Updating image name in PurchaseOrderModel
-        $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
-        $finalOutput = GRNModel::find($last_insert_id);
-        $finalOutput->image = $imageName;
-        $finalOutput->save();
-// dd('kkkkkkkkkkkkk');
-        return [
-            'ImageName' => $imageName,
-            'status' => 'success'
-        ];
-    } catch (\Exception $e) {
-        return [
-            'msg' => $e->getMessage(),
-            'status' => 'error'
-        ];
     }
-}
-   
+
+    public function getDetailsForPurchase($id)
+    {
+        return PurchaseOrdersModel::where('id', '=', $id)->first();
+    }
+    // repository
+    public function storeGRN($request)
+    {
+        try {
+            $grn_no = str_replace(array("-", ":"), "", date('Y-m-d') . time());
+            $dataOutput = new GRNModel();
+            $dataOutput->purchase_orders_id = $request->purchase_orders_id;
+            // $dataOutput->grn_no = $grn_no;
+            $dataOutput->po_date = $request->po_date;
+            $dataOutput->grn_date = $request->grn_date;
+            $dataOutput->remark = $request->remark;
+            $dataOutput->image = 'null';
+            $dataOutput->is_approve = '0';
+            $dataOutput->is_active = '1';
+            $dataOutput->is_deleted = '0';
+            $dataOutput->save();
+            $last_insert_id = $dataOutput->id;
+
+            foreach ($request->addmore as $index => $item) {
+                $user_data = PurchaseOrderDetailsModel::where('id', $item['edit_id'])
+                    ->update([
+                        'qc_check_remark' => $item['qc_check_remark'],
+                        'actual_quantity' => $item['actual_quantity'],
+                        'accepted_quantity' => $item['accepted_quantity'],
+                        'rejected_quantity' => $item['rejected_quantity'],
+                    ]);
+            }
+            $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
+            $finalOutput = GRNModel::find($last_insert_id);
+            $finalOutput->image = $imageName;
+            $finalOutput->save();
+
+
+            
+            $purchase_orders_details = PurchaseOrderModel::where('purchase_orders_id', $request->purchase_orders_id)->first();
+            $business_application = BusinessApplicationProcesses::where('business_id', $purchase_orders_details->business_id)->first();
+            if ($business_application) {
+                $business_application->grn_no = $grn_no;
+                $business_application->quality_material_sent_to_store_date = date('Y-m-d');
+                $business_application->quality_status_id = config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE');
+                $business_application->save();
+            }
+
+            $updateGatepassTable = Gatepass::where('purchase_orders_id',$request->purchase_orders_id)->first();
+            $updateGatepassTable->is_checked_by_quality = true;
+            $updateGatepassTable->save();
+
+            
+
+            return [
+                'ImageName' => $imageName,
+                'status' => 'success'
+            ];
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error'
+            ];
+        }
+    }
+
 }

@@ -1,15 +1,5 @@
 @extends('admin.layouts.master')
 @section('content')
-    <style>
-        .form-control {
-            border: 2px solid #ced4da;
-            border-radius: 4px;
-        }
-
-        .error {
-            color: red;
-        }
-    </style>
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">
@@ -20,11 +10,10 @@
                                 <h1>Purchase Order <span class="table-project-n">Details</span></h1>
                             </div><br>
 
-
-
-                            <a href="{{ route('accept-purchase-order', $purchase_order_id) }}"><button data-toggle="tooltip"
-                                    title="Accept" class="pd-setting-ed">Accept</button></a> &nbsp; &nbsp; &nbsp;
-
                         </div>
                     </div>
-                @endsection
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection

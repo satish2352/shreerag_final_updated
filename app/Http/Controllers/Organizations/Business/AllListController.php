@@ -46,5 +46,26 @@ class AllListController extends Controller
         }
     }
 
+
+    public function getAllListApprovedPurchaseOrderOwnerlogin(Request $request){
+        try {
+            $data_output = $this->service->getAllListApprovedPurchaseOrderOwnerlogin();
+            return view('organizations.business.list.list-purchase-order-approved', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function listPOReceivedForApprovaTowardsOwner(Request $request){
+        try {
+            $data_output = $this->service->listPOReceivedForApprovaTowardsOwner();
+        
+            return view('organizations.business.list.list-po-received-for-sanction-towards-owner', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
+
+
     
 }

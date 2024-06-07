@@ -28,7 +28,7 @@ padding-left: 20px !important;
                 <div class="sparkline13-list">
                     <div class="sparkline13-hd">
                         <div class="main-sparkline13-hd">
-                            <h1>Purchase Order<span class="table-project-n"></span></h1>
+                            <h1>Purchase Order<span class="table-project-n"></span>Approved From Owner</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2" >
                                         {{-- <div class="login-horizental cancel-wp pull-left">
@@ -45,7 +45,7 @@ padding-left: 20px !important;
                                 <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
 										<span class="icon-sc-cl" aria-hidden="true">&times;</span>
 									</button>
-                                <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i>
+                                {{-- <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i> --}}
                                 <p><strong>Success!</strong> {{ Session::get('msg') }}</p>
                             </div>
                              @endif
@@ -81,8 +81,8 @@ padding-left: 20px !important;
                                             <th data-field="id">Sr.No.</th> 
                                             <th data-field="grn_number" data-editable="true">Title</th>
                                             <th data-field="grn_date" data-editable="true">Description</th>
-                                            <th data-field="vendor_id" data-editable="true">Vendor</th>                                         
-                                            <th data-field="client_name" data-editable="true">Client Name</th>                                         
+                                            {{-- <th data-field="vendor_id" data-editable="true">Vendor</th>                                         
+                                            <th data-field="client_name" data-editable="true">Client Name</th>                                          --}}
                                         </tr>
 
                                     </thead>
@@ -91,18 +91,17 @@ padding-left: 20px !important;
 
                                     <tbody>
                                         @foreach($data_output as $data)
-                                        <?php //dd($data['design_image']); ?>
                                         <tr>
                                             
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ucwords($data->title)}}</td>
                                             <td>{{ucwords($data->descriptions)}}</td>
-                                            <td>{{ucwords($data->vendor_id)}}</td>
-                                            <td>{{ucwords($data->client_name)}}</td>
+                                            {{-- <td>{{ucwords($data->vendor_id)}}</td>
+                                            <td>{{ucwords($data->client_name)}}</td> --}}
                                             
                                             <td>
                                                 <div style="display: inline-block; align-items: center;">
-                                                    <a href="{{route('list-check-final-purchase-order', $data->purchase_order_id)}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Check Details</button></a> &nbsp; &nbsp; &nbsp;
+                                                    <a href="{{route('list-check-final-purchase-order', $data->purchase_order_id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>View Details</button></a>
                                                 </div>
                                             </td>
                                             

@@ -50,5 +50,17 @@ class AllListController extends Controller
 
 
     
+    
+    public function getAllListMaterialReceivedFromQuality(){
+
+        try {
+            $data_output = $this->service->getAllListMaterialReceivedFromQuality();
+            return view('organizations.store.list.list-material-received-from-quality', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    
 
 }
