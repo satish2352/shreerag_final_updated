@@ -135,7 +135,7 @@ class AllListRepositor
 
 
 
-  public function getAllListMaterialSentToPurchase()
+  public function getAllStoreDeptSentForPurchaseMaterials()
   {
     try {
 
