@@ -139,7 +139,7 @@ class AllListRepositor
   {
     try {
 
-
+      
       $array_to_be_check = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
       $array_not_to_be_check = ['0'];
 
@@ -157,6 +157,7 @@ class AllListRepositor
         })
         ->whereIn('business_application_processes.store_status_id', $array_to_be_check)
         ->whereIn('business_application_processes.grn_no', $array_not_to_be_check)
+        ->where('business_application_processes.purchase_order_id', '0')
         ->where('businesses.is_active', true)
         ->select(
           'businesses.id',
