@@ -103,7 +103,8 @@ class AllListRepository  {
     try {
 
       
-        $array_to_be_check = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
+      $array_to_be_check = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
+      $array_not_to_be_check = ['0'];
         
         $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
           $join->on('business_application_processes.business_id', '=', 'production.business_id');
@@ -118,6 +119,7 @@ class AllListRepository  {
           $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
         })
         ->whereIn('business_application_processes.store_status_id',$array_to_be_check)
+        ->whereNotIn('business_application_processes.grn_no',$array_not_to_be_check)
         ->where('businesses.is_active',true)
         ->select(
             'businesses.id',
@@ -145,7 +147,8 @@ class AllListRepository  {
   public function getAllListMaterialReceivedFromQuality(){
     try {
       
-        $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
+      $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
+      $array_to_be_check_new = ['0'];
         
         $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
           $join->on('business_application_processes.business_id', '=', 'production.business_id');
@@ -160,7 +163,7 @@ class AllListRepository  {
           $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
         })
         ->whereIn('business_application_processes.quality_status_id',$array_to_be_check)
-        ->where('business_application_processes.store_receipt_no',NULL)
+        ->whereIn('business_application_processes.store_receipt_no',$array_to_be_check_new)
         ->where('businesses.is_active',true)
         ->select(
             'businesses.id',
