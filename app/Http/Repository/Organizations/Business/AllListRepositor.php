@@ -96,7 +96,7 @@ class AllListRepositor
     try {
 
       $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL')];
-      $array_to_be_check_grn_no = [NULL];
+      $array_to_be_check_grn_no = ['NULL'];
 
       $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
         $join->on('business_application_processes.business_id', '=', 'production.business_id');
