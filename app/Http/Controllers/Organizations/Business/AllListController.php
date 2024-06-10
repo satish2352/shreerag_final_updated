@@ -48,7 +48,8 @@ class AllListController extends Controller
     public function getAllStoreDeptSentForPurchaseMaterials(Request $request){
         try {
             $data_output = $this->service->getAllStoreDeptSentForPurchaseMaterials();
-        
+        // dd( $data_output);
+        // die();
             return view('organizations.business.list.list-material-list-from-store-to-purchase', compact('data_output'));
         } catch (\Exception $e) {
             return $e;

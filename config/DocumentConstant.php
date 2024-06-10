@@ -4,9 +4,9 @@ namespace App\Constants;
 
 return [
 
-    // 'ORGANIZATION_ADD'	         => "/all_web_data/images/organization/",
-    // 'ORGANIZATION_DELETE'	         => '/all_web_data/images/organization/',
-    // 'ORGANIZATION_VIEW'	         => env("FILE_VIEW").'/all_web_data/images/organization/',
+    'ORGANIZATION_ADD'	         => "/all_web_data/images/organization/",
+    'ORGANIZATION_DELETE'	         => '/all_web_data/images/organization/',
+    'ORGANIZATION_VIEW'	         => env("FILE_VIEW").'/all_web_data/images/organization/',
 
     // 'EMPLOYEES_ADD'	         => "/all_web_data/images/employees/",
     // 'EMPLOYEES_DELETE'	         => '/all_web_data/images/employees/',
@@ -19,6 +19,11 @@ return [
     'USER_PROFILE_ADD'	         => "/all_web_data/images/userProfile/",
     'USER_PROFILE_DELETE'	         => '/all_web_data/images/userProfile/',
     'USER_PROFILE_VIEW'	         => env("FILE_VIEW").'/all_web_data/images/userProfile/',
+
+    // 'BUSINESS_ADD'	         => "/all_web_data/images/business/",
+    // 'BUSINESS_DELETE'	         => '/all_web_data/images/business/',
+    // 'BUSINESS_VIEW'	         => env("FILE_VIEW").'/all_web_data/images/business/',
+
 
     'DESIGNS_ADD'	         => "/all_web_data/images/designs/",
     'DESIGNS_DELETE'	         => '/all_web_data/images/designs/',
