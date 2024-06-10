@@ -176,7 +176,7 @@ class BusinessController extends Controller
                 $msg ='Purchase order accepted.';
             } else {
                 $status = 'success';
-                $msg ='Purchase failed to accept.';
+                $msg ='Purchase order accepted.';
             }  
 
             return redirect('owner/list-purchase-orders')->with(compact('msg', 'status'));
