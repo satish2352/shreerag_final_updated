@@ -228,9 +228,7 @@
                 <input class="form-control " name="addmore[`+i+`][description]" type="text" style="min-width:150px">
             </td>
             <td>
-            <input type="date" class="form-control mb-2" placeholder="YYYY-MM-DD"
-                                                name="addmore[0][due_date]" id="due_date"
-                                                value="">
+            <input type="date" class="form-control mb-2" placeholder="YYYY-MM-DD" name="addmore[`+i+`][due_date]">
             </td>
             <td>
                 <input class="form-control" name="addmore[`+i+`][hsn]" style="width:100px" type="text">

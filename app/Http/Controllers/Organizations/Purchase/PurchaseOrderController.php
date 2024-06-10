@@ -22,6 +22,10 @@ class PurchaseOrderController extends Controller
     {
         $title = 'Purchase Orders';
         $getOutput = PurchaseOrdersModel::where('requisition_id', base64_decode($requistition_id))->get();
+      
+    //    dd($getOutput);
+    //    die();
+       
         return view('organizations.purchase.addpurchasedetails.list-purchase-orders', compact(
             'title',
             'getOutput',

@@ -60,21 +60,24 @@
                                     <div class="form-group-inner">
                                         <input type="hidden" class="form-control" value="{{ $editData->id }}" id="id" name="id" >
                                         <div class="row">
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                                <div class="form-select-list">
-                                                    <label for="leave_type">Select Leaves Type:</label>
-                                                    <select class="form-control custom-select-value" name="leave_type" id="leave_type">
-                                                        <option value="">Select Leaves Type</option>
-                                                        <option value="1" {{ $editData->leave_type == '1' ? 'selected' : '' }}>Casual Leave</option>
-                                                        <option value="2" {{ $editData->leave_type == '2' ? 'selected' : '' }}>Medical Leave</option>
-                                                        <option value="3" {{ $editData->leave_type == '3' ? 'selected' : '' }}>Early Going</option>
+                                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="leave_type_id">Select Leave Type</label>&nbsp;<span class="red-text">*</span>
+                                                    <select class="form-control" id="leave_type_id" name="leave_type_id" onchange="myFunction(this.value)">
+                                                        <option>Select</option>
+                                                        @foreach ($leaveManagment as $leaveType)
+                                                            <option value="{{ $leaveType['id'] }}"
+                                                                @if (isset($editData['leave_type_id']) && $leaveType['id'] == $editData['leave_type_id']) selected @endif>
+                                                                {{ $leaveType['name'] }}
+                                                            </option>
+                                                        @endforeach
                                                     </select>
-                                                    
+                                                    @if ($errors->has('leave_type_id'))
+                                                        <span class="red-text">{{ $errors->first('leave_type_id') }}</span>
+                                                    @endif
                                                 </div>
                                             </div>
-
-
-
+                                            
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                 <div class="form-select-list">
                                                     <label for="leave_day">Select Leaves Day:</label>
@@ -178,7 +181,7 @@ jQuery(document).ready(function ($) {
 
     $("#addForm").validate({
         rules: {
-            leave_type: {
+            leave_type_id: {
                 required: true,
             },
             department_id: {
@@ -200,7 +203,7 @@ jQuery(document).ready(function ($) {
             },
         },
         messages: {
-            leave_type: {
+            leave_type_id: {
                 required: "Please select leave type.",
             },
             leave_day: {

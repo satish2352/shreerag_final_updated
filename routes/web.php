@@ -108,6 +108,15 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/cities', ['as' => 'cities', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@getCities']);
     Route::get('/states', ['as' => 'states', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@getState']);
 
+    Route::get('/list-yearly-leave-management', ['as' => 'list-yearly-leave-management', 'uses' => 'App\Http\Controllers\Organizations\HR\LeaveManagment\LeaveManagmentController@index']);
+    Route::get('/add-yearly-leave-management', ['as' => 'add-yearly-leave-management', 'uses' => 'App\Http\Controllers\Organizations\HR\LeaveManagment\LeaveManagmentController@add']);
+    Route::post('/store-yearly-leave-management', ['as' => 'store-yearly-leave-management', 'uses' => 'App\Http\Controllers\Organizations\HR\LeaveManagment\LeaveManagmentController@store']);
+    Route::get('/edit-yearly-leave-management/{id}', ['as' => 'edit-yearly-leave-management', 'uses' => 'App\Http\Controllers\Organizations\HR\LeaveManagment\LeaveManagmentController@edit']);
+    Route::post('/update-yearly-leave-management', ['as' => 'update-yearly-leave-management', 'uses' => 'App\Http\Controllers\Organizations\HR\LeaveManagment\LeaveManagmentController@update']);
+    Route::any('/delete-yearly-leave-management/{id}', ['as' => 'delete-yearly-leave-management', 'uses' => 'App\Http\Controllers\Organizations\HR\LeaveManagment\LeaveManagmentController@destroy']);
+
+
+
     Route::get('/list-leaves', ['as' => 'list-leaves', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@index']);
     Route::get('/add-leaves', ['as' => 'add-leaves', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@add']);
     Route::post('/store-leaves', ['as' => 'store-leaves', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@store']);
@@ -233,6 +242,8 @@ Route::group(['prefix' => 'owner'], function () {
     Route::post('/update-business', ['as' => 'update-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@update']);
     Route::any('/delete-business/{id}', ['as' => 'delete-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@destroy']);
     Route::get('/list-submit-final-purchase-order/{purchase_order_id}', ['as' => 'list-submit-final-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@submitFinalPurchaseOrder']);
+    Route::get('/list-submit-final-purchase-order-particular-business/{id}', ['as' => 'list-submit-final-purchase-order-particular-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@submitFinalPurchaseOrderBusinessWise']);
+
     Route::get('/accept-purchase-order/{purchase_order_id}', ['as' => 'accept-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@acceptPurchaseOrder']);
 
     //ALL List

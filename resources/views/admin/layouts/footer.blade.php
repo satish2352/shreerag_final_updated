@@ -11,7 +11,21 @@
         </div>
     </div>
 </div>
+<script>
+    $(function() {
+        var currentYear = new Date().getFullYear();
+        var startYear = 1980;
+        var endYear = currentYear + 10; // Change this to the desired number of future years
 
+        for (var year = startYear; year <= endYear; year++) {
+            var option = $("<option>").val(year).text(year);
+            if (year < currentYear) {
+                option.prop("disabled", true);
+            }
+            $("#dYear").append(option);
+        }
+    });
+</script>
 <script src="{{ asset('js/vendor/jquery-1.11.3.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}"></script>

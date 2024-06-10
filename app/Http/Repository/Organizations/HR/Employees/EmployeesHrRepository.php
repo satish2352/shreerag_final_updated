@@ -4,7 +4,7 @@ use Illuminate\Database\QueryException;
 use DB;
 use Illuminate\Support\Carbon;
 use App\Models\ {
-HREmployee,User,EmployeesModel,RolesModel
+HREmployee,User,EmployeesModel,RolesModel,FinancialYearLeaveRecord,LeaveManagement
 };
 use Config;
 
@@ -54,12 +54,54 @@ class EmployeesHrRepository  {
 			->select('id')->get();
 	}
 
-    public function register($request){
-		$data =array();
-		// $ipAddress = getIPAddress($request);
+    // public function register($request){
+	// 	$data =array();
+	// 	// $ipAddress = getIPAddress($request);
+	// 	$user_data = new User();
+	// 	$user_data->u_email = $request['u_email'];
+	// 	// $user_data->u_uname = $request['u_uname'];
+	// 	$user_data->u_password = bcrypt($request['u_password']);
+	// 	$user_data->role_id = $request['role_id'];
+	// 	$user_data->f_name = $request['f_name'];
+	// 	$user_data->m_name = $request['m_name'];
+	// 	$user_data->l_name = $request['l_name'];
+	// 	$user_data->number = $request['number'];
+	// 	$user_data->designation = $request['designation'];
+	// 	$user_data->address = $request['address'];
+	// 	$user_data->state = $request['state'];
+	// 	$user_data->city = $request['city'];
+	// 	$user_data->pincode = $request['pincode'];
+	// 	$user_data->ip_address = 'null';
+    //     $user_data->org_id = $request->session()->get('org_id');
+	// 	$user_data->is_active = isset($request['is_active']) ? true : false;
+	// 	$user_data->save();
+
+	// 	$financial_year_leave_record = new FinancialYearLeaveRecord();
+	// 	$financial_year_leave_record->user_id = $user_data->id;
+	// 	// Add other necessary fields to FinancialYearLeaveRecord
+	// 	$financial_year_leave_record->save();
+
+	// 	$last_insert_id = $user_data->id;
+	// 	// $this->insertRolesPermissions($request, $last_insert_id);
+
+	// 	// $imageProfile = $last_insert_id .'_' . rand(100000, 999999) . '_english.' . $request->user_profile->extension();
+        
+    //     $user_detail = User::find($last_insert_id);
+    //     // $user_detail->user_profile = $imageProfile; 
+    //     $user_detail->save();
+    //     // echo  $user_detail;
+	// 	// die();
+    //     // $data['imageProfile'] =$imageProfile;
+    //     return $data;
+
+	// }
+
+	public function register($request) {
+		$data = array();
+	
+		// Create a new User instance and populate it with the request data
 		$user_data = new User();
 		$user_data->u_email = $request['u_email'];
-		// $user_data->u_uname = $request['u_uname'];
 		$user_data->u_password = bcrypt($request['u_password']);
 		$user_data->role_id = $request['role_id'];
 		$user_data->f_name = $request['f_name'];
@@ -72,24 +114,39 @@ class EmployeesHrRepository  {
 		$user_data->city = $request['city'];
 		$user_data->pincode = $request['pincode'];
 		$user_data->ip_address = 'null';
-        $user_data->org_id = $request->session()->get('org_id');
+		$user_data->org_id = $request->session()->get('org_id');
 		$user_data->is_active = isset($request['is_active']) ? true : false;
 		$user_data->save();
-
+	
+		// Get the last inserted user's ID
 		$last_insert_id = $user_data->id;
-		// $this->insertRolesPermissions($request, $last_insert_id);
+	
+		// Fetch data from LeaveManagement
+		$leave_management_data = LeaveManagement::all();
 
-		// $imageProfile = $last_insert_id .'_' . rand(100000, 999999) . '_english.' . $request->user_profile->extension();
-        
-        $user_detail = User::find($last_insert_id);
-        // $user_detail->user_profile = $imageProfile; 
-        $user_detail->save();
-        // echo  $user_detail;
-		// die();
-        // $data['imageProfile'] =$imageProfile;
-        return $data;
+	
+		// Loop through each record in LeaveManagement and add it to FinancialYearLeaveRecord
+		foreach ($leave_management_data as $leave) {
+			$financial_year_leave_record = new FinancialYearLeaveRecord();
+			$financial_year_leave_record->user_id = $last_insert_id;
+			$financial_year_leave_record->leave_management_id = $leave->id;
+			$financial_year_leave_record->leave_type_name = $leave->name;
+			$financial_year_leave_record->leave_balance = $leave->leave_count;
+			// Add other necessary fields from LeaveManagement to FinancialYearLeaveRecord
+			$financial_year_leave_record->save();
+		}
+	
+		// Update user details if necessary
+		$user_detail = User::find($last_insert_id);
+		// If you have an image profile or other updates, do them here
+		// $user_detail->user_profile = $imageProfile; 
+		$user_detail->save();
 
+		// Return the data array
+		  // Return the last inserted ID
+        return $last_insert_id;
 	}
+	
 
     public function editUsers($reuest){
 

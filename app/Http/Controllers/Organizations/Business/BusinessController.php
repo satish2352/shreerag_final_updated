@@ -139,27 +139,26 @@ class BusinessController extends Controller
         } catch (\Exception $e) {
             return $e;
         }
-    } 
-
-    
-
+    }    
     public function submitFinalPurchaseOrder($purchase_order_id){
+        try {
+            $data_output = $this->service->getPurchaseOrderBusinessWise($purchase_order_id);
+            return view('organizations.business.list.list-purchase-order-particular-po', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    
+    public function submitFinalPurchaseOrderBusinessWise($purchase_order_id){
 
         try {
-            // $delete_record =  $this->service->deleteById($delete_data_id);
-            // if ($delete_record) {
-            //     $msg = $delete_record['msg'];
-            //     $status = $delete_record['status'];
-            //     if ($status == 'success') {
-            //         return redirect('owner/list-business')->with(compact('msg', 'status'));
-            //     } else {
-            //         return redirect()->back()
-            //             ->withInput()
-            //             ->with(compact('msg', 'status'));
-            //     }
-            // }
+            $getOrganizationData = $this->service->getAllOrganizationData();
 
-            return view('organizations.business.purchase-order.purchase-order-details', compact('purchase_order_id'));
+            $data = $this->service->getPurchaseOrderDetails($purchase_order_id);
+            $purchaseOrder = $data['purchaseOrder'];
+            $purchaseOrderDetails = $data['purchaseOrderDetails'];
+
+            return view('organizations.business.purchase-order.purchase-order-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData'));
 
         } catch (\Exception $e) {
             return $e;

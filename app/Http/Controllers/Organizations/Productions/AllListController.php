@@ -41,6 +41,7 @@ class AllListController extends Controller
     public function getAllNewRequirement(Request $request){
         try {
             $data_output = $this->service->getAllNewRequirement();
+          
             return view('organizations.productions.product.list_design_received_for_production', compact('data_output'));
         } catch (\Exception $e) {
             return $e;

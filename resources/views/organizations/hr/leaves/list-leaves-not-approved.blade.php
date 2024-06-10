@@ -72,11 +72,13 @@
                                     <thead>
                                         <tr>
                                             <th data-field="id">ID</th>
+                                            <th data-field="u_email" data-editable="true">Email</th>
                                             <th data-field="employee_id" data-editable="true">Employee Id</th>
                                             <th data-field="leave_start_date" data-editable="true">Leave Start Date</th>
                                             <th data-field="leave_end_date" data-editable="true">Leave End Date</th>
                                             <th data-field="leave_day" data-editable="true">Leave Day</th>
-                                            <th data-field="leave_type" data-editable="true">Leave Type</th>
+                                            <th data-field="leave_type_id" data-editable="true">Leave Type</th>
+                                            <th data-field="leave_count" data-editable="true">Leave Count</th>
                                             <th data-field="reason" data-editable="true">Reason</th>
                                             <th data-field="action">Action</th>
                                         </tr>
@@ -85,7 +87,8 @@
                                         @foreach($getOutput as $data)
                                         <tr>
                                             <td>{{ $data->id }}</td>
-                                            <td>{{ ucwords($data->employee_id) }}</td>
+                                            <td>{{ ucwords($data->employee_id) }}({{ucwords($data->f_name)}}{{ucwords($data->m_name)}}{{ucwords($data->l_name)}})</td>
+                                            <td>{{ ucwords($data->u_email) }}</td>
                                             <td>{{ ucwords($data->leave_start_date) }}</td>
                                             <td>{{ ucwords($data->leave_end_date) }}</td>
                                             <td> @if($data->leave_day == 'half_day')
@@ -95,17 +98,8 @@
                                               @else
                                                   Unknown Status
                                               @endif</td>
-                                            <td> @if($data->leave_type == 1)
-                                                Casual Leave
-                                              @elseif($data->leave_type == 2)
-                                              Medical Leave
-                                              @elseif($data->leave_type == 3)
-                                              Early Going
-                                              @else
-                                                  Unknown Status
-                                              @endif
-
-                                                </td>
+                                              <td>{{ ucwords($data->leave_type_name) }}</td>
+                                              <td>{{ ucwords($data->leave_count) }}</td>
                                             <td>{{ ucwords($data->reason) }}</td>
                                             <td>
                                                 <div style="display: flex; align-items: center;">
