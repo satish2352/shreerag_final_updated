@@ -138,7 +138,8 @@ class GRNController extends Controller
 
                 )
                 ->get();
-            return $data_output;
+            // return $data_output;
+            return view('organizations.quality.list.list-material-received-from-quality',compact('data_output'));
         } catch (\Exception $e) {
             return $e;
         }
