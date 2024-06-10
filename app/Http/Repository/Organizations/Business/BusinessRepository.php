@@ -166,7 +166,7 @@ class BusinessRepository
             if ($business_application) {
                 $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.APPROVED_PO_FROM_PURCHASE');
                 $business_application->owner_po_action_date= date('Y-m-d');
-                $business_application->purchase_order_id= '0';
+                // $business_application->purchase_order_id= '0';
                 $business_application->finanace_store_receipt_status_id = config('constants.FINANCE_DEPARTMENT.INVOICE_APPROVED_FROM_HIGHER_AUTHORITY');
                 $business_application->save();
             }
