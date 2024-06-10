@@ -85,7 +85,7 @@
                                         class="mini-click-non">Purchase Material Ask By Store To Purchase</span></a>
                             </li>
 
-                            
+
 
                             <li class="{{ request()->is('owner/list-purchase-orders') ? 'active' : '' }}">
                                 <a href="{{ route('list-purchase-orders') }}" aria-expanded="false"><i
@@ -102,8 +102,7 @@
 
                             <li
                                 class="nav-item {{ Request::is('list-po-recived-for-approval-payment') ? 'active' : '' }}">
-                                <a title="Inbox"
-                                    href="{{ route('list-po-recived-for-approval-payment') }}"><i
+                                <a title="Inbox" href="{{ route('list-po-recived-for-approval-payment') }}"><i
                                         class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                         class="mini-sub-pro">PO Payment Release Request</span></a>
                             </li>
@@ -112,7 +111,8 @@
                     @if (session()->get('role_id') == config('constants.ROLE_ID.PURCHASE'))
                         <li class="{{ Request::is('list-purchase') ? 'active' : '' }}">
                             <a class="has-arrow" href="{{ route('list-purchase') }}" aria-expanded="false"><i
-                                    class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">Purchase
+                                    class="fa big-icon fa-envelope icon-wrap"></i> <span
+                                    class="mini-click-non">Purchase
                                     Orders</span></a>
                             <ul class="submenu-angle" aria-expanded="false">
                                 <li class="nav-item {{ Request::is('list-purchase') ? 'active' : '' }}"><a
@@ -285,6 +285,13 @@
                                             class="mini-sub-pro">List GRN</span></a></li>
                             </ul>
                         </li>
+
+                        <li class="{{ request()->is('list-material-sent-to-quality') ? 'active' : '' }}">
+                            <a href="{{ route('list-material-sent-to-quality') }}">
+                                <i class="fa big-icon fa-envelope icon-wrap"></i>
+                                <span class="mini-click-non">Material Sent From Quality</span>
+                            </a>
+                        </li>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.STORE'))
                         <li class="{{ request()->is('list-accepted-design-from-prod') ? 'active' : '' }}">
@@ -366,7 +373,8 @@
                         </li>
 
 
-                        <li class="{{ request()->is('list-po-sanction-and-need-to-do-payment-to-vendor') ? 'active' : '' }}">
+                        <li
+                            class="{{ request()->is('list-po-sanction-and-need-to-do-payment-to-vendor') ? 'active' : '' }}">
                             <a href="{{ route('list-po-sanction-and-need-to-do-payment-to-vendor') }}">
                                 <i class="fa big-icon fa-envelope icon-wrap"></i>
                                 <span class="mini-click-non">PO Pyament Need To Release</span>

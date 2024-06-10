@@ -217,6 +217,9 @@ Route::group(['prefix' => 'quality'], function () {
     // ========================Quality Department End========
 
 
+    //All list
+    Route::get('/list-material-sent-to-quality', ['as' => 'list-material-sent-to-quality', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@getAllListMaterialSentFromQuality']);
+
 });
 
 // ========================OWNER Department Start========
