@@ -289,7 +289,7 @@
                         <li class="{{ request()->is('list-material-sent-to-quality') ? 'active' : '' }}">
                             <a href="{{ route('list-material-sent-to-quality') }}">
                                 <i class="fa big-icon fa-envelope icon-wrap"></i>
-                                <span class="mini-click-non">Material Sent From Quality</span>
+                                <span class="mini-click-non">Material Sent to Store</span>
                             </a>
                         </li>
                     @endif
