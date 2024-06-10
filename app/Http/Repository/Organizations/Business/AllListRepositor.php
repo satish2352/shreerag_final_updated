@@ -252,7 +252,7 @@ class AllListRepositor
           $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
         })
         ->whereIn('business_application_processes.business_status_id', $array_to_be_check_business)
-        ->whereIn('business_application_processes.purchase_status_id', $array_to_be_check_purchase)
+        ->orWhereIn('business_application_processes.purchase_status_id', $array_to_be_check_purchase)
         ->where('businesses.is_active', true)
         ->select(
           'business_application_processes.purchase_order_id',
