@@ -19,7 +19,7 @@ class ProductionRepository  {
 
     public function acceptdesign($id){
         try {
-          
+
             $business_application = BusinessApplicationProcesses::where('business_id', $id)->first();
             if ($business_application) {
                 $business_application->business_id = $id;

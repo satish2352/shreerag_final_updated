@@ -103,6 +103,40 @@ class AllListRepository  {
       try {
 
           $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION')];
+          $array_to_be_check_store = [
+            config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE'),
+            config('constants.STORE_DEPARTMENT.LIST_PO_RECEIVED_FROM_QUALITY_DEPARTMENT'),
+            config('constants.STORE_DEPARTMENT.STORE_RECIEPT_GENRATED'),
+          ];
+          $array_to_be_check_purchase = [
+            config('constants.PUCHASE_DEPARTMENT.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE'),
+            config('constants.PUCHASE_DEPARTMENT.REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE_VENDOR_FINAL'),
+            config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL'),
+            config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY'),
+            config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR'),
+            config('constants.PUCHASE_DEPARTMENT.LIST_NOT_APPROVED_PO_FROM_HIGHER_AUTHORITY'),
+            config('constants.PUCHASE_DEPARTMENT.NOT_APPROVED_PO_AGAIN_SENT_FOR_APPROVAL_TO_HIGHER_AUTHORITY'),
+          ];
+
+
+          $array_to_be_check_owner = [
+            config('constants.HIGHER_AUTHORITY.LIST_PO_TO_BE_APPROVE_FROM_PURCHASE'),
+            config('constants.HIGHER_AUTHORITY.APPROVED_PO_FROM_PURCHASE'),
+            config('constants.HIGHER_AUTHORITY.NOT_APPROVED_PO_FROM_PURCHASE'),
+            config('constants.HIGHER_AUTHORITY.LIST_APPROVED_PO_SENT_TO_VENDOR_BY_PURCHASE'),
+            config('constants.HIGHER_AUTHORITY.LIST_INVOICE_TO_BE_APPROVE_FINANCE'),
+            config('constants.HIGHER_AUTHORITY.APPROVED_INVOICE_FINANCE'),
+            config('constants.HIGHER_AUTHORITY.NOT_APPROVED_INVOICE_FINANCE'),
+          
+          ];
+
+          $array_to_be_check_quality = [
+            config('constants.QUALITY_DEPARTMENT.LIST_PO_RECEIVED_FROM_SECURITY'),
+            config('constants.QUALITY_DEPARTMENT.PO_CHECKED'),
+            config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE'),
+            config('constants.QUALITY_DEPARTMENT.PO_CHECKED_NOT_OK_RETURN_TO_VENDOR'),
+
+          ];
           
           $data_output= ProductionModel::leftJoin('businesses', function($join) {
               $join->on('production.business_id', '=', 'businesses.id');
@@ -114,6 +148,12 @@ class AllListRepository  {
               $join->on('business_application_processes.business_id', '=', 'designs.business_id');
             })
             ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
+            ->orWhereIn('business_application_processes.store_status_id',$array_to_be_check_store)
+            ->orWhereIn('business_application_processes.purchase_status_id',$array_to_be_check_purchase)
+            ->orWhereIn('business_application_processes.business_status_id',$array_to_be_check_owner)
+            ->orWhereIn('business_application_processes.quality_status_id',$array_to_be_check_quality)
+            
+            
             ->where('businesses.is_active',true)
             ->select(
                 'businesses.id',

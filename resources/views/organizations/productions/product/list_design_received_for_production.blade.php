@@ -122,7 +122,7 @@ button.pd-setting-ed {
                                                 <div style="display: inline-block; align-items: center;">
                                                     <a href="{{route('reject-design-edit', base64_encode($data->productionId))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed mb-4"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Reject</button></a> &nbsp;
                                                     <a href="{{ route('accept-design', base64_encode($data->productionId)) }}"
-                                                        onclick="return confirmAccept('{{ route('accept-design', base64_encode($data->productionId)) }}')"
+                                                        onclick="return confirmAccept('{{ route('accept-design', base64_encode($data->id)) }}')"
                                                         class="pd-setting-ed"
                                                         data-toggle="tooltip"
                                                         title="Trash">

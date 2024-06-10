@@ -139,7 +139,7 @@ class AllListRepositor
   {
     try {
 
-
+      
       $array_to_be_check = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
       $array_not_to_be_check = ['0'];
 
@@ -157,6 +157,7 @@ class AllListRepositor
         })
         ->whereIn('business_application_processes.store_status_id', $array_to_be_check)
         ->whereIn('business_application_processes.grn_no', $array_not_to_be_check)
+        ->where('business_application_processes.purchase_order_id', '0')
         ->where('businesses.is_active', true)
         ->select(
           'businesses.id',
@@ -235,7 +236,8 @@ class AllListRepositor
   {
     try {
 
-      $array_to_be_check = [config('constants.HIGHER_AUTHORITY.APPROVED_PO_FROM_PURCHASE')];
+      $array_to_be_check_business = [config('constants.HIGHER_AUTHORITY.APPROVED_PO_FROM_PURCHASE')];
+      $array_to_be_check_purchase = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')];
 
       $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
         $join->on('business_application_processes.business_id', '=', 'production.business_id');
@@ -249,7 +251,8 @@ class AllListRepositor
         ->leftJoin('design_revision_for_prod', function ($join) {
           $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
         })
-        ->whereIn('business_application_processes.business_status_id', $array_to_be_check)
+        ->whereIn('business_application_processes.business_status_id', $array_to_be_check_business)
+        ->orWhereIn('business_application_processes.purchase_status_id', $array_to_be_check_purchase)
         ->where('businesses.is_active', true)
         ->select(
           'business_application_processes.purchase_order_id',
