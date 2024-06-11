@@ -26,7 +26,7 @@
               <div class="row">
                 <div class="col-sm-6 col-md-3">
                   <div class="form-group">
-                    <label>Client Name<span class="text-danger">*</span></label>
+                    <label>Vendor Company Name<span class="text-danger">*</span></label>
                     <input class="form-control" type="text" name="client_name" id="client_name">
                     @if ($errors->has('client_name'))
                         <span class="red-text"><?php echo $errors->first('client_name', ':message'); ?></span>
@@ -94,7 +94,7 @@
                 </div>
                 <div class="col-sm-6 col-md-3">
                   <div class="form-group">
-                    <label>Client Address</label>
+                    <label>Vendor Address</label>
                     <textarea class="form-control" rows="3" name="client_address"></textarea>
                   </div>
                 </div>

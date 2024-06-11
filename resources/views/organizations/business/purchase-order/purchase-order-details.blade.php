@@ -140,7 +140,7 @@
                                                         <div class="row">
                                                             <div class="col-md-12 profile">
                                                                 <ul class="list-unstyled">
-                                                                    <h4>SHREERAG ENGINEERING & AUTO PVT. LTD.</h4>
+                                                                    <h4>{{ $purchaseOrder->client_name }}</h4>
                                                                     <li>{{ $purchaseOrder->client_address }}</li>
                                                                 </ul>
                                                             </div>
@@ -151,9 +151,9 @@
                                                                 <ul class="list-unstyled">
                                                                     <li>GST Number: {{ $purchaseOrder->gst_number }}
                                                                     </li>
-                                                                    <li>Client Name:
-                                                                        {{ $purchaseOrder->client_name }}</li>
-                                                                    <li>Client Name:
+                                                                    {{-- <li>Client Name:
+                                                                        {{ $purchaseOrder->client_name }}</li> --}}
+                                                                    <li>Mobile No.:
                                                                         {{ $purchaseOrder->phone_number }}</li>
                                                                     <li>Email: <a
                                                                             href="javascript:void(0)">{{ $purchaseOrder->email }}</a>
