@@ -118,11 +118,7 @@
                     <tr>
                       
                       <td>{{ $loop->iteration }}</td>
-                      <td>
-                        {{-- <a href="{{ route('show-purchase-order', base64_encode($data->id))}}" --}}
-                          id="clickable-link">ST-{{ $data->id }}</a>
-                      {{-- </td> --}}
-
+                      <td>{{ $data->id }}</td>
                       <td>{{ucwords($data->client_name)}}</td>
                       <td>{{ucwords($data->email)}}</td>
                       <td>{{ucwords($data->gst_number)}}</td>

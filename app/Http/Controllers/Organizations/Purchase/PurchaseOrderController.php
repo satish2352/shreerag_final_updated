@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Services\Organizations\Purchase\PurchaseOrderServices;
 use App\Http\Controllers\Controller;
 use Validator;
-use App\Models\ {
+use App\Models\{
     BusinessApplicationProcesses
 };
 
@@ -20,17 +20,15 @@ class PurchaseOrderController extends Controller
 
     public function index($requistition_id)
     {
-        $title = 'Purchase Orders';
         $getOutput = PurchaseOrdersModel::where('requisition_id', base64_decode($requistition_id))->get();
-      
-    //    dd($getOutput);
-    //    die();
-       
-        return view('organizations.purchase.addpurchasedetails.list-purchase-orders', compact(
-            'title',
-            'getOutput',
-            'requistition_id'
-        )
+
+        return view(
+            'organizations.purchase.addpurchasedetails.list-purchase-orders',
+            compact(
+                'title',
+                'getOutput',
+                'requistition_id'
+            )
         );
     }
 
@@ -40,10 +38,12 @@ class PurchaseOrderController extends Controller
         // dd($requistition_id);
         $title = 'create invoice';
         $title = 'create invoice';
-        return view('organizations.purchase.addpurchasedetails.add-purchase-orders', compact(
-            'title',
-            'requistition_id'
-        )
+        return view(
+            'organizations.purchase.addpurchasedetails.add-purchase-orders',
+            compact(
+                'title',
+                'requistition_id'
+            )
         );
     }
 
@@ -54,7 +54,8 @@ class PurchaseOrderController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         // dd($request);
         $rules = [
             'client_name' => 'required',
@@ -70,46 +71,46 @@ class PurchaseOrderController extends Controller
             'note' => 'nullable',
         ];
 
-            $messages = [
-                        'client_name.required' => 'The Client Name is required.',
-                        'phone_number.required' => 'The Phone Number is required.',
-                        'email.required' => 'The Email is required.',
-                        'tax.required' => 'The Tax is required.',
-                        'invoice_date.required' => 'The Invoice Date is required.',
-                        'gst_number.required' => 'The GST Number is required.',
-                        'payment_terms.required' => 'The Payment Terms is required.',
-                        'client_address.required' => 'The Client Address is required.',
-                        'discount.required' => 'The Discount is required.',
-                        'status.required' => 'The Status is required.',
-                        'note.required' => 'The Note is required.',
-                                            ];
-  
-          try {
-              $validation = Validator::make($request->all(), $rules, $messages);
-              
-              if ($validation->fails()) {
-                  return redirect('purchase/add-purchase-order')
-                      ->withInput()
-                      ->withErrors($validation);
-              } else {
-                $requi_id=$request->requistition_id;
+        $messages = [
+            'client_name.required' => 'The Client Name is required.',
+            'phone_number.required' => 'The Phone Number is required.',
+            'email.required' => 'The Email is required.',
+            'tax.required' => 'The Tax is required.',
+            'invoice_date.required' => 'The Invoice Date is required.',
+            'gst_number.required' => 'The GST Number is required.',
+            'payment_terms.required' => 'The Payment Terms is required.',
+            'client_address.required' => 'The Client Address is required.',
+            'discount.required' => 'The Discount is required.',
+            'status.required' => 'The Status is required.',
+            'note.required' => 'The Note is required.',
+        ];
+
+        try {
+            $validation = Validator::make($request->all(), $rules, $messages);
+
+            if ($validation->fails()) {
+                return redirect('purchase/add-purchase-order')
+                    ->withInput()
+                    ->withErrors($validation);
+            } else {
+                $requi_id = $request->requistition_id;
                 // dd($requi_id);
-                  $add_record = $this->service->submitBOMToOwner($request);
-                  if ($add_record) {
-                      $msg = $add_record['msg'];
-                      $status = $add_record['status'];
-//   dd($add_record);
-                      if ($status == 'success') {
-                          return redirect('purchase/list-purchase-order/'.$requi_id)->with(compact('msg', 'status'));
-                      } else {
-                          return redirect('purchase/add-purchase-order')->withInput()->with(compact('msg', 'status'));
-                      }
-                  }
-              }
-          } catch (Exception $e) {
-              return redirect('purchase/add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
-          }
-      }
+                $add_record = $this->service->submitBOMToOwner($request);
+                if ($add_record) {
+                    $msg = $add_record['msg'];
+                    $status = $add_record['status'];
+                    //   dd($add_record);
+                    if ($status == 'success') {
+                        return redirect('purchase/list-purchase-order/' . $requi_id)->with(compact('msg', 'status'));
+                    } else {
+                        return redirect('purchase/add-purchase-order')->withInput()->with(compact('msg', 'status'));
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            return redirect('purchase/add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+        }
+    }
 
     public function store_old(Request $request)
     {
@@ -201,10 +202,12 @@ class PurchaseOrderController extends Controller
         $invoice = PurchaseOrdersModel::find($show_data_id);
         // //dd($invoice);
         $title = 'edit invoice';
-        return view('organizations.purchase.addpurchasedetails.edit-purchase-orders', compact(
-            'title',
-            'invoice'
-        )
+        return view(
+            'organizations.purchase.addpurchasedetails.edit-purchase-orders',
+            compact(
+                'title',
+                'invoice'
+            )
         );
     }
 
@@ -287,16 +290,16 @@ class PurchaseOrderController extends Controller
             // dd($request);
             $requistition_id = base64_decode($request->requistition_id);
             // dd($requistition_id);
-            $data_for_purchase_order = PurchaseOrdersModel::where('requisition_id',$requistition_id)->first();
+            $data_for_purchase_order = PurchaseOrdersModel::where('requisition_id', $requistition_id)->first();
             // dd($data_for_purchase_order);
-            $business_application = BusinessApplicationProcesses::where('requisition_id',$requistition_id)->first();
-           
+            $business_application = BusinessApplicationProcesses::where('requisition_id', $requistition_id)->first();
+
             if ($business_application) {
                 $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.LIST_PO_TO_BE_APPROVE_FROM_PURCHASE');
                 $business_application->purchase_order_id = $data_for_purchase_order->purchase_orders_id;
-                $business_application->purchase_order_submited_to_owner_date= date('Y-m-d');
+                $business_application->purchase_order_submited_to_owner_date = date('Y-m-d');
                 $business_application->purchase_status_id = config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL');
-                
+
                 $business_application->grn_no = '0';
                 $business_application->store_receipt_no = '0';
                 $business_application->save();
@@ -320,10 +323,10 @@ class PurchaseOrderController extends Controller
         try {
 
             return view('organizations.purchase.purchase-order-details.blade');
-           
+
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
-        } 
+        }
     }
 
 
@@ -334,28 +337,28 @@ class PurchaseOrderController extends Controller
             $delete = $this->service->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id);
             if ($delete) {
                 $status = 'success';
-                $msg ='Purchase order accepted.';
+                $msg = 'Purchase order mail sent to vendor.';
             } else {
                 $status = 'success';
-                $msg ='Purchase failed to accept.';
-            }  
+                $msg = 'Purchase order mail sent to vendor.';
+            }
 
             return redirect('purchase/list-purchase-order-approved-sent-to-vendor')->with(compact('msg', 'status'));
-           
+
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
-        } 
+        }
     }
 
 
     public function getAllListPurchaseOrderTowardsOwnerDetails($purchase_order_id)
     {
         try {
-           
+
             return view('organizations.purchase.addpurchasedetails.view-purchase-orders-details');
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
-        } 
+        }
     }
 
 
