@@ -22,7 +22,7 @@ class ProductionRepository  {
 
             $business_application = BusinessApplicationProcesses::where('business_id', $id)->first();
             if ($business_application) {
-                $business_application->business_id = $id;
+                // $business_application->business_id = $id;
                 $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
                 // $business_application->design_id = $dataOutput->id;
                 $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.ACCEPTED_DESIGN_BY_PRODUCTION');

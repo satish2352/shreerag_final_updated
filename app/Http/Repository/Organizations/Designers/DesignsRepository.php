@@ -137,7 +137,7 @@ class DesignsRepository  {
             $business_application = BusinessApplicationProcesses::where('business_id', $request->business_id)->first();
             if ($business_application) {
 
-                $business_application->business_id = $dataOutput->business_id;
+                // $business_application->business_id = $dataOutput->business_id;
                 $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
                 $business_application->design_id = $dataOutput->id;
                 $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
@@ -202,7 +202,7 @@ class DesignsRepository  {
 
             if ($business_application) {
 
-                $business_application->business_id = $designRevisionForProd->business_id;
+                // $business_application->business_id = $designRevisionForProd->business_id;
                 $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.DESIGN_SENT_TO_PROD_DEPT_REVISED');
                 $business_application->design_id = $designRevisionForProd->design_id;
                 $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_REVISED');
