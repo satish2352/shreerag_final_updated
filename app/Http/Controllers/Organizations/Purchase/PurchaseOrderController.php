@@ -25,7 +25,6 @@ class PurchaseOrderController extends Controller
         return view(
             'organizations.purchase.addpurchasedetails.list-purchase-orders',
             compact(
-                'title',
                 'getOutput',
                 'requistition_id'
             )
