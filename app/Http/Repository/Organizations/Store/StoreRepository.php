@@ -92,7 +92,7 @@ class StoreRepository
     {
         try {
 
-            $business_application = BusinessApplicationProcesses::where('business_id', $id)->first();
+            $business_application = BusinessApplicationProcesses::where('production_id', $id)->first();
             $store_receipt_no  =  str_replace(array("-", ":"), "", date('Y-m-d') . time());
             if ($business_application) {
                 $business_application->business_id = $id;
