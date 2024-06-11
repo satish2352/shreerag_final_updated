@@ -166,8 +166,8 @@ class AllListRepository
     try {
 
       $array_to_be_check = [config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION')];
-      $array_not_to_be_check = [config('constants.FINANCE_DEPARTMENT.INVOICE_PAID_AGAINST_PO')];
-
+      $array_not_to_be_check = [config('constants.FINANCE_DEPARTMENT.INVOICE_PAID_AGAINST_PO'),
+      config('constants.FINANCE_DEPARTMENT.LIST_STORE_RECIEPT_AND_GRN_RECEIVED_FROM_STORE_DEAPRTMENT')];
 
       $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
         $join->on('business_application_processes.business_id', '=', 'production.business_id');
