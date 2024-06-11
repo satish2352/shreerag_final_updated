@@ -87,12 +87,10 @@
                                                             href="{{ route('check-details-of-po-before-send-vendor', $data->purchase_order_id) }}"><button
                                                             {{-- href="{{ route('list-check-final-purchase-order', $data->purchase_order_id) }}"><button --}}
                                                                     data-toggle="tooltip" title="View Details"
-                                                                    class="pd-setting-ed"> View Details Satish</button></a> &nbsp;
+                                                                    class="pd-setting-ed"> View Details</button></a> &nbsp;
                                                             &nbsp; &nbsp;
                                                         </div>
                                                     </td>
-
-
                                                 </tr>
                                             @endforeach
                                         </tbody>

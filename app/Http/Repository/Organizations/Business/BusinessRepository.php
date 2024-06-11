@@ -143,11 +143,11 @@ class BusinessRepository
         }
     }
 
-    public function acceptPurchaseOrder($purchase_status_id)
+    public function acceptPurchaseOrder($purchase_order_id)
     {
         try {
-            
-            $business_application = BusinessApplicationProcesses::where('purchase_order_id', $purchase_status_id)->first();
+        
+            $business_application = BusinessApplicationProcesses::where('purchase_order_id', $purchase_order_id)->first();
             // dd($business_application);
             if ($business_application) {
                 $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.APPROVED_PO_FROM_PURCHASE');
@@ -156,7 +156,6 @@ class BusinessRepository
                 $business_application->finanace_store_receipt_status_id = config('constants.FINANCE_DEPARTMENT.INVOICE_APPROVED_FROM_HIGHER_AUTHORITY');
                 $business_application->save();
             }
-            
             return $business_application;
 
         } catch (\Exception $e) {
@@ -170,7 +169,7 @@ class BusinessRepository
 {
     try {
         // Fetch the Purchase Order
-        $purchaseOrder = PurchaseOrdersModel::where('id', $purchase_order_id)
+        $purchaseOrder = PurchaseOrdersModel::where('purchase_orders_id', $purchase_order_id)
             ->select(
                 'id', 'purchase_orders_id', 'requisition_id', 'business_id', 'production_id',
                 'po_date', 'vendor_id', 'terms_condition', 'transport_dispatch', 'image', 'status',
@@ -180,7 +179,7 @@ class BusinessRepository
             ->first();
           
         // Fetch related Purchase Order Details
-        $purchaseOrderDetails = PurchaseOrderDetailsModel::where('purchase_id', $purchase_order_id)
+        $purchaseOrderDetails = PurchaseOrderDetailsModel::where('purchase_id', $purchaseOrder->id)
             ->select(
                 'purchase_id', 'part_no', 'description', 'qc_check_remark', 'due_date',
                 'hsn_no', 'quantity', 'actual_quantity', 'accepted_quantity',
@@ -196,7 +195,7 @@ class BusinessRepository
         return $e;
     }
 }
-public function getPurchaseOrderBusinessWise($purchase_order_id)
+public function getPurchaseOrderBusinessWise($id)
 {
     try {
         $data_output = PurchaseOrdersModel::select(
@@ -205,7 +204,7 @@ public function getPurchaseOrderBusinessWise($purchase_order_id)
             'client_name', 'phone_number', 'email', 'tax', 'invoice_date', 'gst_number',
             'payment_terms', 'client_address', 'discount', 'note', 'created_at'
         )
-        ->where('purchase_orders_id', $purchase_order_id)
+        ->where('business_id', $id)
         ->get(); // Added to execute the query and get results
 // dd($data_output);
 // die();

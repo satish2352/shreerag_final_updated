@@ -87,7 +87,7 @@
                                                 <th data-field="purchase_id" data-editable="true">Remark</th>
                                                 <th data-field="design_image" data-editable="false">Design Layout</th>
                                                 <th data-field="bom_image" data-editable="false">BOM</th>
-                                                <th data-field="action" data-editable="false">Action</th>
+                                                {{-- <th data-field="action" data-editable="false">Action</th> --}}
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -106,7 +106,7 @@
                                                         href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
                                                         alt="bill of material" >Click to download</a>
                                                 </td>
-                                                    <td>
+                                                    {{-- <td>
                                                         <div style="display: flex; align-items: center;">
                                                             <a
                                                                 href="{{ route('accepted-store-material-sent-to-production', base64_encode($data->productionId)) }} "><button
@@ -114,7 +114,7 @@
                                                                     class="pd-setting-ed">Forwareded For production</button></a>
 
                                                         </div>
-                                                    </td>
+                                                    </td> --}}
 
                                                 </tr>
                                             @endforeach

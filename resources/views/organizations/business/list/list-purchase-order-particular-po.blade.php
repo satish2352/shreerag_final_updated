@@ -72,7 +72,6 @@
                                     </select>
                                 </div>
 
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -102,7 +101,7 @@
                                                     <td>{{ $data->status }}</td>
                                                     <td>
                                                         <div style="display: inline-block; align-items: center;">
-                                                            <a href="{{ route('list-submit-final-purchase-order-particular-business', $data->id) }}">
+                                                            <a href="{{ route('list-submit-final-purchase-order-particular-business', $data->purchase_orders_id) }}">
                                                                 <button data-toggle="tooltip" title="Edit" class="pd-setting-ed">
                                                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Check Details
                                                                 </button>

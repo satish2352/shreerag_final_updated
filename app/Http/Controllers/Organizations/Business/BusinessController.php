@@ -140,9 +140,9 @@ class BusinessController extends Controller
             return $e;
         }
     }    
-    public function submitFinalPurchaseOrder($purchase_order_id){
+    public function submitFinalPurchaseOrder($id){
         try {
-            $data_output = $this->service->getPurchaseOrderBusinessWise($purchase_order_id);
+            $data_output = $this->service->getPurchaseOrderBusinessWise($id);
             return view('organizations.business.list.list-purchase-order-particular-po', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
@@ -176,7 +176,7 @@ class BusinessController extends Controller
                 $msg ='Purchase order accepted.';
             } else {
                 $status = 'success';
-                $msg ='Purchase failed to accept.';
+                $msg ='Purchase order accepted.';
             }  
 
             return redirect('owner/list-purchase-orders')->with(compact('msg', 'status'));

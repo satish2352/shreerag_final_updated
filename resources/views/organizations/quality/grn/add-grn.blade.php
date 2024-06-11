@@ -127,7 +127,7 @@
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="po_date">PO Date :</label>
                                                         <!-- <input type="date" class="form-control" id="po_date"
-                                                            name="po_date" placeholder="Enter PO Date"> -->
+                                                                name="po_date" placeholder="Enter PO Date"> -->
 
                                                         <input type="date" class="form-control" id="po_date"
                                                             name="po_date" placeholder="Enter PO Date"
@@ -137,16 +137,16 @@
                                                     </div>
 
                                                     <!-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="invoice_no">Invoice No.:</label>
-                                                        <input type="text" class="form-control" id="invoice_no"
-                                                            name="invoice_no" placeholder="Enter Invoice No">
-                                                    </div>
+                                                            <label for="invoice_no">Invoice No.:</label>
+                                                            <input type="text" class="form-control" id="invoice_no"
+                                                                name="invoice_no" placeholder="Enter Invoice No">
+                                                        </div>
 
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="invoice_date">Invoice Date:</label>
-                                                        <input type="date" class="form-control" id="invoice_date"
-                                                            name="invoice_date" placeholder="Enter Invoice Date">
-                                                    </div> -->
+                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                            <label for="invoice_date">Invoice Date:</label>
+                                                            <input type="date" class="form-control" id="invoice_date"
+                                                                name="invoice_date" placeholder="Enter Invoice Date">
+                                                        </div> -->
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="image">Signature:</label>
                                                         <input type="file" class="form-control" accept="image/*"
@@ -163,7 +163,7 @@
                                                             <th>Actual Quantity</th>
                                                             <th>Accepted Quantity</th>
                                                             <th>Rejected Quantity</th>
-                                                            <th>Action</th>
+                                                            {{-- <th>Action</th> --}}
                                                         </tr>
                                                         @foreach ($purchase_order_details_data as $item)
                                                             <tr>
@@ -201,8 +201,8 @@
                                                                         placeholder="Enter Rejected Qty"
                                                                         class="form-control rejected_quantity" readonly />
                                                                 </td>
-                                                                <td><button type="button" name="add" id="add"
-                                                                        class="btn btn-success">Add More</button></td>
+                                                                {{-- <td><button type="button" name="add" id="add"
+                                                                        class="btn btn-success">Add More</button></td> --}}
                                                             </tr>
                                                         @endforeach
                                                     </table>

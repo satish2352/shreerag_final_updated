@@ -174,7 +174,7 @@
                         <li class="nav-item {{ Request::is('list-design-upload') ? 'active' : '' }}">
                             <a class="" href="{{ route('list-design-upload') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-envelope icon-wrap"></i> <span
-                                    class="mini-click-non">Designs Sent To Porduction</span></a>
+                                    class="mini-click-non">Designs Sent To Production</span></a>
                         </li>
 
                         <li class="nav-item {{ Request::is('list-reject-design-from-prod') ? 'active' : '' }}">
@@ -289,7 +289,7 @@
                         <li class="{{ request()->is('list-material-sent-to-quality') ? 'active' : '' }}">
                             <a href="{{ route('list-material-sent-to-quality') }}">
                                 <i class="fa big-icon fa-envelope icon-wrap"></i>
-                                <span class="mini-click-non">Material Sent From Quality</span>
+                                <span class="mini-click-non">Material Sent to Store</span>
                             </a>
                         </li>
                     @endif
