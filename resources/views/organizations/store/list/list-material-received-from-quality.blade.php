@@ -110,8 +110,8 @@
                                                         <div style="display: flex; align-items: center;">
                                                             <a
                                                                 href="{{ route('accepted-store-material-sent-to-production', base64_encode($data->productionId)) }} "><button
-                                                                    data-toggle="tooltip" title="Trash"
-                                                                    class="pd-setting-ed">Forwareded For production</button></a>
+                                                                    data-toggle="tooltip" title="Forwared For production"
+                                                                    class="pd-setting-ed">Forwared For production</button></a>
 
                                                         </div>
                                                     </td>

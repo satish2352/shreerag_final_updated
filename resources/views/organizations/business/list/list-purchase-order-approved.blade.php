@@ -98,7 +98,7 @@ padding-left: 20px !important;
                                             
                                             <td>
                                                 <div style="display: inline-block; align-items: center;">
-                                                    <a href="{{route('list-purchase-orders-sent-to-owner-details', base64_encode($data->purchase_order_id))}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>View Details</button></a>
+                                                    <a href="{{route('list-purchase-orders-sent-to-owner-details', $data->purchase_order_id)}} "><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>View Details</button></a>
                                                 </div>
                                             </td>
                                             

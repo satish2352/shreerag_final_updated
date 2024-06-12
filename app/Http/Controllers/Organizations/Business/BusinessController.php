@@ -8,11 +8,13 @@ use Session;
 use Validator;
 use Config;
 use Carbon;
+use App\Http\Controllers\Organizations\CommanController;
 
 class BusinessController extends Controller
 { 
     public function __construct(){
         $this->service = new BusinessServices();
+        $this->serviceCommon = new CommanController();
     }
     public function index()
     {
@@ -152,9 +154,9 @@ class BusinessController extends Controller
     public function submitFinalPurchaseOrderBusinessWise($purchase_order_id){
 
         try {
-            $getOrganizationData = $this->service->getAllOrganizationData();
+            $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
 
-            $data = $this->service->getPurchaseOrderDetails($purchase_order_id);
+            $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
             $purchaseOrder = $data['purchaseOrder'];
             $purchaseOrderDetails = $data['purchaseOrderDetails'];
 

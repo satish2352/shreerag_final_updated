@@ -107,7 +107,7 @@
                                                         <div style="display: flex; align-items: center;">
                                                             <a
                                                                 href="{{ route('list-accepted-grn-srn-finance', base64_encode($data->purchase_order_id)) }} "><button
-                                                                    data-toggle="tooltip" title="Trash"
+                                                                    data-toggle="tooltip" title="Check details"
                                                                     class="pd-setting-ed">Check details</button></a>
 
 

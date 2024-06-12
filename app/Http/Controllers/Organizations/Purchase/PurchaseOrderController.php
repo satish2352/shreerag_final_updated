@@ -10,12 +10,16 @@ use Validator;
 use App\Models\{
     BusinessApplicationProcesses
 };
+use App\Http\Controllers\Organizations\CommanController;
+
 
 class PurchaseOrderController extends Controller
 {
     public function __construct()
     {
         $this->service = new PurchaseOrderServices();
+        $this->serviceCommon = new CommanController();
+
     }
 
     public function index($requistition_id)
@@ -353,8 +357,13 @@ class PurchaseOrderController extends Controller
     public function getAllListPurchaseOrderTowardsOwnerDetails($purchase_order_id)
     {
         try {
+            $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
 
-            return view('organizations.purchase.addpurchasedetails.view-purchase-orders-details');
+            $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
+            $purchaseOrder = $data['purchaseOrder'];
+            $purchaseOrderDetails = $data['purchaseOrderDetails'];
+
+            return view('organizations.purchase.addpurchasedetails.view-purchase-orders-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData'));
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }

@@ -134,7 +134,7 @@
 
                                                             <a
                                                                 href="{{ route('accept-design', base64_encode($data->productionId)) }} "><button
-                                                                    data-toggle="tooltip" title="Trash"
+                                                                    data-toggle="tooltip" title="Accept Design"
                                                                     class="pd-setting-ed"><i class="fa fa-check"
                                                                         aria-hidden="true"></i></button></a>
                                                         </div>

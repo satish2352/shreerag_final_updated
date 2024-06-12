@@ -125,7 +125,7 @@ button.pd-setting-ed {
                                                         onclick="return confirmAccept('{{ route('accept-design', base64_encode($data->id)) }}')"
                                                         class="pd-setting-ed"
                                                         data-toggle="tooltip"
-                                                        title="Trash">
+                                                        title="Accept">
                                                         <button><i class="fa fa-check" aria-hidden="true"></i> Accept </button>
                                                     </a>
                                                 </div>

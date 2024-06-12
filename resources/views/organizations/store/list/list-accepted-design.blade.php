@@ -110,12 +110,12 @@
                                                         <div style="display: flex; align-items: center;">
                                                             <a
                                                                 href="{{ route('accepted-and-material-sent', base64_encode($data->productionId)) }} "><button
-                                                                    data-toggle="tooltip" title="Trash"
+                                                                    data-toggle="tooltip" title="Requirement forwareded For production"
                                                                     class="pd-setting-ed">Requirement forwareded For production</button></a>
 
                                                             <a
                                                                 href="{{ route('need-to-create-req', base64_encode($data->productionId)) }} "><button
-                                                                    data-toggle="tooltip" title="Trash"
+                                                                    data-toggle="tooltip" title="Need To Purchase"
                                                                     class="pd-setting-ed">Need To Purchase</button></a>
                                                         </div>
                                                     </td>

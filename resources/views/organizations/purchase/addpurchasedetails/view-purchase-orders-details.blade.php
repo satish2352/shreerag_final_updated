@@ -9,7 +9,7 @@
                             <div class="main-sparkline13-hd">
                                 <h1>Purchase Order <span class="table-project-n">Details</span></h1>
                             </div><br>
-
+                            @include('organizations.common-pages.purchase-order-view')
                         </div>
                     </div>
                 </div>

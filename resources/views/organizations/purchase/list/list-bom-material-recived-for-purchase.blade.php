@@ -104,7 +104,7 @@
                                                     <td>
                                                         <div style="display: inline-block; align-items: center;">
                                                             <a href="{{route('reject-design-edit', base64_encode($data->requistition_id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Reject</button></a> &nbsp; &nbsp; &nbsp;
-                                                            <a href="{{route('list-purchase-order', base64_encode($data->requistition_id))}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i> Accept and Send For Purchase </button></a>
+                                                            <a href="{{route('list-purchase-order', base64_encode($data->requistition_id))}} "><button data-toggle="tooltip" title="Accept and Send For Purchase " class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i> Accept and Send For Purchase </button></a>
                                                         </div>
                                                     </td>
                                                  
