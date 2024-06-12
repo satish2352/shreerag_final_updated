@@ -324,8 +324,20 @@ class PurchaseOrderController extends Controller
     public function checkDetailsBeforeSendPOToVendor($purchase_order_id)
     {
         try {
+            $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
 
-            return view('organizations.purchase.purchase-order-details.blade');
+            $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
+            $purchaseOrder = $data['purchaseOrder'];
+            $purchaseOrderDetails = $data['purchaseOrderDetails'];
+
+            return view(
+                'organizations.purchase.purchase.purchase-order-details',
+                compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData')
+            );
+
+
+            // return view('organizations.business.purchase-order.purchase-order-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData'));
+
 
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
@@ -357,8 +369,9 @@ class PurchaseOrderController extends Controller
     public function getAllListPurchaseOrderTowardsOwnerDetails($purchase_order_id)
     {
         try {
+            dd("hi");
             $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
-
+            dd($getOrganizationData);
             $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
             $purchaseOrder = $data['purchaseOrder'];
             $purchaseOrderDetails = $data['purchaseOrderDetails'];
