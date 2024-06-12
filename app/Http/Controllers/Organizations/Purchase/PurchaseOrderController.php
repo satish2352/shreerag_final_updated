@@ -369,9 +369,7 @@ class PurchaseOrderController extends Controller
     public function getAllListPurchaseOrderTowardsOwnerDetails($purchase_order_id)
     {
         try {
-            dd("hi");
             $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
-            dd($getOrganizationData);
             $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
             $purchaseOrder = $data['purchaseOrder'];
             $purchaseOrderDetails = $data['purchaseOrderDetails'];
