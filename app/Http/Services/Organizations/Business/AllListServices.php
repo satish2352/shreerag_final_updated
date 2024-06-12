@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Services\Organizations\Business;
+
 use App\Http\Repository\Organizations\Business\AllListRepositor;
 use Carbon\Carbon;
 // use App\Models\ {
@@ -7,62 +8,70 @@ use Carbon\Carbon;
 //     };
 
 use Config;
+
 class AllListServices
 {
     protected $repo;
-    public function __construct() {
+    public function __construct()
+    {
 
         $this->repo = new AllListRepositor();
 
     }
 
-    public function getAllListForwardedToDesign(){
+    public function getAllListForwardedToDesign()
+    {
         try {
-            return  $this->repo->getAllListForwardedToDesign();
-        
+            return $this->repo->getAllListForwardedToDesign();
+
         } catch (\Exception $e) {
             return $e;
         }
-    } 
+    }
 
-    public function getAllListCorrectionToDesignFromProduction(){
+    public function getAllListCorrectionToDesignFromProduction()
+    {
         try {
             return $this->repo->getAllListCorrectionToDesignFromProduction();
         } catch (\Exception $e) {
             return $e;
         }
-    } 
+    }
 
-    public function materialAskByProdToStore(){
+    public function materialAskByProdToStore()
+    {
         try {
             return $this->repo->materialAskByProdToStore();
         } catch (\Exception $e) {
             return $e;
         }
-    } 
+    }
 
 
-    public function getAllStoreDeptSentForPurchaseMaterials(){
+    public function getAllStoreDeptSentForPurchaseMaterials()
+    {
         try {
             return $this->repo->getAllStoreDeptSentForPurchaseMaterials();
         } catch (\Exception $e) {
             return $e;
         }
-    } 
+    }
 
 
-    
-    public function getAllListPurchaseOrder(){
+
+    public function getAllListPurchaseOrder()
+    {
         try {
             return $this->repo->getAllListPurchaseOrder();
         } catch (\Exception $e) {
             return $e;
         }
-    } 
+    }
 
 
-    
-    public function getAllListApprovedPurchaseOrderOwnerlogin(){
+
+    public function getAllListApprovedPurchaseOrderOwnerlogin()
+    {
         try {
             return $this->repo->getAllListApprovedPurchaseOrderOwnerlogin();
         } catch (\Exception $e) {
@@ -70,11 +79,21 @@ class AllListServices
         }
     }
 
-    
 
-    public function listPOReceivedForApprovaTowardsOwner(){
+
+    public function listPOReceivedForApprovaTowardsOwner()
+    {
         try {
             return $this->repo->listPOReceivedForApprovaTowardsOwner();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function loadDesignSubmittedForProduction()
+    {
+        try {
+            return $this->repo->loadDesignSubmittedForProduction();
         } catch (\Exception $e) {
             return $e;
         }

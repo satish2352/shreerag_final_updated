@@ -87,6 +87,16 @@ class AllListController extends Controller
         }
     } 
 
+    public function loadDesignSubmittedForProduction(){
+        try {
+            $data_output = $this->service->loadDesignSubmittedForProduction();
+            return view('organizations.designer.design-upload.list-design-upload', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }     
+
+
 
     
 }

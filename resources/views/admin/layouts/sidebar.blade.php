@@ -1,9 +1,9 @@
 <div class="left-sidebar-pro">
     <nav id="sidebar" class="">
         <div class="sidebar-header">
-            <a href="index.html"><img class="main-logo" src="{{ asset('website/assets/img/logo/LANSCAPE LOG.png') }}"
+            <a href="{{route('login')}}"><img class="main-logo" src="{{ asset('website/assets/img/logo/LANSCAPE LOG.png') }}"
                     alt=""></a>
-            <strong><img src="{{ asset('img/logo/logo.png') }}" alt=""></strong>
+            <strong><img src="{{ asset('img/logo/logo_updated.png') }}" alt=""></strong>
         </div>
         <div class="left-custom-menu-adp-wrap comment-scrollbar">
             <nav class="sidebar-nav left-sidebar-menu-pro">
@@ -62,8 +62,8 @@
                                         class="fa big-icon fa-envelope icon-wrap"></i> <span
                                         class="mini-click-non">Business Sent For Design</span></a>
                             </li>
-                            <li class="{{ request()->is('owner/list-design-upload') ? 'active' : '' }}">
-                                <a href="{{ route('list-design-upload') }}" aria-expanded="false"><i
+                            <li class="{{ request()->is('owner/list-design-uploaded-owner') ? 'active' : '' }}">
+                                <a href="{{ route('list-design-uploaded-owner') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-envelope icon-wrap"></i> <span
                                         class="mini-click-non">Design Received For Production</span></a>
                             </li>
@@ -94,14 +94,14 @@
                             </li>
 
                             <li
-                                class="nav-item {{ Request::is('list-approved-purchase-orders-owner') ? 'active' : '' }}">
+                                class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') ? 'active' : '' }}">
                                 <a title="Inbox" href="{{ route('list-approved-purchase-orders-owner') }}"><i
                                         class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                         class="mini-sub-pro">Purchase Order Approved</span></a>
                             </li>
 
                             <li
-                                class="nav-item {{ Request::is('list-po-recived-for-approval-payment') ? 'active' : '' }}">
+                                class="nav-item {{ request()->is('owner/list-po-recived-for-approval-payment') ? 'active' : '' }}">
                                 <a title="Inbox" href="{{ route('list-po-recived-for-approval-payment') }}"><i
                                         class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                         class="mini-sub-pro">PO Payment Release Request</span></a>
@@ -421,7 +421,7 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="logo-pro">
-                    <a href="index.html"><img class="main-logo" src="{{ asset('img/logo/logo.png') }}"
+                    <a href="{{ route('login') }}"><img class="main-logo" src="{{ asset('img/logo/logo_updated.png') }}"
                             alt=""></a>
                 </div>
             </div>

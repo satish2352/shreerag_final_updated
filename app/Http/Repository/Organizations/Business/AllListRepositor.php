@@ -322,5 +322,43 @@ class AllListRepositor
     }
   }
 
+  public function loadDesignSubmittedForProduction(){
+    try {
+
+        $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN'),
+        config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_PRODUCTION'),
+        config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECIVED_FROM_PRODUCTION_DEPT_REVISED'),
+    
+        ];
+        $data_output= ProductionModel::leftJoin('businesses', function($join) {
+            $join->on('production.business_id', '=', 'businesses.id');
+          })
+          ->leftJoin('business_application_processes', function($join) {
+            $join->on('production.business_id', '=', 'business_application_processes.business_id');
+          })
+          ->leftJoin('designs', function($join) {
+            $join->on('production.business_id', '=', 'designs.business_id');
+          })
+          ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
+          ->where('businesses.is_active',true)
+          ->select(
+              'businesses.id',
+              'businesses.title',
+              'businesses.descriptions',
+              'businesses.remarks',
+              'businesses.is_active',
+              'designs.id',
+              'designs.design_image',
+              'designs.bom_image',
+              'designs.business_id'
+
+          )->get();
+        //   dd($data_output);
+        return $data_output;
+    } catch (\Exception $e) {
+        return $e;
+    }
+}
+
 
 }
