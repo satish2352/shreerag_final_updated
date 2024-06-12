@@ -22,7 +22,7 @@
                 <div class="sparkline12-hd">
                     <div class="main-sparkline12-hd">
                         <center>
-                            <h1>Rejected Design List Sent For Corection</h1>
+                            <h1>Search By PO Number Details</h1>
                         </center>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
                                                                     <a href="{{ route('list-business') }}"
                                                                         class="btn btn-white"
                                                                         style="margin-bottom:50px">Cancel</a>
-                                                                        <button class="btn btn-sm btn-primary login-submit-cs" id="saveButton" type="button" style="margin-bottom:50px">Save Data</button>
+                                                                        <button class="btn btn-sm btn-primary login-submit-cs" id="saveButton" type="button" style="margin-bottom:50px">Search PO Number</button>
                                                                 </div>
                                                             </div>
                                                         </div>
