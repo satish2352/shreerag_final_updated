@@ -17,7 +17,6 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'admin@gmail.com',
-                // 'u_uname' => 'admin@gmail.com',
                 'u_password' => bcrypt('admin@gmail.com'),
                 'role_id' => 111,
                 'org_id' => 0,
@@ -38,8 +37,7 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'owner@gmail.com',
-                // 'u_uname' => 'admin@gmail.com',
-                'u_password' => bcrypt('owner@gmail.com'),
+                'u_password' => bcrypt('FfAtgNQorb'),
                 'role_id' => 1,
                 'org_id' => 0,
                 'f_name' => 'fname',
@@ -59,7 +57,7 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'purchase@gmail.com',
-                'u_password' => bcrypt('purchase@gmail.com'),
+                'u_password' => bcrypt('gyGkQFxefV'),
                 'role_id' => 2,
                 'org_id' => 0,
                 'f_name' => 'fname',
@@ -79,8 +77,7 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'design@gmail.com',
-                // 'u_uname' => 'design@gmail.com',
-                'u_password' => bcrypt('design@gmail.com'),
+                'u_password' => bcrypt('TetmUsgjDf'),
                 'role_id' => 3,
                 'org_id' => 0,
                 'f_name' => 'fname',
@@ -99,8 +96,7 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'prod@gmail.com',
-                // 'u_uname' => 'prod@gmail.com',
-                'u_password' => bcrypt('prod@gmail.com'),
+                'u_password' => bcrypt('YeGClqIloN'),
                 'role_id' => 4,
                 'org_id' => 0,
                 'f_name' => 'fname',
@@ -120,8 +116,7 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'store@gmail.com',
-                // 'u_uname' => 'store@gmail.com',
-                'u_password' => bcrypt('store@gmail.com'),
+                'u_password' => bcrypt('SoQUNvApdw'),
                 'role_id' => 7,
                 'org_id' => 0,
                 'f_name' => 'fname',
@@ -141,8 +136,7 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'security@gmail.com',
-                // 'u_uname' => 'store@gmail.com',
-                'u_password' => bcrypt('security@gmail.com'),
+                'u_password' => bcrypt('YoErlSVVzu'),
                 'role_id' => 5,
                 'org_id' => 0,
                 'f_name' => 'fname',
@@ -162,8 +156,7 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'quality@gmail.com',
-                // 'u_uname' => 'store@gmail.com',
-                'u_password' => bcrypt('quality@gmail.com'),
+                'u_password' => bcrypt('QaxFFsOdRR'),
                 'role_id' => 6,
                 'org_id' => 0,
                 'f_name' => 'fname',
@@ -182,8 +175,7 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'finance@gmail.com',
-                // 'u_uname' => 'store@gmail.com',
-                'u_password' => bcrypt('finance@gmail.com'),
+                'u_password' => bcrypt('ordIoEffAh'),
                 'role_id' => 8,
                 'org_id' => 0,
                 'f_name' => 'fname',
@@ -203,8 +195,7 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'hr@gmail.com',
-                // 'u_uname' => 'store@gmail.com',
-                'u_password' => bcrypt('hr@gmail.com'),
+                'u_password' => bcrypt('zaEAYMmBCa'),
                 'role_id' => 9,
                 'org_id' => 0,
                 'f_name' => 'fname',
