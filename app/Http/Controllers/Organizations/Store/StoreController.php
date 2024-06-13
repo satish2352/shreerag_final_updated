@@ -25,7 +25,7 @@ class StoreController extends Controller
         try {
             $acceptdesign = base64_decode($id);
             $update_data = $this->service->orderAcceptedAndMaterialForwareded($acceptdesign);
-            return redirect('list-accepted-design-from-prod');
+            return redirect('storedept/list-accepted-design-from-prod');
         } catch (\Exception $e) {
             return $e;
         }
@@ -67,7 +67,7 @@ class StoreController extends Controller
             // $validation = Validator::make($request->all(), $rules, $messages);
 
             // if ($validation->fails()) {
-            //     return redirect('add-requistion')
+            //     return redirect('storedept/add-requistion')
             //         ->withInput()
             //         ->withErrors($validation);
             // } else {
@@ -78,14 +78,14 @@ class StoreController extends Controller
                 $status = $add_record['status'];
 
                 if ($status == 'success') {
-                    return redirect('list-material-sent-to-purchase')->with(compact('msg', 'status'));
+                    return redirect('storedept/list-material-sent-to-purchase')->with(compact('msg', 'status'));
                 } else {
-                    return redirect('add-requistion')->withInput()->with(compact('msg', 'status'));
+                    return redirect('storedept/add-requistion')->withInput()->with(compact('msg', 'status'));
                 }
             }
             // }
         } catch (Exception $e) {
-            return redirect('add-requistion')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('storedept/add-requistion')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
 
@@ -96,7 +96,7 @@ class StoreController extends Controller
         try {
             $acceptdesign = base64_decode($id);
             $update_data = $this->service->genrateStoreReciptAndForwardMaterialToTheProduction($acceptdesign);
-            return redirect('list-accepted-design-from-prod');
+            return redirect('storedept/list-accepted-design-from-prod');
         } catch (\Exception $e) {
             return $e;
         }

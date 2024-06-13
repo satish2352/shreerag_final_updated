@@ -25,7 +25,7 @@ class ProductionController extends Controller
         try {
             $acceptdesign = base64_decode($id);
             $update_data = $this->service->acceptdesign($acceptdesign);
-            return redirect('list-accept-design');
+            return redirect('proddept/list-accept-design');
         } catch (\Exception $e) {
             return $e;
         }
@@ -43,7 +43,7 @@ class ProductionController extends Controller
     public function rejectdesign(Request $request){
         try {
             $update_data = $this->service->rejectdesign($request);
-            return redirect('list-reject-design');
+            return redirect('proddept/list-reject-design');
         } catch (\Exception $e) {
             return $e;
         }

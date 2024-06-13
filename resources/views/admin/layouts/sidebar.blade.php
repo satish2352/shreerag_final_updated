@@ -1,8 +1,8 @@
 <div class="left-sidebar-pro">
     <nav id="sidebar" class="">
         <div class="sidebar-header">
-            <a href="{{route('login')}}"><img class="main-logo" src="{{ asset('website/assets/img/logo/LANSCAPE LOG.png') }}"
-                    alt=""></a>
+            <a href="{{ route('login') }}"><img class="main-logo"
+                    src="{{ asset('website/assets/img/logo/LANSCAPE LOG.png') }}" alt=""></a>
             <strong><img src="{{ asset('img/logo/logo_updated.png') }}" alt=""></strong>
         </div>
         <div class="left-custom-menu-adp-wrap comment-scrollbar">
@@ -47,39 +47,39 @@
 
                     @if (session()->get('role_id') == config('constants.ROLE_ID.HIGHER_AUTHORITY'))
                         <ul class="sidebar-menu" id="nav-accordion">
-                            <li class="{{ request()->is('owner/organizations-list-employees') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('owner/organizations-list-employees') ? 'active' : '' }}">
                                 <a title="Inbox" href="{{ route('organizations-list-employees') }}"><i
                                         class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                         class="mini-sub-pro">Add Employees</span></a>
                             </li>
-                            <li class="{{ request()->is('owner/list-business') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('owner/list-business') ? 'active' : '' }}">
                                 <a title="Inbox" href="{{ route('list-business') }}"><i
                                         class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                         class="mini-sub-pro">Business</span></a>
                             </li>
-                            <li class="{{ request()->is('owner/list-forwarded-to-design') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('owner/list-forwarded-to-design') ? 'active' : '' }}">
                                 <a href="{{ route('list-forwarded-to-design') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-envelope icon-wrap"></i> <span
                                         class="mini-click-non">Business Sent For Design</span></a>
                             </li>
-                            <li class="{{ request()->is('owner/list-design-uploaded-owner') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('owner/list-design-uploaded-owner') ? 'active' : '' }}">
                                 <a href="{{ route('list-design-uploaded-owner') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-envelope icon-wrap"></i> <span
                                         class="mini-click-non">Design Received For Production</span></a>
                             </li>
-                            <li class="{{ request()->is('owner/list-design-correction') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('owner/list-design-correction') ? 'active' : '' }}">
                                 <a href="{{ route('list-design-correction') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-envelope icon-wrap"></i> <span
                                         class="mini-click-non">Design Received For Design Correction</span></a>
                             </li>
 
-                            <li class="{{ request()->is('owner/material-ask-by-prod-to-store') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('owner/material-ask-by-prod-to-store') ? 'active' : '' }}">
                                 <a href="{{ route('material-ask-by-prod-to-store') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-envelope icon-wrap"></i> <span
                                         class="mini-click-non">Material Ask By Production To Store</span></a>
                             </li>
 
-                            <li class="{{ request()->is('owner/material-ask-by-store-to-purchase') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('owner/material-ask-by-store-to-purchase') ? 'active' : '' }}">
                                 <a href="{{ route('material-ask-by-store-to-purchase') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-envelope icon-wrap"></i> <span
                                         class="mini-click-non">Purchase Material Ask By Store To Purchase</span></a>
@@ -87,7 +87,7 @@
 
 
 
-                            <li class="{{ request()->is('owner/list-purchase-orders') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('owner/list-purchase-orders') ? 'active' : '' }}">
                                 <a href="{{ route('list-purchase-orders') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-envelope icon-wrap"></i> <span
                                         class="mini-click-non">Purchase order need to check</span></a>
@@ -141,7 +141,7 @@
 
 
                                 <li
-                                    class="{{ request()->is('purchase/list-purchase-orders-sent-to-owner') ? 'active' : '' }}">
+                                    class="nav-item {{ request()->is('purchase/list-purchase-orders-sent-to-owner') ? 'active' : '' }}">
                                     <a href="{{ route('list-purchase-orders-sent-to-owner') }}"
                                         aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span
                                             class="mini-click-non">Purchase Order Submited For Approval</span></a>
@@ -165,19 +165,19 @@
                         </li>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.DESIGNER'))
-                        <li
-                            class="nav-item {{ Request::is('list-new-requirements-received-for-design') ? 'active' : '' }}">
+                        <li 
+                            class="nav-item {{ request()->is('designdept/list-new-requirements-received-for-design') ? 'active' : '' }}">
                             <a class="" href="{{ route('list-new-requirements-received-for-design') }}"
                                 aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span
                                     class="mini-click-non">New Business<br> Received For Design</span></a>
                         </li>
-                        <li class="nav-item {{ Request::is('list-design-upload') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('designdept/list-design-upload') ? 'active' : '' }}">
                             <a class="" href="{{ route('list-design-upload') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-envelope icon-wrap"></i> <span
                                     class="mini-click-non">Designs Sent To Production</span></a>
                         </li>
 
-                        <li class="nav-item {{ Request::is('list-reject-design-from-prod') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('designdept/list-reject-design-from-prod') ? 'active' : '' }}">
                             <a class="" href="{{ route('list-reject-design-from-prod') }}"
                                 aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span
                                     class="mini-click-non">Rejected Design List</span></a>
@@ -198,35 +198,35 @@
                     @if (session()->get('role_id') == config('constants.ROLE_ID.PRODUCTION'))
                         <ul class="sidebar-menu">
                             <li
-                                class="{{ request()->is('list-new-requirements-received-for-production') ? 'active' : '' }}">
+                                class="nav-item {{ request()->is('proddept/list-new-requirements-received-for-production') ? 'active' : '' }}">
                                 <a href="{{ route('list-new-requirements-received-for-production') }}">
                                     <i class="fa big-icon fa-files-o icon-wrap"></i>
                                     <span class="mini-click-non">New Design List</span>
                                 </a>
                             </li>
 
-                            <li class="{{ request()->is('list-accept-design*') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('proddept/list-accept-design*') ? 'active' : '' }}">
                                 <a href="{{ route('list-accept-design') }}">
                                     <i class="fa fa-paper-plane icon-wrap"></i>
                                     <span class="mini-click-non">Accepted Design List</span>
                                 </a>
                             </li>
 
-                            <li class="{{ request()->is('list-reject-design') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('proddept/list-reject-design') ? 'active' : '' }}">
                                 <a href="{{ route('list-reject-design') }}">
                                     <i class="fa fa-frown-o icon-wrap"></i>
                                     <span class="mini-click-non">Rejected Design List</span>
                                 </a>
                             </li>
 
-                            <li class="{{ request()->is('list-revised-design') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('proddept/list-revised-design') ? 'active' : '' }}">
                                 <a href="{{ route('list-revised-design') }}">
                                     <i class="fa fa-fighter-jet icon-wrap"></i>
                                     <span class="mini-click-non">Revised Design List</span>
                                 </a>
                             </li>
 
-                            <li class="{{ request()->is('list-material-recived') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('proddept/list-material-recived') ? 'active' : '' }}">
                                 <a href="{{ route('list-material-recived') }}">
                                     <i class="fa fa-inbox icon-wrap"></i>
                                     <span class="mini-click-non">Material Received For Production</span>
@@ -247,7 +247,7 @@
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.SECURITY'))
                         <li>
-                        <li class="{{ request()->is('search-by-po-no') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('search-by-po-no') ? 'active' : '' }}">
                             <a href="{{ route('search-by-po-no') }}">
                                 <i class="fa fa-frown-o icon-wrap"></i>
                                 <span class="mini-click-non">Search By PO No</span>
@@ -286,7 +286,7 @@
                             </ul>
                         </li>
 
-                        <li class="{{ request()->is('list-material-sent-to-quality') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('list-material-sent-to-quality') ? 'active' : '' }}">
                             <a href="{{ route('list-material-sent-to-quality') }}">
                                 <i class="fa big-icon fa-envelope icon-wrap"></i>
                                 <span class="mini-click-non">Material Sent to Store</span>
@@ -294,30 +294,29 @@
                         </li>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.STORE'))
-                        <li class="{{ request()->is('list-accepted-design-from-prod') ? 'active' : '' }}">
-                            <a href="{{ route('list-accepted-design-from-prod') }}">
-                                <i class="fa big-icon fa-envelope icon-wrap"></i>
-                                <span class="mini-click-non">All New Requirements</span>
-                            </a>
+                    
+                        <li class="nav-item {{ request()->is('storedept/list-accepted-design-from-prod') ? 'active' : '' }}">
+                            <a href="{{ route('list-accepted-design-from-prod') }}" aria-expanded="false"><i
+                                    class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">All
+                                    New Requirements</span></a>
                         </li>
 
-
-                        <li class="{{ request()->is('list-material-sent-to-prod') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('storedept/list-material-sent-to-prod') ? 'active' : '' }}">
                             <a href="{{ route('list-material-sent-to-prod') }}">
                                 <i class="fa big-icon fa-envelope icon-wrap"></i>
                                 <span class="mini-click-non">Requirements Sent To Production</span>
                             </a>
                         </li>
 
-                        <li class="{{ request()->is('list-material-sent-to-purchase') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('storedept/list-material-sent-to-purchase') ? 'active' : '' }}">
                             <a href="{{ route('list-material-sent-to-purchase') }}">
                                 <i class="fa big-icon fa-envelope icon-wrap"></i>
                                 <span class="mini-click-non">Material For Purchase</span>
                             </a>
                         </li>
 
-
-                        <li class="{{ request()->is('list-material-received-from-quality') ? 'active' : '' }}">
+                        <li
+                            class="nav-item {{ request()->is('storedept/list-material-received-from-quality') ? 'active' : '' }}">
                             <a href="{{ route('list-material-received-from-quality') }}">
                                 <i class="fa big-icon fa-envelope icon-wrap"></i>
                                 <span class="mini-click-non">Material Received From Quality</span>
@@ -336,10 +335,10 @@
                             </ul>
                         </li>
                         <li><a title="Inbox" href="{{ route('list-yearly-leave-management') }}"><i
-                            class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                            class="mini-sub-pro">Add Yearly Leave</span></a></li>
+                                    class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                    class="mini-sub-pro">Add Yearly Leave</span></a></li>
 
-                        
+
 
                         <li>
                             <a class="has-arrow" href="{{ route('list-leaves-acceptedby-hr') }}"
@@ -362,14 +361,14 @@
                     @endif
 
                     @if (session()->get('role_id') == config('constants.ROLE_ID.FINANCE'))
-                        <li class="{{ request()->is('list-sr-and-gr-genrated-business') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('list-sr-and-gr-genrated-business') ? 'active' : '' }}">
                             <a href="{{ route('list-sr-and-gr-genrated-business') }}">
                                 <i class="fa big-icon fa-envelope icon-wrap"></i>
                                 <span class="mini-click-non">Need to check for Payment</span>
                             </a>
                         </li>
 
-                        <li class="{{ request()->is('list-po-sent-for-approval') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('list-po-sent-for-approval') ? 'active' : '' }}">
                             <a href="{{ route('list-po-sent-for-approval') }}">
                                 <i class="fa big-icon fa-envelope icon-wrap"></i>
                                 <span class="mini-click-non">PO Submited For Sanction For Payment</span>
@@ -378,7 +377,7 @@
 
 
                         <li
-                            class="{{ request()->is('list-po-sanction-and-need-to-do-payment-to-vendor') ? 'active' : '' }}">
+                            class="nav-item {{ request()->is('list-po-sanction-and-need-to-do-payment-to-vendor') ? 'active' : '' }}">
                             <a href="{{ route('list-po-sanction-and-need-to-do-payment-to-vendor') }}">
                                 <i class="fa big-icon fa-envelope icon-wrap"></i>
                                 <span class="mini-click-non">PO Pyament Need To Release</span>
@@ -421,8 +420,8 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="logo-pro">
-                    <a href="{{ route('login') }}"><img class="main-logo" src="{{ asset('img/logo/logo_updated.png') }}"
-                            alt=""></a>
+                    <a href="{{ route('login') }}"><img class="main-logo"
+                            src="{{ asset('img/logo/logo_updated.png') }}" alt=""></a>
                 </div>
             </div>
         </div>

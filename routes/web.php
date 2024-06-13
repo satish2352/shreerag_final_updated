@@ -138,55 +138,179 @@ Route::group(['middleware' => ['admin']], function () {
 
 
 
+    Route::group(['prefix' => 'quality'], function () {
 
-    //Organizations Designer
-    // Route::get('/designer-dashboard', ['as' => '/designer-dashboard', 'uses' => 'App\Http\Controllers\Organizations\Dashboard\DashboardController@index']);
-    // Route::get('/list-designs', ['as' => 'list-designs', 'uses' => 'App\Http\Controllers\Organizations\Designers\Designs\DesignerController@index']);
-    // Route::get('/add-designs', ['as' => 'add-designs', 'uses' => 'App\Http\Controllers\Organizations\Designers\Designs\DesignerController@add']);
-    // Route::post('/store-designs', ['as' => 'store-designs', 'uses' => 'App\Http\Controllers\Organizations\Designers\Designs\DesignerController@store']);
-    // Route::get('/edit-designs/{id}', ['as' => 'edit-designs', 'uses' => 'App\Http\Controllers\Organizations\Designers\Designs\DesignerController@edit']);
-    // Route::post('/update-designs', ['as' => 'update-designs', 'uses' => 'App\Http\Controllers\Organizations\Designers\Designs\DesignerController@update']);
-    // Route::any('/delete-designs/{id}', ['as' => 'delete-designs', 'uses' => 'App\Http\Controllers\Organizations\Designers\Designs\DesignerController@destroy']);
+        // ========================Quality Department Start========
+        Route::get('/list-grn', ['as' => 'list-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@index']);
+        Route::get('/add-grn/{purchase_orders_id}', ['as' => 'add-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@add']);
+        Route::post('/store-grn', ['as' => 'store-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@store']);
+    
+        Route::get('/edit-grn', ['as' => 'edit-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@edit']);
+        // Route::post('/store-grn', ['as' => 'store-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@store']);
+        // Route::get('/edit-grn/{id}', ['as' => 'edit-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@edit']);
+        // Route::post('/update-grn', ['as' => 'update-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@update']);
+        // Route::any('/delete-grn/{id}', ['as' => 'delete-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@destroy']);
+        // ========================Quality Department End========
+    
+    
+        //All list
+        Route::get('/list-material-sent-to-quality', ['as' => 'list-material-sent-to-quality', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@getAllListMaterialSentFromQuality']);
+    
+    });
+    
+    Route::group(['prefix' => 'owner'], function () {
+        Route::get('/organizations-list-employees', ['as' => 'organizations-list-employees', 'uses' => 'App\Http\Controllers\Organizations\Employees\EmployeesController@index']);
+    
+        Route::get('/list-business', ['as' => 'list-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@index']);
+        Route::get('/add-business', ['as' => 'add-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@add']);
+        Route::post('/store-business', ['as' => 'store-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@store']);
+        Route::get('/edit-business/{id}', ['as' => 'edit-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@edit']);
+        Route::post('/update-business', ['as' => 'update-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@update']);
+        Route::any('/delete-business/{id}', ['as' => 'delete-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@destroy']);
+        Route::get('/list-submit-final-purchase-order/{id}', ['as' => 'list-submit-final-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@submitFinalPurchaseOrder']);
+        Route::get('/list-submit-final-purchase-order-particular-business/{purchase_order_id}', ['as' => 'list-submit-final-purchase-order-particular-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@submitFinalPurchaseOrderBusinessWise']);
+    
+        Route::get('/accept-purchase-order/{purchase_order_id}', ['as' => 'accept-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@acceptPurchaseOrder']);
+    
+        //ALL List
+        Route::get('/list-forwarded-to-design', ['as' => 'list-forwarded-to-design', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListForwardedToDesign']);
+        Route::get('/list-design-correction', ['as' => 'list-design-correction', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListCorrectionToDesignFromProduction']);
+        Route::get('/material-ask-by-prod-to-store', ['as' => 'material-ask-by-prod-to-store', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@materialAskByProdToStore']);
+        Route::get('/material-ask-by-store-to-purchase', ['as' => 'material-ask-by-store-to-purchase', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllStoreDeptSentForPurchaseMaterials']);
+        Route::get('/list-purchase-orders', ['as' => 'list-purchase-orders', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListPurchaseOrder']);
+        Route::get('/list-approved-purchase-orders-owner', ['as' => 'list-approved-purchase-orders-owner', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListApprovedPurchaseOrderOwnerlogin']);
+    
+    
+    
+        Route::get('/list-design-uploaded-owner', ['as' => 'list-design-uploaded-owner', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@loadDesignSubmittedForProduction']);
+        Route::get('/list-po-recived-for-approval-payment', ['as' => 'list-po-recived-for-approval-payment', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@listPOReceivedForApprovaTowardsOwner']);
+    
+    
+    });
+    
+    Route::group(['prefix' => 'purchase'], function () {
+        Route::get('/list-purchase', ['as' => 'list-purchase', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListMaterialReceivedForPurchase']);
+    
+    
+        // Route::get('/submit-bom-to-owner/{id}', ['as' => 'submit-bom-to-owner', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseController@submitBOMToOwner']);
+    
+    
+        Route::get('/list-purchase-order/{requistition_id}', ['as' => 'list-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@index']);
+        // Route::post('/list-purchase-order', ['as' => 'list-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@index']);
+        Route::post('/add-purchase-order', ['as' => 'add-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@create']);
+        Route::post('/store-purchase-order', ['as' => 'store-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@store']);
+        Route::get('/show-purchase-order/{id}', ['as' => 'show-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@show']);
+        Route::get('/edit-purchase-order/{id}', ['as' => 'edit-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@edit']);
+        Route::post('/update-purchase-order', ['as' => 'update-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@update']);
+        Route::any('/delete-purchase-order/{id}', ['as' => 'delete-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@destroy']);
+    
+    
+        Route::group(['prefix' => 'vendor'], function () {
+            Route::get('/list-vendor', ['as' => 'list-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@index']);
+            Route::get('/add-vendor', ['as' => 'add-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@add']);
+            Route::post('/store-vendor', ['as' => 'store-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@store']);
+            Route::get('/edit-vendor/{id}', ['as' => 'edit-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@edit']);
+            Route::post('/update-vendor', ['as' => 'update-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@update']);
+            Route::any('/delete-vendor/{id}', ['as' => 'delete-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@destroy']);
+        });
+    
+        // Route::group(['prefix' => 'purchaseorderstatus'], function () {
+        Route::get('/list-approved-purchase-orders', ['as' => 'list-approved-purchase-orders', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListApprovedPurchaseOrder']);
+        Route::get('/check-details-of-po-before-send-vendor/{purchase_order_id}', ['as' => 'check-details-of-po-before-send-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@checkDetailsBeforeSendPOToVendor']);
+        Route::get('/list-check-final-purchase-order/{purchase_order_id}', ['as' => 'list-check-final-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@submitAndSentEmailToTheVendorFinalPurchaseOrder']);
+    
+        Route::post('/submit-purchase-order-to-owner-for-review', ['as' => 'submit-purchase-order-to-owner-for-review', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@submitPurchaseOrderToOwnerForReview']);
+    
+        Route::get('/list-purchase-order-approved-sent-to-vendor', ['as' => 'list-purchase-order-approved-sent-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListPurchaseOrderMailSentToVendor']);
+        Route::get('/list-purchase-orders-sent-to-owner', ['as' => 'list-purchase-orders-sent-to-owner', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListPurchaseOrderTowardsOwner']);
+        Route::get('/list-purchase-orders-sent-to-owner-details/{purchase_order_id}', ['as' => 'list-purchase-orders-sent-to-owner-details', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@getAllListPurchaseOrderTowardsOwnerDetails']);
+    
+        // });
+    });
+    
+    Route::group(['prefix' => 'designdept'], function () {
+        //ALL List
+        Route::get('/list-new-requirements-received-for-design', ['as' => 'list-new-requirements-received-for-design', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@getAllNewRequirement']);
+        Route::get('/list-design-upload', ['as' => 'list-design-upload', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@index']);
+    
+        Route::get('/add-design-upload/{id}', ['as' => 'add-design-upload', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@add']);
+    
+        Route::post('/store-design-upload', ['as' => 'store-design-upload', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@store']);
+        Route::get('/edit-design-upload/{id}', ['as' => 'edit-design-upload', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@edit']);
+        Route::post('/update-design-upload', ['as' => 'update-design-upload', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@update']);
+    
+    
+        Route::get('/add-re-upload-design/{id}', ['as' => 'add-re-upload-design', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@addReUploadDesing']);
+        Route::post('/update-re-design-upload', ['as' => 'update-re-design-upload', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@updateReUploadDesign']);
+    
+    
+        //ALL List
+        Route::get('/list-reject-design-from-prod', ['as' => 'list-reject-design-from-prod', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@getAllListDesignRecievedForCorrection']);
+    });
+    
+    Route::group(['prefix' => 'proddept'], function () {
+    
+        Route::get('/accept-design/{id}', ['as' => 'accept-design', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@acceptdesign']);
+        Route::get('/reject-design-edit/{id}', ['as' => 'reject-design-edit', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@rejectdesignedit']);
+        Route::post('/reject-design', ['as' => 'reject-design', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@rejectdesign']);
+    
+        //All List
+        Route::get('/list-new-requirements-received-for-production', ['as' => 'list-new-requirements-received-for-production', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllNewRequirement']);
+        Route::get('/list-accept-design', ['as' => 'list-accept-design', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@acceptdesignlist']);
+        Route::get('/list-reject-design', ['as' => 'list-reject-design', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@rejectdesignlist']);
+        Route::get('/list-revised-design', ['as' => 'list-revised-design', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@reviseddesignlist']);
+        Route::get('/list-material-recived', ['as' => 'list-material-recived', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllListMaterialRecievedToProduction']);
+    
+    });
+    
+    Route::group(['prefix' => 'securitydept'], function () {
+        Route::get('/search-by-po-no', ['as' => 'search-by-po-no', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@searchByPONo']);
+    
+        Route::get('/list-gatepass', ['as' => 'list-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@index']);
+        Route::get('/add-gatepass', ['as' => 'add-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@add']);
+    
+        Route::get('/edit-gatepass', ['as' => 'edit-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@edit']);
+    
+    
+        Route::get('/add-gatepass-with-po/{id}', ['as' => 'add-gatepass-with-po', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@addGatePassWithPO']);
+        Route::post('/store-gatepass', ['as' => 'store-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@store']);
+    
+        Route::post('/list-all-po-number', ['as' => 'list-all-po-number', 'uses' => 'App\Http\Controllers\Organizations\Security\AllListController@getAllListMaterialRecieved']);
+    });
+    
+    Route::group(['prefix' => 'storedept'], function () {
+    
+        Route::get('/list-requistion', ['as' => 'list-requistion', 'uses' => 'App\Http\Controllers\Organizations\Store\RequistionController@index']);
+        Route::get('/add-requistion', ['as' => 'add-requistion', 'uses' => 'App\Http\Controllers\Organizations\Store\RequistionController@add']);
+        Route::get('/edit-requistion', ['as' => 'edit-requistion', 'uses' => 'App\Http\Controllers\Organizations\Store\RequistionController@edit']);
+    
+        Route::get('/accepted-and-material-sent/{id}', ['as' => 'accepted-and-material-sent', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@orderAcceptedAndMaterialForwareded']);
+        Route::get('/need-to-create-req/{id}', ['as' => 'need-to-create-req', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@createRequesition']);
+        Route::post('/store-purchase-request-req', ['as' => 'store-purchase-request-req', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@storeRequesition']);
+        //ALL List
+        Route::get('/list-accepted-design-from-prod', ['as' => 'list-accepted-design-from-prod', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListDesignRecievedForMaterial']);
+        Route::get('/list-material-sent-to-prod', ['as' => 'list-material-sent-to-prod', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialSentToProduction']);
+        Route::get('/list-material-sent-to-purchase', ['as' => 'list-material-sent-to-purchase', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialSentToPurchase']);
+        Route::get('/list-material-received-from-quality', ['as' => 'list-material-received-from-quality', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialReceivedFromQuality']);
+    
+        Route::get('/accepted-store-material-sent-to-production/{id}', ['as' => 'accepted-store-material-sent-to-production', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@genrateStoreReciptAndForwardMaterialToTheProduction']);
+    
+    });
+    
+    Route::group(['prefix' => 'financedept'], function () {
+    
+        Route::get('/forward-the-purchase-order-to-the-owner-for-sanction/{purchase_orders_id}', ['as' => 'forward-the-purchase-order-to-the-owner-for-sanction', 'uses' => 'App\Http\Controllers\Organizations\Finance\FinanceController@forwardPurchaseOrderToTheOwnerForSanction']);
+        Route::get('/list-accepted-grn-srn-finance/{purchase_orders_id}', ['as' => 'list-accepted-grn-srn-finance', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@listAcceptedGrnSrnFinance']);
+        //ALL List
+        Route::get('/list-sr-and-gr-genrated-business', ['as' => 'list-sr-and-gr-genrated-business', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@getAllListSRAndGRNGeanrated']);
+        Route::get('/list-po-sent-for-approval', ['as' => 'list-po-sent-for-approval', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@listPOSentForApprovaTowardsOwner']);
+    
+        Route::get('/list-po-sanction-and-need-to-do-payment-to-vendor', ['as' => 'list-po-sanction-and-need-to-do-payment-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@listPOSanctionAndNeedToDoPaymentToVendor']);
+        Route::get('/send-payment-to-vendor/{purchase_orders_id}', ['as' => 'send-payment-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Finance\FinanceController@forwardedPurchaseOrderPaymentToTheVendor']);
+    
+    });
 
-    //Start Purchase Order
-    // Route::get('/production-dashboard', ['as' => '/production-dashboard', 'uses' => 'App\Http\Controllers\Organizations\Dashboard\DashboardController@index']);
-    // Route::get('/list-purchase', ['as' => 'list-purchase', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseController@index']);
-    // Route::get('/add-purchase', ['as' => 'add-purchase', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseController@add']);
-    // Route::post('/store-purchase', ['as' => 'store-purchase', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseController@store']);
-    // Route::get('/edit-purchase/{id}', ['as' => 'edit-purchase', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseController@edit']);
-    // Route::post('/update-purchase', ['as' => 'update-purchase', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseController@update']);
-    // Route::any('/delete-purchase/{id}', ['as' => 'delete-purchase', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseController@destroy']);
-    // Route::delete('/remove-design-details/{rowId}', ['as' => 'remove-design-details', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseController@removeDesignDetails']);
-    // Route::post('/delete-addmore', ['as' => 'delete-addmore', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseController@destroyAddmore']);
 
-
-
-
-    // Route::get('/list-purchases', ['as' => 'list-purchases', 'uses' => 'App\Http\Controllers\Organizations\Productions\PurchaseController@index']);
-    // Route::get('/add-purchases', ['as' => 'add-purchases', 'uses' => 'App\Http\Controllers\Organizations\Productions\PurchaseController@add']);
-    // Route::post('/store-purchases', ['as' => 'store-purchases', 'uses' => 'App\Http\Controllers\Organizations\Productions\PurchaseController@store']);
-    // Route::get('/edit-purchases/{id}', ['as' => 'edit-purchases', 'uses' => 'App\Http\Controllers\Organizations\Productions\PurchaseController@edit']);
-    // Route::post('/update-purchases', ['as' => 'update-purchases', 'uses' => 'App\Http\Controllers\Organizations\Productions\PurchaseController@update']);
-    // Route::any('/delete-purchases/{id}', ['as' => 'delete-purchases', 'uses' => 'App\Http\Controllers\Organizations\Productions\PurchaseController@destroy']);
-
-    //Organizations Purchases
-    // Route::get('/purchase-dashboard', ['as' => '/purchase-dashboard', 'uses' => 'App\Http\Controllers\Organizations\Dashboard\DashboardController@index']);
-    // Route::get('/list-purchase', ['as' => 'list-purchase', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseController@index']);
-    // Route::get('/add-purchase', ['as' => 'add-purchase', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseController@add']);
-    // Route::post('/store-purchase', ['as' => 'store-purchase', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseController@store']);
-    // Route::get('/edit-purchase/{id}', ['as' => 'edit-purchase', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseController@edit']);
-    // Route::post('/update-purchase', ['as' => 'update-purchase', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseController@update']);
-    // Route::any('/delete-purchase/{id}', ['as' => 'delete-purchase', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseController@destroy']);
-
-
-    //Organizations Store
-    // Route::get('/store-dashboard', ['as' => '/store-dashboard', 'uses' => 'App\Http\Controllers\Organizations\Dashboard\DashboardController@index']);
-    // Route::get('/list-store-purchase', ['as' => 'list-store-purchase', 'uses' => 'App\Http\Controllers\Organizations\Store\PurchaseController@index']);
-    // Route::get('/add-store-purchase', ['as' => 'add-store-purchase', 'uses' => 'App\Http\Controllers\Organizations\Store\PurchaseController@add']);
-    // Route::post('/store-store-purchase', ['as' => 'store-store-purchase', 'uses' => 'App\Http\Controllers\Organizations\Store\PurchaseController@store']);
-    // Route::get('/edit-store-purchase/{id}', ['as' => 'edit-store-purchase', 'uses' => 'App\Http\Controllers\Organizations\Store\PurchaseController@edit']);
-    // Route::post('/update-store-purchase', ['as' => 'update-store-purchase', 'uses' => 'App\Http\Controllers\Organizations\Store\PurchaseController@update']);
-    // Route::any('/delete-store-purchase/{id}', ['as' => 'delete-store-purchase', 'uses' => 'App\Http\Controllers\Organizations\Store\PurchaseController@destroy']);
 
 });
 
@@ -211,204 +335,7 @@ Route::post('/update-products', ['as' => 'update-products', 'uses' => 'App\Http\
 Route::any('/delete-products/{id}', ['as' => 'delete-products', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@destroy']);
 
 
-Route::group(['prefix' => 'quality'], function () {
 
-    // ========================Quality Department Start========
-    Route::get('/list-grn', ['as' => 'list-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@index']);
-    Route::get('/add-grn/{purchase_orders_id}', ['as' => 'add-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@add']);
-    Route::post('/store-grn', ['as' => 'store-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@store']);
-
-    Route::get('/edit-grn', ['as' => 'edit-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@edit']);
-    // Route::post('/store-grn', ['as' => 'store-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@store']);
-    // Route::get('/edit-grn/{id}', ['as' => 'edit-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@edit']);
-    // Route::post('/update-grn', ['as' => 'update-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@update']);
-    // Route::any('/delete-grn/{id}', ['as' => 'delete-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@destroy']);
-    // ========================Quality Department End========
-
-
-    //All list
-    Route::get('/list-material-sent-to-quality', ['as' => 'list-material-sent-to-quality', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@getAllListMaterialSentFromQuality']);
-
-});
-
-// ========================OWNER Department Start========
-Route::group(['prefix' => 'owner'], function () {
-    Route::get('/organizations-list-employees', ['as' => 'organizations-list-employees', 'uses' => 'App\Http\Controllers\Organizations\Employees\EmployeesController@index']);
-
-    Route::get('/list-business', ['as' => 'list-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@index']);
-    Route::get('/add-business', ['as' => 'add-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@add']);
-    Route::post('/store-business', ['as' => 'store-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@store']);
-    Route::get('/edit-business/{id}', ['as' => 'edit-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@edit']);
-    Route::post('/update-business', ['as' => 'update-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@update']);
-    Route::any('/delete-business/{id}', ['as' => 'delete-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@destroy']);
-    Route::get('/list-submit-final-purchase-order/{id}', ['as' => 'list-submit-final-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@submitFinalPurchaseOrder']);
-    Route::get('/list-submit-final-purchase-order-particular-business/{purchase_order_id}', ['as' => 'list-submit-final-purchase-order-particular-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@submitFinalPurchaseOrderBusinessWise']);
-
-    Route::get('/accept-purchase-order/{purchase_order_id}', ['as' => 'accept-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@acceptPurchaseOrder']);
-
-    //ALL List
-    Route::get('/list-forwarded-to-design', ['as' => 'list-forwarded-to-design', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListForwardedToDesign']);
-    Route::get('/list-design-correction', ['as' => 'list-design-correction', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListCorrectionToDesignFromProduction']);
-    Route::get('/material-ask-by-prod-to-store', ['as' => 'material-ask-by-prod-to-store', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@materialAskByProdToStore']);
-    Route::get('/material-ask-by-store-to-purchase', ['as' => 'material-ask-by-store-to-purchase', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllStoreDeptSentForPurchaseMaterials']);
-    Route::get('/list-purchase-orders', ['as' => 'list-purchase-orders', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListPurchaseOrder']);
-    Route::get('/list-approved-purchase-orders-owner', ['as' => 'list-approved-purchase-orders-owner', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListApprovedPurchaseOrderOwnerlogin']);
-
-    
-
-    Route::get('/list-design-uploaded-owner', ['as' => 'list-design-uploaded-owner', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@loadDesignSubmittedForProduction']);
-    Route::get('/list-po-recived-for-approval-payment', ['as' => 'list-po-recived-for-approval-payment', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@listPOReceivedForApprovaTowardsOwner']);
-
-
-});
-// ========================OWNER Department End========
-
-//============================Purchase Order Department=================
-Route::group(['prefix' => 'purchase'], function () {
-    Route::get('/list-purchase', ['as' => 'list-purchase', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListMaterialReceivedForPurchase']);
-
-
-    // Route::get('/submit-bom-to-owner/{id}', ['as' => 'submit-bom-to-owner', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseController@submitBOMToOwner']);
-
-
-    Route::get('/list-purchase-order/{requistition_id}', ['as' => 'list-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@index']);
-    // Route::post('/list-purchase-order', ['as' => 'list-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@index']);
-    Route::post('/add-purchase-order', ['as' => 'add-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@create']);
-    Route::post('/store-purchase-order', ['as' => 'store-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@store']);
-    Route::get('/show-purchase-order/{id}', ['as' => 'show-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@show']);
-    Route::get('/edit-purchase-order/{id}', ['as' => 'edit-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@edit']);
-    Route::post('/update-purchase-order', ['as' => 'update-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@update']);
-    Route::any('/delete-purchase-order/{id}', ['as' => 'delete-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@destroy']);
-
-
-    Route::group(['prefix' => 'vendor'], function () {
-        Route::get('/list-vendor', ['as' => 'list-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@index']);
-        Route::get('/add-vendor', ['as' => 'add-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@add']);
-        Route::post('/store-vendor', ['as' => 'store-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@store']);
-        Route::get('/edit-vendor/{id}', ['as' => 'edit-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@edit']);
-        Route::post('/update-vendor', ['as' => 'update-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@update']);
-        Route::any('/delete-vendor/{id}', ['as' => 'delete-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@destroy']);
-    });
-
-    // Route::group(['prefix' => 'purchaseorderstatus'], function () {
-    Route::get('/list-approved-purchase-orders', ['as' => 'list-approved-purchase-orders', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListApprovedPurchaseOrder']);
-    Route::get('/check-details-of-po-before-send-vendor/{purchase_order_id}', ['as' => 'check-details-of-po-before-send-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@checkDetailsBeforeSendPOToVendor']);
-    Route::get('/list-check-final-purchase-order/{purchase_order_id}', ['as' => 'list-check-final-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@submitAndSentEmailToTheVendorFinalPurchaseOrder']);
-
-    Route::post('/submit-purchase-order-to-owner-for-review', ['as' => 'submit-purchase-order-to-owner-for-review', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@submitPurchaseOrderToOwnerForReview']);
-
-    Route::get('/list-purchase-order-approved-sent-to-vendor', ['as' => 'list-purchase-order-approved-sent-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListPurchaseOrderMailSentToVendor']);
-    Route::get('/list-purchase-orders-sent-to-owner', ['as' => 'list-purchase-orders-sent-to-owner', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListPurchaseOrderTowardsOwner']);
-    Route::get('/list-purchase-orders-sent-to-owner-details/{purchase_order_id}', ['as' => 'list-purchase-orders-sent-to-owner-details', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@getAllListPurchaseOrderTowardsOwnerDetails']);
-
-    // });
-});
-
-
-//==============================Purchases Department=============================
-
-// ========================DesignUploadcontroller========
-//ALL List
-Route::get('/list-new-requirements-received-for-design', ['as' => 'list-new-requirements-received-for-design', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@getAllNewRequirement']);
-Route::get('/list-design-upload', ['as' => 'list-design-upload', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@index']);
-
-Route::get('/add-design-upload/{id}', ['as' => 'add-design-upload', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@add']);
-
-Route::post('/store-design-upload', ['as' => 'store-design-upload', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@store']);
-Route::get('/edit-design-upload/{id}', ['as' => 'edit-design-upload', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@edit']);
-Route::post('/update-design-upload', ['as' => 'update-design-upload', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@update']);
-
-
-Route::get('/add-re-upload-design/{id}', ['as' => 'add-re-upload-design', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@addReUploadDesing']);
-Route::post('/update-re-design-upload', ['as' => 'update-re-design-upload', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@updateReUploadDesign']);
-
-
-//ALL List
-Route::get('/list-reject-design-from-prod', ['as' => 'list-reject-design-from-prod', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@getAllListDesignRecievedForCorrection']);
-
-
-
-
-// ========================ProductionUploadcontroller========
-
-// Route::get('/list-design-upload', ['as' => 'list-design-upload', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@index']);
-Route::get('/accept-design/{id}', ['as' => 'accept-design', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@acceptdesign']);
-Route::get('/reject-design-edit/{id}', ['as' => 'reject-design-edit', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@rejectdesignedit']);
-Route::post('/reject-design', ['as' => 'reject-design', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@rejectdesign']);
-// Route::post('/store-design-upload', ['as' => 'store-design-upload', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@store']);
-// Route::get('/edit-design-upload/{id}', ['as' => 'edit-design-upload', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@edit']);
-// Route::post('/update-design-upload', ['as' => 'update-design-upload', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@update']);
-
-//All List
-Route::get('/list-new-requirements-received-for-production', ['as' => 'list-new-requirements-received-for-production', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllNewRequirement']);
-Route::get('/list-accept-design', ['as' => 'list-accept-design', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@acceptdesignlist']);
-Route::get('/list-reject-design', ['as' => 'list-reject-design', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@rejectdesignlist']);
-Route::get('/list-revised-design', ['as' => 'list-revised-design', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@reviseddesignlist']);
-Route::get('/list-material-recived', ['as' => 'list-material-recived', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllListMaterialRecievedToProduction']);
-
-
-
-
-// ========================Start Gatepasscontroller========
-// Route::group(['prefix' => 'security'], function () {
-Route::get('/search-by-po-no', ['as' => 'search-by-po-no', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@searchByPONo']);
-
-Route::get('/list-gatepass', ['as' => 'list-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@index']);
-Route::get('/add-gatepass', ['as' => 'add-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@add']);
-
-Route::get('/edit-gatepass', ['as' => 'edit-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@edit']);
-
-
-Route::get('/add-gatepass-with-po/{id}', ['as' => 'add-gatepass-with-po', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@addGatePassWithPO']);
-Route::post('/store-gatepass', ['as' => 'store-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@store']);
-
-Route::post('/list-all-po-number', ['as' => 'list-all-po-number', 'uses' => 'App\Http\Controllers\Organizations\Security\AllListController@getAllListMaterialRecieved']);
-// });
-// ========================End Gatepasscontroller========
-
-
-// Route::group(['prefix' => 'storedept'], function () {
-    // ========================  Start Store Department  ========
-
-    Route::get('/list-requistion', ['as' => 'list-requistion', 'uses' => 'App\Http\Controllers\Organizations\Store\RequistionController@index']);
-    Route::get('/add-requistion', ['as' => 'add-requistion', 'uses' => 'App\Http\Controllers\Organizations\Store\RequistionController@add']);
-    Route::get('/edit-requistion', ['as' => 'edit-requistion', 'uses' => 'App\Http\Controllers\Organizations\Store\RequistionController@edit']);
-
-    Route::get('/accepted-and-material-sent/{id}', ['as' => 'accepted-and-material-sent', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@orderAcceptedAndMaterialForwareded']);
-    Route::get('/need-to-create-req/{id}', ['as' => 'need-to-create-req', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@createRequesition']);
-    Route::post('/store-purchase-request-req', ['as' => 'store-purchase-request-req', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@storeRequesition']);
-
-    //ALL List
-    Route::get('/list-accepted-design-from-prod', ['as' => 'list-accepted-design-from-prod', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListDesignRecievedForMaterial']);
-    Route::get('/list-material-sent-to-prod', ['as' => 'list-material-sent-to-prod', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialSentToProduction']);
-    Route::get('/list-material-sent-to-purchase', ['as' => 'list-material-sent-to-purchase', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialSentToPurchase']);
-    Route::get('/list-material-received-from-quality', ['as' => 'list-material-received-from-quality', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialReceivedFromQuality']);
-
-    Route::get('/accepted-store-material-sent-to-production/{id}', ['as' => 'accepted-store-material-sent-to-production', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@genrateStoreReciptAndForwardMaterialToTheProduction']);
-
-// });
-
-
-
-
-Route::group(['prefix' => 'financedept'], function () {
-    // ========================  Start Store Department  ========
-
-    
-    Route::get('/forward-the-purchase-order-to-the-owner-for-sanction/{purchase_orders_id}', ['as' => 'forward-the-purchase-order-to-the-owner-for-sanction', 'uses' => 'App\Http\Controllers\Organizations\Finance\FinanceController@forwardPurchaseOrderToTheOwnerForSanction']);
-
-
-    Route::get('/list-accepted-grn-srn-finance/{purchase_orders_id}', ['as' => 'list-accepted-grn-srn-finance', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@listAcceptedGrnSrnFinance']);
-    //ALL List
-    Route::get('/list-sr-and-gr-genrated-business', ['as' => 'list-sr-and-gr-genrated-business', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@getAllListSRAndGRNGeanrated']);
-    Route::get('/list-po-sent-for-approval', ['as' => 'list-po-sent-for-approval', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@listPOSentForApprovaTowardsOwner']);
-
-    Route::get('/list-po-sanction-and-need-to-do-payment-to-vendor', ['as' => 'list-po-sanction-and-need-to-do-payment-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@listPOSanctionAndNeedToDoPaymentToVendor']);
-    Route::get('/send-payment-to-vendor/{purchase_orders_id}', ['as' => 'send-payment-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Finance\FinanceController@forwardedPurchaseOrderPaymentToTheVendor']);
-
-
-    
-});
 
 // ========================  Start DocUploadFianace ========
 

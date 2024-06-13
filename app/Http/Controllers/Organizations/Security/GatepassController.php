@@ -101,7 +101,7 @@ class GatepassController extends Controller
             $validation = Validator::make($request->all(), $rules, $messages);
 
             if ($validation->fails()) {
-                return redirect('add-gatepass')
+                return redirect('securitydept/add-gatepass')
                     ->withInput()
                     ->withErrors($validation);
             } else {
@@ -112,14 +112,14 @@ class GatepassController extends Controller
                     $status = $add_record['status'];
 
                     if ($status == 'success') {
-                        return redirect('list-gatepass')->with(compact('msg', 'status'));
+                        return redirect('securitydept/list-gatepass')->with(compact('msg', 'status'));
                     } else {
-                        return redirect('add-gatepass')->withInput()->with(compact('msg', 'status'));
+                        return redirect('securitydept/add-gatepass')->withInput()->with(compact('msg', 'status'));
                     }
                 }
             }
         } catch (Exception $e) {
-            return redirect('add-gatepass')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('securitydept/add-gatepass')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
 
