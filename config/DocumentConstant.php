@@ -52,7 +52,7 @@ return [
 
     'SERVICES_ADD'	         => "/all_web_data/images/cms/services/",
     'SERVICES_DELETE'	         => '/all_web_data/images/cms/services/',
-    'SERVICES_VIEW'	         => env("FILE_VIEW").'/all_web_data/cms/images/services/',
+    'SERVICES_VIEW'	         => env("FILE_VIEW").'/all_web_data/images/cms/services/',
 
     'TESTIMONIAL_ADD'	         => "/all_web_data/images/cms/testimonial/",
     'TESTIMONIAL_DELETE'	         => '/all_web_data/images/cms/testimonial/',
