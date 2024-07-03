@@ -45,7 +45,7 @@
                     </div>
                     @endforeach
                     @endif
-                    <div class="col-lg-3 manuimg2 text-center">
+                    {{-- <div class="col-lg-3 manuimg2 text-center">
                         <img src="{{ asset('website/assets/img/service/roller.png')}}" id="sevimg" alt="">
                         <div class="p-3">
                             <h2 class="f-700 clrtext">Rollers</h2>
@@ -62,7 +62,7 @@
                         <div class="p-3">
                             <h2 class="f-700 clrtext">Metalic Pallet</h2>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -280,7 +280,7 @@
                 </div>
                 @endforeach
                 @endif
-                <div class="col-lg-6 col-md-12 p-2 exp ">
+                {{-- <div class="col-lg-6 col-md-12 p-2 exp ">
                     <div class="card border-0 bkcl">
                         <img src="{{ asset('website/assets/img/service/movement.png')}}" class="card-img-top" alt="...">
                         <div class="card-body text-center  card-info">
@@ -289,10 +289,10 @@
                         </div>
 
                     </div>
-                </div>
+                </div> --}}
             </div>
 
-            <div class="row">
+            {{-- <div class="row">
 
 
                 <div class="col-lg-6 col-md-12 p-2 exp ">
@@ -314,7 +314,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </section>
     <!-- cards -->
