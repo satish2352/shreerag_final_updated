@@ -310,6 +310,75 @@ Route::group(['middleware' => ['admin']], function () {
     
     });
 
+    // vision-mission
+    Route::get('/list-vision-mission', ['as' => 'list-vision-mission', 'uses' => 'App\Http\Controllers\Admin\CMS\VisionMissionController@index']);
+    Route::get('/add-vision-mission', ['as' => 'add-vision-mission', 'uses' => 'App\Http\Controllers\Admin\CMS\VisionMissionController@add']);
+    Route::post('/add-vision-mission', ['as' => 'add-vision-mission', 'uses' => 'App\Http\Controllers\Admin\CMS\VisionMissionController@store']);
+    Route::get('/edit-vision-mission/{edit_id}', ['as' => 'edit-vision-mission', 'uses' => 'App\Http\Controllers\Admin\CMS\VisionMissionController@edit']);
+    Route::post('/update-vision-mission', ['as' => 'update-vision-mission', 'uses' => 'App\Http\Controllers\Admin\CMS\VisionMissionController@update']);
+    Route::post('/show-vision-mission', ['as' => 'show-vision-mission', 'uses' => 'App\Http\Controllers\Admin\CMS\VisionMissionController@show']);
+   
+    // ==============media============
+    Route::get('/list-services', ['as' => 'list-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@index']);
+    Route::get('/add-services', ['as' => 'add-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@add']);
+    Route::post('/add-services', ['as' => 'add-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@store']);
+    Route::get('/edit-services/{edit_id}', ['as' => 'edit-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@edit']);
+    Route::post('/update-services', ['as' => 'update-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@update']);
+    Route::post('/show-services', ['as' => 'show-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@show']);
+    Route::any('/delete-services/{id}', ['as' => 'delete-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@destroy']);
+    Route::post('/update-active-services', ['as' => 'update-active-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@updateOne']);
+
+// ================
+Route::get('/list-testimonial', ['as' => 'list-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@index']);
+Route::get('/add-testimonial', ['as' => 'add-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@add']);
+Route::post('/add-testimonial', ['as' => 'add-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@store']);
+Route::get('/edit-testimonial/{edit_id}', ['as' => 'edit-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@edit']);
+Route::post('/update-testimonial', ['as' => 'update-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@update']);
+Route::post('/show-testimonial', ['as' => 'show-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@show']);
+Route::any('/delete-testimonial/{id}', ['as' => 'delete-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@destroy']);
+Route::post('/update-active-testimonial', ['as' => 'update-active-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@updateOne']);
+
+
+
+    // ===============Our Products By Nandan 
+
+
+    Route::get('/list-product', ['as' => 'list-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@index']);
+    Route::get('/add-product', ['as' => 'add-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@add']);
+    Route::post('/add-product', ['as' => 'add-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@store']);
+    Route::get('/edit-product/{edit_id}', ['as' => 'edit-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@edit']);
+    Route::post('/update-product', ['as' => 'update-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@update']);
+    Route::post('/show-product', ['as' => 'show-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@show']);
+    Route::any('/delete-product/{id}', ['as' => 'delete-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@destroy']);
+    Route::post('/update-active-product', ['as' => 'update-active-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@updateOne']);
+
+
+// ===============Our Products Details By Nandan 
+
+
+    Route::get('/list-director-desk', ['as' => 'list-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@index']);
+    Route::get('/add-director-desk', ['as' => 'add-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@add']);
+    Route::post('/add-director-desk', ['as' => 'add-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@store']);
+    Route::get('/edit-director-desk/{edit_id}', ['as' => 'edit-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@edit']);
+    Route::post('/update-director-desk', ['as' => 'update-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@update']);
+    Route::post('/show-director-desk', ['as' => 'show-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@show']);
+    Route::post('/delete-director-desk', ['as' => 'delete-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@destroy']);
+    Route::post('/update-active-director-desk', ['as' => 'update-active-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@updateOne']);
+
+
+    Route::get('/list-team', ['as' => 'list-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@index']);
+    Route::get('/add-team', ['as' => 'add-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@add']);
+    Route::post('/add-team', ['as' => 'add-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@store']);
+    Route::get('/edit-team/{edit_id}', ['as' => 'edit-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@edit']);
+    Route::post('/update-team', ['as' => 'update-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@update']);
+    Route::post('/show-team', ['as' => 'show-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@show']);
+    Route::any('/delete-team/{id}', ['as' => 'delete-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@destroy']);
+    Route::post('/update-active-team', ['as' => 'update-active-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@updateOne']);
+
+ // ===============Contact 
+ Route::get('/list-contactus-form', ['as' => 'list-contactus-form', 'uses' => 'App\Http\Controllers\Admin\CMS\ContactUsListController@index']);
+ Route::post('/show-contactus-form', ['as' => 'show-contactus-form', 'uses' => 'App\Http\Controllers\Admin\CMS\ContactUsListController@show']);
+ Route::any('/delete-contactus-form/{id}', ['as' => 'delete-contactus-form', 'uses' => 'App\Http\Controllers\Admin\CMS\ContactUsListController@destroy']);
 
 
 });
@@ -318,13 +387,16 @@ Route::group(['middleware' => ['admin']], function () {
 
 // frontend website shreerag path 
 Route::get('/', ['as' => 'index', 'uses' => 'App\Http\Controllers\Website\PagesController@index']);
-Route::get('/about', ['as' => 'about', 'uses' => 'App\Http\Controllers\Website\PagesController@about']);
-Route::get('/services', ['as' => 'services', 'uses' => 'App\Http\Controllers\Website\PagesController@services']);
-Route::get('/product', ['as' => 'product', 'uses' => 'App\Http\Controllers\Website\PagesController@product']);
+Route::get('/about', ['as' => 'about', 'uses' => 'App\Http\Controllers\Website\AboutController@index']);
+Route::get('/services', ['as' => 'services', 'uses' => 'App\Http\Controllers\Website\ProductServicesController@getAllServices']);
+Route::get('/product', ['as' => 'product', 'uses' => 'App\Http\Controllers\Website\ProductServicesController@index']);
 Route::get('/product_details', ['as' => 'product_details', 'uses' => 'App\Http\Controllers\Website\PagesController@product_details']);
-Route::get('/contact', ['as' => 'contact', 'uses' => 'App\Http\Controllers\Website\PagesController@contact']);
+// Route::get('/contact', ['as' => 'contact', 'uses' => 'App\Http\Controllers\Website\PagesController@contact']);
 
+Route::get('/contactus', ['as' => 'contactus', 'uses' => 'App\Http\Controllers\Website\ContactUsController@getContactUs']);
+Route::post('/add-contactus', ['as' => 'add-contactus', 'uses' => 'App\Http\Controllers\Website\ContactUsController@addContactUs']);
 
+// Route::post('/product-details', ['as' => 'product-details', 'uses' => 'App\Http\Controllers\Website\ProductServicesController@particularPrdouct']);
 
 Route::get('/production-dashboard', ['as' => '/production-dashboard', 'uses' => 'App\Http\Controllers\Organizations\Dashboard\DashboardController@index']);
 Route::get('/list-products', ['as' => 'list-products', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@index']);

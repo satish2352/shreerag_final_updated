@@ -3333,3 +3333,17 @@ div#sparklinehome canvas {
     background-color: #243772;
     color: #fff; 
 }
+.img-size{
+    width: 130px;
+}
+.show-btn-position{
+    display: flex;
+    justify-content: end;
+}
+.show-page-position{
+    display: flex;
+    justify-content: center;
+}
+.padding-col-left{
+    padding-left: 30px;
+}

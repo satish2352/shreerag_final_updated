@@ -95,9 +95,9 @@
                                     </ul>
                                 </li>
                                 <li>
-                                    <a href="{{url('/contact')}}" class="btn btn-round2 d-md-none d-sm-none d-lg-block navcont">Contact Us</a>
+                                    <a href="{{url('/contactus')}}" class="btn btn-round2 d-md-none d-sm-none d-lg-block navcont">Contact Us</a>
 
-                                    <a href="{{url('/contact')}}" class="d-lg-none ">Contact us</a>
+                                    <a href="{{url('/contactus')}}" class="d-lg-none ">Contact us</a>
                                     
                                     <ul class="">
                                         

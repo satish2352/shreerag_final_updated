@@ -34,6 +34,35 @@ return [
     'GRN_VIEW'	         => env("FILE_VIEW").'/all_web_data/images/grn/',
 
 
+    'PRODUCT_ADD'	         => "/all_web_data/images/cms/product/",
+    'PRODUCT_DELETE'	         => '/all_web_data/images/cms/product/',
+    'PRODUCT_VIEW'	         => env("FILE_VIEW").'/all_web_data/images/cms/product/',
+
+    'DIRECTOR_DESK_ADD'	         => "/all_web_data/images/cms/director_desk/",
+    'DIRECTOR_DESK_DELETE'	         => '/all_web_data/images/cms/director_desk/',
+    'DIRECTOR_DESK_VIEW'	         => env("FILE_VIEW").'/all_web_data/images/cms/director_desk/',
+
+    'TEAM_ADD'	         => "/all_web_data/images/cms/team/",
+    'TEAM_DELETE'	         => '/all_web_data/images/cms/team/',
+    'TEAM_VIEW'	         => env("FILE_VIEW").'/all_web_data/images/cms/team/',
+    
+    'VISION_MISSION_ADD'	         => "/all_web_data/images/cms/vision_mission/",
+    'VISION_MISSION_DELETE'	         => '/all_web_data/images/cms/vision_mission/',
+    'VISION_MISSION_VIEW'	         => env("FILE_VIEW").'/all_web_data/images/cms/vision_mission/',
+
+    'SERVICES_ADD'	         => "/all_web_data/images/cms/services/",
+    'SERVICES_DELETE'	         => '/all_web_data/images/cms/services/',
+    'SERVICES_VIEW'	         => env("FILE_VIEW").'/all_web_data/cms/images/services/',
+
+    'TESTIMONIAL_ADD'	         => "/all_web_data/images/cms/testimonial/",
+    'TESTIMONIAL_DELETE'	         => '/all_web_data/images/cms/testimonial/',
+    'TESTIMONIAL_VIEW'	         => env("FILE_VIEW").'/all_web_data/images/cms/testimonial/',
+
+
+    'PRODUCT_DETAILS_VIEW'=> env("FILE_VIEW").'/all_web_data/cms/images/productdetails/',
+    'PRODUCT_DETAILS_DELETE'=>"/all_web_data/cms/images/productdetails/",
+    'PRODUCT_DETAILS_ADD'=>'/all_web_data/images/cms/productdetails/',
+
     // 'DB_BACKUP'	 => "/all_web_data/DBBackup//",
 
     'ROLE_ID' => [

@@ -137,11 +137,21 @@
      <section class="team-area bg-blue-op-11 pt-40 pb-40">
         <div class="container">
             <div class="row">
+                
+                @if (empty($data_output_product))
+                <div class="container">
+                    <div class="row d-flex justify-content-center">
+                        <h3 class="d-flex justify-content-center" style="color: #00000">No Data Found For
+                            Vision Mission</h3>
+                    </div>
+                </div>
+            @else
+                @foreach ($data_output_product as $product)
                 <div class="col-lg-4 col-md-4 col-sm-6 mb-20 p-4">
                     <div class="team-2-each card relative border shadow-3">
                     <div class="product_img text-center">
-                        <h4 class="f-800 pt-4 fs2 clrtext">TAILOR</h4>
-                        <a ><img src="{{ asset('website/assets/img/products/Ellipse 7.png')}}" id="prodimgss" alt=""></a>
+                        <h4 class="f-800 pt-4 fs2 clrtext">{{ $product['title'] }}</h4>
+                        <a ><img src="{{ Config::get('DocumentConstant.PRODUCT_VIEW') }}{{ $product['image'] }}" id="prodimgss" alt=""></a>
                     </div>
                         <div class="team-hover-div procard text-center transition-3">
                             {{-- <h4 class="white f-700"><a href="#">TAILOR</a></h4> --}}
@@ -149,6 +159,8 @@
                         </div>
                     </div>
                 </div>
+                @endforeach
+                @endif
                 <div class="col-lg-4 col-md-4 col-sm-6 mb-20 p-4">
                     <div class="team-2-each card relative border shadow-3">
                         <div class="product_img text-center">
@@ -358,6 +370,17 @@
             <div class="row marginleft75">
                 <div class="col-xl-12">
                     <div class="owl-carousel owl-theme testimonial-2-slide  wow fadeIn">
+
+                        
+                        @if (empty($data_output_testimonial))
+                <div class="container">
+                    <div class="row d-flex justify-content-center">
+                        <h3 class="d-flex justify-content-center" style="color: #00000">No Data Found For
+                            Vision Mission</h3>
+                    </div>
+                </div>
+            @else
+                @foreach ($data_output_testimonial as $testimonial)
                         <div class="">
                             <div class="each-quote-2 pl-20 pr-sm-00 card cardwidth" style="height: 350px; border-top:15px solid #243772; background:#e2feff">
                                 <!-- <ul class="stars-rate mb-5" data-starsactive="5">
@@ -370,21 +393,22 @@
                                     </li>
                                 </ul> -->
                                 <h4 class="f-700 mb-20 pt-20  icn"  id="pr"><i class="fa-solid fa-quote-left  "></i></h4>
-                                <p class="mb-35 pb-10 clrtext text-justify pr-10 lnh">"Shreerag Engineering's trolleys and rollers have transformed our warehouse operations. Their products' durability and efficiency exceeded our expectations, making them our top choice for material handling solutions."</p>
+                                <p class="mb-35 pb-10 clrtext text-justify pr-10 lnh">{{ $testimonial['description'] }}</p>
                                 <div class="client-2-img d-flex  fixed-bottom1 justify-content-md-start justify-content-start">
                                     <div class="img-div   pb-20">
                                         <div class="client-image">
-                                            <img src="{{ asset('website/assets/img/team/team5b.png')}}" class=" rounded-circle" alt="">
+                                            <img src="{{ Config::get('DocumentConstant.TESTIMONIAL_VIEW') }}{{ $testimonial['image'] }}" class=" rounded-circle" alt="">
                                         </div>
                                     </div>
                                     <div class="client-text-2 mb-30 pl-20">
-                                        <h6 class="client-name green fs-17 f-700 clrtext">Mr. Sachin Katkade </h6>
-                                        <p class="mb-0 fs-13 f-400 clrtext mb-30">Technical Expert</p>
+                                        <h6 class="client-name green fs-17 f-700 clrtext">{{ $testimonial['title'] }} </h6>
+                                        <p class="mb-0 fs-13 f-400 clrtext mb-30">{{ $testimonial['position'] }}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
+                        @endforeach
+                        @endif
                         <div class="">
                             <div class="each-quote-2 pl-20 pr-sm-00 card cardwidth" style="height: 350px; border-top:15px solid #243772; background:#e2feff">
                                 <!-- <ul class="stars-rate mb-5" data-starsactive="5">

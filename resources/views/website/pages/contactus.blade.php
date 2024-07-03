@@ -13,6 +13,8 @@
     <!--  -->
     <section>
         <div class="contbak">
+      
+            
             <div class="container mb-10 pt-50 pb-10">
                 {{-- <div class="row">
                     <div class="col-lg-3 col-md-4 col-sm-12 p-2">
@@ -201,6 +203,200 @@
         </div>
         </div>
     </section>
+    <div class="container card shadow-1 p-5">
+        <form class="forms-sample" action="{{ url('add-contactus') }}" id="regForm" method="POST"
+        enctype="multipart/form-data">
+        @csrf
+        <div class="row py-md-2">
+          <div class="col-md-6 pt-md-0 pt-2 ">
+            <div class="">
+              <label for="full_name"><strong style="color:#323232"> Name </strong></label>
+              <input type="text" placeholder="Your Full Name" name="full_name" value="{{ old('full_name') }}"
+                class="form-control full_nameField">
+              <span id="number-validate" class="red-text"></span>
+              @if ($errors->has('full_name'))
+              <span class="red-text">
+                <?php echo $errors->first('full_name', ':message'); ?>
+              </span>
+              @endif
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="">
+              <label for="subject"><strong style="color:#323232"> Company Name </strong></label>
+              <input type="text" placeholder="Enter Company Name" name="subject" value="{{ old('subject') }}"
+                class="form-control">
+              <span id="number-validate" class="red-text"></span>
+              @if ($errors->has('subject'))
+              <span class="red-text">
+                <?php echo $errors->first('subject', ':message'); ?>
+              </span>
+              @endif
+            </div>
+          </div>
+          <div class="col-md-6 pt-2">
+            <div class="">
+              <label for="mobile_number"><strong style="color:#323232"> Mobile Number </strong></label>
+              <input type="text" placeholder="Mobile Number" name="mobile_number"
+                value="{{ old('mobile_number') }}" class="form-control" maxlength="10" minlength="10" onkeyup="addvalidateMobileNumber(this.value)">
+              <span id="number-validate" class="red-text"></span>
+              @if ($errors->has('mobile_number'))
+              <span class="red-text">
+                <?php echo $errors->first('mobile_number', ':message'); ?>
+              </span>
+              @endif
 
+            </div>
+          </div>
+          <div class="col-md-6 pt-2">
+            <div class="">
+              <label for="email"><strong style="color:#323232"> Email Id</strong></label>
+              <input type="email" placeholder="Email Id" name="email" value="{{ old('email') }}"
+                class="form-control">
+              <span id="number-validate" class="red-text"></span>
+              @if ($errors->has('email'))
+              <span class="red-text">
+                <?php echo $errors->first('email', ':message'); ?>
+              </span>
+              @endif
+            </div>
+          </div>
+          <div class="col-md-12 pt-2">
+            <div class=" text-message-box">
+              <label for="message"><strong style="color:#323232"> Message </strong></label>
+              <textarea name="message" id="message" placeholder="Write a Message"
+                class="form-control ">{{ old('message') }}</textarea>
+              <span id="number-validate" class="red-text"></span>
+              @if ($errors->has('message'))
+              <span class="red-text">
+                <?php echo $errors->first('message', ':message'); ?>
+              </span>
+              @endif
+            </div>
+          </div>
+          <div class="col-md-12 py-3 captcha_set" style="text-align: left;">
+            {!! NoCaptcha::renderJs() !!}
+            {!! NoCaptcha::display() !!}
+
+            @if ($errors->has('g-recaptcha-response'))
+            <span class="help-block">
+              <span class="red-text">{{ $errors->first('g-recaptcha-response') }}</span>
+            </span>
+            @endif
+          </div>
+        </div>
+          <div class="d-flex justify-content-center" style="display: flex; justify-content:center;">
+            <button type="submit" id="submitButton" class="btn formSubmit eduact-btn__curve_button" style="background-color: #243772; color:#fff;"><span
+                class="eduact-btn__curve"></span>Submit<i class="icon-arrow"></i></button>
+          </div>
+
+        
+      </form>
+      @if(Session::has('success_message'))
+      <script>
+        { Session::get('success_message') }}");
+      </script>
+      @endif
+    </div>
 </section>
+<script>
+    function addvalidateMobileNumber(number) {
+        var mobileNumberPattern = /^\d*$/;
+        var validationMessage = document.getElementById("validation-message");
+  
+        if (mobileNumberPattern.test(number)) {
+            validationMessage.textContent = "";
+        } else {
+            validationMessage.textContent = "Please enter only numbers.";
+        }
+    }
+  </script>
+  <script>
+    $(document).ready(function() {
+  
+        $("#regForm").validate({
+            errorClass: "error",
+            rules: {
+                full_name: {
+                    required: true,
+                    spcenotallow: true,
+                },
+                email: {
+                    required: true,
+                    email: true,
+                },
+                mobile_number: {
+                    required: true,
+                    spcenotallow: true,
+                },
+                subject: {
+                    required: true,
+                },
+                message: {
+                    required: true,
+                    spcenotallow: true,
+                },
+            },
+            messages: {
+                full_name: {
+                    required: "Enter Full Name",
+                    spcenotallow: "Enter Some Text",
+                },
+                email: {
+                    required: "Enter Email Id",
+                    spcenotallow: "Enter Some Text",
+                },
+                mobile_number: {
+                    required: "Enter Mobile Number",
+                    pattern: "Invalid Mobile Number",
+                    remote: "This mobile number already exists.",
+                    spcenotallow: "Enter Some Text",
+                },
+                subject: {
+                    required: "Enter Company Name",
+                },
+                message: {
+                    required: "Enter Message",
+                },
+            },
+            highlight: function(element, errorClass) {
+                $(element).removeClass(errorClass);
+            },
+            submitHandler: function(form) {
+                // Check if reCAPTCHA challenge is completed
+                if (grecaptcha.getResponse() === "") {
+                    alert("Please complete the reCAPTCHA challenge.");
+                } else {
+                    // Proceed with form submission
+                    form.submit();
+                }
+            }
+        });
+  
+        $("input#document_file").hide();
+  
+    });
+  
+    $.extend($.validator.methods, {
+        spcenotallow: function(b, c, d) {
+            if (!this.depend(d, c)) return "dependency-mismatch";
+            if ("select" === c.nodeName.toLowerCase()) {
+                var e = a(c).val();
+                return e && e.length > 0
+            }
+            return this.checkable(c) ? this.getLength(b, c) > 0 : b.trim().length > 0
+        }
+    });
+  </script>
+  
+  <script>
+    function dismissAlert(alertId) {
+        var alertElement = document.getElementById(alertId);
+        if (alertElement) {
+            setTimeout(function() {
+                alertElement.style.display = "none";
+            }, 2000); // 2000 milliseconds = 2 seconds
+        }
+    }
+  </script>
 @endsection

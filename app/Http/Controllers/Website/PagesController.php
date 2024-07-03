@@ -4,37 +4,25 @@ namespace App\Http\Controllers\Website;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Services\Website\ProductServices;
+use App\Http\Services\Website\IndexServices;
+
 
 class PagesController extends Controller
 {
+    public function __construct()
+    {
+        $this->service = new ProductServices();
+        $this->service_index = new IndexServices();
+    }
+
     public function index()
     {
         try {
-            return view('website.pages.index');
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
-    public function about()
-    {
-        try {
-            return view('website.pages.about');
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
-    public function services()
-    {
-        try {
-            return view('website.pages.services');
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
-    public function product()
-    {
-        try {
-            return view('website.pages.product');
+            $data_output_product = $this->service->getAllProduct();
+            $data_output_testimonial = $this->service_index->getAllTestimonial();
+            return view('website.pages.index', compact('data_output_product', 'data_output_testimonial'));
+
         } catch (\Exception $e) {
             return $e;
         }

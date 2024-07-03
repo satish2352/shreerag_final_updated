@@ -398,6 +398,44 @@
                             </ul>
                         </li>
                     @endif
+
+                       {{-- @if (session()->get('role_id') == config('constants.ROLE_ID.HR')) --}}
+                       <li>
+                        <a class="has-arrow" href="{{ route('list-leaves-acceptedby-hr') }}"
+                            aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span
+                                class="mini-click-non">CMS</span></a>
+                        <ul class="submenu-angle" aria-expanded="false">
+                            <li><a title="Inbox" href="{{ route('list-product') }}"><i
+                                        class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                        class="mini-sub-pro">Product</span></a></li>
+
+                            <li><a title="Inbox" href="{{ route('list-services') }}"><i
+                                        class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                        class="mini-sub-pro">Services</span></a></li>
+
+                            <li><a title="Inbox" href="{{ route('list-testimonial') }}"><i
+                                        class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                        class="mini-sub-pro">Testimonial</span></a></li>
+                                        
+                            <li><a title="Inbox" href="{{ route('list-director-desk') }}"><i
+                                            class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                            class="mini-sub-pro">Director Desk</span></a></li> 
+                            <li><a title="Inbox" href="{{ route('list-vision-mission') }}"><i
+                                                class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                                class="mini-sub-pro">Vision Mission</span></a></li> 
+                            <li><a title="Inbox" href="{{ route('list-team') }}"><i
+                                                    class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                                    class="mini-sub-pro">Team</span></a></li>   
+                            <li><a title="Inbox" href="{{ route('list-testimonial') }}"><i
+                                                        class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                                        class="mini-sub-pro">Testimonial</span></a></li> 
+                            <li><a title="Inbox" href="{{ route('list-contactus-form') }}"><i
+                                                            class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                                            class="mini-sub-pro">Contactus Form </span></a></li> 
+                                                                 
+                        </ul>
+                    </li>                   
+                    {{-- @endif --}}
                     {{-- =====sample routing============= --}}
                     {{-- <li>
                         <a class="has-arrow" href="{{ route('list-newproducts') }}" aria-expanded="false"><i

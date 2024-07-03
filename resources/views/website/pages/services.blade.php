@@ -27,15 +27,24 @@
         </div>
         <div class="bakimgbnr">
             <div class="container-fluid serv pt-5 pb-30">
-
                 <div class="row">
-
-                    <div class="col-lg-3 manuimg1 text-center">
-                        <img src="{{ asset('website/assets/img/service/trolly.png')}}" id="sevimg" alt="">
-                        <div class="p-3">
-                            <h2 class="f-700 clrtext">Trolley</h2>
+                    @if (empty($data_output_services))
+                    <div class="container">
+                        <div class="row d-flex justify-content-center">
+                            <h3 class="d-flex justify-content-center" style="color: #00000">No Data Found For
+                                Services</h3>
                         </div>
                     </div>
+                @else
+                    @foreach ($data_output_services as $services)
+                    <div class="col-lg-3 manuimg1 text-center">
+                        <img src="{{ Config::get('DocumentConstant.SERVICES_VIEW') }}{{ $services['image'] }}" id="sevimg" alt="">
+                        <div class="p-3">
+                            <h2 class="f-700 clrtext">{{ $services['title'] }}</h2>
+                        </div>
+                    </div>
+                    @endforeach
+                    @endif
                     <div class="col-lg-3 manuimg2 text-center">
                         <img src="{{ asset('website/assets/img/service/roller.png')}}" id="sevimg" alt="">
                         <div class="p-3">
@@ -250,15 +259,27 @@
         <div class="container-fluid testmo1 paddiall">
             <div class="row">
                 <div class="col-lg-12"></div>
+                @if (empty($data_output_services))
+                    <div class="container">
+                        <div class="row d-flex justify-content-center">
+                            <h3 class="d-flex justify-content-center" style="color: #00000">No Data Found For
+                                Services</h3>
+                        </div>
+                    </div>
+                @else
+                    @foreach ($data_output_services as $services)
+
                 <div class="col-lg-6 col-md-12 p-2 exp">
                     <div class="card border-0 bkcl">
-                        <img src="{{ asset('website/assets/img/service/caster.png')}}" class="card-img-top" alt="...">
+                        <img src="{{ Config::get('DocumentConstant.SERVICES_VIEW') }}{{ $services['image'] }}" class="card-img-top" alt="...">
                         <div class="card-body  text-center card-info">
-                            <h1 class="white fs2 f-600"> Caster wheels </h1>
+                            <h1 class="white fs2 f-600">{{ $services['title'] }}</h1>
 
                         </div>
                     </div>
                 </div>
+                @endforeach
+                @endif
                 <div class="col-lg-6 col-md-12 p-2 exp ">
                     <div class="card border-0 bkcl">
                         <img src="{{ asset('website/assets/img/service/movement.png')}}" class="card-img-top" alt="...">
