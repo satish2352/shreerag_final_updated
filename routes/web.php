@@ -390,13 +390,9 @@ Route::get('/', ['as' => 'index', 'uses' => 'App\Http\Controllers\Website\PagesC
 Route::get('/about', ['as' => 'about', 'uses' => 'App\Http\Controllers\Website\AboutController@index']);
 Route::get('/services', ['as' => 'services', 'uses' => 'App\Http\Controllers\Website\ProductServicesController@getAllServices']);
 Route::get('/product', ['as' => 'product', 'uses' => 'App\Http\Controllers\Website\ProductServicesController@index']);
-Route::get('/product_details', ['as' => 'product_details', 'uses' => 'App\Http\Controllers\Website\PagesController@product_details']);
-// Route::get('/contact', ['as' => 'contact', 'uses' => 'App\Http\Controllers\Website\PagesController@contact']);
-
 Route::get('/contactus', ['as' => 'contactus', 'uses' => 'App\Http\Controllers\Website\ContactUsController@getContactUs']);
 Route::post('/add-contactus', ['as' => 'add-contactus', 'uses' => 'App\Http\Controllers\Website\ContactUsController@addContactUs']);
-
-// Route::post('/product-details', ['as' => 'product-details', 'uses' => 'App\Http\Controllers\Website\ProductServicesController@particularPrdouct']);
+Route::post('/product-details', ['as' => 'product-details', 'uses' => 'App\Http\Controllers\Website\ProductServicesController@showParticularPrdouct']);
 
 Route::get('/production-dashboard', ['as' => '/production-dashboard', 'uses' => 'App\Http\Controllers\Organizations\Dashboard\DashboardController@index']);
 Route::get('/list-products', ['as' => 'list-products', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@index']);

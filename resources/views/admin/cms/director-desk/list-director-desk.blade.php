@@ -11,11 +11,11 @@
                                                             <div class="main-sparkline13-hd">
                                                                 <h1>Director Desk <span class="table-project-n">Data</span> Table</h1>
                                                                     <div class="form-group-inner login-btn-inner row">
-                                                                        <div class="col-lg-2" >
+                                                                        {{-- <div class="col-lg-2" >
                                                                             <div class="login-horizental cancel-wp pull-left">
                                                                                     <a href="{{ route('add-director-desk') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Director Desk</button></a>
                                                                             </div>
-                                                                        </div>
+                                                                        </div> --}}
                                                                     <div class="col-lg-10"></div>
                                                                 </div>
                                                             </div>
@@ -78,9 +78,9 @@
                                                                     class="show-btn btn btn-sm btn-outline-primary m-1"
                                                                     title="Show Slide "><i class="fas fa-eye"></i></a>
 
-                                                                <a data-id="{{ $item->id }}"
+                                                                {{-- <a data-id="{{ $item->id }}"
                                                                     class="delete-btn btn btn-sm btn-outline-danger m-1"
-                                                                    title="Delete Slide"><i class="fas fa-archive"></i></a>
+                                                                    title="Delete Slide"><i class="fas fa-archive"></i></a> --}}
                                                             </div>
                                                         </td>
                                                     </tr>

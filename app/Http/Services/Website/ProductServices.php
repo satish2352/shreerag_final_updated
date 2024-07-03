@@ -47,6 +47,13 @@ class ProductServices
         }
     } 
     
-    
+    public function getByIdProducts($id)
+    {
+        try {
+            return $this->repo->getByIdProducts($id);
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
     
 }

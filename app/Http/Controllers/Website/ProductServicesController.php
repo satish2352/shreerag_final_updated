@@ -43,5 +43,16 @@ class ProductServicesController extends Controller
         return view('website.pages.services',compact('data_output_services'));
     } 
 
+    public function showParticularPrdouct(Request $request)
+    {
+        try {
+            
+            $data_output_product_detail = $this->service->getByIdProducts($request->show_id);
+           
+            return view('website.pages.product_details', compact('data_output_product_detail'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
 }
 

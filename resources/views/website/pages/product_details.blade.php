@@ -23,26 +23,27 @@
 
     <section class="team-detail pt-40 pb-20">
         <div class="container">
+        @forelse ($data_output_product_detail as $product)
             <div class="row">
                 <div class="col-lg-4">
                     <div class="team-detail-image">
                         <div class="team-member-image img-lined">
-                            <img src="{{ asset('website/assets/img/products/prod1.png')}}" alt="">
-                            <img src="{{ asset('website/assets/img/products/prod2.png')}}" class="pt-10 pb-30" alt="">
+                            <img src="{{ Config::get('DocumentConstant.PRODUCT_VIEW') }}{{ $product['image'] }}" alt="">
+                            {{-- <img src="{{ asset('website/assets/img/products/prod2.png')}}" class="pt-10 pb-30" alt=""> --}}
                         </div>
                         
                     </div>
                 </div>
                 <div class="col-lg-8 mb-70 ">
-                    <h2 class="f-700 mb-20">Parts Trolley</h2>
-                    <h5>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dolor lorem, tempor elementum eros a, tempor aliquet tellus. Proin id arcu lorem. Nam at tellus elementum lorem tincidunt consequat. Suspendisse aliquam vitae mi non eleifend. Aliquam posuere id neque ut finibus. Etiam tristique lorem in neque vehicula fermentum. Aenean in ultrices odio. Sed feugiat maximus mattis. Vivamus at mollis erat. Integer quam orci, iaculis vitae maximus a, fermentum at erat. Aliquam volutpat ex risus.</h5>
-                    <ul class="check-list-2">
+                    <h2 class="f-700 mb-20">{{ $product['title'] }}</h2>
+                    <h5>{{ $product['description'] }}</h5>
+                    {{-- <ul class="check-list-2">
                         <li><h6>Pellentesque varius turpis ligula, in cursus leo dictum quis. Nam volutpat. </h6></li>
                         <li><h6>Gravida odio ex in nulla. Donec pulvinar odio a sapien vehicula, in accumsan libero</h6></li>
                         <li><h6>Donec faucibus sapien sed bibendum dignissim. Nam ac elit nec diam vestibulum.</h6></li>
                         <li><h6>Donec sed pretium massa pulvinar efficitur</h6></li>
-                    </ul>
-                    <div class="hr-2 bg-light-white mt-20 "></div>
+                    </ul> --}}
+                    {{-- <div class="hr-2 bg-light-white mt-20 "></div>
                     <h5 class="f-700">Purchase Price</h5>
                     <ul class="">
                         <li>
@@ -54,10 +55,20 @@
                         <li>
                             <h5>Higher</h5> Financial Manager, Bizz, California
                         </li>
-                    </ul>
+                    </ul> --}}
                     <!-- <a href="#" class="btn btn-round mt-5">Order Now</a> -->
                 </div>
             </div>
+
+            @empty
+            <p>
+                @if (session('language') == 'mar')
+                    {{ Config::get('marathi.PARTICULAR_DEPARTMENT_INFORMATION.NO_DEPARTMENT_INFORMATION') }}
+                @else
+                    {{ Config::get('english.PARTICULAR_DEPARTMENT_INFORMATION.NO_DEPARTMENT_INFORMATION') }}
+                @endif
+            </p>
+        @endforelse
         </div>
     </section>
 
