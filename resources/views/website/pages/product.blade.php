@@ -49,11 +49,11 @@
                         <div class="team-info transition-4">
                             <h3 class="ml-30">
                             <a 
-                            {{-- href="{{url('/product_details')}}" --}}
+                            
                              class="f-700">{{ $product['title'] }} {{	}}</a>
                             </h3>
                             <p class="mb-0 ml-30"><a 
-                                {{-- href="{{url('/product_details')}}" --}}
+                                
                                  class="btn btn-round-blue wide mt-10 z-8">Product</a></p>
                         </div>
                     </div>
