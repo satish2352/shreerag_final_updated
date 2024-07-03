@@ -341,11 +341,11 @@
 
 
                         <li>
-                            <a class="has-arrow" href="{{ route('list-leaves-acceptedby-hr') }}"
+                            <a class="has-arrow" href="{{ route('list-product') }}"
                                 aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span
                                     class="mini-click-non">Leave Management</span></a>
                             <ul class="submenu-angle" aria-expanded="false">
-                                <li><a title="Inbox" href="{{ route('list-leaves-acceptedby-hr') }}"><i
+                                <li><a title="Inbox" href="{{ route('list-product') }}"><i
                                             class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                             class="mini-sub-pro">Leave Request</span></a></li>
 
@@ -399,9 +399,9 @@
                         </li>
                     @endif
 
-                       {{-- @if (session()->get('role_id') == config('constants.ROLE_ID.HR')) --}}
+                       @if (session()->get('role_id') == config('constants.ROLE_ID.CMS'))
                        <li>
-                        <a class="has-arrow" href="{{ route('list-leaves-acceptedby-hr') }}"
+                        <a class="has-arrow" href="{{ route('list-product') }}"
                             aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span
                                 class="mini-click-non">CMS</span></a>
                         <ul class="submenu-angle" aria-expanded="false">
@@ -435,7 +435,7 @@
                                                                  
                         </ul>
                     </li>                   
-                    {{-- @endif --}}
+                    @endif
                     {{-- =====sample routing============= --}}
                     {{-- <li>
                         <a class="has-arrow" href="{{ route('list-newproducts') }}" aria-expanded="false"><i

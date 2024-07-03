@@ -15,6 +15,7 @@ return [
         'STORE'             => 7,
         'FINANCE'           => 8,
         'HR'                => 9,
+        'CMS'                => 10,
     ],
 
 
@@ -123,6 +124,10 @@ return [
         'INVOICE_NOT_APPROVED_FROM_HIGHER_AUTHORITY'                => 1141,
         'INVOICE_PAID_AGAINST_PO'                                   => 1142
       
+    ],
+
+    'CMS'=>[
+
     ],
 ];
 
