@@ -267,8 +267,8 @@
                                         alt=""></a>
                                 <div class="team-detail-3 transition-5" data-overlay="8">
                                     <div class="team-content z-5">
-                                        <h5 class="green f-700 fs-19 relative"><a>Shubham</a></h5>
-                                        <p class="designation ml-10 white fs-13">Co Founder</p>
+                                        <h5 class="green f-700 fs-19 relative"><a>{{ $aboutus['name'] }}</a></h5>
+                                        <p class="designation ml-10 white fs-13">{{ $aboutus['position'] }}</p>
                                         {{-- <ul class="social-icons boxed-social mb-5">
                                         <li>
                                             <a><i class="fab fa-facebook-f"></i></a>
