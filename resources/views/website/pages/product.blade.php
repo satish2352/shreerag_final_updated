@@ -36,7 +36,7 @@
                 <div class="container">
                     <div class="row d-flex justify-content-center">
                         <h3 class="d-flex justify-content-center" style="color: #00000">No Data Found For
-                            Vision Mission</h3>
+                            Product</h3>
                     </div>
                 </div>
             @else
@@ -48,9 +48,13 @@
                         </div>
                         <div class="team-info transition-4">
                             <h3 class="ml-30">
-                            <a href="{{url('/product_details')}}" class="f-700">{{ $product['title'] }} {{	}}</a>
+                            <a 
+                            {{-- href="{{url('/product_details')}}" --}}
+                             class="f-700">{{ $product['title'] }} {{	}}</a>
                             </h3>
-                            <p class="mb-0 ml-30"><a href="{{url('/product_details')}}" class="btn btn-round-blue wide mt-10 z-8">Product</a></p>
+                            <p class="mb-0 ml-30"><a 
+                                {{-- href="{{url('/product_details')}}" --}}
+                                 class="btn btn-round-blue wide mt-10 z-8">Product</a></p>
                         </div>
                     </div>
                 </div>
