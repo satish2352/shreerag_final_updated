@@ -25,7 +25,8 @@ return new class extends Migration
                 $table->string('remark')->nullable();
                 $table->string('transport_dispatch')->nullable();
                 $table->string('image');
-                $table->string('status')->nullable();
+                // $table->string('status')->nullable();
+                $table->string('quote_no');
                 $table->string('client_name');
                 $table->string('phone_number');
                 $table->string('email');

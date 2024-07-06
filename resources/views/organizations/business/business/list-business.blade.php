@@ -79,9 +79,15 @@ padding-left: 20px !important;
                                     <thead>
                                         <tr>
                                             <th data-field="id">Sr.No.</th>
-                                            <th data-field="grn_number" data-editable="true">Title</th>
-                                            <th data-field="grn_date" data-editable="true">Description</th>
-                                            <th data-field="purchase_id" data-editable="true">Remark</th>
+                                            <th data-field="customer_po_number" data-editable="true">PO Number</th>
+                                            <th data-field="title" data-editable="true">Name</th>
+                                            <th data-field="quantity" data-editable="true">Quantity</th>
+                                            <th data-field="rate" data-editable="true">Rate</th>
+                                            <th data-field="po_validity" data-editable="true">PO Validity</th>
+                                            <th data-field="hsn_number" data-editable="true">HSN Number</th>
+                                            <th data-field="customer_payment_terms" data-editable="true">Payment Terms</th>
+                                            <th data-field="customer_terms_condition" data-editable="true">Terms Condition</th>
+                                            <th data-field="remarks" data-editable="true">Remark</th>
                                             <th data-field="action">Action</th>
                                         </tr>
 
@@ -92,8 +98,14 @@ padding-left: 20px !important;
                                         <tr>
                                             
                                             <td>{{ $loop->iteration }}</td>
+                                            <td>{{ucwords($data->customer_po_number)}}</td>
                                             <td>{{ucwords($data->title)}}</td>
-                                            <td>{{ucwords($data->descriptions)}}</td>
+                                            <td>{{ucwords($data->quantity)}}</td>
+                                            <td>{{ucwords($data->rate)}}</td>
+                                            <td>{{ucwords($data->po_validity)}}</td>
+                                            <td>{{ucwords($data->hsn_number)}}</td>
+                                            <td>{{ucwords($data->customer_payment_terms)}}</td>
+                                            <td>{{ucwords($data->customer_terms_condition)}}</td>
                                             <td>{{ucwords($data->remarks)}}</td>
                                             
                                             <td>

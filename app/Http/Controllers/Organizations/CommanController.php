@@ -10,7 +10,8 @@ use App\Models\{
     BusinessApplicationProcesses,
     PurchaseOrderDetailsModel,
     PurchaseOrdersModel,
-    OrganizationModel
+    OrganizationModel,
+    RulesAndRegulations
 };
 
 // use Config;
@@ -37,7 +38,7 @@ class CommanController
                     'terms_condition',
                     'transport_dispatch',
                     'image',
-                    'status',
+                    // 'status',
                     'client_name',
                     'phone_number',
                     'email',
@@ -58,7 +59,7 @@ class CommanController
                     'purchase_id',
                     'part_no',
                     'description',
-                    'qc_check_remark',
+                    // 'qc_check_remark',
                     'due_date',
                     'hsn_no',
                     'quantity',
@@ -69,6 +70,8 @@ class CommanController
                     'amount'
                 )
                 ->get();
+
+
 
             return [
                 'purchaseOrder' => $purchaseOrder,
@@ -100,7 +103,13 @@ class CommanController
         }
     }
 
-
-
-
+    function getAllRulesAndRegulations() {
+        try {
+            $rulesAndRegulationsDetails = RulesAndRegulations::first();;
+            return $rulesAndRegulationsDetails;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+    
 }

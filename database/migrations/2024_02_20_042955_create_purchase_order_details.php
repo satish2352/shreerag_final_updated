@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('purchase_id');
             $table->string('part_no');
             $table->string('description');
-            $table->string('qc_check_remark');
+            // $table->string('qc_check_remark');
             $table->string('due_date');
             $table->string('hsn_no');
             $table->string('quantity');

@@ -19,7 +19,7 @@
                 <div class="sparkline12-hd">
                     <div class="main-sparkline12-hd">
                         <center>
-                            <h1>Add GRN Data</h1>
+                            <h1>Add Rejected Chalan Data</h1>
                         </center>
                     </div>
                 </div>
@@ -56,7 +56,7 @@
                                 @endif
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="all-form-element-inner">
-                                        <form action="{{ route('store-grn') }}" method="POST" id="addDesignsForm"
+                                        <form action="{{ route('store-rejected-chalan') }}" method="POST" id="addDesignsForm"
                                             enctype="multipart/form-data">
                                             @csrf
                                             <div class="form-group-inner">
@@ -223,7 +223,7 @@
                                                         <div class="col-lg-5"></div>
                                                         <div class="col-lg-7">
                                                             <div class="login-horizental cancel-wp pull-left">
-                                                                <a href="{{ route('list-grn') }}" class="btn btn-white"
+                                                                <a href="{{ route('list-rejected-chalan') }}" class="btn btn-white"
                                                                     style="margin-bottom:50px">Cancel</a>
                                                                 <button class="btn btn-sm btn-primary login-submit-cs"
                                                                     type="submit" style="margin-bottom:50px">Save

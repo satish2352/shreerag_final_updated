@@ -45,7 +45,8 @@ class PurchaseOrderRepository
             $dataOutput->remark = '';
             $dataOutput->transport_dispatch = '';
             $dataOutput->image = 'null';
-            $dataOutput->status = $request->status;
+            $dataOutput->quote_no = $request->quote_no;
+            // $dataOutput->status = $request->status;
             $dataOutput->client_name = $request->client_name;
             $dataOutput->phone_number = $request->phone_number;
             $dataOutput->email = $request->email;
@@ -69,7 +70,7 @@ class PurchaseOrderRepository
                 $designDetails->purchase_id = $last_insert_id;
                 $designDetails->part_no = $item['part_no'];
                 $designDetails->description = $item['description'];
-                $designDetails->qc_check_remark = '';
+                // $designDetails->qc_check_remark = '';
                 $designDetails->due_date = $item['due_date'];
                 $designDetails->hsn_no = $item['hsn'];
                 $designDetails->quantity = $item['quantity'];

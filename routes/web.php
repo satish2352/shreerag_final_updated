@@ -75,6 +75,17 @@ Route::group(['middleware' => ['admin']], function () {
     Route::any('/update-roles', ['as' => 'update-roles', 'uses' => 'App\Http\Controllers\Admin\Roles\RolesController@update']);
     Route::any('/delete-roles/{id}', ['as' => 'delete-roles', 'uses' => 'App\Http\Controllers\Admin\Roles\RolesController@destroy']);
 
+
+    Route::get('/list-rules-regulations', ['as' => 'list-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@index']);
+    Route::get('/add-rules-regulations', ['as' => 'add-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@add']);
+    Route::post('/add-rules-regulations', ['as' => 'add-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@store']);
+    Route::get('/edit-rules-regulations/{edit_id}', ['as' => 'edit-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@edit']);
+    Route::post('/update-rules-regulations', ['as' => 'update-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@update']);
+    Route::post('/show-rules-regulations', ['as' => 'show-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@show']);
+    Route::any('/delete-rules-regulations/{id}', ['as' => 'delete-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@destroy']);
+    Route::post('/update-active-rules-regulations', ['as' => 'update-active-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@updateOne']);
+
+    
     // Organization admin
     Route::get('/admin-dashboard', ['as' => '/admin-dashboard', 'uses' => 'App\Http\Controllers\Organizations\Dashboard\DashboardController@index']);
     // Route::get('/organizations-list-employees', ['as' => 'organizations-list-employees', 'uses' => 'App\Http\Controllers\Organizations\Employees\EmployeesController@index']);
@@ -151,11 +162,14 @@ Route::group(['middleware' => ['admin']], function () {
         // Route::post('/update-grn', ['as' => 'update-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@update']);
         // Route::any('/delete-grn/{id}', ['as' => 'delete-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@destroy']);
         // ========================Quality Department End========
-    
-    
         //All list
         Route::get('/list-material-sent-to-quality', ['as' => 'list-material-sent-to-quality', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@getAllListMaterialSentFromQuality']);
     
+        Route::get('/list-rejected-chalan', ['as' => 'list-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Quality\RejectedChalanController@index']);
+        Route::get('/add-rejected-chalan/{purchase_orders_id}', ['as' => 'add-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Quality\RejectedChalanController@add']);
+        Route::post('/store-rejected-chalan', ['as' => 'store-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Quality\RejectedChalanController@store']);
+        Route::get('/edit-rejected-chalan', ['as' => 'edit-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Quality\RejectedChalanController@edit']);
+        
     });
     
     Route::group(['prefix' => 'owner'], function () {

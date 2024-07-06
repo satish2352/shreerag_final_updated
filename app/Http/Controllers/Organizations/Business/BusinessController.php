@@ -35,15 +35,25 @@ class BusinessController extends Controller
     public function store(Request $request){
         $rules = [
                 'title' => 'required|string|max:255',
-                'descriptions' => 'required',
+                'customer_po_number' => 'required',
+                'quantity' => 'required',
+                'po_validity' => 'required',
+                'hsn_number' => 'required',
+                'customer_payment_terms' => 'required',
+                'customer_terms_condition' => 'required',
                 'remarks' => 'required',
             ];
 
             $messages = [
-                        'title.required' => 'The design title is required.',
-                        'title.string' => 'The design title must be a valid string.',
-                        'title.max' => 'The design title must not exceed 255 characters.',
-                        'descriptions.required' => 'The descriptions is required.',
+                        'title.required' => 'The design customer name is required.',
+                        'title.string' => 'The design customer name must be a valid string.',
+                        'title.max' => 'The design customer name must not exceed 255 characters.',
+                        'customer_po_number.required' => 'The customer po number is required.',
+                        'quantity.required' => 'The customer quantity is required.',
+                        'po_validity.required' => 'The po validity is required.',
+                        'hsn_number.required' => 'The hsn number is required.',
+                        'customer_payment_terms.required' => 'The customer payment terms is required.',
+                        'customer_terms_condition.required' => 'The customer terms condition is required.',
                         'remarks.required' => 'The remarks is required.',
                                             ];
   
@@ -85,15 +95,24 @@ class BusinessController extends Controller
     }
        public function update(Request $request){
         $rules = [
-            'title' => 'required|string|max:255',
-            'descriptions' => 'required',
+            'customer_po_number' => 'required',
+            'quantity' => 'required',
+            'po_validity' => 'required',
+            'hsn_number' => 'required',
+            'customer_payment_terms' => 'required',
+            'customer_terms_condition' => 'required',
             'remarks' => 'required',
             ];       
         $messages = [
-            'title.required' => 'The design title is required.',
-            'title.string' => 'The design title must be a valid string.',
-            'title.max' => 'The design title must not exceed 255 characters.',
-            'descriptions.required' => 'The descriptions is required.',
+            'title.required' => 'The design customer name is required.',
+            'title.string' => 'The design customer name must be a valid string.',
+            'title.max' => 'The design customer name must not exceed 255 characters.',
+            'customer_po_number.required' => 'The customer po number is required.',
+            'quantity.required' => 'The customer quantity is required.',
+            'po_validity.required' => 'The po validity is required.',
+            'hsn_number.required' => 'The hsn number is required.',
+            'customer_payment_terms.required' => 'The customer payment terms is required.',
+            'customer_terms_condition.required' => 'The customer terms condition is required.',
             'remarks.required' => 'The remarks is required.',
             ];
 
@@ -157,10 +176,14 @@ class BusinessController extends Controller
             $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
 
             $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
+            // dd($data);
+            // die();
+            $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
+
             $purchaseOrder = $data['purchaseOrder'];
             $purchaseOrderDetails = $data['purchaseOrderDetails'];
 
-            return view('organizations.business.purchase-order.purchase-order-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData'));
+            return view('organizations.business.purchase-order.purchase-order-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData', 'getAllRulesAndRegulations'));
 
         } catch (\Exception $e) {
             return $e;

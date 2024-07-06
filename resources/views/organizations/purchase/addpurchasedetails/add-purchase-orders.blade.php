@@ -167,11 +167,17 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
+                    <label>Quote Number </label>
+                    <input class="form-control text-right" type="text" name="quote_no" value="" placeholder="">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
                     <label>Discount </label>
                     <input class="form-control text-right" type="text" name="discount" value="" placeholder="0">
                   </div>
                 </div>
-                <div class="col-md-6">
+                {{-- <div class="col-md-6">
                   <div class="form-group">
                     <label>Status</label>
                     <select name="status" class="form-control">
@@ -179,7 +185,7 @@
                       <option value="pending">Pending</option>
                     </select>
                   </div>
-                </div>
+                </div> --}}
                 <div class="col-md-12">
                   <div class="form-group">
                     <label>Other Information</label>
@@ -309,9 +315,12 @@
                         discount: {
                             required: true,
                         },
-                        status: {
+                        quote_no: {
                             required: true,
                         },
+                        // status: {
+                        //     required: true,
+                        // },
                         note: {
                             required: true,
                         },
@@ -366,9 +375,12 @@
                         discount: {
                             required: "Please Enter the Discount",
                         },
-                        status: {
-                            required: "Please Enter the Status",
+                        quote_no: {
+                          required: "Please Enter the quote number",
                         },
+                        // status: {
+                        //     required: "Please Enter the Status",
+                        // },
                         note: {
                             required: "Please Enter the Other Information",
                         },

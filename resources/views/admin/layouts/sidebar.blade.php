@@ -106,6 +106,9 @@
                                         class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                         class="mini-sub-pro">PO Payment Release Request</span></a>
                             </li>
+                            <li><a title="Inbox" href="{{ route('list-rules-regulations') }}"><i
+                                class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                class="mini-sub-pro">Rules and Regulations</span></a></li>
                         </ul>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.PURCHASE'))
@@ -283,6 +286,16 @@
                                 <li><a title="Inbox" href="{{ route('list-grn') }}"><i
                                             class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                             class="mini-sub-pro">List GRN</span></a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a class="has-arrow" href="{{ route('list-rejected-chalan') }}" aria-expanded="false"><i
+                                    class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">Rejected Chalan
+                                    </span></a>
+                            <ul class="submenu-angle" aria-expanded="false">
+                                <li><a title="Inbox" href="{{ route('list-rejected-chalan') }}"><i
+                                            class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                            class="mini-sub-pro">List Rejected Chalan</span></a></li>
                             </ul>
                         </li>
 

@@ -183,7 +183,7 @@
                                                     <div class="row">
                                                         <div class="col-md-6 selfProfile">
                                                             <ul class="list-unstyled">
-                                                                <li>Quote Ref No.: --</li>
+                                                                <li>Quote Ref No.: {{ $purchaseOrder->quote_no }}</li>
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -317,20 +317,21 @@
                                     </tr>
                                     <tr>
                                         <td colspan="8" class="no-border">
-                                            Delivery</td>
+                                            Delivery AS EPR ATTACHED DELIVERY SHEDULE</td>
                                     </tr>
                                     <tr>
                                         <td colspan="8" class="no-border">
-                                            <div style="float: right;">For. SHREERAG
-                                                ENGINEERING & AUTO PVT. LTD.</div>
+                                            <div style="float: right;"><strong>For. SHREERAG
+                                                ENGINEERING & AUTO PVT. LTD.</strong></div>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="no-border" colspan="6">
+                                        <td class="no-border" colspan="2">
                                             <strong>Prepared By</strong>
                                         </td>
-                                        <td class="no-border" colspan="">
-                                            ( Authorized Signatory )</td>
+                                        <td class="no-border" colspan="2">( Finance Signatory )</td>
+                                        <td class="no-border" colspan="2">( Purchase Signatory )</td>
+                                        <td class="no-border" colspan="1">( Authorized Signatory )</td>
                                     </tr>
                                 </tfoot>
 
@@ -339,11 +340,22 @@
                         </div>
 
                     </div>
+
+
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="background-color: #fff; border:1px solid black;">
+                        <div class="" style="padding: 20px 10px 20px 10px;">
+                          <h3>{{ $getAllRulesAndRegulations->title }}</h3>
+                          <p>{{ $getAllRulesAndRegulations->description }}</p>
+                        </div>
+                      </div>
+
                     <a ><button data-toggle="tooltip" onclick="printInvoice()"
-                        title="Accept Purchase Order" class="pd-setting-ed">Print</button></a>
+                        title="Accept Purchase Order" class="pd-setting-ed" style="margin-top: 20px;">Print</button></a>
                 </div>
 
                 
+
+               
                 <script>
                     function printInvoice() {
                         window.print();

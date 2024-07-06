@@ -38,8 +38,15 @@ class BusinessRepository
                }
                
             $business_data = new Business();
+            $business_data->customer_po_number = $request->customer_po_number;
             $business_data->title = $request->title;
             $business_data->descriptions = $request->descriptions;
+            $business_data->quantity = $request->quantity;
+            $business_data->rate = $request->rate;
+            $business_data->po_validity = $request->po_validity;
+            $business_data->hsn_number = $request->hsn_number;
+            $business_data->customer_payment_terms = $request->customer_payment_terms;
+            $business_data->customer_terms_condition = $request->customer_terms_condition;
             $business_data->remarks = $request->remarks;
             $business_data->organization_id = $data_output;
             $business_data->save();
@@ -105,8 +112,15 @@ class BusinessRepository
                 ];
             }
 
+            $dataOutput->customer_po_number = $request->customer_po_number;
             $dataOutput->title = $request->title;
             $dataOutput->descriptions = $request->descriptions;
+            $dataOutput->quantity = $request->quantity;
+            $dataOutput->rate = $request->rate;
+            $dataOutput->po_validity = $request->po_validity;
+            $dataOutput->hsn_number = $request->hsn_number;
+            $dataOutput->customer_payment_terms = $request->customer_payment_terms;
+            $dataOutput->customer_terms_condition = $request->customer_terms_condition;
             $dataOutput->remarks = $request->remarks;
 
 
@@ -172,16 +186,16 @@ class BusinessRepository
         $purchaseOrder = PurchaseOrdersModel::where('purchase_orders_id', $purchase_order_id)
             ->select(
                 'id', 'purchase_orders_id', 'requisition_id', 'business_id', 'production_id',
-                'po_date', 'vendor_id', 'terms_condition', 'transport_dispatch', 'image', 'status',
+                'po_date', 'vendor_id', 'terms_condition', 'transport_dispatch', 'image',
                 'client_name', 'phone_number', 'email', 'tax', 'invoice_date', 'gst_number',
                 'payment_terms', 'client_address', 'discount', 'note','created_at'
             )
             ->first();
-          
+            
         // Fetch related Purchase Order Details
         $purchaseOrderDetails = PurchaseOrderDetailsModel::where('purchase_id', $purchaseOrder->id)
             ->select(
-                'purchase_id', 'part_no', 'description', 'qc_check_remark', 'due_date',
+                'purchase_id', 'part_no', 'description','due_date',
                 'hsn_no', 'quantity', 'actual_quantity', 'accepted_quantity',
                 'rejected_quantity', 'rate', 'amount'
             )
@@ -200,7 +214,7 @@ public function getPurchaseOrderBusinessWise($id)
     try {
         $data_output = PurchaseOrdersModel::select(
             'id', 'purchase_orders_id', 'requisition_id', 'business_id', 'production_id',
-            'po_date', 'vendor_id', 'terms_condition', 'transport_dispatch', 'image', 'status',
+            'po_date', 'vendor_id', 'terms_condition', 'transport_dispatch', 'image', 
             'client_name', 'phone_number', 'email', 'tax', 'invoice_date', 'gst_number',
             'payment_terms', 'client_address', 'discount', 'note', 'created_at'
         )

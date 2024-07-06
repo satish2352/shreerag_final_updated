@@ -212,6 +212,15 @@
                           </td>
                         </tr>
                         <tr>
+                          <td colspan="6" style="text-align: right">Quote Number</td>
+                          <td style="text-align: right;width: 230px">
+                            <input class="form-control text-right"
+                            value="{{$invoice->quote_no}}" readonly
+                              type="text">
+                          </td>
+                        </tr>
+
+                        <tr>
                           <td colspan="6" style="text-align: right">Discount</td>
                           <td style="text-align: right;width: 230px">
                             <input class="form-control text-right"
@@ -249,7 +258,7 @@
                     <input class="form-control text-right" type="text" name="discount" value="{{$invoice->discount}}">
                   </div>
                 </div>
-                <div class="col-md-6">
+                {{-- <div class="col-md-6">
                   <div class="form-group">
                     <label>Status</label>
                     <select name="status" id="status" class="form-control">
@@ -257,7 +266,7 @@
                       <option value="pending" {{ $invoice->status == 'pending' ? 'selected' : '' }}>Pending</option>
                     </select>
                   </div>
-                </div>
+                </div> --}}
 
                 <div class="col-md-12">
                   <div class="form-group">

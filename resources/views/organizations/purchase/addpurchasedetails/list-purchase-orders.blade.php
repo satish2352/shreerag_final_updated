@@ -107,8 +107,9 @@
                       <th data-field="payment_terms" data-editable="true">Payment Terms</th>
                       <th data-field="invoice_date" data-editable="true">Invoice terms</th>
                       <th data-field="total" data-editable="true">Total Amount</th>
+                      <th data-field="quote_no" data-editable="true">Quote Number</th>
                       <th data-field="discount" data-editable="true">Discounts</th>
-                      <th data-field="status" data-editable="true">Status</th>
+                      {{-- <th data-field="status" data-editable="true">Status</th> --}}
                       <th data-field="action">Action</th>
                     </tr>
 
@@ -125,6 +126,7 @@
                       <td>{{ucwords($data->payment_terms)}}</td>
                       <td>{{ucwords($data->invoice_date)}}</td>
                       <td>{{ucwords($data->total)}}.00 Rs</td>
+                      <td>{{ucwords($data->quote_no)}}</td>
                       <td>{{ucwords($data->discount)}}</td>
                       <td>{{ucwords($data->status)}}</td>
 

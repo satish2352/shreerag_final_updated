@@ -31,11 +31,11 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Purchase Order Business Wise</h1>
+                                <h1>Rejected Chalan  <span class="table-project-n"></span></h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
                                         {{-- <div class="login-horizental cancel-wp pull-left">
-                                                <a href="{{ route('add-design-upload') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Design</button></a>
+                                            <a href="{{ route('add-rejected-chalan') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Rejected Chalan</button></a>
                                         </div> --}}
                                     </div>
                                     <div class="col-lg-10"></div>
@@ -48,7 +48,7 @@
                                 <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
                                     <span class="icon-sc-cl" aria-hidden="true">&times;</span>
                                 </button>
-                                {{-- <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i> --}}
+                                <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i>
                                 <p><strong>Success!</strong> {{ Session::get('msg') }}</p>
                             </div>
                         @endif
@@ -72,6 +72,7 @@
                                     </select>
                                 </div>
 
+
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -80,37 +81,43 @@
                                         data-click-to-select="true" data-toolbar="#toolbar">
                                         <thead>
                                             <tr>
-                                                <th data-field="id">Sr.No.</th>
-                                                <th data-field="purchase_orders_id" data-editable="true">Purchase Order ID</th>
-                                                <th data-field="client_name" data-editable="true">Client Name</th>
-                                                <th data-field="email" data-editable="true">Email</th>
-                                                <th data-field="phone_number" data-editable="true">Phone Number</th>
-                                                {{-- <th data-field="status" data-editable="true">Status</th> --}}
-                                                <th data-field="actions">Actions</th>
-                                            </tr>
-                                        </thead>
 
+                                                <th data-field="id">ID</th>
+                                                <th data-field="purchase_id" data-editable="true">PO Number</th>
+                                                <th data-field="name" data-editable="true">Name</th>
+                                                <th data-field="date" data-editable="true">Date</th>
+                                                <th data-field="time" data-editable="true">Time</th>
+                                                <th data-field="remark" data-editable="true">Remark</th>
+                                                {{-- <th data-field="status" data-editable="true">Status</th> --}}
+                                                <th data-field="action">Action</th>
+                                            </tr>
+
+                                        </thead>
                                         <tbody>
-                                            @foreach ($data_output as $data)
+
+                                            @foreach ($all_gatepass as $data)
                                                 <tr>
+
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $data->purchase_orders_id }}</td>
-                                                    <td>{{ $data->client_name }}</td>
-                                                    <td>{{ $data->email }}</td>
-                                                    <td>{{ $data->phone_number }}</td>
-                                                    {{-- <td>{{ $data->status }}</td> --}}
+                                                    <td>{{ $data->purchase_orders_id}}</td>
+                                                    <td>{{ ucwords($data->gatepass_name) }}</td>
+                                                    <td>{{ ucwords($data->gatepass_date) }}</td>
+                                                    <td>{{ ucwords($data->gatepass_time) }}</td>
+                                                    <td>{{ ucwords($data->remark) }}</td>
+
                                                     <td>
-                                                        <div style="display: inline-block; align-items: center;">
-                                                            <a href="{{ route('list-submit-final-purchase-order-particular-business', $data->purchase_orders_id) }}">
-                                                                <button data-toggle="tooltip" title="Edit" class="pd-setting-ed">
-                                                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Check Details
-                                                                </button>
-                                                            </a>
-                                                            &nbsp; &nbsp; &nbsp;
+                                                        <div style="display: flex; align-items: center;">
+                                                            <a href="{{ route('add-rejected-chalan', $data->purchase_orders_id) }}"><button
+                                                                    data-toggle="tooltip" title="Edit"
+                                                                    class="pd-setting-ed"><i class="fa fa-pencil-square-o"
+                                                                        aria-hidden="true"></i></button></a>
                                                         </div>
                                                     </td>
+
                                                 </tr>
                                             @endforeach
+
+
                                         </tbody>
                                     </table>
                                 </div>

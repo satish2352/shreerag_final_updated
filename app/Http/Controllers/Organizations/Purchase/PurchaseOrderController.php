@@ -70,7 +70,8 @@ class PurchaseOrderController extends Controller
             'payment_terms' => 'required',
             'client_address' => 'required',
             'discount' => 'required',
-            'status' => 'required',
+            'quote_no' => 'required',
+            // 'status' => 'required',
             'note' => 'nullable',
         ];
 
@@ -84,7 +85,8 @@ class PurchaseOrderController extends Controller
             'payment_terms.required' => 'The Payment Terms is required.',
             'client_address.required' => 'The Client Address is required.',
             'discount.required' => 'The Discount is required.',
-            'status.required' => 'The Status is required.',
+            'quote_no.required' => 'The quote number is required.',
+            // 'status.required' => 'The Status is required.',
             'note.required' => 'The Note is required.',
         ];
 
@@ -127,7 +129,8 @@ class PurchaseOrderController extends Controller
             'payment_terms' => 'required',
             'client_address' => 'required',
             'discount' => 'required',
-            'status' => 'required',
+            'quote_no' => 'required',
+            // 'status' => 'required',
             'note' => 'nullable',
         ];
 
@@ -153,7 +156,8 @@ class PurchaseOrderController extends Controller
             'discount' => $request->discount,
             'total' => $amount,
             'note' => $request->note,
-            'status' => $request->status,
+            'quote_no' => $request->quote_no,
+            // 'status' => $request->status,
         ]);
 
         if ($invoice->save()) {
@@ -234,6 +238,7 @@ class PurchaseOrderController extends Controller
             'invoice_date' => 'required',
             'items' => 'required',
             'note' => 'nullable',
+            'quote_no' => 'required',
         ]);
 
 
@@ -259,7 +264,7 @@ class PurchaseOrderController extends Controller
             'discount' => $request->discount,
             'total' => $amount,
             'note' => $request->note,
-            'status' => $request->status,
+            // 'status' => $request->status,
         ]);
         // //dd($invoice->wasChanged());
         if ($invoice->wasChanged()) {

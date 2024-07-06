@@ -32,8 +32,14 @@ class AllListRepositor
         ->where('businesses.is_active', true)
         ->select(
           'businesses.id',
+          'businesses.customer_po_number',
           'businesses.title',
           'businesses.descriptions',
+          'businesses.quantity',
+          'businesses.po_validity',
+          'businesses.hsn_number',
+          'businesses.customer_payment_terms',
+          'businesses.customer_terms_condition',
           'businesses.remarks',
           'businesses.is_active',
           'designs.business_id',
