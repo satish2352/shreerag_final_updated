@@ -18,14 +18,15 @@ class RejectedChalanServices
     }
 
     public function getAll()
-    {
-        try {
-            $data = $this->repo->getAll();
-            return $data;
-        } catch (\Exception $e) {
-            return $e;
-        }
+{
+    try {
+        $data = $this->repo->getAll();
+        return $data;
+    } catch (\Exception $e) {
+    
+        return $e; 
     }
+}
 
     public function getDetailsForPurchase($id)
     {
@@ -37,19 +38,14 @@ class RejectedChalanServices
     }
 
 
-    public function storeGRN($request)
+    public function storeRejectedChalan($request)
     {
         try {
-            $data = $this->repo->storeGRN($request);
-            // dd($data);
-            $path = Config::get('DocumentConstant.GRN_ADD');
-            $ImageName = $data['ImageName'];
-            uploadImage($request, 'image', $path, $ImageName);
-
+            $data = $this->repo->storeRejectedChalan($request);
             if ($data) {
-                return ['status' => 'success', 'msg' => 'GRN Added Successfully.'];
+                return ['status' => 'success', 'msg' => 'Rejected Chalan Added Successfully.'];
             } else {
-                return ['status' => 'error', 'msg' => 'GRN Not Added.'];
+                return ['status' => 'error', 'msg' => 'Rejected Chalan Not Added.'];
             }
         } catch (\Exception $e) {
             return $e;

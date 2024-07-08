@@ -10,6 +10,7 @@ use App\Models\{
     Gatepass,
     PurchaseOrderModel,
     BusinessApplicationProcesses,
+    RejectedChalan
     
 };
 use Config;
@@ -53,7 +54,7 @@ class GRNRepository
             foreach ($request->addmore as $index => $item) {
                 $user_data = PurchaseOrderDetailsModel::where('id', $item['edit_id'])
                     ->update([
-                        'qc_check_remark' => $item['qc_check_remark'],
+                        // 'qc_check_remark' => $item['qc_check_remark'],
                         'actual_quantity' => $item['actual_quantity'],
                         'accepted_quantity' => $item['accepted_quantity'],
                         'rejected_quantity' => $item['rejected_quantity'],
@@ -75,11 +76,19 @@ class GRNRepository
                 $business_application->save();
             }
 
+
+
             $updateGatepassTable = Gatepass::where('purchase_orders_id',$request->purchase_orders_id)->first();
             $updateGatepassTable->is_checked_by_quality = true;
             $updateGatepassTable->save();
 
-            
+            $rejected_chalan_data = new RejectedChalan();
+            $rejected_chalan_data->purchase_orders_id = $request->purchase_orders_id;
+            $rejected_chalan_data->grn_id = $dataOutput->id;
+            $rejected_chalan_data->chalan_no = '';
+            $rejected_chalan_data->reference_no = '';
+            $rejected_chalan_data->remark = '';
+            $rejected_chalan_data->save();
 
             return [
                 'ImageName' => $imageName,

@@ -332,12 +332,13 @@ class PurchaseOrderController extends Controller
             $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
 
             $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
+            $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
             $purchaseOrder = $data['purchaseOrder'];
             $purchaseOrderDetails = $data['purchaseOrderDetails'];
 
             return view(
                 'organizations.purchase.purchase.purchase-order-details',
-                compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData')
+                compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData', 'getAllRulesAndRegulations')
             );
 
 

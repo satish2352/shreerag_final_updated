@@ -257,8 +257,6 @@
                 i +
                 '][description]" placeholder="Enter Description" class="form-control" /></td><td><input type="text" name="addmore[' +
                 i +
-                '][qc_check_remark]" placeholder="Enter QC Check" class="form-control" /></td><td><input type="text" name="addmore[' +
-                i +
                 '][chalan_quantity]" placeholder="Enter Chalan Qty" class="form-control" /></td><td><input type="text" name="addmore[' +
                 i +
                 '][actual_quantity]" placeholder="Enter Actual Qty" class="form-control" /></td><td><input type="text" name="addmore[' +

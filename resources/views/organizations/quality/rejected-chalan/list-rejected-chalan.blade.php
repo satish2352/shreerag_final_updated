@@ -84,9 +84,8 @@
 
                                                 <th data-field="id">ID</th>
                                                 <th data-field="purchase_id" data-editable="true">PO Number</th>
-                                                <th data-field="name" data-editable="true">Name</th>
-                                                <th data-field="date" data-editable="true">Date</th>
-                                                <th data-field="time" data-editable="true">Time</th>
+                                                <th data-field="name" data-editable="true">PO Date</th>
+                                                <th data-field="date" data-editable="true">GRN Date</th>
                                                 <th data-field="remark" data-editable="true">Remark</th>
                                                 {{-- <th data-field="status" data-editable="true">Status</th> --}}
                                                 <th data-field="action">Action</th>
@@ -100,10 +99,10 @@
 
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $data->purchase_orders_id}}</td>
-                                                    <td>{{ ucwords($data->gatepass_name) }}</td>
-                                                    <td>{{ ucwords($data->gatepass_date) }}</td>
-                                                    <td>{{ ucwords($data->gatepass_time) }}</td>
+                                                    <td>{{ ucwords($data->po_date) }}</td>
+                                                    <td>{{ ucwords($data->grn_date) }}</td>
                                                     <td>{{ ucwords($data->remark) }}</td>
+                                                
 
                                                     <td>
                                                         <div style="display: flex; align-items: center;">

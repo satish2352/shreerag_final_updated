@@ -340,8 +340,6 @@
                         </div>
 
                     </div>
-
-
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="background-color: #fff; border:1px solid black;">
                         <div class="" style="padding: 20px 10px 20px 10px;">
                           <h3>{{ $getAllRulesAndRegulations->title }}</h3>

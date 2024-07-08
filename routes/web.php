@@ -168,7 +168,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-rejected-chalan', ['as' => 'list-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Quality\RejectedChalanController@index']);
         Route::get('/add-rejected-chalan/{purchase_orders_id}', ['as' => 'add-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Quality\RejectedChalanController@add']);
         Route::post('/store-rejected-chalan', ['as' => 'store-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Quality\RejectedChalanController@store']);
-        Route::get('/edit-rejected-chalan', ['as' => 'edit-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Quality\RejectedChalanController@edit']);
+
         
     });
     

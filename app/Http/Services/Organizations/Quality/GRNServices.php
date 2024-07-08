@@ -41,7 +41,6 @@ class GRNServices
     {
         try {
             $data = $this->repo->storeGRN($request);
-            // dd($data);
             $path = Config::get('DocumentConstant.GRN_ADD');
             $ImageName = $data['ImageName'];
             uploadImage($request, 'image', $path, $ImageName);

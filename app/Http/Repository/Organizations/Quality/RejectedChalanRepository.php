@@ -20,9 +20,18 @@ class RejectedChalanRepository
     public function getAll()
     {
         try {
-            $data_output = Gatepass::where('is_checked_by_quality',false)->get();
-
-            return $data_output;
+            $dataOutputCategory = RejectedChalan::join('grn_tbl', 'grn_tbl.purchase_orders_id', '=', 'tbl_rejected_chalan.purchase_orders_id')
+            ->select(
+                'tbl_rejected_chalan.purchase_orders_id',
+                'grn_tbl.po_date', 
+                'grn_tbl.grn_date', 
+                'grn_tbl.remark', 
+                'tbl_rejected_chalan.is_active'
+            )
+            ->groupBy('tbl_rejected_chalan.purchase_orders_id', 'grn_tbl.po_date', 'grn_tbl.grn_date', 'grn_tbl.remark', 'tbl_rejected_chalan.is_active')
+            ->orderBy('tbl_rejected_chalan.purchase_orders_id', 'desc')
+            ->get();                
+            return $dataOutputCategory;
         } catch (\Exception $e) {
             return $e;
         }
@@ -30,67 +39,35 @@ class RejectedChalanRepository
 
     public function getDetailsForPurchase($id)
     {
-        return PurchaseOrdersModel::where('id', '=', $id)->first();
+        $data_output = PurchaseOrdersModel::where('id', '=', $id)->first();
+       
+        return $data_output;
     }
-    // repository
-    public function storeGRN($request)
+    public function storeRejectedChalan($request)
     {
         try {
-            $grn_no = str_replace(array("-", ":"), "", date('Y-m-d') . time());
-            $dataOutput = new GRNModel();
+            // Find existing record
+            $dataOutput = RejectedChalan::first();
+        
             $dataOutput->purchase_orders_id = $request->purchase_orders_id;
-            // $dataOutput->grn_no = $grn_no;
-            $dataOutput->po_date = $request->po_date;
-            $dataOutput->grn_date = $request->grn_date;
+            $dataOutput->grn_id = $dataOutput->grn_id;
+            $dataOutput->chalan_no = $request->chalan_no;
+            $dataOutput->reference_no = $request->reference_no;
             $dataOutput->remark = $request->remark;
-            $dataOutput->image = 'null';
             $dataOutput->is_approve = '0';
             $dataOutput->is_active = '1';
             $dataOutput->is_deleted = '0';
             $dataOutput->save();
-            $last_insert_id = $dataOutput->id;
-
-            foreach ($request->addmore as $index => $item) {
-                $user_data = PurchaseOrderDetailsModel::where('id', $item['edit_id'])
-                    ->update([
-                        // 'qc_check_remark' => $item['qc_check_remark'],
-                        'actual_quantity' => $item['actual_quantity'],
-                        'accepted_quantity' => $item['accepted_quantity'],
-                        'rejected_quantity' => $item['rejected_quantity'],
-                    ]);
-            }
-            $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
-            $finalOutput = GRNModel::find($last_insert_id);
-            $finalOutput->image = $imageName;
-            $finalOutput->save();
-
-
-            
-            $purchase_orders_details = PurchaseOrderModel::where('purchase_orders_id', $request->purchase_orders_id)->first();
-            $business_application = BusinessApplicationProcesses::where('business_id', $purchase_orders_details->business_id)->first();
-            if ($business_application) {
-                $business_application->grn_no = $grn_no;
-                $business_application->quality_material_sent_to_store_date = date('Y-m-d');
-                // $business_application->quality_status_id = config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE');
-                $business_application->save();
-            }
-
-            $updateGatepassTable = Gatepass::where('purchase_orders_id',$request->purchase_orders_id)->first();
-            $updateGatepassTable->is_checked_by_quality = true;
-            $updateGatepassTable->save();
-
-            
+    
             return [
-                'ImageName' => $imageName,
                 'status' => 'success'
             ];
         } catch (\Exception $e) {
-            dd($e->getMessage());
             return [
                 'msg' => $e->getMessage(),
                 'status' => 'error'
             ];
         }
     }
-
+    
 }

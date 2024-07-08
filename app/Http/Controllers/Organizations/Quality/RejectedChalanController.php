@@ -42,7 +42,6 @@ class RejectedChalanController extends Controller
 
             $purchase_order_details_data = PurchaseOrderDetailsModel::where('purchase_id', $po_id)
                 ->get();
-
             return view('organizations.quality.rejected-chalan.add-rejected-chalan', compact('purchase_order_data', 'purchase_order_details_data'));
         } catch (\Exception $e) {
             return $e;
@@ -52,15 +51,15 @@ class RejectedChalanController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'grn_date' => 'required',
-            'purchase_orders_id' => 'required',
-            'po_date' => 'required',
+            'chalan_no' => 'required',
+            'reference_no' => 'required',
+            'remark' => 'required',
         ];
 
         $messages = [
-            'grn_date.required' => 'The Client Name is required.',
-            'purchase_orders_id.required' => 'The purchase orders no is required.',
-            'po_date.required' => 'The Email is required.',
+            'chalan_no.required' => 'The chalan number is required.',
+            'reference_no.required' => 'The reference number is required.',
+            'remark.required' => 'The remark is required.',
         ];
 
         try {
@@ -71,7 +70,7 @@ class RejectedChalanController extends Controller
                     ->withInput()
                     ->withErrors($validation);
             } else {
-                $add_record = $this->service->storeGRN($request);
+                $add_record = $this->service->storeRejectedChalan($request);
                 if ($add_record) {
                     $msg = $add_record['msg'];
                     $status = $add_record['status'];
@@ -87,62 +86,4 @@ class RejectedChalanController extends Controller
             return redirect('quality/add-rejected-chalan')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
-
-
-
-    public function edit()
-    {
-        try {
-            return view('organizations.quality.rejected-chalan.edit-rejected-chalan');
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
-
-
-
-    public function getAllListMaterialSentFromQuality()
-    {
-        try {
-
-            $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
-            $array_to_be_check_new = ['0'];
-
-            $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
-                $join->on('business_application_processes.business_id', '=', 'production.business_id');
-            })
-                ->leftJoin('designs', function ($join) {
-                    $join->on('business_application_processes.business_id', '=', 'designs.business_id');
-                })
-                ->leftJoin('businesses', function ($join) {
-                    $join->on('business_application_processes.business_id', '=', 'businesses.id');
-                })
-                ->leftJoin('design_revision_for_prod', function ($join) {
-                    $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
-                })
-                ->whereIn('business_application_processes.quality_status_id', $array_to_be_check)
-                ->whereIn('business_application_processes.store_receipt_no', $array_to_be_check_new)
-                ->where('businesses.is_active', true)
-                ->select(
-                    'businesses.id',
-                    'businesses.title',
-                    'businesses.descriptions',
-                    'businesses.remarks',
-                    'businesses.is_active',
-                    'production.business_id',
-                    'production.id as productionId',
-                    'design_revision_for_prod.reject_reason_prod',
-                    'design_revision_for_prod.id as design_revision_for_prod_id',
-                    'designs.bom_image',
-                    'designs.design_image'
-
-                )
-                ->get();
-            // return $data_output;
-            return view('organizations.quality.list.list-checked-material-sent-to-store',compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
-
 }

@@ -109,7 +109,7 @@
                                                         name="grn_number" placeholder="Enter GRN Number">
                                                 </div> --}}
 
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                                         <label for="grn_date">GRN Date:</label>
                                                         <input type="date" class="form-control" id="grn_date"
                                                             name="grn_date" placeholder="Enter GRN Date"
@@ -117,14 +117,14 @@
 
                                                     </div>
 
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                                         <label for="purchase_orders_id">PO No.:</label>
                                                         <input type="text" class="form-control" id="purchase_orders_id"
                                                             name="purchase_orders_id" placeholder="Enter Purchase No."
                                                             value="{{ $purchase_order_data->purchase_orders_id }}" readonly>
                                                     </div>
 
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                                         <label for="po_date">PO Date :</label>
                                                         <!-- <input type="date" class="form-control" id="po_date"
                                                                 name="po_date" placeholder="Enter PO Date"> -->
@@ -136,22 +136,8 @@
 
                                                     </div>
 
-                                                    <!-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                            <label for="invoice_no">Invoice No.:</label>
-                                                            <input type="text" class="form-control" id="invoice_no"
-                                                                name="invoice_no" placeholder="Enter Invoice No">
-                                                        </div>
-
-                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                            <label for="invoice_date">Invoice Date:</label>
-                                                            <input type="date" class="form-control" id="invoice_date"
-                                                                name="invoice_date" placeholder="Enter Invoice Date">
-                                                        </div> -->
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="image">Signature:</label>
-                                                        <input type="file" class="form-control" accept="image/*"
-                                                            id="image" name="image">
-                                                    </div>
+                                                   
+                                                   
                                                 </div>
 
                                                 <div style="margin-top:20px">
@@ -183,17 +169,21 @@
                                                                 <td><input type="text"
                                                                         name="addmore[0][actual_quantity]"
                                                                         placeholder="Enter Actual Qty"
-                                                                        class="form-control actual_quantity" />
+                                                                        
+                                                                        class="form-control actual_quantity"
+                                                                        value="{{ $item->actual_quantity }}" readonly />
                                                                 </td>
                                                                 <td><input type="text"
                                                                         name="addmore[0][accepted_quantity]"
                                                                         placeholder="Enter Accepted Qty"
-                                                                        class="form-control accepted_quantity" />
+                                                                        class="form-control accepted_quantity"
+                                                                        value="{{ $item->accepted_quantity }}" readonly/>
                                                                 </td>
                                                                 <td><input type="text"
                                                                         name="addmore[0][rejected_quantity]"
                                                                         placeholder="Enter Rejected Qty"
-                                                                        class="form-control rejected_quantity" readonly />
+                                                                        class="form-control rejected_quantity" 
+                                                                        value="{{ $item->rejected_quantity }}" readonly />
                                                                 </td>
                                                                 {{-- <td><button type="button" name="add" id="add"
                                                                         class="btn btn-success">Add More</button></td> --}}
@@ -202,20 +192,23 @@
                                                     </table>
                                                 </div>
 
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="chalan_no">Chalan No. :</label>
+                                                    <input type="text" class="form-control" id="chalan_no"
+                                                        name="chalan_no" placeholder="Enter Chalan No">
+                                                </div>
+
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="reference_no">Your reference no. :</label>
+                                                    <input type="text" class="form-control" id="reference_no"
+                                                        name="reference_no" placeholder="Enter Reference No">
+                                                </div> 
                                                 <div class="row">
                                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                         <label for="remark">Remark:</label>
                                                         <textarea class="form-control" rows="3" type="text" class="form-control" id="remark" name="remark"
                                                             placeholder="Enter Remark"></textarea>
                                                     </div>
-
-
-
-                                                    {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="status">Status:</label>
-                                                    <input type="text" class="form-control" id="status"
-                                                        name="status" placeholder="Enter Status">
-                                               </div>                                             --}}
                                                 </div>
 
                                                 <div class="login-btn-inner">
@@ -256,8 +249,6 @@
                 '<tr><td><input type="text" name="addmore[' +
                 i +
                 '][description]" placeholder="Enter Description" class="form-control" /></td><td><input type="text" name="addmore[' +
-                i +
-                '][qc_check_remark]" placeholder="Enter QC Check" class="form-control" /></td><td><input type="text" name="addmore[' +
                 i +
                 '][chalan_quantity]" placeholder="Enter Chalan Qty" class="form-control" /></td><td><input type="text" name="addmore[' +
                 i +
@@ -361,10 +352,7 @@
                     remark: {
                         required: "Please enter Remark.",
                     },
-                    image: {
-                        required: "Please select Signature .",
-                        accept: "Please select an Signature file.",
-                    },
+                  
                     'addmore[0][description]': {
                         required: "Please enter Description.",
                     },

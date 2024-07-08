@@ -122,6 +122,7 @@
                                         title="Inbox" href="{{ route('list-purchase') }}"><i
                                             class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                             class="mini-sub-pro">List Purchase Orders To Be Finalize</span></a></li>
+                                            
                             </ul>
                         </li>
                         <li class="{{ Request::is('list-vendor') ? 'active' : '' }}">
