@@ -11,7 +11,8 @@ use App\Models\{
     PurchaseOrderDetailsModel,
     PurchaseOrdersModel,
     OrganizationModel,
-    RulesAndRegulations
+    RulesAndRegulations,
+    Vendors
 };
 
 // use Config;
@@ -25,34 +26,30 @@ class CommanController
     public function getPurchaseOrderDetails($purchase_order_id)
     {
         try {
-            // Fetch the Purchase Order
-            $purchaseOrder = PurchaseOrdersModel::where('purchase_orders_id', $purchase_order_id)
-                ->select(
-                    'id',
-                    'purchase_orders_id',
-                    'requisition_id',
-                    'business_id',
-                    'production_id',
-                    'po_date',
-                    'vendor_id',
-                    'terms_condition',
-                    'transport_dispatch',
-                    'image',
-                    // 'status',
-                    'client_name',
-                    'phone_number',
-                    'email',
-                    'tax',
-                    'invoice_date',
-                    'gst_number',
-                    'payment_terms',
-                    'client_address',
-                    'discount',
-                    'note',
-                    'created_at'
-                )
-                ->first();
-
+            $purchaseOrder = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
+            ->select(
+                'purchase_orders.id',
+                'purchase_orders.purchase_orders_id',
+                'purchase_orders.requisition_id', 
+                'purchase_orders.business_id', 
+                'purchase_orders.production_id', 
+                'purchase_orders.po_date', 
+                'purchase_orders.terms_condition', 
+                'purchase_orders.transport_dispatch', 
+                'purchase_orders.image', 
+                'purchase_orders.tax', 
+                'purchase_orders.invoice_date', 
+                'purchase_orders.payment_terms', 
+                'purchase_orders.discount', 
+                'vendors.vendor_name', 
+                'vendors.vendor_company_name', 
+                'vendors.vendor_email', 
+                'vendors.vendor_address', 
+                'vendors.gst_no', 
+                'vendors.quote_no', 
+                'purchase_orders.is_active'
+            )
+            ->first();
             // Fetch related Purchase Order Details
             $purchaseOrderDetails = PurchaseOrderDetailsModel::where('purchase_id', $purchaseOrder->id)
                 ->select(

@@ -68,10 +68,15 @@ label.error {
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="vendor_name">Vendor Name:</label>
                                                         <input class="form-control" name="vendor_name" id="vendor_name"
-                                                    placeholder="Enter the Vendor Name"
+                                                    placeholder="Enter the company name"
                                                     value=" @if (old('vendor_name')) {{ old('vendor_name') }}@else{{ $editData->vendor_name }} @endif">
                                                 </div>   
-                                                
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="vendor_company_name">Company Name:</label>
+                                                    <input class="form-control" name="vendor_company_name" id="vendor_company_name"
+                                                placeholder="Enter the Vendor Name"
+                                                value=" @if (old('vendor_company_name')) {{ old('vendor_company_name') }}@else{{ $editData->vendor_company_name }} @endif">
+                                            </div>  
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="vendor_email">Email:</label>
                                                     <input type="email" class="form-control" id="vendor_email"

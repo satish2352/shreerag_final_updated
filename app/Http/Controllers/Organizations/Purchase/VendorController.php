@@ -81,14 +81,14 @@ class VendorController extends Controller
                       $status = $add_record['status'];
   
                       if ($status == 'success') {
-                          return redirect('purchase/list-vendor')->with(compact('msg', 'status'));
+                          return redirect('purchase/vendor/list-vendor')->with(compact('msg', 'status'));
                       } else {
-                          return redirect('purchase/add-vendor')->withInput()->with(compact('msg', 'status'));
+                          return redirect('purchase/vendor/add-vendor')->withInput()->with(compact('msg', 'status'));
                       }
                   }
               }
           } catch (Exception $e) {
-              return redirect('purchase/add-vendor')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+              return redirect('purchase/vendor/add-vendor')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
           }
       }
 
@@ -139,7 +139,7 @@ class VendorController extends Controller
                     $msg = $update_data['msg'];
                     $status = $update_data['status'];
                     if ($status == 'success') {
-                        return redirect('purchase/list-vendor')->with(compact('msg', 'status'));
+                        return redirect('purchase/vendor/list-vendor')->with(compact('msg', 'status'));
                     } else {
                         return redirect()->back()
                             ->withInput()

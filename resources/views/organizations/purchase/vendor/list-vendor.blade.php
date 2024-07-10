@@ -80,6 +80,7 @@ padding-left: 20px !important;
                                         <tr>
                                             <th data-field="id">Sr.No.</th>
                                             <th data-field="vendor_name" data-editable="true">Vendor Name</th>
+                                            <th data-field="vendor_company_name" data-editable="true">Company Name</th>
                                             <th data-field="email" data-editable="true">Email</th>
                                             <th data-field="contact_no" data-editable="true">Conatct No.</th>
                                             <th data-field="gst_no" data-editable="true">GST No.</th>
@@ -97,6 +98,7 @@ padding-left: 20px !important;
                                             
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $vendor_data->vendor_name }}</td>
+                                            <td>{{ $vendor_data->vendor_company_name }}</td>
                                             <td>{{ $vendor_data->vendor_email }}</td>
                                             <td>{{ $vendor_data->contact_no }}</td>
                                             <td>{{ $vendor_data->gst_no }}</td>

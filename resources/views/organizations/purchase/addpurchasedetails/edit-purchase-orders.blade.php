@@ -1,385 +1,587 @@
 @extends('admin.layouts.master')
 @section('content')
-<style>
-.form-control {
-  border: 2px solid #ced4da;
-  border-radius: 4px;
-}
-</style>
-<div class="data-table-area mg-tb-15">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div class="sparkline13-list">
-          <div class="sparkline13-hd">
-            <div class="main-sparkline13-hd">
-              <h1>Purchase Order <span class="table-project-n">Data</span> Table</h1>
-            </div><br>
-            <form action="{{route('update-purchase-order')}}" method="post" enctype="multipart/form-data">
-              @csrf
+    <style>
+        a {
+            color: black;
+        }
 
-              <div class="row">
-                <div class="col-sm-6 col-md-3">
-                  <div class="form-group">
-                    <label>Client Name<span class="text-danger">*</span></label>
-                    <input class="form-control" type="text" name="client_name" value="{{$invoice->client_name}}">
-                    <input class="form-control" type="hidden" name="id" value="{{$invoice->id}}">
-                  </div>
-                </div>
-                <div class="col-sm-6 col-md-3">
-                  <div class="form-group">
-                    <label>Phone Number <span class="text-danger">*</span></label>
-                    <input class="form-control" type="text" name="phone_number" value="{{$invoice->phone_number}}">
-                  </div>
-                </div>
+        a:hover {
+            color: black;
+        }
 
-                <div class="col-sm-6 col-md-3">
-                  <div class="form-group">
-                    <label>Email</label>
-                    <input class="form-control" type="email" name="email" value="{{$invoice->email}}">
-                  </div>
-                </div>
-                <div class="col-sm-6 col-md-3">
-                  <div class="form-group">
-                    <label>Tax</label>
-                    <select name="tax" class="form-control" title="select tax" id="inv_tax">
-                      <option value="null">Select Tax</option>
-                      <option value="9" {{ $invoice->tax == 9 ? 'selected' : '' }}>C-GST</option>
-                      <option value="9" {{ $invoice->tax == 9 ? 'selected' : '' }}>S-GST</option>
-                      <option value="18" {{ $invoice->tax == 18 ? 'selected' : '' }}>C-GST + S-GST</option>
-                    </select>
-                  </div>
-                </div>
+        label {
+            margin-top: 10px;
+        }
 
-              </div>
-              <div class="row">
+        label.error {
+            color: red;
+            /* Change 'red' to your desired text color */
+            font-size: 12px;
+            /* Adjust font size if needed */
+            /* Add any other styling as per your design */
+        }
+    </style>
 
-                <div class="col-sm-6 col-md-3">
-                  <div class="form-group">
-                    <label>Invoice date <span class="text-danger">*</span></label>
-                    <div class="cal-icon">
-                      <input class="form-control datetimepicker" type="text" name="invoice_date"
-                        value="{{$invoice->invoice_date}}">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="sparkline12-list">
+                    <div class="sparkline12-hd">
+                        <div class="main-sparkline12-hd">
+                            <center>
+                                <h1>Edit Purchase Order Data</h1>
+                            </center>
+                        </div>
                     </div>
-                  </div>
-                </div>
-                <div class="col-sm-6 col-md-3">
-                  <div class="form-group">
-                    <label>GST Number<span class="text-danger">*</span></label>
-                    <div class="cal-icon">
-                      <input class="form-control " type="text" name="gst_number" value="{{$invoice->gst_number}}">
+                    <div class="sparkline12-graph">
+                        <div class="basic-login-form-ad">
+                            <div class="row">
+                                @if (session('msg'))
+                                    <div class="alert alert-{{ session('status') }}">
+                                        {{ session('msg') }}
+                                    </div>
+                                @endif
+
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    @if (Session::has('status'))
+                                        <div class="col-md-12">
+                                            <div class="alert alert-{{ Session::get('status') }} alert-dismissible"
+                                                role="alert">
+                                                <button type="button" class="close" data-dismiss="alert"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <strong>{{ ucfirst(Session::get('status')) }}!</strong>
+                                                {{ Session::get('msg') }}
+                                            </div>
+                                        </div>
+                                    @endif
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="all-form-element-inner">
+                                            <form
+                                                action="{{ route('update-purchase-order', $editData[0]->purchase_main_id) }}"
+                                                method="POST" id="editDesignsForm" enctype="multipart/form-data">
+                                                @csrf
+                                                <input type="hidden" name="purchase_main_id" id=""
+                                                    class="form-control" value="{{ $editData[0]->purchase_main_id }}"
+                                                    placeholder="">
+                                                <a {{-- href="{{ route('add-more-data') }}" --}}>
+                                                    <div class="container-fluid">
+                                                        <!-- @if ($errors->any())
+    <div class="alert alert-danger">
+                                                                <ul>
+                                                                    @foreach ($errors->all() as $error)
+    <li>{{ $error }}</li>
+    @endforeach
+                                                                </ul>
+                                                            </div>
+    @endif -->
+
+                                                        @foreach ($editData as $key => $editDataNew)
+                                                            @if ($key == 0)
+                                                                <div class="row">
+                                                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                        <div class="form-group">
+                                                                            <label for="Service">Vendor Company
+                                                                                Name:</label> &nbsp;<span
+                                                                                class="red-text">*</span>
+                                                                            <select class="form-control mb-2"
+                                                                                name="vendor_id" id="vendor_id">
+                                                                                <option value="" default>Select
+                                                                                    Category</option>
+                                                                                @foreach ($dataOutputVendor as $service)
+                                                                                    <option value="{{ $service['id'] }}"
+                                                                                        {{ old('vendor_id', $editDataNew->vendor_id) == $service->id ? 'selected' : '' }}>
+                                                                                        {{ $service->vendor_company_name }}
+                                                                                    </option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                            @if ($errors->has('vendor_id'))
+                                                                                <span
+                                                                                    class="red-text">{{ $errors->first('vendor_id') }}</span>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                        <div class="form-group">
+                                                                            <label>Tax</label>
+                                                                            <select class="form-control mb-2" name="tax"
+                                                                                id="tax">
+                                                                                <option value="" default>Select Tax
+                                                                                </option>
+
+                                                                                <option value="9"
+                                                                                    {{ $editDataNew->tax == 9 ? 'selected' : '' }}>
+                                                                                    C-GST</option>
+                                                                                <option value="9"
+                                                                                    {{ $editDataNew->tax == 9 ? 'selected' : '' }}>
+                                                                                    S-GST</option>
+                                                                                <option value="18"
+                                                                                    {{ $editDataNew->tax == 18 ? 'selected' : '' }}>
+                                                                                    C-GST + S-GST</option>
+                                                                            </select>
+                                                                            @if ($errors->has('tax'))
+                                                                                <span
+                                                                                    class="red-text">{{ $errors->first('tax') }}</span>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                        <div class="form-group">
+                                                                            <label>Invoice date <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <div class="cal-icon">
+                                                                                <input class="form-control datetimepicker"
+                                                                                    type="text" name="invoice_date"
+                                                                                    id="invoice_date"
+                                                                                    value="{{ $editDataNew->invoice_date }}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                        <div class="form-group">
+                                                                            <label>Payment Terms</label>
+                                                                            <select name="payment_terms"
+                                                                                class="form-control"
+                                                                                title="select payment terms"
+                                                                                id="payment_terms">
+                                                                                <option value="">Select Payment Terms
+                                                                                </option>
+                                                                                <option value="30"
+                                                                                    {{ $editDataNew->payment_terms == 30 ? 'selected' : '' }}>
+                                                                                    30 Days</option>
+                                                                                <option value="60"
+                                                                                    {{ $editDataNew->payment_terms == 60 ? 'selected' : '' }}>
+                                                                                    60 Days</option>
+                                                                                <option value="90"
+                                                                                    {{ $editDataNew->payment_terms == 90 ? 'selected' : '' }}>
+                                                                                    90 Days</option>
+                                                                            </select>
+                                                                            @if ($errors->has('payment_terms'))
+                                                                                <span
+                                                                                    class="red-text">{{ $errors->first('payment_terms') }}</span>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @endif
+                                                        @endforeach
+                                                        <button type="button" name="add" id="add"
+                                                            class="btn btn-success">Add More</button>
+                                                        <div style="margin-top:10px;">
+                                                            <table class="table table-bordered" id="dynamicTable">
+                                                                <tr>
+                                                                    <th>Part No</th>
+                                                                    <th>Description</th>
+                                                                    <th>Due Date</th>
+                                                                    <th>HSN</th>
+                                                                    <th>Quantity</th>
+                                                                    <th>Rate</th>
+                                                                    <th>Amount</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                                @foreach ($editData as $key => $editDataNew)
+                                                                    <?php
+                                                                    // dd($editDataNew);
+                                                                    // die();
+                                                                    ?>
+                                                                    <tr>
+                                                                        <input type="hidden" name="design_count"
+                                                                            id="design_id_{{ $key }}"
+                                                                            class="form-control"
+                                                                            value="{{ $key }}" placeholder="">
+
+                                                                        <input type="hidden"
+                                                                            name="design_id_{{ $key }}"
+                                                                            id="design_id_{{ $key }}"
+                                                                            class="form-control"
+                                                                            value="{{ $editDataNew->purchase_order_details_id }}"
+                                                                            placeholder="">
+
+                                                                        <td>
+                                                                            <input type="text"
+                                                                                name="part_no_{{ $key }}"
+                                                                                value="{{ $editDataNew->part_no }}"
+                                                                                placeholder="Enter Part No"
+                                                                                class="form-control part_no" />
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <input type="text"
+                                                                                name="description_{{ $key }}"
+                                                                                value="{{ $editDataNew->description }}"
+                                                                                placeholder="Enter Description"
+                                                                                class="form-control description" />
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <input type="date"
+                                                                                name="due_date_{{ $key }}"
+                                                                                value="{{ $editDataNew->due_date }}"
+                                                                                placeholder="Enter Due Date"
+                                                                                class="form-control due_date" />
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <input type="text"
+                                                                                name="hsn_no_{{ $key }}"
+                                                                                value="{{ $editDataNew->hsn_no }}"
+                                                                                placeholder="Enter HSN No"
+                                                                                class="form-control hsn_no" />
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <input type="text"
+                                                                                name="quantity_{{ $key }}"
+                                                                                value="{{ $editDataNew->quantity }}"
+                                                                                placeholder="Enter Quantity"
+                                                                                class="form-control quantity" />
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <input type="text"
+                                                                                name="rate_{{ $key }}"
+                                                                                value="{{ $editDataNew->rate }}"
+                                                                                placeholder="Enter Rate"
+                                                                                class="form-control rate" />
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <input type="text"
+                                                                                name="amount_{{ $key }}"
+                                                                                value="{{ $editDataNew->amount }}"
+                                                                                placeholder="Enter Amount"
+                                                                                class="form-control total_amount" />
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <a data-id="{{ $editDataNew->id }}"
+                                                                                class="delete-btn btn btn-danger m-1"
+                                                                                title="Delete Tender"><i
+                                                                                    class="fas fa-archive"></i></a>
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            </table>
+                                                        </div>
+
+                                                        @foreach ($editData as $key => $editDataNew)
+                                                            @if ($key == 0)
+                                                                <div class="form-group-inner">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                            <label for="quote_no">Quote No:</label>
+                                                                            <input type="text" class="form-control"
+                                                                                id="quote_no" name="quote_no"
+                                                                                value="{{ $editDataNew->quote_no }}"
+                                                                                placeholder="Enter Terms & Condition">
+                                                                        </div>
+
+                                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                            <label for="discount">Discount:</label>
+                                                                            <input type="text" class="form-control"
+                                                                                id="discount" name="discount"
+                                                                                value="{{ $editDataNew->discount }}"
+                                                                                placeholder="Enter discount">
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="row">
+                                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                            <label for="note">Other Information
+                                                                                :</label>
+                                                                            <textarea class="form-control" name="note">
+@if (old('note'))
+{{ old('note') }}@else{{ $editDataNew->note }}
+@endif
+</textarea>
+
+                                                                        </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </div>
+                                                    <div class="login-btn-inner">
+                                                        <div class="row">
+                                                            <div class="col-lg-5"></div>
+                                                            <div class="col-lg-7">
+                                                                <div class="login-horizental cancel-wp pull-left">
+                                                                    <a href="{{ route('list-purchase') }}"
+                                                                        class="btn btn-white"
+                                                                        style="margin-bottom:50px">Cancel</a>
+                                                                    <button class="btn btn-sm btn-primary login-submit-cs"
+                                                                        type="submit" style="margin-bottom:50px">Update
+                                                                        Data</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
                 </div>
-                <div class="col-sm-6 col-md-3">
-                  <div class="form-group">
-                    <label>Payment Terms</label>
-                    <select name="payment_terms" class="form-control" title="select payment terms" id="">
-                      <option value="null">Select Payment Terms</option>
-                      <option value="30" {{ $invoice->payment_terms == 30 ? 'selected' : '' }}>30 Days</option>
-                      <option value="60" {{ $invoice->payment_terms == 60 ? 'selected' : '' }}>60 Days</option>
-                      <option value="90" {{ $invoice->payment_terms == 90 ? 'selected' : '' }}>90 Days</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="col-sm-6 col-md-3">
-                  <div class="form-group">
-                    <label>Client Address</label>
-                    <textarea class="form-control" rows="3"
-                      name="client_address">{{ $invoice->client_address }}</textarea>
-                  </div>
-                </div>
-
-              </div>
-              <div class="row">
-                <div class="col-md-12 col-sm-12">
-                  <div class="table-responsive">
-                    <table class="table table-hover table-white repeater">
-                      <thead>
-                        <tr>
-                          <th>#</th>
-                          <th class="col-sm-2">Part No.</th>
-                          <th class="col-md-2">Description</th>
-                          <th class="col-md-2">Due Date</th>
-                          <th class="col-md-2">HSN</th>
-                          <th class="col-md-2">Quantity</th>
-                          <th class="col-md-2">Rate</th>
-                          <th>Amount</th>
-                          <th><button type="button" class="btn btn-sm btn-success font-18 mr-1" title="Add"
-                              data-repeater-create>
-                              <i class="fa fa-plus"></i>
-                            </button> </th>
-                        </tr>
-                      </thead>
-                      <tbody data-repeater-list="items">
-                        @php
-                        try {
-                        $items = json_decode($invoice->items, true, 512, JSON_THROW_ON_ERROR);
-                        } catch (JsonException $e) {
-                        $items = [];
-                        }
-                        $count=0;
-                        @endphp
-
-                        @foreach ($items as $item)
-                        $count++;
-                        <tr>
-                          <td>
-                            <input type="text" name="items[id][]" class="form-control" style="min-width:50px" readonly
-                              value="{{ $item['id'] }}">
-                          </td>
-                          <td>
-                            <input class="form-control" name="items[part_no][]" value="{{ $item['part_no'] }}"
-                              type="text" style="min-width:150px">
-                          </td>
-                          <td>
-                            <input class="form-control" name="items[description][]" value="{{ $item['description'] }}"
-                              type="text" style="min-width:150px">
-                          </td>
-                          <td>
-                            <input class="form-control datetimepicker" name="items[due_date][]"
-                              value="{{ $item['due_date'] }}" style="width:100px" type="text">
-                          </td>
-                          <td>
-                            <input class="form-control" name="items[hsn][]" value="{{ $item['hsn'] }}"
-                              style="width:80px" type="text">
-                          </td>
-                          <td>
-                            <input class="form-control" name="items[quantity][]" value="{{ $item['quantity'] }}"
-                              style="width:120px" type="text">
-                          </td>
-                          <td>
-                            <input class="form-control" name="items[rate][]" value="{{ $item['rate'] }}"
-                              style="width:120px" type="text">
-                          </td>
-                          <td>
-                            <input class="form-control" name="items[amount][]" value="{{ $item['amount'] }}" readonly
-                              style="width:120px" type="text">
-                          </td>
-                          <td>
-                            <button type="button" class="btn btn-sm btn-danger font-18 ml-2" title="Delete"
-                              data-repeater-delete>
-                              <i class="fa fa-trash"></i>
-                            </button>
-                          </td>
-                        </tr>
-                        @endforeach
-                        <tr data-repeater-item>
-                          <td>
-                            <input type="text" name="id" class="form-control" style="min-width:50px" readonly value="1">
-                          </td>
-                          <td>
-                            <input class="form-control" name="part_no" type="text" style="min-width:150px">
-                          </td>
-                          <td>
-                            <input class="form-control " name="description" type="text" style="min-width:150px">
-                          </td>
-                          <td>
-                            <input class="form-control datetimepicker" name="due_date" type="text"
-                              style="min-width:150px">
-                          </td>
-                          <td>
-                            <input class="form-control" name="hsn" style="width:100px" type="text">
-                          </td>
-                          <td>
-                            <input class="form-control" name="quantity" style="width:100px" type="text">
-                          </td>
-                          <td>
-                            <input class="form-control" name="rate" style="width:80px" type="text">
-                          </td>
-                          <td>
-                            <input class="form-control" name="amount" readonly style="width:120px" type="text">
-                          </td>
-                          <td>
-                            <button type="button" class="btn btn-sm btn-danger font-18 ml-2" title="Delete"
-                              data-repeater-delete>
-                              <i class="fa fa-trash"></i>
-                            </button>
-
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div class="table-responsive">
-                    <table class="table table-hover table-white">
-                      <tbody>
-                        <tr>
-                          <td colspan="6" style="text-align: right">Sub Total</td>
-                          <td style="text-align: right;width: 230px">
-                            <input class="form-control text-right" value="{{$invoice->total}} Rs." readonly type="text">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td colspan="6" style="text-align: right">Quote Number</td>
-                          <td style="text-align: right;width: 230px">
-                            <input class="form-control text-right"
-                            value="{{$invoice->quote_no}}" readonly
-                              type="text">
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <td colspan="6" style="text-align: right">Discount</td>
-                          <td style="text-align: right;width: 230px">
-                            <input class="form-control text-right"
-                              value="{{'- '.(($invoice->discount/100) * $invoice->total).' Rs. '}}" readonly
-                              type="text">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td colspan="6" style="text-align: right">Tax</td>
-                          <td style="text-align: right;width: 230px">
-                            <input class="form-control text-right"
-                              value="{{'+ '.(($invoice->tax/100) * ($invoice->total-(($invoice->discount/100) * $invoice->total))).' Rs. '}}"
-                              readonly type="text">
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <td colspan="6" style="text-align: right; font-weight: bold">
-                            Grand Total
-                          </td>
-                          <td style="text-align: right; font-weight: bold; font-size: 16px;width: 230px;color:black">
-                            {{(($invoice->total -(($invoice->discount/100) * $invoice->total))  + (($invoice->percentage/100) * ($invoice->total-(($invoice->discount/100) * $invoice->total))))+((($invoice->tax/100) * ($invoice->total-(($invoice->discount/100) * $invoice->total))))}}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label>Discount </label>
-                    <input class="form-control text-right" type="text" name="discount" value="{{$invoice->discount}}">
-                  </div>
-                </div>
-                {{-- <div class="col-md-6">
-                  <div class="form-group">
-                    <label>Status</label>
-                    <select name="status" id="status" class="form-control">
-                      <option value="paid" {{ $invoice->status == 'paid' ? 'selected' : '' }}>Paid</option>
-                      <option value="pending" {{ $invoice->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                    </select>
-                  </div>
-                </div> --}}
-
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label>Other Information</label>
-                    <textarea class="form-control" name="note">{{$invoice->note}}</textarea>
-                  </div>
-                </div>
-              </div>
-              <div class="login-btn-inner">
-                <div class="row">
-                  <div class="col-lg-5"></div>
-                  <div class="col-lg-7">
-                    <div class="login-horizental cancel-wp pull-left">
-                      <a href="{{ route('list-purchase') }}" class="btn btn-white" style="margin-bottom:50px">Cancel</a>
-                      <button class="btn btn-sm btn-primary login-submit-cs" type="submit"
-                        style="margin-bottom:50px">Save
-                        Data</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
+            </div>
         </div>
-        @endsection
+    </div>
 
-        @section('scripts')
-        <!-- Select2 JS -->
-        <script src="{{asset('assets/plugins/select2/select2.min.js')}}"></script>
-        <script src="{{asset('assets/js/bootstrap-datetimepicker.min.js')}}"></script>
-        <script src="{{asset('assets/plugins/jquery-repeater/jquery.repeater.min.js')}}"></script>
-        <script>
+
+    <form method="POST" action="{{ route('delete-addmore') }}" id="deleteform">
+        @csrf
+        <input type="hidden" name="delete_id" id="delete_id" value="">
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script>
         $(document).ready(function() {
-          'use strict';
-          var index = `{{$count}}`;
-
-          var tax = $('#inv_tax').val();
-
-          function dateTime() {
-            $('.datetimepicker').datetimepicker({
-              format: 'YYYY-MM-DD ', // Adjust the format as needed
-              showClear: true,
-              showClose: true,
-              icons: {
-                time: 'fa fa-clock-o',
-                date: 'fa fa-calendar',
-                up: 'fa fa-chevron-up',
-                down: 'fa fa-chevron-down',
-                previous: 'fa fa-chevron-left',
-                next: 'fa fa-chevron-right',
-                today: 'fa fa-crosshairs',
-                clear: 'fa fa-trash',
-                close: 'fa fa-times',
-              },
-              useCurrent: false, // Do not default to the current date
-              widgetPositioning: {
-                horizontal: 'auto',
-                vertical: 'bottom',
-              },
-            });
-          }
-
-          $('table.repeater').repeater({
-
-            show: function() {
-              var id = $(`input[name="items[${index}][id]"]`);
-              var part_no = $(`input[name="items[${index}][part_no]"]`);
-              var description = $(`input[name="items[${index}][description]"]`);
-              var due_date = $(`input[name="items[${index}][due_date]"]`);
-              var hsn = $(`input[name="items[${index}][hsn]"]`);
-              var quantity = $(`input[name="items[${index}][quantity]"]`);
-              var rate = $(`input[name="items[${index}][rate]"]`);
-              var amount = $(`input[name="items[${index}][amount]"]`);
-              var item_amount = rate.val() * quantity.val();
-              console.log(amount.val(item_amount))
-              amount.val(item_amount);
-
-              due_date.datetimepicker({
-                format: 'YYYY-MM-DD HH:mm', // Adjust the format as needed
-                showClear: true,
-                showClose: true,
-                icons: {
-                  time: 'fa fa-clock-o',
-                  date: 'fa fa-calendar',
-                  up: 'fa fa-chevron-up',
-                  down: 'fa fa-chevron-down',
-                  previous: 'fa fa-chevron-left',
-                  next: 'fa fa-chevron-right',
-                  today: 'fa fa-crosshairs',
-                  clear: 'fa fa-trash',
-                  close: 'fa fa-times'
+            var validator = $("#editDesignsForm").validate({
+                ignore: [],
+                rules: {
+                    vendor_id: {
+                        required: true,
+                    },
+                    tax: {
+                        required: true,
+                    },
+                    invoice_date: {
+                        required: true,
+                    },
+                    payment_terms: {
+                        required: true,
+                    },
+                    discount: {
+                        required: true,
+                        number: true,
+                    },
+                    quote_no: {
+                        required: true,
+                        number: true,
+                    },
+                    note: {
+                        required: true,
+                    },
+                    'part_no_0': {
+                        required: true,
+                    },
+                    'description_0': {
+                        required: true,
+                    },
+                    'due_date_0': {
+                        required: true,
+                    },
+                    'hsn_no_0': {
+                        required: true,
+                    },
+                    'quantity_0': {
+                        required: true,
+                        digits: true,
+                    },
+                    'rate_0': {
+                        required: true,
+                        number: true,
+                    },
+                    'amount_0': {
+                        required: true,
+                    },
                 },
-                useCurrent: false, // Do not default to the current date
-                widgetPositioning: {
-                  horizontal: 'auto',
-                  vertical: 'bottom'
+                messages: {
+                    vendor: {
+                        required: "Please Select the Vendor Company Name",
+                    },
+                    tax_id: {
+                        required: "Please Enter the Tax",
+                    },
+                    invoice_date: {
+                        required: "Please Enter the Invoice Date",
+                    },
+                    payment_terms: {
+                        required: "Please Enter the Payment Terms",
+                    },
+                    discount: {
+                        required: "Please Enter the Discount",
+                        number: "Please enter a valid number.",
+                    },
+                    quote_no: {
+                        required: "Please Enter the quote number",
+                        number: "Please enter a valid number.",
+
+                    },
+                    note: {
+                        required: "Please Enter the Other Information",
+                    },
+                    'part_no_0': {
+                        required: "Please enter the Part Number",
+                    },
+                    'description_0': {
+                        required: "Please enter the Description",
+                    },
+                    'due_date_0': {
+                        required: "Please enter the Due Date",
+                    },
+                    'hsn_no_0': {
+                        required: "Please enter the HSN",
+                    },
+                    'quantity_0': {
+                        required: "Please enter the Quantity",
+                        digits: "Please enter only digits for Quantity",
+                    },
+                    'rate_0': {
+                        required: "Please enter the Rate",
+                        number: "Please enter a valid number for Rate",
+                    },
+                    'amount_0': {
+                        required: "Please enter the Amount",
+                    },
+                },
+                errorPlacement: function(error, element) {
+                    if (element.hasClass("part_no") || element.hasClass("description") ||
+                        element.hasClass("due_date") || element.hasClass("hsn_no") ||
+                        element.hasClass("quantity") || element.hasClass("rate") ||
+                        element.hasClass("amount")) {
+                        error.insertAfter(element);
+                    } else {
+                        error.insertAfter(element);
+                    }
                 }
-              });
-              index++;
-              id.val(index).trigger('change');
-              $(this).slideDown();
-              dateTime();
-            },
+            });
 
-            hide: function(deleteElement) {
-              index--;
-              $(this).slideUp(deleteElement);
-            },
-          });
+            var i = {!! count($editData) !!}; // Initialize i with the number of existing rows
 
-          dateTime();
+            $("#add").click(function() {
+                ++i;
 
+                var newRow = $(
+                    '<tr>' +
+                    '<input type="hidden" name="addmore[' + i +
+                    '][design_count]" class="form-control" value="' + i +
+                    '" placeholder=""> <input type="hidden" name="addmore[' + i +
+                    '][purchase_id]" class="form-control" value="' + i + '" placeholder="">' +
+                    '<td><input type="text" class="form-control part_no" name="addmore[' + i +
+                    '][part_no]" placeholder=" Part No" /></td>' +
+                    '<td><input type="text" class="form-control description" name="addmore[' + i +
+                    '][description]" placeholder=" Description" /></td>' +
+                    '<td><input type="date" class="form-control due_date" name="addmore[' + i +
+                    '][due_date]" placeholder=" Due Date" /></td>' +
+                    '<td><input type="text" class="form-control hsn_no" name="addmore[' + i +
+                    '][hsn_no]" placeholder=" HSN No" /></td>' +
+                    '<td><input type="text" class="form-control quantity" name="addmore[' + i +
+                    '][quantity]" placeholder=" Quantity" /></td>' +
+                    '<td><input type="text" class="form-control rate" name="addmore[' + i +
+                    '][rate]" placeholder=" Rate" /></td>' +
+                    '<td><input type="text" class="form-control amount" name="addmore[' + i +
+                    '][amount]" placeholder=" Amount" readonly /></td>' +
+                    '<td><a class="remove-tr delete-btn btn btn-danger m-1" title="Delete Tender"><i class="fas fa-archive"></i></a></td>' +
+                    '</tr>'
+                );
 
+                $("#dynamicTable").append(newRow);
+
+                // Reinitialize validation for the new row
+                $('input[name="addmore[' + i + '][part_no]"]').rules("add", {
+                    required: true,
+                    messages: {
+                        required: "Please enter the Part Number",
+                    }
+                });
+                $('input[name="addmore[' + i + '][description]"]').rules("add", {
+                    required: true,
+                    messages: {
+                        required: "Please enter the Description",
+                    }
+                });
+                $('input[name="addmore[' + i + '][due_date]"]').rules("add", {
+                    required: true,
+                    messages: {
+                        required: "Please enter the Due Date",
+                    }
+                });
+                $('input[name="addmore[' + i + '][hsn_no]"]').rules("add", {
+                    required: true,
+                    messages: {
+                        required: "Please enter the HSN",
+                    }
+                });
+                $('input[name="addmore[' + i + '][quantity]"]').rules("add", {
+                    required: true,
+                    digits: true,
+                    messages: {
+                        required: "Please enter the Quantity",
+                        digits: "Please enter only digits for Quantity",
+                    }
+                });
+                $('input[name="addmore[' + i + '][rate]"]').rules("add", {
+                    required: true,
+                    number: true,
+                    messages: {
+                        required: "Please enter the Rate",
+                        number: "Please enter a valid number for Rate",
+                    }
+                });
+                $('input[name="addmore[' + i + '][amount]"]').rules("add", {
+                    required: true,
+                    messages: {
+                        required: "Please enter the Amount",
+                    }
+                });
+            });
+
+            $(document).on("click", ".remove-tr", function() {
+                $(this).parents("tr").remove();
+            });
+
+            // Custom validation method for minimum date
+            $.validator.addMethod("minDate", function(value, element) {
+                var today = new Date();
+                var inputDate = new Date(value);
+                return inputDate >= today;
+            }, "The date must be today or later.");
+
+            // Initialize date pickers with min date set to today
+            function setMinDateForDueDates() {
+                var today = new Date().toISOString().split('T')[0];
+                $('.due_date').attr('min', today);
+            }
+            setMinDateForDueDates();
+
+            $(document).on('focus', '.due_date', function() {
+                setMinDateForDueDates();
+            });
+
+            $(document).on('keyup', '.quantity, .rate', function(e) {
+                var currentRow = $(this).closest("tr");
+                var quantity = currentRow.find('.quantity').val();
+                var rate = currentRow.find('.rate').val();
+                var amount = quantity * rate;
+                currentRow.find('.amount').val(amount);
+            });
+
+            $('.delete-btn').click(function(e) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $("#delete_id").val($(this).attr("data-id"));
+                        $("#deleteform").submit();
+                    }
+                });
+            });
         });
-        </script>
-        @endsection
+    </script>
+
+
+@endsection

@@ -101,15 +101,16 @@
                       
                       <th data-field="#">#</th>
                       <th data-field="po_id">ID</th>
-                      <th data-field="name" data-editable="true"> Name</th>
+                      <th data-field="vendor_name" data-editable="true"> Name</th>
+                      <th data-field="name" data-editable="true">Company Name</th>
                       <th data-field="email" data-editable="true">Email</th>
+                      <th data-field="contact_no" data-editable="true">Contact No.</th>
                       <th data-field="gst_number" data-editable="true">GST Number</th>
                       <th data-field="payment_terms" data-editable="true">Payment Terms</th>
                       <th data-field="invoice_date" data-editable="true">Invoice terms</th>
-                      <th data-field="total" data-editable="true">Total Amount</th>
+                      {{-- <th data-field="total" data-editable="true">Total Amount</th> --}}
                       <th data-field="quote_no" data-editable="true">Quote Number</th>
                       <th data-field="discount" data-editable="true">Discounts</th>
-                      {{-- <th data-field="status" data-editable="true">Status</th> --}}
                       <th data-field="action">Action</th>
                     </tr>
 
@@ -120,15 +121,17 @@
                       
                       <td>{{ $loop->iteration }}</td>
                       <td>{{ $data->id }}</td>
-                      <td>{{ucwords($data->client_name)}}</td>
-                      <td>{{ucwords($data->email)}}</td>
-                      <td>{{ucwords($data->gst_number)}}</td>
+                      <td>{{ucwords($data->vendor_name)}}</td>
+                      <td>{{ucwords($data->vendor_company_name)}}</td>
+                      <td>{{ucwords($data->vendor_email)}}</td>
+                      <td>{{ucwords($data->contact_no)}}</td>
+                      <td>{{ucwords($data->gst_no)}}</td>
                       <td>{{ucwords($data->payment_terms)}}</td>
                       <td>{{ucwords($data->invoice_date)}}</td>
-                      <td>{{ucwords($data->total)}}.00 Rs</td>
+                      {{-- <td>{{ucwords($data->total)}}.00 Rs</td> --}}
                       <td>{{ucwords($data->quote_no)}}</td>
                       <td>{{ucwords($data->discount)}}</td>
-                      <td>{{ucwords($data->status)}}</td>
+                      {{-- <td>{{ucwords($data->status)}}</td> --}}
 
                       <td>
                         <div style="display: flex; align-items: center;">

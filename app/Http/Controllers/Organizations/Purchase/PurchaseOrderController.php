@@ -8,7 +8,8 @@ use App\Http\Services\Organizations\Purchase\PurchaseOrderServices;
 use App\Http\Controllers\Controller;
 use Validator;
 use App\Models\{
-    BusinessApplicationProcesses
+    BusinessApplicationProcesses,
+    Vendors
 };
 use App\Http\Controllers\Organizations\CommanController;
 
@@ -24,8 +25,14 @@ class PurchaseOrderController extends Controller
 
     public function index($requistition_id)
     {
-        $getOutput = PurchaseOrdersModel::where('requisition_id', base64_decode($requistition_id))->get();
-
+        // $getOutput = PurchaseOrdersModel::where('requisition_id', base64_decode($requistition_id))->get();
+        $getOutput = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
+        ->where('requisition_id', base64_decode($requistition_id))->get();
+       
+//         $getOutput = PurchaseOrdersModel::join('grn_tbl', 'grn_tbl.purchase_orders_id', '=', 'tbl_rejected_chalan.purchase_orders_id')
+//         ->where('requisition_id', base64_decode($requistition_id))->get();
+// dd($getOutput);
+// die();
         return view(
             'organizations.purchase.addpurchasedetails.list-purchase-orders',
             compact(
@@ -37,15 +44,18 @@ class PurchaseOrderController extends Controller
 
     public function create(Request $request)
     {
+        
         $requistition_id = $request->requistition_id;
         // dd($requistition_id);
         $title = 'create invoice';
         $title = 'create invoice';
+        $dataOutputVendor = Vendors::get();
         return view(
             'organizations.purchase.addpurchasedetails.add-purchase-orders',
             compact(
                 'title',
-                'requistition_id'
+                'requistition_id',
+                'dataOutputVendor'
             )
         );
     }
@@ -61,14 +71,10 @@ class PurchaseOrderController extends Controller
     {
         // dd($request);
         $rules = [
-            'client_name' => 'required',
-            'phone_number' => 'required',
-            'email' => 'required',
+            'vendor_id' => 'required',
             'tax' => 'required',
             'invoice_date' => 'required',
-            'gst_number' => 'required',
             'payment_terms' => 'required',
-            'client_address' => 'required',
             'discount' => 'required',
             'quote_no' => 'required',
             // 'status' => 'required',
@@ -76,14 +82,10 @@ class PurchaseOrderController extends Controller
         ];
 
         $messages = [
-            'client_name.required' => 'The Client Name is required.',
-            'phone_number.required' => 'The Phone Number is required.',
-            'email.required' => 'The Email is required.',
+            'vendor_id.required' => 'The select vendor comapny name is required.',
             'tax.required' => 'The Tax is required.',
             'invoice_date.required' => 'The Invoice Date is required.',
-            'gst_number.required' => 'The GST Number is required.',
             'payment_terms.required' => 'The Payment Terms is required.',
-            'client_address.required' => 'The Client Address is required.',
             'discount.required' => 'The Discount is required.',
             'quote_no.required' => 'The quote number is required.',
             // 'status.required' => 'The Status is required.',
@@ -120,14 +122,14 @@ class PurchaseOrderController extends Controller
     public function store_old(Request $request)
     {
         $rules = [
-            'client_name' => 'required',
-            'phone_number' => 'required',
-            'email' => 'required',
+            // 'client_name' => 'required',
+            // 'phone_number' => 'required',
+            // 'email' => 'required',
             'tax' => 'required',
             'invoice_date' => 'required',
-            'gst_number' => 'required',
+            // 'gst_number' => 'required',
             'payment_terms' => 'required',
-            'client_address' => 'required',
+            // 'client_address' => 'required',
             'discount' => 'required',
             'quote_no' => 'required',
             // 'status' => 'required',
@@ -144,12 +146,12 @@ class PurchaseOrderController extends Controller
 
 
         $invoice = new PurchaseOrdersModel([
-            'client_name' => $request->client_name,
-            'phone_number' => $request->phone_number,
+            // 'client_name' => $request->client_name,
+            // 'phone_number' => $request->phone_number,
             'tax' => $request->tax,
-            'email' => $request->email,
-            'client_address' => $request->client_address,
-            'gst_number' => $request->gst_number,
+            // 'email' => $request->email,
+            // 'client_address' => $request->client_address,
+            // 'gst_number' => $request->gst_number,
             'invoice_date' => $request->invoice_date,
             'payment_terms' => $request->payment_terms,
             'items' => $itemsJson,
@@ -203,20 +205,21 @@ class PurchaseOrderController extends Controller
     }
 
 
-    public function edit(Request $request)
-    {
-        $show_data_id = base64_decode($request->id);
-        $invoice = PurchaseOrdersModel::find($show_data_id);
-        // //dd($invoice);
-        $title = 'edit invoice';
-        return view(
-            'organizations.purchase.addpurchasedetails.edit-purchase-orders',
-            compact(
-                'title',
-                'invoice'
-            )
-        );
-    }
+    // public function edit(Request $request)
+    // {
+    //     $show_data_id = base64_decode($request->id);
+    //     $invoice = PurchaseOrdersModel::find($show_data_id);
+    //     $dataOutputVendor = Vendors::get();
+    //     $title = 'edit invoice';
+    //     return view(
+    //         'organizations.purchase.addpurchasedetails.edit-purchase-orders',
+    //         compact(
+    //             'title',
+    //             'invoice',
+    //             'dataOutputVendor'
+    //         )
+    //     );
+    // }
 
     /**
      * Update the specified resource in storage.
@@ -225,58 +228,58 @@ class PurchaseOrderController extends Controller
      * @param  \App\Models\Invoice $invoice
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
-    {
-        // //dd($request);
-        $this->validate($request, [
-            'client_name' => 'required',
-            'phone_number' => 'required',
-            'email' => 'required',
-            'tax' => 'required',
-            'client_address' => 'required',
-            'gst_number' => 'required',
-            'invoice_date' => 'required',
-            'items' => 'required',
-            'note' => 'nullable',
-            'quote_no' => 'required',
-        ]);
+    // public function update(Request $request)
+    // {
+    //     // //dd($request);
+    //     $this->validate($request, [
+    //         // 'client_name' => 'required',
+    //         // 'phone_number' => 'required',
+    //         // 'email' => 'required',
+    //         'tax' => 'required',
+    //         // 'client_address' => 'required',
+    //         // 'gst_number' => 'required',
+    //         'invoice_date' => 'required',
+    //         'items' => 'required',
+    //         'note' => 'nullable',
+    //         'quote_no' => 'required',
+    //     ]);
 
 
-        $itemsJson = json_encode($request->items);
+    //     $itemsJson = json_encode($request->items);
 
 
-        $amount = 0;
-        foreach ($request->items as $item) {
-            $amount += $item['amount'];
-        }
+    //     $amount = 0;
+    //     foreach ($request->items as $item) {
+    //         $amount += $item['amount'];
+    //     }
 
-        $invoice = PurchaseOrdersModel::find($request->id);
-        $invoice->update([
-            'client_name' => $request->client_name,
-            'phone_number' => $request->phone_number,
-            'tax' => $request->tax,
-            'email' => $request->email,
-            'client_address' => $request->client_address,
-            'gst_number' => $request->gst_number,
-            'invoice_date' => $request->invoice_date,
-            'payment_terms' => $request->payment_terms,
-            'items' => $itemsJson,
-            'discount' => $request->discount,
-            'total' => $amount,
-            'note' => $request->note,
-            // 'status' => $request->status,
-        ]);
-        // //dd($invoice->wasChanged());
-        if ($invoice->wasChanged()) {
-            $msg = 'Invoice has been updated';
-            $status = 'success';
-            return redirect('purchase/list-purchase-order')->with(compact('msg', 'status'));
-        } else {
-            $msg = 'No changes were made to the invoice';
-            $status = 'error';
-            return redirect('purchase/list-purchase-order')->with(compact('msg', 'status'));
-        }
-    }
+    //     $invoice = PurchaseOrdersModel::find($request->id);
+    //     $invoice->update([
+    //         // 'client_name' => $request->client_name,
+    //         // 'phone_number' => $request->phone_number,
+    //         'tax' => $request->tax,
+    //         // 'email' => $request->email,
+    //         // 'client_address' => $request->client_address,
+    //         // 'gst_number' => $request->gst_number,
+    //         'invoice_date' => $request->invoice_date,
+    //         'payment_terms' => $request->payment_terms,
+    //         'items' => $itemsJson,
+    //         'discount' => $request->discount,
+    //         'total' => $amount,
+    //         'note' => $request->note,
+    //         // 'status' => $request->status,
+    //     ]);
+    //     // //dd($invoice->wasChanged());
+    //     if ($invoice->wasChanged()) {
+    //         $msg = 'Invoice has been updated';
+    //         $status = 'success';
+    //         return redirect('purchase/list-purchase-order')->with(compact('msg', 'status'));
+    //     } else {
+    //         $msg = 'No changes were made to the invoice';
+    //         $status = 'error';
+    //         return redirect('purchase/list-purchase-order')->with(compact('msg', 'status'));
+    //     }
+    // }
 
     /**
      * Remove the specified resource from storage.
@@ -377,15 +380,107 @@ class PurchaseOrderController extends Controller
         try {
             $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
             $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
+            $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
             $purchaseOrder = $data['purchaseOrder'];
             $purchaseOrderDetails = $data['purchaseOrderDetails'];
 
-            return view('organizations.purchase.addpurchasedetails.view-purchase-orders-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData'));
+            return view('organizations.purchase.addpurchasedetails.view-purchase-orders-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData', 'getAllRulesAndRegulations'));
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
 
+    public function edit(Request $request){
+        $edit_data_id = base64_decode($request->id);
+        $editData = $this->service->getById($edit_data_id);
+        $dataOutputVendor = Vendors::get();
+        // dd($editData);
+        // die();
+        return view('organizations.purchase.addpurchasedetails.edit-purchase-orders', compact('editData', 'dataOutputVendor'));
+    }
+    
+    
+            public function update(Request $request){
+                
+               $rules = [
+                    // 'design_name' => 'required|string|max:255',
+                    // 'design_page' => 'required|max:255',
+                    // 'project_name' => 'required|string|max:20',
+                    // 'time_allocation' => 'required|string|max:255',
+                    // 'image' => 'image|mimes:jpeg,png,jpg|max:10240|min:5',
+                ];
+    
+                $messages = [
+                            // 'design_name.required' => 'The design name is required.',
+                            // 'design_name.string' => 'The design name must be a valid string.',
+                            // 'design_name.max' => 'The design name must not exceed 255 characters.',
+                            
+                            // 'design_page.required' => 'The design page is required.',
+                            // 'design_page.max' => 'The design page must not exceed 255 characters.',
+                            
+                            // 'project_name.required' => 'The project name is required.',
+                            // 'project_name.string' => 'The project name must be a valid string.',
+                            // 'project_name.max' => 'The project name must not exceed 20 characters.',
+                            
+                            // 'time_allocation.required' => 'The time allocation is required.',
+                            // 'time_allocation.string' => 'The time allocation must be a valid string.',
+                            // 'time_allocation.max' => 'The time allocation must not exceed 255 characters.',
+                            
+                            // 'image.required' => 'The image is required.',
+                            // 'image.image' => 'The image must be a valid image file.',
+                            // 'image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
+                            // 'image.max' => 'The image size must not exceed 10MB.',
+                            // 'image.min' => 'The image size must not be less than 5KB.',
+                        ];
+        
+                try {
+                    $validation = Validator::make($request->all(),$rules, $messages);
+                    if ($validation->fails()) {
+                        return redirect()->back()
+                            ->withInput()
+                            ->withErrors($validation);
+                    } else {
+                        
+                        $update_data = $this->service->updateAll($request);
+                        // $requisition_id = $request->input('requisition_id');
+                       
+                        if ($update_data) {
+                            $msg = $update_data['msg'];
+                            $status = $update_data['status'];
+                            if ($status == 'success') {
+                                return redirect('purchase/list-purchase')->with(compact('msg', 'status'));
+                            } else {
+                                return redirect()->back()
+                                    ->withInput()
+                                    ->with(compact('msg', 'status'));
+                            }
+                        }
+                    }
+                } catch (Exception $e) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                }
+            }
 
+    public function destroyAddmore(Request $request){
+        try {
+            $delete_rti = $this->service->deleteByIdAddmore($request->delete_id);
+            if ($delete_rti) {
+                $msg = $delete_rti['msg'];
+                $status = $delete_rti['status'];
+                if ($status == 'success') {
+                    return redirect('purchase/edit-purchase-order/{id}')->with(compact('msg', 'status'));
+                    
+                } else {
+                    return redirect()->back()
+                        ->withInput()
+                        ->with(compact('msg', 'status'));
+                }
+            }
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
 
 }

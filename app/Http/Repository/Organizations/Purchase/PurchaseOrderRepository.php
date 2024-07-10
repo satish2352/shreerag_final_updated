@@ -37,24 +37,24 @@ class PurchaseOrderRepository
             $dataOutput = new PurchaseOrdersModel();
             $dataOutput->purchase_orders_id = $purchase_orderid;
             $dataOutput->requisition_id = $requistition_id;
+            $dataOutput->vendor_id = $request->vendor_id;
             $dataOutput->business_id = $data_for_requistition->business_id;
             $dataOutput->production_id = $data_for_requistition->production_id;
             $dataOutput->po_date = date('m-d-Y');
-            $dataOutput->vendor_id = '';
             $dataOutput->terms_condition = '';
             $dataOutput->remark = '';
             $dataOutput->transport_dispatch = '';
             $dataOutput->image = 'null';
             $dataOutput->quote_no = $request->quote_no;
             // $dataOutput->status = $request->status;
-            $dataOutput->client_name = $request->client_name;
-            $dataOutput->phone_number = $request->phone_number;
-            $dataOutput->email = $request->email;
+            // $dataOutput->client_name = $request->client_name;
+            // $dataOutput->phone_number = $request->phone_number;
+            // $dataOutput->email = $request->email;
             $dataOutput->tax = $request->tax;
             $dataOutput->invoice_date = $request->invoice_date;
-            $dataOutput->gst_number = $request->gst_number;
+            // $dataOutput->gst_number = $request->gst_number;
             $dataOutput->payment_terms = $request->payment_terms;
-            $dataOutput->client_address = $request->client_address;
+            // $dataOutput->client_address = $request->client_address;
             $dataOutput->discount = $request->discount;
             $dataOutput->note = $request->note;
             $dataOutput->is_approve = '0';
@@ -111,6 +111,125 @@ class PurchaseOrderRepository
             
             return $business_application;
 
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getById($id) {
+        try {
+            // $designData = PurchaseOrderModel::leftJoin('purchase_order_details', 'purchase_order.id', '=', 'purchase_order_details.purchase_id')
+            //     ->select('purchase_order_details.*','purchase_order_details.id as purchase_order_details_id', 'purchase_order.id as purchase_main_id', 'purchase_order.vendor_id', 'purchase_order.po_date', 'purchase_order.remark', 'purchase_order.image')
+            //     ->where('purchase_order.id', $id)
+            //     ->get();
+            $designData = PurchaseOrdersModel::leftJoin('purchase_order_details', 'purchase_orders.id', '=', 'purchase_order_details.purchase_id')
+                ->select('purchase_order_details.*', 'purchase_order_details.id as purchase_order_details_id', 'purchase_orders.id as purchase_main_id', 'purchase_orders.vendor_id', 'purchase_orders.quote_no', 'purchase_orders.tax','purchase_orders.invoice_date','purchase_orders.quote_no',  'purchase_orders.payment_terms','purchase_orders.discount')
+                ->where('purchase_orders.id', $id)
+                ->get();
+
+            // $designData= PurchaseOrderModel::get();
+
+            if ($designData->isEmpty()) {
+                return null;
+            } else {
+                return $designData;
+            }
+        } catch (\Exception $e) {
+            return [
+                'msg' => 'Failed to get by id Citizen Volunteer.',
+                'status' => 'error',
+                'error' => $e->getMessage(), 
+            ];
+        }
+    }
+    public function updateAll($request){
+       
+        try {
+          
+            // Update existing design details
+            for ($i = 0; $i <= $request->design_count; $i++) {
+                $designDetails = PurchaseOrderDetailsModel::findOrFail($request->input("design_id_" . $i));
+                
+                $designDetails->part_no = $request->input("part_no_" . $i);
+                $designDetails->description = $request->input("description_" . $i);
+                $designDetails->due_date = $request->input("due_date_" . $i);
+                $designDetails->hsn_no = $request->input("hsn_no_" . $i);
+                $designDetails->quantity = $request->input("quantity_" . $i);
+                $designDetails->rate = $request->input("rate_" . $i);
+                $designDetails->amount = $request->input("amount_" . $i);
+                $designDetails->save();
+            }
+    
+            // Update main design data
+            $dataOutput = PurchaseOrdersModel::findOrFail($request->purchase_main_id);
+            $dataOutput->vendor_id = $request->vendor_id;
+            $dataOutput->quote_no = $request->quote_no;
+            $dataOutput->tax = $request->tax;
+            $dataOutput->invoice_date = $request->invoice_date;
+            $dataOutput->payment_terms = $request->payment_terms;
+            $dataOutput->discount = $request->discount;
+            $dataOutput->note = $request->note;
+            $dataOutput->save();
+           
+            // Add new design details
+            if ($request->has('addmore')) {
+                foreach ($request->addmore as $key => $item) {
+                    $designDetails = new PurchaseOrderDetailsModel();
+              
+                    // Assuming 'purchase_id' is a foreign key related to 'PurchaseOrderModel'
+                    $designDetails->purchase_id = $request->purchase_main_id; // Set the parent design ID
+                    $designDetails->part_no = $item['part_no'];
+                    $designDetails->description = $item['description'];
+                    $designDetails->due_date = $item['due_date'];
+                    $designDetails->hsn_no = $item['hsn_no'];
+                    $designDetails->quantity = $item['quantity'];
+                    $designDetails->rate = $item['rate'];
+                    $designDetails->amount = $item['amount'];
+                    $designDetails->actual_quantity = '0';
+                    $designDetails->accepted_quantity = '0';
+                    $designDetails->rejected_quantity = '0';
+                  
+                    $designDetails->save();
+                    
+                 
+
+                }
+            }
+            
+            
+            // $previousImage = $dataOutput->image;
+           
+            $last_insert_id = $dataOutput->id;
+
+            $return_data['last_insert_id'] = $last_insert_id;
+            // $return_data['image'] = $previousImage;
+            // dd( $designDetails);
+            // die();
+            return  $return_data;
+    
+            // Returning success message
+            return [
+                'msg' => 'Data updated successfully.',
+                'status' => 'success',
+                'designDetails' => $request->all()
+            ];
+        } catch (\Exception $e) {
+            return [
+                'msg' => 'Failed to update data.',
+                'status' => 'error',
+                'error' => $e->getMessage()
+            ];
+        }
+    }
+
+    public function deleteByIdAddmore($id){
+        try {
+            $rti = PurchaseOrderDetailsModel::find($id);
+            if ($rti) {
+                $rti->delete();           
+                return $rti;
+            } else {
+                return null;
+            }
         } catch (\Exception $e) {
             return $e;
         }

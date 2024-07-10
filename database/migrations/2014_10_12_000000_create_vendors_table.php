@@ -16,9 +16,10 @@ return new class extends Migration
         Schema::create('vendors', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('vendor_name');
+            $table->string('vendor_company_name');
             $table->string('vendor_email')->unique();
-            $table->string('contact_no')->nullable();
-            $table->string('vendor_address')->nullable();
+            $table->string('contact_no');
+            $table->string('vendor_address');
             $table->string('gst_no');
             $table->string('quote_no');
             $table->string('payment_terms')->nullable();

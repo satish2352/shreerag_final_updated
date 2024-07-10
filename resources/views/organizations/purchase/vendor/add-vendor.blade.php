@@ -105,8 +105,12 @@ label.error {
                                                         <input type="text" class="form-control" id="vendor_name"
                                                             name="vendor_name" placeholder="Enter your name">
                                                 </div>   
-                                                
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="vendor_company_name">Company Name:</label>
+                                                    <input type="text" class="form-control" id="vendor_company_name"
+                                                        name="vendor_company_name" placeholder="Enter company name">
+                                                </div>
+                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="vendor_email">Email:</label>
                                                     <input type="email" class="form-control" id="vendor_email"
                                                         name="vendor_email" placeholder="Enter your vendor_email">

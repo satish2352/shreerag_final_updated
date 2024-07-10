@@ -83,8 +83,10 @@
                                                 <th data-field="id">Sr.No.</th>
                                                 <th data-field="purchase_orders_id" data-editable="true">Purchase Order ID</th>
                                                 <th data-field="client_name" data-editable="true">Client Name</th>
+                                                <th data-field="vendor_company_name" data-editable="true">Client Company Name</th>
                                                 <th data-field="email" data-editable="true">Email</th>
-                                                <th data-field="phone_number" data-editable="true">Phone Number</th>
+                                                <th data-field="contact_no" data-editable="true">Phone Number</th>
+                                                <th data-field="vendor_address" data-editable="true">Address</th>
                                                 {{-- <th data-field="status" data-editable="true">Status</th> --}}
                                                 <th data-field="actions">Actions</th>
                                             </tr>
@@ -95,9 +97,11 @@
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $data->purchase_orders_id }}</td>
-                                                    <td>{{ $data->client_name }}</td>
-                                                    <td>{{ $data->email }}</td>
-                                                    <td>{{ $data->phone_number }}</td>
+                                                     <td>{{ $data->vendor_name }}</td>
+                                                    <td>{{ $data->vendor_company_name }}</td>
+                                                    <td>{{ $data->vendor_email }}</td> 
+                                                    <td>{{ $data->contact_no }}</td> 
+                                                    <td>{{ $data->vendor_address }}</td> 
                                                     {{-- <td>{{ $data->status }}</td> --}}
                                                     <td>
                                                         <div style="display: inline-block; align-items: center;">

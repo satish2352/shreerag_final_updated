@@ -53,6 +53,7 @@ public function addAll($request)
     try {
         $vendor_data = new Vendors();
         $vendor_data->vendor_name = $request->vendor_name;
+        $vendor_data->vendor_company_name = $request->vendor_company_name;
         $vendor_data->vendor_email = $request->vendor_email;
         $vendor_data->contact_no = $request->contact_no;
         $vendor_data->gst_no = $request->gst_no;
@@ -122,6 +123,7 @@ public function addAll($request)
             }
 
             $vendor_data->vendor_name = $request->vendor_name;
+            $vendor_data->vendor_company_name = $request->vendor_company_name;
             $vendor_data->vendor_email = $request->vendor_email;
             $vendor_data->contact_no = $request->contact_no;
             $vendor_data->gst_no = $request->gst_no;

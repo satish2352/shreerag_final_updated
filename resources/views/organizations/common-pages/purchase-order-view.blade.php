@@ -139,8 +139,10 @@
                                                     <div class="row">
                                                         <div class="col-md-12 profile">
                                                             <ul class="list-unstyled">
-                                                                <h4>{{ $purchaseOrder->client_name }}</h4>
-                                                                <li>{{ $purchaseOrder->client_address }}</li>
+                                                                <h4>{{ $purchaseOrder->vendor_company_name }}</h4>
+                                                                <li>{{ $purchaseOrder->vendor_address }}</li>
+                                                                <li>{{ $purchaseOrder->gst_no }}</li>
+                                                                
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -148,14 +150,15 @@
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <ul class="list-unstyled">
-                                                                <li>GST Number: {{ $purchaseOrder->gst_number }}
+                                                                <li>Name : {{ $purchaseOrder->vendor_name }}</li>
+                                                                <li>GST Number: {{ $purchaseOrder->gst_no }}
                                                                 </li>
                                                                 {{-- <li>Client Name:
                                                                     {{ $purchaseOrder->client_name }}</li> --}}
                                                                 <li>Mobile No.:
                                                                     {{ $purchaseOrder->phone_number }}</li>
                                                                 <li>Email: <a href="javascript:void(0)">{{
-                                                                        $purchaseOrder->email }}</a>
+                                                                        $purchaseOrder->vendor_email }}</a>
                                                                 </li>
                                                             </ul>
                                                         </div>

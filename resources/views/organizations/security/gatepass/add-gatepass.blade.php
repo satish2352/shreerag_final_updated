@@ -173,6 +173,19 @@
     </script>
     <script>
         jQuery.noConflict();
+        function setMinDate() {
+            var today = new Date();
+            var day = String(today.getDate()).padStart(2, '0');
+            var month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+            var year = today.getFullYear();
+            var todayDate = year + '-' + month + '-' + day;
+
+            $('#gatepass_date').attr('min', todayDate);
+        }
+
+        // Call the function to set the minimum date
+        setMinDate();
+
         jQuery(document).ready(function($) {
             $("#addDesignsForm").validate({
                 rules: {

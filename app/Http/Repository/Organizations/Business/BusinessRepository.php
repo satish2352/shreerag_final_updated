@@ -10,7 +10,8 @@ use App\Models\{
     BusinessApplicationProcesses,
     PurchaseOrderDetailsModel,
     PurchaseOrdersModel,
-    OrganizationModel
+    OrganizationModel,
+    Vendors
 };
 use Config;
 
@@ -212,16 +213,21 @@ class BusinessRepository
 public function getPurchaseOrderBusinessWise($id)
 {
     try {
-        $data_output = PurchaseOrdersModel::select(
-            'id', 'purchase_orders_id', 'requisition_id', 'business_id', 'production_id',
-            'po_date', 'vendor_id', 'terms_condition', 'transport_dispatch', 'image', 
-            'client_name', 'phone_number', 'email', 'tax', 'invoice_date', 'gst_number',
-            'payment_terms', 'client_address', 'discount', 'note', 'created_at'
+        $data_output = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
+        ->select(
+            'purchase_orders.id',
+            'purchase_orders.purchase_orders_id',         
+            'vendors.vendor_name', 
+            'vendors.vendor_company_name', 
+            'vendors.vendor_email', 
+            'vendors.vendor_address', 
+            'vendors.contact_no', 
+            'vendors.gst_no', 
+            'purchase_orders.is_active'
         )
-        ->where('business_id', $id)
-        ->get(); // Added to execute the query and get results
-// dd($data_output);
-// die();
+        ->where('purchase_orders.business_id', $id)
+        ->get(); 
+
         return $data_output;
     } catch (\Exception $e) {
         return $e->getMessage(); // Changed to return the error message string

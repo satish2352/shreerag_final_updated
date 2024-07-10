@@ -1,8 +1,12 @@
 @extends('admin.layouts.master')
 @section('content')
     <style>
-        label {
+         label {
             margin-top: 10px;
+        }
+        label.error {
+            color: red;
+            font-size: 12px;
         }
         .form-display-center{
         display: flex !important;
@@ -55,43 +59,37 @@
                                             id="id" name="id">
                                         <div class="row">
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="customer_po_number">PO  Number :</label>&nbsp<span
-                                                class="red-text">*</span>
+                                                <label for="customer_po_number">PO  Number :  <span class="text-danger">*</span></label>
                                                 <input class="form-control" name="customer_po_number" id="customer_po_number"
                                                     placeholder="Enter the customer po number"
                                                     value=" @if (old('customer_po_number')) {{ old('customer_po_number') }}@else{{ $editData->customer_po_number }} @endif">
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="title">Name :</label>&nbsp<span
-                                                class="red-text">*</span>
+                                                <label for="title">Name :  <span class="text-danger">*</span></label>
                                                 <input class="form-control" name="title" id="title"
                                                     placeholder="Enter the customer po number"
                                                     value=" @if (old('title')) {{ old('title') }}@else{{ $editData->title }} @endif">
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="quantity">Quantity :</label>&nbsp<span
-                                                class="red-text">*</span>
+                                                <label for="quantity">Quantity :  <span class="text-danger">*</span></label>
                                                 <input class="form-control" name="quantity" id="quantity"
                                                     placeholder="Enter the customer po number"
                                                     value=" @if (old('quantity')) {{ old('quantity') }}@else{{ $editData->quantity }} @endif">
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="rate">Rate :</label>&nbsp<span
-                                                class="red-text">*</span>
+                                                <label for="rate">Rate :  <span class="text-danger">*</span></label>
                                                 <input class="form-control" name="rate" id="rate"
                                                     placeholder="Enter the customer po number"
                                                     value=" @if (old('rate')) {{ old('rate') }}@else{{ $editData->rate }} @endif">
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="po_validity">PO Validity:</label>&nbsp<span
-                                                class="red-text">*</span>
+                                                <label for="po_validity">PO Validity:  <span class="text-danger">*</span></label>
                                                 <input type="date" class="form-control" name="po_validity" id="po_validity"
                                                     placeholder="Enter the customer po number"
                                                     value=" @if (old('po_validity')) {{ old('po_validity') }}@else{{ $editData->po_validity }} @endif">
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="hsn_number">HSN  Number:</label>&nbsp<span
-                                                class="red-text">*</span>
+                                                <label for="hsn_number">HSN  Number:  <span class="text-danger">*</span></label>
                                                 <input class="form-control" name="hsn_number" id="hsn_number"
                                                     placeholder="Enter the customer po number"
                                                     value=" @if (old('hsn_number')) {{ old('hsn_number') }}@else{{ $editData->hsn_number }} @endif">
@@ -155,6 +153,21 @@
     <script>
         jQuery.noConflict();
         jQuery(document).ready(function($) {
+             // Function to set minimum date for the po_validity field
+             function setMinDate() {
+                var today = new Date();
+                var day = String(today.getDate()).padStart(2, '0');
+                var month = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                var year = today.getFullYear();
+                var todayDate = year + '-' + month + '-' + day;
+    
+                $('#po_validity').attr('min', todayDate);
+            }
+    
+            // Call the function to set the minimum date
+            setMinDate();
+    
+
             $("#editEmployeeForm").validate({
                 rules: {
                     title: {

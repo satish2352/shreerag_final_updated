@@ -96,7 +96,11 @@
 <script>
     // $('.delete-btn').click(function(e) {
     $(document).on('click', '.delete-btn', function(e) {
-alert('hii');
+ // Get the data-id attribute of the clicked button
+ var id = $(this).attr('data-id');
+
+// Show the id in an alert
+alert('ID: ' + id);
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
