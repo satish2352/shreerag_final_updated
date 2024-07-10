@@ -27,8 +27,6 @@ class EmployeesServices
     public function addAll($request){
         try {
             $last_id = $this->repo->addAll($request);
-            // dd($last_id);
-            // die();
             $path = Config::get('DocumentConstant.EMPLOYEES_ADD');
             $ImageName = $last_id['ImageName'];
             uploadImage($request, 'image', $path, $ImageName);
@@ -86,7 +84,6 @@ class EmployeesServices
     {
         try {
             $delete = $this->repo->deleteById($id);
-            // dd($delete);
             if ($delete) {
                 return ['status' => 'success', 'msg' => 'Deleted Successfully.'];
             } else {

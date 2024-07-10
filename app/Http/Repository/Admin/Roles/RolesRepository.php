@@ -91,10 +91,8 @@ class RolesRepository  {
     public function deleteById($id){
             try {
                 $deleteDataById = RolesModel::find($id);
-                // dd($deleteDataById);
-
-                    $deleteDataById->delete();
-                    return $deleteDataById;
+                $deleteDataById->delete();
+                return $deleteDataById;
             
             } catch (\Exception $e) {
                 return $e;

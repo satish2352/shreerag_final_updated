@@ -247,12 +247,20 @@
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.SECURITY'))
                         <li>
-                        <li class="nav-item {{ request()->is('search-by-po-no') ? 'active' : '' }}">
+                        {{-- <li class="nav-item {{ request()->is('search-by-po-no') ? 'active' : '' }}">
                             <a href="{{ route('search-by-po-no') }}">
                                 <i class="fa fa-frown-o icon-wrap"></i>
                                 <span class="mini-click-non">Search By PO No</span>
                             </a>
-                        </li>
+                        </li> --}}
+
+                        <li
+                        class="nav-item {{ Request::is('list-purchase-order-approved-sent-to-vendor-security') ? 'active' : '' }}">
+                        <a title="Inbox"
+                            href="{{ route('list-purchase-order-approved-sent-to-vendor') }}"><i
+                                class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                class="mini-sub-pro">Purchase Order Sent To Vendor</span></a>
+                    </li>
 
                         <a class="has-arrow" href="{{ route('list-gatepass') }}" aria-expanded="false"><i
                                 class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">Gate

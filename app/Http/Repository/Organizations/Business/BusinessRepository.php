@@ -13,9 +13,14 @@ use App\Models\{
     OrganizationModel
 };
 use Config;
+use App\Http\Controllers\Organizations\CommanController;
 
 class BusinessRepository
 {
+
+    public function __construct(){
+        $this->serviceCommon = new CommanController();
+    }
 
 
     public function getAll()
@@ -66,7 +71,7 @@ class BusinessRepository
             ];
 
         } catch (\Exception $e) {
-            dd($e);
+            
             return [
                 'msg' => $e->getMessage(),
                 'status' => 'error'
@@ -78,7 +83,6 @@ class BusinessRepository
     {
         try {
             $dataOutputByid = Business::find($id);
-            // dd($dataOutputByid);
             if ($dataOutputByid) {
                 return $dataOutputByid;
             } else {
@@ -96,8 +100,6 @@ class BusinessRepository
     {
         try {
             $dataOutput = Business::find($request->id);
-            // dd($dataOutput);
-
             if (!$dataOutput) {
                 return [
                     'msg' => 'Update Data not found.',
@@ -143,23 +145,29 @@ class BusinessRepository
         }
     }
 
-    public function acceptPurchaseOrder($purchase_order_id)
+    public function acceptPurchaseOrder($purchase_order_id, $business_id)
     {
         try {
-        
-            $business_application = BusinessApplicationProcesses::where('purchase_order_id', $purchase_order_id)->first();
-            // dd($business_application);
+            $business_application = BusinessApplicationProcesses::where('business_id', $business_id)->first();
+            $po_count = $this->serviceCommon->getNumberOfPOCount($business_id, $purchase_order_id);
             if ($business_application) {
-                $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.APPROVED_PO_FROM_PURCHASE');
-                $business_application->owner_po_action_date= date('Y-m-d');
-                // $business_application->purchase_order_id= '0';
-                $business_application->finanace_store_receipt_status_id = config('constants.FINANCE_DEPARTMENT.INVOICE_APPROVED_FROM_HIGHER_AUTHORITY');
+
+                if($po_count > 0) {
+                    $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.HALF_APPROVED_PO_FROM_PURCHASE');
+                } else {
+                    $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.APPROVED_PO_FROM_PURCHASE');
+                }
                 $business_application->save();
             }
+
+            $PurchaseOrdersData = PurchaseOrdersModel::where('purchase_orders_id', $purchase_order_id)->first();
+            $PurchaseOrdersData->owner_po_action_date= date('Y-m-d');
+            $PurchaseOrdersData->finanace_store_receipt_status_id = config('constants.FINANCE_DEPARTMENT.INVOICE_APPROVED_FROM_HIGHER_AUTHORITY');
+            $PurchaseOrdersData->save();
+
             return $business_application;
 
         } catch (\Exception $e) {
-            dd($e);
             return $e;
         }
     }
@@ -205,9 +213,10 @@ public function getPurchaseOrderBusinessWise($id)
             'payment_terms', 'client_address', 'discount', 'note', 'created_at'
         )
         ->where('business_id', $id)
+        ->whereNull('purchase_status_from_owner')
+        ->orWhere('purchase_status_from_owner', config('constants.HIGHER_AUTHORITY.HALF_APPROVED_PO_FROM_PURCHASE'))
+
         ->get(); // Added to execute the query and get results
-// dd($data_output);
-// die();
         return $data_output;
     } catch (\Exception $e) {
         return $e->getMessage(); // Changed to return the error message string

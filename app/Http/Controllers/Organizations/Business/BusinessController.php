@@ -77,7 +77,6 @@ class BusinessController extends Controller
 
             $edit_data_id = base64_decode($request->id);
             $editData = $this->service->getById($edit_data_id);
-            // dd($editData);
             return view('organizations.business.business.edit-business', compact('editData'));
         } catch (\Exception $e) {
             return $e;
@@ -151,16 +150,17 @@ class BusinessController extends Controller
         }
     }
     
-    public function submitFinalPurchaseOrderBusinessWise($purchase_order_id){
+    public function getPurchaseOrderDetails($purchase_order_id){
 
         try {
             $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
 
             $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
+            $business_id = $data['purchaseOrder']->business_id;
             $purchaseOrder = $data['purchaseOrder'];
             $purchaseOrderDetails = $data['purchaseOrderDetails'];
 
-            return view('organizations.business.purchase-order.purchase-order-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData'));
+            return view('organizations.business.purchase-order.purchase-order-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData','business_id'));
 
         } catch (\Exception $e) {
             return $e;
@@ -168,11 +168,10 @@ class BusinessController extends Controller
     } 
 
 
-    public function acceptPurchaseOrder($purchase_order_id)
+    public function acceptPurchaseOrder($purchase_order_id, $business_id)
     {
         try {
-            
-            $delete = $this->service->acceptPurchaseOrder($purchase_order_id);
+            $delete = $this->service->acceptPurchaseOrder($purchase_order_id,$business_id);
             if ($delete) {
                 $status = 'success';
                 $msg ='Purchase order accepted.';

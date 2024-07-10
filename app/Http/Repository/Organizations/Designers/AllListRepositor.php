@@ -50,10 +50,9 @@ class AllListRepositor  {
           )
           ->distinct('design_revision_for_prod.id')
           ->get();
-        // dd($data_output);
         return $data_output;
     } catch (\Exception $e) {
-        dd($e);
+        
         return $e;
     }
 }

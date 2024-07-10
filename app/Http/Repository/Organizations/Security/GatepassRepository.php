@@ -68,7 +68,6 @@ class GatepassRepository
     // public function getById($id){
     //     try {
     //             $dataOutputByid = Gatepass::find($id);
-    //             // dd($dataOutputByid);
     //             if ($dataOutputByid) {
     //                 return $dataOutputByid;
 
@@ -88,8 +87,7 @@ class GatepassRepository
         try {
 
             $dataOutputById = Gatepass::find($id);
-            // dd($dataOutputById);
-            // dd($dataOutputById);
+      
             // Check if data is found
             if ($dataOutputById !== null) {
                 return $dataOutputById;

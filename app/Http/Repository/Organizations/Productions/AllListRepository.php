@@ -49,10 +49,9 @@ class AllListRepository  {
 //           )
 //           ->distinct('design_revision_for_prod.id')
 //           ->get();
-//         // dd($data_output);
 //         return $data_output;
 //     } catch (\Exception $e) {
-//         dd($e);
+//         
 //         return $e;
 //     }
 // }
@@ -147,11 +146,16 @@ class AllListRepository  {
             ->leftJoin('designs', function($join) {
               $join->on('business_application_processes.business_id', '=', 'designs.business_id');
             })
+
+            ->leftJoin('purchase_orders', function($join) {
+              $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
+            })
+
             ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
             ->orWhereIn('business_application_processes.store_status_id',$array_to_be_check_store)
-            ->orWhereIn('business_application_processes.purchase_status_id',$array_to_be_check_purchase)
+            ->orWhereIn('purchase_orders.purchase_status_from_purchase',$array_to_be_check_purchase)
             ->orWhereIn('business_application_processes.business_status_id',$array_to_be_check_owner)
-            ->orWhereIn('business_application_processes.quality_status_id',$array_to_be_check_quality)
+            ->orWhereIn('purchase_orders.quality_status_id',$array_to_be_check_quality)
             
             
             ->where('businesses.is_active',true)
@@ -168,7 +172,6 @@ class AllListRepository  {
             )->get();
           return $data_output;
       } catch (\Exception $e) {
-          dd($e);
           return $e;
       }
   }
@@ -204,10 +207,9 @@ class AllListRepository  {
               'designs.design_image'
 
           )->get();
-        //   dd($data_output);
         return $data_output;
     } catch (\Exception $e) {
-        dd($e);
+        
         return $e;
     }
   }
@@ -253,7 +255,7 @@ class AllListRepository  {
 
         return $data_output;
     } catch (\Exception $e) {
-        dd($e);
+        
         return $e;
     }
   }
@@ -298,7 +300,7 @@ class AllListRepository  {
         ->get();
       return $data_output;
     } catch (\Exception $e) {
-        dd($e);
+        
         return $e;
     }
 }

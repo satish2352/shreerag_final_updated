@@ -49,7 +49,6 @@ class VendorRepository  {
     
 public function addAll($request)
 {
-    // dd($request);
     try {
         $vendor_data = new Vendors();
         $vendor_data->vendor_name = $request->vendor_name;
@@ -61,7 +60,6 @@ public function addAll($request)
         $vendor_data->vendor_address = $request->payment_terms;
 		// $project_data->is_active = isset($request['is_active']) ? true : false;
         $vendor_data->save();
-// dd($vendor_data->save());
         // $design_data = new DesignModel();
         // $design_data->id=$vendor_data->id;
         // $design_data->design_image='';
@@ -84,7 +82,7 @@ public function addAll($request)
         ];
 
     } catch (\Exception $e) {
-        // dd($e);
+        // 
         return [
             'msg' => $e->getMessage(),
             'status' => 'error'
@@ -95,7 +93,6 @@ public function addAll($request)
     public function getById($id){
     try {
             $dataOutputByid = Vendors::find($id);
-            // dd($dataOutputByid);
             if ($dataOutputByid) {
                 return $dataOutputByid;
             } else {
@@ -112,7 +109,6 @@ public function addAll($request)
         public function updateAll($request){
         try { 
             $vendor_data = Vendors::find($request->id);
-            // dd($vendor_data);
 
             if (!$vendor_data) {
                 return [

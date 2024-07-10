@@ -79,7 +79,7 @@ class FinanceRepository
     //             $business_application->store_status_id = config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE');
     //             $business_application->requisition_id = $last_insert_id;
     //             $dataOutput->purchase_dept_req_sent_date = date('Y-m-d');
-    //             $business_application->purchase_status_id = config('constants.PUCHASE_DEPARTMENT.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE');
+    //             $business_application->purchase_status_from_purchase = config('constants.PUCHASE_DEPARTMENT.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE');
     //             $business_application->save();
 
     //         }

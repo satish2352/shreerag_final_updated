@@ -25,7 +25,6 @@ class LeaveManagmentController extends Controller
     public function index(){
         try {
             $getOutput = $this->service->getAll();
-            // dd($getOutput);
             return view('organizations.hr.yearly-leave-management.list-yearly-leave-management', compact('getOutput'));
         } catch (\Exception $e) {
             return $e;
@@ -142,26 +141,7 @@ class LeaveManagmentController extends Controller
             return $e;
         }
     }
-    // public function destroy(Request $request){
-    //     $delete_data_id = base64_decode($request->id);
-    //     try {
-    //         $delete_record = $this->service->deleteById($delete_data_id);
-    //         // dd($delete_record);
-    //         if ($delete_record) {
-    //             $msg = $delete_record['msg'];
-    //             $status = $delete_record['status'];
-    //             if ($status == 'success') {
-    //                 return redirect('list-yearly-leave-management')->with(compact('msg', 'status'));
-    //             } else {
-    //                 return redirect()->back()
-    //                     ->withInput()
-    //                     ->with(compact('msg', 'status'));
-    //             }
-    //         }
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // } 
+ 
 
     public function destroy(Request $request)
 {

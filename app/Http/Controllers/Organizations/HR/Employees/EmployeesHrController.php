@@ -133,8 +133,6 @@ class EmployeesHrController extends Controller
         else
         {
             $register_user = $this->service->register($request);
-        //   dd($register_user);
-        //   die();
             if($register_user)
             {
               
@@ -277,25 +275,6 @@ class EmployeesHrController extends Controller
         }
     } 
 
-    // public function delete(Request $request){
-    //     $delete_data_id = base64_decode($request->id);
-    //     try {
-    //         $delete_record = $this->service->delete($delete_data_id);
-    //         // dd($delete_record);
-    //         if ($delete_record) {
-    //             $msg = $delete_record['msg'];
-    //             $status = $delete_record['status'];
-    //             if ($status == 'success') {
-    //                 return redirect('list-users')->with(compact('msg', 'status'));
-    //             } else {
-    //                 return redirect()->back()
-    //                     ->withInput()
-    //                     ->with(compact('msg', 'status'));
-    //             }
-    //         }
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // } 
+  
 
 }

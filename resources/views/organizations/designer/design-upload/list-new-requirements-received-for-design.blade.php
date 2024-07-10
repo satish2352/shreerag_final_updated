@@ -72,7 +72,6 @@ padding-left: 20px !important;
                           
                             <div class="table-responsive"> 
 
-     <?php //dd($data_output); ?>
                                 <input type="hidden" class="form-control" id="business_id" name="business_id">
 
                                 <table id="table" data-toggle="table" data-pagination="true" data-search="true"
@@ -93,7 +92,6 @@ padding-left: 20px !important;
 
                                     </thead>
                                     <tbody>
-                                        <?php //dd($data_output); ?>
                                         @foreach($data_output as $data)
                                         <tr>
 

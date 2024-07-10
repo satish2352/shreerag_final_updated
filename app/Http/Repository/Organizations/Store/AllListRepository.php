@@ -53,7 +53,7 @@ class AllListRepository  {
           ->get();
         return $data_output;
       } catch (\Exception $e) {
-          dd($e);
+          
           return $e;
       }
   }
@@ -101,10 +101,9 @@ class AllListRepository  {
 
   public function getAllListMaterialSentToPurchase(){
     try {
-
       
       $array_to_be_check = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
-      $array_not_to_be_check = ['0'];
+      $array_not_to_be_check = [NULL];
         
         $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
           $join->on('business_application_processes.business_id', '=', 'production.business_id');
@@ -118,8 +117,11 @@ class AllListRepository  {
         ->leftJoin('design_revision_for_prod', function($join) {
           $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
         })
+        // ->leftJoin('purchase_orders', function($join) {
+        //   $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
+        // })
         ->whereIn('business_application_processes.store_status_id',$array_to_be_check)
-        ->whereIn('business_application_processes.grn_no',$array_not_to_be_check)
+        // ->whereIn('purchase_orders.grn_no',$array_not_to_be_check)
         ->where('businesses.is_active',true)
         ->select(
             'businesses.id',

@@ -33,7 +33,6 @@ class AppServiceProvider extends ServiceProvider
             //     ->select('users.role_id', 'tbl_employees.department_id', 'tbl_employees.employee_name', 'tbl_employees.email')
             //     ->get();
             $dashboard=EmployeesModel::where('email',session()->get('u_email'))->get();
-            // dd($dashboard,session()->all());
             $view->with('dashboard', $dashboard);
         });
     }

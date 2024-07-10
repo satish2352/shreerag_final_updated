@@ -53,7 +53,6 @@ class RolesController extends Controller
                       ->withErrors($validation);
               } else {
                   $add_record = $this->service->addAll($request);
-                //   dd($add_record);
                   if ($add_record) {
                       $msg = $add_record['msg'];
                       $status = $add_record['status'];
@@ -102,7 +101,6 @@ class RolesController extends Controller
                         ->withErrors($validation);
                 } else {
                     $update_data = $this->service->updateAll($request);
-                    // dd($update_data);
                     if ($update_data) {
                         $msg = $update_data['msg'];
                         $status = $update_data['status'];
@@ -123,7 +121,6 @@ class RolesController extends Controller
         }
         public function destroy(Request $request){
             $delete_data_id = base64_decode($request->id);
-            // dd($delete_data_id);
             try {
                 $delete_record = $this->service->deleteById($delete_data_id);
                 if ($delete_record) {

@@ -142,10 +142,10 @@ class BusinessServices
         }
     }
 
-    public function acceptPurchaseOrder($id)
+    public function acceptPurchaseOrder($id, $business_id)
     {
         try {
-            $acceptPurchaseOrder = $this->repo->acceptPurchaseOrder($id);
+            $acceptPurchaseOrder = $this->repo->acceptPurchaseOrder($id, $business_id);
             return $acceptPurchaseOrder;
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
@@ -156,8 +156,6 @@ class BusinessServices
     {
         try {
             $data_output = $this->repo->getPurchaseOrderBusinessWise($purchase_order_id);
-            // dd($data_output);
-            // die();
             return $data_output;
 
         } catch (\Exception $e) {

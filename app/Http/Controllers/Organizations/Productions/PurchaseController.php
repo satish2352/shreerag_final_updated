@@ -34,7 +34,6 @@ class PurchaseController extends Controller
     }
 
       public function store(Request $request){
-        // dd($request);
         $rules = [
                 'name' => 'required|string|max:255',
                 'email' => 'required|max:255',
@@ -143,7 +142,6 @@ class PurchaseController extends Controller
                         ->withErrors($validation);
                 } else {
                     $update_data = $this->service->updateAll($request);
-                    // dd($update_data);
                     if ($update_data) {
                         $msg = $update_data['msg'];
                         $status = $update_data['status'];
@@ -167,7 +165,6 @@ class PurchaseController extends Controller
             $delete_data_id = base64_decode($request->id);
             try {
                 $delete_record = $this->service->deleteById($delete_data_id);
-                // dd($delete_record);
                 if ($delete_record) {
                     $msg = $delete_record['msg'];
                     $status = $delete_record['status'];

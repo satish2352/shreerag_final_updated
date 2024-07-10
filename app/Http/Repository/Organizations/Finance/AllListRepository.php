@@ -61,7 +61,7 @@ class AllListRepository
         ->get();
       return $data_output;
     } catch (\Exception $e) {
-      dd($e);
+      
       return $e;
     }
   }
@@ -109,7 +109,7 @@ class AllListRepository
         ->get();
       return $data_output;
     } catch (\Exception $e) {
-      dd($e);
+      
       return $e;
     }
   }

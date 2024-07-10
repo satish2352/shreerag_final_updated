@@ -10,7 +10,8 @@ use App\Models\{
     BusinessApplicationProcesses,
     PurchaseOrderDetailsModel,
     PurchaseOrdersModel,
-    OrganizationModel
+    OrganizationModel,
+    PurchaseOrderModel
 };
 
 // use Config;
@@ -99,6 +100,47 @@ class CommanController
             return $e;
         }
     }
+
+    public function checkMultiplePurchaseIDAreThereOrNot()
+    {
+        try {
+            $dataOutputCategory = Business::join('tbl_organizations', 'tbl_organizations.id', '=', 'businesses.organization_id')
+                ->select(
+                    'tbl_organizations.id',
+                    'tbl_organizations.company_name',
+                    'tbl_organizations.email',
+                    'tbl_organizations.mobile_number',
+                    'tbl_organizations.address',
+                    'tbl_organizations.image',
+                )
+                ->first();
+
+            return $dataOutputCategory;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+
+    public function getNumberOfPOCount($business_id,$purchase_order_id) {
+
+        $purchase_status_from_owner = [config('constants.HIGHER_AUTHORITY.APPROVED_PO_FROM_PURCHASE')];
+        $this->getPurchaseOrderUpdate($purchase_order_id);
+        $count = PurchaseOrderModel::where('business_id', $business_id)->whereNotIn('purchase_status_from_owner', $purchase_status_from_owner)->count();
+        
+        return $count;
+    }
+
+    public function getPurchaseOrderUpdate($purchase_order_id) {
+        $updated_data = PurchaseOrderModel::where('purchase_orders_id', $purchase_order_id)->update([
+            'purchase_status_from_owner' => config('constants.HIGHER_AUTHORITY.APPROVED_PO_FROM_PURCHASE'),
+            'owner_po_action_date'=> date('Y-m-d'),
+            'finanace_store_receipt_status_id' => config('constants.FINANCE_DEPARTMENT.INVOICE_APPROVED_FROM_HIGHER_AUTHORITY')
+        ]);
+        return $updated_data;
+    }
+
+
 
 
 

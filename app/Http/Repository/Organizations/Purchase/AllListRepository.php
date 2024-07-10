@@ -54,7 +54,7 @@ class AllListRepository
   //         ->get();
   //       return $data_output;
   //     } catch (\Exception $e) {
-  //         dd($e);
+  //         
   //         return $e;
   //     }
   // }
@@ -120,7 +120,12 @@ class AllListRepository
         ->leftJoin('design_revision_for_prod', function ($join) {
           $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
         })
-        ->whereIn('business_application_processes.purchase_status_id', $array_to_be_check)
+
+        ->leftJoin('purchase_orders', function($join) {
+          $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
+        })
+        
+        ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
         ->where('businesses.is_active', true)
         ->select(
           'businesses.id',
@@ -164,8 +169,11 @@ class AllListRepository
         ->leftJoin('design_revision_for_prod', function ($join) {
           $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
         })
-        ->whereIn('business_application_processes.business_status_id', $array_to_be_check)
-        ->whereNull('business_application_processes.purchase_order_mail_submited_to_vendor_date')
+        ->leftJoin('purchase_orders', function($join) {
+          $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
+        })
+        ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check)
+        ->whereNull('purchase_orders.purchase_order_mail_submited_to_vendor_date')
 
         
         ->where('businesses.is_active', true)
@@ -194,7 +202,7 @@ class AllListRepository
   {
     try {
 
-      $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')];
+      $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY')];
 
       $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
         $join->on('business_application_processes.business_id', '=', 'production.business_id');
@@ -208,10 +216,17 @@ class AllListRepository
         ->leftJoin('design_revision_for_prod', function ($join) {
           $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
         })
-        ->whereIn('business_application_processes.purchase_status_id', $array_to_be_check)
+
+        ->leftJoin('purchase_orders', function($join) {
+          $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
+        })
+
+
+        ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check)
         ->where('businesses.is_active', true)
+        ->distinct('business_application_processes.id')
         ->select(
-          'business_application_processes.purchase_order_id',
+          'purchase_orders.purchase_orders_id as purchase_order_id',
           'businesses.id',
           'businesses.title',
           'businesses.descriptions',
@@ -251,8 +266,11 @@ class AllListRepository
           ->leftJoin('design_revision_for_prod', function($join) {
             $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
           })
-          ->whereIn('business_application_processes.purchase_status_id',$array_to_be_check)
-          ->whereIn('business_application_processes.business_status_id',$array_not_to_be_check)
+          ->leftJoin('purchase_orders', function($join) {
+            $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
+          })
+          ->whereIn('purchase_orders.purchase_status_from_purchase',$array_to_be_check)
+          // ->whereIn('business_application_processes.business_status_id',$array_not_to_be_check)
           ->where('businesses.is_active',true)
           ->select(
               'business_application_processes.purchase_order_id',

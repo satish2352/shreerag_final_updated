@@ -17,7 +17,6 @@ class EmployeesHrRepository  {
                         ->where('organization_id', session()->get('org_id'))
                         ->orderBy('updated_at', 'desc')
                         ->get();
-            // dd($data_output);
             return $data_output;
         } catch (\Exception $e) {
             return $e;

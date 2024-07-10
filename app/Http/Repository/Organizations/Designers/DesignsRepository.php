@@ -72,7 +72,6 @@ class DesignsRepository  {
                   'designs.business_id'
 
               )->get();
-            //   dd($data_output);
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -220,7 +219,7 @@ class DesignsRepository  {
 
             return $return_data;
         } catch (\Exception $e) {
-            dd($e);
+            
             return [
                 'msg' => 'Failed to update Report Incident Crowdsourcing.',
                 'status' => 'error',

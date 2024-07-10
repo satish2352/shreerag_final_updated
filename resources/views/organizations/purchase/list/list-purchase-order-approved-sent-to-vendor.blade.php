@@ -59,6 +59,7 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
+                                                <th data-field="po_number" data-editable="true">PO Number</th>
                                                 <th data-field="grn_number" data-editable="true">Title</th>
                                                 <th data-field="grn_date" data-editable="true">Description</th>
                                                 {{-- <th data-field="vendor_id" data-editable="true">Vendor</th>                                         
@@ -71,13 +72,13 @@
 
                                         <tbody>
                                             @foreach ($data_output as $data)
-                                                <?php //dd($data['design_image']);
-                                                ?>
+                                              {{-- {{dd($data_output)}} --}}
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ ucwords($data->title) }}</td>
-                                                    <td>{{ ucwords($data->descriptions) }}</td>
+                                                    <td>{{$data['purchase_order_id']}}</td>
+                                                    <td>{{ ucwords($data['title']) }}</td>
+                                                    <td>{{ ucwords($data['descriptions']) }}</td>
                                                     {{-- <td>{{ucwords($data->vendor_id)}}</td>
                                             <td>{{ucwords($data->client_name)}}</td> --}}
 
@@ -85,7 +86,6 @@
                                                         <div style="display: inline-block; align-items: center;">
                                                             <a
                                                             href="{{ route('check-details-of-po-before-send-vendor', $data->purchase_order_id) }}"><button
-                                                            {{-- href="{{ route('list-check-final-purchase-order', $data->purchase_order_id) }}"><button --}}
                                                                     data-toggle="tooltip" title="View Details"
                                                                     class="pd-setting-ed"> View Details</button></a> &nbsp;
                                                             &nbsp; &nbsp;

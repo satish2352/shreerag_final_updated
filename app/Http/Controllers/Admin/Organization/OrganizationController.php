@@ -24,7 +24,6 @@ class OrganizationController extends Controller
     public function index(){
         try {
             $getOutput = $this->service->getAll();
-            // dd($getOutput);
             return view('admin.pages.organizations.list-organizations', compact('getOutput'));
         } catch (\Exception $e) {
             return $e;
@@ -40,7 +39,6 @@ class OrganizationController extends Controller
 
 
       public function store(Request $request){
-        // dd($request);
          $rules = [
                     'company_name' => 'required|string|max:255',
                     'email' => 'required|email|max:255',
@@ -93,7 +91,6 @@ class OrganizationController extends Controller
                       ->withErrors($validation);
               } else {
                   $add_record = $this->service->addAll($request);
-                //   dd($add_record);
                   if ($add_record) {
                       $msg = $add_record['msg'];
                       $status = $add_record['status'];
@@ -176,7 +173,6 @@ class OrganizationController extends Controller
                         ->withErrors($validation);
                 } else {
                     $update_data = $this->service->updateAll($request);
-                    // dd($update_data);
                     if ($update_data) {
                         $msg = $update_data['msg'];
                         $status = $update_data['status'];
@@ -200,7 +196,6 @@ class OrganizationController extends Controller
             $delete_data_id = base64_decode($request->id);
             try {
                 $delete_record = $this->service->deleteById($delete_data_id);
-                // dd($delete_record);
                 if ($delete_record) {
                     $msg = $delete_record['msg'];
                     $status = $delete_record['status'];
@@ -224,8 +219,6 @@ class OrganizationController extends Controller
         $roles=RolesModel::get();
         $employees = EmployeesModel::get();
 
-        // dd($dept);
-        // $detailsData->founding_date = Carbon\Carbon::parse($detailsData->founding_date)->format('d/m/Y');
         return view('admin.pages.organizations.detail-organizations',compact('detailsData','dept','roles','employees'));
     }
     

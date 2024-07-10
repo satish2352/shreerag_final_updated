@@ -34,8 +34,6 @@ class GatepassServices
     {
         try {
             $last_id = $this->repo->addAll($request);
-            // dd($last_id);
-
             if ($last_id) {
                 return ['status' => 'success', 'msg' => 'Data Added Successfully.'];
             } else {
@@ -51,11 +49,8 @@ class GatepassServices
     {
         try {
             $result = $this->repo->getById($id);
-            // dd($result); // Dump the result
-            // die();
             return $result;
         } catch (\Exception $e) {
-            dd($e); // Dump the exception
             return $e;
         }
     }
@@ -80,7 +75,6 @@ class GatepassServices
     {
         try {
             $delete = $this->repo->deleteById($id);
-            // dd($delete);
             if ($delete) {
                 return ['status' => 'success', 'msg' => 'Deleted Successfully.'];
             } else {

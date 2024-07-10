@@ -52,10 +52,5 @@ class DocUploadFianaceController extends Controller
     } 
     
 
-    // public function add(){
-    //     return view('organizations.productions.products.add-products');
-    // }
-
-
-
+  
 }

@@ -85,7 +85,7 @@ class GRNRepository
                 'status' => 'success'
             ];
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            
             return [
                 'msg' => $e->getMessage(),
                 'status' => 'error'

@@ -79,6 +79,7 @@ padding-left: 20px !important;
                                     <thead>
                                         <tr>
                                             <th data-field="id">Sr.No.</th> 
+                                            
                                             <th data-field="grn_number" data-editable="true">Title</th>
                                             <th data-field="grn_date" data-editable="true">Description</th>
                                             {{-- <th data-field="vendor_id" data-editable="true">Vendor</th>                                         
@@ -94,6 +95,7 @@ padding-left: 20px !important;
                                         <tr>
                                             
                                             <td>{{ $loop->iteration }}</td>
+                                            
                                             <td>{{ucwords($data->title)}}</td>
                                             <td>{{ucwords($data->descriptions)}}</td>
                                             {{-- <td>{{ucwords($data->vendor_id)}}</td>
@@ -101,7 +103,7 @@ padding-left: 20px !important;
                                             
                                             <td>
                                                 <div style="display: inline-block; align-items: center;">
-                                                    <a href="{{route('list-check-final-purchase-order', $data->purchase_order_id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>View Details</button></a>
+                                                    <a href="{{route('list-check-final-purchase-order', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>View Details</button></a>
                                                 </div>
                                             </td>
                                             

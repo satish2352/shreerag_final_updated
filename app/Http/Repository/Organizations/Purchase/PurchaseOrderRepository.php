@@ -26,7 +26,6 @@ class PurchaseOrderRepository
     // repository
     public function submitBOMToOwner($request)
     {
-        // dd($request);
         $purchase_orderid = str_replace(array("-", ":"), "", date('Y-m-d') . time());
         try {
 
@@ -87,7 +86,7 @@ class PurchaseOrderRepository
                 'status' => 'success'
             ];
         } catch (\Exception $e) {
-            dd($e);
+            
             return [
                 'msg' => $e->getMessage(),
                 'status' => 'error'
@@ -96,23 +95,83 @@ class PurchaseOrderRepository
     }
 
 
-    public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_status_id) {
+    public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id) {
         try {
             
-            $business_application = BusinessApplicationProcesses::where('purchase_order_id', $purchase_status_id)->first();
+            $purchaseOrdersModel = PurchaseOrdersModel::where('purchase_orders_id', $purchase_order_id)->first();
             
-            if ($business_application) {
-                $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.LIST_APPROVED_PO_SENT_TO_VENDOR_BY_PURCHASE');
-                $business_application->purchase_order_mail_submited_to_vendor_date= date('Y-m-d');
-                $business_application->purchase_status_id = config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR');
-                $business_application->save();
+            if ($purchaseOrdersModel) {
+                // $purchaseOrdersModel->business_status_id = config('constants.HIGHER_AUTHORITY.LIST_APPROVED_PO_SENT_TO_VENDOR_BY_PURCHASE');
+                $purchaseOrdersModel->purchase_order_mail_submited_to_vendor_date= date('Y-m-d');
+                $purchaseOrdersModel->purchase_status_from_purchase = config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR');
+                $purchaseOrdersModel->save();
             }
             
-            return $business_application;
+            return $purchaseOrdersModel;
 
         } catch (\Exception $e) {
+          dd($e);
             return $e;
         }
     }
+
+
+    // New Functions for the application list PO need to be check 
+    public function listAllApprovedPOToBeChecked($id)
+    {
+      try {
+        
+        $array_not_to_be_check = [
+          config('constants.HIGHER_AUTHORITY.LIST_PO_TO_BE_APPROVE_FROM_PURCHASE'),
+          config('constants.HIGHER_AUTHORITY.HALF_APPROVED_PO_FROM_PURCHASE')
+        
+        ];
+        $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL')];
+  
+        $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+          $join->on('business_application_processes.business_id', '=', 'production.business_id');
+        })
+          ->leftJoin('designs', function ($join) {
+            $join->on('business_application_processes.business_id', '=', 'designs.business_id');
+          })
+          ->leftJoin('businesses', function ($join) {
+            $join->on('business_application_processes.business_id', '=', 'businesses.id');
+          })
+          ->leftJoin('design_revision_for_prod', function ($join) {
+            $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
+          })
+          ->leftJoin('purchase_orders', function($join) {
+            $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
+          })
+  
+          ->where('business_application_processes.business_id', $id)
+          ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
+          ->orWhereIn('business_application_processes.business_status_id', $array_not_to_be_check)
+          ->whereNull('purchase_orders.grn_no')
+          ->whereNull('purchase_orders.store_receipt_no')
+          // ->groupBy('purchase_orders.business_id')
+          // ->groupBy('business_application_processes.purchase_order_id')
+          // ->groupBy('businesses.id')
+          ->where('businesses.is_active', true)
+          ->select(
+            'purchase_orders.purchase_orders_id as purchase_order_id',
+            'businesses.id',
+            'businesses.title',
+            'businesses.descriptions',
+            'businesses.remarks',
+            'businesses.is_active',
+            'production.business_id',
+            'design_revision_for_prod.reject_reason_prod',
+            'designs.bom_image',
+            'designs.design_image'
+          )->get();
+        return $data_output;
+      } catch (\Exception $e) {
+  
+        return $e;
+      }
+    }
+
+
 
 }

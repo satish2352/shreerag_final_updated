@@ -43,7 +43,6 @@ class VendorController extends Controller
     } 
 
     public function store(Request $request){
-        // dd($request);
         $rules = [
                 'vendor_name' => 'required|string|max:255',
                 'vendor_email' => 'required',
@@ -98,7 +97,6 @@ class VendorController extends Controller
 
             $edit_data_id = base64_decode($request->id);
             $editData = $this->service->getById($edit_data_id);
-            // dd($editData);
             return view('organizations.purchase.vendor.edit-vendor', compact('editData'));
         } catch (\Exception $e) {
             return $e;

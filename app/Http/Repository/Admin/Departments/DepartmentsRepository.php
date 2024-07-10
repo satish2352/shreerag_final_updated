@@ -139,11 +139,9 @@ class DepartmentsRepository  {
     public function deleteById($id){
             try {
                 $deleteDataById = DepartmentsModel::find($id);
-                // dd($deleteDataById);
-
-                    $deleteDataById->delete();
-                    return $deleteDataById;
-            
+                $deleteDataById->delete();
+                return $deleteDataById;
+        
             } catch (\Exception $e) {
                 return $e;
             }    }
