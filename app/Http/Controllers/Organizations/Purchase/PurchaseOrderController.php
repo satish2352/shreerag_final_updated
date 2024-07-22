@@ -465,12 +465,18 @@ class PurchaseOrderController extends Controller
     public function destroyAddmore(Request $request){
         try {
             $delete_rti = $this->service->deleteByIdAddmore($request->delete_id);
+         
             if ($delete_rti) {
                 $msg = $delete_rti['msg'];
                 $status = $delete_rti['status'];
+
+                $id = base64_encode($request->delete_id);
+                // dd($id);
+                // die();
                 if ($status == 'success') {
                     return redirect('purchase/edit-purchase-order/{id}')->with(compact('msg', 'status'));
-                    
+                    // return redirect()->route('purchase.edit-purchase-order', ['id' => $id])
+                    // ->with(compact('msg', 'status'));
                 } else {
                     return redirect()->back()
                         ->withInput()

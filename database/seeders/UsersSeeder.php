@@ -225,6 +225,45 @@ class UsersSeeder extends Seeder
                 'ip_address' => '192.168.1.32',
             ]
         );
+        User::create(
+            [
+                'u_email' => 'logistics@gmail.com',
+                'u_password' => bcrypt('logistics@123'),
+                'role_id' => 11,
+                'org_id' => 0,
+                'f_name' => 'fname',
+                'm_name' => 'mname',
+                'l_name' => 'lname',
+                'number' => 'number',
+                'designation' => 'designation',
+                'address' => 'address',
+                'state' => 'state',
+                'city' => 'city',
+                'pincode' => 'pincode',
+                'ip_address' => '192.168.1.32',
+            ]
+        );
+        User::create(
+            [
+                'u_email' => 'dispatch@gmail.com',
+                'u_password' => bcrypt('dispatch@123'),
+                'role_id' => 10,
+                'org_id' => 0,
+                'f_name' => 'fname',
+                'm_name' => 'mname',
+                'l_name' => 'lname',
+                'number' => 'number',
+                'designation' => 'designation',
+                'address' => 'address',
+                'state' => 'state',
+                'city' => 'city',
+                'pincode' => 'pincode',
+                'ip_address' => '192.168.1.32',
+            ]
+        );
+
+        
+        
     }
 
 
