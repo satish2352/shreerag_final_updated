@@ -96,7 +96,7 @@
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ ucwords($data->purchase_order_id	) }}</td>
+                                                    <td>{{ ucwords($data->purchase_orders_id	) }}</td>
                                                     <td>{{ ucwords($data->grn_no) }}</td>
                                                     <td>{{ ucwords($data->store_receipt_no) }}</td>
                                                     <td>{{ ucwords($data->title) }}</td>
@@ -106,7 +106,7 @@
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
                                                             <a
-                                                                href="{{ route('send-payment-to-vendor', $data->purchase_order_id) }} "><button
+                                                                href="{{ route('send-payment-to-vendor', [$data->purchase_orders_id, $data->business_id]) }} "><button
                                                                     data-toggle="tooltip" title="Payment Paid To Vendor"
                                                                     class="pd-setting-ed">Payment Paid To Vendor</button></a>
                                                         </div>

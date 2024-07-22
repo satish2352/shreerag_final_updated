@@ -17,6 +17,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('organization_id');
             $table->string('customer_po_number');
+            $table->string('product_name');
             $table->string('title');
             $table->text('descriptions')->nullable();
             $table->string('quantity');
@@ -26,6 +27,7 @@ return new class extends Migration
             $table->string('customer_payment_terms')->nullable();
             $table->string('customer_terms_condition')->nullable();
             $table->string('remarks')->nullable();
+            $table->string('is_approved_production')->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('is_deleted')->default(false);
             $table->timestamps();

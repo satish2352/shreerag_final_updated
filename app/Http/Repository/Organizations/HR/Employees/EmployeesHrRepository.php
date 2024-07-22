@@ -17,7 +17,6 @@ class EmployeesHrRepository  {
                         ->where('organization_id', session()->get('org_id'))
                         ->orderBy('updated_at', 'desc')
                         ->get();
-            // dd($data_output);
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -104,6 +103,7 @@ class EmployeesHrRepository  {
 		$user_data->u_email = $request['u_email'];
 		$user_data->u_password = bcrypt($request['u_password']);
 		$user_data->role_id = $request['role_id'];
+		$user_data->department_id = $request['department_id'];
 		$user_data->f_name = $request['f_name'];
 		$user_data->m_name = $request['m_name'];
 		$user_data->l_name = $request['l_name'];

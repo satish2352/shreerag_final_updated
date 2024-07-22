@@ -27,7 +27,6 @@ class OrganizationServices
     public function addAll($request){
         try {
             $last_id = $this->repo->addAll($request);
-            // dd($last_id);
             $path = Config::get('DocumentConstant.ORGANIZATION_ADD');
             $ImageName = $last_id['ImageName'];
             uploadImage($request, 'image', $path, $ImageName);
@@ -52,9 +51,7 @@ class OrganizationServices
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
-            // dd($return_data);
             $path = Config::get('DocumentConstant.ORGANIZATION_ADD');
-            // dd($path);
             if ($request->hasFile('image')) {
                 if ($return_data['image']) {
                     if (file_exists_view(Config::get('DocumentConstant.ORGANIZATION_DELETE') . $return_data['image'])) {
@@ -93,7 +90,6 @@ class OrganizationServices
     {
         try {
             $delete = $this->repo->deleteById($id);
-            // dd($delete);
             if ($delete) {
                 return ['status' => 'success', 'msg' => 'Deleted Successfully.'];
             } else {

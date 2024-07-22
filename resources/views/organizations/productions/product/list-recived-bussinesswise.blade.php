@@ -28,7 +28,7 @@ padding-left: 20px !important;
                 <div class="sparkline13-list">
                     <div class="sparkline13-hd">
                         <div class="main-sparkline13-hd">
-                            <h1>Design Sent For Production <span class="table-project-n"></span></h1>
+                            <h1>Material Recived From Store Department BusinessWise<span class="table-project-n"></span></h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2" >
                                         {{-- <div class="login-horizental cancel-wp pull-left">
@@ -45,7 +45,7 @@ padding-left: 20px !important;
                                 <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
 										<span class="icon-sc-cl" aria-hidden="true">&times;</span>
 									</button>
-                                <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i>
+                                {{-- <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i> --}}
                                 <p><strong>Success!</strong> {{ Session::get('msg') }}</p>
                             </div>
                              @endif
@@ -78,17 +78,13 @@ padding-left: 20px !important;
                                     data-toolbar="#toolbar">
                                     <thead>
                                         <tr>
-                                            
-                                            <th data-field="id">ID</th>   
-                                            <th data-field="customer_po_number" data-editable="true">PO Number</th>
-                                            <th data-field="product_name" data-editable="true">Product Name</th>
-                                            <th data-field="title" data-editable="true">Name</th>
-                                            <th data-field="quantity" data-editable="true">Quantity</th>
-                                            <th data-field="grn_date" data-editable="true">Description</th>
-                                            <th data-field="purchase_id" data-editable="true">Remark</th>                                         
-                                            <th data-field="design_image" data-editable="false">Design Layout</th>
-                                            <th data-field="bom_image" data-editable="false">BOM</th>                                                                                                                           
-                                            {{-- <th data-field="action">Action</th> --}}
+                                            <th data-field="id">Sr.No.</th> 
+                                            <th data-field="purchase_orders_id" data-editable="true">Purchase Order ID</th>
+                                            <th data-field="client_name" data-editable="true">Client Name</th>
+                                            <th data-field="vendor_company_name" data-editable="true">Client Company Name</th>
+                                            <th data-field="email" data-editable="true">Email</th>
+                                            <th data-field="contact_no" data-editable="true">Phone Number</th>
+                                            <th data-field="vendor_address" data-editable="true">Address</th>
                                         </tr>
 
                                     </thead>
@@ -96,30 +92,29 @@ padding-left: 20px !important;
                                    
 
                                     <tbody>
+                                        <?php 
+// dd($data_output);
+// die();
+
+?>
                                         @foreach($data_output as $data)
                                         <tr>
                                             
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ ucwords($data->customer_po_number) }}</td>
-                                            <td>{{ucwords($data->product_name)}}</td>
-                                            <td>{{ucwords($data->title)}}</td>
-                                            <td>{{ucwords($data->quantity)}}</td>
-                                            <td>{{ ucwords($data->descriptions) }}</td>
-                                            <td>{{ucwords($data->remarks)}}</td>
-                                            <td> <a class="img-size" target="_blank"
-                                                href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
-                                                alt="Design"> Click to view</a>
-                                        </td>
-                                        <td> <a class="img-size"
-                                                href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                alt="bill of material" >Click to download</a>
-                                        </td>
+                                            <td>{{ $data->purchase_orders_id }}</td>
+                                            <td>{{ $data->vendor_name }}</td>
+                                           <td>{{ $data->vendor_company_name }}</td>
+                                           <td>{{ $data->vendor_email }}</td> 
+                                           <td>{{ $data->contact_no }}</td> 
+                                           <td>{{ $data->vendor_address }}</td> 
+                                            
                                             {{-- <td>
-                                                <div style="display: flex; align-items: center;">
-                                                    <a href="{{route('edit-business', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                                    <a href="{{route('delete-business', base64_encode($data->id))}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash" aria-hidden="true"></i></button></a>
+                                                <div style="display: inline-block; align-items: center;">
+                                                    <a href="{{route('list-submit-final-purchase-order-particular-business', $data->purchase_order_id)}} "><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>View Details</button></a>
                                                 </div>
                                             </td> --}}
+                                            
+                                          
                                            </tr>
                                         @endforeach
                                     </tbody>

@@ -91,11 +91,12 @@ class StoreController extends Controller
 
 
 
-    public function genrateStoreReciptAndForwardMaterialToTheProduction($id)
+    public function genrateStoreReciptAndForwardMaterialToTheProduction($purchase_orders_id, $business_id)
     {
         try {
-            $acceptdesign = base64_decode($id);
-            $update_data = $this->service->genrateStoreReciptAndForwardMaterialToTheProduction($acceptdesign);
+            $acceptdesign = base64_decode($purchase_orders_id);
+            $acceptbusinessId = base64_decode($business_id);
+            $update_data = $this->service->genrateStoreReciptAndForwardMaterialToTheProduction($acceptdesign, $acceptbusinessId);
             return redirect('storedept/list-accepted-design-from-prod');
         } catch (\Exception $e) {
             return $e;

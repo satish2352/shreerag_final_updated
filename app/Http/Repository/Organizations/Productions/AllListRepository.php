@@ -8,7 +8,8 @@ use App\Models\ {
     DesignModel,
     BusinessApplicationProcesses,
     ProductionModel,
-    DesignRevisionForProd
+    DesignRevisionForProd,
+    PurchaseOrdersModel
     };
 use Config;
 
@@ -49,10 +50,9 @@ class AllListRepository  {
 //           )
 //           ->distinct('design_revision_for_prod.id')
 //           ->get();
-//         // dd($data_output);
 //         return $data_output;
 //     } catch (\Exception $e) {
-//         dd($e);
+//         
 //         return $e;
 //     }
 // }
@@ -79,8 +79,11 @@ class AllListRepository  {
           ->where('businesses.is_active',true)
           ->select(
               'businesses.id',
+              'businesses.customer_po_number',
+              'businesses.product_name',
               'businesses.title',
               'businesses.descriptions',
+              'businesses.quantity',
               'businesses.remarks',
               'businesses.is_active',
               'production.business_id',
@@ -147,18 +150,26 @@ class AllListRepository  {
             ->leftJoin('designs', function($join) {
               $join->on('business_application_processes.business_id', '=', 'designs.business_id');
             })
+
+            ->leftJoin('purchase_orders', function($join) {
+              $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
+            })
+
             ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
             ->orWhereIn('business_application_processes.store_status_id',$array_to_be_check_store)
-            ->orWhereIn('business_application_processes.purchase_status_id',$array_to_be_check_purchase)
+            ->orWhereIn('purchase_orders.purchase_status_from_purchase',$array_to_be_check_purchase)
             ->orWhereIn('business_application_processes.business_status_id',$array_to_be_check_owner)
-            ->orWhereIn('business_application_processes.quality_status_id',$array_to_be_check_quality)
+            ->orWhereIn('purchase_orders.quality_status_id',$array_to_be_check_quality)
             
-            
+            ->distinct('businesses.id')
             ->where('businesses.is_active',true)
             ->select(
                 'businesses.id',
-                'businesses.title',
-                'businesses.descriptions',
+                'businesses.customer_po_number',
+              'businesses.product_name',
+              'businesses.title',
+              'businesses.descriptions',
+              'businesses.quantity',
                 'businesses.remarks',
                 'businesses.is_active',
                 'production.business_id',
@@ -168,7 +179,6 @@ class AllListRepository  {
             )->get();
           return $data_output;
       } catch (\Exception $e) {
-          dd($e);
           return $e;
       }
   }
@@ -204,10 +214,9 @@ class AllListRepository  {
               'designs.design_image'
 
           )->get();
-        //   dd($data_output);
         return $data_output;
     } catch (\Exception $e) {
-        dd($e);
+        
         return $e;
     }
   }
@@ -253,7 +262,7 @@ class AllListRepository  {
 
         return $data_output;
     } catch (\Exception $e) {
-        dd($e);
+        
         return $e;
     }
   }
@@ -278,10 +287,15 @@ class AllListRepository  {
         ->leftJoin('design_revision_for_prod', function($join) {
           $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
         })
+        ->leftJoin('purchase_orders', function($join) {
+          $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
+        })
         ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
         ->where('businesses.is_active',true)
+        ->distinct('businesses.id')
         ->select(
             'businesses.id',
+            'businesses.product_name',
             'businesses.title',
             'businesses.descriptions',
             'businesses.remarks',
@@ -298,10 +312,53 @@ class AllListRepository  {
         ->get();
       return $data_output;
     } catch (\Exception $e) {
-        dd($e);
+        
         return $e;
     }
 }
 
+public function getAllListMaterialRecievedToProductionBusinessWise($id)
+{
+    try {
+      $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_BOM_RECIVED_FROM_STORE_DEPT_FOR_PRODUCTION')];
+        
+      $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
+        $join->on('business_application_processes.business_id', '=', 'production.business_id');
+      })
+      ->leftJoin('designs', function($join) {
+        $join->on('business_application_processes.business_id', '=', 'designs.business_id');
+      })
+      ->leftJoin('businesses', function($join) {
+        $join->on('business_application_processes.business_id', '=', 'businesses.id');
+      })
+      ->leftJoin('design_revision_for_prod', function($join) {
+        $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
+      })
+      ->leftJoin('purchase_orders', function($join) {
+        $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
+      })
+      ->leftJoin('vendors', function($join) {
+        $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
+      })
+      ->where('purchase_orders.business_id', $id)
+      ->whereIn('purchase_orders.store_status_id',$array_to_be_check)
+      ->where('businesses.is_active',true)
+      ->select(
+        'purchase_orders.id',
+            'purchase_orders.purchase_orders_id',         
+            'vendors.vendor_name', 
+            'vendors.vendor_company_name', 
+            'vendors.vendor_email', 
+            'vendors.vendor_address', 
+            'vendors.contact_no', 
+            'vendors.gst_no', 
+            'purchase_orders.is_active'
+      )
+      ->get();
+        return $data_output;
+    } catch (\Exception $e) {
+        return $e->getMessage(); 
+    }
+}
 
 }

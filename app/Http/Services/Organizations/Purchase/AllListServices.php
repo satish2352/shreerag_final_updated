@@ -61,9 +61,16 @@ class AllListServices
             return $e;
         }
     }
+    public function getAllListPurchaseOrderMailSentToVendorBusinessWise($purchase_order_id)
+    {
+        try {
+            $data_output = $this->repo->getAllListPurchaseOrderMailSentToVendorBusinessWise($purchase_order_id);
+            return $data_output;
 
-
-    
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
     public function getAllListPurchaseOrderTowardsOwner(){
         try {
             return $this->repo->getAllListPurchaseOrderTowardsOwner();
@@ -71,6 +78,9 @@ class AllListServices
             return $e;
         }
     } 
+
+   
+   
 
 
 }

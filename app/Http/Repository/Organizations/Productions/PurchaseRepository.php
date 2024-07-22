@@ -64,8 +64,6 @@ public function addAll($request)
         public function updateAll($request){
         try { 
             $dataOutput = PurchaseModel::find($request->id);
-            // dd($dataOutput);
-
             if (!$dataOutput) {
                 return [
                     'msg' => 'Update Data not found.',

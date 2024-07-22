@@ -28,7 +28,11 @@ class DesignsRepository  {
               ->where('businesses.is_active',true)
               ->select(
                   'businesses.id',
+                  'businesses.customer_po_number',
+                  'businesses.product_name',
                   'businesses.title',
+                  'businesses.descriptions',
+                  'businesses.quantity',
                   'businesses.descriptions',
                   'businesses.remarks',
                   'businesses.is_active',
@@ -62,8 +66,11 @@ class DesignsRepository  {
               ->where('businesses.is_active',true)
               ->select(
                   'businesses.id',
+                  'businesses.customer_po_number',
+                  'businesses.product_name',
                   'businesses.title',
                   'businesses.descriptions',
+                  'businesses.quantity',
                   'businesses.remarks',
                   'businesses.is_active',
                   'designs.id',
@@ -72,7 +79,6 @@ class DesignsRepository  {
                   'designs.business_id'
 
               )->get();
-            //   dd($data_output);
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -220,7 +226,7 @@ class DesignsRepository  {
 
             return $return_data;
         } catch (\Exception $e) {
-            dd($e);
+            
             return [
                 'msg' => 'Failed to update Report Incident Crowdsourcing.',
                 'status' => 'error',

@@ -82,13 +82,13 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
-                                                <th data-field="grn_number" data-editable="true">Title</th>
+                                                <th data-field="product_name" data-editable="true">Product Name</th>
                                                 <th data-field="grn_date" data-editable="true">Description</th>
                                                 <th data-field="purchase_id" data-editable="true">Remark</th>
                                                 <th data-field="store_material_sent_date" data-editable="true">Matrial Recieved Date</th>
                                                 <th data-field="design_image" data-editable="false">Design Layout</th>
                                                 <th data-field="bom_image" data-editable="false">BOM</th>
-
+                                                <th data-field="" data-editable="false">Action</th>
                                             </tr>
 
                                         </thead>
@@ -99,7 +99,7 @@
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ ucwords($data->title) }}</td>
+                                                    <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->descriptions) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                     <td>{{ ucwords($data->store_material_sent_date) }}</td>
@@ -114,7 +114,11 @@
 
                                                    
 
-                                                
+                                                <td>
+                                                    <div style="display: inline-block; align-items: center;">
+                                                        <a href="{{route('list-final-purchase-order-production', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>View Details</button></a>
+                                                    </div>
+                                                </td>
 
 
 

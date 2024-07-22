@@ -27,8 +27,12 @@
                 <div class="col-lg-6 col-md-6 col-sm-6">
                   <div class="form-group">
                       <label for="vendor_id">Vendor Company Name <span class="text-danger">*</span></label>
-                      <select class="form-control"  name="vendor_id">
-                          <option>Select</option>
+                      {{-- <select class="form-control"  name="vendor_id" id="vendor_id">
+                          <option>Select</option> --}}
+
+                          <select class="form-control mb-2" name="vendor_id" id="vendor_id">
+                          <option value="" default>Vendor Company Name</option>
+
                           @foreach ($dataOutputVendor as $data)
                                   <option value="{{ $data['id'] }}" >
                                       {{ $data['vendor_company_name'] }}</option>
@@ -464,10 +468,10 @@
                 'addmore[0][description]': {
                     required: true,
                 },
-                'addmore[0][due_date]': {
-                    required: true,
-                    minDate: true,
-                },
+                // 'addmore[0][due_date]': {
+                //     required: true,
+                //     minDate: true,
+                // },
                 'addmore[0][hsn]': {
                     required: true,
                 },
@@ -490,9 +494,9 @@
                 'addmore[0][description]': {
                     required: "Please Enter the Description",
                 },
-                'addmore[0][due_date]': {
-                    required: "Please Enter the Due Date",
-                },
+                // 'addmore[0][due_date]': {
+                //     required: "Please Enter the Due Date",
+                // },
                 'addmore[0][hsn]': {
                     required: "Please Enter the HSN",
                 },
@@ -538,15 +542,15 @@
                     }
                 });
             });
-            $(context).find('.due-date').each(function() {
-                $(this).rules("add", {
-                    required: true,
-                    minDate: true,
-                    messages: {
-                        required: "Please Enter the Due Date",
-                    }
-                });
-            });
+            // $(context).find('.due-date').each(function() {
+            //     $(this).rules("add", {
+            //         required: true,
+            //         minDate: true,
+            //         messages: {
+            //             required: "Please Enter the Due Date",
+            //         }
+            //     });
+            // });
             $(context).find('.hsn').each(function() {
                 $(this).rules("add", {
                     required: true,

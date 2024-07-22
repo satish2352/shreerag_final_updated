@@ -65,7 +65,16 @@
                                                     value=" @if (old('customer_po_number')) {{ old('customer_po_number') }}@else{{ $editData->customer_po_number }} @endif">
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="title">Name :  <span class="text-danger">*</span></label>
+                                                <label for="product_name">Product Name :  <span class="text-danger">*</span></label> 
+                                                <input type="text" class="form-control" id="product_name"
+                                                 value=" @if (old('product_name')) {{ old('product_name') }}@else{{ $editData->product_name }} @endif"
+                                                    name="product_name" placeholder="Enter Product Name">
+                                                    @if ($errors->has('product_name'))
+                                                    <span class="red-text"><?php echo $errors->first('product_name', ':message'); ?></span>
+                                                @endif
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <label for="title">Customer Name :  <span class="text-danger">*</span></label>
                                                 <input class="form-control" name="title" id="title"
                                                     placeholder="Enter the customer po number"
                                                     value=" @if (old('title')) {{ old('title') }}@else{{ $editData->title }} @endif">
@@ -82,12 +91,18 @@
                                                     placeholder="Enter the customer po number"
                                                     value=" @if (old('rate')) {{ old('rate') }}@else{{ $editData->rate }} @endif">
                                             </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                            {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                 <label for="po_validity">PO Validity:  <span class="text-danger">*</span></label>
                                                 <input type="date" class="form-control" name="po_validity" id="po_validity"
                                                     placeholder="Enter the customer po number"
                                                     value=" @if (old('po_validity')) {{ old('po_validity') }}@else{{ $editData->po_validity }} @endif">
+                                            </div> --}}
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <label for="po_validity">PO Validity: <span class="text-danger">*</span></label>
+                                                <input type="date" class="form-control" name="po_validity" id="po_validity"
+                                                    value="{{ old('po_validity', $editData->po_validity) }}">
                                             </div>
+                                            
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                 <label for="hsn_number">HSN  Number:  <span class="text-danger">*</span></label>
                                                 <input class="form-control" name="hsn_number" id="hsn_number"
@@ -170,6 +185,9 @@
 
             $("#editEmployeeForm").validate({
                 rules: {
+                    product_name: {
+                        required: true,
+                    },
                     title: {
                         required: true,
                     },
@@ -203,6 +221,9 @@
                     },
                 },
                 messages: {
+                    product_name: {
+                        required: "Please enter Product Name.",
+                    },
                     title: {
                         required: "Please enter Customer Name.",
                     },

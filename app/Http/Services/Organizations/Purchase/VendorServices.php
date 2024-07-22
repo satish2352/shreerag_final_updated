@@ -28,8 +28,6 @@ public function addAll($request)
 {
     try {
         $result = $this->repo->addAll($request);
-        // dd($result);
-        // die();
         if ($result['status'] === 'success') {
             return ['status' => 'success', 'msg' => 'This business send to Design Department Successfully.'];
         } else {
@@ -67,7 +65,7 @@ public function addAll($request)
     {
         try {
             $delete = $this->repo->deleteById($id);
-            // dd($delete);
+           
             if ($delete) {
                 return ['status' => 'success', 'msg' => 'Deleted Successfully.'];
             } else {

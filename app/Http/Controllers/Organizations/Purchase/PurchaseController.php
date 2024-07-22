@@ -26,14 +26,6 @@ class PurchaseController extends Controller
         }
     }
 
-    // public function submitBOMToOwner($id){
-    //     try {
-    //         $data_output = $this->service->submitBOMToOwner();
-    //         dd($data_output);
-    //         return view('organizations.purchase.purchase.list-purchase', compact('getOutput'));
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
+  
 
 }

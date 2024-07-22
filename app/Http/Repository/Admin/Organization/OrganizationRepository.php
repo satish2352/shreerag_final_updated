@@ -26,7 +26,6 @@ class organizationRepository  {
     public function addAll($request)
     {
         try {
-            // dd($request);
         
             $dataOutput = new OrganizationModel();
             $dataOutput->company_name = $request->company_name;
@@ -94,7 +93,6 @@ class organizationRepository  {
 
 
                 $dataOutput = OrganizationModel::find($request->id);
-                // dd($dataOutput);
                 if (!$dataOutput) {
                     return [
                         'msg' => 'Update Data not found.',

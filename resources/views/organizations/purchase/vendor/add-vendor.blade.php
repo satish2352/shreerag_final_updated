@@ -7,10 +7,8 @@ label {
 
 label.error {
     color: red;
-    /* Change 'red' to your desired text color */
     font-size: 12px;
-    /* Adjust font size if needed */
-    /* Add any other styling as per your design */
+   
 }
 </style>
 <div class="row">
@@ -33,72 +31,30 @@ label.error {
                         @endif
 
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            @if (Session::get('status') == 'success')
-                            <div class="col-md-12">
-                                <div class="alert alert-success alert-dismissible" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <strong>Success!</strong> {{ Session::get('msg') }}
-                                </div>
-                            </div>
-                            @endif
-
-                            @if (Session::get('status') == 'error')
-                            <div class="col-md-12">
-                                <div class="alert alert-danger alert-dismissible" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <strong>Error!</strong> {!! session('msg') !!}
-                                </div>
-                            </div>
-                            @endif
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="all-form-element-inner">
                                     <form action="{{ route('store-vendor') }}" method="POST" id="addDesignsForm"
                                         enctype="multipart/form-data">
                                         @csrf
                                         <div class="form-group-inner">
-
-                                            {{-- ========================== --}}
                                             <div class="container-fluid">
-                                                {{-- <form 
-                                                action="{{ route('addmorePost') }}"
-                                                method="POST"> --}}
-
-                                                {{-- @csrf --}}
-
                                                 @if ($errors->any())
                                                 <div class="alert alert-danger">
-
                                                     <ul>
-
                                                         @foreach ($errors->all() as $error)
                                                         <li>{{ $error }}</li>
                                                         @endforeach
-
                                                     </ul>
-
                                                 </div>
                                                 @endif
-
                                                 @if (Session::has('success'))
                                                 <div class="alert alert-success text-center">
-
                                                     <a href="#" class="close" data-dismiss="alert"
                                                         aria-label="close">×</a>
-
                                                     <p>{{ Session::get('success') }}</p>
-
                                                 </div>
                                                 @endif
-
-
                                             </div>
-
-                                            {{-- =================== --}}
-
                                             <div class="row">
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="vendor_name">Vendor Name:</label>
@@ -113,7 +69,7 @@ label.error {
                                                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="vendor_email">Email:</label>
                                                     <input type="email" class="form-control" id="vendor_email"
-                                                        name="vendor_email" placeholder="Enter your vendor_email">
+                                                        name="vendor_email" placeholder="Enter your email">
                                                 </div>
 
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -143,7 +99,7 @@ label.error {
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="vendor_address">Address :</label>
                                                     <input type="text" class="form-control" id="vendor_address"
-                                                        name="vendor_address" placeholder="Enter your vendor_address">
+                                                        name="vendor_address" placeholder="Enter your vendor address">
                                                 </div>    
                                                 
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -153,15 +109,8 @@ label.error {
                                                     {{ old('is_active') ? 'checked' : '' }}>
                                                 Is Active
                                                 <i class="input-helper"></i><i class="input-helper"></i></label>
-                                                   <!-- <label for="status">Status :</label>
-                                                    <input type="text" class="form-control" id="status"
-                                                        name="status" placeholder="Enter status here"> -->
                                                 </div>
-                                               
                                             </div>
-                                                
-                                      
-
                                             <div class="login-btn-inner">
                                                 <div class="row">
                                                     <div class="col-lg-5"></div>
@@ -188,62 +137,48 @@ label.error {
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+<<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> 
 <script>
-var i = 0;
+   jQuery.noConflict();
+   jQuery(document).ready(function($) {
+    $.validator.addMethod("regex", function(value, element, regexp) {
+        if (regexp.constructor != RegExp)
+            regexp = new RegExp(regexp);
+        else if (regexp.global)
+            regexp.lastIndex = 0;
+        return this.optional(element) || regexp.test(value);
+    }, "Please check your input.");
 
-$("#add").click(function() {
-    ++i;
-
-    $("#dynamicTable").append(
-        '<tr><td><input type="text" name="addmore[' +
-        i +
-        '][quantity]" placeholder="Enter your quantity" class="form-control" /></td><td><input type="text" name="addmore[' +
-        i +
-        '][description]" placeholder="Enter your description" class="form-control" /></td><td><input type="text" name="addmore[' +
-        i +
-        '][price]" placeholder="Enter your Price" class="form-control" /></td><td><input type="text" name="addmore[' +
-        i +
-        '][amount]" placeholder="Enter your amount" class="form-control" /></td><td><input type="text" name="addmore[' +
-        i +
-        '][total]" placeholder="Enter your total" class="form-control" /></td><td><button type="button" class="btn btn-danger remove-tr">Remove</button></td></tr>'
-    );
-});
-
-$(document).on("click", ".remove-tr", function() {
-    $(this).parents("tr").remove();
-});
-</script>
-<script>
-jQuery.noConflict();
-jQuery(document).ready(function($) {
     $("#addDesignsForm").validate({
         rules: {
             vendor_name: {
-            required: true,
+                required: true,
+            },
+            vendor_company_name: {
+                required: true,
             },
             vendor_address: {
                 required: true,
-                // Add your custom validation rule if needed
             },
             gst_no: {
                 required: true,
+                regex: /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/ // Add your GST pattern here
             },
             contact_no: {
                 required: true,
+                regex: /^[0-9]{10}$/ 
             },
             vendor_email: {
                 required: true,
+                email: true
             },
             quote_no: {
                 required: true,
+                regex: /^[A-Z0-9]+$/ 
             },
             payment_terms: {
-                required: true,
-            },
-            status: {
                 required: true,
             },
         },
@@ -251,43 +186,45 @@ jQuery(document).ready(function($) {
             vendor_name: {
                 required: "Please enter your name.",
             },
+            vendor_company_name: {
+                required: "Please enter company name.",
+            },
             vendor_address: {
-                required: "Please enter your vendor_address.",
+                required: "Please enter your vendor address.",
             },
             gst_no: {
                 required: "Please enter your GST No.",
+                regex: "Please enter a valid GST No."
             },
             contact_no: {
                 required: "Please enter a valid contact no.",
+                regex: "Please enter a valid 10 digit mobile number."
             },
             vendor_email: {
                 required: "Please enter your valid email.",
+                email: "Please enter a valid email address."
             },
             quote_no: {
                 required: "Please enter your quote no.",
+                regex: "Please enter a valid Quote No."
             },
             payment_terms: {
                 required: "Please enter your payment terms.",
             },  
-            status: {
-                required: "Please enter status",
-            },
-
+           
         },
         submitHandler: function(form) {
-                // Use SweetAlert to show a success message
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'Vendor added successfully.',
-                }).then(function() {
-                    form.submit(); // Submit the form after the user clicks OK
-                });
-            }
-        });
+            // Use SweetAlert to show a success message
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Vendor added successfully.',
+            }).then(function() {
+                form.submit(); // Submit the form after the user clicks OK
+            });
+        }
     });
+});
 </script>
-
-
 
 @endsection

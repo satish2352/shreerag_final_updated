@@ -41,7 +41,6 @@ class AllListController extends Controller
 
         try {
             $data_output = $this->service->getAllListMaterialSentToPurchase();
-        
             return view('organizations.store.list.list-material-sent-to-purchase', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
@@ -60,7 +59,15 @@ class AllListController extends Controller
             return $e;
         }
     }
-
+    public function submitFinalPurchaseOrder($id){
+        try {
+            $data_output = $this->service->getPurchaseOrderBusinessWise($id);
+           
+            return view('organizations.store.list.list-material-received-from-quality-businesswise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     
 
 }

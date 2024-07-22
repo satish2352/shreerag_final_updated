@@ -20,15 +20,26 @@ class AllListServices
     
     public function getAllListSRAndGRNGeanrated(){
         try {
-            return $this->repo->getAllListSRAndGRNGeanrated();
+            $data_output = $this->repo->getAllListSRAndGRNGeanrated();
+           
+            return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
-
-    public function listAcceptedGrnSrnFinance(){
+    public function getAllListSRAndGRNGeanratedBusinessWise($id)
+    {
         try {
-            return $this->repo->listAcceptedGrnSrnFinance();
+            $data_output = $this->repo->getAllListSRAndGRNGeanratedBusinessWise($id);
+            return $data_output;
+
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
+    public function listAcceptedGrnSrnFinance($purchase_orders_id){
+        try {
+            return $this->repo->listAcceptedGrnSrnFinance($purchase_orders_id);
         } catch (\Exception $e) {
             return $e;
         }
@@ -47,7 +58,10 @@ class AllListServices
 
     public function listPOSanctionAndNeedToDoPaymentToVendor(){
         try {
-            return $this->repo->listPOSanctionAndNeedToDoPaymentToVendor();
+            $data_output = $this->repo->listPOSanctionAndNeedToDoPaymentToVendor();
+         
+            return $data_output;
+
         } catch (\Exception $e) {
             return $e;
         }

@@ -42,7 +42,7 @@ class GRNController extends Controller
 
             $purchase_order_details_data = PurchaseOrderDetailsModel::where('purchase_id', $po_id)
                 ->get();
-
+              
             return view('organizations.quality.grn.add-grn', compact('purchase_order_data', 'purchase_order_details_data'));
         } catch (\Exception $e) {
             return $e;
@@ -72,6 +72,8 @@ class GRNController extends Controller
                     ->withErrors($validation);
             } else {
                 $add_record = $this->service->storeGRN($request);
+        //    dd($add_record);
+        //    die();
                 if ($add_record) {
                     $msg = $add_record['msg'];
                     $status = $add_record['status'];
@@ -106,7 +108,7 @@ class GRNController extends Controller
         try {
 
             $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
-            $array_to_be_check_new = ['0'];
+            // $array_to_be_check_new = ['0'];
 
             $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
                 $join->on('business_application_processes.business_id', '=', 'production.business_id');
@@ -120,11 +122,16 @@ class GRNController extends Controller
                 ->leftJoin('design_revision_for_prod', function ($join) {
                     $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
                 })
-                ->whereIn('business_application_processes.quality_status_id', $array_to_be_check)
-                ->whereIn('business_application_processes.store_receipt_no', $array_to_be_check_new)
+                ->leftJoin('purchase_orders', function($join) {
+                    $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
+                  })
+                ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
+                // ->whereIn('purchase_orders.store_receipt_no', $array_to_be_check_new)
                 ->where('businesses.is_active', true)
+                ->distinct('businesses.id')
                 ->select(
                     'businesses.id',
+                    'businesses.product_name',
                     'businesses.title',
                     'businesses.descriptions',
                     'businesses.remarks',
@@ -138,11 +145,22 @@ class GRNController extends Controller
 
                 )
                 ->get();
+               
             // return $data_output;
             return view('organizations.quality.list.list-checked-material-sent-to-store',compact('data_output'));
         } catch (\Exception $e) {
             return $e;
         }
     }
+    public function getAllListMaterialSentFromQualityBusinessWise($id){
+        try {
+            $data_output = $this->service->getAllListMaterialSentFromQualityBusinessWise($id);
+           
+            return view('organizations.quality.list.list-checked-material-sent-to-store-businesswise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    
 
 }

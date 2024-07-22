@@ -79,7 +79,7 @@ padding-left: 20px !important;
                                     <thead>
                                         <tr>
                                             <th data-field="id">Sr.No.</th> 
-                                            <th data-field="grn_number" data-editable="true">Title</th>
+                                            <th data-field="product_name" data-editable="true">Product Name</th>
                                             <th data-field="grn_date" data-editable="true">Description</th>
                                         </tr>
 
@@ -89,16 +89,25 @@ padding-left: 20px !important;
 
                                     <tbody>
                                         @foreach($data_output as $data)
-                                        <?php //dd($data['design_image']); ?>
                                         <tr>
                                             
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ucwords($data->title)}}</td>
+                                            <td>{{ucwords($data->product_name)}}</td>
                                             <td>{{ucwords($data->descriptions)}}</td>
                                             <td>
                                                 <div style="display: inline-block; align-items: center;">
-                                                    <a href="{{route('list-purchase-orders-sent-to-owner-details', $data->purchase_order_id)}} "><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>View Details</button></a>
+                                                    <a
+                                                        href="{{ route('list-purchase-order-approved-bussinesswise', $data->id) }}"><button
+                                                            data-toggle="tooltip" title="Edit"
+                                                            class="pd-setting-ed"><i class="fa fa-pencil-square-o"
+                                                                aria-hidden="true"></i> Check Details</button></a>
+                                                    &nbsp; &nbsp; &nbsp;
                                                 </div>
+
+
+                                                {{-- <div style="display: inline-block; align-items: center;">
+                                                    <a href="{{route('list-purchase-orders-sent-to-owner-details', $data->purchase_order_id)}} "><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>View Details</button></a>
+                                                </div> --}}
                                             </td>
                                          
                                             

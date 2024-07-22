@@ -102,8 +102,6 @@
 
                                         <tbody>
                                             @foreach ($data_output as $data)
-                                                <?php //dd($data['design_image']);
-                                                ?>
                                                 <tr>
                                                     
                                                     <td>{{ $loop->iteration }}</td>

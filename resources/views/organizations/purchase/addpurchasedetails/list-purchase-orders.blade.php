@@ -101,6 +101,7 @@
                       
                       <th data-field="#">#</th>
                       <th data-field="po_id">ID</th>
+                      <th data-field="purchase_orders_id" data-editable="true"> PO Number</th>
                       <th data-field="vendor_name" data-editable="true"> Name</th>
                       <th data-field="name" data-editable="true">Company Name</th>
                       <th data-field="email" data-editable="true">Email</th>
@@ -121,6 +122,7 @@
                       
                       <td>{{ $loop->iteration }}</td>
                       <td>{{ $data->id }}</td>
+                      <td>{{ucwords($data->purchase_orders_id)}}</td>
                       <td>{{ucwords($data->vendor_name)}}</td>
                       <td>{{ucwords($data->vendor_company_name)}}</td>
                       <td>{{ucwords($data->vendor_email)}}</td>

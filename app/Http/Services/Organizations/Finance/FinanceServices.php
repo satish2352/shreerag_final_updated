@@ -17,19 +17,34 @@ class FinanceServices
         $this->repo = new FinanceRepository();
     }
 
-    public function forwardPurchaseOrderToTheOwnerForSanction($purchase_order_id)
+    // public function forwardPurchaseOrderToTheOwnerForSanction($purchase_orders_id, $business_id)
+    // {
+    //     try {
+    //         $update_data = $this->repo->forwardPurchaseOrderToTheOwnerForSanction($purchase_orders_id, $business_id);
+    //         dd($update_data);
+    //         die();
+    //         return $update_data; 
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+    public function forwardPurchaseOrderToTheOwnerForSanction($purchase_orders_id, $business_id)
     {
         try {
-            $update_data = $this->repo->forwardPurchaseOrderToTheOwnerForSanction($purchase_order_id);
+            $update_data = $this->repo->forwardPurchaseOrderToTheOwnerForSanction($purchase_orders_id, $business_id);
+        //   dd($update_data);
+        //   die();
+            return $update_data; 
         } catch (\Exception $e) {
-            return $e;
+            return $e->getMessage();
         }
     }
-
-    public function forwardedPurchaseOrderPaymentToTheVendor($purchase_order_id)
+    
+    public function forwardedPurchaseOrderPaymentToTheVendor($purchase_order_id, $business_id)
     {
         try {
-            $update_data = $this->repo->forwardedPurchaseOrderPaymentToTheVendor($purchase_order_id);
+            $update_data = $this->repo->forwardedPurchaseOrderPaymentToTheVendor($purchase_order_id, $business_id);
+
         } catch (\Exception $e) {
             return $e;
         }

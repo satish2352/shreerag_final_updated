@@ -10,7 +10,8 @@ use App\Models\{
     Gatepass,
     PurchaseOrderModel,
     BusinessApplicationProcesses,
-    RejectedChalan
+    RejectedChalan,
+    PurchaseOrdersModel
     
 };
 use Config;
@@ -50,7 +51,7 @@ class GRNRepository
             $dataOutput->is_deleted = '0';
             $dataOutput->save();
             $last_insert_id = $dataOutput->id;
-
+     
             foreach ($request->addmore as $index => $item) {
                 $user_data = PurchaseOrderDetailsModel::where('id', $item['edit_id'])
                     ->update([
@@ -65,23 +66,27 @@ class GRNRepository
             $finalOutput->image = $imageName;
             $finalOutput->save();
 
-
+         
             
             $purchase_orders_details = PurchaseOrderModel::where('purchase_orders_id', $request->purchase_orders_id)->first();
-            $business_application = BusinessApplicationProcesses::where('business_id', $purchase_orders_details->business_id)->first();
+          
+           
+            $business_application = PurchaseOrderModel::where('purchase_orders_id', $purchase_orders_details->purchase_orders_id)->first();
+          
+
             if ($business_application) {
                 $business_application->grn_no = $grn_no;
                 $business_application->quality_material_sent_to_store_date = date('Y-m-d');
                 $business_application->quality_status_id = config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE');
-                $business_application->save();
+                $business_application->save();               
             }
 
-
-
+          
             $updateGatepassTable = Gatepass::where('purchase_orders_id',$request->purchase_orders_id)->first();
             $updateGatepassTable->is_checked_by_quality = true;
             $updateGatepassTable->save();
-
+            // dd($updateGatepassTable);
+            // die();
             $rejected_chalan_data = new RejectedChalan();
             $rejected_chalan_data->purchase_orders_id = $request->purchase_orders_id;
             $rejected_chalan_data->grn_id = $dataOutput->id;
@@ -95,7 +100,7 @@ class GRNRepository
                 'status' => 'success'
             ];
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            
             return [
                 'msg' => $e->getMessage(),
                 'status' => 'error'
@@ -103,4 +108,30 @@ class GRNRepository
         }
     }
 
+    public function getAllListMaterialSentFromQualityBusinessWise($id)
+{
+    try {
+        $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
+
+        $data_output = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
+        ->select(
+            'purchase_orders.id',
+            'purchase_orders.purchase_orders_id',         
+            'vendors.vendor_name', 
+            'vendors.vendor_company_name', 
+            'vendors.vendor_email', 
+            'vendors.vendor_address', 
+            'vendors.contact_no', 
+            'vendors.gst_no', 
+            'purchase_orders.is_active'
+        )
+        ->where('purchase_orders.business_id', $id)
+        ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
+        ->get(); // Added to execute the query and get results
+       
+        return $data_output;
+    } catch (\Exception $e) {
+        return $e->getMessage(); // Changed to return the error message string
+    }
+}
 }

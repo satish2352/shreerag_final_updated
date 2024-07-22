@@ -34,11 +34,11 @@
                                 <h1>Gatepass <span class="table-project-n">Data</span> Table</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
-                                        <div class="login-horizental cancel-wp pull-left">
+                                        {{-- <div class="login-horizental cancel-wp pull-left">
                                             <a href="{{ route('add-gatepass') }}"><button
                                                     class="btn btn-sm btn-primary login-submit-cs" type="submit">Add Gate
                                                     Pass</button></a>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                     <div class="col-lg-10"></div>
                                 </div>
@@ -109,12 +109,14 @@
 
 
                                                     <td>
+                                                        
                                                         <div style="display: flex; align-items: center;">
-                                                            <a
+                                                            <a href="{{route('edit-gatepass', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+                                                            {{-- <a
                                                                 href="{{ route('edit-gatepass', base64_encode($data->id)) }}"><button
                                                                     data-toggle="tooltip" title="Edit"
                                                                     class="pd-setting-ed"><i class="fa fa-pencil-square-o"
-                                                                        aria-hidden="true"></i></button></a>
+                                                                        aria-hidden="true"></i></button></a> --}}
                                                         </div>
                                                     </td>
                                                 </tr>

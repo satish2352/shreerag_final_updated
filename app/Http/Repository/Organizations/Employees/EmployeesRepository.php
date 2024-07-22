@@ -32,8 +32,6 @@ class EmployeesRepository  {
     public function addAll($request)
     {   
         try {
-            // dd($request->session()->get('org_id'));
-
            //insert data to users table
             $userData=new User();
             $userData->u_email= $request->email;
@@ -91,7 +89,6 @@ class EmployeesRepository  {
 
         public function updateAll($request){
         try { 
-            // dd($request->session()->get('org_id'));
             $return_data = array();
             $userData = User::where('u_email', $request->email)->first();
             $userData->u_email= $request->email;

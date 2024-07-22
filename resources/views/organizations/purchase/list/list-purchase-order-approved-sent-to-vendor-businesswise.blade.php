@@ -34,7 +34,9 @@
                                 <h1>Purchase Order<span class="table-project-n">Sent To Vendor</span></h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
-                                        
+                                        {{-- <div class="login-horizental cancel-wp pull-left">
+                                                <a href="{{ route('add-design-upload') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Design</button></a>
+                                        </div> --}}
                                     </div>
                                     <div class="col-lg-10"></div>
                                 </div>
@@ -57,10 +59,16 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
-                                                {{-- <th data-field="po_number" data-editable="true">PO Number</th> --}}
-                                                <th data-field="product_name" data-editable="true">Product Name</th>
-                                                <th data-field="grn_date" data-editable="true">Description</th>
-                                                {{-- <th data-field="vendor_address" data-editable="true">Address</th>                                      --}}
+                                               
+
+
+                                                <th data-field="purchase_orders_id" data-editable="true">Purchase Order ID</th>
+                                                <th data-field="client_name" data-editable="true">Client Name</th>
+                                                <th data-field="vendor_company_name" data-editable="true">Client Company Name</th>
+                                                <th data-field="email" data-editable="true">Email</th>
+                                                <th data-field="contact_no" data-editable="true">Phone Number</th>
+                                                {{-- <th data-field="vendor_id" data-editable="true">Vendor</th>                                         
+                                            <th data-field="client_name" data-editable="true">Client Name</th>                                          --}}
                                             </tr>
 
                                         </thead>
@@ -69,28 +77,27 @@
 
                                         <tbody>
                                             @foreach ($data_output as $data)
-                                            
+                                              {{-- {{dd($data_output)}} --}}
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
-
-                                                    {{-- <td>{{$data['purchase_order_id']}}</td> --}}
+                                                    {{-- <td>{{$data['purchase_order_id']}}</td>
                                                     <td>{{ ucwords($data['product_name']) }}</td>
-                                                    <td>{{ ucwords($data['descriptions']) }}</td>
+                                                    <td>{{ ucwords($data['descriptions']) }}</td> --}}
 
-                                                    {{-- <td>{{ $data->purchase_order_id }}</td>
-                                                     <td>{{ $data->vendor_name }}</td>
-                                                    <td>{{ $data->vendor_company_name }}</td>
-                                                    <td>{{ $data->vendor_email }}</td> 
-                                                    <td>{{ $data->contact_no }}</td>  --}}
-                                                    {{-- <td>{{ $data->vendor_address }}</td>  --}}
+
+                                                    <td>{{ $data->purchase_order_id }}</td>
+                                                    <td>{{ $data->vendor_name }}</td>
+                                                   <td>{{ $data->vendor_company_name }}</td>
+                                                   <td>{{ $data->vendor_email }}</td> 
+                                                   <td>{{ $data->contact_no }}</td> 
                                                     {{-- <td>{{ucwords($data->vendor_id)}}</td>
                                             <td>{{ucwords($data->client_name)}}</td> --}}
 
                                                     <td>
                                                         <div style="display: inline-block; align-items: center;">
                                                             <a
-                                                            href="{{ route('list-purchase-order-approved-sent-to-vendor-businesswise', $data->id) }}"><button
+                                                            href="{{ route('check-details-of-po-before-send-vendor', $data->purchase_order_id) }}"><button
                                                                     data-toggle="tooltip" title="View Details"
                                                                     class="pd-setting-ed"> View Details</button></a> &nbsp;
                                                             &nbsp; &nbsp;

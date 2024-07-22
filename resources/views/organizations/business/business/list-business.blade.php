@@ -71,6 +71,7 @@ padding-left: 20px !important;
                            
                           
                             <div class="table-responsive"> 
+                                
                                 <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                     data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
                                     data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true"
@@ -80,6 +81,7 @@ padding-left: 20px !important;
                                         <tr>
                                             <th data-field="id">Sr.No.</th>
                                             <th data-field="customer_po_number" data-editable="true">PO Number</th>
+                                            <th data-field="product_name" data-editable="true">Product Name</th>
                                             <th data-field="title" data-editable="true">Name</th>
                                             <th data-field="quantity" data-editable="true">Quantity</th>
                                             <th data-field="rate" data-editable="true">Rate</th>
@@ -88,6 +90,7 @@ padding-left: 20px !important;
                                             <th data-field="customer_payment_terms" data-editable="true">Payment Terms</th>
                                             <th data-field="customer_terms_condition" data-editable="true">Terms Condition</th>
                                             <th data-field="remarks" data-editable="true">Remark</th>
+                                            <th data-field="descriptions" data-editable="true">Description</th>
                                             <th data-field="action">Action</th>
                                         </tr>
 
@@ -99,6 +102,7 @@ padding-left: 20px !important;
                                             
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ucwords($data->customer_po_number)}}</td>
+                                            <td>{{ucwords($data->product_name)}}</td>
                                             <td>{{ucwords($data->title)}}</td>
                                             <td>{{ucwords($data->quantity)}}</td>
                                             <td>{{ucwords($data->rate)}}</td>
@@ -107,12 +111,23 @@ padding-left: 20px !important;
                                             <td>{{ucwords($data->customer_payment_terms)}}</td>
                                             <td>{{ucwords($data->customer_terms_condition)}}</td>
                                             <td>{{ucwords($data->remarks)}}</td>
+                                            <td>{{ucwords($data->descriptions)}}</td>
+                                            
                                             
                                             <td>
+                                                @if($data->is_approved_production == 1)
+                                                <button data-toggle="tooltip" title="Edit" class="pd-setting-ed" disabled>
+                                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                </button>
+                                                <button data-toggle="tooltip" title="Trash" class="pd-setting-ed" disabled>
+                                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                                </button>                                                
+                                                @else
                                                 <div style="display: flex; align-items: center;">
                                                     <a href="{{route('edit-business', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
                                                     <a href="{{route('delete-business', base64_encode($data->id))}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash" aria-hidden="true"></i></button></a>
                                                 </div>
+                                                @endif
                                             </td>
                                            </tr>
                                         @endforeach

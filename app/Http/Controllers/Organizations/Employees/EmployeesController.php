@@ -24,7 +24,6 @@ class EmployeesController extends Controller
     public function index(){
         try {
             $getOutput = $this->service->getAll();
-            // dd($getOutput);
             return view('organizations.pages.employees.list-employees', compact('getOutput'));
         } catch (\Exception $e) {
             return $e;
@@ -98,7 +97,6 @@ class EmployeesController extends Controller
                       ->withErrors($validation);
               } else {
                   $add_record = $this->service->addAll($request);
-                //   dd($add_record);
                   if ($add_record) {
                       $msg = $add_record['msg'];
                       $status = $add_record['status'];
@@ -195,7 +193,6 @@ class EmployeesController extends Controller
             $delete_data_id = base64_decode($request->id);
             try {
                 $delete_record = $this->service->deleteById($delete_data_id);
-                // dd($delete_record);
                 if ($delete_record) {
                     $msg = $delete_record['msg'];
                     $status = $delete_record['status'];

@@ -30,7 +30,7 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Material Need To Sent To<span class="table-project-n">Production</span> Department</h1>
+                                <h1>SR and GRN <span class="table-project-n">Gnearated For </span> Purchase Order List</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
                                         {{-- <div class="login-horizental cancel-wp pull-left">
@@ -80,44 +80,60 @@
                                         data-click-to-select="true" data-toolbar="#toolbar">
                                         <thead>
                                             <tr>
-                                                
+
                                                 <th data-field="id">ID</th>
-                                                <th data-field="product_name" data-editable="true">Product Name</th>
-                                                <th data-field="grn_date" data-editable="true">Description</th>
-                                                <th data-field="purchase_id" data-editable="true">Remark</th>
-                                                <th data-field="design_image" data-editable="false">Design Layout</th>
-                                                <th data-field="bom_image" data-editable="false">BOM</th>
+                                                <th data-field="purchase_order_id" data-editable="true">Purchase Order No</th>
+                                                <th data-field="grn_no" data-editable="true">GRN No</th>
+                                                <th data-field="store_receipt_no" data-editable="true">SR No</th>
+                                                <th data-field="grn_number" data-editable="true">Client Name</th>
+                                                <th data-field="grn_date" data-editable="true">Company Name</th>
                                                 <th data-field="action" data-editable="false">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($data_output as $data)
                                                 <tr>
-                                                    
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ ucwords($data->product_name) }}</td>
-                                                    <td>{{ ucwords($data->descriptions) }}</td>
-                                                    <td>{{ ucwords($data->remarks) }}</td>
-                                                    <td> <a class="img-size" target="_blank"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
-                                                        alt="Design"> Click to view</a>
-                                                </td>
-                                                <td> <a class="img-size"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                        alt="bill of material" >Click to download</a>
-                                                </td>
-                                                    <td>
-                                                        <div style="display: flex; align-items: center;">
-                                                            <a
-                                                                href="{{ route('accepted-and-material-sent', base64_encode($data->productionId)) }} "><button
-                                                                    data-toggle="tooltip" title="Requirement forwareded For production"
-                                                                    class="pd-setting-ed">Requirement forwareded For production</button></a>
 
-                                                            <a
-                                                                href="{{ route('need-to-create-req', base64_encode($data->productionId)) }} "><button
-                                                                    data-toggle="tooltip" title="Need To Purchase"
-                                                                    class="pd-setting-ed">Need To Purchase</button></a>
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ ucwords($data->purchase_orders_id	) }}</td>
+                                                    <td>{{ ucwords($data->grn_no) }}</td>
+                                                    <td>{{ ucwords($data->store_receipt_no) }}</td>
+                                                    <td>{{ ucwords($data->vendor_name) }}</td>
+                                                    <td>{{ ucwords($data->vendor_company_name) }}</td>
+                                             
+
+                                                    <td>
+                                                                                                                {{-- <div style="display: flex; align-items: center;">
+                                                            <a href="{{ route('list-accepted-grn-srn-finance', [$data->business_id, $data->purchase_orders_id]) }}">
+                                                                <button data-toggle="tooltip" title="Trash" class="pd-setting-ed">
+                                                                    Check details
+                                                                </button>
+                                                            </a>
+                                                        </div> --}}
+                                                        <div style="display: flex; align-items: center;">
+                                                            <a href="{{ route('forward-the-purchase-order-to-the-owner-for-sanction', [$data->purchase_orders_id, $data->business_id]) }}">
+                                                                <button data-toggle="tooltip" title="Trash" class="pd-setting-ed">
+                                                                    Check details
+                                                                </button>
+                                                            </a>
                                                         </div>
+                                                        
+                                                        {{-- <div style="display: flex; align-items: center;">
+                                                            <a href="{{ route('list-accepted-grn-srn-finance', [$data->business_id, $data->purchase_orders_id]) }}">
+                                                                <button data-toggle="tooltip" title="Trash" class="pd-setting-ed">
+                                                                    Check details
+                                                                </button>
+                                                            </a>
+                                                        </div> --}}
+                                                        
+                                                        {{-- <div style="display: flex; align-items: center;">
+                                                            <a
+                                                                href="{{ route('list-accepted-grn-srn-finance', [$data->purchase_orders_id, $data->business_id]) }} "><button
+                                                                    data-toggle="tooltip" title="Trash"
+                                                                    class="pd-setting-ed">Check details</button></a>
+
+
+                                                        </div> --}}
                                                     </td>
 
                                                 </tr>

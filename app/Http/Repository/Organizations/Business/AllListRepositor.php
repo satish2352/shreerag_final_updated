@@ -9,7 +9,8 @@ use App\Models\{
   DesignModel,
   BusinessApplicationProcesses,
   ProductionModel,
-  DesignRevisionForProd
+  DesignRevisionForProd,
+  PurchaseOrdersModel
 };
 use Config;
 
@@ -33,6 +34,7 @@ class AllListRepositor
         ->select(
           'businesses.id',
           'businesses.customer_po_number',
+          'businesses.product_name',
           'businesses.title',
           'businesses.descriptions',
           'businesses.quantity',
@@ -87,10 +89,9 @@ class AllListRepositor
           'designs.design_image'
 
         )->get();
-      //   dd($data_output);
       return $data_output;
     } catch (\Exception $e) {
-      dd($e);
+      
       return $e;
     }
   }
@@ -115,12 +116,16 @@ class AllListRepositor
         ->leftJoin('design_revision_for_prod', function ($join) {
           $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
         })
+        
         ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
         ->where('businesses.is_active', true)
         ->select(
           'businesses.id',
+          'businesses.customer_po_number',
+          'businesses.product_name',
           'businesses.title',
           'businesses.descriptions',
+          'businesses.quantity',
           'businesses.remarks',
           'businesses.is_active',
           'production.business_id',
@@ -134,7 +139,7 @@ class AllListRepositor
         ->get();
       return $data_output;
     } catch (\Exception $e) {
-      dd($e);
+      
       return $e;
     }
   }
@@ -161,14 +166,21 @@ class AllListRepositor
         ->leftJoin('design_revision_for_prod', function ($join) {
           $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
         })
+        ->leftJoin('purchase_orders', function($join) {
+          $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
+        })
         ->whereIn('business_application_processes.store_status_id', $array_to_be_check)
-        ->whereIn('business_application_processes.grn_no', $array_not_to_be_check)
+        // ->whereIn('business_application_processes.grn_no', $array_not_to_be_check)
         ->where('business_application_processes.purchase_order_id', '0')
         ->where('businesses.is_active', true)
+        ->distinct('businesses.id')
         ->select(
           'businesses.id',
+          'businesses.customer_po_number',
+          'businesses.product_name',
           'businesses.title',
           'businesses.descriptions',
+          'businesses.quantity',
           'businesses.remarks',
           'businesses.is_active',
           'production.business_id',
@@ -180,6 +192,9 @@ class AllListRepositor
 
         )
         ->get();
+
+        // dd($data_output);
+        // die();
       return $data_output;
     } catch (\Exception $e) {
       return $e;
@@ -193,13 +208,17 @@ class AllListRepositor
   {
     try {
 
-      $array_not_to_be_check = [config('constants.HIGHER_AUTHORITY.LIST_PO_TO_BE_APPROVE_FROM_PURCHASE')];
+      // $array_not_to_be_check = [
+      //   config('constants.HIGHER_AUTHORITY.LIST_PO_TO_BE_APPROVE_FROM_PURCHASE'),
+      //   config('constants.HIGHER_AUTHORITY.HALF_APPROVED_PO_FROM_PURCHASE')
+      
+      // ];
       $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL')];
-      $array_to_be_check_grn_no = ['0'];
 
       $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
         $join->on('business_application_processes.business_id', '=', 'production.business_id');
       })
+      
         ->leftJoin('designs', function ($join) {
           $join->on('business_application_processes.business_id', '=', 'designs.business_id');
         })
@@ -209,15 +228,20 @@ class AllListRepositor
         ->leftJoin('design_revision_for_prod', function ($join) {
           $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
         })
-        ->whereIn('business_application_processes.purchase_status_id', $array_to_be_check)
-        ->whereIn('business_application_processes.business_status_id', $array_not_to_be_check)
-        ->whereIn('business_application_processes.grn_no', $array_to_be_check_grn_no)
-        ->whereIn('business_application_processes.store_receipt_no', $array_to_be_check_grn_no)
+        ->leftJoin('purchase_orders', function($join) {
+          $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
+        })
 
+        ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
+        // ->orWhereNotIn('business_application_processes.business_status_id', $array_not_to_be_check)
+        ->whereNull('purchase_orders.grn_no')
+        ->whereNull('purchase_orders.store_receipt_no')
+        ->distinct('businesses.id')
         ->where('businesses.is_active', true)
         ->select(
           'business_application_processes.purchase_order_id',
           'businesses.id',
+          'businesses.product_name',
           'businesses.title',
           'businesses.descriptions',
           'businesses.remarks',
@@ -226,7 +250,6 @@ class AllListRepositor
           'design_revision_for_prod.reject_reason_prod',
           'designs.bom_image',
           'designs.design_image'
-
         )->get();
 
       return $data_output;
@@ -257,12 +280,15 @@ class AllListRepositor
         ->leftJoin('design_revision_for_prod', function ($join) {
           $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
         })
+       
         ->whereIn('business_application_processes.business_status_id', $array_to_be_check_business)
-        ->orWhereIn('business_application_processes.purchase_status_id', $array_to_be_check_purchase)
+        ->orWhereIn('business_application_processes.purchase_status_from_purchase', $array_to_be_check_purchase)
         ->where('businesses.is_active', true)
+
         ->select(
           'business_application_processes.purchase_order_id',
           'businesses.id',
+          'businesses.product_name',
           'businesses.title',
           'businesses.descriptions',
           'businesses.remarks',
@@ -274,6 +300,7 @@ class AllListRepositor
 
         )->get();
 
+        
       return $data_output;
     } catch (\Exception $e) {
 
@@ -281,12 +308,97 @@ class AllListRepositor
     }
   }
 
+  public function getPurchaseOrderBusinessWise($id)
+  {
+      try {
+          // $data_output = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
+          // ->select(
+          //     'purchase_orders.id',
+          //     'purchase_orders.purchase_orders_id',         
+          //     'vendors.vendor_name', 
+          //     'vendors.vendor_company_name', 
+          //     'vendors.vendor_email', 
+          //     'vendors.vendor_address', 
+          //     'vendors.contact_no', 
+          //     'vendors.gst_no', 
+          //     'purchase_orders.is_active'
+          // )
+          // ->where('purchase_orders.business_id', $id)
+          // // ->get(); 
+  
+          // // ->where('business_id', $id)
+          // ->whereNull('purchase_status_from_owner')
+          // ->orWhere('purchase_status_from_owner', config('constants.HIGHER_AUTHORITY.HALF_APPROVED_PO_FROM_PURCHASE'))
+  
+          // ->get(); // Added to execute the query and get results
+        //  dd($data_output);
+        //  die();
+
+
+
+
+        $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY')];
+
+        $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+          $join->on('business_application_processes.business_id', '=', 'production.business_id');
+        })
+          ->leftJoin('designs', function ($join) {
+            $join->on('business_application_processes.business_id', '=', 'designs.business_id');
+          })
+          ->leftJoin('businesses', function ($join) {
+            $join->on('business_application_processes.business_id', '=', 'businesses.id');
+          })
+          ->leftJoin('design_revision_for_prod', function ($join) {
+            $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
+          })
+  
+          ->leftJoin('purchase_orders', function($join) {
+            $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
+          })
+          ->leftJoin('vendors', function($join) {
+            $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
+          })
+  
+          ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check)
+          ->where('businesses.is_active', true)
+          ->distinct('business_application_processes.id')
+          ->select(
+            'purchase_orders.purchase_orders_id as purchase_order_id',
+            'businesses.id',
+            'businesses.product_name',
+            'businesses.title',
+            'businesses.descriptions',
+            'businesses.remarks',
+            'businesses.is_active',
+            'production.business_id',
+            'design_revision_for_prod.reject_reason_prod',
+            'designs.bom_image',
+            'designs.design_image',
+            'purchase_orders.vendor_id',
+            'vendors.vendor_name', 
+            'vendors.vendor_company_name', 
+            'vendors.vendor_email', 
+            'vendors.vendor_address', 
+            'vendors.contact_no', 
+            'vendors.gst_no', 
+  
+          )->get();
+          
+          // dd($data_output);
+          // die();
+          return $data_output;
+      } catch (\Exception $e) {
+          return $e->getMessage(); // Changed to return the error message string
+      }
+  }
+  
   public function listPOReceivedForApprovaTowardsOwner()
   {
     try {
 
       // $array_to_be_check = [config('constants.FINANCE_DEPARTMENT.LIST_STORE_RECIEPT_AND_GRN_RECEIVED_FROM_STORE_DEAPRTMENT')];
-      $array_to_be_check = [config('constants.HIGHER_AUTHORITY.INVOICE_RECEIVED_FOR_BILL_APPROVAL_TO_HIGHER_AUTHORITY')];
+      $array_to_be_check = [config('constants.HIGHER_AUTHORITY.INVOICE_RECEIVED_FOR_BILL_APPROVAL_TO_HIGHER_AUTHORITY'),
+      config('constants.FINANCE_DEPARTMENT.LIST_STORE_RECIEPT_AND_GRN_RECEIVED_FROM_STORE_DEAPRTMENT')];
 
       $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
         $join->on('business_application_processes.business_id', '=', 'production.business_id');
@@ -301,12 +413,16 @@ class AllListRepositor
         ->leftJoin('design_revision_for_prod', function ($join) {
           $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
         })
-        ->whereIn('business_application_processes.business_status_id', $array_to_be_check)
+        ->leftJoin('purchase_orders', function($join) {
+          $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
+        })
+        ->whereIn('purchase_orders.finanace_store_receipt_status_id', $array_to_be_check)
+        // ->whereIn('business_application_processes.business_status_id', $array_to_be_check)
         ->where('businesses.is_active', true)
         ->select(
-          'business_application_processes.purchase_order_id',
+          'purchase_orders.purchase_orders_id',
           'business_application_processes.store_receipt_no',
-          'business_application_processes.grn_no',
+          'purchase_orders.grn_no',
           'businesses.id',
           'businesses.title',
           'businesses.descriptions',
@@ -323,7 +439,7 @@ class AllListRepositor
         ->get();
       return $data_output;
     } catch (\Exception $e) {
-      dd($e);
+      
       return $e;
     }
   }
@@ -345,12 +461,16 @@ class AllListRepositor
           ->leftJoin('designs', function($join) {
             $join->on('production.business_id', '=', 'designs.business_id');
           })
+
           ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
           ->where('businesses.is_active',true)
           ->select(
               'businesses.id',
+              'businesses.customer_po_number',
+              'businesses.product_name',
               'businesses.title',
               'businesses.descriptions',
+              'businesses.quantity',
               'businesses.remarks',
               'businesses.is_active',
               'designs.id',
@@ -359,12 +479,12 @@ class AllListRepositor
               'designs.business_id'
 
           )->get();
-        //   dd($data_output);
         return $data_output;
     } catch (\Exception $e) {
         return $e;
     }
 }
 
+                      
 
 }

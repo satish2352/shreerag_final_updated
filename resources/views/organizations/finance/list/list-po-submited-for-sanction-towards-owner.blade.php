@@ -96,7 +96,7 @@
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ ucwords($data->purchase_order_id	) }}</td>
+                                                    <td>{{ ucwords($data->purchase_orders_id	) }}</td>
                                                     <td>{{ ucwords($data->grn_no) }}</td>
                                                     <td>{{ ucwords($data->store_receipt_no) }}</td>
                                                     <td>{{ ucwords($data->title) }}</td>

@@ -43,7 +43,6 @@ class VendorController extends Controller
     } 
 
     public function store(Request $request){
-        // dd($request);
         $rules = [
                 'vendor_name' => 'required|string|max:255',
                 'vendor_email' => 'required',
@@ -98,7 +97,6 @@ class VendorController extends Controller
 
             $edit_data_id = base64_decode($request->id);
             $editData = $this->service->getById($edit_data_id);
-            // dd($editData);
             return view('organizations.purchase.vendor.edit-vendor', compact('editData'));
         } catch (\Exception $e) {
             return $e;
@@ -158,11 +156,12 @@ class VendorController extends Controller
         $delete_data_id = base64_decode($request->id);
         try {
             $delete_record = $this->service->deleteById($delete_data_id);
+          
             if ($delete_record) {
                 $msg = $delete_record['msg'];
                 $status = $delete_record['status'];
                 if ($status == 'success') {
-                    return redirect('purchase/list-vendor')->with(compact('msg', 'status'));
+                    return redirect('purchase/vendor/list-vendor')->with(compact('msg', 'status'));
                 } else {
                     return redirect()->back()
                         ->withInput()

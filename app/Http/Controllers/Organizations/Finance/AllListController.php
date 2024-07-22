@@ -25,9 +25,18 @@ class AllListController extends Controller
         }
     } 
 
+    public function getAllListSRAndGRNGeanratedBusinessWise($id){
+        try {
+            $data_output = $this->service->getAllListSRAndGRNGeanratedBusinessWise($id);
+           
+            return view('organizations.finance.list.list-sr-and-gr-genrated-business-wise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     public function listAcceptedGrnSrnFinance($purchase_orders_id){
         try {
-            // $data_output = $this->service->listAcceptedGrnSrnFinance();
+            $data_output = $this->service->listAcceptedGrnSrnFinance($purchase_orders_id);
         // , compact('data_output')
             return view('organizations.finance.list.list-material-details-sr-and-gr-genrated-business',compact('purchase_orders_id'));
         } catch (\Exception $e) {

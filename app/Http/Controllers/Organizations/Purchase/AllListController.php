@@ -41,6 +41,7 @@ class AllListController extends Controller
 
         try {
             $data_output = $this->service->getAllListMaterialReceivedForPurchase();
+          
             return view('organizations.purchase.list.list-bom-material-recived-for-purchase', compact('data_output'));
             // return view('organizations.purchase.forms.send-vendor-details-for-purchase', compact('data_output'));
         } catch (\Exception $e) {
@@ -72,7 +73,15 @@ class AllListController extends Controller
         }
     }
 
-    
+    public function getAllListPurchaseOrderMailSentToVendorBusinessWise($id){
+        try {
+            $data_output = $this->service->getAllListPurchaseOrderMailSentToVendorBusinessWise($id);
+           
+            return view('organizations.purchase.list.list-purchase-order-approved-sent-to-vendor-businesswise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     
     public function getAllListPurchaseOrderTowardsOwner(Request $request){
         try {

@@ -25,14 +25,16 @@ class PurchaseOrderController extends Controller
 
     public function index($requistition_id)
     {
+        // $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL')];
         // $getOutput = PurchaseOrdersModel::where('requisition_id', base64_decode($requistition_id))->get();
         $getOutput = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
-        ->where('requisition_id', base64_decode($requistition_id))->get();
+        // ->where('purchase_orders.business_id')
+        ->whereNull('purchase_status_from_owner')
+        // ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
+        ->where('requisition_id', base64_decode($requistition_id))
+        ->get();
        
-//         $getOutput = PurchaseOrdersModel::join('grn_tbl', 'grn_tbl.purchase_orders_id', '=', 'tbl_rejected_chalan.purchase_orders_id')
-//         ->where('requisition_id', base64_decode($requistition_id))->get();
-// dd($getOutput);
-// die();
+
         return view(
             'organizations.purchase.addpurchasedetails.list-purchase-orders',
             compact(
@@ -46,8 +48,6 @@ class PurchaseOrderController extends Controller
     {
         
         $requistition_id = $request->requistition_id;
-        // dd($requistition_id);
-        $title = 'create invoice';
         $title = 'create invoice';
         $dataOutputVendor = Vendors::get();
         return view(
@@ -69,7 +69,6 @@ class PurchaseOrderController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request);
         $rules = [
             'vendor_id' => 'required',
             'tax' => 'required',
@@ -101,12 +100,10 @@ class PurchaseOrderController extends Controller
                     ->withErrors($validation);
             } else {
                 $requi_id = $request->requistition_id;
-                // dd($requi_id);
                 $add_record = $this->service->submitBOMToOwner($request);
                 if ($add_record) {
                     $msg = $add_record['msg'];
                     $status = $add_record['status'];
-                    //   dd($add_record);
                     if ($status == 'success') {
                         return redirect('purchase/list-purchase-order/' . $requi_id)->with(compact('msg', 'status'));
                     } else {
@@ -181,7 +178,6 @@ class PurchaseOrderController extends Controller
     {
         $show_data_id = base64_decode($request->id);
         $invoice = PurchaseOrdersModel::find($show_data_id);
-        // //dd($invoice);
         $title = 'view invoice';
         return view('organizations.purchase.addpurchasedetails.show-purchase-orders', compact('invoice', 'title'));
     }
@@ -190,7 +186,6 @@ class PurchaseOrderController extends Controller
     {
         $show_data_id = base64_decode($request->id);
         $invoice = PurchaseOrdersModel::find($show_data_id);
-        // //dd($invoice);
         $title = 'view invoice';
         return view('organizations.purchase.addpurchasedetails.show-purchase-orders21', compact('invoice', 'title'));
     }
@@ -199,7 +194,6 @@ class PurchaseOrderController extends Controller
     {
         $show_data_id = base64_decode($request->id);
         $invoice = PurchaseOrdersModel::find($show_data_id);
-        //dd($invoice);
         $title = 'view invoice';
         return view('organizations.purchase.addpurchasedetails.show-purchase-orders1', compact('invoice', 'title'));
     }
@@ -298,21 +292,23 @@ class PurchaseOrderController extends Controller
     public function submitPurchaseOrderToOwnerForReview(Request $request)
     {
         try {
-            // dd($request);
             $requistition_id = base64_decode($request->requistition_id);
-            // dd($requistition_id);
-            $data_for_purchase_order = PurchaseOrdersModel::where('requisition_id', $requistition_id)->first();
-            // dd($data_for_purchase_order);
+            
+            $data_purchase_orders_id = PurchaseOrdersModel::where('requisition_id', $requistition_id)->pluck('purchase_orders_id');
+            
+            $data_purchase_orders_update = PurchaseOrdersModel::where('requisition_id', $requistition_id)->first();
+            $data_purchase_orders_update->purchase_status_from_purchase = config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL');
+            $data_purchase_orders_update->save();
+
             $business_application = BusinessApplicationProcesses::where('requisition_id', $requistition_id)->first();
 
             if ($business_application) {
                 $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.LIST_PO_TO_BE_APPROVE_FROM_PURCHASE');
-                $business_application->purchase_order_id = $data_for_purchase_order->purchase_orders_id;
+                $business_application->purchase_order_id = $data_purchase_orders_id;
                 $business_application->purchase_order_submited_to_owner_date = date('Y-m-d');
-                $business_application->purchase_status_id = config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL');
 
-                $business_application->grn_no = '0';
-                $business_application->store_receipt_no = '0';
+                // $business_application->grn_no = '0';
+                // $business_application->store_receipt_no = '0';
                 $business_application->save();
 
             }
@@ -336,12 +332,13 @@ class PurchaseOrderController extends Controller
 
             $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
             $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
+            $business_id = $data['purchaseOrder']->business_id;
             $purchaseOrder = $data['purchaseOrder'];
             $purchaseOrderDetails = $data['purchaseOrderDetails'];
 
             return view(
                 'organizations.purchase.purchase.purchase-order-details',
-                compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData', 'getAllRulesAndRegulations')
+                compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData', 'getAllRulesAndRegulations','business_id')
             );
 
 
@@ -355,10 +352,10 @@ class PurchaseOrderController extends Controller
 
 
 
-    public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id)
+    public function listAllApprovedPOToBeChecked($purchase_order_id)
     {
         try {
-            $delete = $this->service->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id);
+            $delete = $this->service->listAllApprovedPOToBeChecked($purchase_order_id);
             if ($delete) {
                 $status = 'success';
                 $msg = 'Purchase order mail sent to vendor.';
@@ -381,10 +378,11 @@ class PurchaseOrderController extends Controller
             $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
             $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
             $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
+            $business_id = $data['purchaseOrder']->business_id;
             $purchaseOrder = $data['purchaseOrder'];
             $purchaseOrderDetails = $data['purchaseOrderDetails'];
 
-            return view('organizations.purchase.addpurchasedetails.view-purchase-orders-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData', 'getAllRulesAndRegulations'));
+            return view('organizations.purchase.addpurchasedetails.view-purchase-orders-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData', 'getAllRulesAndRegulations','business_id'));
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
@@ -392,10 +390,11 @@ class PurchaseOrderController extends Controller
 
     public function edit(Request $request){
         $edit_data_id = base64_decode($request->id);
+      
         $editData = $this->service->getById($edit_data_id);
+       
         $dataOutputVendor = Vendors::get();
-        // dd($editData);
-        // die();
+      
         return view('organizations.purchase.addpurchasedetails.edit-purchase-orders', compact('editData', 'dataOutputVendor'));
     }
     
@@ -483,4 +482,24 @@ class PurchaseOrderController extends Controller
         }
     } 
 
+    public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id)
+    {
+        try {
+            $delete = $this->service->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id);
+            if ($delete) {
+                $status = 'success';
+                $msg = 'Purchase order mail sent to vendor.';
+            } else {
+                $status = 'success';
+                $msg = 'Purchase order mail sent to vendor.';
+            }
+
+            return redirect('purchase/list-purchase-order-approved-sent-to-vendor')->with(compact('msg', 'status'));
+
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
+    }
+
+    
 }

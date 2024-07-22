@@ -75,7 +75,6 @@ class DesignUploadController extends Controller
  
          try {
              $validation = Validator::make($request->all(),$rules, $messages);
-            //  dd($validation);
              if ($validation->fails()) {
                  return redirect()->back()
                      ->withInput()

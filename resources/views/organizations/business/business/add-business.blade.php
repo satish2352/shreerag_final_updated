@@ -62,14 +62,6 @@
                                                 <div class="form-group-inner">
                                                 <div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="title">Customer Name :  <span class="text-danger">*</span></label> 
-                                                        <input type="text" class="form-control" id="title" value="{{ old('title') }}"
-                                                            name="title" placeholder="Enter Customer Name">
-                                                            @if ($errors->has('title'))
-                                                            <span class="red-text"><?php echo $errors->first('title', ':message'); ?></span>
-                                                        @endif
-                                                    </div>
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="customer_po_number">Customer PO Number :  <span class="text-danger">*</span></label>
                                                         <input type="text" class="form-control" id="customer_po_number" value="{{ old('customer_po_number') }}"
                                                             name="customer_po_number" placeholder="Enter Customer PO Number">
@@ -77,6 +69,23 @@
                                                             <span class="red-text"><?php echo $errors->first('customer_po_number', ':message'); ?></span>
                                                         @endif
                                                     </div>
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                        <label for="product_name">Product Name :  <span class="text-danger">*</span></label> 
+                                                        <input type="text" class="form-control" id="product_name" value="{{ old('product_name') }}"
+                                                            name="product_name" placeholder="Enter Product Name">
+                                                            @if ($errors->has('product_name'))
+                                                            <span class="red-text"><?php echo $errors->first('product_name', ':message'); ?></span>
+                                                        @endif
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                        <label for="title">Customer Name :  <span class="text-danger">*</span></label> 
+                                                        <input type="text" class="form-control" id="title" value="{{ old('title') }}"
+                                                            name="title" placeholder="Enter Customer Name">
+                                                            @if ($errors->has('title'))
+                                                            <span class="red-text"><?php echo $errors->first('title', ':message'); ?></span>
+                                                        @endif
+                                                    </div>
+                                                
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="quantity">Quantity :  <span class="text-danger">*</span></label>
                                                         <input type="text" class="form-control" id="quantity" value="{{ old('quantity') }}"
@@ -209,6 +218,9 @@
     
             $("#addEmployeeForm").validate({
                 rules: {
+                    product_name: {
+                        required: true,
+                    },
                     title: {
                         required: true,
                     },
@@ -244,6 +256,9 @@
                     },
                 },
                 messages: {
+                    product_name: {
+                        required: "Please enter Product Name.",
+                    },
                     title: {
                         required: "Please enter Customer Name.",
                     },

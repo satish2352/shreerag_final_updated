@@ -34,7 +34,8 @@ class BusinessController extends Controller
     } 
     public function store(Request $request){
         $rules = [
-                'title' => 'required|string|max:255',
+               'title' => 'required|string|max:255',
+                'product_name' => 'required',
                 'customer_po_number' => 'required',
                 'quantity' => 'required',
                 'po_validity' => 'required',
@@ -45,9 +46,10 @@ class BusinessController extends Controller
             ];
 
             $messages = [
-                        'title.required' => 'The design customer name is required.',
-                        'title.string' => 'The design customer name must be a valid string.',
-                        'title.max' => 'The design customer name must not exceed 255 characters.',
+                        'title.required' => 'The customer name is required.',
+                        'title.string' => 'The customer name must be a valid string.',
+                        'title.max' => 'The customer name must not exceed 255 characters.',
+                        'product_name.required' => 'The product name is required.',
                         'customer_po_number.required' => 'The customer po number is required.',
                         'quantity.required' => 'The customer quantity is required.',
                         'po_validity.required' => 'The po validity is required.',
@@ -87,7 +89,6 @@ class BusinessController extends Controller
 
             $edit_data_id = base64_decode($request->id);
             $editData = $this->service->getById($edit_data_id);
-            // dd($editData);
             return view('organizations.business.business.edit-business', compact('editData'));
         } catch (\Exception $e) {
             return $e;
@@ -96,6 +97,7 @@ class BusinessController extends Controller
        public function update(Request $request){
         $rules = [
             'customer_po_number' => 'required',
+            'product_name' => 'required',
             'quantity' => 'required',
             'po_validity' => 'required',
             'hsn_number' => 'required',
@@ -108,6 +110,7 @@ class BusinessController extends Controller
             'title.string' => 'The design customer name must be a valid string.',
             'title.max' => 'The design customer name must not exceed 255 characters.',
             'customer_po_number.required' => 'The customer po number is required.',
+            'product_name.required' => 'The product name is required.',
             'quantity.required' => 'The customer quantity is required.',
             'po_validity.required' => 'The po validity is required.',
             'hsn_number.required' => 'The hsn number is required.',
@@ -164,28 +167,24 @@ class BusinessController extends Controller
     public function submitFinalPurchaseOrder($id){
         try {
             $data_output = $this->service->getPurchaseOrderBusinessWise($id);
-            // dd($data_output);
-            // die();
+           
             return view('organizations.business.list.list-purchase-order-particular-po', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
         }
     }
     
-    public function submitFinalPurchaseOrderBusinessWise($purchase_order_id){
+    public function getPurchaseOrderDetails($purchase_order_id){
 
         try {
             $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
-
-            $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
-            // dd($data);
-            // die();
             $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
-
+            $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
+            $business_id = $data['purchaseOrder']->business_id;
             $purchaseOrder = $data['purchaseOrder'];
             $purchaseOrderDetails = $data['purchaseOrderDetails'];
 
-            return view('organizations.business.purchase-order.purchase-order-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData', 'getAllRulesAndRegulations'));
+            return view('organizations.business.purchase-order.purchase-order-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData','business_id', 'getAllRulesAndRegulations'));
 
         } catch (\Exception $e) {
             return $e;
@@ -193,11 +192,10 @@ class BusinessController extends Controller
     } 
 
 
-    public function acceptPurchaseOrder($purchase_order_id)
+    public function acceptPurchaseOrder($purchase_order_id, $business_id)
     {
         try {
-            
-            $delete = $this->service->acceptPurchaseOrder($purchase_order_id);
+            $delete = $this->service->acceptPurchaseOrder($purchase_order_id,$business_id);
             if ($delete) {
                 $status = 'success';
                 $msg ='Purchase order accepted.';

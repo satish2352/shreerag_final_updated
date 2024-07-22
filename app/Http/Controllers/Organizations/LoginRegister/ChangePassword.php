@@ -27,7 +27,6 @@ class ChangePassword extends Controller
             'min:8',
         ],
     ]);
-        // dd($request);
 
     if ($validator->fails()) {
         return redirect()->back()->withErrors($validator)->withInput();

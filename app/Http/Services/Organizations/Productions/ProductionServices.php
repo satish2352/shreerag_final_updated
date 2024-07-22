@@ -19,7 +19,9 @@ use Config;
 
     public function acceptdesign($id){
         try {
-            $update_data = $this->repo->acceptdesign($id);
+           $data_output = $update_data = $this->repo->acceptdesign($id);
+          
+           return $data_output;
         } catch (\Exception $e) {
             return $e;
         }

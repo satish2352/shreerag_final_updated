@@ -30,7 +30,7 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Material Need To Sent To<span class="table-project-n">Production</span> Department</h1>
+                                <h1>Material Need To Sent To<span class="table-project-n">Production</span> Department Business Wise</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
                                         {{-- <div class="login-horizental cancel-wp pull-left">
@@ -81,13 +81,13 @@
                                         <thead>
                                             <tr>
                                                 
-                                                <th data-field="id">ID</th>
-                                                <th data-field="product_name" data-editable="true">Product Name</th>
-                                                <th data-field="grn_date" data-editable="true">Description</th>
-                                                <th data-field="purchase_id" data-editable="true">Remark</th>
-                                                <th data-field="design_image" data-editable="false">Design Layout</th>
-                                                <th data-field="bom_image" data-editable="false">BOM</th>
-                                                <th data-field="action" data-editable="false">Action</th>
+                                                <th data-field="id">Sr.No.</th> 
+                                                <th data-field="purchase_orders_id" data-editable="true">Purchase Order ID</th>
+                                                <th data-field="client_name" data-editable="true">Client Name</th>
+                                                <th data-field="vendor_company_name" data-editable="true">Client Company Name</th>
+                                                <th data-field="email" data-editable="true">Email</th>
+                                                <th data-field="contact_no" data-editable="true">Phone Number</th>
+                                                <th data-field="vendor_address" data-editable="true">Address</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -95,31 +95,12 @@
                                                 <tr>
                                                     
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ ucwords($data->product_name) }}</td>
-                                                    <td>{{ ucwords($data->descriptions) }}</td>
-                                                    <td>{{ ucwords($data->remarks) }}</td>
-                                                    <td> <a class="img-size" target="_blank"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
-                                                        alt="Design"> Click to view</a>
-                                                </td>
-                                                <td> <a class="img-size"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                        alt="bill of material" >Click to download</a>
-                                                </td>
-                                                    <td>
-                                                        <div style="display: flex; align-items: center;">
-                                                            <a
-                                                                href="{{ route('accepted-and-material-sent', base64_encode($data->productionId)) }} "><button
-                                                                    data-toggle="tooltip" title="Requirement forwareded For production"
-                                                                    class="pd-setting-ed">Requirement forwareded For production</button></a>
-
-                                                            <a
-                                                                href="{{ route('need-to-create-req', base64_encode($data->productionId)) }} "><button
-                                                                    data-toggle="tooltip" title="Need To Purchase"
-                                                                    class="pd-setting-ed">Need To Purchase</button></a>
-                                                        </div>
-                                                    </td>
-
+                                            <td>{{ $data->purchase_orders_id }}</td>
+                                            <td>{{ $data->vendor_name }}</td>
+                                           <td>{{ $data->vendor_company_name }}</td>
+                                           <td>{{ $data->vendor_email }}</td> 
+                                           <td>{{ $data->contact_no }}</td> 
+                                           <td>{{ $data->vendor_address }}</td> 
                                                 </tr>
                                             @endforeach
                                         </tbody>

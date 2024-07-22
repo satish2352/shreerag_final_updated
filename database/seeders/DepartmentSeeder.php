@@ -60,11 +60,18 @@ class DepartmentSeeder extends Seeder
                 'department_name' => 'HR',
             ]);
             
-            DepartmentsModel::create(
-                [
-                    'id'=> 10,
-                    'department_name' => 'CMS',
-                ]); 
+        DepartmentsModel::create(
+            [
+                'id'=> 10,
+                'department_name' => 'CMS',
+            ]); 
+        DepartmentsModel::create(
+            [
+                'id'=> 11,
+                'department_name' => 'Employee',
+            ]); 
+
+                
       
     }
 }

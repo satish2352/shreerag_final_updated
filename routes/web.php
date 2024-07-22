@@ -164,7 +164,8 @@ Route::group(['middleware' => ['admin']], function () {
         // ========================Quality Department End========
         //All list
         Route::get('/list-material-sent-to-quality', ['as' => 'list-material-sent-to-quality', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@getAllListMaterialSentFromQuality']);
-    
+        Route::get('/list-material-sent-to-quality-businesswise/{id}', ['as' => 'list-material-sent-to-quality-businesswise', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@getAllListMaterialSentFromQualityBusinessWise']);
+
         Route::get('/list-rejected-chalan', ['as' => 'list-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Quality\RejectedChalanController@index']);
         Route::get('/add-rejected-chalan/{purchase_orders_id}', ['as' => 'add-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Quality\RejectedChalanController@add']);
         Route::post('/store-rejected-chalan', ['as' => 'store-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Quality\RejectedChalanController@store']);
@@ -182,9 +183,9 @@ Route::group(['middleware' => ['admin']], function () {
         Route::post('/update-business', ['as' => 'update-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@update']);
         Route::any('/delete-business/{id}', ['as' => 'delete-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@destroy']);
         Route::get('/list-submit-final-purchase-order/{id}', ['as' => 'list-submit-final-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@submitFinalPurchaseOrder']);
-        Route::get('/list-submit-final-purchase-order-particular-business/{purchase_order_id}', ['as' => 'list-submit-final-purchase-order-particular-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@submitFinalPurchaseOrderBusinessWise']);
+        Route::get('/list-submit-final-purchase-order-particular-business/{purchase_order_id}', ['as' => 'list-submit-final-purchase-order-particular-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@getPurchaseOrderDetails']);
     
-        Route::get('/accept-purchase-order/{purchase_order_id}', ['as' => 'accept-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@acceptPurchaseOrder']);
+        Route::get('/accept-purchase-order/{purchase_order_id}/{business_id}', ['as' => 'accept-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@acceptPurchaseOrder']);
     
         //ALL List
         Route::get('/list-forwarded-to-design', ['as' => 'list-forwarded-to-design', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListForwardedToDesign']);
@@ -193,7 +194,8 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/material-ask-by-store-to-purchase', ['as' => 'material-ask-by-store-to-purchase', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllStoreDeptSentForPurchaseMaterials']);
         Route::get('/list-purchase-orders', ['as' => 'list-purchase-orders', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListPurchaseOrder']);
         Route::get('/list-approved-purchase-orders-owner', ['as' => 'list-approved-purchase-orders-owner', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListApprovedPurchaseOrderOwnerlogin']);
-    
+        Route::get('/list-purchase-order-approved-bussinesswise/{id}', ['as' => 'list-purchase-order-approved-bussinesswise', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@submitFinalPurchaseOrder']);
+        // Route::get('/list-submit-final-purchase-order-particular-business/{purchase_order_id}', ['as' => 'list-submit-final-purchase-order-particular-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@getPurchaseOrderDetails']);
     
     
         Route::get('/list-design-uploaded-owner', ['as' => 'list-design-uploaded-owner', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@loadDesignSubmittedForProduction']);
@@ -231,11 +233,13 @@ Route::group(['middleware' => ['admin']], function () {
         // Route::group(['prefix' => 'purchaseorderstatus'], function () {
         Route::get('/list-approved-purchase-orders', ['as' => 'list-approved-purchase-orders', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListApprovedPurchaseOrder']);
         Route::get('/check-details-of-po-before-send-vendor/{purchase_order_id}', ['as' => 'check-details-of-po-before-send-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@checkDetailsBeforeSendPOToVendor']);
-        Route::get('/list-check-final-purchase-order/{purchase_order_id}', ['as' => 'list-check-final-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@submitAndSentEmailToTheVendorFinalPurchaseOrder']);
+        Route::get('/list-check-final-purchase-order/{purchase_order_id}', ['as' => 'list-check-final-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@listAllApprovedPOToBeChecked']);
+        Route::get('/finalize-and-submit-mail-to-vendor/{purchase_order_id}', ['as' => 'finalize-and-submit-mail-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@submitAndSentEmailToTheVendorFinalPurchaseOrder']);
     
         Route::post('/submit-purchase-order-to-owner-for-review', ['as' => 'submit-purchase-order-to-owner-for-review', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@submitPurchaseOrderToOwnerForReview']);
     
         Route::get('/list-purchase-order-approved-sent-to-vendor', ['as' => 'list-purchase-order-approved-sent-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListPurchaseOrderMailSentToVendor']);
+        Route::get('/list-purchase-order-approved-sent-to-vendor-businesswise/{id}', ['as' => 'list-purchase-order-approved-sent-to-vendor-businesswise', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListPurchaseOrderMailSentToVendorBusinessWise']);
         Route::get('/list-purchase-orders-sent-to-owner', ['as' => 'list-purchase-orders-sent-to-owner', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListPurchaseOrderTowardsOwner']);
         Route::get('/list-purchase-orders-sent-to-owner-details/{purchase_order_id}', ['as' => 'list-purchase-orders-sent-to-owner-details', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@getAllListPurchaseOrderTowardsOwnerDetails']);
     
@@ -275,6 +279,8 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-revised-design', ['as' => 'list-revised-design', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@reviseddesignlist']);
         Route::get('/list-material-recived', ['as' => 'list-material-recived', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllListMaterialRecievedToProduction']);
     
+        Route::get('/list-final-purchase-order-production/{id}', ['as' => 'list-final-purchase-order-production', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllListMaterialRecievedToProductionBusinessWise']);
+
     });
     
     Route::group(['prefix' => 'securitydept'], function () {
@@ -283,8 +289,9 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-gatepass', ['as' => 'list-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@index']);
         Route::get('/add-gatepass', ['as' => 'add-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@add']);
     
-        Route::get('/edit-gatepass', ['as' => 'edit-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@edit']);
-    
+        Route::get('/edit-gatepass/{id}', ['as' => 'edit-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@edit']);
+        Route::post('/update-gatepass', ['as' => 'update-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@update']);
+
     
         Route::get('/add-gatepass-with-po/{id}', ['as' => 'add-gatepass-with-po', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@addGatePassWithPO']);
         Route::post('/store-gatepass', ['as' => 'store-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@store']);
@@ -306,21 +313,23 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-material-sent-to-prod', ['as' => 'list-material-sent-to-prod', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialSentToProduction']);
         Route::get('/list-material-sent-to-purchase', ['as' => 'list-material-sent-to-purchase', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialSentToPurchase']);
         Route::get('/list-material-received-from-quality', ['as' => 'list-material-received-from-quality', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialReceivedFromQuality']);
-    
-        Route::get('/accepted-store-material-sent-to-production/{id}', ['as' => 'accepted-store-material-sent-to-production', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@genrateStoreReciptAndForwardMaterialToTheProduction']);
+        Route::get('/list-material-received-from-quality-bussinesswise/{id}', ['as' => 'list-material-received-from-quality-bussinesswise', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@submitFinalPurchaseOrder']);
+
+        Route::get('/accepted-store-material-sent-to-production/{purchase_orders_id}/{business_id}', ['as' => 'accepted-store-material-sent-to-production', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@genrateStoreReciptAndForwardMaterialToTheProduction']);
     
     });
     
     Route::group(['prefix' => 'financedept'], function () {
     
-        Route::get('/forward-the-purchase-order-to-the-owner-for-sanction/{purchase_orders_id}', ['as' => 'forward-the-purchase-order-to-the-owner-for-sanction', 'uses' => 'App\Http\Controllers\Organizations\Finance\FinanceController@forwardPurchaseOrderToTheOwnerForSanction']);
+        Route::get('/forward-the-purchase-order-to-the-owner-for-sanction/{purchase_orders_id}/{business_id}', ['as' => 'forward-the-purchase-order-to-the-owner-for-sanction', 'uses' => 'App\Http\Controllers\Organizations\Finance\FinanceController@forwardPurchaseOrderToTheOwnerForSanction']);
         Route::get('/list-accepted-grn-srn-finance/{purchase_orders_id}', ['as' => 'list-accepted-grn-srn-finance', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@listAcceptedGrnSrnFinance']);
         //ALL List
         Route::get('/list-sr-and-gr-genrated-business', ['as' => 'list-sr-and-gr-genrated-business', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@getAllListSRAndGRNGeanrated']);
+        Route::get('/list-sr-and-gr-genrated-business-wise/{id}', ['as' => 'list-sr-and-gr-genrated-business-wise', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@getAllListSRAndGRNGeanratedBusinessWise']);
         Route::get('/list-po-sent-for-approval', ['as' => 'list-po-sent-for-approval', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@listPOSentForApprovaTowardsOwner']);
     
         Route::get('/list-po-sanction-and-need-to-do-payment-to-vendor', ['as' => 'list-po-sanction-and-need-to-do-payment-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@listPOSanctionAndNeedToDoPaymentToVendor']);
-        Route::get('/send-payment-to-vendor/{purchase_orders_id}', ['as' => 'send-payment-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Finance\FinanceController@forwardedPurchaseOrderPaymentToTheVendor']);
+        Route::get('/send-payment-to-vendor/{purchase_orders_id}/{business_id}', ['as' => 'send-payment-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Finance\FinanceController@forwardedPurchaseOrderPaymentToTheVendor']);
     
     });
 

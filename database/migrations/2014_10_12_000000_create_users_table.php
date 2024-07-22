@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('city')->nullable();
             $table->string('pincode')->nullable();
+            $table->string('department_id')->nullable();
             $table->string('ip_address')->nullable();
             $table->rememberToken();
             $table->boolean('is_active')->default(true);

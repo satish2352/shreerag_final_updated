@@ -44,7 +44,6 @@ class LoginController extends Controller
                 ->withErrors($validation);
         } else {
             $resp = self::$loginServe->checkLogin($request);
-            // dd($resp);
             if ($resp['status'] == 'success') {
                 if (is_object($resp['msg']) && property_exists($resp['msg'], 'id')) {
                     $userId = $resp['msg']->id;

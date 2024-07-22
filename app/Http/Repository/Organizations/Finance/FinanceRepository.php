@@ -10,40 +10,86 @@ use App\Models\{
     BusinessApplicationProcesses,
     ProductionModel,
     DesignRevisionForProd,
-    Requisition
+    Requisition,
+    PurchaseOrderModel
 };
 use Config;
 
 class FinanceRepository
 {
 
-    public function forwardPurchaseOrderToTheOwnerForSanction($purchase_order_id)
+    // public function forwardPurchaseOrderToTheOwnerForSanction($purchase_orders_id, $business_id)
+    // {
+    //     try {
+    //           $purchase_order = PurchaseOrderModel::where('purchase_orders_id', $purchase_orders_id)->first();
+    //         //   dd($purchase_order);
+    //         //   die();
+    //           $business_application = BusinessApplicationProcesses::where('business_id', $business_id)->first();
+            
+           
+    //           if ( $business_application  &&  $purchase_order) {
+    //             // Update the business application statuses and dates
+    //             $business_application->business_status_id = config('constants.FINANCE_DEPARTMENT.INVOICE_SENT_FOR_BILL_APPROVAL_TO_HIGHER_AUTHORITY');
+                
+    //             // Update the purchase order statuses, receipt number, and dates
+    //             $purchase_order->purchase_orders_id = $purchase_orders_id;
+    //             // Save the updated business application and purchase order
+    //             $business_application->save();
+    //             $purchase_order->save();
+
+
+    //             dd($business_application);
+    //             dd($purchase_order);
+    //             die();
+    //           }
+    //        return "ok";
+    //     } catch (\Exception $e) {
+    //         return $e->getMessage();
+    //     }
+    // }
+
+    public function forwardPurchaseOrderToTheOwnerForSanction($purchase_orders_id, $business_id)
     {
         try {
-            $business_application = BusinessApplicationProcesses::where('purchase_order_id', $purchase_order_id)->first();
-            if ($business_application) {
-                $business_application->purchase_order_id = $purchase_order_id;
+           
+            $purchase_order = PurchaseOrderModel::where('purchase_orders_id', $purchase_orders_id)->first();
+            
+            $business_application = BusinessApplicationProcesses::where('business_id', $business_id)->first();
+        
+            if ($business_application && $purchase_order) {
+                // Update the business application statuses and dates
                 $business_application->business_status_id = config('constants.FINANCE_DEPARTMENT.INVOICE_SENT_FOR_BILL_APPROVAL_TO_HIGHER_AUTHORITY');
+                $purchase_order->purchase_orders_id = $purchase_orders_id;
+                // Save the updated business application and purchase order
                 $business_application->save();
+                $purchase_order->save();
+                // dd($business_application);
+                // die();
+                return ['business_application' => $business_application, 'purchase_order' => $purchase_order];
             }
-            return $business_application;
+    
+            return "No matching records found.";
         } catch (\Exception $e) {
-            return $e;
+            return $e->getMessage();
         }
     }
-
-
-    public function forwardedPurchaseOrderPaymentToTheVendor($purchase_order_id)
+    
+    public function forwardedPurchaseOrderPaymentToTheVendor($purchase_order_id, $business_id)
     {
         try {
-            $business_application = BusinessApplicationProcesses::where('purchase_order_id', $purchase_order_id)->first();
-            if ($business_application) {
+            $purchase_order = PurchaseOrderModel::where('purchase_orders_id', $purchase_order_id)->first();
+           
+            $business_application = BusinessApplicationProcesses::where('business_id', $business_id)->first();
+            if ( $business_application  &&  $purchase_order) {
                 $business_application->purchase_order_id = $purchase_order_id;
                 $business_application->business_status_id = config('constants.FINANCE_DEPARTMENT.INVOICE_PAID_AGAINST_PO');
-                $business_application->finanace_store_receipt_status_id = config('constants.FINANCE_DEPARTMENT.INVOICE_PAID_AGAINST_PO');
+                // $business_application->finanace_store_receipt_status_id = config('constants.FINANCE_DEPARTMENT.INVOICE_PAID_AGAINST_PO');
+               
+                $purchase_order->finanace_store_receipt_status_id = config('constants.FINANCE_DEPARTMENT.INVOICE_PAID_AGAINST_PO');
                 $business_application->save();
+                $purchase_order->save();               
             }
-            return $business_application;
+            return "ok";
         } catch (\Exception $e) {
             return $e;
         }
@@ -79,7 +125,7 @@ class FinanceRepository
     //             $business_application->store_status_id = config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE');
     //             $business_application->requisition_id = $last_insert_id;
     //             $dataOutput->purchase_dept_req_sent_date = date('Y-m-d');
-    //             $business_application->purchase_status_id = config('constants.PUCHASE_DEPARTMENT.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE');
+    //             $business_application->purchase_status_from_purchase = config('constants.PUCHASE_DEPARTMENT.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE');
     //             $business_application->save();
 
     //         }

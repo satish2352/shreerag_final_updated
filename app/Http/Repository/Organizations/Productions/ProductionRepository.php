@@ -19,8 +19,10 @@ class ProductionRepository  {
 
     public function acceptdesign($id){
         try {
-
+            
             $business_application = BusinessApplicationProcesses::where('business_id', $id)->first();
+          
+
             if ($business_application) {
                 // $business_application->business_id = $id;
                 $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
@@ -28,8 +30,21 @@ class ProductionRepository  {
                 $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.ACCEPTED_DESIGN_BY_PRODUCTION');
                 // $business_application->production_id = $production_data->id;
                 $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION');
+               
                 $business_application->save();
             }
+            $business = Business::find($id);
+
+            if ($business) {
+                $business->is_approved_production = '1';
+                $business->save();
+            } else {
+                return [
+                    'msg' => 'Business not found',
+                    'status' => 'error',
+                ];
+            }
+    
             $designRevisionForProdID = DesignRevisionForProd::where('production_id', $business_application->production_id)->orderBy('id','desc')->first();
 
             $dataOutput = DesignModel::where('business_id', $business_application->business_id)->first();
@@ -42,6 +57,8 @@ class ProductionRepository  {
             }
             $dataOutput->design_image = $designRevisionForProdID->design_image;
             $dataOutput->bom_image = $designRevisionForProdID->bom_image;
+
+           
             $dataOutput->save();
 
         } catch (\Exception $e) {

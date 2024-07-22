@@ -88,7 +88,10 @@ button.pd-setting-ed {
                                         <tr>
                                             
                                             <th data-field="id">ID</th>   
-                                            <th data-field="grn_number" data-editable="true">Title</th>
+                                            <th data-field="customer_po_number" data-editable="true">PO Number</th>
+                                            <th data-field="product_name" data-editable="true">Product Name</th>
+                                            {{-- <th data-field="title" data-editable="true">Name</th> --}}
+                                            <th data-field="quantity" data-editable="true">Quantity</th>
                                             <th data-field="grn_date" data-editable="true">Description</th>
                                             <th data-field="purchase_id" data-editable="true">Remark</th>                                         
                                             <th data-field="design_image" data-editable="false">Design Layout</th>
@@ -102,12 +105,14 @@ button.pd-setting-ed {
 
                                     <tbody>
                                         @foreach($data_output as $data)
-                                        <?php //dd($data['design_image']); ?>
                                         <tr>
                                             
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ucwords($data->title)}}</td>
-                                            <td>{{ucwords($data->descriptions)}}</td>
+                                            <td>{{ ucwords($data->customer_po_number) }}</td>
+                                            <td>{{ucwords($data->product_name)}}</td>
+                                            {{-- <td>{{ucwords($data->title)}}</td> --}}
+                                            <td>{{ucwords($data->quantity)}}</td>
+                                            <td>{{ ucwords($data->descriptions) }}</td>
                                             <td>{{ucwords($data->remarks)}}</td>
                                             <td><a class="img-size" target="_blank"
                                                 href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"

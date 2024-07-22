@@ -18,7 +18,6 @@ class AllListController extends Controller
     public function getAllListForwardedToDesign(Request $request){
         try {
             $data_output = $this->service->getAllListForwardedToDesign();
-        
             return view('organizations.business.list.list-business', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
@@ -48,8 +47,7 @@ class AllListController extends Controller
     public function getAllStoreDeptSentForPurchaseMaterials(Request $request){
         try {
             $data_output = $this->service->getAllStoreDeptSentForPurchaseMaterials();
-        // dd( $data_output);
-        // die();
+
             return view('organizations.business.list.list-material-list-from-store-to-purchase', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
@@ -61,6 +59,7 @@ class AllListController extends Controller
     public function getAllListPurchaseOrder(Request $request){
         try {
             $data_output = $this->service->getAllListPurchaseOrder();
+        
             return view('organizations.business.list.list-purchase-order-need-to-check', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
@@ -76,11 +75,18 @@ class AllListController extends Controller
             return $e;
         }
     }
-
+    public function submitFinalPurchaseOrder($id){
+        try {
+            $data_output = $this->service->getPurchaseOrderBusinessWise($id);
+           
+            return view('organizations.business.list.list-purchase-order-approved-bussinesswise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     public function listPOReceivedForApprovaTowardsOwner(Request $request){
         try {
             $data_output = $this->service->listPOReceivedForApprovaTowardsOwner();
-        
             return view('organizations.business.list.list-po-received-for-sanction-towards-owner', compact('data_output'));
         } catch (\Exception $e) {
             return $e;

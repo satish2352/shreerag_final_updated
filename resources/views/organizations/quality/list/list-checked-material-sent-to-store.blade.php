@@ -82,7 +82,7 @@
                                             <tr>
                                                 
                                                 <th data-field="id">ID</th>
-                                                <th data-field="grn_number" data-editable="true">Title</th>
+                                                <th data-field="grn_number" data-editable="true">Product Name</th>
                                                 <th data-field="grn_date" data-editable="true">Description</th>
                                                 <th data-field="purchase_id" data-editable="true">Remark</th>
                                                 <th data-field="design_image" data-editable="false">Design Layout</th>
@@ -95,7 +95,7 @@
                                                 <tr>
                                                     
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ ucwords($data->title) }}</td>
+                                                    <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->descriptions) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                     <td> <a class="img-size" target="_blank"
@@ -106,15 +106,16 @@
                                                         href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
                                                         alt="bill of material" >Click to download</a>
                                                 </td>
-                                                    {{-- <td>
-                                                        <div style="display: flex; align-items: center;">
+                                                    <td>
+                                                        <div style="display: inline-block; align-items: center;">
                                                             <a
-                                                                href="{{ route('accepted-store-material-sent-to-production', base64_encode($data->productionId)) }} "><button
-                                                                    data-toggle="tooltip" title="Trash"
-                                                                    class="pd-setting-ed">Forwareded For production</button></a>
-
+                                                                href="{{ route('list-material-sent-to-quality-businesswise', $data->id) }}"><button
+                                                                    data-toggle="tooltip" title="Edit"
+                                                                    class="pd-setting-ed"><i class="fa fa-pencil-square-o"
+                                                                        aria-hidden="true"></i> Check Details</button></a>
+                                                            &nbsp; &nbsp; &nbsp;
                                                         </div>
-                                                    </td> --}}
+                                                    </td>
 
                                                 </tr>
                                             @endforeach

@@ -46,10 +46,12 @@ class StoreServices
     }
 
 
-    public function genrateStoreReciptAndForwardMaterialToTheProduction($id)
+    public function genrateStoreReciptAndForwardMaterialToTheProduction($purchase_orders_id, $business_id)
     {
         try {
-            $update_data = $this->repo->genrateStoreReciptAndForwardMaterialToTheProduction($id);
+            $update_data = $this->repo->genrateStoreReciptAndForwardMaterialToTheProduction($purchase_orders_id, $business_id);
+            // dd($update_data);
+            // die();
         } catch (\Exception $e) {
             return $e;
         }

@@ -68,13 +68,13 @@ label.error {
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="vendor_name">Vendor Name:</label>
                                                         <input class="form-control" name="vendor_name" id="vendor_name"
-                                                    placeholder="Enter the company name"
+                                                    placeholder="Enter the name"
                                                     value=" @if (old('vendor_name')) {{ old('vendor_name') }}@else{{ $editData->vendor_name }} @endif">
                                                 </div>   
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="vendor_company_name">Company Name:</label>
                                                     <input class="form-control" name="vendor_company_name" id="vendor_company_name"
-                                                placeholder="Enter the Vendor Name"
+                                                placeholder="Enter the Company Name"
                                                 value=" @if (old('vendor_company_name')) {{ old('vendor_company_name') }}@else{{ $editData->vendor_company_name }} @endif">
                                             </div>  
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -165,89 +165,79 @@ label.error {
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
 <script>
-var i = 0;
-
-$("#add").click(function() {
-    ++i;
-
-    $("#dynamicTable").append(
-        '<tr><td><input type="text" name="addmore[' +
-        i +
-        '][quantity]" placeholder="Enter your quantity" class="form-control" /></td><td><input type="text" name="addmore[' +
-        i +
-        '][description]" placeholder="Enter your description" class="form-control" /></td><td><input type="text" name="addmore[' +
-        i +
-        '][price]" placeholder="Enter your Price" class="form-control" /></td><td><input type="text" name="addmore[' +
-        i +
-        '][amount]" placeholder="Enter your amount" class="form-control" /></td><td><input type="text" name="addmore[' +
-        i +
-        '][total]" placeholder="Enter your total" class="form-control" /></td><td><button type="button" class="btn btn-danger remove-tr">Remove</button></td></tr>'
-    );
-});
-
-$(document).on("click", ".remove-tr", function() {
-    $(this).parents("tr").remove();
-});
-</script>
-<script>
-jQuery.noConflict();
-jQuery(document).ready(function($) {
-    $("#addDesignsForm").validate({
-        rules: {
-            vendor_name: {
-            required: true,
+    jQuery.noConflict();
+    jQuery(document).ready(function($) {
+        $.validator.addMethod("regex", function(value, element, regexp) {
+            if (regexp.constructor != RegExp)
+                regexp = new RegExp(regexp);
+            else if (regexp.global)
+                regexp.lastIndex = 0;
+            return this.optional(element) || regexp.test(value);
+        }, "Please check your input.");
+    
+        $("#addDesignsForm").validate({
+            rules: {
+                vendor_name: {
+                    required: true,
+                },
+                vendor_company_name: {
+                    required: true,
+                },
+                vendor_address: {
+                    required: true,
+                },
+                gst_no: {
+                    required: true,
+                    regex: /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/ // Add your GST pattern here
+                },
+                contact_no: {
+                    required: true,
+                    regex: /^[0-9]{10}$/ 
+                },
+                vendor_email: {
+                    required: true,
+                    email: true
+                },
+                quote_no: {
+                    required: true,
+                    regex: /^[A-Z0-9]+$/ 
+                },
+                payment_terms: {
+                    required: true,
+                },
             },
-            vendor_address: {
-                required: true,
-                // Add your custom validation rule if needed
+            messages: {
+                vendor_name: {
+                    required: "Please enter your name.",
+                },
+                vendor_company_name: {
+                    required: "Please enter company name.",
+                },
+                vendor_address: {
+                    required: "Please enter your vendor address.",
+                },
+                gst_no: {
+                    required: "Please enter your GST No.",
+                    regex: "Please enter a valid GST No."
+                },
+                contact_no: {
+                    required: "Please enter a valid contact no.",
+                    regex: "Please enter a valid 10 digit mobile number."
+                },
+                vendor_email: {
+                    required: "Please enter your valid email.",
+                    email: "Please enter a valid email address."
+                },
+                quote_no: {
+                    required: "Please enter your quote no.",
+                    regex: "Please enter a valid Quote No."
+                },
+                payment_terms: {
+                    required: "Please enter your payment terms.",
+                },  
+               
             },
-            gst_no: {
-                required: true,
-            },
-            contact_no: {
-                required: true,
-            },
-            vendor_email: {
-                required: true,
-            },
-            quote_no: {
-                required: true,
-            },
-            payment_terms: {
-                required: true,
-            },
-            status: {
-                required: true,
-            },
-        },
-        messages: {
-            vendor_name: {
-                required: "Please enter your name.",
-            },
-            vendor_address: {
-                required: "Please enter your vendor_address.",
-            },
-            gst_no: {
-                required: "Please enter your GST No.",
-            },
-            contact_no: {
-                required: "Please enter a valid contact no.",
-            },
-            vendor_email: {
-                required: "Please enter your valid email.",
-            },
-            quote_no: {
-                required: "Please enter your quote no.",
-            },
-            payment_terms: {
-                required: "Please enter your payment terms.",
-            },  
-            status: {
-                required: "Please enter status",
-            },
-
-        },
-        submitHandler: function(form) {
+            submitHandler: function(form) {
                 // Use SweetAlert to show a success message
                 Swal.fire({
                     icon: 'success',
@@ -259,8 +249,7 @@ jQuery(document).ready(function($) {
             }
         });
     });
-</script>
-
+    </script>
 
 
 @endsection

@@ -85,7 +85,7 @@
                                                 <th data-field="grn_number" data-editable="true">Title</th>
                                                 <th data-field="grn_date" data-editable="true">Description</th>
                                                 <th data-field="purchase_id" data-editable="true">Remark</th>
-                                                <th data-field="store_material_sent_date" data-editable="true">Matrial Recieved Date</th>
+                                                {{-- <th data-field="store_material_sent_date" data-editable="true">Matrial Recieved Date</th> --}}
                                                 <th data-field="design_image" data-editable="false">Purchase order</th>
                                                 <th data-field="bom_image" data-editable="false">Genrate Gate Pass</th>
 
@@ -102,7 +102,7 @@
                                                     <td>{{ ucwords($data->title) }}</td>
                                                     <td>{{ ucwords($data->descriptions) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
-                                                    <td>{{ ucwords($data->store_material_sent_date) }}</td>
+                                                    {{-- <td>{{ ucwords($data->store_material_sent_date) }}</td> --}}
                                                     <td> <a class="img-size" target="_blank"
                                                         href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
                                                         alt="Design"> Click to view</a>

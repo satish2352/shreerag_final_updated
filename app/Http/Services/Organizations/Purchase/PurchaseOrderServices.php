@@ -33,8 +33,7 @@ use Config;
     public function submitBOMToOwner($request){
         try {
             $data = $this->repo->submitBOMToOwner($request);
-            // dd($data);
-            // die();
+           
             if ($data) {
                 return ['status' => 'success', 'msg' => 'Purchase Order Added Successfully.'];
             } else {
@@ -61,11 +60,24 @@ use Config;
     
 
     
-    public function submitAndSentEmailToTheVendorFinalPurchaseOrder($id)
+    public function listAllApprovedPOToBeChecked($id)
     {
         try {
-            $submitAndSentEmailToTheVendorFinalPurchaseOrder = $this->repo->submitAndSentEmailToTheVendorFinalPurchaseOrder($id);
-            return $submitAndSentEmailToTheVendorFinalPurchaseOrder;
+            $listAllApprovedPOToBeChecked = $this->repo->listAllApprovedPOToBeChecked($id);
+            return $listAllApprovedPOToBeChecked;
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
+    }
+
+
+        
+    public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id)
+    {
+        try {
+            $data = $this->repo->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id);
+           
+            return $data;
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }

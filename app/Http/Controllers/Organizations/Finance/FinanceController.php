@@ -18,24 +18,38 @@ class FinanceController extends Controller
         $this->service = new FinanceServices();
     }
 
-
-
-    public function forwardPurchaseOrderToTheOwnerForSanction($purchase_orders_id)
+    public function forwardPurchaseOrderToTheOwnerForSanction($purchase_orders_id, $business_id)
     {
         try {
-            $update_data = $this->service->forwardPurchaseOrderToTheOwnerForSanction($purchase_orders_id);
-            return redirect('financedept/list-sr-and-gr-genrated-business');
+            $update_data = $this->service->forwardPurchaseOrderToTheOwnerForSanction($purchase_orders_id, $business_id);
+    
+            if (is_array($update_data)) {
+                return redirect('financedept/list-sr-and-gr-genrated-business')->with('success', 'Purchase order forwarded successfully.');
+            } else {
+                return redirect('financedept/list-sr-and-gr-genrated-business')->with('error', $update_data);
+            }
         } catch (\Exception $e) {
-            return $e;
+            return redirect('financedept/list-sr-and-gr-genrated-business')->with('error', $e->getMessage());
         }
     }
+    
+
+    // public function forwardPurchaseOrderToTheOwnerForSanction($purchase_orders_id, $business_id)
+    // {
+    //     try {
+    //         $update_data = $this->service->forwardPurchaseOrderToTheOwnerForSanction($purchase_orders_id, $business_id);
+    //         return redirect('financedept/list-sr-and-gr-genrated-business');
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
 
 
     
-    public function forwardedPurchaseOrderPaymentToTheVendor($purchase_orders_id)
+    public function forwardedPurchaseOrderPaymentToTheVendor($purchase_orders_id, $business_id)
     {
         try {
-            $update_data = $this->service->forwardedPurchaseOrderPaymentToTheVendor($purchase_orders_id);
+            $update_data = $this->service->forwardedPurchaseOrderPaymentToTheVendor($purchase_orders_id, $business_id);
             return redirect('financedept/list-po-sanction-and-need-to-do-payment-to-vendor');
         } catch (\Exception $e) {
             return $e;

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('role_name');
             $table->boolean('is_deleted')->default(false);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
 
         });

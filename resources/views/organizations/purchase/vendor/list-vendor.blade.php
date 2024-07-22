@@ -28,7 +28,7 @@ padding-left: 20px !important;
                 <div class="sparkline13-list">
                     <div class="sparkline13-hd">
                         <div class="main-sparkline13-hd">
-                            <h1>Vendor <span class="table-project-n">Registration</span> Table</h1>
+                            <h1>Vendor <span class="table-project-n">List</span> Table</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2" >
                                         <div class="login-horizental cancel-wp pull-left">
@@ -87,7 +87,6 @@ padding-left: 20px !important;
                                             <th data-field="quote_no" data-editable="true">Quote No.</th>
                                             <th data-field="payment_terms" data-editable="true">Payment terms</th> 
                                             <th data-field="address" data-editable="true">Address</th>
-                                            <th data-field="status" data-editable="true">Status</th> 
                                             <th data-field="action">Action</th>
                                         </tr>
 
@@ -95,7 +94,6 @@ padding-left: 20px !important;
                                     <tbody>
                                        @foreach($data_output as $vendor_data)
                                         <tr>
-                                            
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $vendor_data->vendor_name }}</td>
                                             <td>{{ $vendor_data->vendor_company_name }}</td>
@@ -104,9 +102,7 @@ padding-left: 20px !important;
                                             <td>{{ $vendor_data->gst_no }}</td>
                                             <td>{{ $vendor_data->quote_no }}</td>
                                             <td>{{ $vendor_data->payment_terms }}</td>
-                                            <td>{{ $vendor_data->vendor_address }}</td>
-                                            <td>{{ $vendor_data->is_active }}</td>
-                                         
+                                            <td>{{ $vendor_data->vendor_address }}</td>                                         
                                             <td>
                                                 <div style="display: flex; align-items: center;">
                                                     <a href="{{route('edit-vendor', base64_encode($vendor_data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>

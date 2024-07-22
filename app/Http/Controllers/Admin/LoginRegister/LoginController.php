@@ -46,14 +46,12 @@ class LoginController extends Controller
                 if($resp['status']=='success') {
                     return redirect('dashboard');
                 } else {
-                    // dd("IN else redirect");
                     return redirect('/login')->with('error', $resp['msg']);
                 }
 
             }
 
         } catch (Exception $e) {
-            dd($e);
             return redirect('feedback-suggestions')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
         

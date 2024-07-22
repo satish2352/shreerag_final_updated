@@ -83,7 +83,7 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
-                                                <th data-field="grn_number" data-editable="true">Title</th>
+                                                <th data-field="grn_number" data-editable="true">Product Name</th>
                                                 <th data-field="grn_date" data-editable="true">Description</th>
                                             </tr>
 
@@ -96,7 +96,7 @@
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ ucwords($data->title) }}</td>
+                                                    <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->descriptions) }}</td>
 
                                                     <td>

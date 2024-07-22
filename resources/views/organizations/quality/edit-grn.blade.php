@@ -77,10 +77,6 @@
                                                         <th>Action</th>
                                                     </tr>
                                                     @foreach ($editData as $key => $editDataNew)
-                                                    <?php 
-                                                    // dd($editDataNew);
-                                                    // die();
-                                                    ?>
                                                         <tr>
 
                                                             <input type="hidden" name="design_count"

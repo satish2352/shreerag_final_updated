@@ -14,7 +14,6 @@ class EmployeesRepository  {
 
     public function getAll(){
         try {
-            // dd(session()->get('role_id') );
           $data_output = EmployeesModel::select(
                 'tbl_employees.id as emp_id',
                 'tbl_employees.email as emp_email',
@@ -73,7 +72,7 @@ class EmployeesRepository  {
             ];
 
         } catch (QueryException $e) {
-            dd($e);
+            
             return [
                 'msg' => $e->getMessage(),
                 'status' => 'error'
@@ -101,7 +100,6 @@ class EmployeesRepository  {
         try { 
             $return_data = array();
             $userData = User::where('u_email', $request->email)->first();
-            // dd($userData);
             $userData->org_id = $request->company_id;
             $userData->u_email= $request->email;
             $userData->role_id= "2";
@@ -147,7 +145,6 @@ class EmployeesRepository  {
                 $deleteDataById = EmployeesModel::find($emp_id);
                 $userData = User::where('u_email', $deleteDataById->email)->first();
                 $userData->delete();
-                // dd($deleteDataById);
 
                 if ($deleteDataById) {
                     if (file_exists_view(Config::get('DocumentConstant.EMPLOYEES_DELETE') . $deleteDataById->emp_image)){

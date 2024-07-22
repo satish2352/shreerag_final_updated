@@ -77,15 +77,16 @@ class BusinessServices
     {
         try {
             $return_data = $this->repo->updateAll($request);
-            if ($return_data) {
+            if ($return_data['status'] == 'success') {
                 return ['status' => 'success', 'msg' => 'Data Updated Successfully.'];
             } else {
-                return ['status' => 'error', 'msg' => 'Data  Not Updated.'];
+                return ['status' => 'error', 'msg' => $return_data['msg']];
             }
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
+    
 
     // public function updateAll( $request ) {
     //     try {
@@ -142,10 +143,10 @@ class BusinessServices
         }
     }
 
-    public function acceptPurchaseOrder($id)
+    public function acceptPurchaseOrder($id, $business_id)
     {
         try {
-            $acceptPurchaseOrder = $this->repo->acceptPurchaseOrder($id);
+            $acceptPurchaseOrder = $this->repo->acceptPurchaseOrder($id, $business_id);
             return $acceptPurchaseOrder;
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
@@ -156,8 +157,7 @@ class BusinessServices
     {
         try {
             $data_output = $this->repo->getPurchaseOrderBusinessWise($purchase_order_id);
-            // dd($data_output);
-            // die();
+        //    dd($data_output);
             return $data_output;
 
         } catch (\Exception $e) {

@@ -117,6 +117,7 @@
                                                 @endif
                                             </div>
                                         </div>
+
                                         <div class="col-lg-6 col-md-6 col-sm-6">
                                             <div class="form-group">
                                                 <label for="u_password">Password</label>&nbsp<span class="red-text">*</span>
@@ -146,6 +147,18 @@
                                                 @if ($errors->has('password_confirmation'))
                                                     <span class="red-text"><?php echo $errors->first('password_confirmation', ':message'); ?></span>
                                                 @endif
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6">
+                                            <div class="form-group">
+                                                <label for="company_id">Select Department:</label>
+                                                <select class="form-control custom-select-value" name="department_id">
+                                                    <ul class="dropdown-menu ">
+                                                        <option value="">Select Company</option>
+                                                        @foreach($dept as $datas)
+                                                        <option value="{{$datas->id}}">{{ucfirst($datas->department_name)}}</option>
+                                                        @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6">

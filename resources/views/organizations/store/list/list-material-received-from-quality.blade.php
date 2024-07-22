@@ -30,7 +30,7 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Material Need To Sent To<span class="table-project-n">Production</span> Department</h1>
+                                <h1>Material Need To Sent To <span class="table-project-n">Production</span> Department</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
                                         {{-- <div class="login-horizental cancel-wp pull-left">
@@ -82,7 +82,7 @@
                                             <tr>
                                                 
                                                 <th data-field="id">ID</th>
-                                                <th data-field="grn_number" data-editable="true">Title</th>
+                                                <th data-field="product_name" data-editable="true">Product Name</th>
                                                 <th data-field="grn_date" data-editable="true">Description</th>
                                                 <th data-field="purchase_id" data-editable="true">Remark</th>
                                                 <th data-field="design_image" data-editable="false">Design Layout</th>
@@ -95,7 +95,7 @@
                                                 <tr>
                                                     
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ ucwords($data->title) }}</td>
+                                                    <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->descriptions) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                     <td> <a class="img-size" target="_blank"
@@ -107,13 +107,19 @@
                                                         alt="bill of material" >Click to download</a>
                                                 </td>
                                                     <td>
-                                                        <div style="display: flex; align-items: center;">
+                                                        <a
+                                                        href="{{ route('list-material-received-from-quality-bussinesswise', $data->id) }}"><button
+                                                            data-toggle="tooltip" title="Edit"
+                                                            class="pd-setting-ed"><i class="fa fa-pencil-square-o"
+                                                                aria-hidden="true"></i> Check Details</button></a>
+                                                    &nbsp; &nbsp; &nbsp;
+                                                        {{-- <div style="display: flex; align-items: center;">
                                                             <a
                                                                 href="{{ route('accepted-store-material-sent-to-production', base64_encode($data->productionId)) }} "><button
                                                                     data-toggle="tooltip" title="Forwared For production"
                                                                     class="pd-setting-ed">Forwared For production</button></a>
 
-                                                        </div>
+                                                        </div> --}}
                                                     </td>
 
                                                 </tr>

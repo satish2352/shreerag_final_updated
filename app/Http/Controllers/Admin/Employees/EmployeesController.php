@@ -30,7 +30,6 @@ class EmployeesController extends Controller
 
     public function add(){
         $data=OrganizationModel::orderby('updated_at','desc')->get();
-        // dd($data);
         return view('admin.pages.employees.add-employees',compact('data'));
     }
 
@@ -38,7 +37,6 @@ class EmployeesController extends Controller
 
 
       public function store(Request $request){
-        // dd($request->session()->get('user_id'));
          $rules = [
                     'employee_name' => 'required|string|max:255',
                     'email' => 'required|email|max:255',
@@ -83,7 +81,6 @@ class EmployeesController extends Controller
                       ->withErrors($validation);
               } else {
                   $add_record = $this->service->addAll($request);
-                //   dd($add_record);
                   if ($add_record) {
                       $msg = $add_record['msg'];
                       $status = $add_record['status'];
@@ -168,7 +165,6 @@ class EmployeesController extends Controller
                         ->withErrors($validation);
                 } else {
                     $update_data = $this->service->updateAll($request);
-                    // dd($update_data);
                     if ($update_data) {
                         $msg = $update_data['msg'];
                         $status = $update_data['status'];
@@ -187,18 +183,9 @@ class EmployeesController extends Controller
                     ->with(['msg' => $e->getMessage(), 'status' => 'error']);
             }
         }
-        // public function updateOne(Request $request){
-        //     try {
-        //         $active_id = $request->active_id;
-        //     $result = $this->service->updateOne($active_id);
-        //         return redirect('list-organizations')->with('flash_message', 'Updated!');  
-        //     } catch (\Exception $e) {
-        //         return $e;
-        //     }
-        // }
+      
         public function destroy(Request $request){
             $delete_data_id = base64_decode($request->emp_id);
-            // dd($delete_data_id);
             try {
                 $delete_record = $this->service->deleteById($delete_data_id);
                 if ($delete_record) {

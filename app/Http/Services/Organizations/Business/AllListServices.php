@@ -51,7 +51,9 @@ class AllListServices
     public function getAllStoreDeptSentForPurchaseMaterials()
     {
         try {
-            return $this->repo->getAllStoreDeptSentForPurchaseMaterials();
+            $data_output =  $this->repo->getAllStoreDeptSentForPurchaseMaterials();
+         
+            return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
@@ -62,7 +64,12 @@ class AllListServices
     public function getAllListPurchaseOrder()
     {
         try {
-            return $this->repo->getAllListPurchaseOrder();
+            $data_output = $this->repo->getAllListPurchaseOrder();
+            // dd($data_output);
+            // die();
+            return $data_output;
+            // dd($data_output);
+            // die();
         } catch (\Exception $e) {
             return $e;
         }
@@ -73,7 +80,9 @@ class AllListServices
     public function getAllListApprovedPurchaseOrderOwnerlogin()
     {
         try {
-            return $this->repo->getAllListApprovedPurchaseOrderOwnerlogin();
+            $data_output = $this->repo->getAllListApprovedPurchaseOrderOwnerlogin();
+        
+            return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
@@ -84,8 +93,11 @@ class AllListServices
     public function listPOReceivedForApprovaTowardsOwner()
     {
         try {
-            return $this->repo->listPOReceivedForApprovaTowardsOwner();
-        } catch (\Exception $e) {
+            $data_output = $this->repo->listPOReceivedForApprovaTowardsOwner();
+            // dd($data_output);
+            // die();
+        return $data_output;
+    } catch (\Exception $e) {
             return $e;
         }
     }
@@ -99,6 +111,15 @@ class AllListServices
         }
     }
 
+    public function getPurchaseOrderBusinessWise($purchase_order_id)
+    {
+        try {
+            $data_output = $this->repo->getPurchaseOrderBusinessWise($purchase_order_id);
+            return $data_output;
 
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
 
 }
