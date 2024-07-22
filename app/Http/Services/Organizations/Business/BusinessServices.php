@@ -132,7 +132,6 @@ class BusinessServices
     {
         try {
             $delete = $this->repo->deleteById($id);
-            // dd( $delete );
             if ($delete) {
                 return ['status' => 'success', 'msg' => 'Deleted Successfully.'];
             } else {
@@ -157,7 +156,6 @@ class BusinessServices
     {
         try {
             $data_output = $this->repo->getPurchaseOrderBusinessWise($purchase_order_id);
-        //    dd($data_output);
             return $data_output;
 
         } catch (\Exception $e) {

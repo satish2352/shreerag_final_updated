@@ -224,7 +224,7 @@ class PurchaseOrderController extends Controller
      */
     // public function update(Request $request)
     // {
-    //     // //dd($request);
+
     //     $this->validate($request, [
     //         // 'client_name' => 'required',
     //         // 'phone_number' => 'required',
@@ -263,7 +263,7 @@ class PurchaseOrderController extends Controller
     //         'note' => $request->note,
     //         // 'status' => $request->status,
     //     ]);
-    //     // //dd($invoice->wasChanged());
+
     //     if ($invoice->wasChanged()) {
     //         $msg = 'Invoice has been updated';
     //         $status = 'success';
@@ -471,8 +471,6 @@ class PurchaseOrderController extends Controller
                 $status = $delete_rti['status'];
 
                 $id = base64_encode($request->delete_id);
-                // dd($id);
-                // die();
                 if ($status == 'success') {
                     return redirect('purchase/edit-purchase-order/{id}')->with(compact('msg', 'status'));
                     // return redirect()->route('purchase.edit-purchase-order', ['id' => $id])

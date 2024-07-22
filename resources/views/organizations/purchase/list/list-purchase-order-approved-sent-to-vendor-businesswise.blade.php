@@ -77,7 +77,6 @@
 
                                         <tbody>
                                             @foreach ($data_output as $data)
-                                              {{-- {{dd($data_output)}} --}}
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>

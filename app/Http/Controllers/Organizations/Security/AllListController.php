@@ -49,8 +49,6 @@ class AllListController extends Controller
       
               )
               ->get();
-// dd($data_output);
-// die();
             return view('organizations.security.list.list-recived-material', compact('data_output'));
         } catch (\Exception $e) {
             return $e;

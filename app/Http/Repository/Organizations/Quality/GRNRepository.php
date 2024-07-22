@@ -85,8 +85,6 @@ class GRNRepository
             $updateGatepassTable = Gatepass::where('purchase_orders_id',$request->purchase_orders_id)->first();
             $updateGatepassTable->is_checked_by_quality = true;
             $updateGatepassTable->save();
-            // dd($updateGatepassTable);
-            // die();
             $rejected_chalan_data = new RejectedChalan();
             $rejected_chalan_data->purchase_orders_id = $request->purchase_orders_id;
             $rejected_chalan_data->grn_id = $dataOutput->id;

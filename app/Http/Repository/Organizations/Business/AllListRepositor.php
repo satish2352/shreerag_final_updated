@@ -192,9 +192,6 @@ class AllListRepositor
 
         )
         ->get();
-
-        // dd($data_output);
-        // die();
       return $data_output;
     } catch (\Exception $e) {
       return $e;
@@ -331,12 +328,7 @@ class AllListRepositor
           // ->orWhere('purchase_status_from_owner', config('constants.HIGHER_AUTHORITY.HALF_APPROVED_PO_FROM_PURCHASE'))
   
           // ->get(); // Added to execute the query and get results
-        //  dd($data_output);
-        //  die();
-
-
-
-
+       
         $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY')];
 
         $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
@@ -383,10 +375,7 @@ class AllListRepositor
             'vendors.gst_no', 
   
           )->get();
-          
-          // dd($data_output);
-          // die();
-          return $data_output;
+         return $data_output;
       } catch (\Exception $e) {
           return $e->getMessage(); // Changed to return the error message string
       }

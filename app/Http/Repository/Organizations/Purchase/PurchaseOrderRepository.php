@@ -115,13 +115,9 @@ class PurchaseOrderRepository
                 $purchaseOrdersModel->purchase_status_from_purchase = config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR');
                 $purchaseOrdersModel->save();
             }
-            
-            // dd($purchaseOrdersModel);
-            // die();
             return $purchaseOrdersModel;
 
         } catch (\Exception $e) {
-          dd($e);
             return $e;
         }
     }
@@ -209,8 +205,6 @@ class PurchaseOrderRepository
 
             $return_data['last_insert_id'] = $last_insert_id;
             // $return_data['image'] = $previousImage;
-            // dd( $designDetails);
-            // die();
             return  $return_data;
     
             // Returning success message

@@ -65,11 +65,7 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->getAllListPurchaseOrder();
-            // dd($data_output);
-            // die();
             return $data_output;
-            // dd($data_output);
-            // die();
         } catch (\Exception $e) {
             return $e;
         }
@@ -94,8 +90,6 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->listPOReceivedForApprovaTowardsOwner();
-            // dd($data_output);
-            // die();
         return $data_output;
     } catch (\Exception $e) {
             return $e;

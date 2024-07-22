@@ -47,8 +47,6 @@ class ProductsServices
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
-        //   dd($return_data);
-        //   die();
             $path = Config::get('DocumentConstant.PRODUCT_ADD');
             if ($request->hasFile('image')) {
                 if ($return_data['image']) {
@@ -89,7 +87,6 @@ class ProductsServices
     {
         try {
             $delete = $this->repo->deleteById($id);
-            // dd($delete);
             if ($delete) {
                 return ['status' => 'success', 'msg' => 'Deleted Successfully.'];
             } else {

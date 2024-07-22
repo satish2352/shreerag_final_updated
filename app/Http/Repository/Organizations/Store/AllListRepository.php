@@ -237,8 +237,6 @@ class AllListRepository  {
         // ->whereIn('purchase_orders.store_receipt_no',$array_to_be_check_new)
         ->where('purchase_orders.business_id', $id)
         ->get(); 
-  //  dd($data_output);
-  //  die();
         return $data_output;
     } catch (\Exception $e) {
         return $e->getMessage(); 

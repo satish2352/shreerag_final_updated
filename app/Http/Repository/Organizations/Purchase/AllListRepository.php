@@ -163,8 +163,6 @@ class AllListRepository
 
         )
         ->get();
-        // dd($data_output);
-        // die();
         
       return $data_output;
     } catch (\Exception $e) {

@@ -87,9 +87,6 @@ class GatepassRepository
         try {
             // Update main design data
             $dataOutput = Gatepass::findOrFail($request->id);
-    dd( $dataOutput);
-    die();
-
             // Updating fields
             $dataOutput->purchase_id = $request->purchase_id;
             $dataOutput->gatepass_name = $request->gatepass_name;

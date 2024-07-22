@@ -85,20 +85,14 @@ use Config;
     public function getById($id){
         try {
             $result = $this->repo->getById($id);
-            // dd($result); // Dump the result
-            // die();
             return $result;
         } catch (\Exception $e) {
-            dd($e); // Dump the exception
             return $e;
         }
     }
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
-            // dd($return_data);
-            // die();
-        
             if ($return_data) {
                 return ['status' => 'success', 'msg' => 'Slide Updated Successfully.'];
             } else {

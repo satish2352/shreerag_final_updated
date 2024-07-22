@@ -50,8 +50,6 @@ class AllListServices
     public function getAllListMaterialReceivedFromQuality(){
         try {
             $return_data = $this->repo->getAllListMaterialReceivedFromQuality();
-            // dd($return_data);
-            // die();
             return $return_data;
         } catch (\Exception $e) {
             return $e;
@@ -62,8 +60,6 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->getPurchaseOrderBusinessWise($purchase_order_id);
-            // dd($data_output);
-            // die();
             return $data_output;
 
         } catch (\Exception $e) {

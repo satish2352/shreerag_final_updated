@@ -84,8 +84,7 @@ class AllListController extends Controller
     public function getAllListMaterialRecievedToProduction(){
         try {
             $data_output = $this->service->getAllListMaterialRecievedToProduction();
-// dd($data_output);
-// die();
+
             return view('organizations.productions.product.list-recived-material', compact('data_output'));
         } catch (\Exception $e) {
             return $e;

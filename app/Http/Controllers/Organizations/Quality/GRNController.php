@@ -72,8 +72,6 @@ class GRNController extends Controller
                     ->withErrors($validation);
             } else {
                 $add_record = $this->service->storeGRN($request);
-        //    dd($add_record);
-        //    die();
                 if ($add_record) {
                     $msg = $add_record['msg'];
                     $status = $add_record['status'];

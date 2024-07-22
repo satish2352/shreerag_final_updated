@@ -22,8 +22,6 @@ class FinanceRepository
     // {
     //     try {
     //           $purchase_order = PurchaseOrderModel::where('purchase_orders_id', $purchase_orders_id)->first();
-    //         //   dd($purchase_order);
-    //         //   die();
     //           $business_application = BusinessApplicationProcesses::where('business_id', $business_id)->first();
             
            
@@ -37,10 +35,6 @@ class FinanceRepository
     //             $business_application->save();
     //             $purchase_order->save();
 
-
-    //             dd($business_application);
-    //             dd($purchase_order);
-    //             die();
     //           }
     //        return "ok";
     //     } catch (\Exception $e) {
@@ -63,8 +57,6 @@ class FinanceRepository
                 // Save the updated business application and purchase order
                 $business_application->save();
                 $purchase_order->save();
-                // dd($business_application);
-                // die();
                 return ['business_application' => $business_application, 'purchase_order' => $purchase_order];
             }
     
