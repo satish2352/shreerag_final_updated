@@ -454,7 +454,7 @@
                         class="nav-item {{ request()->is('list-po-sanction-and-need-to-do-payment-to-vendor') ? 'active' : '' }}">
                         <a href="{{ route('list-po-sanction-and-need-to-do-payment-to-vendor') }}">
                             <i class="fa big-icon fa-envelope icon-wrap"></i>
-                            <span class="mini-click-non">Send To Dispatch</span>
+                            <span class="mini-click-non">Send To Fianance</span>
                         </a>
                     </li>
                 @endif
