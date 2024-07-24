@@ -1,6 +1,6 @@
 <?php
-namespace App\Http\Services\Organizations\Logistics;
-use App\Http\Repository\Organizations\Logistics\AllListRepository;
+namespace App\Http\Services\Organizations\Dispatch;
+use App\Http\Repository\Organizations\Dispatch\AllListRepository;
 use Carbon\Carbon;
 // use App\Models\ {
 //     DesignModel
@@ -15,18 +15,18 @@ class AllListServices
         $this->repo = new AllListRepository();
 
     }
-    public function getAllCompletedProduction(){
+    public function getAllReceivedFromFianance(){
         try {
-          $data_output = $this->repo->getAllCompletedProduction();
+          $data_output = $this->repo->getAllReceivedFromFianance();
          
           return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
-    public function getAllLogistics(){
+    public function getAllDispatch(){
         try {
-          $data_output = $this->repo->getAllLogistics();
+          $data_output = $this->repo->getAllDispatch();
         //  dd($data_output);
         //  die();
           return $data_output;

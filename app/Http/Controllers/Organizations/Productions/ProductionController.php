@@ -48,5 +48,13 @@ class ProductionController extends Controller
             return $e;
         }
     } 
- 
+    public function acceptProductionCompleted($id){
+        try {
+            // $accepted = base64_decode($id);
+            $update_data = $this->service->acceptProductionCompleted($id);
+            return redirect('proddept/list-final-production-completed');
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
 }

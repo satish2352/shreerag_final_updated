@@ -47,15 +47,23 @@ class BusinessRepository
             $business_data->customer_po_number = $request->customer_po_number;
             $business_data->title = $request->title;
             $business_data->product_name = $request->product_name;
-            $business_data->descriptions = $request->descriptions;
             $business_data->quantity = $request->quantity;
             $business_data->rate = $request->rate;
             $business_data->po_validity = $request->po_validity;
             $business_data->hsn_number = $request->hsn_number;
-            $business_data->customer_payment_terms = $request->customer_payment_terms;
-            $business_data->customer_terms_condition = $request->customer_terms_condition;
-            $business_data->remarks = $request->remarks;
             $business_data->organization_id = $data_output;
+            if (isset($request['customer_payment_terms'])) {
+                $business_data->customer_payment_terms = $request['customer_payment_terms'];
+            } 
+            if (isset($request['descriptions'])) {
+                $business_data->descriptions = $request['descriptions'];
+            }
+            if (isset($request['customer_terms_condition'])) {
+                $business_data->customer_terms_condition = $request['customer_terms_condition'];
+            }  
+            if (isset($request['remarks'])) {
+                $business_data->remarks = $request['remarks'];
+            } 
             $business_data->save();
 
             $design_data = new DesignModel();
@@ -119,15 +127,26 @@ class BusinessRepository
             $dataOutput->customer_po_number = $request->customer_po_number;
             $dataOutput->title = $request->title;
             $dataOutput->product_name = $request->product_name;
-            $dataOutput->descriptions = $request->descriptions;
+            // $dataOutput->descriptions = $request->descriptions;
             $dataOutput->quantity = $request->quantity;
             $dataOutput->rate = $request->rate;
             $dataOutput->po_validity = $request->po_validity;
             $dataOutput->hsn_number = $request->hsn_number;
-            $dataOutput->customer_payment_terms = $request->customer_payment_terms;
-            $dataOutput->customer_terms_condition = $request->customer_terms_condition;
-            $dataOutput->remarks = $request->remarks;
-
+            // $dataOutput->customer_payment_terms = $request->customer_payment_terms;
+            // $dataOutput->customer_terms_condition = $request->customer_terms_condition;
+            // $dataOutput->remarks = $request->remarks;
+            if (isset($request['customer_payment_terms'])) {
+                $dataOutput->customer_payment_terms = $request['customer_payment_terms'];
+            } 
+            if (isset($request['descriptions'])) {
+                $dataOutput->descriptions = $request['descriptions'];
+            }
+            if (isset($request['customer_terms_condition'])) {
+                $dataOutput->customer_terms_condition = $request['customer_terms_condition'];
+            }  
+            if (isset($request['remarks'])) {
+                $dataOutput->remarks = $request['remarks'];
+            } 
 
             $dataOutput->save();
 

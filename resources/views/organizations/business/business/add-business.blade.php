@@ -122,18 +122,13 @@
                                                         <label for="customer_payment_terms">Payment Terms :</label> (optional) 
                                                         <input type="text" class="form-control" id="customer_payment_terms" value="{{ old('customer_payment_terms') }}"
                                                             name="customer_payment_terms" placeholder="Enter Payment Terms">
-                                                            @if ($errors->has('customer_payment_terms'))
-                                                            <span class="red-text"><?php echo $errors->first('customer_payment_terms', ':message'); ?></span>
-                                                        @endif
+                                                            
                                                     </div>
 
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="customer_terms_condition">Terms Condition :</label> (optional) 
                                                         <input type="text" class="form-control" id="customer_terms_condition" value="{{ old('customer_terms_condition') }}"
                                                             name="customer_terms_condition" placeholder="Enter Terms Condition ">
-                                                            @if ($errors->has('customer_terms_condition'))
-                                                            <span class="red-text"><?php echo $errors->first('customer_terms_condition', ':message'); ?></span>
-                                                        @endif
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <div class="sparkline12-graph">
@@ -156,9 +151,7 @@
                                                                     <label for="remarks">Remark</label> (optional) 
                                                                     <textarea class="form-control" rows="3" type="text" class="form-control" id="remarks" name="remarks"
                                                                         placeholder="Enter Remark">{{ old('remarks') }}</textarea>
-                                                                        @if ($errors->has('remarks'))
-                                                                        <span class="red-text"><?php echo $errors->first('remarks', ':message'); ?></span>
-                                                                    @endif
+                                                                       
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="pwstrength_viewport_progress"></span></div>
@@ -224,9 +217,9 @@
                     title: {
                         required: true,
                     },
-                    descriptions: {
-                        required: true,
-                    },
+                    // descriptions: {
+                    //     required: true,
+                    // },
                     customer_po_number: {
                         required: true,
                     },
@@ -245,15 +238,15 @@
                         required: true,
                         number: true,
                     },
-                    customer_payment_terms: {
-                        required: true,
-                    },
-                    customer_terms_condition: {
-                        required: true,
-                    },
-                    remarks: {
-                        required: true,
-                    },
+                    // customer_payment_terms: {
+                    //     required: true,
+                    // },
+                    // customer_terms_condition: {
+                    //     required: true,
+                    // },
+                    // remarks: {
+                    //     required: true,
+                    // },
                 },
                 messages: {
                     product_name: {
@@ -262,9 +255,9 @@
                     title: {
                         required: "Please enter Customer Name.",
                     },
-                    descriptions: {
-                        required: "Please enter Description.",
-                    },
+                    // descriptions: {
+                    //     required: "Please enter Description.",
+                    // },
                     customer_po_number: {
                         required: "Please enter po number.",
                     }, 
@@ -283,15 +276,15 @@
                         required: "Please enter hsn number.",
                         number: "Please enter a valid number.",
                     },
-                    customer_payment_terms: {
-                        required: "Please enter customer payment terms.",
-                    },
-                    customer_terms_condition: {
-                        required: "Please enter customer terms condition.",
-                    },
-                    remarks: {
-                        required: "Please enter Remark.",
-                    },
+                    // customer_payment_terms: {
+                    //     required: "Please enter customer payment terms.",
+                    // },
+                    // customer_terms_condition: {
+                    //     required: "Please enter customer terms condition.",
+                    // },
+                    // remarks: {
+                    //     required: "Please enter Remark.",
+                    // },
                 },
                 submitHandler: function(form) {
                     // Use SweetAlert to show a confirmation dialog

@@ -86,7 +86,24 @@ class FinanceRepository
             return $e;
         }
     }
+    public function sendToDispatch($id) {
+        try {
+           
+            $business_application = BusinessApplicationProcesses::where('business_id', $id)->first();
+            if ($business_application) {
+                $business_application->dispatch_status_id = config('constants.FINANCE_DEPARTMENT.LIST_LOGISTICS_SEND_TO_DISPATCH_DEAPRTMENT');
+                $business_application->save();
 
+    
+                return response()->json(['status' => 'success', 'message' => 'Production status updated successfully.']);
+            } else {
+                return response()->json(['status' => 'error', 'message' => 'Business application not found.'], 404);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
+        }
+    }
+    
     // public function addAll($request)
     // {
     //     try {

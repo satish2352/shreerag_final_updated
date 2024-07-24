@@ -89,4 +89,16 @@ class AllListServices
             return $e;
         }
     }
+
+    public function getAllCompletedProduction(){
+        try {
+          $data_output = $this->repo->getAllCompletedProduction();
+         
+          return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    
 }

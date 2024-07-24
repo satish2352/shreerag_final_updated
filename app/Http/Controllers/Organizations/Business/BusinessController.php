@@ -40,9 +40,9 @@ class BusinessController extends Controller
                 'quantity' => 'required',
                 'po_validity' => 'required',
                 'hsn_number' => 'required',
-                'customer_payment_terms' => 'required',
-                'customer_terms_condition' => 'required',
-                'remarks' => 'required',
+                // 'customer_payment_terms' => 'required',
+                // 'customer_terms_condition' => 'required',
+                // 'remarks' => 'required',
             ];
 
             $messages = [
@@ -54,9 +54,9 @@ class BusinessController extends Controller
                         'quantity.required' => 'The customer quantity is required.',
                         'po_validity.required' => 'The po validity is required.',
                         'hsn_number.required' => 'The hsn number is required.',
-                        'customer_payment_terms.required' => 'The customer payment terms is required.',
-                        'customer_terms_condition.required' => 'The customer terms condition is required.',
-                        'remarks.required' => 'The remarks is required.',
+                        // 'customer_payment_terms.required' => 'The customer payment terms is required.',
+                        // 'customer_terms_condition.required' => 'The customer terms condition is required.',
+                        // 'remarks.required' => 'The remarks is required.',
                                             ];
   
           try {
@@ -101,9 +101,9 @@ class BusinessController extends Controller
             'quantity' => 'required',
             'po_validity' => 'required',
             'hsn_number' => 'required',
-            'customer_payment_terms' => 'required',
-            'customer_terms_condition' => 'required',
-            'remarks' => 'required',
+            // 'customer_payment_terms' => 'required',
+            // 'customer_terms_condition' => 'required',
+            // 'remarks' => 'required',
             ];       
         $messages = [
             'title.required' => 'The design customer name is required.',
@@ -114,9 +114,9 @@ class BusinessController extends Controller
             'quantity.required' => 'The customer quantity is required.',
             'po_validity.required' => 'The po validity is required.',
             'hsn_number.required' => 'The hsn number is required.',
-            'customer_payment_terms.required' => 'The customer payment terms is required.',
-            'customer_terms_condition.required' => 'The customer terms condition is required.',
-            'remarks.required' => 'The remarks is required.',
+            // 'customer_payment_terms.required' => 'The customer payment terms is required.',
+            // 'customer_terms_condition.required' => 'The customer terms condition is required.',
+            // 'remarks.required' => 'The remarks is required.',
             ];
 
         try {

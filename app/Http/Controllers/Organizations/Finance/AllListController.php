@@ -67,9 +67,27 @@ class AllListController extends Controller
         }
     } 
 
+    public function getAllListBusinessReceivedFromLogistics()
+    {
+        try {
+            $data_output = $this->service->getAllListBusinessReceivedFromLogistics();
+            
+            return view('organizations.finance.list.list-business-received-from-logistics', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getAllListBusinessFianaceSendToDispatch()
+    {
+        try {
+            $data_output = $this->service->getAllListBusinessFianaceSendToDispatch();
+            
+            return view('organizations.dispatch.dispatchdept.list-business-received-from-fianance', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     
-
-
     
     // public function getAllListMaterialSentToPurchase(){
 

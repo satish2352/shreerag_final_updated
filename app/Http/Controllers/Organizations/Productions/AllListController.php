@@ -100,4 +100,13 @@ class AllListController extends Controller
             return $e;
         }
     }
+
+    public function getAllCompletedProduction(){
+        try {
+            $data_output = $this->service->getAllCompletedProduction();
+            return view('organizations.productions.product.list-production-completed', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
 }

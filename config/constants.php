@@ -15,7 +15,9 @@ return [
         'STORE'             => 7,
         'FINANCE'           => 8,
         'HR'                => 9,
-        'CMS'                => 10,
+        'LOGISTICS'         => 10,
+        'DISPATCH'          => 11,
+        'CMS'               => 12,
     ],
 
 
@@ -30,6 +32,9 @@ return [
         '7' => 'STORE',
         '8' => 'FINANCE',
         '9' => 'HR',
+        '10' => 'LOGISTICS',
+        '11' => 'DISPATCH',
+        '12' => 'CMS',
     ],
     
     'HIGHER_AUTHORITY' => [
@@ -128,19 +133,21 @@ return [
         'INVOICE_APPROVED_FROM_HIGHER_AUTHORITY'                    => 1140,
         'INVOICE_NOT_APPROVED_FROM_HIGHER_AUTHORITY'                => 1141,
         'INVOICE_PAID_AGAINST_PO'                                   => 1142,
-        'LIST_LOGISTICS_RECEIVED_FROM_LOGISTICS'           => 1145,
-        'LOGISTICS_SEND_PRODUCTION_REQUEST_TO_DISPATCH'           => 1146,
+        'LIST_LOGISTICS_RECEIVED_FROM_LOGISTICS'                    => 1146,
+        'LIST_LOGISTICS_SEND_TO_DISPATCH_DEAPRTMENT'                 => 1147,
+      
       
     ],
     'LOGISTICS_DEPARTMENT' => [
         'ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN'   => 1121,
-        'LOGISTICS_SEND_COMPLETED_PRODUCTION_TO_FINANCE'   => 1145,
+        'LOGISTICS_FILL_COMPLETED_PRODUCTION_FORM_IN_LOGISTICS'       => 1145,
+        'LOGISTICS_SEND_PRODUCTION_REQUEST_TO_FINANCE'                => 1146,
   
       ],
       'DISPATCH_DEPARTMENT' => [
-        'LIST_RECEIVED_FROM_FINANCE_ACCORDING_TOLOGISTICS'            => 1146,
-        'DISPATCH_SEND_REQUEST_TO_CLIENT'                   => 1147,
-        'LIST_DISPATCH_COMPLETED_FROM_DISPATCH_DEPARTMENT'                   => 1147,
+        'LIST_RECEIVED_FROM_FINANCE_ACCORDING_TO_LOGISTICS'            => 1147,
+        'DISPATCH_DEPARTMENT_MARKED_DISPATCH_COMPLETED'                   => 1148,
+        'LIST_DISPATCH_COMPLETED_FROM_DISPATCH_DEPARTMENT'                   => 1148,
       ],
 
     'CMS'=>[

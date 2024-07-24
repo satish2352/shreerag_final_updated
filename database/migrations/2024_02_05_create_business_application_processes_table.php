@@ -44,7 +44,9 @@ return new class extends Migration
             $table->unsignedBigInteger('store_receipt_no')->nullable();
             // $table->date('finanace_store_receipt_generate_date')->nullable();
             // $table->unsignedBigInteger('finanace_store_receipt_status_id')->nullable();
-
+            $table->string('logistics_status_id')->nullable();
+            $table->string('dispatch_status_id')->nullable();
+            
             $table->boolean('is_approve')->default(false);
             $table->boolean('is_active')->default(true);
             $table->boolean('is_deleted')->default(false);

@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Repository\Organizations\Logistics;
+namespace App\Http\Repository\Organizations\Dispatch;
 use Illuminate\Database\QueryException;
 use DB;
 use Illuminate\Support\Carbon;
@@ -14,10 +14,10 @@ use App\Models\ {
 use Config;
 
 class AllListRepository  {
-public function getAllCompletedProduction(){
+public function getAllReceivedFromFianance(){
   try {
 
-      $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
+      $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.LIST_RECEIVED_FROM_FINANCE_ACCORDING_TO_LOGISTICS')];
       $array_to_be_check_new = [NULL];
       $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
         $join->on('business_application_processes.business_id', '=', 'production.business_id');
@@ -34,7 +34,7 @@ public function getAllCompletedProduction(){
       ->leftJoin('purchase_orders', function($join) {
         $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
       })
-      ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
+      ->whereIn('business_application_processes.dispatch_status_id',$array_to_be_check)
       // ->whereIn('business_application_processes.logistics_status_id',$array_to_be_check_new)
       ->where('businesses.is_active',true)
       ->distinct('businesses.id')
@@ -63,10 +63,10 @@ public function getAllCompletedProduction(){
   }
 }
 
-public function getAllLogistics(){
+public function getAllDispatch(){
   try {
   
-    $array_to_be_check = [config('constants.LOGISTICS_DEPARTMENT.LOGISTICS_FILL_COMPLETED_PRODUCTION_FORM_IN_LOGISTICS')];
+    $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.LIST_DISPATCH_COMPLETED_FROM_DISPATCH_DEPARTMENT')];
     $array_to_be_check_new = ['0'];
   
       $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
@@ -87,7 +87,7 @@ public function getAllLogistics(){
       ->leftJoin('tbl_logistics', function($join) {
         $join->on('business_application_processes.business_id', '=', 'tbl_logistics.business_id');
       })
-      ->whereIn('business_application_processes.logistics_status_id',$array_to_be_check)
+      ->whereIn('business_application_processes.dispatch_status_id',$array_to_be_check)
       // ->whereIn('purchase_orders.store_receipt_no',$array_to_be_check_new)
       ->where('businesses.is_active',true)
       ->distinct('businesses.id')

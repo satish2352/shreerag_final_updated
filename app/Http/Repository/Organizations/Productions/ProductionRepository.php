@@ -8,7 +8,9 @@ Business,
 DesignModel,
 BusinessApplicationProcesses,
 ProductionModel,
-DesignRevisionForProd
+DesignRevisionForProd,
+Logistics,
+Dispatch
 };
 use Config;
 
@@ -111,6 +113,73 @@ class ProductionRepository  {
         }
     } 
 
+    // public function acceptProductionCompleted($id) {
+    //     try {
+           
+    //         // Fetch the business application process record for the given business ID
+    //         $business_application = BusinessApplicationProcesses::where('business_id', $id)->first();
+    //         // dd($business_application);
+    //         // die();
+    //         // Check if the record exists
+    //         if ($business_application) {
+    //             $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN');
+    //             $business_application->save();
+    
+    //             return response()->json(['status' => 'success', 'message' => 'Production status updated successfully.']);
+    //         } else {
+    //             // Return an error response if the record does not exist
+    //             return response()->json(['status' => 'error', 'message' => 'Business application not found.'], 404);
+    //         }
+    
+    //     } catch (\Exception $e) {
+    //         // Return an error response if an exception occurs
+    //         return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
+    //     }
+    // }
+    
+    public function acceptProductionCompleted($id) {
+        try {
+            // Fetch the business application process record for the given business ID
+            $business_application = BusinessApplicationProcesses::where('business_id', $id)->first();
+            if ($business_application) {
+                $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN');
+                $business_application->save();
+    
+                $dataOutput = Logistics::where('business_id', $id)->first();
+                if (!$dataOutput) {
+                    $dataOutput = new Logistics;
+                }
+    
+                $dataOutput->business_id = $id;
+                $dataOutput->business_application_processes_id = $business_application->id;
+                // $dataOutput->quantity = $request->input('quantity');
+                $dataOutput->is_approve = '0';
+                $dataOutput->is_active = '1';
+                $dataOutput->is_deleted = '0';
+                $dataOutput->save();
 
-
+                $dataOutput = Dispatch::where('business_id', $id)->first();
+                if (!$dataOutput) {
+                    $dataOutput = new Dispatch;
+                }
+    
+                $dataOutput->business_id = $id;
+                $dataOutput->business_application_processes_id = $business_application->id;
+                // $dataOutput->quantity = $request->input('quantity');
+                $dataOutput->is_approve = '0';
+                $dataOutput->is_active = '1';
+                $dataOutput->is_deleted = '0';
+                $dataOutput->save();
+    
+                return response()->json(['status' => 'success', 'message' => 'Production status updated successfully.']);
+            } else {
+                // Return an error response if the record does not exist
+                return response()->json(['status' => 'error', 'message' => 'Business application not found.'], 404);
+            }
+        } catch (\Exception $e) {
+            // Return an error response if an exception occurs
+            return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
+        }
+    }
+    
 }

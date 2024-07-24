@@ -31,7 +31,7 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Material Recived From<span class="table-project-n">Store</span> Department</h1>
+                                <h1>Logistics List</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
                                         {{-- <div class="login-horizental cancel-wp pull-left">
@@ -92,9 +92,6 @@
                                             </tr>
 
                                         </thead>
-
-
-
                                         <tbody>
                                             @foreach ($data_output as $data)
                                                 <tr>
@@ -111,17 +108,19 @@
                                                         href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
                                                         alt="bill of material" >Click to download</a>
                                                 </td>
+                                                <td>
+                                                    <a href="{{ route('send-to-fianance', base64_encode($data->productionId)) }}"
+                                                        onclick="return confirmAccept('{{ route('send-to-fianance', base64_encode($data->id)) }}')"
+                                                        class="pd-setting-ed"
+                                                        data-toggle="tooltip"
+                                                        title="Accept">
+                                                        <button><i class="fa fa-check" aria-hidden="true"></i> Send to Fianance </button>
+                                                    </a>
+                                                </td>
 
                                                    
 
-                                                <td>
-                                                    <div style="display: inline-block; align-items: center;">
-                                                        <a href="{{route('list-final-purchase-order-production', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>View Details</button></a>
-                                                    </div>
-                                                    <div style="display: inline-block; align-items: center;">
-                                                        <a href="{{route('update-final-production-completed-status', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>Production Completed</button></a>
-                                                    </div>
-                                                </td>
+                                               
 
 
 

@@ -45,7 +45,16 @@ class FinanceServices
             return $e;
         }
     }
-
+    public function sendToDispatch($id){
+        try {
+           $update_data = $this->repo->sendToDispatch($id);
+       
+           return $update_data;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
+    
     // public function addAll($request)
     // {
     //     try {

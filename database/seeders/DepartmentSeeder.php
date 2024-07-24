@@ -59,15 +59,25 @@ class DepartmentSeeder extends Seeder
                 'id'=> 9,
                 'department_name' => 'HR',
             ]);
-            
         DepartmentsModel::create(
             [
                 'id'=> 10,
-                'department_name' => 'CMS',
+                'department_name' => 'Logistics',
             ]); 
         DepartmentsModel::create(
             [
                 'id'=> 11,
+                'department_name' => 'Dispatch',
+            ]); 
+            
+        DepartmentsModel::create(
+            [
+                'id'=> 12,
+                'department_name' => 'CMS',
+            ]); 
+        DepartmentsModel::create(
+            [
+                'id'=> 13,
                 'department_name' => 'Employee',
             ]); 
 

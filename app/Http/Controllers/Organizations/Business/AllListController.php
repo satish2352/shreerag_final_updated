@@ -100,9 +100,18 @@ class AllListController extends Controller
         } catch (\Exception $e) {
             return $e;
         }
-    }     
+    }  
+    
+    public function listProductDispatchCompletedFromDispatch(){
+        try {
+            $data_output = $this->service->listProductDispatchCompletedFromDispatch();
+            return view('organizations.business.list.list-dispatch-completed', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }  
 
-
+    
 
     
 }

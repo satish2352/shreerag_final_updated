@@ -106,6 +106,13 @@
                                         class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                         class="mini-sub-pro">PO Payment Release Request</span></a>
                             </li>
+                            <li
+                            class="nav-item {{ request()->is('owner/list-product-dispatch-completed') ? 'active' : '' }}">
+                            <a title="Inbox" href="{{ route('list-product-dispatch-completed') }}"><i
+                                    class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                    class="mini-sub-pro">Dispatch Completed</span></a>
+                        </li>
+                            
                             <li><a title="Inbox" href="{{ route('list-rules-regulations') }}"><i
                                 class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                 class="mini-sub-pro">Rules and Regulations</span></a></li>
@@ -234,6 +241,12 @@
                                 <a href="{{ route('list-material-recived') }}">
                                     <i class="fa fa-inbox icon-wrap"></i>
                                     <span class="mini-click-non">Material Received For Production</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ request()->is('proddept/list-final-production-completed') ? 'active' : '' }}">
+                                <a href="{{ route('list-final-production-completed') }}">
+                                    <i class="fa fa-inbox icon-wrap"></i>
+                                    <span class="mini-click-non">Production Completed</span>
                                 </a>
                             </li>
                         </ul>
@@ -405,9 +418,62 @@
                                 <span class="mini-click-non">PO Pyament Need To Release</span>
                             </a>
                         </li>
+
+                        <li class="nav-item {{ request()->is('recive-logistics-list') ? 'active' : '' }}">
+                            <a href="{{ route('recive-logistics-list') }}">
+                                <i class="fa big-icon fa-envelope icon-wrap"></i>
+                                <span class="mini-click-non">Recive Logistics List</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {{ request()->is('list-send-to-dispatch') ? 'active' : '' }}">
+                            <a href="{{ route('list-send-to-dispatch') }}">
+                                <i class="fa big-icon fa-envelope icon-wrap"></i>
+                                <span class="mini-click-non">Product Submited to Dispatch</span>
+                            </a>
+                        </li>
                     @endif
 
 
+                    @if (session()->get('role_id') == config('constants.ROLE_ID.LOGISTICS'))
+                    <li class="nav-item {{ request()->is('list-final-production-completed-recive-to-logistics') ? 'active' : '' }}">
+                        <a href="{{ route('list-final-production-completed-recive-to-logistics') }}">
+                            <i class="fa big-icon fa-envelope icon-wrap"></i>
+                            <span class="mini-click-non">Production Completed</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item {{ request()->is('list-logistics') ? 'active' : '' }}">
+                        <a href="{{ route('list-logistics') }}">
+                            <i class="fa big-icon fa-envelope icon-wrap"></i>
+                            <span class="mini-click-non">List Logistics</span>
+                        </a>
+                    </li>
+
+
+                    <li
+                        class="nav-item {{ request()->is('list-po-sanction-and-need-to-do-payment-to-vendor') ? 'active' : '' }}">
+                        <a href="{{ route('list-po-sanction-and-need-to-do-payment-to-vendor') }}">
+                            <i class="fa big-icon fa-envelope icon-wrap"></i>
+                            <span class="mini-click-non">Send To Dispatch</span>
+                        </a>
+                    </li>
+                @endif
+
+                @if (session()->get('role_id') == config('constants.ROLE_ID.DISPATCH'))
+                <li class="nav-item {{ request()->is('list-final-production-completed-received-from-fianance') ? 'active' : '' }}">
+                    <a href="{{ route('list-final-production-completed-received-from-fianance') }}">
+                        <i class="fa big-icon fa-envelope icon-wrap"></i>
+                        <span class="mini-click-non">Received From Finance</span>
+                    </a>
+                </li>
+
+                <li class="nav-item {{ request()->is('list-dispatch') ? 'active' : '' }}">
+                    <a href="{{ route('list-dispatch') }}">
+                        <i class="fa big-icon fa-envelope icon-wrap"></i>
+                        <span class="mini-click-non">Completed Dispatch</span>
+                    </a>
+                </li>
+            @endif
                     @if (session()->get('user_id'))
                         <li>
                             <a class="has-arrow" href="{{ route('list-leaves') }}" aria-expanded="false"><i
@@ -458,6 +524,7 @@
                         </ul>
                     </li>                   
                     @endif
+
                     {{-- =====sample routing============= --}}
                     {{-- <li>
                         <a class="has-arrow" href="{{ route('list-newproducts') }}" aria-expanded="false"><i

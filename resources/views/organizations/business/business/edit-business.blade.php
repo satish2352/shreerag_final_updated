@@ -191,9 +191,9 @@
                     title: {
                         required: true,
                     },
-                    descriptions: {
-                        required: true,
-                    },
+                    // descriptions: {
+                    //     required: true,
+                    // },
                     customer_po_number: {
                         required: true,
                     },
@@ -209,16 +209,16 @@
                     hsn_number: {
                         required: true,
                     },
-                    customer_payment_terms: {
-                        required: true,
-                    },
-                    customer_terms_condition: {
-                        required: true,
-                    },
+                    // customer_payment_terms: {
+                    //     required: true,
+                    // },
+                    // customer_terms_condition: {
+                    //     required: true,
+                    // },
                     
-                    remarks: {
-                        required: true,
-                    },
+                    // remarks: {
+                    //     required: true,
+                    // },
                 },
                 messages: {
                     product_name: {
@@ -227,9 +227,9 @@
                     title: {
                         required: "Please enter Customer Name.",
                     },
-                    descriptions: {
-                        required: "Please enter Description.",
-                    },
+                    // descriptions: {
+                    //     required: "Please enter Description.",
+                    // },
                     customer_po_number: {
                         required: "Please enter po number.",
                     }, 
@@ -246,15 +246,15 @@
                     hsn_number: {
                         required: "Please enter hsn number.",
                     },
-                    customer_payment_terms: {
-                        required: "Please enter customer payment terms.",
-                    },
-                    customer_terms_condition: {
-                        required: "Please enter customer terms condition.",
-                    },
-                    remarks: {
-                        required: "Please enter Remark.",
-                    },
+                    // customer_payment_terms: {
+                    //     required: "Please enter customer payment terms.",
+                    // },
+                    // customer_terms_condition: {
+                    //     required: "Please enter customer terms condition.",
+                    // },
+                    // remarks: {
+                    //     required: "Please enter Remark.",
+                    // },
 
                 },
                 submitHandler: function(form) {

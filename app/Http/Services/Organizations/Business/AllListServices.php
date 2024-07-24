@@ -115,5 +115,14 @@ class AllListServices
             return $e;
         }
     }
+    public function listProductDispatchCompletedFromDispatch()
+    {
+        try {
+            $data_output = $this->repo->listProductDispatchCompletedFromDispatch();
+            return $data_output;
 
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
 }
