@@ -124,7 +124,7 @@ class PurchaseOrderRepository
     public function getById($id) {
         try {
             $designData = PurchaseOrdersModel::leftJoin('purchase_order_details', 'purchase_orders.id', '=', 'purchase_order_details.purchase_id')
-                ->select('purchase_order_details.*', 'purchase_order_details.id as purchase_order_details_id', 'purchase_orders.id as purchase_main_id', 'purchase_orders.vendor_id', 'purchase_orders.quote_no', 'purchase_orders.tax','purchase_orders.invoice_date','purchase_orders.quote_no',  'purchase_orders.payment_terms','purchase_orders.discount')
+                ->select('purchase_order_details.*', 'purchase_order_details.id as purchase_order_details_id', 'purchase_orders.id as purchase_main_id', 'purchase_orders.vendor_id', 'purchase_orders.quote_no', 'purchase_orders.tax','purchase_orders.invoice_date','purchase_orders.quote_no','purchase_orders.note',  'purchase_orders.payment_terms','purchase_orders.discount')
                 ->where('purchase_orders.id', $id)
                 ->get();
 

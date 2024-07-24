@@ -58,7 +58,7 @@ class LogisticsController extends Controller
             $validation = Validator::make($request->all(), $rules, $messages);
 
             if ($validation->fails()) {
-                return redirect('logistics/logisticsdept/add-logistics')
+                return redirect('logisticsdept/add-logistics')
                     ->withInput()
                     ->withErrors($validation);
             } else {
@@ -68,14 +68,14 @@ class LogisticsController extends Controller
                     $status = $add_record['status'];
 
                     if ($status == 'success') {
-                        return redirect('logistics/logisticsdept/list-logistics')->with(compact('msg', 'status'));
+                        return redirect('logisticsdept/list-logistics')->with(compact('msg', 'status'));
                     } else {
-                        return redirect('logistics/logisticsdept/list-logistics')->withInput()->with(compact('msg', 'status'));
+                        return redirect('logisticsdept/list-logistics')->withInput()->with(compact('msg', 'status'));
                     }
                 }
             }
         } catch (Exception $e) {
-            return redirect('logistics/logisticsdept/add-logistics')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('logisticsdept/add-logistics')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
     
@@ -84,7 +84,7 @@ class LogisticsController extends Controller
         try {
             $accepted = base64_decode($id);
             $update_data = $this->service->sendToFianance($accepted);
-            return redirect('logistics/logisticsdept/list-logistics');
+            return redirect('logisticsdept/list-logistics');
         } catch (\Exception $e) {
             return $e;
         }

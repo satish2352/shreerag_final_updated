@@ -77,6 +77,8 @@
                                                             </div>
     @endif -->
 
+  
+
                                                         @foreach ($editData as $key => $editDataNew)
                                                             @if ($key == 0)
                                                                 <div class="row">
@@ -289,11 +291,7 @@
                                                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                                             <label for="note">Other Information
                                                                                 :</label>
-                                                                            <textarea class="form-control" name="note">
-@if (old('note'))
-{{ old('note') }}@else{{ $editDataNew->note }}
-@endif
-</textarea>
+                                                                            <textarea class="form-control" name="note">@if (old('note')){{ old('note') }}@else{{ $editDataNew->note }}@endif</textarea>
 
                                                                         </div>
                                                             @endif

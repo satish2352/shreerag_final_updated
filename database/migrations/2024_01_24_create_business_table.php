@@ -24,9 +24,9 @@ return new class extends Migration
             $table->string('po_validity');
             $table->string('rate');
             $table->string('hsn_number');
-            $table->string('customer_payment_terms')->nullable();
-            $table->string('customer_terms_condition')->nullable();
-            $table->string('remarks')->nullable();
+            $table->text('customer_payment_terms')->nullable();
+            $table->text('customer_terms_condition')->nullable();
+            $table->text('remarks')->nullable();
             $table->string('is_approved_production')->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('is_deleted')->default(false);
