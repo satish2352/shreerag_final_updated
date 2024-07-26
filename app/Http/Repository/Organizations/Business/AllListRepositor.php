@@ -152,6 +152,7 @@ class AllListRepositor
 
       
       $array_to_be_check = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
+      $array_to_be_check_business = [config('constants.HIGHER_AUTHORITY.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE')];
       $array_not_to_be_check = ['0'];
 
       $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
@@ -170,6 +171,8 @@ class AllListRepositor
           $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
         })
         ->whereIn('business_application_processes.store_status_id', $array_to_be_check)
+        ->whereIn('business_application_processes.business_status_id', $array_to_be_check_business)
+        
         // ->whereIn('business_application_processes.grn_no', $array_not_to_be_check)
         ->where('business_application_processes.purchase_order_id', '0')
         ->where('businesses.is_active', true)
@@ -329,8 +332,7 @@ class AllListRepositor
   
           // ->get(); // Added to execute the query and get results
        
-        $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY')];
-
+        $array_to_be_check = [config('constants.HIGHER_AUTHORITY.APPROVED_PO_FROM_PURCHASE')];
         $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
           $join->on('business_application_processes.business_id', '=', 'production.business_id');
         })
@@ -516,7 +518,7 @@ public function listProductDispatchCompletedFromDispatch(){
           'designs.design_image',
           'business_application_processes.logistics_status_id',
           'tbl_logistics.truck_no',
-          'tbl_logistics.vendor_id',
+          // 'tbl_logistics.vendor_id',
       )
       ->get();
      

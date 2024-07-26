@@ -60,8 +60,17 @@ class AllListController extends Controller
             return $e;
         }
     }
-
-
+    public function getPurchaseOrderSentToOwnerForApprovalBusinesWise($id){
+        try {
+            $data_output = $this->service->getPurchaseOrderSentToOwnerForApprovalBusinesWise($id);
+           
+            return view('organizations.purchase.list.list-purchase-order-approved-need-to-check-businesswise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    
+    
 
     public function getAllListPurchaseOrderMailSentToVendor(Request $request){
         try {
@@ -78,6 +87,25 @@ class AllListController extends Controller
             $data_output = $this->service->getAllListPurchaseOrderMailSentToVendorBusinessWise($id);
            
             return view('organizations.purchase.list.list-purchase-order-approved-sent-to-vendor-businesswise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getAllListSubmitedPurchaeOrderByVendor(Request $request){
+        try {
+
+            $data_output = $this->service->getAllListSubmitedPurchaeOrderByVendor();
+            return view('organizations.purchase.list.list-all-po-sent-to-vendor', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function getAllListSubmitedPurchaeOrderByVendorBusinessWise($id){
+        try {
+            $data_output = $this->service->getAllListSubmitedPurchaeOrderByVendorBusinessWise($id);
+           
+            return view('organizations.purchase.list.list-all-po-sent-to-vendor-businesswise', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
         }

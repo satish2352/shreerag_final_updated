@@ -34,6 +34,15 @@ class AllListServices
             return $e;
         }
     }
-    
+    public function getAllListSendToFiananceByLogistics(){
+      try {
+        $data_output = $this->repo->getAllListSendToFiananceByLogistics();
+      //  dd($data_output);
+      //  die();
+        return $data_output;
+      } catch (\Exception $e) {
+          return $e;
+      }
+  }
     
 }

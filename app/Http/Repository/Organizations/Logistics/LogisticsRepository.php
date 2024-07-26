@@ -9,7 +9,8 @@ use App\Models\ {
     ProductionModel,
     DesignRevisionForProd,
     PurchaseOrdersModel,
-    Logistics
+    Logistics,
+    Dispatch
     };
 use Config;
 
@@ -17,12 +18,17 @@ class LogisticsRepository  {
 public function storeLogistics($request)
 {
     try {
-        $dataOutput = Logistics::first();
+        // $dataOutput = Logistics::get();
+        // $dataOutput = new Logistics();
+        // $dataOutput = Logistics::find($request->id);
+        // $dataOutput = Logistics::where('id', $request->id)->first();
+        // $dataOutput = BusinessApplicationProcesses::where('business_id', $request->business_id)->first();
+        $dataOutput = Logistics::where('business_id', $request->business_id)->first();
+        // dd($dataOutput);
+        // die();
         if ($dataOutput) {
             // Update the fields
             $dataOutput->truck_no = $request->truck_no;
-            $dataOutput->quantity = $request->quantity;
-            $dataOutput->vendor_id = $request->vendor_id;
             $dataOutput->is_approve = '0';
             $dataOutput->is_active = '1';
             $dataOutput->is_deleted = '0';
@@ -33,7 +39,6 @@ public function storeLogistics($request)
             if ($business_application) {
                 $business_application->logistics_status_id = config('constants.LOGISTICS_DEPARTMENT.LOGISTICS_FILL_COMPLETED_PRODUCTION_FORM_IN_LOGISTICS');
                 $business_application->save();
-
                 return response()->json(['status' => 'success', 'message' => 'Production status updated successfully.']);
             } else {
                 return response()->json(['status' => 'error', 'message' => 'Business application not found.'], 404);

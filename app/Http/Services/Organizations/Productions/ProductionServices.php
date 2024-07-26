@@ -39,7 +39,7 @@ use Config;
     public function acceptProductionCompleted($id){
         try {
            $update_data = $this->repo->acceptProductionCompleted($id);
-         
+       
            return $update_data;
         } catch (\Exception $e) {
             return $e;

@@ -182,6 +182,7 @@
             // Call the function to set the minimum date
             setMinDate();
     
+    
 
             $("#editEmployeeForm").validate({
                 rules: {

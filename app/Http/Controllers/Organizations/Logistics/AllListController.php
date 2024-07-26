@@ -31,5 +31,14 @@ class AllListController extends Controller
             return $e;
         }
     }
+    public function getAllListSendToFiananceByLogistics(){
+        try {
+            $data_output = $this->service->getAllListSendToFiananceByLogistics();
+            return view('organizations.logistics.logisticsdept.list-send-to-fianance-by-logistics', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    
     
 }

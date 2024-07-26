@@ -106,7 +106,7 @@ public function getAllDispatch(){
           'designs.design_image',
           'business_application_processes.logistics_status_id',
           'tbl_logistics.truck_no',
-          'tbl_logistics.vendor_id',
+          // 'tbl_logistics.vendor_id',
       )
       ->get();
      

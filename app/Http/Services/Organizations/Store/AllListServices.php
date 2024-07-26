@@ -50,6 +50,8 @@ class AllListServices
     public function getAllListMaterialReceivedFromQuality(){
         try {
             $return_data = $this->repo->getAllListMaterialReceivedFromQuality();
+            // dd( $return_data);
+            // die();
             return $return_data;
         } catch (\Exception $e) {
             return $e;

@@ -76,7 +76,7 @@ use Config;
     {
         try {
             $data = $this->repo->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id);
-           
+          
             return $data;
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];

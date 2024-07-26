@@ -59,7 +59,7 @@ class FinanceController extends Controller
         try {
             $accepted = base64_decode($id);
             $update_data = $this->service->sendToDispatch($accepted);
-            return redirect('financedept/list-business-send-to-dispatch');
+            return redirect('financedept/list-send-to-dispatch');
         } catch (\Exception $e) {
             return $e;
         }

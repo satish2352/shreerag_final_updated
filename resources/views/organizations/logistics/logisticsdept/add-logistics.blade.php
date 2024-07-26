@@ -47,11 +47,13 @@
                                 @endif
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="all-form-element-inner">
-                                        <form action="{{ route('store-logistics', 
+                                        <form action="{{ route('store-logistics', $editData->id
                                        ) }}"
                                             method="POST" id="editDesignsForm" enctype="multipart/form-data">
                                             @csrf
-                                           
+                                            <input type="hidden" name="business_id" id=""
+                                                    class="form-control" value="{{ $editData->id }}"
+                                                    placeholder="">
                                             <div class="row">
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="customer_po_number">PO  Number :  <span class="text-danger">*</span></label>
@@ -69,6 +71,15 @@
                                                     @endif
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="title">Vendor Name :  <span class="text-danger">*</span></label> 
+                                                    <input type="text" class="form-control" id="title"
+                                                     value=" @if (old('title')) {{ old('title') }}@else{{ $editData->title }} @endif"
+                                                        name="title" placeholder="Enter Vendor Name" readonly>
+                                                        @if ($errors->has('title'))
+                                                        <span class="red-text"><?php echo $errors->first('title', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="truck_no">Truck Number :  <span class="text-danger">*</span></label> 
                                                     <input type="text" class="form-control" id="truck_no"
                                                      value=" "
@@ -78,22 +89,18 @@
                                                     @endif
                                                 </div>
                                                
-                                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                                {{-- <div class="col-lg-6 col-md-6 col-sm-6">
                                                     <div class="form-group">
                                                         <label for="vendor_id">Vendor Company Name <span class="text-danger">*</span></label>
-                                                        {{-- <select class="form-control"  name="vendor_id" id="vendor_id">
-                                                            <option>Select</option> --}}
-                                  
                                                             <select class="form-control mb-2" name="vendor_id" id="vendor_id">
                                                             <option value="" default>Vendor Company Name</option>
-                                  
                                                             @foreach ($dataOutputVendor as $data)
                                                                     <option value="{{ $data['id'] }}" >
                                                                         {{ $data['vendor_company_name'] }}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
-                                                </div>
+                                                </div> --}}
                                             </div>
 
                                             <div class="container-fluid">
@@ -109,7 +116,7 @@
                                                                     class="btn btn-white"
                                                                     style="margin-bottom:50px">Cancel</a>
                                                                 <button class="btn btn-sm btn-primary login-submit-cs"
-                                                                    type="submit" style="margin-bottom:50px">Update Data</button>
+                                                                    type="submit" style="margin-bottom:50px">Save Data</button>
                                                                
                                                             </div>
                                                         </div>

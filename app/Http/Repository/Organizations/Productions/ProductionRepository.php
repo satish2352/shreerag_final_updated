@@ -158,19 +158,19 @@ class ProductionRepository  {
                 $dataOutput->is_deleted = '0';
                 $dataOutput->save();
 
-                $dataOutput = Dispatch::where('business_id', $id)->first();
-                if (!$dataOutput) {
-                    $dataOutput = new Dispatch;
+                $dataOutputDispatch = Dispatch::where('business_id', $id)->first();
+                if (!$dataOutputDispatch) {
+                    $dataOutputDispatch = new Dispatch;
                 }
     
-                $dataOutput->business_id = $id;
-                $dataOutput->business_application_processes_id = $business_application->id;
-                // $dataOutput->quantity = $request->input('quantity');
-                $dataOutput->is_approve = '0';
-                $dataOutput->is_active = '1';
-                $dataOutput->is_deleted = '0';
-                $dataOutput->save();
-    
+                $dataOutputDispatch->business_id = $id;
+                $dataOutputDispatch->logistics_id =  $dataOutput->id;
+                $dataOutputDispatch->business_application_processes_id = $business_application->id;
+                $dataOutputDispatch->is_approve = '0';
+                $dataOutputDispatch->is_active = '1';
+                $dataOutputDispatch->is_deleted = '0';
+                $dataOutputDispatch->save();
+  
                 return response()->json(['status' => 'success', 'message' => 'Production status updated successfully.']);
             } else {
                 // Return an error response if the record does not exist

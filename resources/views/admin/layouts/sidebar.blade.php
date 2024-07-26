@@ -174,6 +174,12 @@
                                 </li>
                             </ul>
                         </li>
+                        <li class="nav-item {{ request()->is('purchase/list-submited-po-to-vendor') ? 'active' : '' }}">
+                            <a class="" href="{{ route('list-submited-po-to-vendor') }}" aria-expanded="false"><i
+                                    class="fa big-icon fa-envelope icon-wrap"></i> <span
+                                    class="mini-click-non">Submited PO by Vendor List</span></a>
+                        </li>
+
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.DESIGNER'))
                         <li 
@@ -451,10 +457,10 @@
 
 
                     <li
-                        class="nav-item {{ request()->is('list-po-sanction-and-need-to-do-payment-to-vendor') ? 'active' : '' }}">
-                        <a href="{{ route('list-po-sanction-and-need-to-do-payment-to-vendor') }}">
+                        class="nav-item {{ request()->is('list-send-to-fianance-by-logistics') ? 'active' : '' }}">
+                        <a href="{{ route('list-send-to-fianance-by-logistics') }}">
                             <i class="fa big-icon fa-envelope icon-wrap"></i>
-                            <span class="mini-click-non">Send To Fianance</span>
+                            <span class="mini-click-non">Submited by Fianance</span>
                         </a>
                     </li>
                 @endif

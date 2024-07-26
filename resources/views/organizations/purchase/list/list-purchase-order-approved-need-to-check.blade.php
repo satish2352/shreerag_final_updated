@@ -103,7 +103,7 @@ padding-left: 20px !important;
                                             
                                             <td>
                                                 <div style="display: inline-block; align-items: center;">
-                                                    <a href="{{route('list-check-final-purchase-order', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>View Details</button></a>
+                                                    <a href="{{route('list-purchase-order-approved-bussinesswise', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>View Details</button></a>
                                                 </div>
                                             </td>
                                             

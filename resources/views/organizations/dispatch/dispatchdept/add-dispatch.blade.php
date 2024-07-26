@@ -107,7 +107,7 @@
                                                                     class="btn btn-white"
                                                                     style="margin-bottom:50px">Cancel</a>
                                                                 <button class="btn btn-sm btn-primary login-submit-cs"
-                                                                    type="submit" style="margin-bottom:50px">Update Data</button>
+                                                                    type="submit" style="margin-bottom:50px">Save Data</button>
                                                                
                                                             </div>
                                                         </div>

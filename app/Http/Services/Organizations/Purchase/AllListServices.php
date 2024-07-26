@@ -52,7 +52,16 @@ class AllListServices
             return $e;
         }
     }
-
+    public function getPurchaseOrderSentToOwnerForApprovalBusinesWise($id)
+    {
+        try {
+            $data_output = $this->repo->getPurchaseOrderSentToOwnerForApprovalBusinesWise($id);
+           
+            return $data_output;
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
+    }
     
     public function getAllListPurchaseOrderMailSentToVendor(){
         try {
@@ -65,6 +74,27 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->getAllListPurchaseOrderMailSentToVendorBusinessWise($purchase_order_id);
+            return $data_output;
+
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
+    public function getAllListSubmitedPurchaeOrderByVendor(){
+        try {
+           $data_output = $this->repo->getAllListSubmitedPurchaeOrderByVendor();
+        // dd($data_output);
+        //    die();
+        return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getAllListSubmitedPurchaeOrderByVendorBusinessWise($id)
+    {
+        try {
+            $data_output = $this->repo->getAllListSubmitedPurchaeOrderByVendorBusinessWise($id);
+          
             return $data_output;
 
         } catch (\Exception $e) {

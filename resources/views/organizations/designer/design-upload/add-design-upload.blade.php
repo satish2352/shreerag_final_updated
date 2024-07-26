@@ -72,7 +72,7 @@
 
                                                 <div class="row">
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="design_image">Upload Design Layout:</label>
+                                                        <label for="design_image">Upload Design Layout (upload pdf file) :</label>
                                                         <input type="file" class="form-control" accept="application/pdf"
                                                             id="design_image" name="design_image">
                                                         @if ($errors->has('design_image'))
@@ -80,7 +80,7 @@
                                                         @endif
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="bom_image">Upload BOM:</label>
+                                                        <label for="bom_image">Upload BOM (upload excel file) :</label>
                                                         <input type="file" class="form-control" accept=".xls, .xlsx"
                                                             id="bom_image" name="bom_image">
                                                         @if ($errors->has('bom_image'))

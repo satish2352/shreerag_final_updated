@@ -118,6 +118,7 @@ class GatepassController extends Controller
         try {
             $edit_data_id = base64_decode($request->id);
             $editData = $this->service->getById($edit_data_id);
+          
             return view('organizations.security.gatepass.edit-gatepass', compact('editData'));
         } catch (\Exception $e) {
             return $e;
@@ -159,6 +160,7 @@ class GatepassController extends Controller
                     ->withErrors($validation);
             } else {
                 $update_data = $this->service->updateAll($request);
+            
                 if ($update_data['status'] == 'success') {
                     return redirect('securitydept/list-gatepass')->with('msg', $update_data['msg'])->with('status', 'success');
                 } else {

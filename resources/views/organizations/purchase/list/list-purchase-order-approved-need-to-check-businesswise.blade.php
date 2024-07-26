@@ -28,7 +28,7 @@ padding-left: 20px !important;
                 <div class="sparkline13-list">
                     <div class="sparkline13-hd">
                         <div class="main-sparkline13-hd">
-                            <h1>Purchase Order Sent To Owner For Approval<span class="table-project-n"></span></h1>
+                            <h1>Purchase Order<span class="table-project-n"></span>Approved From Owner</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2" >
                                         {{-- <div class="login-horizental cancel-wp pull-left">
@@ -79,8 +79,12 @@ padding-left: 20px !important;
                                     <thead>
                                         <tr>
                                             <th data-field="id">Sr.No.</th> 
-                                            <th data-field="product_name" data-editable="true">Product Name</th>
-                                            <th data-field="grn_date" data-editable="true">Description</th>
+                                            <th data-field="purchase_orders_id" data-editable="true">Purchase Order ID</th>
+                                            <th data-field="client_name" data-editable="true">Client Name</th>
+                                            <th data-field="vendor_company_name" data-editable="true">Client Company Name</th>
+                                            <th data-field="email" data-editable="true">Email</th>
+                                            <th data-field="contact_no" data-editable="true">Phone Number</th>
+                                            <th data-field="vendor_address" data-editable="true">Address</th>
                                         </tr>
 
                                     </thead>
@@ -92,25 +96,14 @@ padding-left: 20px !important;
                                         <tr>
                                             
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ucwords($data->product_name)}}</td>
-                                            <td>{{ucwords($data->descriptions)}}</td>
-                                            <td>
-                                                <div style="display: inline-block; align-items: center;">
-                                                    <a
-                                                        href="{{ route('list-purchase-order-sent-to-owner-for-approval-busineswise', $data->id) }}"><button
-                                                            data-toggle="tooltip" title="Edit"
-                                                            class="pd-setting-ed"><i class="fa fa-pencil-square-o"
-                                                                aria-hidden="true"></i> Check Details</button></a>
-                                                    &nbsp; &nbsp; &nbsp;
-                                                </div>
-
-
-                                                {{-- <div style="display: inline-block; align-items: center;">
-                                                    <a href="{{route('list-purchase-orders-sent-to-owner-details', $data->purchase_order_id)}} "><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>View Details</button></a>
-                                                </div> --}}
-                                            </td>
-                                         
+                                            <td>{{ $data->purchase_orders_id }}</td>
+                                            <td>{{ $data->vendor_name }}</td>
+                                           <td>{{ $data->vendor_company_name }}</td>
+                                           <td>{{ $data->vendor_email }}</td> 
+                                           <td>{{ $data->contact_no }}</td> 
+                                           <td>{{ $data->vendor_address }}</td> 
                                             
+                                           
                                           
                                            </tr>
                                         @endforeach

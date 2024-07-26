@@ -156,7 +156,7 @@ class AllListRepository  {
     try {
       
       $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
-      $array_to_be_check_new = ['0'];
+      $array_to_be_check_new = [null];
         
         $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
           $join->on('business_application_processes.business_id', '=', 'production.business_id');
@@ -174,6 +174,7 @@ class AllListRepository  {
           $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
         })
         ->whereIn('purchase_orders.quality_status_id',$array_to_be_check)
+        ->whereNull('business_application_processes.store_material_sent_date')
         // ->whereIn('purchase_orders.store_receipt_no',$array_to_be_check_new)
         ->where('businesses.is_active',true)
         ->distinct('businesses.id')
@@ -189,7 +190,8 @@ class AllListRepository  {
             'design_revision_for_prod.reject_reason_prod',
             'design_revision_for_prod.id as design_revision_for_prod_id',
             'designs.bom_image',
-            'designs.design_image'
+            'designs.design_image',
+            'business_application_processes.store_receipt_no'
 
         )
         ->get();
