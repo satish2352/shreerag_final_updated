@@ -82,7 +82,7 @@ class AllListController extends Controller
         try {
             $data_output = $this->service->getAllListBusinessFianaceSendToDispatch();
             
-            return view('organizations.dispatch.dispatchdept.list-business-received-from-fianance', compact('data_output'));
+            return view('organizations.finance.list.list-business-send-to-dispatch', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
         }
