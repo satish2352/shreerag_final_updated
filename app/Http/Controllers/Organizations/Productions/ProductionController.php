@@ -24,6 +24,8 @@ class ProductionController extends Controller
     public function acceptdesign($id){
         try {
             $acceptdesign = base64_decode($id);
+            // dd($acceptdesign);
+            // die();
             $update_data = $this->service->acceptdesign($acceptdesign);
             return redirect('proddept/list-accept-design');
         } catch (\Exception $e) {

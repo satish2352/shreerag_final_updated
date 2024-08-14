@@ -41,7 +41,8 @@ class AllListController extends Controller
 
         try {
             $data_output = $this->service->getAllListMaterialReceivedForPurchase();
-          
+            // dd($data_output);
+            // die();
             return view('organizations.purchase.list.list-bom-material-recived-for-purchase', compact('data_output'));
             // return view('organizations.purchase.forms.send-vendor-details-for-purchase', compact('data_output'));
         } catch (\Exception $e) {

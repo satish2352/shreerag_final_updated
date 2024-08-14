@@ -66,7 +66,17 @@ class GRNServices
             return $e;
         }
     }
-
+    public function getAllRejectedChalanList()
+    {
+        try {
+            $data = $this->repo->getAllRejectedChalanList();
+            return $data;
+        } catch (\Exception $e) {
+        
+            return $e; 
+        }
+    }
+    
     // public function addAll($request)
     // {
     //     try {

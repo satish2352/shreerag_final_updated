@@ -76,7 +76,7 @@
 
                                                     {{-- <td>{{$data['purchase_order_id']}}</td> --}}
                                                     <td>{{ ucwords($data['product_name']) }}</td>
-                                                    <td>{{ ucwords($data['descriptions']) }}</td>
+                                                    <td>{{ ucwords($data['description']) }}</td>
 
                                                     {{-- <td>{{ $data->purchase_order_id }}</td>
                                                      <td>{{ $data->vendor_name }}</td>

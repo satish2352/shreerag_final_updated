@@ -88,7 +88,8 @@ padding-left: 20px !important;
 
                                     </thead>
 
-                                   
+                                   <?php
+                                   ?>
 
                                     <tbody>
                                         @foreach($data_output as $data)
@@ -97,7 +98,7 @@ padding-left: 20px !important;
                                             <td>{{ $loop->iteration }}</td>
                                             
                                             <td>{{ucwords($data->product_name)}}</td>
-                                            <td>{{ucwords($data->descriptions)}}</td>
+                                            <td>{{ucwords($data->description)}}</td>
                                             {{-- <td>{{ucwords($data->vendor_id)}}</td>
                                             <td>{{ucwords($data->client_name)}}</td> --}}
                                             

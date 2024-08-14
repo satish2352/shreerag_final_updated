@@ -18,6 +18,7 @@ return new class extends Migration
                 $table->unsignedBigInteger('purchase_orders_id');
                 $table->unsignedBigInteger('requisition_id');
                 $table->unsignedBigInteger('business_id');
+                $table->unsignedBigInteger('business_details_id');
                 $table->unsignedBigInteger('production_id');
                 $table->string('po_date')->nullable();
                 $table->string('vendor_id');
@@ -30,7 +31,8 @@ return new class extends Migration
                 // $table->string('client_name');
                 // $table->string('phone_number');
                 // $table->string('email');
-                $table->string('tax');
+                $table->string('tax_type');
+                $table->string('tax_id');
                 $table->string('invoice_date');
                 // $table->string('gst_number');
                 $table->string('payment_terms');

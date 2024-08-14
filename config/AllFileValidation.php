@@ -26,4 +26,8 @@ return [
 
     'TEAM_IMAGE_MAX_SIZE'=>'1048',
     'TEAM_IMAGE_MIN_SIZE'=>'10',
+
+    'NOTICE_IMAGE_MAX_SIZE'=>'1048',
+    'NOTICE_IMAGE_MIN_SIZE'=>'10',
+    
 ];

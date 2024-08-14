@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('business_application_processes', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('business_id')->nullable();
+            $table->unsignedBigInteger('business_details_id');
             $table->date('business_sent_date')->nullable();
             // $table->date('owner_po_action_date')->nullable();
             $table->unsignedBigInteger('business_status_id')->nullable();

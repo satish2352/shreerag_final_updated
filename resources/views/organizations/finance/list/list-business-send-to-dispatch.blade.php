@@ -82,8 +82,8 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
-                                                <th data-field="product_name" data-editable="true">Product Name</th>
-                                                <th data-field="grn_date" data-editable="true">Description</th>
+                                                <th data-field="customer_po_number" data-editable="true">Customer PO Number</th>
+                                                <th data-field="title" data-editable="true">Name</th>
                                                 <th data-field="purchase_id" data-editable="true">Remark</th>
                                                 <th data-field="store_material_sent_date" data-editable="true">Matrial Recieved Date</th>
                                                 <th data-field="design_image" data-editable="false">Design Layout</th>

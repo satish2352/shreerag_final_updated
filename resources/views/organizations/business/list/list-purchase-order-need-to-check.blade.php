@@ -90,14 +90,17 @@
                                         </thead>
 
 
-
+<?php
+// dd($data_output);
+// die();
+?>
                                         <tbody>
                                             @foreach ($data_output as $data)
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
-                                                    <td>{{ ucwords($data->descriptions) }}</td>
+                                                    <td>{{ ucwords($data->description) }}</td>
 
                                                     <td>
                                                         <div style="display: inline-block; align-items: center;">

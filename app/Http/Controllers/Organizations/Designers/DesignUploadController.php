@@ -10,7 +10,10 @@ use Session;
 use Validator;
 use Config;
 use Carbon;
-
+use App\Models\{
+    Business,
+    BusinessDetails
+};
 class DesignUploadController extends Controller
 { 
     public function __construct(){
@@ -20,7 +23,7 @@ class DesignUploadController extends Controller
     public function getAllNewRequirement(Request $request){
         try {
             $data_output = $this->service->getAllNewRequirement();
-        
+     
             return view('organizations.designer.design-upload.list-new-requirements-received-for-design', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
@@ -35,15 +38,31 @@ class DesignUploadController extends Controller
         }
     }     
 
-    public function add($id){
+    // public function add($id){
+    //     try {
+    //         $addData = base64_decode($id);
+    //         $business_data = Business::where('id', '=', $addData)->first();
+    //         $b_id = $business_data->id;
+    //         $business_details_data = BusinessDetails::where('business_id', $b_id)
+    //             ->get();
+    //         return view('organizations.designer.design-upload.add-design-upload', compact('addData', 'business_data', 'business_details_data'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // } 
+    public function add($id)
+    {
         try {
             $addData = base64_decode($id);
-            return view('organizations.designer.design-upload.add-design-upload', compact('addData'));
+            $business_data = Business::where('id', $addData)->first();
+            $business_details_data = BusinessDetails::where('business_id', $business_data->id)->get();
+    
+            return view('organizations.designer.design-upload.add-design-upload', compact('addData', 'business_data', 'business_details_data'));
         } catch (\Exception $e) {
-            return $e;
+            return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
         }
-    } 
-
+    }
+    
 
     public function addReUploadDesing($id){
         try {
@@ -58,19 +77,19 @@ class DesignUploadController extends Controller
     public function update(Request $request){
             
         $rules = [
-            'design_image' => 'required|mimes:pdf|max:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'',
+            // 'design_image' => 'required|mimes:pdf|max:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'',
             // 'bom_image' => 'required|mimes:xls,xlsx|max:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'',
          ];
 
          $messages = [
-            'design_image.required' => 'The design pdf is required.',
-            'design_image.mimes' => 'The design pdf must be in PDF format.',
-            'design_image.max' => 'The design pdf size must not exceed '.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'KB .',
-            'design_image.min' => 'The design pdf size must not be less than '.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'KB .',
-            'bom_image.required' => 'The bill of material excel sheet is required.',
-            // 'bom_image.mimes' => 'The bill of material excel sheet must be in XLS XLSX format.',
-            'bom_image.max' => 'The bill of material excel sheet size must not exceed '.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'KB .',
-            'bom_image.min' => 'The bill of material excel size must not be less than '.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'KB .',
+            // 'design_image.required' => 'The design pdf is required.',
+            // 'design_image.mimes' => 'The design pdf must be in PDF format.',
+            // 'design_image.max' => 'The design pdf size must not exceed '.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'KB .',
+            // 'design_image.min' => 'The design pdf size must not be less than '.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'KB .',
+            // 'bom_image.required' => 'The bill of material excel sheet is required.',
+            // // 'bom_image.mimes' => 'The bill of material excel sheet must be in XLS XLSX format.',
+            // 'bom_image.max' => 'The bill of material excel sheet size must not exceed '.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'KB .',
+            // 'bom_image.min' => 'The bill of material excel size must not be less than '.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'KB .',
                  ];
  
          try {

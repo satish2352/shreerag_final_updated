@@ -79,12 +79,11 @@ padding-left: 20px !important;
                                     <thead>
                                         <tr>
                                             <th data-field="id">Sr.No.</th> 
-                                            <th data-field="purchase_orders_id" data-editable="true">Purchase Order ID</th>
-                                            <th data-field="client_name" data-editable="true">Client Name</th>
-                                            <th data-field="vendor_company_name" data-editable="true">Client Company Name</th>
-                                            <th data-field="email" data-editable="true">Email</th>
-                                            <th data-field="contact_no" data-editable="true">Phone Number</th>
-                                            <th data-field="vendor_address" data-editable="true">Address</th>
+                                            <th data-field="product_name" data-editable="true">Product Name</th>
+                                            <th data-field="quantity" data-editable="true">Quantity</th>
+                                            <th data-field="grn_date" data-editable="true">Description</th>
+                                            {{-- <th data-field="action" data-editable="true">Action</th> --}}
+
                                         </tr>
 
                                     </thead>
@@ -93,20 +92,12 @@ padding-left: 20px !important;
                                         <tr>
                                             
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $data->purchase_orders_id }}</td>
-                                            <td>{{ $data->vendor_name }}</td>
-                                           <td>{{ $data->vendor_company_name }}</td>
-                                           <td>{{ $data->vendor_email }}</td> 
-                                           <td>{{ $data->contact_no }}</td> 
-                                           <td>{{ $data->vendor_address }}</td> 
-                                            
-                                            {{-- <td>
-                                                <div style="display: inline-block; align-items: center;">
-                                                    <a href="{{route('list-submit-final-purchase-order-particular-business', $data->purchase_order_id)}} "><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>View Details</button></a>
-                                                </div>
-                                            </td> --}}
-                                            
-                                          
+                                            <td>{{ucwords($data->product_name)}}</td>
+                                            <td>{{ucwords($data->quantity)}}</td>
+                                            <td>{{ ucwords($data->description) }}</td>
+                                            <td><div style="display: inline-block; align-items: center;">
+                                                <a href="{{route('update-final-production-completed-status', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>Production Completed</button></a>
+                                            </div></td>
                                            </tr>
                                         @endforeach
                                     </tbody>

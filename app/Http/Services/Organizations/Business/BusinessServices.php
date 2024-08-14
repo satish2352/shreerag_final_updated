@@ -77,6 +77,7 @@ class BusinessServices
     {
         try {
             $return_data = $this->repo->updateAll($request);
+           
             if ($return_data['status'] == 'success') {
                 return ['status' => 'success', 'msg' => 'Data Updated Successfully.'];
             } else {
@@ -88,45 +89,19 @@ class BusinessServices
     }
     
 
-    // public function updateAll( $request ) {
-    //     try {
-    //         $return_data = $this->repo->updateAll( $request );
-
-    //         $path = Config::get( 'DocumentConstant.ORGANIZATION_ADD' );
-    //         if ( $request->hasFile( 'image' ) ) {
-    //             if ( $return_data[ 'image' ] ) {
-    //                 if ( file_exists_view( Config::get( 'DocumentConstant.ORGANIZATION_DELETE' ) . $return_data[ 'image' ] ) ) {
-    //                     removeImage( Config::get( 'DocumentConstant.ORGANIZATION_DELETE' ) . $return_data[ 'image' ] );
-    //                 }
-
-    //             }
-    //             if ( $request->hasFile( 'image' ) ) {
-    //                 $englishImageName = $return_data[ 'last_insert_id' ] . '_' . rand( 100000, 999999 ) . '_video.' . $request->file( 'image' )->extension();
-
-    //                 // Rest of your code...
-    //             } else {
-    //                 // Handle the case where 'image' key is not present in the request.
-    //                 // For example, you might want to skip the file handling or return an error message.
-    //             }
-
-    //             // $englishImageName = $return_data[ 'last_insert_id' ] . '_' . rand( 100000, 999999 ) . '_image.' . $request->image->extension();
-    //             uploadImage( $request, 'image', $path, $englishImageName );
-    //             $slide_data = AboutUs::find( $return_data[ 'last_insert_id' ] );
-    //             $slide_data->image = $englishImageName;
-    //             $slide_data->save();
-    //         }
-
-    //         if ( $return_data ) {
-    //             return [ 'status' => 'success', 'msg' => 'Data Updated Successfully.' ];
-    //         } else {
-    //             return [ 'status' => 'error', 'msg' => 'Data  Not Updated.' ];
-    //         }
-
-    //     } catch ( Exception $e ) {
-    //         return [ 'status' => 'error', 'msg' => $e->getMessage() ];
-    //     }
-
-    // }
+    public function deleteByIdAddmore($id){
+        try {
+            $delete = $this->repo->deleteByIdAddmore($id);
+         
+            if ($delete) {
+                return ['status' => 'success', 'msg' => 'Deleted Successfully.'];
+            } else {
+                return ['status' => 'error', 'msg' => ' Not Deleted.'];
+            }  
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        } 
+    }
 
     public function deleteById($id)
     {

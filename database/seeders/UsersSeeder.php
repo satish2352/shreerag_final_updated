@@ -37,7 +37,7 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'owner@gmail.com',
-                'u_password' => bcrypt('FfAtgNQorb'),
+                'u_password' => bcrypt('12345678'),
                 'role_id' => 1,
                 'org_id' => 0,
                 'f_name' => 'fname',
@@ -55,7 +55,7 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'design@gmail.com',
-                'u_password' => bcrypt('TetmUsgjDf'),
+                'u_password' => bcrypt('12345678'),
                 'role_id' => 3,
                 'org_id' => 0,
                 'f_name' => 'fname',
@@ -74,7 +74,7 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'prod@gmail.com',
-                'u_password' => bcrypt('YeGClqIloN'),
+                'u_password' => bcrypt('12345678'),
                 'role_id' => 4,
                 'org_id' => 0,
                 'f_name' => 'fname',
@@ -94,7 +94,7 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'store@gmail.com',
-                'u_password' => bcrypt('SoQUNvApdw'),
+                'u_password' => bcrypt('12345678'),
                 'role_id' => 7,
                 'org_id' => 0,
                 'f_name' => 'fname',
@@ -113,7 +113,7 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'purchase@gmail.com',
-                'u_password' => bcrypt('gyGkQFxefV'),
+                'u_password' => bcrypt('12345678'),
                 'role_id' => 2,
                 'org_id' => 0,
                 'f_name' => 'fname',
@@ -132,7 +132,7 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'security@gmail.com',
-                'u_password' => bcrypt('YoErlSVVzu'),
+                'u_password' => bcrypt('12345678'),
                 'role_id' => 5,
                 'org_id' => 0,
                 'f_name' => 'fname',
@@ -152,7 +152,7 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'quality@gmail.com',
-                'u_password' => bcrypt('QaxFFsOdRR'),
+                'u_password' => bcrypt('12345678'),
                 'role_id' => 6,
                 'org_id' => 0,
                 'f_name' => 'fname',
@@ -171,7 +171,7 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'finance@gmail.com',
-                'u_password' => bcrypt('ordIoEffAh'),
+                'u_password' => bcrypt('12345678'),
                 'role_id' => 8,
                 'org_id' => 0,
                 'f_name' => 'fname',
@@ -191,7 +191,7 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'hr@gmail.com',
-                'u_password' => bcrypt('zaEAYMmBCa'),
+                'u_password' => bcrypt('12345678'),
                 'role_id' => 9,
                 'org_id' => 0,
                 'f_name' => 'fname',
@@ -211,7 +211,7 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'logistics@gmail.com',
-                'u_password' => bcrypt('logistics@123'),
+                'u_password' => bcrypt('12345678'),
                 'role_id' => 10,
                 'org_id' => 0,
                 'f_name' => 'fname',
@@ -229,7 +229,7 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'dispatch@gmail.com',
-                'u_password' => bcrypt('dispatch@123'),
+                'u_password' => bcrypt('12345678'),
                 'role_id' => 11,
                 'org_id' => 0,
                 'f_name' => 'fname',
@@ -248,7 +248,7 @@ class UsersSeeder extends Seeder
         User::create(
             [
                 'u_email' => 'cms@gmail.com',
-                'u_password' => bcrypt('cms@123'),
+                'u_password' => bcrypt('12345678'),
                 'role_id' => 12,
                 'org_id' => 0,
                 'f_name' => 'fname',

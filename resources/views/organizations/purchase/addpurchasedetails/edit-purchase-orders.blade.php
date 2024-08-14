@@ -82,7 +82,7 @@
                                                         @foreach ($editData as $key => $editDataNew)
                                                             @if ($key == 0)
                                                                 <div class="row">
-                                                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
                                                                             <label for="Service">Vendor Company
                                                                                 Name:</label> &nbsp;<span
@@ -90,7 +90,7 @@
                                                                             <select class="form-control mb-2"
                                                                                 name="vendor_id" id="vendor_id">
                                                                                 <option value="" default>Select
-                                                                                    Category</option>
+                                                                                    Vendor Company Name</option>
                                                                                 @foreach ($dataOutputVendor as $service)
                                                                                     <option value="{{ $service['id'] }}"
                                                                                         {{ old('vendor_id', $editDataNew->vendor_id) == $service->id ? 'selected' : '' }}>
@@ -105,29 +105,40 @@
                                                                         </div>
                                                                     </div>
 
-                                                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
-                                                                            <label>Tax</label>
-                                                                            <select class="form-control mb-2" name="tax"
-                                                                                id="tax">
-                                                                                <option value="" default>Select Tax
-                                                                                </option>
-
-                                                                                <option value="9"
-                                                                                    {{ $editDataNew->tax == 9 ? 'selected' : '' }}>
-                                                                                    C-GST</option>
-                                                                                <option value="9"
-                                                                                    {{ $editDataNew->tax == 9 ? 'selected' : '' }}>
-                                                                                    S-GST</option>
-                                                                                <option value="18"
-                                                                                    {{ $editDataNew->tax == 18 ? 'selected' : '' }}>
-                                                                                    C-GST + S-GST</option>
+                                                                            <label>Tax Type</label>
+                                                                            <select class="form-control mb-2" name="tax_type" id="tax_type">
+                                                                                <option value="" {{ old('tax_type') == '' ? 'selected' : '' }}>Select Tax Type</option>
+                                                                                <option value="CGST" {{ old('tax_type', $editDataNew->tax_type) == 'CGST' ? 'selected' : '' }}>C-GST</option>
+                                                                                <option value="SGST" {{ old('tax_type', $editDataNew->tax_type) == 'SGST' ? 'selected' : '' }}>S-GST</option>
+                                                                                <option value="CGST+SGST" {{ old('tax_type', $editDataNew->tax_type) == 'CGST+SGST' ? 'selected' : '' }}>C-GST + S-GST</option>
                                                                             </select>
-                                                                            @if ($errors->has('tax'))
-                                                                                <span
-                                                                                    class="red-text">{{ $errors->first('tax') }}</span>
+                                                                            @if ($errors->has('tax_type'))
+                                                                                <span class="red-text">{{ $errors->first('tax_type') }}</span>
                                                                             @endif
                                                                         </div>
+                                                                    </div>
+                                                                    
+                                                                <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label for="Service">Tax :</label> &nbsp;<span
+                                                                            class="red-text">*</span>
+                                                                        <select class="form-control mb-2"
+                                                                            name="tax_id" id="tax_id">
+                                                                            <option value="" default>Select
+                                                                                Tax</option>
+                                                                            @foreach ($dataOutputTax as $taxData)
+                                                                                <option value="{{ $taxData['id'] }}"
+                                                                                    {{ old('tax_id', $editDataNew->tax_id) == $taxData->id ? 'selected' : '' }}>
+                                                                                    {{ $taxData->name }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                        @if ($errors->has('tax_id'))
+                                                                            <span
+                                                                                class="red-text">{{ $errors->first('tax_id') }}</span>
+                                                                        @endif
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
@@ -179,8 +190,8 @@
                                                                     <th>Part No</th>
                                                                     <th>Description</th>
                                                                     <th>Due Date</th>
-                                                                    <th>HSN</th>
                                                                     <th>Quantity</th>
+                                                                    <th>Unit</th>
                                                                     <th>Rate</th>
                                                                     <th>Amount</th>
                                                                     <th>Action</th>
@@ -198,15 +209,17 @@
                                                                             class="form-control"
                                                                             value="{{ $editDataNew->purchase_order_details_id }}"
                                                                             placeholder="">
-
                                                                         <td>
-                                                                            <input type="text"
-                                                                                name="part_no_{{ $key }}"
-                                                                                value="{{ $editDataNew->part_no }}"
-                                                                                placeholder="Enter Part No"
-                                                                                class="form-control part_no" />
+                                                                            <select class="form-control part-no mb-2" name="part_no_id_{{ $key }}" id="">
+                                                                                <option value="" default>Select Item</option>
+                                                                                @foreach ($dataOutputPartItem as $data)
+                                                                                <option value="{{ $data['id'] }}"
+                                                                                    {{ old('part_no_id', $editDataNew->part_no_id) == $data->id ? 'selected' : '' }}>
+                                                                                    {{ $data->name }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                            </select>
                                                                         </td>
-
                                                                         <td>
                                                                             <input type="text"
                                                                                 name="description_{{ $key }}"
@@ -222,15 +235,6 @@
                                                                                 placeholder="Enter Due Date"
                                                                                 class="form-control due_date" />
                                                                         </td>
-
-                                                                        <td>
-                                                                            <input type="text"
-                                                                                name="hsn_no_{{ $key }}"
-                                                                                value="{{ $editDataNew->hsn_no }}"
-                                                                                placeholder="Enter HSN No"
-                                                                                class="form-control hsn_no" />
-                                                                        </td>
-
                                                                         <td>
                                                                             <input type="text"
                                                                                 name="quantity_{{ $key }}"
@@ -238,7 +242,13 @@
                                                                                 placeholder="Enter Quantity"
                                                                                 class="form-control quantity" />
                                                                         </td>
-
+                                                                        <td>
+                                                                            <input type="text"
+                                                                                name="unit_{{ $key }}"
+                                                                                value="{{ $editDataNew->unit }}"
+                                                                                placeholder="Enter Unit"
+                                                                                class="form-control unit" />
+                                                                        </td>
                                                                         <td>
                                                                             <input type="text"
                                                                                 name="rate_{{ $key }}"
@@ -271,7 +281,7 @@
                                                                 <div class="form-group-inner">
                                                                     <div class="row">
                                                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                            <label for="quote_no">Quote No:</label>
+                                                                            <label for="quote_no">Quote No:  (optional)</label>
                                                                             <input type="text" class="form-control"
                                                                                 id="quote_no" name="quote_no"
                                                                                 value="{{ $editDataNew->quote_no }}"
@@ -279,7 +289,7 @@
                                                                         </div>
 
                                                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                            <label for="discount">Discount:</label>
+                                                                            <label for="discount">Discount:  (optional)</label>
                                                                             <input type="text" class="form-control"
                                                                                 id="discount" name="discount"
                                                                                 value="{{ $editDataNew->discount }}"
@@ -352,32 +362,32 @@
                     payment_terms: {
                         required: true,
                     },
-                    discount: {
-                        required: true,
-                        number: true,
-                    },
-                    quote_no: {
-                        required: true,
-                        number: true,
-                    },
+                    // discount: {
+                    //     required: true,
+                    //     number: true,
+                    // },
+                    // quote_no: {
+                    //     required: true,
+                    //     number: true,
+                    // },
                     note: {
                         required: true,
                     },
-                    'part_no_0': {
+                    'part_no_id_0': {
                         required: true,
                     },
-                    'description_0': {
-                        required: true,
-                    },
+                    // 'description_0': {
+                    //     required: true,
+                    // },
                     'due_date_0': {
-                        required: true,
-                    },
-                    'hsn_no_0': {
                         required: true,
                     },
                     'quantity_0': {
                         required: true,
                         digits: true,
+                    },
+                    'unit_0': {
+                        required: true,
                     },
                     'rate_0': {
                         required: true,
@@ -400,33 +410,34 @@
                     payment_terms: {
                         required: "Please Enter the Payment Terms",
                     },
-                    discount: {
-                        required: "Please Enter the Discount",
-                        number: "Please enter a valid number.",
-                    },
-                    quote_no: {
-                        required: "Please Enter the quote number",
-                        number: "Please enter a valid number.",
+                    // discount: {
+                    //     required: "Please Enter the Discount",
+                    //     number: "Please enter a valid number.",
+                    // },
+                    // quote_no: {
+                    //     required: "Please Enter the quote number",
+                    //     number: "Please enter a valid number.",
 
-                    },
+                    // },
                     note: {
                         required: "Please Enter the Other Information",
                     },
-                    'part_no_0': {
+                    'part_no_id_0': {
                         required: "Please enter the Part Number",
                     },
-                    'description_0': {
-                        required: "Please enter the Description",
-                    },
+                    // 'description_0': {
+                    //     required: "Please enter the Description",
+                    // },
                     'due_date_0': {
                         required: "Please enter the Due Date",
                     },
-                    'hsn_no_0': {
-                        required: "Please enter the HSN",
-                    },
+                   
                     'quantity_0': {
                         required: "Please enter the Quantity",
                         digits: "Please enter only digits for Quantity",
+                    },
+                    'unit_0': {
+                        required: "Please enter the Unit",
                     },
                     'rate_0': {
                         required: "Please enter the Rate",
@@ -437,9 +448,9 @@
                     },
                 },
                 errorPlacement: function(error, element) {
-                    if (element.hasClass("part_no") || element.hasClass("description") ||
-                        element.hasClass("due_date") || element.hasClass("hsn_no") ||
-                        element.hasClass("quantity") || element.hasClass("rate") ||
+                    if (element.hasClass("part_no_id") ||
+                        element.hasClass("due_date") || 
+                        element.hasClass("quantity") || element.hasClass("unit") || element.hasClass("rate") ||
                         element.hasClass("amount")) {
                         error.insertAfter(element);
                     } else {
@@ -459,16 +470,22 @@
                     '][design_count]" class="form-control" value="' + i +
                     '" placeholder=""> <input type="hidden" name="addmore[' + i +
                     '][purchase_id]" class="form-control" value="' + i + '" placeholder="">' +
-                    '<td><input type="text" class="form-control part_no" name="addmore[' + i +
-                    '][part_no]" placeholder=" Part No" /></td>' +
+                    '<td>' +
+            '<select class="form-control part_no_id mb-2" name="addmore[' + i + '][part_no_id]" id="">' +
+                '<option value="" default>Tax</option>' +
+                '@foreach ($dataOutputPartItem as $data)' +
+                    '<option value="{{ $data['id'] }}">{{ $data['name'] }}</option>' +
+                '@endforeach' +
+            '</select>' +
+            '</td>' +
                     '<td><input type="text" class="form-control description" name="addmore[' + i +
                     '][description]" placeholder=" Description" /></td>' +
                     '<td><input type="date" class="form-control due_date" name="addmore[' + i +
                     '][due_date]" placeholder=" Due Date" /></td>' +
-                    '<td><input type="text" class="form-control hsn_no" name="addmore[' + i +
-                    '][hsn_no]" placeholder=" HSN No" /></td>' +
                     '<td><input type="text" class="form-control quantity" name="addmore[' + i +
-                    '][quantity]" placeholder=" Quantity" /></td>' +
+                        '][quantity]" placeholder=" Quantity" /></td>' +
+                    '<td><input type="text" class="form-control unit" name="addmore[' + i +
+                    '][unit]" placeholder="Unit" /></td>' +
                     '<td><input type="text" class="form-control rate" name="addmore[' + i +
                     '][rate]" placeholder=" Rate" /></td>' +
                     '<td><input type="text" class="form-control amount" name="addmore[' + i +
@@ -480,28 +497,22 @@
                 $("#dynamicTable").append(newRow);
 
                 // Reinitialize validation for the new row
-                $('input[name="addmore[' + i + '][part_no]"]').rules("add", {
-                    required: true,
-                    messages: {
-                        required: "Please enter the Part Number",
-                    }
-                });
-                $('input[name="addmore[' + i + '][description]"]').rules("add", {
-                    required: true,
-                    messages: {
-                        required: "Please enter the Description",
-                    }
-                });
+                $('select[name="addmore[' + i + '][part_no_id]"]').rules("add", {
+            required: true,
+            messages: {
+                required: "Please select the Part Number",
+            }
+        });
+                // $('input[name="addmore[' + i + '][description]"]').rules("add", {
+                //     required: true,
+                //     messages: {
+                //         required: "Please enter the Description",
+                //     }
+                // });
                 $('input[name="addmore[' + i + '][due_date]"]').rules("add", {
                     required: true,
                     messages: {
                         required: "Please enter the Due Date",
-                    }
-                });
-                $('input[name="addmore[' + i + '][hsn_no]"]').rules("add", {
-                    required: true,
-                    messages: {
-                        required: "Please enter the HSN",
                     }
                 });
                 $('input[name="addmore[' + i + '][quantity]"]').rules("add", {
@@ -510,6 +521,14 @@
                     messages: {
                         required: "Please enter the Quantity",
                         digits: "Please enter only digits for Quantity",
+                    }
+                });
+                $('input[name="addmore[' + i + '][unit]"]').rules("add", {
+                    required: true,
+                    digits: true,
+                    messages: {
+                        required: "Please enter the unit",
+                        
                     }
                 });
                 $('input[name="addmore[' + i + '][rate]"]').rules("add", {

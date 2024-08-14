@@ -117,6 +117,7 @@
 
                   </thead>
                   <tbody>
+                    
                     @foreach($getOutput as $data)
                     <tr>
                       
@@ -137,7 +138,7 @@
 
                       <td>
                         <div style="display: flex; align-items: center;">
-                          <a href="{{route('edit-purchase-order', base64_encode($data->id))}}"><button
+                          <a href="{{route('edit-purchase-order', $data->purchase_orders_id)}}"><button
                               data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o"
                                 aria-hidden="true"></i></button></a>
                         </div>

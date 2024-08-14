@@ -26,9 +26,10 @@ class LogisticsController extends Controller
     {
         try {
             
-            $purchase_order_data = BusinessApplicationProcesses::where('business_id', '=', $business_id)->first();
+            $purchase_order_data = BusinessApplicationProcesses::where('business_details_id', '=', $business_id)->first();
             $dataOutputVendor = Vendors::get();
             $edit_data_id = $business_id;
+           
             $editData = $this->business_service->getById($edit_data_id);
 
 

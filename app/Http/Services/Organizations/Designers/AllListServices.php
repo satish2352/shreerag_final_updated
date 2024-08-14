@@ -18,8 +18,9 @@ class AllListServices
 
     public function getAllListDesignRecievedForCorrection(){
         try {
-            return  $this->repo->getAllListDesignRecievedForCorrection();
-        
+            $data_output =  $this->repo->getAllListDesignRecievedForCorrection();
+            // dd($data_output);
+           return $data_output;
         } catch (\Exception $e) {
             return $e;
         }

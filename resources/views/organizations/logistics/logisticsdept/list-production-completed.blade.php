@@ -82,35 +82,53 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
+                                                <th data-field="customer_po_number" data-editable="true">PO Number</th>
                                                 <th data-field="product_name" data-editable="true">Product Name</th>
-                                                <th data-field="grn_date" data-editable="true">Description</th>
-                                                <th data-field="purchase_id" data-editable="true">Remark</th>
-                                                <th data-field="store_material_sent_date" data-editable="true">Matrial Recieved Date</th>
-                                                <th data-field="design_image" data-editable="false">Design Layout</th>
-                                                <th data-field="bom_image" data-editable="false">BOM</th>
+                                                <th data-field="quantity" data-editable="true">Quantity</th>
+                                                <th data-field="remark" data-editable="true">Remark</th>
+                                                <th data-field="title" data-editable="true">customer Name</th>
+                                                {{-- <th data-field="vendor_company_name" data-editable="true">Vendor company Name</th>
+                                                <th data-field="vendor_email" data-editable="true">Vendor Email</th>
+                                                <th data-field="contact_no" data-editable="true">Vendor Contact Number</th>
+                                                <th data-field="vendor_address" data-editable="true">Vendor Address</th> --}}
+                                                {{-- <th data-field="store_material_sent_date" data-editable="true">Matrial Recieved Date</th> --}}
+                                                {{-- <th data-field="design_image" data-editable="false">Design Layout</th> --}}
+                                                {{-- <th data-field="bom_image" data-editable="false">BOM</th> --}}
                                                 <th data-field="" data-editable="false">Action</th>
                                             </tr>
 
                                         </thead>
                                         <tbody>
+
+
+                                            <?php
+                                            // dd($data_output);
+                                            // die();
+                                            ?>
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ ucwords($data->customer_po_number) }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
-                                                    <td>{{ ucwords($data->descriptions) }}</td>
+                                                    <td>{{ ucwords($data->quantity) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
-                                                    <td>{{ ucwords($data->store_material_sent_date) }}</td>
-                                                    <td> <a class="img-size" target="_blank"
+                                                    <td>{{ ucwords($data->title) }}</td>
+                                                    {{-- <td>{{ ucwords($data->vendor_company_name) }}</td>
+                                                    <td>{{ ucwords($data->vendor_email) }}</td>
+                                                    <td>{{ ucwords($data->contact_no) }}</td>
+                                                    <td>{{ ucwords($data->vendor_address) }}</td> --}}
+                                                    {{-- <td>{{ ucwords($data->store_material_sent_date) }}</td> --}}
+                                                    {{-- <td> <a class="img-size" target="_blank"
                                                         href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
                                                         alt="Design"> Click to view</a>
                                                 </td>
                                                 <td> <a class="img-size"
                                                         href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
                                                         alt="bill of material" >Click to download</a>
-                                                </td>
+                                                </td> --}}
                                                 <td>
                                                     <div style="display: flex; align-items: center;">
-                                                        <a href="{{route('add-logistics', $data->business_id)}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+                                                        <a href="{{route('add-logistics', $data->id)}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
                                                         {{-- <a href="{{route('delete-products')}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a> --}}
                                                     </div>
                                                 </td>

@@ -23,7 +23,7 @@ public function storeLogistics($request)
         // $dataOutput = Logistics::find($request->id);
         // $dataOutput = Logistics::where('id', $request->id)->first();
         // $dataOutput = BusinessApplicationProcesses::where('business_id', $request->business_id)->first();
-        $dataOutput = Logistics::where('business_id', $request->business_id)->first();
+        $dataOutput = Logistics::where('business_details_id', $request->business_id)->first();
         // dd($dataOutput);
         // die();
         if ($dataOutput) {
@@ -34,11 +34,13 @@ public function storeLogistics($request)
             $dataOutput->is_deleted = '0';
             $dataOutput->save();
 
-            $business_application = BusinessApplicationProcesses::where('business_id', $dataOutput->business_id)->first();
-            
+            $business_application = BusinessApplicationProcesses::where('business_details_id', $dataOutput->business_details_id)->first();
+         
             if ($business_application) {
                 $business_application->logistics_status_id = config('constants.LOGISTICS_DEPARTMENT.LOGISTICS_FILL_COMPLETED_PRODUCTION_FORM_IN_LOGISTICS');
                 $business_application->save();
+                // dd($business_application);
+                // die();
                 return response()->json(['status' => 'success', 'message' => 'Production status updated successfully.']);
             } else {
                 return response()->json(['status' => 'error', 'message' => 'Business application not found.'], 404);
@@ -56,7 +58,7 @@ public function storeLogistics($request)
 public function sendToFianance($id) {
     try {
        
-        $business_application = BusinessApplicationProcesses::where('business_id', $id)->first();
+        $business_application = BusinessApplicationProcesses::where('business_details_id', $id)->first();
         if ($business_application) {
             $business_application->logistics_status_id = config('constants.LOGISTICS_DEPARTMENT.LOGISTICS_SEND_PRODUCTION_REQUEST_TO_FINANCE');
             $business_application->save();

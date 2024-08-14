@@ -117,6 +117,9 @@ class GRNController extends Controller
                 ->leftJoin('businesses', function ($join) {
                     $join->on('business_application_processes.business_id', '=', 'businesses.id');
                 })
+                ->leftJoin('businesses_details', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+                })
                 ->leftJoin('design_revision_for_prod', function ($join) {
                     $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
                 })
@@ -129,9 +132,9 @@ class GRNController extends Controller
                 ->distinct('businesses.id')
                 ->select(
                     'businesses.id',
-                    'businesses.product_name',
+                    'businesses_details.product_name',
                     'businesses.title',
-                    'businesses.descriptions',
+                    'businesses_details.description',
                     'businesses.remarks',
                     'businesses.is_active',
                     'production.business_id',
@@ -155,6 +158,16 @@ class GRNController extends Controller
             $data_output = $this->service->getAllListMaterialSentFromQualityBusinessWise($id);
            
             return view('organizations.quality.list.list-checked-material-sent-to-store-businesswise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function getAllRejectedChalanList()
+    {
+        try {
+            $all_gatepass = $this->service->getAllRejectedChalanList();
+            return view('organizations.quality.list.list-rejected-chalan-po-wise', compact('all_gatepass'));
         } catch (\Exception $e) {
             return $e;
         }

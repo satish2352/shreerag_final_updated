@@ -13,6 +13,9 @@
         justify-content: center !important;
         align-items: center;
         }
+        .red-text{
+            color: red; 
+        }
     </style>
     <div class="container-fluid">
     <div class="row">
@@ -70,14 +73,6 @@
                                                         @endif
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="product_name">Product Name :  <span class="text-danger">*</span></label> 
-                                                        <input type="text" class="form-control" id="product_name" value="{{ old('product_name') }}"
-                                                            name="product_name" placeholder="Enter Product Name">
-                                                            @if ($errors->has('product_name'))
-                                                            <span class="red-text"><?php echo $errors->first('product_name', ':message'); ?></span>
-                                                        @endif
-                                                    </div>
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="title">Customer Name :  <span class="text-danger">*</span></label> 
                                                         <input type="text" class="form-control" id="title" value="{{ old('title') }}"
                                                             name="title" placeholder="Enter Customer Name">
@@ -85,23 +80,60 @@
                                                             <span class="red-text"><?php echo $errors->first('title', ':message'); ?></span>
                                                         @endif
                                                     </div>
-                                                
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="quantity">Quantity :  <span class="text-danger">*</span></label>
-                                                        <input type="text" class="form-control" id="quantity" value="{{ old('quantity') }}"
-                                                            name="quantity" placeholder="Enter Quantity">
-                                                            @if ($errors->has('quantity'))
-                                                            <span class="red-text"><?php echo $errors->first('quantity', ':message'); ?></span>
-                                                        @endif
-                                                    </div>
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="rate">Rate :  <span class="text-danger">*</span></label> 
-                                                        <input type="text" class="form-control" id="rate" value="{{ old('rate') }}"
-                                                            name="rate" placeholder="Enter rate">
-                                                            @if ($errors->has('rate'))
-                                                            <span class="red-text"><?php echo $errors->first('rate', ':message'); ?></span>
-                                                        @endif
-                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12 col-sm-12">
+                                                            <div class="table-responsive">
+                                                                <table class="table table-hover table-white repeater" id="purchase_order_table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>#</th>
+                                                                            <th class="col-sm-3">Product Name</th>
+                                                                            <th class="col-md-3">Description</th>
+                                                                            <th class="col-md-2">Quantity</th>
+                                                                            {{-- <th class="col-md-2">Unit</th> --}}
+                                                                            <th class="col-md-2">Rate</th>
+                                                                            <th>
+                                                                                <button type="button" class="btn btn-sm btn-success font-18 mr-1" id="add_more_btn"
+                                                                                    title="Add" data-repeater-create>
+                                                                                    <i class="fa fa-plus"></i>
+                                                                                </button>
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <input type="text" name="id" class="form-control" style="min-width:50px" readonly value="1">
+                                                                                <input type="hidden" id="i_id" class="form-control" style="min-width:50px" readonly value="0">
+                                                                            </td>
+                                                                            <td>
+                                                                                <input class="form-control part-no" name="addmore[0][product_name]" type="text" style="min-width:150px">
+                                                                            </td>
+                                        
+                                                                            <td>
+                                                                                <input class="form-control description" name="addmore[0][description]" type="text" style="min-width:150px">
+                                                                            </td>
+                                                                            <td>
+                                                                                <input class="form-control quantity" name="addmore[0][quantity]" type="text">
+                                                                            </td>
+                                                                            {{-- <td>
+                                                                                <input class="form-control unit" name="addmore[0][unit]"  type="text">
+                                                                            </td> --}}
+                                                                            <td>
+                                                                                <input class="form-control rate" name="addmore[0][rate]" type="text">
+                                                                            </td>
+                                                                            <td>
+                                                                                <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete"
+                                                                                    data-repeater-delete>
+                                                                                    <i class="fa fa-trash"></i>
+                                                                                </button>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>              
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="po_validity">PO Validity :  <span class="text-danger">*</span></label> 
                                                         <input type="date" class="form-control" id="po_validity" value="{{ old('po_validity') }}"
@@ -110,14 +142,7 @@
                                                             <span class="red-text"><?php echo $errors->first('po_validity', ':message'); ?></span>
                                                         @endif
                                                     </div>
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="hsn_number">HSN number :  <span class="text-danger">*</span></label>
-                                                        <input type="text" class="form-control" id="hsn_number" value="{{ old('hsn_number') }}"
-                                                            name="hsn_number" placeholder="Enter HSN number">
-                                                            @if ($errors->has('hsn_number'))
-                                                            <span class="red-text"><?php echo $errors->first('hsn_number', ':message'); ?></span>
-                                                        @endif
-                                                    </div>
+                                                   
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="customer_payment_terms">Payment Terms :</label> (optional) 
                                                         <input type="text" class="form-control" id="customer_payment_terms" value="{{ old('customer_payment_terms') }}"
@@ -127,28 +152,14 @@
 
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="customer_terms_condition">Terms Condition :</label> (optional) 
-                                                        <input type="text" class="form-control" id="customer_terms_condition" value="{{ old('customer_terms_condition') }}"
-                                                            name="customer_terms_condition" placeholder="Enter Terms Condition ">
+                                                        <textarea class="form-control" rows="3" type="text" class="form-control" id="customer_terms_condition" name="customer_terms_condition"
+                                                        placeholder="Enter Terms and Condition">{{ old('customer_terms_condition') }}</textarea>
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <div class="sparkline12-graph">
                                                             <div id="pwd-container1">
                                                                 <div class="form-group">
-                                                                    <label for="descriptions">Description</label> (optional) 
-                                                                    <textarea class="form-control" rows="3" type="text" class="form-control" id="descriptions" name="descriptions"
-                                                                        placeholder="Enter Description">{{ old('descriptions') }}</textarea>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <div class="pwstrength_viewport_progress"></span></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <div class="sparkline12-graph">
-                                                            <div id="pwd-container1">
-                                                                <div class="form-group">
-                                                                    <label for="remarks">Remark</label> (optional) 
+                                                                    <label for="remarks">Remark <span class="text-danger">*</span></label> 
                                                                     <textarea class="form-control" rows="3" type="text" class="form-control" id="remarks" name="remarks"
                                                                         placeholder="Enter Remark">{{ old('remarks') }}</textarea>
                                                                        
@@ -192,7 +203,197 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
-    <script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+    
+    
+      <script>
+        $(document).ready(function() {
+            // Initialize jQuery Validation
+            var validator = $("#purchase_order_table").validate({
+                ignore: [], // Validate hidden inputs as well
+                rules: {
+                    'addmore[0][product_name]': {
+                        required: true,
+                    },
+                    // 'addmore[0][description]': {
+                    //     required: true,
+                    // },
+                    'addmore[0][quantity]': {
+                        required: true,
+                        digits: true,
+                    },
+                    'addmore[0][rate]': {
+                        required: true,
+                        number: true,
+                    },
+                    'addmore[0][amount]': {
+                        required: true,
+                    },
+                },
+                messages: {
+                    'addmore[0][product_name]': {
+                        required: "Please Enter the Part Number",
+                    },
+                    // 'addmore[0][description]': {
+                    //     required: "Please Enter the Description",
+                    // },
+                    'addmore[0][quantity]': {
+                        required: "Please Enter the Quantity",
+                        digits: "Please enter only digits for Quantity",
+                    },
+                    'addmore[0][rate]': {
+                        required: "Please Enter the Rate",
+                        number: "Please enter a valid number for Rate",
+                    },
+                    'addmore[0][amount]': {
+                        required: "Please Enter the Amount",
+                    },
+                },
+                errorPlacement: function(error, element) {
+                    if (element.hasClass("part-no") || 
+                        element.hasClass("due-date") || 
+                        element.hasClass("quantity") || element.hasClass("rate") ||
+                        element.hasClass("total_amount")) {
+                        error.insertAfter(element.closest('td'));
+                    } else {
+                        error.insertAfter(element);
+                    }
+                }
+            });
+    
+            // Function to initialize validation for dynamically added fields
+            function initializeValidation(context) {
+                $(context).find('.part-no').each(function() {
+                    $(this).rules("add", {
+                        required: true,
+                        messages: {
+                            required: "Please Enter the Part Number",
+                        }
+                    });
+                });
+                $(context).find('.quantity').each(function() {
+                    $(this).rules("add", {
+                        required: true,
+                        digits: true,
+                        messages: {
+                            required: "Please Enter the Quantity",
+                            digits: "Please enter only numbers for Quantity",
+                        }
+                    });
+                });
+                // $(context).find('.unit').each(function() {
+                //     $(this).rules("add", {
+                //         required: true,
+                //         messages: {
+                //             required: "Please Enter the Unit",
+                //         }
+                //     });
+                // });
+                $(context).find('.rate').each(function() {
+                    $(this).rules("add", {
+                        required: true,
+                        number: true,
+                        messages: {
+                            required: "Please Enter the Rate",
+                            number: "Please enter a valid number for Rate",
+                        }
+                    });
+                });
+                $(context).find('.total_amount').each(function() {
+                    $(this).rules("add", {
+                        required: true,
+                        messages: {
+                            required: "Please Enter the Amount",
+                        }
+                    });
+                });
+            }
+    
+            // Add more rows when the "Add More" button is clicked
+            $("#add_more_btn").click(function() {
+                var i_count = $('#i_id').val();
+                var i = parseInt(i_count) + 1;
+                $('#i_id').val(i);
+    
+                var newRow = `
+                    <tr>
+                        <td>
+                            <input type="text" name="id" class="form-control" style="min-width:50px" readonly value="${i}">
+                        </td>
+                        <td>
+                           <input class="form-control product_name" name="addmore[${i}][product_name]" type="text" style="min-width:150px">
+                        </td>
+                        <td>
+                            <input class="form-control description" name="addmore[${i}][description]" type="text" style="min-width:150px">
+                        </td>
+                        <td>
+                            <input class="form-control quantity" name="addmore[${i}][quantity]" type="text">
+                        </td>
+                        <td>
+                            <input class="form-control rate" name="addmore[${i}][rate]" type="text">
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete" data-repeater-delete>
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                $("#purchase_order_table tbody").append(newRow);
+    
+                // Reinitialize validation for dynamically added fields
+                validator.resetForm(); // Reset validation state
+                initializeValidation($("#purchase_order_table")); // Initialize for all rows
+            });
+    
+            // Remove a row when the "Remove" button is clicked
+            $(document).on("click", ".remove-row", function() {
+                var i_count = $('#i_id').val();
+                var i = parseInt(i_count) - 1;
+                $('#i_id').val(i);
+    
+                $(this).closest("tr").remove();
+    
+                // Reset validation state after removing row
+                validator.resetForm();
+            });
+    
+            // Initialize validation for the first row on page load
+            initializeValidation($("#purchase_order_table"));
+    
+            // Custom validation method for minimum date
+            $.validator.addMethod("minDate", function(value, element) {
+                var today = new Date();
+                var inputDate = new Date(value);
+                return inputDate >= today;
+            }, "The date must be today or later.");
+    
+            // Initialize date pickers with min date set to today
+            function setMinDateForDueDates() {
+                var today = new Date().toISOString().split('T')[0];
+                $('.due-date').attr('min', today);
+            }
+            setMinDateForDueDates();
+    
+            $(document).on('focus', '.due-date', function() {
+                setMinDateForDueDates();
+            });
+    
+            $(document).on('keyup', '.quantity, .rate', function(e) {
+                var currentRow = $(this).closest("tr");
+                var current_row_quantity = currentRow.find('.quantity').val();
+                var current_row_rate = currentRow.find('.rate').val();
+                var new_total_price = current_row_quantity * current_row_rate;
+                currentRow.find('.total_amount').val(new_total_price);
+            });
+        });
+    </script>
+   
+   
+   
+   <script>
         jQuery.noConflict();
         jQuery(document).ready(function($) {
             // Function to set minimum date for the po_validity field
@@ -217,11 +418,11 @@
                     title: {
                         required: true,
                     },
-                    // descriptions: {
-                    //     required: true,
-                    // },
+                   
                     customer_po_number: {
                         required: true,
+                        minlength: 10,
+                        maxlength: 16
                     },
                     quantity: {
                         required: true,
@@ -234,19 +435,32 @@
                     po_validity: {
                         required: true,
                     },
-                    hsn_number: {
+                    remarks: {
                         required: true,
-                        number: true,
                     },
-                    // customer_payment_terms: {
+                    // hsn_number: {
                     //     required: true,
+                    //     number: true,
                     // },
-                    // customer_terms_condition: {
-                    //     required: true,
-                    // },
-                    // remarks: {
-                    //     required: true,
-                    // },
+                    'addmore[][product_name]': {
+                            required: true,
+                        },
+                        'addmore[][description]': {
+                            required: true,
+                        },
+                        'addmore[][due_date]': {
+                            required: true,
+                        },
+                        'addmore[][quantity]': {
+                            required: true,
+                        },
+                        'addmore[][rate]': {
+                            required: true,
+                        },
+                        'addmore[][amount]': {
+                            required: true,
+                        },
+                   
                 },
                 messages: {
                     product_name: {
@@ -255,11 +469,11 @@
                     title: {
                         required: "Please enter Customer Name.",
                     },
-                    // descriptions: {
-                    //     required: "Please enter Description.",
-                    // },
+                    
                     customer_po_number: {
                         required: "Please enter po number.",
+                        minlength: "PO number must be at least 10 characters long.",
+                        maxlength: "PO number must be at most 16 characters long."
                     }, 
                     quantity: {
                         required: "Please enter quantity.",
@@ -272,19 +486,33 @@
                     po_validity: {
                         required: "Please enter po validity.",
                     },
-                    hsn_number: {
-                        required: "Please enter hsn number.",
-                        number: "Please enter a valid number.",
+                    // hsn_number: {
+                    //     required: "Please enter hsn number.",
+                    //     number: "Please enter a valid number.",
+                    // },
+                    'addmore[][product_name]': {
+                            required: "Please Enter the Part Number",
+                        },
+                        'addmore[][description]': {
+                            required: "Please Enter the Description",
+                        },
+                        'addmore[][due_date]': {
+                            required: "Please Enter the Due Date",
+                        },
+                        'addmore[][quantity]': {
+                            required: "Please Enter the Quantity",
+                        },
+                        
+                        'addmore[][rate]': {
+                            required: "Please Enter the Rate", 
+                        },
+                        'addmore[][amount]': {
+                            required: "Please Enter the Amount",
+                        },
+                        remarks: {
+                        required: "Please enter remarks",
                     },
-                    // customer_payment_terms: {
-                    //     required: "Please enter customer payment terms.",
-                    // },
-                    // customer_terms_condition: {
-                    //     required: "Please enter customer terms condition.",
-                    // },
-                    // remarks: {
-                    //     required: "Please enter Remark.",
-                    // },
+                  
                 },
                 submitHandler: function(form) {
                     // Use SweetAlert to show a confirmation dialog

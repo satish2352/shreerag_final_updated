@@ -86,11 +86,12 @@
                                                 {{-- <th data-field="title" data-editable="true">Name</th> --}}
                                                 <th data-field="quantity" data-editable="true">Quantity</th>
                                                 <th data-field="grn_date" data-editable="true">Description</th>
-                                                <th data-field="purchase_id" data-editable="true">Remark</th>
+                                                {{-- <th data-field="purchase_id" data-editable="true">Remark</th> --}}
                                                 <th data-field="bom_image" data-editable="false">BOM</th>
                                                 <th data-field="bom" data-editable="false">Action</th>
                                             </tr>
                                         </thead>
+                                      
                                         <tbody>
                                             @foreach ($data_output as $data)
                                                 <tr>
@@ -99,8 +100,8 @@
                                                     <td>{{ucwords($data->product_name)}}</td>
                                                     {{-- <td>{{ucwords($data->title)}}</td> --}}
                                                     <td>{{ucwords($data->quantity)}}</td>
-                                                    <td>{{ ucwords($data->descriptions) }}</td>
-                                                    <td>{{ ucwords($data->remarks) }}</td>
+                                                    <td>{{ ucwords($data->description) }}</td>
+                                                    {{-- <td>{{ ucwords($data->remarks) }}</td> --}}
                                                   
                                                     <td> <a class="img-size"
                                                             href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"

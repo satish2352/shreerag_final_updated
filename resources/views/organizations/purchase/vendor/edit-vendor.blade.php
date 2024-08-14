@@ -92,14 +92,14 @@ label.error {
                                                 </div>
 
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="gst_no">GST No:</label>
+                                                    <label for="gst_no">Vendor GST No:</label>
                                                     <input type="text" class="form-control" id="gst_no"
                                                         name="gst_no" placeholder="Enter GST number"
                                                         value=" @if (old('gst_no')) {{ old('gst_no') }}@else{{ $editData->gst_no }} @endif">
                                                 </div>
 
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="quote_no">Quote No:</label>
+                                                    <label for="quote_no">Vendor Quote No:</label>
                                                     <input type="text" class="form-control" id="quote_no"
                                                         name="quote_no" placeholder="Enter your quote no"
                                                         value=" @if (old('quote_no')) {{ old('quote_no') }}@else{{ $editData->quote_no }} @endif">

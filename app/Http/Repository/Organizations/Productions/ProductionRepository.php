@@ -10,7 +10,8 @@ BusinessApplicationProcesses,
 ProductionModel,
 DesignRevisionForProd,
 Logistics,
-Dispatch
+Dispatch,
+BusinessDetails
 };
 use Config;
 
@@ -21,9 +22,11 @@ class ProductionRepository  {
 
     public function acceptdesign($id){
         try {
-            
-            $business_application = BusinessApplicationProcesses::where('business_id', $id)->first();
-          
+            // dd($id);
+            // die();
+            $business_application = BusinessApplicationProcesses::where('production_id', $id)->first();
+        //  dd($business_application);
+        //  die();
 
             if ($business_application) {
                 // $business_application->business_id = $id;
@@ -35,14 +38,17 @@ class ProductionRepository  {
                
                 $business_application->save();
             }
-            $business = Business::find($id);
+            // $business = Business::find($id);
+            // $business = BusinessDetails::find($id);
+            $business = ProductionModel::find($id);
+            
 
             if ($business) {
                 $business->is_approved_production = '1';
                 $business->save();
             } else {
                 return [
-                    'msg' => 'Business not found',
+                    'msg' => 'Product not found',
                     'status' => 'error',
                 ];
             }
@@ -73,15 +79,18 @@ class ProductionRepository  {
         try {
 
             $idtoedit = base64_decode($request->business_id);
-
+// dd($idtoedit);
+// die();
             $production_data = ProductionModel::where('id', $idtoedit)->first();
 
             $designRevisionForProdID = DesignRevisionForProd::where('id', $production_data->id)->orderBy('id','desc')->first();
             if($designRevisionForProdID) {
 
                 $designRevisionForProdID->business_id = $production_data->business_id;
+                $designRevisionForProdID->business_details_id = $production_data->business_details_id;
                 $designRevisionForProdID->design_id = $production_data->design_id;
                 $designRevisionForProdID->production_id = $production_data->business_id;
+                $designRevisionForProdID->production_id = $production_data->business_details_id;
                 $designRevisionForProdID->reject_reason_prod = $request->reject_reason_prod;
                 $designRevisionForProdID->remark_by_design = '';
                 $designRevisionForProdID->save();
@@ -89,21 +98,23 @@ class ProductionRepository  {
             } else {
                 $designRevisionForProdIDInsert = new DesignRevisionForProd();
                 $designRevisionForProdIDInsert->business_id = $production_data->business_id;
+                $designRevisionForProdIDInsert->business_details_id = $production_data->business_details_id;
                 $designRevisionForProdIDInsert->design_id = $production_data->design_id;
                 $designRevisionForProdIDInsert->production_id = $production_data->business_id;
+                $designRevisionForProdIDInsert->production_id = $production_data->business_details_id;
                 $designRevisionForProdIDInsert->reject_reason_prod = $request->reject_reason_prod;
                 $designRevisionForProdIDInsert->remark_by_design = '';
                 $designRevisionForProdIDInsert->save();
 
             }
 
-            $business_application = BusinessApplicationProcesses::where('business_id', $production_data->business_id)->first();
+            $business_application = BusinessApplicationProcesses::where('business_details_id', $production_data->business_details_id)->first();
             
             if ($business_application) {
                 $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.LIST_DESIGN_RECIEVED_FROM_PROD_DEPT_FOR_REVISED');
-                $business_application->design_id = $production_data->design_id;
+                // $business_application->design_id = $production_data->design_id;
                 $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.LIST_DESIGN_RECIEVED_FROM_PROD_DEPT_FOR_REVISED');
-                $business_application->production_id =  $production_data->id;
+                // $business_application->production_id =  $production_data->id;
                 $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.DESIGN_SENT_TO_DESIGN_DEPT_FOR_REVISED');
                 $business_application->save();
             }
@@ -139,18 +150,21 @@ class ProductionRepository  {
     
     public function acceptProductionCompleted($id) {
         try {
+            // dd($id);
+            // die();
             // Fetch the business application process record for the given business ID
-            $business_application = BusinessApplicationProcesses::where('business_id', $id)->first();
+            $business_application = BusinessApplicationProcesses::where('business_details_id', $id)->first();
             if ($business_application) {
                 $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN');
                 $business_application->save();
     
-                $dataOutput = Logistics::where('business_id', $id)->first();
+                $dataOutput = Logistics::where('business_details_id', $id)->first();
                 if (!$dataOutput) {
                     $dataOutput = new Logistics;
                 }
     
-                $dataOutput->business_id = $id;
+                $dataOutput->business_details_id = $id;
+                $dataOutput->business_id = $business_application->business_id;
                 $dataOutput->business_application_processes_id = $business_application->id;
                 // $dataOutput->quantity = $request->input('quantity');
                 $dataOutput->is_approve = '0';
@@ -158,12 +172,13 @@ class ProductionRepository  {
                 $dataOutput->is_deleted = '0';
                 $dataOutput->save();
 
-                $dataOutputDispatch = Dispatch::where('business_id', $id)->first();
+                $dataOutputDispatch = Dispatch::where('business_details_id', $id)->first();
                 if (!$dataOutputDispatch) {
                     $dataOutputDispatch = new Dispatch;
                 }
     
-                $dataOutputDispatch->business_id = $id;
+                $dataOutputDispatch->business_details_id = $id;
+                $dataOutputDispatch->business_id = $business_application->business_id;
                 $dataOutputDispatch->logistics_id =  $dataOutput->id;
                 $dataOutputDispatch->business_application_processes_id = $business_application->id;
                 $dataOutputDispatch->is_approve = '0';
@@ -171,6 +186,7 @@ class ProductionRepository  {
                 $dataOutputDispatch->is_deleted = '0';
                 $dataOutputDispatch->save();
   
+             
                 return response()->json(['status' => 'success', 'message' => 'Production status updated successfully.']);
             } else {
                 // Return an error response if the record does not exist

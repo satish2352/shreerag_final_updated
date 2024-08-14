@@ -63,6 +63,12 @@ return [
     'PRODUCT_DETAILS_DELETE'=>"/all_web_data/cms/images/productdetails/",
     'PRODUCT_DETAILS_ADD'=>'/all_web_data/images/cms/productdetails/',
 
+
+    
+    'NOTICE_VIEW'=> env("FILE_VIEW").'/all_web_data/hr/document/notice/',
+    'NOTICE_DELETE'=>"/all_web_data/hr/document/notice/",
+    'NOTICE_ADD'=>'/all_web_data/hr/document/notice/',
+
     // 'DB_BACKUP'	 => "/all_web_data/DBBackup//",
 
     'ROLE_ID' => [

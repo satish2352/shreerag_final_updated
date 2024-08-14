@@ -17,13 +17,13 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('organization_id');
             $table->string('customer_po_number');
-            $table->string('product_name');
+            // $table->string('product_name');
             $table->string('title');
-            $table->text('descriptions')->nullable();
-            $table->string('quantity');
+            // $table->text('descriptions')->nullable();
+            // $table->string('quantity');
             $table->string('po_validity');
-            $table->string('rate');
-            $table->string('hsn_number');
+            // $table->string('rate');
+            // $table->string('hsn_number');
             $table->text('customer_payment_terms')->nullable();
             $table->text('customer_terms_condition')->nullable();
             $table->text('remarks')->nullable();

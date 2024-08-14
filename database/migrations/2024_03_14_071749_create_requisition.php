@@ -17,6 +17,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('req_name');
             $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('business_details_id');
             $table->unsignedBigInteger('design_id');
             $table->unsignedBigInteger('production_id');
             $table->string('req_date');

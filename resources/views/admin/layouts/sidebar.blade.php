@@ -52,6 +52,7 @@
                                         class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                         class="mini-sub-pro">Add Employees</span></a>
                             </li>
+                            
                             <li class="nav-item {{ request()->is('owner/list-business') ? 'active' : '' }}">
                                 <a title="Inbox" href="{{ route('list-business') }}"><i
                                         class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
@@ -99,13 +100,55 @@
                                         class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                         class="mini-sub-pro">Purchase Order Approved</span></a>
                             </li>
-
+                            <li
+                                class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') ? 'active' : '' }}">
+                                <a title="Inbox" href="{{ route('list-approved-purchase-orders-owner') }}"><i
+                                        class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                        class="mini-sub-pro">Submitted PO by Vendor</span></a>
+                            </li>
+                            <li
+                                class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') ? 'active' : '' }}">
+                                <a title="Inbox" href="{{ route('list-approved-purchase-orders-owner') }}"><i
+                                        class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                        class="mini-sub-pro">Security Created Gate Pass</span></a>
+                            </li>
+                            <li
+                                class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') ? 'active' : '' }}">
+                                <a title="Inbox" href="{{ route('list-approved-purchase-orders-owner') }}"><i
+                                        class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                        class="mini-sub-pro">Quality Dept Created GRN</span></a>
+                            </li>
+                            <li
+                                class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') ? 'active' : '' }}">
+                                <a title="Inbox" href="{{ route('list-approved-purchase-orders-owner') }}"><i
+                                        class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                        class="mini-sub-pro">Material Received From Quality Dept</span></a>
+                            </li>
+                            <li
+                            class="nav-item {{ Request::is('list-rejected-chalan-po-wise') ? 'active' : '' }}">
+                            <a title="Inbox"
+                                href="{{ route('list-rejected-chalan-po-wise') }}"><i
+                                    class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                    class="mini-sub-pro">PO wise Rejected Chalan</span></a>
+                        </li>
+                            <li
+                            class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') ? 'active' : '' }}">
+                            <a title="Inbox" href="{{ route('list-approved-purchase-orders-owner') }}"><i
+                                    class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                    class="mini-sub-pro">Fianance Dept Received GRN and SR</span></a>
+                        </li>
                             <li
                                 class="nav-item {{ request()->is('owner/list-po-recived-for-approval-payment') ? 'active' : '' }}">
                                 <a title="Inbox" href="{{ route('list-po-recived-for-approval-payment') }}"><i
                                         class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                         class="mini-sub-pro">PO Payment Release Request</span></a>
                             </li>
+                            <li
+                            class="nav-item {{ request()->is('owner/list-po-recived-for-approval-payment') ? 'active' : '' }}">
+                            <a title="Inbox" href="{{ route('list-po-recived-for-approval-payment') }}"><i
+                                    class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                    class="mini-sub-pro">Logistics Dept Received Product completed list</span></a>
+                        </li>
                             <li
                             class="nav-item {{ request()->is('owner/list-product-dispatch-completed') ? 'active' : '' }}">
                             <a title="Inbox" href="{{ route('list-product-dispatch-completed') }}"><i
@@ -116,6 +159,12 @@
                             <li><a title="Inbox" href="{{ route('list-rules-regulations') }}"><i
                                 class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                 class="mini-sub-pro">Rules and Regulations</span></a></li>
+                                <li class="nav-item {{ Request::is('list-roles') ? 'active' : '' }}">
+                                    <a title="Inbox" href="{{ route('list-roles') }}">
+                                        <i class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i>
+                                        <span class="mini-sub-pro">List Roles</span>
+                                    </a>
+                                </li>
                         </ul>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.PURCHASE'))
@@ -143,14 +192,21 @@
                                             class="mini-sub-pro">Vendor List</span></a></li>
                             </ul>
                         </li>
-
+                        <li class="nav-item {{ request()->is('purchase/list-tax') ? 'active' : '' }}">
+                            <a class="" href="{{ route('list-tax') }}" aria-expanded="false"><i
+                                    class="fa big-icon fa-envelope icon-wrap"></i> <span
+                                    class="mini-click-non">Tax</span></a>
+                        </li>
+                        <li class="nav-item {{ request()->is('purchase/list-part-item') ? 'active' : '' }}">
+                            <a class="" href="{{ route('list-part-item') }}" aria-expanded="false"><i
+                                    class="fa big-icon fa-envelope icon-wrap"></i> <span
+                                    class="mini-click-non">Part Item</span></a>
+                        </li>
                         <li class="{{ Request::is('list-approved-purchase-orders') ? 'active' : '' }}">
                             <a class="has-arrow" href="{{ route('list-approved-purchase-orders') }}"
                                 aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span
                                     class="mini-click-non">Purchase Order Status</span></a>
                             <ul class="submenu-angle" aria-expanded="false">
-
-
                                 <li
                                     class="nav-item {{ request()->is('purchase/list-purchase-orders-sent-to-owner') ? 'active' : '' }}">
                                     <a href="{{ route('list-purchase-orders-sent-to-owner') }}"
@@ -172,6 +228,13 @@
                                             class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                             class="mini-sub-pro">Purchase Order Sent To Vendor</span></a>
                                 </li>
+                                <li
+                                class="nav-item {{ Request::is('list-rejected-chalan-po-wise') ? 'active' : '' }}">
+                                <a title="Inbox"
+                                    href="{{ route('list-rejected-chalan-po-wise') }}"><i
+                                        class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                        class="mini-sub-pro">PO wise Rejected Chalan List</span></a>
+                            </li>
                             </ul>
                         </li>
                         <li class="nav-item {{ request()->is('purchase/list-submited-po-to-vendor') ? 'active' : '' }}">
@@ -316,16 +379,7 @@
                                             class="mini-sub-pro">List GRN</span></a></li>
                             </ul>
                         </li>
-                        <li>
-                            <a class="has-arrow" href="{{ route('list-rejected-chalan') }}" aria-expanded="false"><i
-                                    class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">Rejected Chalan
-                                    </span></a>
-                            <ul class="submenu-angle" aria-expanded="false">
-                                <li><a title="Inbox" href="{{ route('list-rejected-chalan') }}"><i
-                                            class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                                            class="mini-sub-pro">List Rejected Chalan</span></a></li>
-                            </ul>
-                        </li>
+                       
 
                         <li class="nav-item {{ request()->is('list-material-sent-to-quality') ? 'active' : '' }}">
                             <a href="{{ route('list-material-sent-to-quality') }}">
@@ -333,6 +387,13 @@
                                 <span class="mini-click-non">Material Sent to Store</span>
                             </a>
                         </li>
+                        <li
+                                class="nav-item {{ Request::is('list-rejected-chalan-po-wise') ? 'active' : '' }}">
+                                <a title="Inbox"
+                                    href="{{ route('list-rejected-chalan-po-wise') }}"><i
+                                        class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                        class="mini-sub-pro">PO wise Rejected Chalan</span></a>
+                            </li>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.STORE'))
                     
@@ -362,6 +423,16 @@
                                 <i class="fa big-icon fa-envelope icon-wrap"></i>
                                 <span class="mini-click-non">Material Received From Quality</span>
                             </a>
+                        </li>
+                        <li>
+                            <a class="has-arrow" href="{{ route('list-rejected-chalan') }}" aria-expanded="false"><i
+                                    class="fa big-icon fa-envelope icon-wrap"></i> <span class="mini-click-non">Rejected Chalan
+                                    </span></a>
+                            <ul class="submenu-angle" aria-expanded="false">
+                                <li><a title="Inbox" href="{{ route('list-rejected-chalan') }}"><i
+                                            class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                            class="mini-sub-pro">List Rejected Chalan</span></a></li>
+                            </ul>
                         </li>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.HR'))
@@ -399,6 +470,17 @@
                                             class="mini-sub-pro">Leave Not Approved</span></a></li>
                             </ul>
                         </li>
+                        <li class="nav-item {{ request()->is('list-notice') ? 'active' : '' }}">
+                            <a href="{{ route('list-notice') }}">
+                                <i class="fa big-icon fa-envelope icon-wrap"></i>
+                                <span class="mini-click-non">Add Notice</span>
+                            </a>
+                        </li>
+
+                        <a href="{{ route('list-notice') }}">
+                            <i class="fa big-icon fa-envelope icon-wrap"></i>
+                            <span class="mini-click-non">Notice</span>
+                        </a>
                     @endif
 
                     @if (session()->get('role_id') == config('constants.ROLE_ID.FINANCE'))
@@ -491,6 +573,13 @@
                                             class="mini-sub-pro">Add Leaves Request</span></a></li>
                             </ul>
                         </li>
+                        <li class="nav-item {{ request()->is('particular-notice-department-wise') ? 'active' : '' }}">
+                            <a href="{{ route('particular-notice-department-wise') }}">
+                                <i class="fa big-icon fa-envelope icon-wrap"></i>
+                                <span class="mini-click-non">Notice</span>
+                            </a>
+                        </li>
+                        
                     @endif
 
                        @if (session()->get('role_id') == config('constants.ROLE_ID.CMS'))
@@ -680,3 +769,7 @@
             </div>
         </div>
     </div>
+    <form method="POST" action="{{ url('/particular-notice-department-wise') }}" id="showform">
+        @csrf
+        <input type="hidden" name="show_id" id="show_id" value="">
+    </form>

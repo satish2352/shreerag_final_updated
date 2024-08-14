@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('designs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('business_details_id');
             $table->string('design_image');
             $table->string('bom_image');
             $table->boolean('is_approve')->default(false);
