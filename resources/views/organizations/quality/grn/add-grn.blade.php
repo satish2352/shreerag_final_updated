@@ -158,7 +158,7 @@
                                                     <table class="table table-bordered" id="dynamicTable">
                                                         <tr>
                                                             <th>Description</th>
-                                                            <th>Chalan Quantity</th>
+                                                            <th>PO Quantity</th>
                                                             <th>Actual Quantity</th>
                                                             <th>Accepted Quantity</th>
                                                             <th>Rejected Quantity</th>

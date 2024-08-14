@@ -16,12 +16,12 @@ return new class extends Migration
         Schema::create('purchase_order_details', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('purchase_id');
-            $table->string('part_no');
+            $table->string('part_no_id');
             $table->string('description');
             // $table->string('qc_check_remark');
             $table->string('due_date');
-            $table->string('hsn_no');
             $table->string('quantity');
+            $table->string('unit');
             $table->string('actual_quantity');
             $table->string('accepted_quantity');
             $table->string('rejected_quantity');

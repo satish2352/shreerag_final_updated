@@ -92,14 +92,14 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            
+                                         
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ ucwords($data->purchase_orders_id) }}</td>
                                                     <td>{{ ucwords($data->Title) }}</td>
-                                                    <td>{{ ucwords($data->descriptions) }}</td>
+                                                    <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                     <td> <a class="img-size" target="_blank"
                                                         href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
@@ -118,7 +118,7 @@
 
                                                         </div> --}}
                                                         <div style="display: flex; align-items: center;">
-                                                            <a href="{{ route('accepted-store-material-sent-to-production', [base64_encode($data->purchase_orders_id), base64_encode($data->business_id)]) }}">
+                                                            <a href="{{ route('accepted-store-material-sent-to-production', [base64_encode($data->purchase_orders_id), base64_encode($data->business_details_id)]) }}">
                                                                 <button data-toggle="tooltip" title="Forwarded For Production" class="pd-setting-ed">Forwarded For Production</button>
                                                             </a>
                                                         </div>

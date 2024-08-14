@@ -55,8 +55,16 @@ class FinanceController extends Controller
             return $e;
         }
     }
-
-
+    public function sendToDispatch($id){
+        try {
+            $accepted = base64_decode($id);
+            $update_data = $this->service->sendToDispatch($accepted);
+            return redirect('financedept/list-send-to-dispatch');
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    
 
     // public function createRequesition($createRequesition)
     // {

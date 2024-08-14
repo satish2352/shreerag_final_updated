@@ -35,13 +35,13 @@ class BusinessController extends Controller
     public function store(Request $request){
         $rules = [
                'title' => 'required|string|max:255',
-                'product_name' => 'required',
-                'customer_po_number' => 'required',
-                'quantity' => 'required',
+                // 'product_name' => 'required',
+                'customer_po_number' => 'required|string|min:10|max:16',
+                // 'quantity' => 'required',
                 'po_validity' => 'required',
-                'hsn_number' => 'required',
-                'customer_payment_terms' => 'required',
-                'customer_terms_condition' => 'required',
+                // 'hsn_number' => 'required',
+                // 'customer_payment_terms' => 'required',
+                // 'customer_terms_condition' => 'required',
                 'remarks' => 'required',
             ];
 
@@ -49,15 +49,17 @@ class BusinessController extends Controller
                         'title.required' => 'The customer name is required.',
                         'title.string' => 'The customer name must be a valid string.',
                         'title.max' => 'The customer name must not exceed 255 characters.',
-                        'product_name.required' => 'The product name is required.',
+                        // 'product_name.required' => 'The product name is required.',
                         'customer_po_number.required' => 'The customer po number is required.',
-                        'quantity.required' => 'The customer quantity is required.',
+                        'customer_po_number.min' => 'The customer po number must be at least 10 characters.',
+                        'customer_po_number.max' => 'The customer po number must not exceed 16 characters.',
+                        // 'quantity.required' => 'The customer quantity is required.',
                         'po_validity.required' => 'The po validity is required.',
-                        'hsn_number.required' => 'The hsn number is required.',
-                        'customer_payment_terms.required' => 'The customer payment terms is required.',
-                        'customer_terms_condition.required' => 'The customer terms condition is required.',
+                        // 'hsn_number.required' => 'The hsn number is required.',
+                        // 'customer_payment_terms.required' => 'The customer payment terms is required.',
+                        // 'customer_terms_condition.required' => 'The customer terms condition is required.',
                         'remarks.required' => 'The remarks is required.',
-                                            ];
+                    ];
   
           try {
               $validation = Validator::make($request->all(), $rules, $messages);
@@ -88,7 +90,11 @@ class BusinessController extends Controller
         try {     
 
             $edit_data_id = base64_decode($request->id);
+            // $edit_data_id = $request->id;
+           
             $editData = $this->service->getById($edit_data_id);
+            // dd($edit_data_id);
+            // die();
             return view('organizations.business.business.edit-business', compact('editData'));
         } catch (\Exception $e) {
             return $e;
@@ -96,27 +102,29 @@ class BusinessController extends Controller
     }
        public function update(Request $request){
         $rules = [
-            'customer_po_number' => 'required',
-            'product_name' => 'required',
-            'quantity' => 'required',
-            'po_validity' => 'required',
-            'hsn_number' => 'required',
-            'customer_payment_terms' => 'required',
-            'customer_terms_condition' => 'required',
-            'remarks' => 'required',
+            // 'customer_po_number' => 'required|string|min:10|max:16',
+            // 'product_name' => 'required',
+            // 'quantity' => 'required',
+            // 'po_validity' => 'required',
+            // 'hsn_number' => 'required',
+            // 'customer_payment_terms' => 'required',
+            // 'customer_terms_condition' => 'required',
+            // 'remarks' => 'required',
             ];       
         $messages = [
-            'title.required' => 'The design customer name is required.',
-            'title.string' => 'The design customer name must be a valid string.',
-            'title.max' => 'The design customer name must not exceed 255 characters.',
-            'customer_po_number.required' => 'The customer po number is required.',
-            'product_name.required' => 'The product name is required.',
-            'quantity.required' => 'The customer quantity is required.',
-            'po_validity.required' => 'The po validity is required.',
-            'hsn_number.required' => 'The hsn number is required.',
-            'customer_payment_terms.required' => 'The customer payment terms is required.',
-            'customer_terms_condition.required' => 'The customer terms condition is required.',
-            'remarks.required' => 'The remarks is required.',
+            // 'title.required' => 'The design customer name is required.',
+            // 'title.string' => 'The design customer name must be a valid string.',
+            // 'title.max' => 'The design customer name must not exceed 255 characters.',
+            // 'customer_po_number.required' => 'The customer po number is required.',
+            // 'customer_po_number.min' => 'The customer po number must be at least 10 characters.',
+            // 'customer_po_number.max' => 'The customer po number must not exceed 16 characters.',
+            // 'product_name.required' => 'The product name is required.',
+            // 'quantity.required' => 'The customer quantity is required.',
+            // 'po_validity.required' => 'The po validity is required.',
+            // 'hsn_number.required' => 'The hsn number is required.',
+            // 'customer_payment_terms.required' => 'The customer payment terms is required.',
+            // 'customer_terms_condition.required' => 'The customer terms condition is required.',
+            // 'remarks.required' => 'The remarks is required.',
             ];
 
         try {
@@ -127,6 +135,8 @@ class BusinessController extends Controller
                     ->withErrors($validation);
             } else {
                 $update_data = $this->service->updateAll($request);
+                // dd($update_data);
+                // die();
                 if ($update_data) {
                     $msg = $update_data['msg'];
                     $status = $update_data['status'];
@@ -145,6 +155,7 @@ class BusinessController extends Controller
                 ->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
+
     public function destroy(Request $request){
         $delete_data_id = base64_decode($request->id);
         try {
@@ -154,6 +165,30 @@ class BusinessController extends Controller
                 $status = $delete_record['status'];
                 if ($status == 'success') {
                     return redirect('owner/list-business')->with(compact('msg', 'status'));
+                } else {
+                    return redirect()->back()
+                        ->withInput()
+                        ->with(compact('msg', 'status'));
+                }
+            }
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
+    public function destroyAddmore(Request $request){
+        try {
+            $delete_rti = $this->service->deleteByIdAddmore($request->delete_id);    
+                 dd($delete_rti);
+                 die();
+            if ($delete_rti) {
+                $msg = $delete_rti['msg'];
+                $status = $delete_rti['status'];
+
+                $id = base64_encode($request->delete_id);
+                if ($status == 'success') {
+                    return redirect('owner/edit-business/{id}')->with(compact('msg', 'status'));
+                    // return redirect()->route('purchase.edit-purchase-order', ['id' => $id])
+                    // ->with(compact('msg', 'status'));
                 } else {
                     return redirect()->back()
                         ->withInput()
@@ -180,6 +215,7 @@ class BusinessController extends Controller
             $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
             $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
             $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
+            // $business_id = $data['purchaseOrder']->business_id;
             $business_id = $data['purchaseOrder']->business_id;
             $purchaseOrder = $data['purchaseOrder'];
             $purchaseOrderDetails = $data['purchaseOrderDetails'];

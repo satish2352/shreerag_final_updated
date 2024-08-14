@@ -18,7 +18,8 @@ class AllListServices
     public function getAllListDesignRecievedForMaterial(){
         try {
             $data_output = $this->repo->getAllListDesignRecievedForMaterial();
-           
+        //    dd($data_output);
+        //    die();
             return $data_output;
 
         } catch (\Exception $e) {
@@ -27,7 +28,10 @@ class AllListServices
     }
     public function getAllListMaterialSentToProduction(){
         try {
-            return $this->repo->getAllListMaterialSentToProduction();
+            $data_output = $this->repo->getAllListMaterialSentToProduction();
+            // dd($data_output);
+            // die();
+            return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
@@ -42,7 +46,7 @@ class AllListServices
     public function getAllListMaterialReceivedFromQuality(){
         try {
             $return_data = $this->repo->getAllListMaterialReceivedFromQuality();
-            // dd($return_data);
+            // dd( $return_data);
             // die();
             return $return_data;
         } catch (\Exception $e) {
@@ -53,8 +57,7 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->getPurchaseOrderBusinessWise($purchase_order_id);
-            // dd($data_output);
-            // die();
+        
             return $data_output;
 
         } catch (\Exception $e) {

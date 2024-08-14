@@ -85,8 +85,6 @@ class GRNRepository
             $updateGatepassTable = Gatepass::where('purchase_orders_id',$request->purchase_orders_id)->first();
             $updateGatepassTable->is_checked_by_quality = true;
             $updateGatepassTable->save();
-            // dd($updateGatepassTable);
-            // die();
             $rejected_chalan_data = new RejectedChalan();
             $rejected_chalan_data->purchase_orders_id = $request->purchase_orders_id;
             $rejected_chalan_data->grn_id = $dataOutput->id;
@@ -125,13 +123,36 @@ class GRNRepository
             'vendors.gst_no', 
             'purchase_orders.is_active'
         )
-        ->where('purchase_orders.business_id', $id)
+        ->where('purchase_orders.business_details_id', $id)
         ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
         ->get(); // Added to execute the query and get results
        
         return $data_output;
     } catch (\Exception $e) {
         return $e->getMessage(); // Changed to return the error message string
+    }
+}
+
+
+public function getAllRejectedChalanList()
+{
+    try {
+        
+        $dataOutputCategory = RejectedChalan::join('grn_tbl', 'grn_tbl.purchase_orders_id', '=', 'tbl_rejected_chalan.purchase_orders_id')
+        ->select(
+            'tbl_rejected_chalan.purchase_orders_id',
+            'grn_tbl.po_date', 
+            'grn_tbl.grn_date', 
+            'grn_tbl.remark', 
+            'tbl_rejected_chalan.is_active'
+        )
+        ->groupBy('tbl_rejected_chalan.purchase_orders_id', 'grn_tbl.po_date', 'grn_tbl.grn_date', 'grn_tbl.remark', 'tbl_rejected_chalan.is_active')
+        ->orderBy('tbl_rejected_chalan.purchase_orders_id', 'desc')
+        ->whereNotNull('tbl_rejected_chalan.chalan_no')
+        ->get();                
+        return $dataOutputCategory;
+    } catch (\Exception $e) {
+        return $e;
     }
 }
 }

@@ -22,7 +22,10 @@ class AllListServices
     public function getAllListForwardedToDesign()
     {
         try {
-            return $this->repo->getAllListForwardedToDesign();
+            $data_output = $this->repo->getAllListForwardedToDesign();
+        //  dd($data_output);
+        //  die();
+            return $data_output;
 
         } catch (\Exception $e) {
             return $e;
@@ -32,7 +35,10 @@ class AllListServices
     public function getAllListCorrectionToDesignFromProduction()
     {
         try {
-            return $this->repo->getAllListCorrectionToDesignFromProduction();
+            $data_output = $this->repo->getAllListCorrectionToDesignFromProduction();
+            // dd($data_output);
+            // die();
+            return $data_output; 
         } catch (\Exception $e) {
             return $e;
         }
@@ -41,7 +47,10 @@ class AllListServices
     public function materialAskByProdToStore()
     {
         try {
-            return $this->repo->materialAskByProdToStore();
+            $data_output = $this->repo->materialAskByProdToStore();
+            // dd($data_output);
+            // die();
+            return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
@@ -52,7 +61,8 @@ class AllListServices
     {
         try {
             $data_output =  $this->repo->getAllStoreDeptSentForPurchaseMaterials();
-         
+        //  dd( $data_output);
+        //  die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -68,8 +78,6 @@ class AllListServices
             // dd($data_output);
             // die();
             return $data_output;
-            // dd($data_output);
-            // die();
         } catch (\Exception $e) {
             return $e;
         }
@@ -94,8 +102,6 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->listPOReceivedForApprovaTowardsOwner();
-            // dd($data_output);
-            // die();
         return $data_output;
     } catch (\Exception $e) {
             return $e;
@@ -105,7 +111,21 @@ class AllListServices
     public function loadDesignSubmittedForProduction()
     {
         try {
-            return $this->repo->loadDesignSubmittedForProduction();
+            $data_output = $this->repo->loadDesignSubmittedForProduction();
+        // dd($data_output);
+        // die();
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function loadDesignSubmittedForProductionBusinessWise($business_id)
+    {
+        try {
+            $data_output = $this->repo->loadDesignSubmittedForProductionBusinessWise($business_id);
+        // dd($data_output);
+        // die();
+            return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
@@ -115,11 +135,22 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->getPurchaseOrderBusinessWise($purchase_order_id);
+        //    dd($data_output);
+        //    die();
             return $data_output;
 
         } catch (\Exception $e) {
             return $e;
         }
     }
+    public function listProductDispatchCompletedFromDispatch()
+    {
+        try {
+            $data_output = $this->repo->listProductDispatchCompletedFromDispatch();
+            return $data_output;
 
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
 }

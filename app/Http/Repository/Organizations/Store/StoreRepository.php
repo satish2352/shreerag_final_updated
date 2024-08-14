@@ -21,10 +21,9 @@ class StoreRepository
     public function orderAcceptedAndMaterialForwareded($id)
     {
         try {
-
-            $business_application = BusinessApplicationProcesses::where('business_id', $id)->first();
+            $business_application = BusinessApplicationProcesses::where('business_details_id', $id)->first();
             if ($business_application) {
-                // $business_application->business_id = $id;
+                //  $business_application->business_details_id = $id;
 
                 $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION');
                 $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.ACCEPTED_DESIGN_BY_PRODUCTION');
@@ -43,9 +42,12 @@ class StoreRepository
         try {
             
             $production_id = base64_decode($request->production_id);
+           
             $business_application = BusinessApplicationProcesses::where('production_id', $production_id)->first();
+           
             $dataOutput = new Requisition();
             $dataOutput->business_id = $business_application->business_id;
+            $dataOutput->business_details_id = $business_application->business_details_id;
             $dataOutput->design_id = $business_application->design_id;
             $dataOutput->production_id = $business_application->production_id;
             $dataOutput->req_name = "";
@@ -126,7 +128,7 @@ class StoreRepository
             // Fetch the purchase order and business application based on the production ID
             $purchase_order = PurchaseOrderModel::where('purchase_orders_id', $purchase_orders_id)->first();
           
-            $business_application = BusinessApplicationProcesses::where('business_id', $business_id)->first();
+            $business_application = BusinessApplicationProcesses::where('business_details_id', $business_id)->first();
 
             // Generate a store receipt number
             $store_receipt_no = str_replace(array("-", ":"), "", date('Y-m-d') . time());
@@ -148,11 +150,6 @@ class StoreRepository
                 // Save the updated business application and purchase order
                 $business_application->save();
                 $purchase_order->save();
-
-
-        //         dd($purchase_order);
-        //         dd($business_application);
-        //  die();
             }
           
     

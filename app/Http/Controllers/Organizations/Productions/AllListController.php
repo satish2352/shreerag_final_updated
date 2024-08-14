@@ -47,7 +47,15 @@ class AllListController extends Controller
             return $e;
         }
     } 
-
+    public function getAllNewRequirementBusinessWise($business_id){
+        try {
+            $data_output = $this->service->getAllNewRequirementBusinessWise($business_id);
+            return view('organizations.productions.product.list_design_received_for_production_business_wise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    
 
     public function acceptdesignlist(){
         try {
@@ -57,8 +65,15 @@ class AllListController extends Controller
             return $e;
         }
     } 
-
-
+    public function acceptdesignlistBusinessWise($business_id){
+        try {
+            $data_output = $this->service->acceptdesignlistBusinessWise($business_id);
+            return view('organizations.productions.product.list-design-accepted-business-wise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
+    
     
     public function rejectdesignlist(){
         try {
@@ -84,8 +99,7 @@ class AllListController extends Controller
     public function getAllListMaterialRecievedToProduction(){
         try {
             $data_output = $this->service->getAllListMaterialRecievedToProduction();
-// dd($data_output);
-// die();
+
             return view('organizations.productions.product.list-recived-material', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
@@ -97,6 +111,15 @@ class AllListController extends Controller
             $data_output = $this->service->getAllListMaterialRecievedToProductionBusinessWise($id);
            
             return view('organizations.productions.product.list-recived-bussinesswise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function getAllCompletedProduction(){
+        try {
+            $data_output = $this->service->getAllCompletedProduction();
+            return view('organizations.productions.product.list-production-completed', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
         }

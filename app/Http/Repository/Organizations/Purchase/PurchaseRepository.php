@@ -36,10 +36,9 @@ public function submitBOMToOwner($request)
         foreach ($request->addmore as $item) {
             $designDetails = new PurchaseOrderDetailsModel();
             $designDetails->purchase_id = $last_insert_id;
-            $designDetails->part_no = $item['part_no'];
+            $designDetails->part_no_id = $item['part_no_id'];
             $designDetails->description = $item['description'];
             $designDetails->due_date = $item['due_date'];
-            $designDetails->hsn_no = $item['hsn_no'];
             $designDetails->quantity = $item['quantity'];
             $designDetails->rate = $item['rate'];
             $designDetails->amount = $item['amount'];

@@ -24,6 +24,18 @@ class AllListController extends Controller
             return $e;
         }
     } 
+    public function getAllListDesignRecievedForMaterialBusinessWise($business_id, Request $request)
+    {
+        try {
+            $data_output = $this->service->getAllListDesignRecievedForMaterialBusinessWise($business_id);
+            // dd($data_output); // Uncomment for debugging
+            // die(); // Uncomment for debugging
+            return view('organizations.store.list.list-accepted-design-business-wise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    
 
     public function getAllListMaterialSentToProduction(Request $request){
         try {

@@ -24,6 +24,8 @@ class ProductionController extends Controller
     public function acceptdesign($id){
         try {
             $acceptdesign = base64_decode($id);
+            // dd($acceptdesign);
+            // die();
             $update_data = $this->service->acceptdesign($acceptdesign);
             return redirect('proddept/list-accept-design');
         } catch (\Exception $e) {
@@ -48,5 +50,13 @@ class ProductionController extends Controller
             return $e;
         }
     } 
- 
+    public function acceptProductionCompleted($id){
+        try {
+            // $accepted = base64_decode($id);
+            $update_data = $this->service->acceptProductionCompleted($id);
+            return redirect('proddept/list-final-production-completed');
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
 }

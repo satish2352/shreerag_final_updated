@@ -70,8 +70,6 @@ public function addContactUs(Request $request) {
 
 
             // if($add_contact['status'] == 'success') {
-            //     // dd($add_contact['status']);
-            //     // die();
             //     return redirect()->back()->with('success_message', 'Your message has been submitted successfully!');
             // } else {
             //     return redirect('contactus')->withInput()->with(compact('msg', 'status'));

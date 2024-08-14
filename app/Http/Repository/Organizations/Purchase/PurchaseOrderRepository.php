@@ -38,6 +38,7 @@ class PurchaseOrderRepository
             $dataOutput->requisition_id = $requistition_id;
             $dataOutput->vendor_id = $request->vendor_id;
             $dataOutput->business_id = $data_for_requistition->business_id;
+            $dataOutput->business_details_id = $data_for_requistition->business_details_id;
             $dataOutput->production_id = $data_for_requistition->production_id;
             $dataOutput->po_date = date('m-d-Y');
             $dataOutput->terms_condition = '';
@@ -49,17 +50,25 @@ class PurchaseOrderRepository
             // $dataOutput->client_name = $request->client_name;
             // $dataOutput->phone_number = $request->phone_number;
             // $dataOutput->email = $request->email;
-            $dataOutput->tax = $request->tax;
+            $dataOutput->tax_type = $request->tax_type;
+            $dataOutput->tax_id = $request->tax_id;
             $dataOutput->invoice_date = $request->invoice_date;
             // $dataOutput->gst_number = $request->gst_number;
             $dataOutput->payment_terms = $request->payment_terms;
             // $dataOutput->client_address = $request->client_address;
-            $dataOutput->discount = $request->discount;
+            // $dataOutput->discount = $request->discount;
             $dataOutput->note = $request->note;
             $dataOutput->purchase_status_from_purchase = config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL');
             $dataOutput->is_approve = '0';
             $dataOutput->is_active = '1';
             $dataOutput->is_deleted = '0';
+
+            if ($request->has('quote_no')) {
+                $dataOutput->quote_no = $request->quote_no;
+            }
+            if ($request->has('discount')) {
+                $dataOutput->discount = $request->discount;
+            }
             $dataOutput->save();
             $last_insert_id = $dataOutput->id;
 
@@ -74,12 +83,12 @@ class PurchaseOrderRepository
                 $designDetails = new PurchaseOrderDetailsModel();
 
                 $designDetails->purchase_id = $last_insert_id;
-                $designDetails->part_no = $item['part_no'];
+                $designDetails->part_no_id = $item['part_no_id'];
                 $designDetails->description = $item['description'];
                 // $designDetails->qc_check_remark = '';
                 $designDetails->due_date = $item['due_date'];
-                $designDetails->hsn_no = $item['hsn'];
                 $designDetails->quantity = $item['quantity'];
+                $designDetails->unit = $item['unit'];
                 $designDetails->actual_quantity = '0';
                 $designDetails->accepted_quantity = '0';
                 $designDetails->rejected_quantity = '0';
@@ -115,23 +124,19 @@ class PurchaseOrderRepository
                 $purchaseOrdersModel->purchase_status_from_purchase = config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR');
                 $purchaseOrdersModel->save();
             }
-            
-            // dd($purchaseOrdersModel);
-            // die();
             return $purchaseOrdersModel;
 
         } catch (\Exception $e) {
-          dd($e);
             return $e;
         }
     }
     public function getById($id) {
         try {
             $designData = PurchaseOrdersModel::leftJoin('purchase_order_details', 'purchase_orders.id', '=', 'purchase_order_details.purchase_id')
-                ->select('purchase_order_details.*', 'purchase_order_details.id as purchase_order_details_id', 'purchase_orders.id as purchase_main_id', 'purchase_orders.vendor_id', 'purchase_orders.quote_no', 'purchase_orders.tax','purchase_orders.invoice_date','purchase_orders.quote_no',  'purchase_orders.payment_terms','purchase_orders.discount')
+                ->select('purchase_order_details.*', 'purchase_order_details.id as purchase_order_details_id', 'purchase_orders.id as purchase_main_id', 'purchase_orders.vendor_id', 'purchase_orders.quote_no', 'purchase_orders.tax_type', 'purchase_orders.tax_id','purchase_orders.invoice_date','purchase_orders.quote_no','purchase_orders.note',  'purchase_orders.payment_terms','purchase_orders.discount')
                 ->where('purchase_orders.id', $id)
                 ->get();
-
+               
             if ($designData->isEmpty()) {
                 return null;
             } else {
@@ -148,16 +153,14 @@ class PurchaseOrderRepository
     public function updateAll($request){
        
         try {
-          
             // Update existing design details
             for ($i = 0; $i <= $request->design_count; $i++) {
                 $designDetails = PurchaseOrderDetailsModel::findOrFail($request->input("design_id_" . $i));
-                
-                $designDetails->part_no = $request->input("part_no_" . $i);
+                $designDetails->part_no_id = $request->input("part_no_id_" . $i);
                 $designDetails->description = $request->input("description_" . $i);
                 $designDetails->due_date = $request->input("due_date_" . $i);
-                $designDetails->hsn_no = $request->input("hsn_no_" . $i);
                 $designDetails->quantity = $request->input("quantity_" . $i);
+                $designDetails->unit = $request->input("unit_" . $i);
                 $designDetails->rate = $request->input("rate_" . $i);
                 $designDetails->amount = $request->input("amount_" . $i);
                 $designDetails->save();
@@ -166,12 +169,20 @@ class PurchaseOrderRepository
             // Update main design data
             $dataOutput = PurchaseOrdersModel::findOrFail($request->purchase_main_id);
             $dataOutput->vendor_id = $request->vendor_id;
-            $dataOutput->quote_no = $request->quote_no;
-            $dataOutput->tax = $request->tax;
+            // $dataOutput->quote_no = $request->quote_no;
+            $dataOutput->tax_type = $request->tax_type;
+            $dataOutput->tax_id = $request->tax_id;
             $dataOutput->invoice_date = $request->invoice_date;
             $dataOutput->payment_terms = $request->payment_terms;
-            $dataOutput->discount = $request->discount;
+            // $dataOutput->discount = $request->discount;
             $dataOutput->note = $request->note;
+
+            if ($request->has('quote_no')) {
+                $dataOutput->quote_no = $request->quote_no;
+            }
+            if ($request->has('discount')) {
+                $dataOutput->discount = $request->discount;
+            }
             $dataOutput->save();
 
            
@@ -184,11 +195,11 @@ class PurchaseOrderRepository
               
                     // Assuming 'purchase_id' is a foreign key related to 'PurchaseOrderModel'
                     $designDetails->purchase_id = $request->purchase_main_id; // Set the parent design ID
-                    $designDetails->part_no = $item['part_no'];
+                    $designDetails->part_no_id = $item['part_no_id'];
                     $designDetails->description = $item['description'];
                     $designDetails->due_date = $item['due_date'];
-                    $designDetails->hsn_no = $item['hsn_no'];
                     $designDetails->quantity = $item['quantity'];
+                    $designDetails->unit = $item['unit'];
                     $designDetails->rate = $item['rate'];
                     $designDetails->amount = $item['amount'];
                     $designDetails->actual_quantity = '0';
@@ -209,8 +220,6 @@ class PurchaseOrderRepository
 
             $return_data['last_insert_id'] = $last_insert_id;
             // $return_data['image'] = $previousImage;
-            // dd( $designDetails);
-            // die();
             return  $return_data;
     
             // Returning success message

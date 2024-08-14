@@ -66,7 +66,27 @@ class AllListServices
             return $e;
         }
     }
+    public function getAllListBusinessReceivedFromLogistics(){
+        try {
+            $data_output = $this->repo->getAllListBusinessReceivedFromLogistics();
+         
+            return $data_output;
 
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getAllListBusinessFianaceSendToDispatch(){
+        try {
+            $data_output = $this->repo->getAllListBusinessFianaceSendToDispatch();
+         
+            return $data_output;
+
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    
     // public function getAllListMaterialSentToPurchase(){
     //     try {
     //         return $this->repo->getAllListMaterialSentToPurchase();

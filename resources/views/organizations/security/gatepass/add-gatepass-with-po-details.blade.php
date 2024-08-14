@@ -105,7 +105,7 @@ label.error {
                                                 </div>
 
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="gatepass_date">Date:</label>
+                                                    <label for="gatepass_date">Date :</label>
                                                     <input type="date" class="form-control" id="gatepass_date"
                                                         name="gatepass_date" placeholder="Select Date">
                                                 </div>
@@ -161,6 +161,16 @@ var i = 0;
 <script>
 jQuery.noConflict();
 jQuery(document).ready(function($) {
+    function setMinDate() {
+                var today = new Date();
+                var day = String(today.getDate()).padStart(2, '0');
+                var month = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                var year = today.getFullYear();
+                var todayDate = year + '-' + month + '-' + day;
+    
+                $('#gatepass_date').attr('min', todayDate);
+            }
+            setMinDate();
     $("#addDesignsForm").validate({
         rules: {          
             purchase_id: {
@@ -178,9 +188,7 @@ jQuery(document).ready(function($) {
             remark :{
                 required : true,
             },           
-            status :{
-                required : true,
-            },            
+                        
         },
         messages: {
             purchase_id: {
@@ -198,9 +206,7 @@ jQuery(document).ready(function($) {
             remark : {
                 required: "Please enter Remark.",
             },                      
-            status : {
-                required: "Please enter Status.",
-            },            
+                      
         },
     });
 });

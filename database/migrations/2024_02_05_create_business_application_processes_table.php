@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('business_application_processes', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('business_id')->nullable();
+            $table->unsignedBigInteger('business_details_id');
             $table->date('business_sent_date')->nullable();
             // $table->date('owner_po_action_date')->nullable();
             $table->unsignedBigInteger('business_status_id')->nullable();
@@ -44,7 +45,9 @@ return new class extends Migration
             $table->unsignedBigInteger('store_receipt_no')->nullable();
             // $table->date('finanace_store_receipt_generate_date')->nullable();
             // $table->unsignedBigInteger('finanace_store_receipt_status_id')->nullable();
-
+            $table->string('logistics_status_id')->nullable();
+            $table->string('dispatch_status_id')->nullable();
+            
             $table->boolean('is_approve')->default(false);
             $table->boolean('is_active')->default(true);
             $table->boolean('is_deleted')->default(false);

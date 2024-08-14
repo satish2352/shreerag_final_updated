@@ -42,8 +42,6 @@ class GRNServices
     {
         try {
             $data = $this->repo->storeGRN($request);
-            // dd($data);
-            // die();
             $path = Config::get('DocumentConstant.GRN_ADD');
             $ImageName = $data['ImageName'];
             uploadImage($request, 'image', $path, $ImageName);
@@ -62,14 +60,23 @@ class GRNServices
     {
         try {
             $data_output = $this->repo->getAllListMaterialSentFromQualityBusinessWise($id);
-        //    dd($data_output);
             return $data_output;
 
         } catch (\Exception $e) {
             return $e;
         }
     }
-
+    public function getAllRejectedChalanList()
+    {
+        try {
+            $data = $this->repo->getAllRejectedChalanList();
+            return $data;
+        } catch (\Exception $e) {
+        
+            return $e; 
+        }
+    }
+    
     // public function addAll($request)
     // {
     //     try {

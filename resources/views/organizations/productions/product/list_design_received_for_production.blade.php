@@ -89,14 +89,15 @@ button.pd-setting-ed {
                                             
                                             <th data-field="id">ID</th>   
                                             <th data-field="customer_po_number" data-editable="true">PO Number</th>
-                                            <th data-field="product_name" data-editable="true">Product Name</th>
+                                            {{-- <th data-field="product_name" data-editable="true">Product Name</th> --}}
                                             {{-- <th data-field="title" data-editable="true">Name</th> --}}
-                                            <th data-field="quantity" data-editable="true">Quantity</th>
-                                            <th data-field="grn_date" data-editable="true">Description</th>
+                                            {{-- <th data-field="quantity" data-editable="true">Quantity</th> --}}
+                                            {{-- <th data-field="grn_date" data-editable="true">Description</th> --}}
                                             <th data-field="purchase_id" data-editable="true">Remark</th>                                         
-                                            <th data-field="design_image" data-editable="false">Design Layout</th>
-                                            <th data-field="bom_image" data-editable="false">BOM</th>                                                                                                                           
-                                            <th data-field="action">Action</th>
+                                            {{-- <th data-field="design_image" data-editable="false">Design Layout</th>
+                                            <th data-field="bom_image" data-editable="false">BOM</th>  --}}
+                                            <th data-field="status">Status</th>                                                                                                                          
+                                            {{-- <th data-field="action">Action</th> --}}
                                         </tr>
 
                                     </thead>
@@ -109,21 +110,24 @@ button.pd-setting-ed {
                                             
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ ucwords($data->customer_po_number) }}</td>
-                                            <td>{{ucwords($data->product_name)}}</td>
+                                            {{-- <td>{{ucwords($data->product_name)}}</td> --}}
                                             {{-- <td>{{ucwords($data->title)}}</td> --}}
-                                            <td>{{ucwords($data->quantity)}}</td>
-                                            <td>{{ ucwords($data->descriptions) }}</td>
+                                            {{-- <td>{{ucwords($data->quantity)}}</td> --}}
+                                            {{-- <td>{{ ucwords($data->descriptions) }}</td> --}}
                                             <td>{{ucwords($data->remarks)}}</td>
-                                            <td><a class="img-size" target="_blank"
+
+                                           
+                                            
+                                            {{-- <td><a class="img-size" target="_blank"
                                                 href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
                                                 alt="Design"> Click to view</a>
                                             </td>
                                             <td> <a class="img-size"
                                                     href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
                                                     alt="bill of material" >Click to download</a>
-                                            </td>
-                                            
-                                            <td>
+                                            </td> --}}
+                                            <td> <a href="{{ route('list-new-requirements-received-for-production-business-wise', base64_encode($data->business_id)) }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >View Details</button></a></td>
+                                            {{-- <td>
                                                 <div style="display: inline-block; align-items: center;">
                                                     <a href="{{route('reject-design-edit', base64_encode($data->productionId))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed mb-4"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Reject</button></a> &nbsp;
                                                     <a href="{{ route('accept-design', base64_encode($data->productionId)) }}"
@@ -134,7 +138,7 @@ button.pd-setting-ed {
                                                         <button><i class="fa fa-check" aria-hidden="true"></i> Accept </button>
                                                     </a>
                                                 </div>
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                         @endforeach
                                     </tbody>

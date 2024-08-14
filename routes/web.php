@@ -147,6 +147,15 @@ Route::group(['middleware' => ['admin']], function () {
 
     Route::post('/update-status-not-approved', ['as' => 'update-status-not-approved', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@updateLabourStatusNotApproved']);
 
+    Route::get('/list-notice', ['as' => 'list-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@index']);
+    Route::get('/add-notice', ['as' => 'add-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@add']);
+    Route::post('/add-notice', ['as' => 'add-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@store']);
+    Route::get('/edit-notice/{edit_id}', ['as' => 'edit-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@edit']);
+    Route::post('/update-notice', ['as' => 'update-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@update']);
+    Route::post('/show-notice', ['as' => 'show-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@show']);
+    Route::any('/delete-notice/{id}', ['as' => 'delete-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@destroy']);
+    Route::post('/update-active-notice', ['as' => 'update-active-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@updateOne']);
+    Route::get('/particular-notice-department-wise', ['as' => 'particular-notice-department-wise', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@departmentWiseNotice']);
 
 
     Route::group(['prefix' => 'quality'], function () {
@@ -166,9 +175,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-material-sent-to-quality', ['as' => 'list-material-sent-to-quality', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@getAllListMaterialSentFromQuality']);
         Route::get('/list-material-sent-to-quality-businesswise/{id}', ['as' => 'list-material-sent-to-quality-businesswise', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@getAllListMaterialSentFromQualityBusinessWise']);
 
-        Route::get('/list-rejected-chalan', ['as' => 'list-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Quality\RejectedChalanController@index']);
-        Route::get('/add-rejected-chalan/{purchase_orders_id}', ['as' => 'add-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Quality\RejectedChalanController@add']);
-        Route::post('/store-rejected-chalan', ['as' => 'store-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Quality\RejectedChalanController@store']);
+        Route::get('/list-rejected-chalan-po-wise', ['as' => 'list-rejected-chalan-po-wise', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@getAllListMaterialSentFromQuality']);
 
         
     });
@@ -199,9 +206,13 @@ Route::group(['middleware' => ['admin']], function () {
     
     
         Route::get('/list-design-uploaded-owner', ['as' => 'list-design-uploaded-owner', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@loadDesignSubmittedForProduction']);
+        Route::get('/list-design-uploaded-owner-business-wise/{business_id}', ['as' => 'list-design-uploaded-owner-business-wise', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@loadDesignSubmittedForProductionBusinessWise']);
+
         Route::get('/list-po-recived-for-approval-payment', ['as' => 'list-po-recived-for-approval-payment', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@listPOReceivedForApprovaTowardsOwner']);
-    
-    
+        Route::get('/list-product-dispatch-completed', ['as' => 'list-product-dispatch-completed', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@listProductDispatchCompletedFromDispatch']);
+
+        Route::post('/delete-addmore', ['as' => 'delete-addmore', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@destroyAddmore']);
+
     });
     
     Route::group(['prefix' => 'purchase'], function () {
@@ -242,8 +253,27 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-purchase-order-approved-sent-to-vendor-businesswise/{id}', ['as' => 'list-purchase-order-approved-sent-to-vendor-businesswise', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListPurchaseOrderMailSentToVendorBusinessWise']);
         Route::get('/list-purchase-orders-sent-to-owner', ['as' => 'list-purchase-orders-sent-to-owner', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListPurchaseOrderTowardsOwner']);
         Route::get('/list-purchase-orders-sent-to-owner-details/{purchase_order_id}', ['as' => 'list-purchase-orders-sent-to-owner-details', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@getAllListPurchaseOrderTowardsOwnerDetails']);
-    
+        Route::get('/list-purchase-order-sent-to-owner-for-approval-busineswise/{purchase_order_id}', ['as' => 'list-purchase-order-sent-to-owner-for-approval-busineswise', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getPurchaseOrderSentToOwnerForApprovalBusinesWise']);
         // });
+    
+        Route::get('/list-submited-po-to-vendor', ['as' => 'list-submited-po-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListSubmitedPurchaeOrderByVendor']);
+        Route::get('/list-submited-po-to-vendor-businesswise/{id}', ['as' => 'list-submited-po-to-vendor-businesswise', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListSubmitedPurchaeOrderByVendorBusinessWise']);
+
+        Route::any('/list-tax', ['as' => 'list-tax', 'uses' => 'App\Http\Controllers\Organizations\Purchase\TaxController@index']);
+        Route::any('/add-tax', ['as' => 'add-tax', 'uses' => 'App\Http\Controllers\Organizations\Purchase\TaxController@add']);
+        Route::any('/store-tax', ['as' => 'store-tax', 'uses' => 'App\Http\Controllers\Organizations\Purchase\TaxController@store']);
+        Route::any('/edit-tax/{id}', ['as' => 'edit-tax', 'uses' => 'App\Http\Controllers\Organizations\Purchase\TaxController@edit']);
+        Route::any('/update-tax', ['as' => 'update-tax', 'uses' => 'App\Http\Controllers\Organizations\Purchase\TaxController@update']);
+        Route::any('/delete-tax/{id}', ['as' => 'delete-tax', 'uses' => 'App\Http\Controllers\Organizations\Purchase\TaxController@destroy']);
+    
+        Route::any('/list-part-item', ['as' => 'list-part-item', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ItemController@index']);
+        Route::any('/add-part-item', ['as' => 'add-part-item', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ItemController@add']);
+        Route::any('/store-part-item', ['as' => 'store-part-item', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ItemController@store']);
+        Route::any('/edit-part-item/{id}', ['as' => 'edit-part-item', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ItemController@edit']);
+        Route::any('/update-part-item', ['as' => 'update-part-item', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ItemController@update']);
+        Route::any('/delete-part-item/{id}', ['as' => 'delete-part-item', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ItemController@destroy']);
+    
+
     });
     
     Route::group(['prefix' => 'designdept'], function () {
@@ -274,25 +304,33 @@ Route::group(['middleware' => ['admin']], function () {
     
         //All List
         Route::get('/list-new-requirements-received-for-production', ['as' => 'list-new-requirements-received-for-production', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllNewRequirement']);
+        Route::get('/list-new-requirements-received-for-production-business-wise/{business_id}', ['as' => 'list-new-requirements-received-for-production-business-wise', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllNewRequirementBusinessWise']);
+
+
         Route::get('/list-accept-design', ['as' => 'list-accept-design', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@acceptdesignlist']);
+        Route::get('/list-accept-design-business-wise/{business_id}', ['as' => 'list-accept-design-business-wise', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@acceptdesignlistBusinessWise']);
         Route::get('/list-reject-design', ['as' => 'list-reject-design', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@rejectdesignlist']);
-        Route::get('/list-revised-design', ['as' => 'list-revised-design', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@reviseddesignlist']);
+        Route::get('/list-revislist-material-reciveded-design', ['as' => 'list-revised-design', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@reviseddesignlist']);
         Route::get('/list-material-recived', ['as' => 'list-material-recived', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllListMaterialRecievedToProduction']);
     
         Route::get('/list-final-purchase-order-production/{id}', ['as' => 'list-final-purchase-order-production', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllListMaterialRecievedToProductionBusinessWise']);
+
+        Route::get('/update-final-production-completed-status/{id}', ['as' => 'update-final-production-completed-status', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@acceptProductionCompleted']);
+        Route::get('/list-final-production-completed', ['as' => 'list-final-production-completed', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllCompletedProduction']);
+
+        // Route::get('/list-final-production-completed/{id}', ['as' => 'list-final-production-completed', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllFinalProductionCompleted']);
 
     });
     
     Route::group(['prefix' => 'securitydept'], function () {
         Route::get('/search-by-po-no', ['as' => 'search-by-po-no', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@searchByPONo']);
-    
+        // Route::get('/list-purchase-order-approved-sent-to-vendor-security', ['as' => 'list-purchase-order-approved-sent-to-vendor-security', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@searchByPONo']);
         Route::get('/list-gatepass', ['as' => 'list-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@index']);
         Route::get('/add-gatepass', ['as' => 'add-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@add']);
     
         Route::get('/edit-gatepass/{id}', ['as' => 'edit-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@edit']);
         Route::post('/update-gatepass', ['as' => 'update-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@update']);
 
-    
         Route::get('/add-gatepass-with-po/{id}', ['as' => 'add-gatepass-with-po', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@addGatePassWithPO']);
         Route::post('/store-gatepass', ['as' => 'store-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@store']);
     
@@ -310,6 +348,8 @@ Route::group(['middleware' => ['admin']], function () {
         Route::post('/store-purchase-request-req', ['as' => 'store-purchase-request-req', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@storeRequesition']);
         //ALL List
         Route::get('/list-accepted-design-from-prod', ['as' => 'list-accepted-design-from-prod', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListDesignRecievedForMaterial']);
+        Route::get('/list-accepted-design-from-prod-business-wise/{business_id}', ['as' => 'list-accepted-design-from-prod-business-wise', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListDesignRecievedForMaterialBusinessWise']);
+
         Route::get('/list-material-sent-to-prod', ['as' => 'list-material-sent-to-prod', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialSentToProduction']);
         Route::get('/list-material-sent-to-purchase', ['as' => 'list-material-sent-to-purchase', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialSentToPurchase']);
         Route::get('/list-material-received-from-quality', ['as' => 'list-material-received-from-quality', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialReceivedFromQuality']);
@@ -317,6 +357,9 @@ Route::group(['middleware' => ['admin']], function () {
 
         Route::get('/accepted-store-material-sent-to-production/{purchase_orders_id}/{business_id}', ['as' => 'accepted-store-material-sent-to-production', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@genrateStoreReciptAndForwardMaterialToTheProduction']);
     
+        Route::get('/list-rejected-chalan', ['as' => 'list-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\RejectedChalanController@index']);
+        Route::get('/add-rejected-chalan/{purchase_orders_id}', ['as' => 'add-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\RejectedChalanController@add']);
+        Route::post('/store-rejected-chalan', ['as' => 'store-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\RejectedChalanController@store']);
     });
     
     Route::group(['prefix' => 'financedept'], function () {
@@ -330,9 +373,33 @@ Route::group(['middleware' => ['admin']], function () {
     
         Route::get('/list-po-sanction-and-need-to-do-payment-to-vendor', ['as' => 'list-po-sanction-and-need-to-do-payment-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@listPOSanctionAndNeedToDoPaymentToVendor']);
         Route::get('/send-payment-to-vendor/{purchase_orders_id}/{business_id}', ['as' => 'send-payment-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Finance\FinanceController@forwardedPurchaseOrderPaymentToTheVendor']);
-    
+        Route::get('/recive-logistics-list', ['as' => 'recive-logistics-list', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@getAllListBusinessReceivedFromLogistics']);
+        Route::get('/send-to-dispatch/{id}', ['as' => 'send-to-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Finance\FinanceController@sendToDispatch']);
+        Route::get('/list-send-to-dispatch', ['as' => 'list-send-to-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@getAllListBusinessFianaceSendToDispatch']);
+        
     });
 
+    Route::group(['prefix' => 'logisticsdept'], function () {
+        Route::get('/list-final-production-completed-recive-to-logistics', ['as' => 'list-final-production-completed-recive-to-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\AllListController@getAllCompletedProduction']);
+        Route::get('/add-logistics/{business_id}', ['as' => 'add-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\LogisticsController@addLogistics']);
+        Route::post('/store-logistics', ['as' => 'store-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\LogisticsController@storeLogistics']);
+        Route::get('/list-logistics', ['as' => 'list-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\AllListController@getAllLogistics']);
+        Route::get('/send-to-fianance/{id}', ['as' => 'send-to-fianance', 'uses' => 'App\Http\Controllers\Organizations\Logistics\LogisticsController@sendToFianance']);
+        Route::get('/list-send-to-fianance-by-logistics', ['as' => 'list-send-to-fianance-by-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\AllListController@getAllListSendToFiananceByLogistics']);
+
+    
+    });
+    Route::group(['prefix' => 'dispatchdept'], function () {
+        Route::get('/list-final-production-completed-received-from-fianance', ['as' => 'list-final-production-completed-received-from-fianance', 'uses' => 'App\Http\Controllers\Organizations\Dispatch\AllListController@getAllReceivedFromFianance']);
+        Route::get('/add-dispatch/{business_id}', ['as' => 'add-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Dispatch\DispatchController@addDispatch']);
+        Route::post('/store-dispatch', ['as' => 'store-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Dispatch\DispatchController@storeDispatch']);
+        Route::get('/list-dispatch', ['as' => 'list-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Dispatch\AllListController@getAllDispatch']);
+        
+        // Route::get('/add-logistics/{business_id}', ['as' => 'add-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\LogisticsController@addLogistics']);
+        // Route::post('/store-logistics', ['as' => 'store-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\LogisticsController@storeLogistics']);
+        // Route::get('/list-logistics', ['as' => 'list-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\AllListController@getAllLogistics']);
+        // Route::get('/send-to-fianance/{id}', ['as' => 'send-to-fianance', 'uses' => 'App\Http\Controllers\Organizations\Logistics\LogisticsController@sendToFianance']);
+    });
     // vision-mission
     Route::get('/list-vision-mission', ['as' => 'list-vision-mission', 'uses' => 'App\Http\Controllers\Admin\CMS\VisionMissionController@index']);
     Route::get('/add-vision-mission', ['as' => 'add-vision-mission', 'uses' => 'App\Http\Controllers\Admin\CMS\VisionMissionController@add']);

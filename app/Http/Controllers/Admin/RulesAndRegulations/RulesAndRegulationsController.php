@@ -121,7 +121,6 @@ class RulesAndRegulationsController extends Controller
             $delete_data_id = base64_decode($request->id);
             try {
                 $delete_record = $this->service->deleteById($delete_data_id);
-                // dd($delete_record);
                 if ($delete_record) {
                     $msg = $delete_record['msg'];
                     $status = $delete_record['status'];

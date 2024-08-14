@@ -102,8 +102,8 @@ label.error {
                                             <div class="row">
                                                
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="bom_file_req">Bill Of Material :</label>
-                                                     <input type="file" class="form-control" accept="image/*" id="bom_file_req"
+                                                    <label for="bom_file_req">Bill Of Material (upload excel file) :</label>
+                                                     <input type="file" class="form-control" accept=".xls, .xlsx" id="bom_file_req"
                                                          name="bom_file_req" placeholder="Enter bom_file_req">
                                                          <input type="hidden" class="form-control" id="production_id"
                                                         name="production_id" value="{{$createRequesition}}" placeholder="Enter your requistion number ">
@@ -122,7 +122,7 @@ label.error {
                                                             <a href="{{ route('list-requistion') }}" class="btn btn-white"
                                                                 style="margin-bottom:50px">Cancel</a>
                                                             <button class="btn btn-sm btn-primary login-submit-cs"
-                                                                type="submit" style="margin-bottom:50px">Submit Requisition Details To Production 
+                                                                type="submit" style="margin-bottom:50px">Submit Requisition Details To Purchase 
                                                                 </button>
                                                         </div>
                                                     </div>

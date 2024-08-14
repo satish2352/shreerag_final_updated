@@ -85,10 +85,10 @@ padding-left: 20px !important;
                                             
                                             <th data-field="id">ID</th>
                                             <th data-field="customer_po_number" data-editable="true">PO Number</th>
-                                            <th data-field="product_name" data-editable="true">Product Name</th>
+                                            {{-- <th data-field="product_name" data-editable="true">Product Name</th> --}}
                                             <th data-field="title" data-editable="true">Name</th>
-                                            <th data-field="quantity" data-editable="true">Quantity</th>
-                                            <th data-field="grn_date" data-editable="true">Description</th>
+                                            {{-- <th data-field="quantity" data-editable="true">Quantity</th> --}}
+                                            {{-- <th data-field="grn_date" data-editable="true">Description</th> --}}
                                             <th data-field="purchase_id" data-editable="true">Remark</th>
                                             <th data-field="action">Action</th>
                                         </tr>
@@ -102,10 +102,10 @@ padding-left: 20px !important;
                                             
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ ucwords($data->customer_po_number) }}</td>
-                                            <td>{{ucwords($data->product_name)}}</td>
+                                            {{-- <td>{{ucwords($data->product_name)}}</td> --}}
                                             <td>{{ucwords($data->title)}}</td>
-                                            <td>{{ucwords($data->quantity)}}</td>
-                                            <td>{{ ucwords($data->descriptions) }}</td>
+                                            {{-- <td>{{ucwords($data->quantity)}}</td> --}}
+                                            {{-- <td>{{ ucwords($data->descriptions) }}</td> --}}
                                             <td>{{ ucwords($data->remarks) }}</td>
                                             
                                             {{-- <td><img style="max-width:250px; max-height:150px;" src="{{ Config::get('DocumentConstant.DESIGNS_VIEW') . $data->image }}" alt="{{ strip_tags($data['company_name']) }} Image" /></td> --}}

@@ -78,7 +78,8 @@ class AllListController extends Controller
     public function submitFinalPurchaseOrder($id){
         try {
             $data_output = $this->service->getPurchaseOrderBusinessWise($id);
-           
+        //    dd($data_output);
+        //    die();
             return view('organizations.business.list.list-purchase-order-approved-bussinesswise', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
@@ -96,13 +97,30 @@ class AllListController extends Controller
     public function loadDesignSubmittedForProduction(){
         try {
             $data_output = $this->service->loadDesignSubmittedForProduction();
-            return view('organizations.designer.design-upload.list-design-upload', compact('data_output'));
+            return view('organizations.business.design.list-design-upload', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
         }
-    }     
+    }  
+    public function loadDesignSubmittedForProductionBusinessWise($business_id){
+        try {
+            $data_output = $this->service->loadDesignSubmittedForProductionBusinessWise($business_id);
+            return view('organizations.business.design.list-design-uploaded-owner-business-wise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }  
+    
+    public function listProductDispatchCompletedFromDispatch(){
+        try {
+            $data_output = $this->service->listProductDispatchCompletedFromDispatch();
+            return view('organizations.business.list.list-dispatch-completed', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }  
 
-
+    
 
     
 }

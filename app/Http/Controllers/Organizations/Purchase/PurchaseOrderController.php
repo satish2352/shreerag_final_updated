@@ -9,7 +9,9 @@ use App\Http\Controllers\Controller;
 use Validator;
 use App\Models\{
     BusinessApplicationProcesses,
-    Vendors
+    Vendors,
+    Tax,
+    PartItem
 };
 use App\Http\Controllers\Organizations\CommanController;
 
@@ -49,13 +51,17 @@ class PurchaseOrderController extends Controller
         
         $requistition_id = $request->requistition_id;
         $title = 'create invoice';
-        $dataOutputVendor = Vendors::get();
+        $dataOutputVendor = Vendors::where('is_active', true)->get();
+        $dataOutputTax = Tax::where('is_active', true)->get();
+        $dataOutputPartItem = PartItem::where('is_active', true)->get();
         return view(
             'organizations.purchase.addpurchasedetails.add-purchase-orders',
             compact(
                 'title',
                 'requistition_id',
-                'dataOutputVendor'
+                'dataOutputVendor',
+                'dataOutputTax',
+                'dataOutputPartItem'
             )
         );
     }
@@ -71,18 +77,18 @@ class PurchaseOrderController extends Controller
     {
         $rules = [
             'vendor_id' => 'required',
-            'tax' => 'required',
+            'tax_id' => 'required',
             'invoice_date' => 'required',
             'payment_terms' => 'required',
-            'discount' => 'required',
-            'quote_no' => 'required',
+            // 'discount' => 'required',
+            // 'quote_no' => 'required',
             // 'status' => 'required',
             'note' => 'nullable',
         ];
 
         $messages = [
             'vendor_id.required' => 'The select vendor comapny name is required.',
-            'tax.required' => 'The Tax is required.',
+            'tax_id.required' => 'The Tax is required.',
             'invoice_date.required' => 'The Invoice Date is required.',
             'payment_terms.required' => 'The Payment Terms is required.',
             'discount.required' => 'The Discount is required.',
@@ -122,7 +128,7 @@ class PurchaseOrderController extends Controller
             // 'client_name' => 'required',
             // 'phone_number' => 'required',
             // 'email' => 'required',
-            'tax' => 'required',
+            'tax_id' => 'required',
             'invoice_date' => 'required',
             // 'gst_number' => 'required',
             'payment_terms' => 'required',
@@ -145,7 +151,7 @@ class PurchaseOrderController extends Controller
         $invoice = new PurchaseOrdersModel([
             // 'client_name' => $request->client_name,
             // 'phone_number' => $request->phone_number,
-            'tax' => $request->tax,
+            'tax_id' => $request->tax_id,
             // 'email' => $request->email,
             // 'client_address' => $request->client_address,
             // 'gst_number' => $request->gst_number,
@@ -224,7 +230,7 @@ class PurchaseOrderController extends Controller
      */
     // public function update(Request $request)
     // {
-    //     // //dd($request);
+
     //     $this->validate($request, [
     //         // 'client_name' => 'required',
     //         // 'phone_number' => 'required',
@@ -263,7 +269,7 @@ class PurchaseOrderController extends Controller
     //         'note' => $request->note,
     //         // 'status' => $request->status,
     //     ]);
-    //     // //dd($invoice->wasChanged());
+
     //     if ($invoice->wasChanged()) {
     //         $msg = 'Invoice has been updated';
     //         $status = 'success';
@@ -389,13 +395,17 @@ class PurchaseOrderController extends Controller
     }
 
     public function edit(Request $request){
-        $edit_data_id = base64_decode($request->id);
-      
+        $edit_data_id = $request->id;
+        // $edit_data_id = base64_decode($request->id);
+    //    dd($edit_data_id);
+    //    die();
         $editData = $this->service->getById($edit_data_id);
-       
-        $dataOutputVendor = Vendors::get();
-      
-        return view('organizations.purchase.addpurchasedetails.edit-purchase-orders', compact('editData', 'dataOutputVendor'));
+    //        dd($editData);
+    //    die();
+        $dataOutputVendor = Vendors::where('is_active', true)->get();
+        $dataOutputTax = Tax::where('is_active', true)->get();
+        $dataOutputPartItem = PartItem::where('is_active', true)->get();
+        return view('organizations.purchase.addpurchasedetails.edit-purchase-orders', compact('editData', 'dataOutputVendor', 'dataOutputTax', 'dataOutputPartItem'));
     }
     
     
@@ -465,12 +475,16 @@ class PurchaseOrderController extends Controller
     public function destroyAddmore(Request $request){
         try {
             $delete_rti = $this->service->deleteByIdAddmore($request->delete_id);
+         
             if ($delete_rti) {
                 $msg = $delete_rti['msg'];
                 $status = $delete_rti['status'];
+
+                $id = base64_encode($request->delete_id);
                 if ($status == 'success') {
                     return redirect('purchase/edit-purchase-order/{id}')->with(compact('msg', 'status'));
-                    
+                    // return redirect()->route('purchase.edit-purchase-order', ['id' => $id])
+                    // ->with(compact('msg', 'status'));
                 } else {
                     return redirect()->back()
                         ->withInput()

@@ -220,9 +220,8 @@
                                     <tr style="border:1px solid black;">
                                         <th>Sr. No.</th>
                                         <th class="col-sm-2">Part No.</th>
-                                        <th class="col-md-2">Description</th>
+                                        <th class="col-md-2" colspan="2">Description</th>
                                         <th class="col-md-2">Due Date</th>
-                                        <th class="col-md-2">HSN</th>
                                         <th class="col-md-2">Quantity</th>
                                         <th class="col-md-2">Rate</th>
                                         <th>Amount</th>
@@ -232,13 +231,12 @@
                                     @foreach ($purchaseOrderDetails as $index => $item)
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
-                                        <td>{{ $item->part_no }}</td>
-                                        <td class="d-none d-sm-table-cell"
+                                        <td>{{ $item->part_no_id }}</td>
+                                        <td class="d-none d-sm-table-cell " colspan="2"
                                             style="max-width: 150px !important; overflow-wrap: break-word; word-wrap: break-word; word-break: break-all;">
                                             {{ $item->description }}</td>
                                         <td>{{ $item->due_date }}</td>
-                                        <td>{{ $item->hsn_no }}</td>
-                                        <td>{{ $item->quantity }}</td>
+                                        <td>{{ $item->quantity }} {{ $item->unit }}</td>
                                         <td>{{ $item->rate }}</td>
                                         <td class="text-right">
                                             {{ $item->amount }}</td>

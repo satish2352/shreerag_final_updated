@@ -15,8 +15,10 @@ return new class extends Migration
     {
         Schema::create('production', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('business_details_id');
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('design_id');
+            $table->unsignedBigInteger('is_approved_production')->nullable();
             $table->boolean('is_approve')->default(false);
             $table->boolean('is_active')->default(true);
             $table->boolean('is_deleted')->default(false);

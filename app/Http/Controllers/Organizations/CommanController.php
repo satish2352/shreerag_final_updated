@@ -93,7 +93,8 @@ class CommanController
                     'purchase_orders.terms_condition', 
                     'purchase_orders.transport_dispatch', 
                     'purchase_orders.image', 
-                    'purchase_orders.tax', 
+                    'purchase_orders.tax_type', 
+                    'purchase_orders.tax_id', 
                     'purchase_orders.invoice_date', 
                     'purchase_orders.payment_terms', 
                     'purchase_orders.discount', 
@@ -116,11 +117,11 @@ class CommanController
             $purchaseOrderDetails = PurchaseOrderDetailsModel::where('purchase_id', $purchaseOrder->id)
                 ->select(
                     'purchase_id',
-                    'part_no',
+                    'part_no_id',
                     'description',
                     'due_date',
-                    'hsn_no',
                     'quantity',
+                    'unit',
                     'actual_quantity',
                     'accepted_quantity',
                     'rejected_quantity',

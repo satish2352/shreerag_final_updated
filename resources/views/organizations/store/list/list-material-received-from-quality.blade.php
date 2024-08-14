@@ -96,7 +96,7 @@
                                                     
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
-                                                    <td>{{ ucwords($data->descriptions) }}</td>
+                                                    <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                     <td> <a class="img-size" target="_blank"
                                                         href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"

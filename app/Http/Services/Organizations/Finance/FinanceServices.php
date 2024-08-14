@@ -21,8 +21,6 @@ class FinanceServices
     // {
     //     try {
     //         $update_data = $this->repo->forwardPurchaseOrderToTheOwnerForSanction($purchase_orders_id, $business_id);
-    //         dd($update_data);
-    //         die();
     //         return $update_data; 
     //     } catch (\Exception $e) {
     //         return $e;
@@ -32,8 +30,6 @@ class FinanceServices
     {
         try {
             $update_data = $this->repo->forwardPurchaseOrderToTheOwnerForSanction($purchase_orders_id, $business_id);
-        //   dd($update_data);
-        //   die();
             return $update_data; 
         } catch (\Exception $e) {
             return $e->getMessage();
@@ -49,7 +45,16 @@ class FinanceServices
             return $e;
         }
     }
-
+    public function sendToDispatch($id){
+        try {
+           $update_data = $this->repo->sendToDispatch($id);
+       
+           return $update_data;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
+    
     // public function addAll($request)
     // {
     //     try {

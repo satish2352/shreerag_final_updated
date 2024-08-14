@@ -125,8 +125,63 @@
         @csrf
         <input type="hidden" name="delete_id" id="delete_id" value="">
     </form>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+<script>
+var i = 0;
+
+
+
+</script>
+<script>
+jQuery.noConflict();
+jQuery(document).ready(function($) {
+    function setMinDate() {
+                var today = new Date();
+                var day = String(today.getDate()).padStart(2, '0');
+                var month = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                var year = today.getFullYear();
+                var todayDate = year + '-' + month + '-' + day;
+    
+                $('#gatepass_date').attr('min', todayDate);
+            }
+            setMinDate();
+    $("#addDesignsForm").validate({
+        rules: {          
+            purchase_orders_id: {
+                required: true
+            },
+            gatepass_name : {
+                required : true
+            },     
+            gatepass_date : {
+                required : true
+            },    
+            gatepass_time : {
+                required : true
+            },
+            remark :{
+                required : true,
+            },           
+        },
+        messages: {
+            purchase_orders_id: {
+                required: "Please Enter Po Number.",
+            },              
+            gatepass_name : {
+                required: "Please Enter Gatepass Name.",
+            },
+            gatepass_date : {
+                required: "Please Select Gatepass Date.",
+            },
+            gatepass_time : {
+                required: "Please Select Gatepass Time.",
+            },
+            remark : {
+                required: "Please enter Remark.",
+            },                      
+        },
+    });
+});
+</script>
 @endsection

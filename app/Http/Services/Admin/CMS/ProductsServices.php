@@ -3,7 +3,7 @@ namespace App\Http\Services\Admin\CMS;
 use App\Http\Repository\Admin\CMS\ProductRepository;
 use Carbon\Carbon;
 use App\Models\ {
-    ProductServices
+    Products
     };
 
 use Config;
@@ -47,7 +47,6 @@ class ProductsServices
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
-          
             $path = Config::get('DocumentConstant.PRODUCT_ADD');
             if ($request->hasFile('image')) {
                 if ($return_data['image']) {
@@ -66,7 +65,7 @@ class ProductsServices
                 }                
                 // $englishImageName = $return_data['last_insert_id'] . '_' . rand(100000, 999999) . '_image.' . $request->image->extension();
                 uploadImage($request, 'image', $path, $englishImageName);
-                $aboutus_data = ProductServices::find($return_data['last_insert_id']);
+                $aboutus_data = Products::find($return_data['last_insert_id']);
                 $aboutus_data->image = $englishImageName;
                 $aboutus_data->save();
               
@@ -88,7 +87,6 @@ class ProductsServices
     {
         try {
             $delete = $this->repo->deleteById($id);
-            // dd($delete);
             if ($delete) {
                 return ['status' => 'success', 'msg' => 'Deleted Successfully.'];
             } else {

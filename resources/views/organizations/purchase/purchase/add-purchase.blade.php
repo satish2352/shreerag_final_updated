@@ -119,7 +119,6 @@ label.error {
                                                         <th>Part No</th>
                                                         <th>Description</th>
                                                         <th>Due Date</th>
-                                                        <th>HSN</th>
                                                         <th>Quantity</th>
                                                         <th>Rate</th>
                                                         <th>Amount</th>
@@ -127,7 +126,7 @@ label.error {
                                                     </tr>
 
                                                     <tr>
-                                                        <td><input type="text" name="addmore[0][part_no]"
+                                                        <td><input type="text" name="addmore[0][part_no_id]"
                                                                 placeholder="Enter Part No" class="form-control" />
                                                         </td>
                                                         <td><input type="text" name="addmore[0][description]"
@@ -135,9 +134,6 @@ label.error {
                                                         </td>
                                                         <td><input type="date" name="addmore[0][due_date]"
                                                                 placeholder="Select Due Date" class="form-control" />
-                                                        </td>
-                                                        <td><input type="text" name="addmore[0][hsn_no]"
-                                                                placeholder="Enter HSN No" class="form-control" />
                                                         </td>
                                                         <td><input type="text" name="addmore[0][quantity]"
                                                                 placeholder="Enter Quantity" class="form-control" />
@@ -225,13 +221,11 @@ $("#add").click(function() {
     $("#dynamicTable").append(
         '<tr><td><input type="text" name="addmore[' +
         i +
-        '][part_no]" placeholder="Enter Part No" class="form-control" /></td><td><input type="text" name="addmore[' +
+        '][part_no_id]" placeholder="Enter Part No" class="form-control" /></td><td><input type="text" name="addmore[' +
         i +
         '][description]" placeholder="Enter Description" class="form-control" /></td><td><input type="date" name="addmore[' +
         i +
         '][due_date]" placeholder="Select Due Date" class="form-control" /></td><td><input type="text" name="addmore[' +
-        i +
-        '][hsn_no]" placeholder="Enter HSN No" class="form-control" /></td><td><input type="text" name="addmore[' +
         i +
         '][quantity]" placeholder="Enter Quantity" class="form-control" /></td><td><input type="text" name="addmore[' +
         i +
@@ -266,16 +260,13 @@ jQuery(document).ready(function($) {
                 required: true,
             },
             // Add validation rules for other fields
-            'addmore[0][part_no]': {
+            'addmore[0][part_no_id]': {
                 required: true,
             },
             'addmore[0][description]': {
                 required: true,
             },
             'addmore[0][due_date]': {
-                required: true,
-            },
-            'addmore[0][hsn_no]': {
                 required: true,
             },
             'addmore[0][quantity]': {
@@ -307,7 +298,7 @@ jQuery(document).ready(function($) {
             },
 
              // Add error messages for other fields
-             'addmore[0][part_no]': {
+             'addmore[0][part_no_id]': {
                 required: "Please Enter Part No",
             },
             'addmore[0][description]': {
@@ -315,9 +306,6 @@ jQuery(document).ready(function($) {
             },
             'addmore[0][due_date]': {
                 required: "Please Select Due Date",
-            },
-            'addmore[0][hsn_no]': {
-                required: "Please Enter HSN No",
             },
             'addmore[0][quantity]': {
                 required: "Please Enter Quantity",

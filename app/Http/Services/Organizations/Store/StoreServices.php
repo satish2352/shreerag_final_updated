@@ -21,6 +21,9 @@ class StoreServices
     {
         try {
             $update_data = $this->repo->orderAcceptedAndMaterialForwareded($id);
+            // dd( $update_data);
+            // die();
+            return $update_data;
         } catch (\Exception $e) {
             return $e;
         }
@@ -50,8 +53,6 @@ class StoreServices
     {
         try {
             $update_data = $this->repo->genrateStoreReciptAndForwardMaterialToTheProduction($purchase_orders_id, $business_id);
-            // dd($update_data);
-            // die();
         } catch (\Exception $e) {
             return $e;
         }

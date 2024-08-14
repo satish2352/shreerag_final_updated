@@ -36,26 +36,50 @@ class AllListServices
     
     public function getAllNewRequirement(){
         try {
-            return $this->repo->getAllNewRequirement();
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
-
-    
-    public function getAllacceptdesign(){
-        try {
-            $data_output = $this->repo->getAllacceptdesign();
-           
+            $data_output = $this->repo->getAllNewRequirement();
+          
             return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
-
+    public function getAllNewRequirementBusinessWise($business_id){
+        try {
+            $data_output = $this->repo->getAllNewRequirementBusinessWise($business_id);
+            // Remove debugging code
+            // dd($data_output);
+            // die();
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    
+    public function getAllacceptdesign(){
+        try {
+            $data_output = $this->repo->getAllacceptdesign();
+        //    dd($data_output);
+        //    die();
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function acceptdesignlistBusinessWise($business_id){
+        try {
+            $data_output = $this->repo->acceptdesignlistBusinessWise($business_id);
+        //    dd($data_output);
+        //    die();
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     public function getAllrejectdesign(){
         try {
-            return $this->repo->getAllrejectdesign();
+            $data_output = $this->repo->getAllrejectdesign();
+            // dd($data_output);
+            return $data_output; 
         } catch (\Exception $e) {
             return $e;
         }
@@ -63,7 +87,8 @@ class AllListServices
 
     public function getAllreviseddesign(){
         try {
-            return $this->repo->getAllreviseddesign();
+            $data_output = $this->repo->getAllreviseddesign();
+            return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
@@ -72,7 +97,6 @@ class AllListServices
     public function getAllListMaterialRecievedToProduction(){
         try {
           $data_output = $this->repo->getAllListMaterialRecievedToProduction();
-         
           return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -83,10 +107,24 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->getAllListMaterialRecievedToProductionBusinessWise($id);
+          
             return $data_output;
 
         } catch (\Exception $e) {
             return $e;
         }
     }
+
+    public function getAllCompletedProduction(){
+        try {
+          $data_output = $this->repo->getAllCompletedProduction();
+        //  dd($data_output);
+        //  die();
+          return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    
 }

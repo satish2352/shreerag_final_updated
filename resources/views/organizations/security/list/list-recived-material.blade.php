@@ -82,7 +82,7 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
-                                                <th data-field="grn_number" data-editable="true">Title</th>
+                                                <th data-field="grn_number" data-editable="true">Product Name</th>
                                                 <th data-field="grn_date" data-editable="true">Description</th>
                                                 <th data-field="purchase_id" data-editable="true">Remark</th>
                                                 {{-- <th data-field="store_material_sent_date" data-editable="true">Matrial Recieved Date</th> --}}
@@ -99,8 +99,8 @@
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ ucwords($data->title) }}</td>
-                                                    <td>{{ ucwords($data->descriptions) }}</td>
+                                                    <td>{{ ucwords($data->product_name) }}</td>
+                                                    <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                     {{-- <td>{{ ucwords($data->store_material_sent_date) }}</td> --}}
                                                     <td> <a class="img-size" target="_blank"
@@ -110,7 +110,7 @@
 
                                                 <td> <a class="btn btn-sm btn-primary login-submit-cs" type="button"
                                                     href="{{route('add-gatepass-with-po', base64_encode($data->purchase_orders_id))}}"
-                                                    alt="Design">Ganerate Gate Pass New</a>
+                                                    alt="Design">Ganerate Gate Pass</a>
                                             </td>
                                              
 
