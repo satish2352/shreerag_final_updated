@@ -15,9 +15,6 @@ class AllListServices
         $this->repo = new AllListRepository();
 
     }
-
-  
-    
     public function getAllListDesignRecievedForMaterial(){
         try {
             $data_output = $this->repo->getAllListDesignRecievedForMaterial();
@@ -28,7 +25,6 @@ class AllListServices
             return $e;
         }
     }
-
     public function getAllListMaterialSentToProduction(){
         try {
             return $this->repo->getAllListMaterialSentToProduction();
@@ -36,8 +32,6 @@ class AllListServices
             return $e;
         }
     }
-
-
     public function getAllListMaterialSentToPurchase(){
         try {
             return $this->repo->getAllListMaterialSentToPurchase();
@@ -45,8 +39,6 @@ class AllListServices
             return $e;
         }
     }
-
-
     public function getAllListMaterialReceivedFromQuality(){
         try {
             $return_data = $this->repo->getAllListMaterialReceivedFromQuality();
@@ -57,7 +49,6 @@ class AllListServices
             return $e;
         }
     }
-
     public function getPurchaseOrderBusinessWise($purchase_order_id)
     {
         try {
