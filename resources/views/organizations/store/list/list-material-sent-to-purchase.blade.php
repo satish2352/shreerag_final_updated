@@ -80,7 +80,6 @@
                                         data-click-to-select="true" data-toolbar="#toolbar">
                                         <thead>
                                             <tr>
-                                                
                                                 <th data-field="id">Sr.No.</th>
                                                 <th data-field="customer_po_number" data-editable="true">PO Number</th>
                                                 <th data-field="product_name" data-editable="true">Product Name</th>
