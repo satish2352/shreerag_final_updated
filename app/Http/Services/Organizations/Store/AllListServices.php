@@ -26,6 +26,18 @@ class AllListServices
             return $e;
         }
     }
+
+    public function getAllListDesignRecievedForMaterialBusinessWise($business_id)
+    {
+        try {
+            $data_output = $this->repo->getAllListDesignRecievedForMaterialBusinessWise($business_id);
+            // dd($data_output); // Uncomment for debugging
+            // die(); // Uncomment for debugging
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     public function getAllListMaterialSentToProduction(){
         try {
             $data_output = $this->repo->getAllListMaterialSentToProduction();

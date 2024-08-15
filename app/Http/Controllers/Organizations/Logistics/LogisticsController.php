@@ -8,7 +8,8 @@ use App\Http\Services\Organizations\Business\BusinessServices;
 use App\Models\ {
     
     BusinessApplicationProcesses,
-    Vendors
+    Vendors,
+    Business
     };
 use Session;
 use Validator;
@@ -26,12 +27,27 @@ class LogisticsController extends Controller
     {
         try {
             
-            $purchase_order_data = BusinessApplicationProcesses::where('business_details_id', '=', $business_id)->first();
+            // $purchase_order_data =
+            $purchase_order_data = Business::leftJoin('businesses_details', 'businesses.id', '=', 'businesses_details.business_id')
+            ->select('businesses_details.*',
+            'businesses_details.id as businesses_details_id',
+                'businesses.id as business_main_id',
+                'businesses.customer_po_number',
+                'businesses.title',
+                'businesses.po_validity',
+                'businesses.customer_payment_terms',
+                'businesses.customer_terms_condition',
+                'businesses.remarks')
+            ->where('businesses.id', $business_id)
+            ->first();
+            //  BusinessApplicationProcesses::where('business_details_id', '=', $business_id)->first();
             $dataOutputVendor = Vendors::get();
-            $edit_data_id = $business_id;
-           
-            $editData = $this->business_service->getById($edit_data_id);
-
+            $editData = $purchase_order_data;
+            // dd($editData);
+            // die();
+            // $editData = $this->business_service->getById($business_id);
+// dd($purchase_order_data);
+// die();
 
             return view('organizations.logistics.logisticsdept.add-logistics'
             , compact('dataOutputVendor', 'editData')
