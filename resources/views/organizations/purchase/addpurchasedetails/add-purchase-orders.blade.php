@@ -50,7 +50,7 @@
                       <option value="">Select Tax Type</option>
                       <option value="CGST">C-GST</option>
                       <option value="SGST">S-GST</option>
-                      <option value="CGST+SGST">C-GST + S-GST</option>
+                      <option value="IGST">I-GST</option>
                     </select>
                   </div>
                 </div>

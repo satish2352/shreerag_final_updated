@@ -111,7 +111,7 @@
                                                             </a>
                                                         </div> --}}
                                                         <div style="display: flex; align-items: center;">
-                                                            <a href="{{ route('forward-the-purchase-order-to-the-owner-for-sanction', [$data->purchase_orders_id, $data->business_id]) }}">
+                                                            <a href="{{ route('forward-the-purchase-order-to-the-owner-for-sanction', [$data->purchase_orders_id, $data->id]) }}">
                                                                 <button data-toggle="tooltip" title="Trash" class="pd-setting-ed">
                                                                     Check details
                                                                 </button>

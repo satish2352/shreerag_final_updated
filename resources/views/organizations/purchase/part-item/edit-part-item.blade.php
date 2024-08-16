@@ -23,35 +23,9 @@
                         @endif
 
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            @if (Session::get('status') == 'success')
-                                <div class="col-12 grid-margin">
-                                    <div class="alert alert-custom-success " id="success-alert">
-                                        <button type="button"  data-bs-dismiss="alert"></button>
-                                        <strong style="color: green;">Success!</strong> {{ Session::get('msg') }}
-                                    </div>
-                                </div>
-                            @endif
-
-                            @if (Session::get('status') == 'error')
-                                <div class="col-12 grid-margin">
-                                    <div class="alert alert-custom-danger " id="error-alert">
-                                        <button type="button"  data-bs-dismiss="alert"></button>
-                                        <strong style="color: red;">Error!</strong> {!! session('msg') !!}
-                                    </div>
-                                </div>
-                            @endif
-
                             <div class="all-form-element-inner">
-                                @if ($errors->any())
-                                    <div class="alert alert-danger">
-                                        <ul>
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
-                                <form action="{{ route('update-part-item') }}" method="POST" enctype="multipart/form-data" id="editEmployeeForm" autocomplete="off">
+                               
+                                <form action="{{ route('update-part-item') }}" method="POST" enctype="multipart/form-data" id="regForm" autocomplete="off">
                                     @csrf
                                     <div class="form-group-inner">
                                         <input type="hidden" class="form-control" value="@if (old('id')) {{ old('id') }}@else{{ $editData->id }} @endif" id="id" name="id">
@@ -86,11 +60,35 @@
         </div>
     </div>
 </div>
-  <script src="{{asset('js/vendor/jquery-1.11.3.min.js')}}"></script>
-    <script src="{{asset('js/password-meter/pwstrength-bootstrap.min.js')}}"></script>
-    <script src="{{asset('js/password-meter/zxcvbn.js')}}"></script>
-    <script src="{{asset('js/password-meter/password-meter-active.js')}}"></script>
-  <!-- Include jQuery -->
-
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+    <script>
+        $(document).ready(function() {
+            // Custom validation rule to check if the input does not contain only spaces
+            $.validator.addMethod("spcenotallow", function(value, element) {
+                return this.optional(element) || value.trim().length > 0;
+            }, "Enter some valid text");
+        
+            // Initialize the form validation
+            $("#regForm").validate({
+                rules: {
+                    name: {
+                        required: true,
+                        spcenotallow: true,
+                    },
+                    // You can add more fields here as needed
+                },
+                messages: {
+                    name: {
+                        required: "Please enter the name.",
+                        spcenotallow: "Name cannot contain only spaces.",
+                    },
+                    // Custom error messages for other fields can go here
+                },
+            });
+        });
+        </script>
+        
 
 @endsection

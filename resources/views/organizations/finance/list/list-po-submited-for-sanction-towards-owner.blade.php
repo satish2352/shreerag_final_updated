@@ -100,7 +100,7 @@
                                                     <td>{{ ucwords($data->grn_no) }}</td>
                                                     <td>{{ ucwords($data->store_receipt_no) }}</td>
                                                     <td>{{ ucwords($data->title) }}</td>
-                                                    <td>{{ ucwords($data->descriptions) }}</td>
+                                                    <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
 
                                                     <td>

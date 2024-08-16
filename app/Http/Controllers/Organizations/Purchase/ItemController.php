@@ -10,6 +10,7 @@ use Validator;
 use Config;
 use Carbon;
 use App\Models\OrganizationModel;
+use Illuminate\Validation\Rule;
 class ItemController extends Controller
 { 
     public function __construct(){
@@ -37,14 +38,14 @@ class ItemController extends Controller
 
       public function store(Request $request){
          $rules = [
-                    'name' => 'required|string|max:255',
+                    'name' => 'required|max:255',
                     
                 ];
 
                 $messages = [
                     'name.required' => 'Please enter the department name.',
-                    'name.string' => 'The company name must be a valid string.',
-                    'name.max' => 'The company name must not exceed 255 characters.',
+                    // 'name.unique' => 'Part Name already exist.',
+                    'name.max' => 'The name must not exceed 255 characters.',
                 ];
   
           try {
@@ -84,16 +85,17 @@ class ItemController extends Controller
 
 
         public function update(Request $request){
+            $id = $request->edit_id;
             $rules = [
-                    'name' => 'required|string|max:255',
-                    
+                    // 'name' => ['required', 'max:255', Rule::unique('tbl_part_item', 'name')->ignore($id, 'id')],
                 ];
     
                      
             $messages = [
-                    'name.required' => 'Please enter the department name.',
-                    'name.string' => 'The company name must be a valid string.',
-                    'name.max' => 'The company name must not exceed 255 characters.',
+                    // 'name.required' => 'Please enter the department name.',
+                    // 'name.string' => 'The company name must be a valid string.',
+                    // 'name.max' => 'The company name must not exceed 255 characters.',
+                    // 'name.unique' => 'Part Name Already Exist.',
                 ];
     
             try {

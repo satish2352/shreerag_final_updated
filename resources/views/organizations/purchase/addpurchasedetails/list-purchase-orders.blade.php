@@ -117,7 +117,7 @@
 
                   </thead>
                   <tbody>
-                    
+                   
                     @foreach($getOutput as $data)
                     <tr>
                       
@@ -148,14 +148,14 @@
                   </tbody>
                 </table>
               </div>
+              @if(!$getOutput->isEmpty())
               <form action="{{ route('submit-purchase-order-to-owner-for-review') }}" method="POST">
                 @csrf
-         
                 <input type="hidden" name="requistition_id" id="requistition_id" value="{{$requistition_id}}">
                 <button class="btn btn-sm btn-primary login-submit-cs mt-0"
                 type="submit">Send to the owner for approval</button>
-
                 </form>
+                @endif
             </div>
           </div>
         </div>
