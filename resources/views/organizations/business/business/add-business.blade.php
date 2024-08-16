@@ -66,7 +66,7 @@
                                                 <div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="customer_po_number">Customer PO Number :  <span class="text-danger">*</span></label>
-                                                        <input type="text" class="form-control" id="customer_po_number" value="{{ old('customer_po_number') }}"
+                                                        <input type="text" class="form-control" id="customer_po_number" value="{{old('customer_po_number') }}"
                                                             name="customer_po_number" placeholder="Enter Customer PO Number">
                                                             @if ($errors->has('customer_po_number'))
                                                             <span class="red-text"><?php echo $errors->first('customer_po_number', ':message'); ?></span>
@@ -107,7 +107,7 @@
                                                                                 <input type="hidden" id="i_id" class="form-control" style="min-width:50px" readonly value="0">
                                                                             </td>
                                                                             <td>
-                                                                                <input class="form-control part-no" name="addmore[0][product_name]" type="text" style="min-width:150px">
+                                                                                <input class="form-control product_name" name="addmore[0][product_name]" type="text" style="min-width:150px">
                                                                             </td>
                                         
                                                                             <td>
@@ -174,8 +174,7 @@
                                                 </div>
                                                 <div class="login-btn-inner">
                                                     <div class="row">
-                                                        <div class="col-lg-5"></div>
-                                                        <div class="col-lg-7">
+                                                        <div class="col-lg-12" style="display: flex; justify-content: center;">
                                                             <div class="login-horizental cancel-wp pull-left">
                                                                 <a href="{{ route('list-business') }}" class="btn btn-white"
                                                                     style="margin-bottom:50px">Cancel</a>
@@ -197,18 +196,198 @@
         </div>
     </div>
     </div>
-    <script src="{{ asset('js/password-meter/pwstrength-bootstrap.min.js') }}"></script>
-    <script src="{{ asset('js/password-meter/zxcvbn.js') }}"></script>
-    <script src="{{ asset('js/password-meter/password-meter-active.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+    <script>
+        $(document).ready(function() {
+            // Initialize jQuery Validation
+            var validator = $("#addEmployeeForm").validate({
+                ignore: [], // Validate hidden inputs as well
+                rules: {
+                    title: {
+                        required: true,
+                        maxlength: 50, // Maximum length of 50 characters
+                        // alphanumeric: true // Alphanumeric validation
+                    },
+                    customer_po_number: {
+                        required: true,
+                        minlength: 10,
+                        maxlength: 16,
+                        digits: true // Digits only
+                    },
+                    po_validity: {
+                        required: true,
+                        date: true // Date validation
+                    },
+                    remarks: {
+                        required: true,
+                        maxlength: 255 // Maximum length of 255 characters
+                    },
+                    'addmore[0][product_name]': {
+                        required: true,
+                        maxlength: 100, // Maximum length of 100 characters
+                        // alphanumeric: true // Alphanumeric validation
+                    },
+                    'addmore[0][description]': {
+                        required: true,
+                        maxlength: 255 // Maximum length of 255 characters
+                    },
+                    'addmore[0][quantity]': {
+                        required: true,
+                        digits: true, // Digits only
+                        min: 1 // Minimum value 1
+                    },
+                    'addmore[0][rate]': {
+                        required: true,
+                        number: true, // Number validation
+                        min: 0.01 // Minimum value 0.01
+                    }
+                },
+                messages: {
+                    title: {
+                        required: "Please enter Customer Name.",
+                        maxlength: "Customer Name must be at most 50 characters long.",
+                        // alphanumeric: "Customer Name can only contain letters and numbers."
+                    },
+                    customer_po_number: {
+                        required: "Please enter PO number.",
+                        minlength: "PO number must be at least 10 characters long.",
+                        maxlength: "PO number must be at most 16 characters long.",
+                        digits: "PO number can only contain digits."
+                    },
+                    po_validity: {
+                        required: "Please enter PO validity.",
+                        date: "Please enter a valid date."
+                    },
+                    remarks: {
+                        required: "Please enter remarks.",
+                        maxlength: "Remarks must be at most 255 characters long."
+                    },
+                    'addmore[0][product_name]': {
+                        required: "Please enter the Product Name.",
+                        maxlength: "Product Name must be at most 100 characters long.",
+                        // alphanumeric: "Product Name can only contain letters and numbers."
+                    },
+                    'addmore[0][description]': {
+                        required: "Please enter the Description.",
+                        maxlength: "Description must be at most 255 characters long."
+                    },
+                    'addmore[0][quantity]': {
+                        required: "Please enter the Quantity.",
+                        digits: "Please enter only digits for Quantity.",
+                        min: "Quantity must be at least 1."
+                    },
+                    'addmore[0][rate]': {
+                        required: "Please enter the Rate.",
+                        number: "Please enter a valid number for Rate.",
+                        min: "Rate must be a positive number."
+                    }
+                },
+                errorPlacement: function(error, element) {
+                    error.addClass('text-danger'); // Add Bootstrap text-danger class for styling
+                    if (element.closest('.form-group').length) {
+                        element.closest('.form-group').append(error);
+                    } else if (element.closest('td').length) {
+                        element.closest('td').append(error);
+                    } else {
+                        error.insertAfter(element);
+                    }
+                }
+            });
     
+            // Attach validation to the default row
+            initializeValidation($("#purchase_order_table tbody tr"));
     
-      <script>
+            // Function to attach validation rules to dynamic fields
+            function initializeValidation(row) {
+                row.find('.product_name').rules("add", {
+                    required: true,
+                    maxlength: 100, // Maximum length of 100 characters
+                    // alphanumeric: true, // Alphanumeric validation
+                    messages: {
+                        required: "Please enter the Product Name.",
+                        maxlength: "Product Name must be at most 100 characters long.",
+                        // alphanumeric: "Product Name can only contain letters and numbers."
+                    }
+                });
+                row.find('.description').rules("add", {
+                    required: true,
+                    maxlength: 255, // Maximum length of 255 characters
+                    messages: {
+                        required: "Please enter the Description.",
+                        maxlength: "Description must be at most 255 characters long."
+                    }
+                });
+                row.find('.quantity').rules("add", {
+                    required: true,
+                    digits: true, // Digits only
+                    min: 1, // Minimum value 1
+                    messages: {
+                        required: "Please enter the Quantity.",
+                        digits: "Please enter only digits for Quantity.",
+                        min: "Quantity must be at least 1."
+                    }
+                });
+                row.find('.rate').rules("add", {
+                    required: true,
+                    number: true, // Number validation
+                    min: 0.01, // Minimum value 0.01
+                    messages: {
+                        required: "Please enter the Rate.",
+                        number: "Please enter a valid number for Rate.",
+                        min: "Rate must be a positive number."
+                    }
+                });
+            }
+    
+            // Add more rows when the "Add More" button is clicked
+            $("#add_more_btn").click(function() {
+                var i_count = $('#i_id').val();
+                var i = parseInt(i_count) + 1;
+                $('#i_id').val(i);
+    
+                var newRow = `
+                    <tr>
+                        <td>
+                            <input type="text" name="id" class="form-control" style="min-width:50px" readonly value="${i}">
+                        </td>
+                        <td>
+                            <input class="form-control product_name" name="addmore[${i}][product_name]" type="text" style="min-width:150px">
+                        </td>
+                        <td>
+                            <input class="form-control description" name="addmore[${i}][description]" type="text" style="min-width:150px">
+                        </td>
+                        <td>
+                            <input class="form-control quantity" name="addmore[${i}][quantity]" type="text">
+                        </td>
+                        <td>
+                            <input class="form-control rate" name="addmore[${i}][rate]" type="text">
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete" data-repeater-delete>
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+    
+                var row = $(newRow).appendTo("#purchase_order_table tbody");
+    
+                // Attach validation to the new row
+                initializeValidation(row);
+                validator.resetForm(); // Reset validation state after adding a new row
+            });
+    
+            // Remove a row when the "Remove" button is clicked
+            $(document).on("click", ".remove-row", function() {
+                $(this).closest("tr").remove();
+                validator.resetForm(); // Reset validation state after removing a row
+            });
+        });
+    </script>
+    
+      {{-- <script>
         $(document).ready(function() {
             // Initialize jQuery Validation
             var validator = $("#purchase_order_table").validate({
@@ -252,10 +431,10 @@
                     },
                 },
                 errorPlacement: function(error, element) {
-                    if (element.hasClass("part-no") || 
-                        element.hasClass("due-date") || 
-                        element.hasClass("quantity") || element.hasClass("rate") ||
-                        element.hasClass("total_amount")) {
+                    if (element.hasClass("product_name") || 
+                        element.hasClass("quantity") || 
+                        element.hasClass("rate") || 
+                        element.hasClass("amount")) {
                         error.insertAfter(element.closest('td'));
                     } else {
                         error.insertAfter(element);
@@ -265,7 +444,7 @@
     
             // Function to initialize validation for dynamically added fields
             function initializeValidation(context) {
-                $(context).find('.part-no').each(function() {
+                $(context).find('.product_name').each(function() {
                     $(this).rules("add", {
                         required: true,
                         messages: {
@@ -301,7 +480,7 @@
                         }
                     });
                 });
-                $(context).find('.total_amount').each(function() {
+                $(context).find('.amount').each(function() {
                     $(this).rules("add", {
                         required: true,
                         messages: {
@@ -325,15 +504,16 @@
                         <td>
                            <input class="form-control product_name" name="addmore[${i}][product_name]" type="text" style="min-width:150px">
                         </td>
-                        <td>
-                            <input class="form-control description" name="addmore[${i}][description]" type="text" style="min-width:150px">
-                        </td>
+                       
                         <td>
                             <input class="form-control quantity" name="addmore[${i}][quantity]" type="text">
                         </td>
                         <td>
                             <input class="form-control rate" name="addmore[${i}][rate]" type="text">
                         </td>
+                           <td>
+                        <input class="form-control amount" name="addmore[${i}][amount]" readonly style="width:120px" type="text">
+                       </td>
                         <td>
                             <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete" data-repeater-delete>
                                 <i class="fa fa-trash"></i>
@@ -371,29 +551,29 @@
             }, "The date must be today or later.");
     
             // Initialize date pickers with min date set to today
-            function setMinDateForDueDates() {
-                var today = new Date().toISOString().split('T')[0];
-                $('.due-date').attr('min', today);
-            }
-            setMinDateForDueDates();
+            // function setMinDateForDueDates() {
+            //     var today = new Date().toISOString().split('T')[0];
+            //     $('.due-date').attr('min', today);
+            // }
+            // setMinDateForDueDates();
     
-            $(document).on('focus', '.due-date', function() {
-                setMinDateForDueDates();
-            });
+            // $(document).on('focus', '.due-date', function() {
+            //     setMinDateForDueDates();
+            // });
     
             $(document).on('keyup', '.quantity, .rate', function(e) {
                 var currentRow = $(this).closest("tr");
                 var current_row_quantity = currentRow.find('.quantity').val();
                 var current_row_rate = currentRow.find('.rate').val();
                 var new_total_price = current_row_quantity * current_row_rate;
-                currentRow.find('.total_amount').val(new_total_price);
+                currentRow.find('.amount').val(new_total_price);
             });
         });
-    </script>
+    </script> --}}
    
    
    
-   <script>
+   {{-- <script>
         jQuery.noConflict();
         jQuery(document).ready(function($) {
             // Function to set minimum date for the po_validity field
@@ -412,9 +592,7 @@
     
             $("#addEmployeeForm").validate({
                 rules: {
-                    product_name: {
-                        required: true,
-                    },
+                   
                     title: {
                         required: true,
                     },
@@ -424,14 +602,7 @@
                         minlength: 10,
                         maxlength: 16
                     },
-                    quantity: {
-                        required: true,
-                        number: true,
-                    },
-                    rate: {
-                        required: true,
-                        number: true,
-                    },
+                  
                     po_validity: {
                         required: true,
                     },
@@ -442,15 +613,15 @@
                     //     required: true,
                     //     number: true,
                     // },
-                    'addmore[][product_name]': {
+                    'input[name^="addmore["][name$="[product_name]"]': {
                             required: true,
                         },
-                        'addmore[][description]': {
-                            required: true,
-                        },
-                        'addmore[][due_date]': {
-                            required: true,
-                        },
+                        // 'addmore[][description]': {
+                        //     required: true,
+                        // },
+                        // 'addmore[][due_date]': {
+                        //     required: true,
+                        // },
                         'addmore[][quantity]': {
                             required: true,
                         },
@@ -463,9 +634,7 @@
                    
                 },
                 messages: {
-                    product_name: {
-                        required: "Please enter Product Name.",
-                    },
+                   
                     title: {
                         required: "Please enter Customer Name.",
                     },
@@ -475,14 +644,6 @@
                         minlength: "PO number must be at least 10 characters long.",
                         maxlength: "PO number must be at most 16 characters long."
                     }, 
-                    quantity: {
-                        required: "Please enter quantity.",
-                        number: "Please enter a valid number.",
-                    },
-                    rate: {
-                        required: "Please enter rate.",
-                        number: "Please enter a valid number.",
-                    },
                     po_validity: {
                         required: "Please enter po validity.",
                     },
@@ -490,15 +651,15 @@
                     //     required: "Please enter hsn number.",
                     //     number: "Please enter a valid number.",
                     // },
-                    'addmore[][product_name]': {
+                    'input[name^="addmore["][name$="[product_name]"]': {
                             required: "Please Enter the Part Number",
                         },
-                        'addmore[][description]': {
-                            required: "Please Enter the Description",
-                        },
-                        'addmore[][due_date]': {
-                            required: "Please Enter the Due Date",
-                        },
+                        // 'addmore[][description]': {
+                        //     required: "Please Enter the Description",
+                        // },
+                        // 'addmore[][due_date]': {
+                        //     required: "Please Enter the Due Date",
+                        // },
                         'addmore[][quantity]': {
                             required: "Please Enter the Quantity",
                         },
@@ -533,5 +694,5 @@
             });
         });
     </script>
-    
+     --}}
 @endsection

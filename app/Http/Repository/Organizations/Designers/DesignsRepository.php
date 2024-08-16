@@ -31,7 +31,7 @@ class DesignsRepository  {
                   'businesses.id',
                   'businesses.customer_po_number',
                 //   'businesses.product_name',
-                //   'businesses.title',
+                  'businesses.title',
                 //   'businesses.descriptions',
                 //   'businesses.quantity',
                 //   'businesses.descriptions',
