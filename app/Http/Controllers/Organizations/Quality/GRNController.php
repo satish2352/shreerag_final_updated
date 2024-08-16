@@ -109,10 +109,10 @@ class GRNController extends Controller
             // $array_to_be_check_new = ['0'];
 
             $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
-                $join->on('business_application_processes.business_id', '=', 'production.business_id');
+                $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
             })
                 ->leftJoin('designs', function ($join) {
-                    $join->on('business_application_processes.business_id', '=', 'designs.business_id');
+                    $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
                 })
                 ->leftJoin('businesses', function ($join) {
                     $join->on('business_application_processes.business_id', '=', 'businesses.id');
@@ -121,14 +121,15 @@ class GRNController extends Controller
                     $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
                 })
                 ->leftJoin('design_revision_for_prod', function ($join) {
-                    $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
+                    $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
                 })
                 ->leftJoin('purchase_orders', function($join) {
-                    $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
+                    $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
                   })
                 ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
                 // ->whereIn('purchase_orders.store_receipt_no', $array_to_be_check_new)
                 ->where('businesses.is_active', true)
+
                 ->distinct('businesses.id')
                 ->select(
                     'businesses.id',

@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('tbl_logistics', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('business_details_id');
             $table->unsignedBigInteger('business_application_processes_id');
             $table->string('truck_no')->nullable();
             $table->string('remark')->nullable();

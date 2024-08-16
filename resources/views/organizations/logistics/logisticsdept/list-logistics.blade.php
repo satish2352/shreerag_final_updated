@@ -85,7 +85,7 @@
                                                 <th data-field="customer_po_number" data-editable="true">PO Number</th>
                                                 <th data-field="product_name" data-editable="true">Product Name</th>
                                                 <th data-field="quantity" data-editable="true">Quantity</th>
-                                                <th data-field="remark" data-editable="true">Remark</th>
+                                                {{-- <th data-field="remark" data-editable="true">Remark</th> --}}
                                                 <th data-field="title" data-editable="true">customer Name</th>
                                                 <th data-field="" data-editable="false">Action</th>
                                             </tr>
@@ -99,10 +99,10 @@
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
-                                                    <td>{{ ucwords($data->remarks) }}</td>
+                                                    {{-- <td>{{ ucwords($data->remarks) }}</td> --}}
                                                     <td>{{ ucwords($data->title) }}</td>
                                                 <td>
-                                                    <a href="{{ route('send-to-fianance', base64_encode($data->productionId)) }}"
+                                                    <a href="{{ route('send-to-fianance', base64_encode($data->id)) }}"
                                                         onclick="return confirmAccept('{{ route('send-to-fianance', base64_encode($data->id)) }}')"
                                                         class="pd-setting-ed"
                                                         data-toggle="tooltip"
@@ -110,13 +110,6 @@
                                                         <button><i class="fa fa-check" aria-hidden="true"></i> Send to Fianance </button>
                                                     </a>
                                                 </td>
-
-                                                   
-
-                                               
-
-
-
                                                 </tr>
                                             @endforeach
                                         </tbody>

@@ -63,6 +63,15 @@
                                                         value=" @if (old('customer_po_number')) {{ old('customer_po_number') }}@else{{ $editData->customer_po_number }} @endif" readonly>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="product_name">product Name :  <span class="text-danger">*</span></label> 
+                                                    <input type="text" class="form-control" id="product_name"
+                                                     value=" @if (old('product_name')) {{ old('product_name') }}@else{{ $editData->product_name }} @endif"
+                                                        name="product_name" placeholder="Enter Product Name" readonly>
+                                                        @if ($errors->has('product_name'))
+                                                        <span class="red-text"><?php echo $errors->first('product_name', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="quantity">Quantity :  <span class="text-danger">*</span></label> 
                                                     <input type="text" class="form-control" id="quantity"
                                                      value=" @if (old('quantity')) {{ old('quantity') }}@else{{ $editData->quantity }} @endif"

@@ -19,7 +19,7 @@
                 <div class="sparkline12-hd">
                     <div class="main-sparkline12-hd">
                         <center>
-                            <h1>Add Dispatch Data</h1>
+                            <h1>Add Logistics Data</h1>
                         </center>
                     </div>
                 </div>
@@ -45,19 +45,55 @@
                                         </div>
                                     </div>
                                 @endif
+                                
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="all-form-element-inner">
-                                        <form action="{{ route('store-dispatch', 
+                                        <form action="{{ route('store-dispatch', $editData->id
                                        ) }}"
                                             method="POST" id="editDesignsForm" enctype="multipart/form-data">
                                             @csrf
-                                           
+                                            <input type="hidden" name="business_details_id" id=""
+                                            class="form-control" value="{{ $editData->business_details_id }}"
+                                            placeholder="">
                                             <div class="row">
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="customer_po_number">PO  Number :  <span class="text-danger">*</span></label>
                                                     <input class="form-control" name="customer_po_number" id="customer_po_number"
                                                         placeholder="Enter the customer po number"
                                                         value=" @if (old('customer_po_number')) {{ old('customer_po_number') }}@else{{ $editData->customer_po_number }} @endif" readonly>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="product_name">product Name :  <span class="text-danger">*</span></label> 
+                                                    <input type="text" class="form-control" id="product_name"
+                                                     value=" @if (old('product_name')) {{ old('product_name') }}@else{{ $editData->product_name }} @endif"
+                                                        name="product_name" placeholder="Enter Product Name" readonly>
+                                                        @if ($errors->has('product_name'))
+                                                        <span class="red-text"><?php echo $errors->first('product_name', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="quantity">Quantity :  <span class="text-danger">*</span></label> 
+                                                    <input type="text" class="form-control" id="quantity"
+                                                     value=" @if (old('quantity')) {{ old('quantity') }}@else{{ $editData->quantity }} @endif"
+                                                        name="quantity" placeholder="Enter Product Name" readonly>
+                                                        @if ($errors->has('quantity'))
+                                                        <span class="red-text"><?php echo $errors->first('quantity', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="title">Vendor Name :  <span class="text-danger">*</span></label> 
+                                                    <input type="text" class="form-control" id="title"
+                                                     value=" @if (old('title')) {{ old('title') }}@else{{ $editData->title }} @endif"
+                                                        name="title" placeholder="Enter Vendor Name" readonly>
+                                                        @if ($errors->has('title'))
+                                                        <span class="red-text"><?php echo $errors->first('title', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="truck_no">Truck Number:  <span class="text-danger">*</span></label>
+                                                    <input class="form-control" name="truck_no" id="truck_no"
+                                                        placeholder="Enter the customer po number"
+                                                        value=" @if (old('truck_no')) {{ old('truck_no') }}@else{{ $editData->truck_no }} @endif" readonly>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="outdoor_no">Outdoor No. :  <span class="text-danger">*</span></label> 
@@ -81,9 +117,9 @@
                                                     <div class="sparkline12-graph">
                                                         <div id="pwd-container1">
                                                             <div class="form-group">
-                                                                <label for="remarks">Remark</label> (optional) 
-                                                                <textarea class="form-control" rows="3" type="text" class="form-control" id="remarks" name="remarks"
-                                                                    placeholder="Enter Remark">{{ old('remarks') }}</textarea>
+                                                                <label for="remark">Remark</label> (optional) 
+                                                                <textarea class="form-control" rows="3" type="text" class="form-control" id="remark" name="remark"
+                                                                    placeholder="Enter Remark">{{ old('remark') }}</textarea>
                                                                    
                                                             </div>
                                                             <div class="form-group">
@@ -92,6 +128,19 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                               
+                                                {{-- <div class="col-lg-6 col-md-6 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="vendor_id">Vendor Company Name <span class="text-danger">*</span></label>
+                                                            <select class="form-control mb-2" name="vendor_id" id="vendor_id">
+                                                            <option value="" default>Vendor Company Name</option>
+                                                            @foreach ($dataOutputVendor as $data)
+                                                                    <option value="{{ $data['id'] }}" >
+                                                                        {{ $data['vendor_company_name'] }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div> --}}
                                             </div>
 
                                             <div class="container-fluid">

@@ -22,32 +22,74 @@ class DispatchController extends Controller
         $this->business_service = new BusinessServices();
     }
   
+    // public function addDispatch($business_id)
+    // {
+    //     try {
+            
+    //         // $purchase_order_data = BusinessApplicationProcesses::where('business_details_id', '=', $business_id)->first();
+    //         // $edit_data_id = $business_id;
+    //         // $editData = $this->business_service->getById($edit_data_id);
+
+    //         $purchase_order_data = BusinessApplicationProcesses::where('business_details_id', $business_id)
+    //         ->leftJoin('businesses', function ($join) {
+    //             $join->on('business_application_processes.business_id', '=', 'businesses.id');
+    //         })
+            
+    //         ->leftJoin('businesses_details', function($join) {
+    //             $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+    //         })
+    //         ->leftJoin('tbl_logistics', function($join) {
+    //             $join->on('business_application_processes.business_details_id', '=', 'tbl_logistics.business_details_id');
+    //           })
+    //         ->first();
+          
+    //         $editData = $purchase_order_data;
+
+    //         dd($editData);
+    //         die();
+    //         return view('organizations.dispatch.dispatchdept.add-dispatch', compact('editData')
+    //     );
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
     public function addDispatch($business_id)
     {
         try {
+            $purchase_order_data = BusinessApplicationProcesses::where('business_application_processes.business_details_id', $business_id)
+                ->leftJoin('businesses', function ($join) {
+                    $join->on('business_application_processes.business_id', '=', 'businesses.id');
+                })
+                ->leftJoin('businesses_details', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+                })
+                ->leftJoin('tbl_logistics', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'tbl_logistics.business_details_id');
+                })
+                ->first();
             
-            $purchase_order_data = BusinessApplicationProcesses::where('business_id', '=', $business_id)->first();
-            $edit_data_id = $business_id;
-            $editData = $this->business_service->getById($edit_data_id);
-            return view('organizations.dispatch.dispatchdept.add-dispatch', compact('editData')
-        );
+            $editData = $purchase_order_data;
+    
+            // dd($editData);
+            // die();
+            return view('organizations.dispatch.dispatchdept.add-dispatch', compact('editData'));
         } catch (\Exception $e) {
             return $e;
         }
     }
-
+    
     public function storeDispatch(Request $request)
     {
         $rules = [
-            'outdoor_no' => 'required',
-            'gate_entry' => 'required',
-            'remark' => 'required',
+            // 'outdoor_no' => 'required',
+            // 'gate_entry' => 'required',
+            // 'remark' => 'required',
         ];
 
         $messages = [
-            'outdoor_no.required' => 'The outdoor number is required.',
-            'gate_entry.required' => 'The gate entry is required.',
-            'remark.required' => 'The remark is required.',
+            // 'outdoor_no.required' => 'The outdoor number is required.',
+            // 'gate_entry.required' => 'The gate entry is required.',
+            // 'remark.required' => 'The remark is required.',
         ];
 
         try {
@@ -59,6 +101,8 @@ class DispatchController extends Controller
                     ->withErrors($validation);
             } else {
                 $add_record = $this->service->storeDispatch($request);
+
+
                 if ($add_record) {
                     $msg = $add_record['msg'];
                     $status = $add_record['status'];

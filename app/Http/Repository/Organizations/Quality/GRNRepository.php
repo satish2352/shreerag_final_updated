@@ -112,6 +112,10 @@ class GRNRepository
         $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
 
         $data_output = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
+        ->leftJoin('businesses_details', function($join) {
+            $join->on('purchase_orders.business_details_id', '=', 'businesses_details.id');
+        })
+        ->distinct('businesses_details.id')  
         ->select(
             'purchase_orders.id',
             'purchase_orders.purchase_orders_id',         

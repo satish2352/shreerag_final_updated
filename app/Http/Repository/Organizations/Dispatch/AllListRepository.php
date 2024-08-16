@@ -28,32 +28,61 @@ public function getAllReceivedFromFianance(){
       ->leftJoin('businesses', function($join) {
         $join->on('business_application_processes.business_id', '=', 'businesses.id');
       })
+      ->leftJoin('businesses_details', function($join) {
+        $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+    })
       ->leftJoin('design_revision_for_prod', function($join) {
         $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
       })
       ->leftJoin('purchase_orders', function($join) {
         $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
       })
+      ->leftJoin('tbl_logistics', function($join) {
+        $join->on('business_application_processes.business_details_id', '=', 'tbl_logistics.business_details_id');
+      })
       ->whereIn('business_application_processes.dispatch_status_id',$array_to_be_check)
       // ->whereIn('business_application_processes.logistics_status_id',$array_to_be_check_new)
       ->where('businesses.is_active',true)
-      ->distinct('businesses_details.id')
-        ->select(
-            'businesses.id',
-            'businesses_details.id',
-            'businesses.title',
-            'businesses.customer_po_number',
-            'businesses_details.product_name',
-            'businesses.title',
-            'businesses_details.quantity',
-            'businesses.remarks',
-            'businesses.is_active',
-            'production.business_id',
-            'production.id as productionId',
-            'business_application_processes.store_material_sent_date',
-            'tbl_logistics.truck_no',
-            // 'tbl_logistics.vendor_id',
-        );
+      // ->distinct('businesses_details.id')
+      ->groupBy(
+        'businesses.customer_po_number',
+        'businesses.title',
+        'businesses_details.id',
+        'businesses_details.product_name',
+        'businesses_details.quantity',
+        'businesses_details.description',
+        'business_application_processes.id',
+        'tbl_logistics.truck_no',
+    )
+      ->select(
+        'businesses.customer_po_number',
+        'businesses.title',
+        'businesses_details.id',
+        'businesses_details.product_name',
+        'businesses_details.description',
+        'businesses_details.quantity',
+          // 'production.id as productionId',
+          // 'business_application_processes.store_material_sent_date',
+          'tbl_logistics.truck_no',
+          // 'tbl_logistics.vendor_id',
+      )
+      ->get();
+        // ->select(
+        //     'businesses.id',
+        //     'businesses_details.id',
+        //     'businesses.title',
+        //     'businesses.customer_po_number',
+        //     'businesses_details.product_name',
+        //     'businesses.title',
+        //     'businesses_details.quantity',
+        //     'businesses.remarks',
+        //     'businesses.is_active',
+        //     'production.business_id',
+        //     'production.id as productionId',
+        //     'business_application_processes.store_material_sent_date',
+        //     'tbl_logistics.truck_no',
+        //     // 'tbl_logistics.vendor_id',
+        // );
       
     return $data_output;
   } catch (\Exception $e) {
@@ -78,7 +107,7 @@ public function getAllDispatch(){
         $join->on('business_application_processes.business_id', '=', 'businesses.id');
       })
       ->leftJoin('businesses_details', function($join) {
-        $join->on('production.business_details_id', '=', 'businesses_details.id');
+        $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
     })
       ->leftJoin('design_revision_for_prod', function($join) {
         $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
@@ -89,29 +118,49 @@ public function getAllDispatch(){
       ->leftJoin('tbl_logistics', function($join) {
         $join->on('business_application_processes.business_details_id', '=', 'tbl_logistics.business_details_id');
       })
+      ->leftJoin('tbl_dispatch', function($join) {
+        $join->on('business_application_processes.id', '=', 'tbl_dispatch.business_application_processes_id');
+      })
       ->whereIn('business_application_processes.dispatch_status_id',$array_to_be_check)
       // ->whereIn('purchase_orders.store_receipt_no',$array_to_be_check_new)
       ->where('businesses.is_active',true)
       ->distinct('businesses_details.id')
+      ->groupBy(
+        'businesses_details.id',
+        // 'businesses.id',
+        'businesses.customer_po_number',
+        'businesses.title',
+        'businesses_details.product_name',
+        'businesses_details.quantity',
+        'businesses_details.description',
+        // 'business_application_processes.id',
+        // 'tbl_logistics.business_details_id',
+        'tbl_logistics.truck_no',
+        'tbl_dispatch.outdoor_no',
+        'tbl_dispatch.gate_entry',
+        'tbl_dispatch.remark',
+    )
       ->select(
-          'businesses.id',
-          'businesses_details.id',
-          'businesses.title',
-          'businesses.customer_po_number',
-          'businesses_details.product_name',
-          'businesses.title',
-          'businesses_details.quantity',
-          'businesses.remarks',
-          'businesses.is_active',
-          'production.business_id',
-          'production.id as productionId',
-          'business_application_processes.store_material_sent_date',
+        'businesses_details.id',
+        // 'businesses.id',
+        'businesses.customer_po_number',
+        'businesses.title',
+        'businesses_details.product_name',
+        'businesses_details.description',
+        'businesses_details.quantity',
+          // 'production.id as productionId',
+          // 'business_application_processes.store_material_sent_date',
+          // 'tbl_logistics.business_details_id',
           'tbl_logistics.truck_no',
           // 'tbl_logistics.vendor_id',
-      );
+          'tbl_dispatch.outdoor_no',
+          'tbl_dispatch.gate_entry',
+          'tbl_dispatch.remark',
+      )
+      ->get();
      
-     
-   
+  //  dd($data_output);
+  //  die();
     return $data_output;
   } catch (\Exception $e) {
       return $e;

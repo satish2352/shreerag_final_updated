@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('tbl_dispatch', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('business_details_id');
             $table->unsignedBigInteger('business_application_processes_id');
             $table->unsignedBigInteger('logistics_id');
             $table->string('outdoor_no')->nullable();

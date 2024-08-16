@@ -83,10 +83,13 @@
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
                                                 <th data-field="customer_po_number" data-editable="true">PO Number</th>
+                                                <th data-field="title" data-editable="true">customer Name</th>
                                                 <th data-field="product_name" data-editable="true">Product Name</th>
                                                 <th data-field="quantity" data-editable="true">Quantity</th>
+                                                <th data-field="outdoor_no" data-editable="true">Outdoor Number</th>
+                                                <th data-field="gate_entry" data-editable="true">Gate Entry</th>
                                                 <th data-field="remark" data-editable="true">Remark</th>
-                                                <th data-field="title" data-editable="true">customer Name</th>
+                                               
                                                 
                                             </tr>
 
@@ -96,11 +99,13 @@
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
+                                                    <td>{{ ucwords($data->title) }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
-                                                    <td>{{ ucwords($data->remarks) }}</td>
-                                                    <td>{{ ucwords($data->title) }}</td>
-                                               
+                                                    <td>{{ ucwords($data->remark) }}</td>                                                   
+                                                    <td>{{ ucwords($data->outdoor_no) }}</td>
+                                                    <td>{{ ucwords($data->gate_entry) }}</td>
+                                                   
 
                                                    
 

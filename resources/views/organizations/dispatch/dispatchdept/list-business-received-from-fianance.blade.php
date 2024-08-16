@@ -91,6 +91,7 @@
                                             </tr>
 
                                         </thead>
+                                       
                                         <tbody>
                                             @foreach ($data_output as $data)
                                                 <tr>
@@ -98,12 +99,12 @@
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
-                                                    <td>{{ ucwords($data->remarks) }}</td>
+                                                    <td>{{ ucwords($data->remark) }}</td>
                                                     <td>{{ ucwords($data->title) }}</td>
                                                
                                                 <td>
                                                     <div style="display: flex; align-items: center;">
-                                                        <a href="{{route('add-dispatch', $data->business_id)}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+                                                        <a href="{{route('add-dispatch', $data->id)}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
                                                         {{-- <a href="{{route('delete-products')}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a> --}}
                                                     </div>
                                                 </td>

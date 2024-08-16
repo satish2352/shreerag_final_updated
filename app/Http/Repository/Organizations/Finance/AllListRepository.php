@@ -317,23 +317,46 @@ class AllListRepository
         ->whereIn('business_application_processes.logistics_status_id',$array_to_be_check)
         // ->whereIn('purchase_orders.store_receipt_no',$array_to_be_check_new)
         ->where('businesses.is_active',true)
-        ->distinct('businesses_details.id')
+        // ->distinct('businesses_details.id')
+        ->groupBy(
+          'businesses.customer_po_number',
+          'businesses.title',
+          'businesses_details.id',
+          'businesses_details.product_name',
+          'businesses_details.quantity',
+          'businesses_details.description',
+          'business_application_processes.id',
+          'tbl_logistics.truck_no',
+      )
         ->select(
-            'businesses.id',
-            'businesses_details.id',
-            'businesses.title',
-            'businesses.customer_po_number',
-            'businesses_details.product_name',
-            'businesses.title',
-            'businesses_details.quantity',
-            'businesses.remarks',
-            'businesses.is_active',
-            'production.business_id',
-            'production.id as productionId',
-            'business_application_processes.store_material_sent_date',
+          'businesses.customer_po_number',
+          'businesses.title',
+          'businesses_details.id',
+          'businesses_details.product_name',
+          'businesses_details.description',
+          'businesses_details.quantity',
+            // 'production.id as productionId',
+            // 'business_application_processes.store_material_sent_date',
             'tbl_logistics.truck_no',
             // 'tbl_logistics.vendor_id',
-        );
+        )
+        ->get();
+        // ->select(
+        //     'businesses.id',
+        //     'businesses_details.id',
+        //     'businesses.title',
+        //     'businesses.customer_po_number',
+        //     'businesses_details.product_name',
+        //     'businesses.title',
+        //     'businesses_details.quantity',
+        //     'businesses.remarks',
+        //     'businesses.is_active',
+        //     'production.business_id',
+        //     'production.id as productionId',
+        //     'business_application_processes.store_material_sent_date',
+        //     'tbl_logistics.truck_no',
+        //     // 'tbl_logistics.vendor_id',
+        // );
        
      
       return $data_output;
