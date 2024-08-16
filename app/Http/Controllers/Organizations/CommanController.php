@@ -104,7 +104,8 @@ class CommanController
                     'vendors.vendor_address', 
                     'vendors.gst_no', 
                     'vendors.quote_no', 
-                    'purchase_orders.is_active'
+                    'purchase_orders.is_active',
+                      'purchase_orders.created_at'
                 )
                 ->where('purchase_orders.purchase_orders_id', $purchase_order_id)
                 ->first();
