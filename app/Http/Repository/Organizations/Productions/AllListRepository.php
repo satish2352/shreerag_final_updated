@@ -256,6 +256,7 @@ public function getAllNewRequirementBusinessWise($business_id) {
           ->where('businesses_details.is_active', true)
           ->distinct('businesses_details.id')
           ->select(
+            'production.business_details_id',
               'businesses_details.product_name',
               'businesses_details.description',
               'businesses_details.quantity',
