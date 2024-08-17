@@ -673,7 +673,7 @@
                                 <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
                                     <div class="header-right-info">
                                         <ul class="nav navbar-nav mai-top-nav header-right-menu">
-                                            <li class="nav-item dropdown">
+                                            {{-- <li class="nav-item dropdown">
                                                 <a href="#" data-toggle="dropdown" role="button"
                                                     aria-expanded="false" class="nav-link dropdown-toggle"><i
                                                         class="fa fa-envelope-o adminpro-chat-pro"
@@ -703,29 +703,26 @@
                                                         <a href="#">View All Messages</a>
                                                     </div>
                                                 </div>
-                                            </li>
+                                            </li> --}}
                                             <li class="nav-item">
                                                 <a href="#" data-toggle="dropdown" role="button"
-                                                    aria-expanded="false" class="nav-link dropdown-toggle"><i
-                                                        class="fa fa-bell-o" aria-hidden="true"></i><span
-                                                        class="indicator-nt"></span>
+                                                    aria-expanded="false" class="nav-link dropdown-toggle"><i class="fa fa-bell"></i></i><span
+                                                        class="">1</span>
                                                 </a>
+                                                
                                                 <div role="menu"
                                                     class="notification-author dropdown-menu animated zoomIn">
-                                                    <div class="notification-single-top">
-                                                        <h1>Notifications</h1>
+                                                    <div class="notification-single-top" style="background-color: linear-gradient(178deg, #175CA2 0%, #121416 100%)">
+                                                        <h1 style="color: #fff; ">Notifications</h1>
                                                     </div>
-                                                    <ul class="notification-menu">
+                                                    <ul class="notification-menu" style="background-color:#fff;">
                                                         <li>
                                                             <a href="#">
-                                                                <div class="notification-icon">
-                                                                    <i class="fa fa-check adminpro-checked-pro admin-check-pro"
-                                                                        aria-hidden="true"></i>
-                                                                </div>
-                                                                <div class="notification-content">
-                                                                    <span class="notification-date">16 Sept</span>
-                                                                    <h2>Advanda Cro</h2>
-                                                                    <p>Please done this project as soon possible.</p>
+                                                             
+                                                                <div class="notification-content" >
+                                                                   
+                                                                    <h2 style="color:#444;">Business Sent For Design</h2>
+                                                                   
                                                                 </div>
                                                             </a>
                                                         </li>
