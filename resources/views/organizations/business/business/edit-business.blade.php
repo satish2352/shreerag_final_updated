@@ -223,6 +223,17 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
     <script>
         $(document).ready(function() {
+            function setMinDate() {
+                var today = new Date();
+                var day = String(today.getDate()).padStart(2, '0');
+                var month = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                var year = today.getFullYear();
+                var todayDate = year + '-' + month + '-' + day;
+    
+                $('#po_validity').attr('min', todayDate);
+            }
+             // Call the function to set the minimum date
+        setMinDate();
             // Initialize jQuery Validation
             var validator = $("#addEmployeeForm").validate({
                 ignore: [], // Validate hidden inputs as well

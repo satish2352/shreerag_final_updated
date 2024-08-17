@@ -276,14 +276,14 @@
                                     </tr>
                                     <tr>
                                         <td class="no-border" colspan="6"></td>
-                                        <td>CGST 9%</td>
+                                        <td>{{ $purchaseOrder->tax_type }} {{ $purchaseOrder->tax_id }} %</td>
                                         <td class="text-right">
                                             {{ ($purchaseOrderDetails->sum('amount') -
                                             $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) *
-                                            0.09 }}
+                                            (1 + ($purchaseOrder->tax_id / 100)) }}
                                         </td>
                                     </tr>
-                                    <tr>
+                                    {{-- <tr>
                                         <td class="no-border" colspan="6"></td>
                                         <td>SGST 9%</td>
                                         <td class="text-right">
@@ -291,7 +291,7 @@
                                             $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) *
                                             0.09 }}
                                         </td>
-                                    </tr>
+                                    </tr> --}}
 
 
                                     <tr>
