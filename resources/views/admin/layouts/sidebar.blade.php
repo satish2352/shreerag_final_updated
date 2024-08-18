@@ -453,11 +453,11 @@
 
 
                         <li>
-                            <a class="has-arrow" href="{{ route('list-product') }}"
+                            <a class="has-arrow" href="{{ route('list-leaves-acceptedby-hr') }}"
                                 aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span
                                     class="mini-click-non">Leave Management</span></a>
                             <ul class="submenu-angle" aria-expanded="false">
-                                <li><a title="Inbox" href="{{ route('list-product') }}"><i
+                                <li><a title="Inbox" href="{{ route('list-leaves-acceptedby-hr') }}"><i
                                             class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                             class="mini-sub-pro">Leave Request</span></a></li>
 
