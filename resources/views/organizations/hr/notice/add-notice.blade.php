@@ -1,6 +1,14 @@
 @extends('admin.layouts.master')
 
 @section('content')
+<style>
+    .error{
+        color: red !important;
+    }
+    .form-control{
+        color: black !important;
+    }
+    </style>
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -49,7 +57,7 @@
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="company_id">Select Department:</label>
+                                            <label for="company_id">Select Department <span class="text-danger">*</span></label>
                                             <select class="form-control custom-select-value" name="department_id" id="department_id">
                                                 <ul class="dropdown-menu ">
                                                     <option value="">Select Department</option>
@@ -61,7 +69,7 @@
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="title">Title</label>
+                                            <label for="title">Title <span class="text-danger">*</span></label>
                                             <input class="form-control mb-2" name="title" id="title"
                                                 placeholder="Enter the Title" name="title"
                                                 value="{{ old('title') }}">
@@ -72,8 +80,8 @@
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group" id="summernote_id">
-                                            <label for="description">Description</label>
-                                            <textarea class="form-control" name="description" id="description" placeholder="Enter Page Content">{{ old('description') }}</textarea>
+                                            <label for="description">Description <span class="text-danger">*</span></label>
+                                            <textarea class="form-control" name="description" id="description" placeholder="Enter Description">{{ old('description') }}</textarea>
                                             @if ($errors->has('description'))
                                                 <span
                                                     class="red-text">{{ $errors->first('description') }}</span>
@@ -82,7 +90,7 @@
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="image">Upload </label><br>
+                                            <label for="image">Upload <span class="text-danger">*</span></label><br>
                                             {{-- <input type="file" name="image" id="image" accept="/*"
                                                 value="{{ old('image') }}" class="form-control mb-2">
                                             @if ($errors->has('image'))
@@ -101,7 +109,7 @@
                                             Save &amp; Submit
                                         </button>
                                         {{-- <button type="reset" class="btn btn-sm btn-danger">Cancel</button> --}}
-                                        <span><a href="{{ route('list-services') }}"
+                                        <span><a href="{{ route('list-notice') }}"
                                                 class="btn btn-sm btn-primary ">Back</a></span>
                                     </div>
                                 </div>
@@ -122,15 +130,47 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
 <script>
     $(document).ready(function() {
-           
+        // Function to check if all input fields are filled with valid data
+        function checkFormValidity() {
+            const department_id = $('#department_id').val();
+            const title = $('#title').val();
+            const description = $('#description').val();
+            const image = $('#image').val();                    
+        }
+        
+        // Custom validation method to check file extension
+        $.validator.addMethod("fileExtension", function(value, element, param) {
+            // Get the file extension
+            const extension = value.split('.').pop().toLowerCase();
+            return $.inArray(extension, param) !== -1;
+        }, "Invalid file extension.");
+
+        // Custom validation method to check file size
+        $.validator.addMethod("fileSize", function(value, element, param) {
+            // Convert bytes to KB
+            const fileSizeKB = element.files[0].size / 1024;
+            return fileSizeKB >= param[0] && fileSizeKB <= param[1];
+        }, "File size must be between {0} KB and {1} KB.");
+
+        // Update the accept attribute to validate based on file extension
+        $('#image').attr('accept', 'application/pdf');
+
+        // Call the checkFormValidity function on input change
+        $('input, textarea, #image').on('input change', checkFormValidity);
+        $.validator.addMethod("spcenotallow", function(value, element) {
+            if ("select" === element.nodeName.toLowerCase()) {
+                var e = $(element).val();
+                return e && e.length > 0;
+            }
+            return this.checkable(element) ? this.getLength(value, element) > 0 : value.trim().length >
+                0;
+        }, "Enter Some Text");
 
         // Initialize the form validation
         $("#regForm").validate({
             rules: {
                 department_id: {
                     required: true,
-               
-                    department_id:true,
                 },
                 title: {
                     required: true,
@@ -138,13 +178,16 @@
                 description: {
                     required: true,
                 },
-             
-
+                image: {
+                    required: true,
+                    fileExtension: ["pdf"],
+                    fileSize: [50, 1048], // Min 10KB and Max 2MB (2 * 1024 KB)
+                    // imageDimensions: [200, 200, 1000, 1000], // Min width x height and Max width x height
+                },
             },
             messages: {
                 department_id: {
                     required: "Please slect deparment name",
-                    // remote: "This Email already exists."
                 },
                 title: {
                     required: "Please Select Role Name",
@@ -152,9 +195,13 @@
                 description: {
                     required: "Please Enter the Password",
                 },
-               
+                image: {
+                    required: "Please upload an pdf.",
+                    fileExtension: "Only pdf are allowed.",
+                    fileSize: "File size must be between 50 KB and 1048 KB.",
+                    // imageDimensions: "Image dimensions must be between 200x200 and 1000x1000 pixels.",
+                },
             },
-
         });
     });
 </script>

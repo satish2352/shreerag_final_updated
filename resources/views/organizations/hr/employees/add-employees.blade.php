@@ -98,10 +98,10 @@
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6">
                                             <div class="form-group">
-                                                <label for="role_id">Role Type</label>&nbsp<span class="red-text">*</span>
+                                                <label for="role_id">Department</label>&nbsp<span class="red-text">*</span>
                                                 <select class="form-control" id="role_id" name="role_id"
                                                     onchange="myFunction(this.value)">
-                                                    <option value="">Select</option>
+                                                    <option value="">Select Department</option>
                                                     @foreach ($roles as $role)
                                                         @if (old('role_id') == $role['id'])
                                                             <option value="{{ $role['id'] }}" selected>
@@ -149,7 +149,7 @@
                                                 @endif
                                             </div>
                                         </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-6">
+                                        {{-- <div class="col-lg-6 col-md-6 col-sm-6">
                                             <div class="form-group">
                                                 <label for="company_id">Select Department:</label>
                                                 <select class="form-control custom-select-value" name="department_id">
@@ -160,7 +160,7 @@
                                                         @endforeach
                                                 </select>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="col-lg-6 col-md-6 col-sm-6">
                                             <div class="form-group">
                                                 <label for="f_name">First Name</label>&nbsp<span class="red-text">*</span>

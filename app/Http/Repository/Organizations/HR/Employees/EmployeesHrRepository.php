@@ -41,12 +41,44 @@ class EmployeesHrRepository  {
 								'users.pincode',
 								'users.id',
 								'users.is_active'
-							)->get();
+							) ->orderBy('users.id', 'desc')->get();
 							// ->toArray();
 
 		return $data_users;
 	}
-
+	// public function getById($id)
+	// {
+	// 	try {
+	// 		$data_users = User::join('tbl_roles', function($join) {
+	// 			$join->on('users.role_id', '=', 'tbl_roles.id');
+	// 		})
+	// 		// ->where('users.is_active','=',true)
+	// 		->select('tbl_roles.role_name',
+	// 				'users.u_email',
+	// 				'users.f_name',
+	// 				'users.m_name',
+	// 				'users.l_name',
+	// 				'users.number',
+	// 				'users.designation',
+	// 				'users.address',
+	// 				'users.state',
+	// 				'users.city',
+	// 				'users.pincode',
+	// 				'users.id',
+	// 				'users.is_active'
+	// 			) ->orderBy('users.id', 'desc')->where('users.id', $id)->first();		
+	// 		if ($data_users) {
+	// 			return $user;
+	// 		} else {
+	// 			return null;
+	// 		}
+	// 	} catch (\Exception $e) {
+	// 		return [
+	// 			'msg' => $e->getMessage(),
+	// 			'status' => 'error'
+	// 		];
+	// 	}
+	// }
     public function checkDupCredentials($request){
 		return User::where('u_email', '=', $request['u_email'])
 			// ->orWhere('u_uname','=',$request['u_uname'])
@@ -103,7 +135,7 @@ class EmployeesHrRepository  {
 		$user_data->u_email = $request['u_email'];
 		$user_data->u_password = bcrypt($request['u_password']);
 		$user_data->role_id = $request['role_id'];
-		$user_data->department_id = $request['department_id'];
+		// $user_data->department_id = $request['department_id'];
 		$user_data->f_name = $request['f_name'];
 		$user_data->m_name = $request['m_name'];
 		$user_data->l_name = $request['l_name'];
@@ -261,13 +293,14 @@ class EmployeesHrRepository  {
 
 	public function getById($id){
 		try {
+			
 			$user = User::leftJoin('tbl_roles', 'tbl_roles.id', '=', 'users.role_id')
 				->leftJoin('tbl_area as state_user', 'users.state', '=', 'state_user.location_id')
 				->leftJoin('tbl_area as city_user', 'users.city', '=', 'city_user.location_id')
 				->where('users.id', $id)
-				->select('users.f_name','users.m_name','users.l_name','users.u_email','users.number','users.designation','users.address','users.pincode','users.user_profile','roles.role_name','state_user.name as state','city_user.name as city')
+				->select('users.f_name','users.m_name','users.l_name','users.u_email','users.number','users.designation','users.address','users.pincode','tbl_roles.role_name','state_user.name as state','city_user.name as city')
 				->first();
-	
+				
 			if ($user) {
 				return $user;
 			} else {

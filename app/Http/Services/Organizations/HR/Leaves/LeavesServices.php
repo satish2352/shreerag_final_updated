@@ -22,6 +22,13 @@ class LeavesServices
             return $e;
         }
     }
+    public function getById($id){
+        try {
+            return $this->repo->getById($id);
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     public function getAllLeavesRequest(){
         try {
             return $this->repo->getAllLeavesRequest();
@@ -60,13 +67,13 @@ class LeavesServices
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }      
     }
-    public function getById($id){
-        try {
-            return $this->repo->getById($id);
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
+    // public function getById($id){
+    //     try {
+    //         return $this->repo->getById($id);
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
 
     public function updateAll($request){
         try {

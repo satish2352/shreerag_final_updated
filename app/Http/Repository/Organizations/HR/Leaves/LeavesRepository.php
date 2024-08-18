@@ -35,6 +35,45 @@ class LeavesRepository  {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function getById($id){
+        try {
+            $data_output = Leaves::join('users', 'tbl_leaves.employee_id', '=', 'users.id')
+                ->join('tbl_leave_management', 'tbl_leaves.leave_type_id', '=', 'tbl_leave_management.id')
+                ->where('tbl_leaves.organization_id', session()->get('org_id'))
+                ->where('tbl_leaves.is_approved', 0)
+                ->select(
+                    'tbl_leaves.id',
+                    'users.u_email',
+                    'users.f_name',
+                    'users.m_name',
+                    'users.l_name',
+                    'tbl_leaves.leave_start_date',
+                    'tbl_leaves.employee_id',
+                    'tbl_leaves.leave_end_date',
+                    'tbl_leaves.leave_day',
+                    'tbl_leaves.leave_count',
+                    'tbl_leave_management.name as leave_type_name',
+                    'tbl_leaves.reason',
+                    'tbl_leaves.is_approved'
+                )
+            ->orderBy('tbl_leaves.updated_at', 'desc')
+            ->where('tbl_leaves.id', $id)
+            ->first();
+
+                if ($data_output) {
+                    return $data_output;
+                } else {
+                    return null;
+                }
+            } catch (\Exception $e) {
+                return [
+                    'msg' => $e,
+                    'status' => 'error'
+                ];
+            }
+        }
+
     
     public function getAllLeavesRequest() {
         try {           
@@ -186,21 +225,21 @@ class LeavesRepository  {
     }
 }
 
-    public function getById($id){
-    try {
-            $dataOutputByid = Leaves::find($id);
-            if ($dataOutputByid) {
-                return $dataOutputByid;
-            } else {
-                return null;
-            }
-        } catch (\Exception $e) {
-            return [
-                'msg' => $e,
-                'status' => 'error'
-            ];
-        }
-    }
+    // public function getById($id){
+    // try {
+    //         $dataOutputByid = Leaves::find($id);
+    //         if ($dataOutputByid) {
+    //             return $dataOutputByid;
+    //         } else {
+    //             return null;
+    //         }
+    //     } catch (\Exception $e) {
+    //         return [
+    //             'msg' => $e,
+    //             'status' => 'error'
+    //         ];
+    //     }
+    // }
 
    public function updateAll($request)
 {

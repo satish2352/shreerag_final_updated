@@ -37,6 +37,7 @@ class EmployeesHrServices
                 return [ 'status'=>'failed', 'msg'=>'Registration Failed. The name has already been taken.' ];
             } else {
                 $last_id = $this->repo->register( $request );
+            
                 if ( $last_id ) {
                     return [ 'status' => 'success', 'msg' => 'User Added Successfully.' ];
                 } else {
@@ -76,10 +77,10 @@ class EmployeesHrServices
 
     }
 
-    public function getById( $id ) {
+    public function getById($id){
         try {
-            return $this->repo->getById( $id );
-        } catch ( \Exception $e ) {
+            return $this->repo->getById($id);
+        } catch (\Exception $e) {
             return $e;
         }
     }

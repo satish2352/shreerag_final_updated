@@ -64,63 +64,63 @@ class EmployeesHrController extends Controller
     public function register(Request $request){
 
         $rules = [
-                   'u_email' => 'required|unique:users,u_email|regex:/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z])+\.)+([a-zA-Z0-9]{2,4})+$/',
-                    'u_password'=>'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[a-zA-Z\d]).{8,}$/',
-                    'password_confirmation' => 'required|same:u_password',
-                    'role_id' => 'required',
-                    'f_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
-                    'm_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
-                    'l_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
-                    'number' =>  'required|regex:/^[0-9]{10}$/',
-                    'designation' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
-                    'address' => ['required','regex:/^(?![0-9\s]+$)[A-Za-z0-9\s\.,#\-\(\)\[\]\{\}]+$/','max:255'],
-                    'state' => 'required',
-                    'city' => 'required',
-                    'pincode' => 'required|regex:/^[0-9]{6}$/',
+                //    'u_email' => 'required|unique:users,u_email|regex:/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z])+\.)+([a-zA-Z0-9]{2,4})+$/',
+                //     'u_password'=>'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[a-zA-Z\d]).{8,}$/',
+                //     'password_confirmation' => 'required|same:u_password',
+                //     'role_id' => 'required',
+                //     'f_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
+                //     'm_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
+                //     'l_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
+                //     'number' =>  'required|regex:/^[0-9]{10}$/',
+                //     'designation' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
+                //     'address' => ['required','regex:/^(?![0-9\s]+$)[A-Za-z0-9\s\.,#\-\(\)\[\]\{\}]+$/','max:255'],
+                //     'state' => 'required',
+                //     'city' => 'required',
+                //     'pincode' => 'required|regex:/^[0-9]{6}$/',
                     // 'user_profile' => 'required|image|mimes:jpeg,png,jpg|max:'.Config::get("AllFileValidation.USER_PROFILE_MAX_SIZE").'|dimensions:min_width=150,min_height=150,max_width=400,max_height=400|min:'.Config::get("AllFileValidation.USER_PROFILE_MIN_SIZE").'',
 
                  ];       
 
         $messages = [   
-                        'u_email.required' => 'Please enter email.',
-                        'u_email.unique' => 'Your email is already exist.',
-                        'u_email.regex' => 'Enter valid email.',
-                        // 'u_uname.required'=>'Please enter firstname.',
-                        // 'u_uname.regex' => 'Please  enter text only.',
-                        // 'u_uname.max'   => 'Please  enter firstname length upto 255 character only.',       
-                        'u_password.required' => 'Please enter password.',
-                        'u_password.regex' => 'Password should be more than 8 numbers with atleast 1 capital letter,1 small letter, 1 number and 1 special character.',
-                        'password_confirmation.same' => 'The password confirmation does not match.',
-                        // 'u_password.min' => 'Please combination of number character of 8 char.',
-                        'role_id.required' => 'Please select role type.',
-                        'f_name.required' => 'Please enter first name.',
-                         'f_name.regex' => 'Please  enter text only.',
-                        'f_name.max'   => 'Please  enter first name length upto 255 character only.',
+                    //     'u_email.required' => 'Please enter email.',
+                    //     'u_email.unique' => 'Your email is already exist.',
+                    //     'u_email.regex' => 'Enter valid email.',
+                    //     // 'u_uname.required'=>'Please enter firstname.',
+                    //     // 'u_uname.regex' => 'Please  enter text only.',
+                    //     // 'u_uname.max'   => 'Please  enter firstname length upto 255 character only.',       
+                    //     'u_password.required' => 'Please enter password.',
+                    //     'u_password.regex' => 'Password should be more than 8 numbers with atleast 1 capital letter,1 small letter, 1 number and 1 special character.',
+                    //     'password_confirmation.same' => 'The password confirmation does not match.',
+                    //     // 'u_password.min' => 'Please combination of number character of 8 char.',
+                    //     'role_id.required' => 'Please select role type.',
+                    //     'f_name.required' => 'Please enter first name.',
+                    //      'f_name.regex' => 'Please  enter text only.',
+                    //     'f_name.max'   => 'Please  enter first name length upto 255 character only.',
 
-                        'm_name.required' =>'Please enter middle name.',
-                        'm_name.regex' => 'Please  enter text only.',
-                        'm_name.max'   => 'Please  enter middle name length upto 255 character only.',
+                    //     'm_name.required' =>'Please enter middle name.',
+                    //     'm_name.regex' => 'Please  enter text only.',
+                    //     'm_name.max'   => 'Please  enter middle name length upto 255 character only.',
 
-                        'l_name.required' => 'Please enter last name.',
-                        'l_name.regex' => 'Please  enter text only.',
-                        'l_name.max'   => 'Please  enter last name length upto 255 character only.',
+                    //     'l_name.required' => 'Please enter last name.',
+                    //     'l_name.regex' => 'Please  enter text only.',
+                    //     'l_name.max'   => 'Please  enter last name length upto 255 character only.',
 
-                        'number.required' => 'Please enter number.',
-                        'number.regex' => 'Please enter only numbers with 10-digit.',
+                    //     'number.required' => 'Please enter number.',
+                    //     'number.regex' => 'Please enter only numbers with 10-digit.',
 
-                        'designation.required' =>'Please enter designation.',
-                        'designation.regex' => 'Please  enter text only.',
-                        'designation.max'   => 'Please  enter designation length upto 255 character only.',
+                    //     'designation.required' =>'Please enter designation.',
+                    //     'designation.regex' => 'Please  enter text only.',
+                    //     'designation.max'   => 'Please  enter designation length upto 255 character only.',
 
-                        'address.required' => 'Please enter address.',
-                        'address.regex' => 'Please enter right address.',
-                        'address.max'   => 'Please  enter address length upto 255 character only.',
+                    //     'address.required' => 'Please enter address.',
+                    //     'address.regex' => 'Please enter right address.',
+                    //     'address.max'   => 'Please  enter address length upto 255 character only.',
 
 
-                        'state.required' => 'Please select state.',
-                        'city.required' =>'Please select city.',
-                       'pincode.required' => 'Please enter pincode.',
-                        'pincode.regex' => 'Please enter a 6-digit pincode.',
+                    //     'state.required' => 'Please select state.',
+                    //     'city.required' =>'Please select city.',
+                    //    'pincode.required' => 'Please enter pincode.',
+                    //     'pincode.regex' => 'Please enter a 6-digit pincode.',
                                             ];
 
 
@@ -248,7 +248,10 @@ class EmployeesHrController extends Controller
 
     public function show(Request $request){
         try {
-            $user_detail = $this->service->getById($request->show_id);
+            $data_id = base64_decode($request->id);
+          
+            $user_detail = $this->service->getById($data_id);
+  
             return view('organizations.hr.employees.show-employees', compact('user_detail'));
         } catch (\Exception $e) {
             return $e;

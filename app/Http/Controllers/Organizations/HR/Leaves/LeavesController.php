@@ -42,6 +42,18 @@ class LeavesController extends Controller
             return $e;
         }
     } 
+    public function show(Request $request){
+        try {
+            $data_id = base64_decode($request->id);
+          
+            $user_detail = $this->service->getById($data_id);
+  
+            return view('organizations.hr.leaves.show-leaves', compact('user_detail'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
     public function getAllNotApprovedRequest(){
         try {
             $getOutput = $this->service->getAllNotApprovedRequest();
