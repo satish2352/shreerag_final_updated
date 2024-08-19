@@ -88,7 +88,7 @@ class FinanceRepository
     }
     public function sendToDispatch($id) {
         try {
-           
+          
             $business_application = BusinessApplicationProcesses::where('business_details_id', $id)->first();
             if ($business_application) {
                 $business_application->dispatch_status_id = config('constants.FINANCE_DEPARTMENT.LIST_LOGISTICS_SEND_TO_DISPATCH_DEAPRTMENT');

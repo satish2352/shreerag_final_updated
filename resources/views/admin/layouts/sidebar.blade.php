@@ -100,7 +100,7 @@
                                         class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                         class="mini-sub-pro">Purchase Order Approved</span></a>
                             </li>
-                            <li
+                            {{-- <li
                                 class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') ? 'active' : '' }}">
                                 <a title="Inbox" href="{{ route('list-approved-purchase-orders-owner') }}"><i
                                         class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
@@ -154,17 +154,17 @@
                             <a title="Inbox" href="{{ route('list-product-dispatch-completed') }}"><i
                                     class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                     class="mini-sub-pro">Dispatch Completed</span></a>
-                        </li>
+                        </li> --}}
                             
                             <li><a title="Inbox" href="{{ route('list-rules-regulations') }}"><i
                                 class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                 class="mini-sub-pro">Rules and Regulations</span></a></li>
-                                <li class="nav-item {{ Request::is('list-roles') ? 'active' : '' }}">
+                                {{-- <li class="nav-item {{ Request::is('list-roles') ? 'active' : '' }}">
                                     <a title="Inbox" href="{{ route('list-roles') }}">
                                         <i class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i>
                                         <span class="mini-sub-pro">List Roles</span>
                                     </a>
-                                </li>
+                                </li> --}}
                         </ul>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.PURCHASE'))

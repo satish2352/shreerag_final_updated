@@ -62,7 +62,7 @@
                                         <div class="row">
                                             <div class="col-lg-6 col-md-6 col-sm-6">
                                                 <div class="form-group">
-                                                    <label for="leave_type_id">Select Leave Type</label>&nbsp;<span class="red-text">*</span>
+                                                    <label for="leave_type_id">Select Leave Type <span class="text-danger">*</span></label>
                                                     <select class="form-control" id="leave_type_id" name="leave_type_id" onchange="myFunction(this.value)">
                                                         <option>Select</option>
                                                         @foreach ($leaveManagment as $leaveType)
@@ -78,9 +78,9 @@
                                                 </div>
                                             </div>
                                             
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <div class="col-lg-6 col-md-6 col-sm-6">
                                                 <div class="form-select-list">
-                                                    <label for="leave_day">Select Leaves Day:</label>
+                                                    <label for="leave_day">Select Leaves Day <span class="text-danger">*</span></label>
                                                     <select class="form-control custom-select-value" name="leave_day" id="leave_day">
                                                         <option value="">Select Leaves Day</option>
                                                         <option value="full_day" {{ $editData->leave_day == 'full_day' ? 'selected' : '' }}>Full Day</option>
@@ -90,21 +90,21 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="leave_start_date">Start Date:</label>
+                                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                                <label for="leave_start_date">Start Date <span class="text-danger">*</span></label>
                                                 <div class="calendar-icon">
                                                     <input type="text" class="form-control custom-select-value" value="{{ $editData->leave_start_date }}" id="leave_start_date" name="leave_start_date" placeholder="Enter foundation date">
                                                 </div>
                                             </div>
                                             
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="leave_end_date">End Date:</label>
+                                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                                <label for="leave_end_date">End Date <span class="text-danger">*</span></label>
                                                 <div class="calendar-icon">
                                                     <input type="text" class="form-control" id="leave_end_date" value="{{ $editData->leave_end_date }}" name="leave_end_date" placeholder="Enter foundation date">
                                                 </div>
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="name">Reason:</label>
+                                                <label for="name">Reason <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="reason" name="reason" value="{{ $editData->reason }}" placeholder="Enter reason">
                                             </div>
                                         </div>
@@ -232,7 +232,5 @@ jQuery(document).ready(function ($) {
     });
 });
 </script>
-
-
 
 @endsection

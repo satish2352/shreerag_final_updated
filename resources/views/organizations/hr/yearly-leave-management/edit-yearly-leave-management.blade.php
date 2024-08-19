@@ -83,7 +83,8 @@
                                                 <div class="calendar-icon">
                                                     <input type="text" class="form-control custom-select-value" value="@if (old('name')) {{ old('name') }}@else{{ $editData->name }} @endif" id="name" name="name" placeholder="Enter foundation date">
                                                     @if ($errors->has('name'))
-                                                    <span class="red-text"><?php echo $errors->first('name', ':message'); ?></span>
+                                                        <span class="red-text">{{ $errors->first('name') }}</span>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -91,9 +92,10 @@
                                             <div class="col-lg-6 col-md-6 col-sm-6">
                                                 <label for="leave_count">Leave Count :</label>&nbsp<span class="red-text">*</span>
                                                 <div class="calendar-icon">
-                                                    <input type="text" class="form-control" id="leave_count"value="@if (old('leave_count')) {{ old('leave_count') }}@else{{ $editData->leave_count }} @endif" name="leave_count" placeholder="Enter foundation date">
+                                                    <input type="text" class="form-control" id="leave_count"value="@if (old('leave_count')) {{ old('leave_count') }}@else{{ $editData->leave_count }} @endif" name="leave_count" placeholder="Enter leave count">
                                                     @if ($errors->has('leave_count'))
-                                                    <span class="red-text"><?php echo $errors->first('leave_count', ':message'); ?></span>
+                                                        <span class="red-text">{{ $errors->first('leave_count') }}</span>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>                                        
@@ -149,7 +151,7 @@ jQuery(document).ready(function ($) {
                     required: "Please enter leave name.",
                 },
                 leave_count: {
-                    required: "Please leave count.",
+                    required: "Please enter leave count.",
                 },
                
             },
@@ -166,7 +168,5 @@ jQuery(document).ready(function ($) {
     });
 });
 </script>
-
-
 
 @endsection
