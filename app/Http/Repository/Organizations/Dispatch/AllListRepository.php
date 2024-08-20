@@ -97,29 +97,29 @@ public function getAllDispatch(){
     $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.LIST_DISPATCH_COMPLETED_FROM_DISPATCH_DEPARTMENT')];
     $array_to_be_check_new = ['0'];
   
-      $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-      })
-      ->leftJoin('designs', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-      })
-      ->leftJoin('businesses', function($join) {
-        $join->on('business_application_processes.business_id', '=', 'businesses.id');
-      })
-      ->leftJoin('businesses_details', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+    $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
+      $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
     })
-      ->leftJoin('design_revision_for_prod', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-      })
-      ->leftJoin('purchase_orders', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-      })
-      ->leftJoin('tbl_logistics', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'tbl_logistics.business_details_id');
-      })
+    ->leftJoin('designs', function($join) {
+      $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+    })
+    ->leftJoin('businesses', function($join) {
+      $join->on('business_application_processes.business_id', '=', 'businesses.id');
+    })
+    ->leftJoin('businesses_details', function($join) {
+      $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+  })
+    ->leftJoin('design_revision_for_prod', function($join) {
+      $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+    })
+    ->leftJoin('purchase_orders', function($join) {
+      $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+    })
+    ->leftJoin('tbl_logistics', function($join) {
+      $join->on('business_application_processes.business_details_id', '=', 'tbl_logistics.business_details_id');
+    })
       ->leftJoin('tbl_dispatch', function($join) {
-        $join->on('business_application_processes.id', '=', 'tbl_dispatch.business_application_processes_id');
+        $join->on('business_application_processes.business_details_id', '=', 'tbl_dispatch.business_details_id');
       })
       ->whereIn('business_application_processes.dispatch_status_id',$array_to_be_check)
       // ->whereIn('purchase_orders.store_receipt_no',$array_to_be_check_new)
@@ -139,6 +139,7 @@ public function getAllDispatch(){
         'tbl_dispatch.outdoor_no',
         'tbl_dispatch.gate_entry',
         'tbl_dispatch.remark',
+        'tbl_dispatch.updated_at',
     )
       ->select(
         'businesses_details.id',
@@ -156,11 +157,11 @@ public function getAllDispatch(){
           'tbl_dispatch.outdoor_no',
           'tbl_dispatch.gate_entry',
           'tbl_dispatch.remark',
+          'tbl_dispatch.updated_at',
       )
       ->get();
      
-  //  dd($data_output);
-  //  die();
+ 
     return $data_output;
   } catch (\Exception $e) {
       return $e;

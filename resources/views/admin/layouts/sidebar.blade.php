@@ -123,7 +123,7 @@
                                 <a title="Inbox" href="{{ route('list-approved-purchase-orders-owner') }}"><i
                                         class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                         class="mini-sub-pro">Material Received From Quality Dept</span></a>
-                            </li>
+                            </li> --}}
                             <li
                             class="nav-item {{ Request::is('list-rejected-chalan-po-wise') ? 'active' : '' }}">
                             <a title="Inbox"
@@ -131,12 +131,12 @@
                                     class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                     class="mini-sub-pro">PO wise Rejected Chalan</span></a>
                         </li>
-                            <li
+                            {{-- <li
                             class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') ? 'active' : '' }}">
                             <a title="Inbox" href="{{ route('list-approved-purchase-orders-owner') }}"><i
                                     class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                     class="mini-sub-pro">Fianance Dept Received GRN and SR</span></a>
-                        </li>
+                        </li> --}}
                             <li
                                 class="nav-item {{ request()->is('owner/list-po-recived-for-approval-payment') ? 'active' : '' }}">
                                 <a title="Inbox" href="{{ route('list-po-recived-for-approval-payment') }}"><i
@@ -154,7 +154,7 @@
                             <a title="Inbox" href="{{ route('list-product-dispatch-completed') }}"><i
                                     class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                     class="mini-sub-pro">Dispatch Completed</span></a>
-                        </li> --}}
+                        </li> 
                             
                             <li><a title="Inbox" href="{{ route('list-rules-regulations') }}"><i
                                 class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
