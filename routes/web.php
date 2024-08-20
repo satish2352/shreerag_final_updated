@@ -420,15 +420,15 @@ Route::group(['middleware' => ['admin']], function () {
     Route::any('/delete-services/{id}', ['as' => 'delete-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@destroy']);
     Route::post('/update-active-services', ['as' => 'update-active-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@updateOne']);
 
-// ================
-Route::get('/list-testimonial', ['as' => 'list-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@index']);
-Route::get('/add-testimonial', ['as' => 'add-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@add']);
-Route::post('/add-testimonial', ['as' => 'add-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@store']);
-Route::get('/edit-testimonial/{edit_id}', ['as' => 'edit-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@edit']);
-Route::post('/update-testimonial', ['as' => 'update-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@update']);
-Route::post('/show-testimonial', ['as' => 'show-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@show']);
-Route::any('/delete-testimonial/{id}', ['as' => 'delete-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@destroy']);
-Route::post('/update-active-testimonial', ['as' => 'update-active-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@updateOne']);
+    // ================
+    Route::get('/list-testimonial', ['as' => 'list-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@index']);
+    Route::get('/add-testimonial', ['as' => 'add-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@add']);
+    Route::post('/add-testimonial', ['as' => 'add-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@store']);
+    Route::get('/edit-testimonial/{edit_id}', ['as' => 'edit-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@edit']);
+    Route::post('/update-testimonial', ['as' => 'update-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@update']);
+    Route::post('/show-testimonial', ['as' => 'show-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@show']);
+    Route::any('/delete-testimonial/{id}', ['as' => 'delete-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@destroy']);
+    Route::post('/update-active-testimonial', ['as' => 'update-active-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@updateOne']);
 
 
 
