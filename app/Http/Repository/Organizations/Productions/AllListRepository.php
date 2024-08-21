@@ -361,7 +361,7 @@ public function getAllNewRequirementBusinessWise($business_id) {
   public function acceptdesignlistBusinessWise($business_id){
     try {
      
-      // $decoded_business_id = base64_decode($business_id);
+      $decoded_business_id = base64_decode($business_id);
  
         $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION')];
         $array_to_be_check_store = [
@@ -417,11 +417,11 @@ public function getAllNewRequirementBusinessWise($business_id) {
         // ->leftJoin('purchase_orders', function($join) {
         //   $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
         // })
-      //   ->where(function($query) use ($business_id) {
-      //     $query->where('businesses_details.business_id', $business_id)
-      //           ->where('production.is_approved_production', 1);
-      // })
-        ->where('businesses_details.business_id', $decoded_business_id)
+        ->where(function($query) use ($decoded_business_id) {
+          $query->where('production.business_id', $decoded_business_id)
+                ->where('production.is_approved_production', 1);
+      })
+        // ->where('production.business_id', $decoded_business_id)
         //   ->where('production.is_approved_production', 1)
           ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
           ->orWhereIn('business_application_processes.store_status_id',$array_to_be_check_store)
