@@ -39,7 +39,9 @@ class DesignsRepository  {
                   'businesses.is_active',
                   'designs.business_id'
                  
-              )->orderBy('businesses.updated_at', 'desc')->get();
+              )
+            //   ->orderBy('businesses.updated_at', 'desc')
+              ->get();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -96,7 +98,8 @@ class DesignsRepository  {
                   'designs.design_image',
                   'designs.bom_image',
                   'designs.business_id'
-              )->orderBy('designs.updated_at', 'desc')
+              )
+            //   ->orderBy('designs.updated_at', 'desc')
               ->get();
 
          
