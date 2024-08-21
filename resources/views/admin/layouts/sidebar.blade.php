@@ -100,30 +100,70 @@
                                         class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                         class="mini-sub-pro">Purchase Order Approved</span></a>
                             </li>
-                            {{-- <li
-                                class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') ? 'active' : '' }}">
-                                <a title="Inbox" href="{{ route('list-approved-purchase-orders-owner') }}"><i
+                            <li
+                                class="nav-item {{ request()->is('owner/list-owner-submited-po-to-vendor') ? 'active' : '' }}">
+                                <a title="Inbox" href="{{ route('list-owner-submited-po-to-vendor') }}"><i
                                         class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                         class="mini-sub-pro">Submitted PO by Vendor</span></a>
                             </li>
-                            <li
-                                class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') ? 'active' : '' }}">
-                                <a title="Inbox" href="{{ route('list-approved-purchase-orders-owner') }}"><i
-                                        class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                                        class="mini-sub-pro">Security Created Gate Pass</span></a>
+                            <li class="nav-item {{ request()->is('owner/list-owner-gatepass') ? 'active' : '' }}">
+                            <a title="Inbox" href="{{ route('list-owner-gatepass') }}"><i
+                                    class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                    class="mini-sub-pro">Security Created Gate Pass</span></a>
                             </li>
                             <li
-                                class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') ? 'active' : '' }}">
-                                <a title="Inbox" href="{{ route('list-approved-purchase-orders-owner') }}"><i
-                                        class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                                        class="mini-sub-pro">Quality Dept Created GRN</span></a>
-                            </li>
-                            <li
-                                class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') ? 'active' : '' }}">
-                                <a title="Inbox" href="{{ route('list-approved-purchase-orders-owner') }}"><i
-                                        class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                                        class="mini-sub-pro">Material Received From Quality Dept</span></a>
-                            </li> --}}
+                            class="nav-item {{ request()->is('owner/list-owner-grn') ? 'active' : '' }}">
+                            <a title="Inbox" href="{{ route('list-owner-grn') }}"><i
+                                    class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                    class="mini-sub-pro">Material Received for GRN Generate</span></a>
+                             </li>
+
+                             <li
+                             class="nav-item {{ request()->is('owner/list-material-sent-to-store-generated-grn') ? 'active' : '' }}">
+                             <a title="Inbox" href="{{ route('list-material-sent-to-store-generated-grn') }}"><i
+                                     class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                     class="mini-sub-pro">Generated GRN Material send Quality Dept to Store </span></a>
+                         </li>
+           
+                         <li
+                         class="nav-item {{ request()->is('owner/list-owner-material-recived-from-store') ? 'active' : '' }}">
+                         <a title="Inbox" href="{{ route('list-owner-material-recived-from-store') }}"><i
+                                 class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                 class="mini-sub-pro">Store Dept Material send to Production Dept</span></a>
+                         </li>
+                         <li
+                         class="nav-item {{ request()->is('owner/list-owner-final-production-completed') ? 'active' : '' }}">
+                         <a title="Inbox" href="{{ route('list-owner-final-production-completed') }}"><i
+                                 class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                 class="mini-sub-pro">Production Department Completed Production</span></a>
+                          </li>
+                     <li
+                     class="nav-item {{ request()->is('owner/list-owner-final-production-completed-recive-to-logistics') ? 'active' : '' }}">
+                     <a title="Inbox" href="{{ route('list-owner-final-production-completed-recive-to-logistics') }}"><i
+                             class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                             class="mini-sub-pro">Logistics Dept Received Product completed list</span></a>
+                      </li>
+
+                      <li
+                     class="nav-item {{ request()->is('owner/recive-owner-logistics-list') ? 'active' : '' }}">
+                     <a title="Inbox" href="{{ route('recive-owner-logistics-list') }}"><i
+                             class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                             class="mini-sub-pro">Fianance Dept Production Recevied from Logistics Dept</span></a>
+                      </li>
+
+                      <li
+                      class="nav-item {{ request()->is('owner/list-owner-send-to-dispatch') ? 'active' : '' }}">
+                      <a title="Inbox" href="{{ route('list-owner-send-to-dispatch') }}"><i
+                              class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                              class="mini-sub-pro">Fianance Dept Production Request Send to Dispatch Dept</span></a>
+                       </li>
+                     
+                       <li
+                       class="nav-item {{ request()->is('owner/list-product-dispatch-completed') ? 'active' : '' }}">
+                       <a title="Inbox" href="{{ route('list-product-dispatch-completed') }}"><i
+                               class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                               class="mini-sub-pro">Dispatch Dept Production Dispatch Completed</span></a>
+                   </li> 
                             <li
                             class="nav-item {{ Request::is('list-rejected-chalan-po-wise') ? 'active' : '' }}">
                             <a title="Inbox"
@@ -143,18 +183,7 @@
                                         class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                         class="mini-sub-pro">PO Payment Release Request</span></a>
                             </li>
-                            <li
-                            class="nav-item {{ request()->is('owner/list-po-recived-for-approval-payment') ? 'active' : '' }}">
-                            <a title="Inbox" href="{{ route('list-po-recived-for-approval-payment') }}"><i
-                                    class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                                    class="mini-sub-pro">Logistics Dept Received Product completed list</span></a>
-                        </li>
-                            <li
-                            class="nav-item {{ request()->is('owner/list-product-dispatch-completed') ? 'active' : '' }}">
-                            <a title="Inbox" href="{{ route('list-product-dispatch-completed') }}"><i
-                                    class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                                    class="mini-sub-pro">Dispatch Completed</span></a>
-                        </li> 
+                           
                             
                             <li><a title="Inbox" href="{{ route('list-rules-regulations') }}"><i
                                 class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span

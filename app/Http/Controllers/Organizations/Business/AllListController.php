@@ -110,7 +110,97 @@ class AllListController extends Controller
             return $e;
         }
     }  
-    
+
+    public function getAllListSubmitedPurchaeOrderByVendorOwnerside(){
+        try {
+            $data_output = $this->service->getAllListSubmitedPurchaeOrderByVendorOwnerside();
+            return view('organizations.business.list.list-owner-all-po-sent-to-vendor', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }  
+    public function getOwnerReceivedGatePass(){
+        try {
+            $all_gatepass = $this->service->getOwnerReceivedGatePass();
+            return view('organizations.business.list.list-owner-gatepass', compact('all_gatepass'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
+
+    public function getOwnerGRN()
+    {
+        try {
+            $all_gatepass = $this->service->getOwnerGRN();
+            return view('organizations.business.list.list-owner-grn', compact('all_gatepass'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getAllListMaterialSentFromQualityToStoreGeneratedGRN()
+    {
+        try {
+            $data_output = $this->service->getAllListMaterialSentFromQualityToStoreGeneratedGRN();
+            return view('organizations.business.list.list-owner-checked-material-sent-to-store', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getAllListMaterialSentFromQualityToStoreGeneratedGRNBusinessWise($id)
+    {
+        try {
+            $data_output = $this->service->getAllListMaterialSentFromQualityToStoreGeneratedGRNBusinessWise($id);
+            return view('organizations.business.list.list-owner-checked-material-sent-to-store-businesswise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getOwnerAllListMaterialRecievedToProduction()
+    {
+        try {
+            $data_output = $this->service->getOwnerAllListMaterialRecievedToProduction();
+            return view('organizations.business.list.list-owner-recived-material-from-store-dept', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function getOwnerAllCompletedProduction(){
+        try {
+            $data_output = $this->service->getOwnerAllCompletedProduction();
+            return view('organizations.business.list.list-owner-production-completed', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getOwnerFinalAllCompletedProductionLogistics(){
+        try {
+            $data_output = $this->service->getOwnerFinalAllCompletedProductionLogistics();
+            return view('organizations.business.list.list-owner-production-completed-received-logistics', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getOwnerAllListBusinessReceivedFromLogistics()
+    {
+        try {
+            $data_output = $this->service->getOwnerAllListBusinessReceivedFromLogistics();
+            
+            return view('organizations.business.list.list-owner-business-received-from-logistics', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getOwnerAllListBusinessFianaceSendToDispatch()
+    {
+        try {
+            $data_output = $this->service->getOwnerAllListBusinessFianaceSendToDispatch();
+            
+            return view('organizations.business.list.list-owner-business-send-to-dispatch', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     public function listProductDispatchCompletedFromDispatch(){
         try {
             $data_output = $this->service->listProductDispatchCompletedFromDispatch();

@@ -28,7 +28,7 @@ class BusinessRepository
     public function getAll()
     {
         try {
-            $data_output = Business::get();
+            $data_output = Business::orderBy('businesses.updated_at', 'desc')->get();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
