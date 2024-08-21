@@ -50,7 +50,7 @@ class AllListRepositor
           'designs.business_id',
           'designs.created_at'
           
-        )->orderBy('designs.updated_at', 'desc')->get();
+        )->get();
 
 
 // dd($data_output);
