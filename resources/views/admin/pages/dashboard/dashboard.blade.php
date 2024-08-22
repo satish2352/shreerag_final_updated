@@ -176,7 +176,7 @@
         <div class="row ">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="sparkline14-list">
-                 
+                    @if (session()->get('role_id') == config('constants.ROLE_ID.HIGHER_AUTHORITY'))
                   <div class="d-flex flex-column flex-lg-row h-lg-full">
                            
                             <div class="h-screen flex-grow-1 overflow-y-lg-auto">
@@ -202,18 +202,20 @@
                                         </div>
                                     </div>
                                 </header>
-                           
+                               
                                 <main class="py-6">
                                     <div class="container-fluid">
                                        
                                         <div class="row g-6 mb-6">
-                                            <div class="col-xl-3 col-sm-6 col-12 mb-2">
+                                            <div class="col-xl-4 col-sm-6 col-12 mb-2">
                                                 <div class="card shadow border-0">
                                                     <div class="card-body">
                                                         <div class="row border-bottom">
                                                             <div class="col mb-2">
-                                                                <span class="h6 font-semibold text-muted text-sm d-block mb-2">Owner</span>
-                                                                <span class="h5 font-bold mb-0">95%</span>
+                                                                <span class="h6 font-semibold text-muted text-sm d-block mb-2">Total Customer PO </span>
+                                                                <span class="h5 font-bold mb-0">{{ $return_data['active_businesses'] }}
+                                                                    
+                                                                    </span>
                                                             </div>
                                                             <div class="col-auto">
                                                                 <div
@@ -227,19 +229,19 @@
                                                                 <span
                                                                     class="badge badge-pill bg-soft-success text-success me-2">
                                                                     <i class="fa-solid fa-arrow-right"></i>                                                           </span>
-                                                                <span class="text-nowrap text-xs text-muted">view details</span>
+                                                                <span class="text-nowrap text-xs text-muted">View Details</span>
                                                             </a>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-3 col-sm-6 col-12">
+                                            <div class="col-xl-4 col-sm-6 col-12">
                                                 <div class="card shadow border-0">
                                                     <div class="card-body">
                                                         <div class="row border-bottom">
                                                             <div class="col mb-2">
-                                                                <span class="h6 font-semibold text-muted text-sm d-block mb-2">Designer</span>
-                                                                <span class="h5 font-bold mb-0">95%</span>
+                                                                <span class="h6 font-semibold text-muted text-sm d-block mb-2">Total Product</span>
+                                                                <span class="h5 font-bold mb-0">{{ $return_data['business_details'] }}</span>
                                                             </div>
                                                             <div class="col-auto">
                                                                 <div
@@ -253,19 +255,21 @@
                                                             <a href="">
                                                                 <span class="badge badge-pill bg-soft-success text-success me-2">
                                                                     <i class="fa-solid fa-arrow-right"></i>                                                           </span>
-                                                                <span class="text-nowrap text-xs text-muted">view details</span>
+                                                                <span class="text-nowrap text-xs text-muted">View Details</span>
                                                             </a>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-3 col-sm-6 col-12">
+                                            <div class="col-xl-4 col-sm-6 col-12">
                                                 <div class="card shadow border-0">
                                                     <div class="card-body">
                                                         <div class="row border-bottom">
                                                             <div class="col mb-2">
-                                                                <span class="h6 font-semibold text-muted text-sm d-block mb-2">Production</span>
-                                                                <span class="h5 font-bold mb-0">95%</span>
+                                                                <span class="h6 font-semibold text-muted text-sm d-block mb-2">Completed Customer PO</span>
+                                                                <span class="h5 font-bold mb-0">
+                                                                    {{ $return_data['business_completed'] }}
+                                                                </span>
                                                             </div>
                                                             <div class="col-auto">
                                                                 <div
@@ -287,13 +291,15 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-3 col-sm-6 col-12">
+                                            <div class="col-xl-4 col-sm-6 col-12">
                                                 <div class="card shadow border-0">
                                                     <div class="card-body">
                                                         <div class="row border-bottom">
                                                             <div class="col mb-2">
-                                                                <span class="h6 font-semibold text-muted text-sm d-block mb-2">Quality</span>
-                                                                <span class="h5 font-bold mb-0">95%</span>
+                                                                <span class="h6 font-semibold text-muted text-sm d-block mb-2">Completed Product</span>
+                                                                <span class="h5 font-bold mb-0">
+                                                                    {{ $return_data['product_completed'] }}
+                                                                </span>
                                                             </div>
                                                             <div class="col-auto">
                                                                 <div
@@ -314,13 +320,13 @@
                                                 </div>
                                             </div>
                                            <!-- ============= -->
-                                            <div class="col-xl-3 col-sm-6 col-12 mb-2">
+                                            <div class="col-xl-4 col-sm-6 col-12 mb-2">
                                                 <div class="card shadow border-0">
                                                     <div class="card-body">
                                                         <div class="row border-bottom">
                                                             <div class="col mb-2">
-                                                                <span class="h6 font-semibold text-muted text-sm d-block mb-2">Purchase</span>
-                                                                <span class="h5 font-bold mb-0">95%</span>
+                                                                <span class="h6 font-semibold text-muted text-sm d-block mb-2">Inprocess Business</span>
+                                                                <span class="h5 font-bold mb-0">{{ $return_data['business_inprocess'] }}</span>
                                                             </div>
                                                             <div class="col-auto">
                                                                 <div
@@ -341,13 +347,13 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-3 col-sm-6 col-12">
+                                            <div class="col-xl-4 col-sm-6 col-12">
                                                 <div class="card shadow border-0">
                                                     <div class="card-body">
                                                         <div class="row border-bottom">
                                                             <div class="col mb-2">
-                                                                <span class="h6 font-semibold text-muted text-sm d-block mb-2">Store</span>
-                                                                <span class="h5 font-bold mb-0">95%</span>
+                                                                <span class="h6 font-semibold text-muted text-sm d-block mb-2">Inprocess Product</span>
+                                                                <span class="h5 font-bold mb-0">{{ $return_data['product_inprocess'] }}</span>
                                                             </div>
                                                             <div class="col-auto">
                                                                 <div
@@ -367,7 +373,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-3 col-sm-6 col-12">
+                                            {{-- <div class="col-xl-4 col-sm-6 col-12">
                                                 <div class="card shadow border-0">
                                                     <div class="card-body">
                                                         <div class="row border-bottom">
@@ -394,7 +400,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-3 col-sm-6 col-12">
+                                            <div class="col-xl-4 col-sm-6 col-12">
                                                 <div class="card shadow border-0">
                                                     <div class="card-body">
                                                         <div class="row border-bottom">
@@ -421,9 +427,9 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                             <!-- ============= -->
-                                            <div class="col-xl-3 col-sm-6 col-12 mb-2">
+                                            {{-- <div class="col-xl-4 col-sm-6 col-12 mb-2">
                                                 <div class="card shadow border-0">
                                                     <div class="card-body">
                                                         <div class="row border-bottom">
@@ -450,7 +456,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-3 col-sm-6 col-12">
+                                            <div class="col-xl-4 col-sm-6 col-12">
                                                 <div class="card shadow border-0">
                                                     <div class="card-body">
                                                         <div class="row border-bottom">
@@ -476,7 +482,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-3 col-sm-6 col-12">
+                                            <div class="col-xl-4 col-sm-6 col-12">
                                                 <div class="card shadow border-0">
                                                     <div class="card-body">
                                                         <div class="row border-bottom">
@@ -503,7 +509,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-3 col-sm-6 col-12">
+                                            <div class="col-xl-4 col-sm-6 col-12">
                                                 <div class="card shadow border-0">
                                                     <div class="card-body">
                                                         <div class="row border-bottom">
@@ -529,21 +535,146 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                     </div>
                                 </main>
+                              
+                              <div class="row">
+                                 <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <canvas id="myPieChart"></canvas>
+                                 </div>
+                                 <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <canvas id="myBarChart"></canvas>
+                                 </div>
+                              </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('myPieChart').getContext('2d');
+    
+    // Pass PHP data to JavaScript
+    var counts = @json($return_data); // Ensure $return_data is correctly set in the controller
+
+    var backgroundColors = [
+        '#2d4e59',
+        '#33b78c',
+        '#34bab8',
+        '#199cc2',
+        '#3585b2',
+        '#6d9baa'
+    ];
+
+    var labels = Object.keys(counts);
+    var data = Object.values(counts);
+
+    var myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: backgroundColors
+            }]
+        },
+        options: {
+            plugins: {
+                tooltip: {
+                    enabled: true
+                },
+                legend: {
+                    position: 'right'
+                },
+                title: {
+                    display: true,
+                    text: 'Product Pie Chart',
+                    font: {
+                        size: 20
+                    }
+                }
+            },
+            responsive: true
+        }
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('myBarChart').getContext('2d');
+    
+    // Pass PHP data to JavaScript
+    var counts = @json($return_data); // Ensure $return_data is correctly set in the controller
+
+    var backgroundColors = [
+        '#2d4e59',
+        '#33b78c',
+        '#34bab8',
+        '#199cc2',
+        '#3585b2',
+        '#6d9baa'
+    ];
+
+    var labels = Object.keys(counts);
+    var data = Object.values(counts);
+
+    var myBarChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Products',
+                data: data,
+                backgroundColor: backgroundColors,
+                borderColor: '#000', // Optional: border color for the bars
+                borderWidth: 1 // Optional: border width for the bars
+            }]
+        },
+        options: {
+            plugins: {
+                tooltip: {
+                    enabled: true
+                },
+                legend: {
+                    position: 'top'
+                },
+                title: {
+                    display: true,
+                    text: 'Product Bar Chart',
+                    font: {
+                        size: 20
+                    }
+                }
+            },
+            responsive: true,
+            scales: {
+                x: {
+                    beginAtZero: true
+                },
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+                                
                             </div>
                         </div>
+                        @endif
+                        @if (session()->get('role_id') == config('constants.ROLE_ID.HIGHER_AUTHORITY'))
                         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
                             <div class="offcanvas-header">
-                              <h5 id="offcanvasRightLabel">Offcanvas right</h5>
+                              <h5 id="offcanvasRightLabel">Customer PO List</h5>
                               <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                             </div>
                             <div class="offcanvas-body">
-                              ...
+                                <ul>
+                                <li><span  class="">Leave Management</span></li>
+                                <li><span  class="">Leave Management</span></li>
+                                </ul>
                             </div>
-                          </div>
+                       </div>
+                       @endif
                 </div>
             </div>
         </div>

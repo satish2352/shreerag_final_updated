@@ -90,8 +90,8 @@
                                                             <th class="col-md-2">Description</th>
                                                             <th class="col-md-1">Quantity</th>
                                                             <th class="col-md-1">Rate</th>
-                                                            <th class="col-sm-3">Upload Design Layout (upload pdf file)</th>
-                                                            <th class="col-sm-3">Upload BOM (upload excel file)</th>
+                                                            <th class="col-sm-3">Upload Design Layout (upload pdf file min:10KB to max:2MB)</th>
+                                                            <th class="col-sm-3">Upload BOM (upload excel file min:10KB to max:2MB)</th>
                                                             {{-- <th>Action</th> --}}
                                                         </tr>
                                                         @foreach ($business_details_data as $index => $item)
@@ -172,46 +172,155 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <script>
-        jQuery.noConflict();
-        jQuery(document).ready(function($) {
-            $("#addDesignsForm").validate({
-                rules: {
-                    design_image: {
-                        required: true,
-                        accept: "application/pdf", // Specify PDF MIME type
-                    },
-                    bom_image: {
-                        required: true,
-                        accept: ".xls,.xlsx",
-                    },
-                },
-                messages: {
-                    design_image: {
-                        required: "Please select design layout pdf .",
-                        accept: "Please select an  design layout pdf file.",
-                    },
-                    bom_image: {
-                        required: "Please select bom excel .",
-                        accept: "Please select an bom excel file.",
-                    },
-                },
-                submitHandler: function(form) {
-                    // Use SweetAlert to show a confirmation dialog
-                    Swal.fire({
-                        icon: 'question',
-                        title: 'Are you sure?',
-                        text: 'You want to send this design to Production Department ?',
-                        showCancelButton: true,
-                        confirmButtonText: 'Yes',
-                        cancelButtonText: 'No',
-                    }).then(function(result) {
-                        if (result.isConfirmed) {
-                            // If user clicks "Yes", submit the form
-                            form.submit();
-                        }
-                    });
+    jQuery.noConflict();
+jQuery(document).ready(function($) {
+    // Custom validation method for file size
+    $.validator.addMethod('filesize', function (value, element, param) {
+        var fileSize = element.files[0].size; // Get file size in bytes
+        return this.optional(element) || (fileSize >= param.min && fileSize <= param.max);
+    }, 'Invalid file size.');
+
+    // Initialize jQuery Validation
+    $("#addDesignsForm").validate({
+        ignore: [], // Validate hidden inputs as well
+        rules: {
+            // Validation rules for the first set of fields (index 0)
+            'addmore[0][design_image]': {
+                required: true,
+                accept: "application/pdf",
+                filesize: { min: 10 * 1024, max: 2 * 1024 * 1024 } // 10KB to 2MB
+            },
+            'addmore[0][bom_image]': {
+                required: true,
+                accept: ".xls,.xlsx",
+                filesize: { min: 10 * 1024, max: 2 * 1024 * 1024 } // 10KB to 2MB
+            }
+        },
+        messages: {
+            'addmore[0][design_image]': {
+                required: "Please select design layout pdf.",
+                accept: "Please select a valid design layout pdf file.",
+                filesize: "The file must be between 10KB and 2MB."
+            },
+            'addmore[0][bom_image]': {
+                required: "Please select BOM excel file.",
+                accept: "Please select a valid BOM excel file.",
+                filesize: "The file must be between 10KB and 2MB."
+            }
+        },
+        errorPlacement: function(error, element) {
+            error.addClass('text-danger'); // Add Bootstrap text-danger class for styling
+            if (element.closest('td').length) {
+                element.closest('td').append(error);
+            } else {
+                error.insertAfter(element);
+            }
+        },
+        submitHandler: function(form) {
+            // Use SweetAlert to show a confirmation dialog
+            Swal.fire({
+                icon: 'question',
+                title: 'Are you sure?',
+                text: 'You want to send this design to the Production Department?',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    form.submit();
                 }
             });
+        }
+    });
+
+    // Function to initialize validation for dynamically added fields
+    function initializeValidation(index) {
+        var design_image_field = 'addmore[' + index + '][design_image]';
+        var bom_image_field = 'addmore[' + index + '][bom_image]';
+        
+        $('input[name="' + design_image_field + '"]').rules("add", {
+            required: true,
+            accept: "application/pdf",
+            filesize: { min: 10 * 1024, max: 2 * 1024 * 1024 }, // 10KB to 2MB
+            messages: {
+                required: "Please select design layout pdf.",
+                accept: "Please select a valid design layout pdf file.",
+                filesize: "The file must be between 10KB and 2MB."
+            }
         });
+
+        $('input[name="' + bom_image_field + '"]').rules("add", {
+            required: true,
+            accept: ".xls,.xlsx",
+            filesize: { min: 10 * 1024, max: 2 * 1024 * 1024 }, // 10KB to 2MB
+            messages: {
+                required: "Please select BOM excel file.",
+                accept: "Please select a valid BOM excel file.",
+                filesize: "The file must be between 10KB and 2MB."
+            }
+        });
+    }
+
+    // Attach validation for each row that is dynamically added
+    $("#add_more_btn").click(function() {
+        var rowCount = $('#dynamicTable tr').length; // Get the current number of rows
+        var newRow = '<tr>...' // Your code to generate new row
+        $('#dynamicTable').append(newRow);
+
+        initializeValidation(rowCount); // Apply validation to the new row
+    });
+
+    // Apply validation to the existing rows
+    $('#dynamicTable tr').each(function(index) {
+        initializeValidation(index);
+    });
+
+     // Event listener for file input changes
+     $(document).on('change', 'input[type="file"]', function() {
+        // Remove validation rules for the file input
+        $(this).rules("remove");
+    });
+});
+        // jQuery.noConflict();
+        // jQuery(document).ready(function($) {
+        //     $("#addDesignsForm").validate({
+        //         rules: {
+        //             design_image: {
+        //                 required: true,
+        //                 accept: "application/pdf", // Specify PDF MIME type
+        //             },
+        //             bom_image: {
+        //                 required: true,
+        //                 accept: ".xls,.xlsx",
+        //             },
+        //         },
+        //         messages: {
+        //             design_image: {
+        //                 required: "Please select design layout pdf .",
+        //                 accept: "Please select an  design layout pdf file.",
+        //             },
+        //             bom_image: {
+        //                 required: "Please select bom excel .",
+        //                 accept: "Please select an bom excel file.",
+        //             },
+        //         },
+        //         submitHandler: function(form) {
+        //             // Use SweetAlert to show a confirmation dialog
+        //             Swal.fire({
+        //                 icon: 'question',
+        //                 title: 'Are you sure?',
+        //                 text: 'You want to send this design to Production Department ?',
+        //                 showCancelButton: true,
+        //                 confirmButtonText: 'Yes',
+        //                 cancelButtonText: 'No',
+        //             }).then(function(result) {
+        //                 if (result.isConfirmed) {
+        //                     // If user clicks "Yes", submit the form
+        //                     form.submit();
+        //                 }
+        //             });
+        //         }
+        //     });
+        // });
     </script>
 @endsection

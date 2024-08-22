@@ -103,32 +103,6 @@
                                         class="fa big-icon fa-check icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">Purchase Order Approved</span></a>
                             </li>
-<<<<<<< HEAD
-                           <li
-                                class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') ? 'active' : '' }}">
-                                <a href="{{ route('list-approved-purchase-orders-owner') }}" aria-expanded="false"><i
-                                        class="fa big-icon fa-user-tag icon-wrap" aria-hidden="true"></i> <span
-                                        class="mini-click-non">Submitted PO by Vendor</span></a>
-                            </li>
-                            <li
-                                class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') ? 'active' : '' }}">
-                                <a href="{{ route('list-approved-purchase-orders-owner') }}" aria-expanded="false"><i
-                                        class="fa big-icon fa-shield-alt icon-wrap" aria-hidden="true"></i> <span
-                                        class="mini-click-non">Security Created Gate Pass</span></a>
-                            </li>
-                            <li
-                                class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') ? 'active' : '' }}">
-                                <a href="{{ route('list-approved-purchase-orders-owner') }}" aria-expanded="false"><i
-                                        class="fa big-icon fa-clipboard-check icon-wrap" aria-hidden="true"></i> <span
-                                        class="mini-click-non">Quality Dept Created GRN</span></a>
-                            </li>
-                            <li
-                                class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') ? 'active' : '' }}">
-                                <a href="{{ route('list-approved-purchase-orders-owner') }}" aria-expanded="false"><i
-                                        class="fa big-icon fa-clipboard-list icon-wrap" aria-hidden="true"></i> <span
-                                        class="mini-click-non">Material Received From Quality Dept</span></a>
-                            </li>
-=======
                             <li
                                 class="nav-item {{ request()->is('owner/list-owner-submited-po-to-vendor') ? 'active' : '' }}">
                                 <a title="Inbox" href="{{ route('list-owner-submited-po-to-vendor') }}"><i
@@ -193,7 +167,6 @@
                                class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
                                class="mini-sub-pro">Dispatch Dept Production Dispatch Completed</span></a>
                    </li> 
->>>>>>> 0ff0612627f63ba193fc387ec4832daf63830599
                             <li
                             class="nav-item {{ Request::is('list-rejected-chalan-po-wise') ? 'active' : '' }}">
                             <a href="{{ route('list-rejected-chalan-po-wise') }}" aria-expanded="false"><i
@@ -212,22 +185,7 @@
                                         class="fa big-icon fa-file-invoice icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">PO Payment Release Request</span></a>
                             </li>
-<<<<<<< HEAD
-                            <li
-                            class="nav-item {{ request()->is('owner/list-po-recived-for-approval-payment') ? 'active' : '' }}">
-                            <a href="{{ route('list-po-recived-for-approval-payment') }}" aria-expanded="false"><i
-                                    class="fa big-icon fa-box  icon-wrap" aria-hidden="true"></i> <span
-                                    class="mini-click-non">Logistics Dept Received Product completed list</span></a>
-                        </li>
-                            <li
-                            class="nav-item {{ request()->is('owner/list-product-dispatch-completed') ? 'active' : '' }}">
-                            <a href="{{ route('list-product-dispatch-completed') }}" aria-expanded="false"><i
-                                    class="fa big-icon fa-truck icon-wrap" aria-hidden="true"></i> <span
-                                    class="mini-click-non">Dispatch Completed</span></a>
-                        </li> 
-=======
                            
->>>>>>> 0ff0612627f63ba193fc387ec4832daf63830599
                             
                             <li><a href="{{ route('list-rules-regulations') }}" aria-expanded="false"><i
                                 class="fa big-icon fa-file-alt  icon-wrap" aria-hidden="true"></i> <span
