@@ -56,30 +56,20 @@ label.error {
                             @endif
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="all-form-element-inner">
-                                    <form action="{{ route('store-purchase-request-req') }}" method="POST" id="addDesignsForm"
+                                    <form action="{{ route('store-purchase-request-req') }}" method="POST" id="regForm"
                                         enctype="multipart/form-data">
                                         @csrf
                                         <div class="form-group-inner">
 
                                             {{-- ========================== --}}
                                             <div class="container-fluid">
-                                                {{-- <form 
-                                                action="{{ route('addmorePost') }}"
-                                                method="POST"> --}}
-
-                                                {{-- @csrf --}}
-
                                                 @if ($errors->any())
                                                 <div class="alert alert-danger">
-
                                                     <ul>
-
                                                         @foreach ($errors->all() as $error)
                                                         <li>{{ $error }}</li>
                                                         @endforeach
-
                                                     </ul>
-
                                                 </div>
                                                 @endif
 
@@ -102,7 +92,7 @@ label.error {
                                             <div class="row">
                                                
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="bom_file_req">Bill Of Material (upload excel file) :</label>
+                                                    <label for="bom_file_req">Bill Of Material (upload excel file min:10KB to 2MB) :</label>
                                                      <input type="file" class="form-control" accept=".xls, .xlsx" id="bom_file_req"
                                                          name="bom_file_req" placeholder="Enter bom_file_req">
                                                          <input type="hidden" class="form-control" id="production_id"
@@ -143,121 +133,52 @@ label.error {
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script>
-var i = 0;
+  $(document).ready(function() {
+    // Custom validation method to check file extension
+    $.validator.addMethod("fileExtension", function(value, element, param) {
+        const extension = value.split('.').pop().toLowerCase();
+        return $.inArray(extension, param) !== -1;
+    }, "Invalid file extension.");
 
-$("#add").click(function() {
-    ++i;
+    // Custom validation method to check file size
+    $.validator.addMethod("fileSize", function(value, element, param) {
+        if (element.files.length === 0) {
+            return false; // No file selected
+        }
+        const fileSizeKB = element.files[0].size / 1024;
+        return fileSizeKB >= param[0] && fileSizeKB <= param[1];
+    }, "File size must be between {0} KB and {1} KB.");
 
-    $("#dynamicTable").append(
-        '<tr><td><input type="text" name="addmore[' +
-        i +
-        '][description]" placeholder="Enter your description" class="form-control" /></td><td><input type="text" name="addmore[' +
-        i +
-        '][quantity]" placeholder="Enter your quantity" class="form-control" /></td><td><input type="text" name="addmore[' +
-        i +
-        '][unit]" placeholder="Enter your unit" class="form-control" /></td><td><input type="text" name="addmore[' +
-        i +
-        '][day]" placeholder="Enter your day" class="form-control" /></td><td><input type="text" name="addmore[' +
-        i +
-        '][remark]" placeholder="Enter your rremark" class="form-control" /></td><td><input type="text" name="addmore[' +
-        i +
-        '][stock]" placeholder="Enter your stock" class="form-control" /></td><td><button type="button" class="btn btn-danger remove-tr">Remove</button></td></tr>'
-    );
-});
-
-$(document).on("click", ".remove-tr", function() {
-    $(this).parents("tr").remove();
-});
-</script>
-<script>
-jQuery.noConflict();
-jQuery(document).ready(function($) {
-    $("#addDesignsForm").validate({
+    // Initialize the form validation
+    $("#regForm").validate({
         rules: {
-          
-            department_id: {
+            bom_file_req: {
                 required: true,
-                // Add your custom validation rule if needed
-            },
-            req_name: {
-                required: true,
-            },
-            production_id: {
-                required: true,
-            },
-            req_date: {
-                required: true,
-            },
-            description: {
-                required: true,
-            },
-            quantity: {
-                required: true,
-            },
-            unit: {
-                required: true,
-            },
-            day: {
-                required: true,
-            },          
-            remark: {
-                required: true,
-            },
-            stock: {
-                required: true,
-            },
-            signature: {
-                required: true,
-            },
-            status: {
-                required: true,
+                fileExtension: ["xlsx", "xls"],
+                fileSize: [10, 2048], // Min 10KB and Max 2MB (2 * 1024 KB)
             },
         },
         messages: {
-          
-            department_id: {
-                required: "Please select a valid department id.",
+            bom_file_req: {
+                required: "Please upload an Excel file (xlsx, xls).",
+                fileExtension: "Only XLSX and XLS files are allowed.",
+                fileSize: "File size must be between 10 KB and 2048 KB.",
             },
-            req_name: {
-                required: "Please enter requistion name.",
-            },
-            production_id: {
-                required: "Please enter requistion number.",
-            },
-            req_date: {
-                required: "Please enter requistion date.",
-            },
-            description: {
-                required: "Please enter description.",
-            },
-            quantity: {
-                required: "Please enter quantity.",
-            },
-            unit: {
-                required: "Please enter unit.",
-            },
-            day: {
-                required: "Please enter day.",
-            },
-            remark: {
-                required: "Please enter remark.",
-            },
-            stock: {
-                required: "Please enter stock.",
-            },
-            signature: {
-                required: "Please select a signature.",
-                accept: "Please select an image file.",
-            },
-        
-            status: {
-                required: "Please enter status",
-            },
-
         },
     });
+
+    // Update the accept attribute to validate based on file extension
+    $('#bom_file_req').attr('accept', '.xlsx, .xls');
+
+    // Event listener to clear validation messages when a file is selected
+    $('#bom_file_req').on('change', function() {
+        // Clear validation errors for this field
+        $(this).valid();  // This triggers the validation and clears errors if the field is valid
+    });
 });
+
 </script>
+
 
 
 

@@ -105,7 +105,7 @@
                             </li>
                             <li
                                 class="nav-item {{ request()->is('owner/list-owner-submited-po-to-vendor') ? 'active' : '' }}">
-                                <a href="{{ route('list-owner-submited-po-to-vendor') }}" aria-expanded="false"><i
+                                <a title="Inbox" href="{{ route('list-owner-submited-po-to-vendor') }}"><i
                                         class="fa big-icon fa-user-tag icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">Submitted PO by Vendor</span></a>
                             </li>
