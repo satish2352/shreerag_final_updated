@@ -103,6 +103,7 @@
                                         class="fa big-icon fa-check icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">Purchase Order Approved</span></a>
                             </li>
+<<<<<<< HEAD
                            <li
                                 class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') ? 'active' : '' }}">
                                 <a href="{{ route('list-approved-purchase-orders-owner') }}" aria-expanded="false"><i
@@ -127,6 +128,72 @@
                                         class="fa big-icon fa-clipboard-list icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">Material Received From Quality Dept</span></a>
                             </li>
+=======
+                            <li
+                                class="nav-item {{ request()->is('owner/list-owner-submited-po-to-vendor') ? 'active' : '' }}">
+                                <a title="Inbox" href="{{ route('list-owner-submited-po-to-vendor') }}"><i
+                                        class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                        class="mini-sub-pro">Submitted PO by Vendor</span></a>
+                            </li>
+                            <li class="nav-item {{ request()->is('owner/list-owner-gatepass') ? 'active' : '' }}">
+                            <a title="Inbox" href="{{ route('list-owner-gatepass') }}"><i
+                                    class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                    class="mini-sub-pro">Security Created Gate Pass</span></a>
+                            </li>
+                            <li
+                            class="nav-item {{ request()->is('owner/list-owner-grn') ? 'active' : '' }}">
+                            <a title="Inbox" href="{{ route('list-owner-grn') }}"><i
+                                    class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                    class="mini-sub-pro">Material Received for GRN Generate</span></a>
+                             </li>
+
+                             <li
+                             class="nav-item {{ request()->is('owner/list-material-sent-to-store-generated-grn') ? 'active' : '' }}">
+                             <a title="Inbox" href="{{ route('list-material-sent-to-store-generated-grn') }}"><i
+                                     class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                     class="mini-sub-pro">Generated GRN Material send Quality Dept to Store </span></a>
+                         </li>
+           
+                         <li
+                         class="nav-item {{ request()->is('owner/list-owner-material-recived-from-store') ? 'active' : '' }}">
+                         <a title="Inbox" href="{{ route('list-owner-material-recived-from-store') }}"><i
+                                 class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                 class="mini-sub-pro">Store Dept Material send to Production Dept</span></a>
+                         </li>
+                         <li
+                         class="nav-item {{ request()->is('owner/list-owner-final-production-completed') ? 'active' : '' }}">
+                         <a title="Inbox" href="{{ route('list-owner-final-production-completed') }}"><i
+                                 class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                 class="mini-sub-pro">Production Department Completed Production</span></a>
+                          </li>
+                     <li
+                     class="nav-item {{ request()->is('owner/list-owner-final-production-completed-recive-to-logistics') ? 'active' : '' }}">
+                     <a title="Inbox" href="{{ route('list-owner-final-production-completed-recive-to-logistics') }}"><i
+                             class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                             class="mini-sub-pro">Logistics Dept Received Product completed list</span></a>
+                      </li>
+
+                      <li
+                     class="nav-item {{ request()->is('owner/recive-owner-logistics-list') ? 'active' : '' }}">
+                     <a title="Inbox" href="{{ route('recive-owner-logistics-list') }}"><i
+                             class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                             class="mini-sub-pro">Fianance Dept Production Recevied from Logistics Dept</span></a>
+                      </li>
+
+                      <li
+                      class="nav-item {{ request()->is('owner/list-owner-send-to-dispatch') ? 'active' : '' }}">
+                      <a title="Inbox" href="{{ route('list-owner-send-to-dispatch') }}"><i
+                              class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                              class="mini-sub-pro">Fianance Dept Production Request Send to Dispatch Dept</span></a>
+                       </li>
+                     
+                       <li
+                       class="nav-item {{ request()->is('owner/list-product-dispatch-completed') ? 'active' : '' }}">
+                       <a title="Inbox" href="{{ route('list-product-dispatch-completed') }}"><i
+                               class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                               class="mini-sub-pro">Dispatch Dept Production Dispatch Completed</span></a>
+                   </li> 
+>>>>>>> 0ff0612627f63ba193fc387ec4832daf63830599
                             <li
                             class="nav-item {{ Request::is('list-rejected-chalan-po-wise') ? 'active' : '' }}">
                             <a href="{{ route('list-rejected-chalan-po-wise') }}" aria-expanded="false"><i
@@ -145,6 +212,7 @@
                                         class="fa big-icon fa-file-invoice icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">PO Payment Release Request</span></a>
                             </li>
+<<<<<<< HEAD
                             <li
                             class="nav-item {{ request()->is('owner/list-po-recived-for-approval-payment') ? 'active' : '' }}">
                             <a href="{{ route('list-po-recived-for-approval-payment') }}" aria-expanded="false"><i
@@ -157,6 +225,9 @@
                                     class="fa big-icon fa-truck icon-wrap" aria-hidden="true"></i> <span
                                     class="mini-click-non">Dispatch Completed</span></a>
                         </li> 
+=======
+                           
+>>>>>>> 0ff0612627f63ba193fc387ec4832daf63830599
                             
                             <li><a href="{{ route('list-rules-regulations') }}" aria-expanded="false"><i
                                 class="fa big-icon fa-file-alt  icon-wrap" aria-hidden="true"></i> <span

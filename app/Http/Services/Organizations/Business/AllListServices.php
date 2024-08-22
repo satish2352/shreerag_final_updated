@@ -89,7 +89,7 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->getAllListApprovedPurchaseOrderOwnerlogin();
-        
+      
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -139,6 +139,103 @@ class AllListServices
             $data_output = $this->repo->getPurchaseOrderBusinessWise($purchase_order_id);
         //    dd($data_output);
         //    die();
+            return $data_output;
+
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getAllListSubmitedPurchaeOrderByVendorOwnerside()
+    {
+        try {
+            $data_output = $this->repo->getAllListSubmitedPurchaeOrderByVendorOwnerside();
+            return $data_output;
+
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getOwnerReceivedGatePass()
+    {
+        try {
+            $data_output = $this->repo->getOwnerReceivedGatePass();
+            return $data_output;
+
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getOwnerGRN()
+    {
+        try {
+            $data = $this->repo->getOwnerGRN();
+            return $data;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getAllListMaterialSentFromQualityToStoreGeneratedGRN()
+    {
+        try {
+            $data = $this->repo->getAllListMaterialSentFromQualityToStoreGeneratedGRN();
+            return $data;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getAllListMaterialSentFromQualityToStoreGeneratedGRNBusinessWise($id)
+    {
+        try {
+            $data = $this->repo->getAllListMaterialSentFromQualityToStoreGeneratedGRNBusinessWise($id);
+            return $data;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getOwnerAllListMaterialRecievedToProduction()
+    {
+        try {
+            $data = $this->repo->getOwnerAllListMaterialRecievedToProduction();
+            return $data;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function getOwnerAllCompletedProduction(){
+        try {
+          $data_output = $this->repo->getOwnerAllCompletedProduction();
+        //  dd($data_output);
+        //  die();
+          return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getOwnerFinalAllCompletedProductionLogistics(){
+        try {
+          $data_output = $this->repo->getOwnerFinalAllCompletedProductionLogistics();
+        //  dd($data_output);
+        //  die();
+          return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getOwnerAllListBusinessReceivedFromLogistics(){
+        try {
+            $data_output = $this->repo->getOwnerAllListBusinessReceivedFromLogistics();
+         
+            return $data_output;
+
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getOwnerAllListBusinessFianaceSendToDispatch(){
+        try {
+            $data_output = $this->repo->getOwnerAllListBusinessFianaceSendToDispatch();
+         
             return $data_output;
 
         } catch (\Exception $e) {

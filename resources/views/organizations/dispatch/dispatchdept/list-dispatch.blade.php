@@ -86,6 +86,7 @@
                                                 <th data-field="title" data-editable="true">customer Name</th>
                                                 <th data-field="product_name" data-editable="true">Product Name</th>
                                                 <th data-field="quantity" data-editable="true">Quantity</th>
+                                                <th data-field="truck_no" data-editable="true">Truck Number</th>
                                                 <th data-field="outdoor_no" data-editable="true">Outdoor Number</th>
                                                 <th data-field="gate_entry" data-editable="true">Gate Entry</th>
                                                 <th data-field="remark" data-editable="true">Dispatch Remark</th>
@@ -102,6 +103,7 @@
                                                     <td>{{ ucwords($data->title) }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
+                                                    <td>{{ ucwords($data->truck_no) }}</td>
                                                     <td>{{ ucwords($data->outdoor_no) }}</td>
                                                     <td>{{ ucwords($data->gate_entry) }}</td>
                                                     <td>{{ ucwords($data->remark) }}</td>  

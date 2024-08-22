@@ -381,11 +381,11 @@ class AllListRepository
           'design_revision_for_prod.reject_reason_prod',
           'designs.bom_image',
           'designs.design_image',
-          'purchase_orders.vendor_id'
-        )
-        // ->groupBy('businesses.id')
+          'purchase_orders.vendor_id',
+          'purchase_orders.updated_at',
+        )->orderBy('purchase_orders.updated_at', 'desc')
         ->get();
-
+ 
       return $data_output;
     } catch (\Exception $e) {
 
@@ -446,8 +446,9 @@ class AllListRepository
             'vendors.vendor_address', 
             'vendors.contact_no', 
             'vendors.gst_no', 
-  
-          )->get();
+            'purchase_orders.updated_at',
+            )->orderBy('purchase_orders.updated_at', 'desc')
+          ->get();
           
         
           return $data_output;
@@ -489,17 +490,19 @@ class AllListRepository
         // ->distinct('businesses.id')
         ->where('businesses.is_active', true)
         ->groupBy( 'businesses_details.id',
-        'businesses_details.product_name','businesses_details.description')
+        'businesses_details.product_name','businesses_details.description',
+        'purchase_orders.updated_at')
 
         ->select(
           // 'purchase_orders.purchase_orders_id as purchase_order_id',
           'businesses_details.id',
           'businesses_details.product_name',
           'businesses_details.description',
-         
+          'purchase_orders.updated_at'
         )
         ->distinct('businesses.id')
         // ->groupBy('businesses.id')
+        ->orderBy('purchase_orders.updated_at', 'desc')
         ->get();
 
       return $data_output;
@@ -565,8 +568,9 @@ class AllListRepository
             'vendors.vendor_address', 
             'vendors.contact_no', 
             'vendors.gst_no', 
-  
-          )->get();
+            'purchase_orders.updated_at',
+              )->orderBy('purchase_orders.updated_at', 'desc')
+          ->get();
           
         
           return $data_output;
@@ -617,9 +621,10 @@ class AllListRepository
               'production.business_id',
               'design_revision_for_prod.reject_reason_prod',
               'designs.bom_image',
-              'designs.design_image'
-
-          )->get();
+              'designs.design_image',
+              'purchase_orders.updated_at',
+              )->orderBy('purchase_orders.updated_at', 'desc')
+          ->get();
 
         return $data_output;
     } catch (\Exception $e) {
