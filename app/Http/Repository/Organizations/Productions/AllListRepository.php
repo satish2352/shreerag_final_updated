@@ -123,7 +123,8 @@ class AllListRepository  {
               'businesses.title',
               'businesses.remarks',
               'businesses.is_active',
-              'production.business_id'
+              'production.business_id',
+              'businesses.updated_at',
           )->orderBy('businesses.updated_at', 'desc')
           ->get();
 
@@ -267,7 +268,8 @@ public function getAllNewRequirementBusinessWise($business_id) {
               'business_application_processes.production_status_id',
               'business_application_processes.business_status_id',
               'business_application_processes.design_status_id',
-          )->orderBy('businesses_details.updated_at', 'desc')
+              'production.updated_at',
+          )->orderBy('production.updated_at', 'desc')
           ->get();
 
       return $data_output;
@@ -417,12 +419,12 @@ public function getAllNewRequirementBusinessWise($business_id) {
         // ->leftJoin('purchase_orders', function($join) {
         //   $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
         // })
-        ->where(function($query) use ($decoded_business_id) {
-          $query->where('production.business_id', $decoded_business_id)
-                ->where('production.is_approved_production', 1);
-      })
-        // ->where('production.business_id', $decoded_business_id)
-        //   ->where('production.is_approved_production', 1)
+      //   ->where(function($query) use ($decoded_business_id) {
+      //     $query->where('production.business_id', $decoded_business_id)
+      //           ->where('production.is_approved_production', 1);
+      // })
+        ->where('production.business_id', $decoded_business_id)
+          ->where('production.is_approved_production', 1)
           ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
           ->orWhereIn('business_application_processes.store_status_id',$array_to_be_check_store)
           // ->orWhereIn('purchase_orders.purchase_status_from_purchase',$array_to_be_check_purchase)
@@ -431,6 +433,7 @@ public function getAllNewRequirementBusinessWise($business_id) {
           
           // ->where('businesses.is_active',true)
         
+          ->where('businesses_details.is_active', true)
           ->distinct('businesses_details.id')
           // ->where('businesses.is_active',true)
           ->select(
@@ -445,8 +448,9 @@ public function getAllNewRequirementBusinessWise($business_id) {
               'production.business_id',
               'designs.bom_image',
               'designs.design_image',
-
-          )->get();
+              'production.updated_at',
+              )->orderBy('production.updated_at', 'desc')
+          ->get();
         return $data_output;
     } catch (\Exception $e) {
         return $e;
