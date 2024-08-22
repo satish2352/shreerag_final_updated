@@ -490,14 +490,15 @@ class AllListRepository
         // ->distinct('businesses.id')
         ->where('businesses.is_active', true)
         ->groupBy( 'businesses_details.id',
-        'businesses_details.product_name','businesses_details.description')
+        'businesses_details.product_name','businesses_details.description',
+        'purchase_orders.updated_at')
 
         ->select(
           // 'purchase_orders.purchase_orders_id as purchase_order_id',
           'businesses_details.id',
           'businesses_details.product_name',
           'businesses_details.description',
-          'purchase_orders.updated_at',
+          'purchase_orders.updated_at'
         )
         ->distinct('businesses.id')
         // ->groupBy('businesses.id')

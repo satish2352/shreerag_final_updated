@@ -98,8 +98,8 @@ class AllListRepositor
           'production.business_id',
           'design_revision_for_prod.reject_reason_prod',
           'designs.bom_image',
-          'designs.design_image'
-
+          'designs.design_image',
+          'designs.updated_at'
         )->orderBy('designs.updated_at', 'desc')->get();
       return $data_output;
     } catch (\Exception $e) {
@@ -150,8 +150,8 @@ class AllListRepositor
           'design_revision_for_prod.reject_reason_prod',
           'design_revision_for_prod.id as design_revision_for_prod_id',
           'designs.bom_image',
-          'designs.design_image'
-
+          'designs.design_image',
+          'production.updated_at'
         )
         ->orderBy('production.updated_at', 'desc')->get();
       return $data_output;
@@ -275,7 +275,8 @@ class AllListRepositor
               'businesses_details.product_name',
               'businesses_details.description',
               'businesses_details.quantity',
-              'businesses_details.rate'
+              'businesses_details.rate',
+              'production.updated_at'
           )->orderBy('production.updated_at', 'desc')->get();
   
           return $data_output;
@@ -327,7 +328,8 @@ class AllListRepositor
         ->groupBy('businesses.id','businesses_details.id','businesses_details.product_name',
         'businesses_details.description',
         'businesses_details.quantity',
-        'businesses_details.rate'
+        'businesses_details.rate',
+        'purchase_orders.updated_at'
         )
         ->select(
           // 'business_application_processes.purchase_order_id',
@@ -345,7 +347,8 @@ class AllListRepositor
           'businesses_details.product_name',
           'businesses_details.description',
           'businesses_details.quantity',
-          'businesses_details.rate'
+          'businesses_details.rate',
+          'purchase_orders.updated_at'
         )->orderBy('purchase_orders.updated_at', 'desc')->get();
 
       return $data_output;
@@ -395,9 +398,10 @@ class AllListRepositor
           'production.business_id',
           'design_revision_for_prod.reject_reason_prod',
           'designs.bom_image',
-          'designs.design_image'
-
-        )->get();
+          'designs.design_image',
+          'businesses_details.updated_at'
+          )->orderBy('businesses_details.updated_at', 'desc')
+        ->get();
 
         
       return $data_output;
@@ -478,8 +482,10 @@ class AllListRepositor
             'vendors.vendor_address', 
             'vendors.contact_no', 
             'vendors.gst_no', 
-  
-          )->get();
+            'purchase_orders.updated_at'
+            )->orderBy('purchase_orders.updated_at', 'desc')
+          
+          ->get();
          return $data_output;
       } catch (\Exception $e) {
           return $e->getMessage(); // Changed to return the error message string
@@ -533,7 +539,8 @@ class AllListRepositor
           // 'designs.bom_image',
           // 'designs.design_image'
 
-        )
+          'purchase_orders.updated_at'
+          )->orderBy('purchase_orders.updated_at', 'desc')
         ->get();
       return $data_output;
     } catch (\Exception $e) {
@@ -564,7 +571,7 @@ class AllListRepositor
           ->where('businesses.is_active',true)
           ->distinct('businesses.id')
           ->groupBy('businesses.id', 'businesses.customer_po_number', 'businesses.title',
-           'businesses.remarks', 'businesses.is_active', 'production.business_id'
+           'businesses.remarks', 'businesses.is_active', 'production.business_id', 'businesses.updated_at'
            )
            
           ->select(
@@ -580,8 +587,9 @@ class AllListRepositor
               // 'designs.design_image',
               // 'designs.bom_image',
               // 'designs.business_id',
-              'production.business_id'
-          
+              'production.business_id',
+              'businesses.updated_at',
+             'businesses.updated_at'
           )->orderBy('businesses.updated_at', 'desc')->get();
 
 
@@ -642,8 +650,8 @@ public function loadDesignSubmittedForProductionBusinessWise($business_id){
             'designs.id',
             'designs.design_image',
             'designs.bom_image',
-            'designs.business_id'
-        
+            'designs.business_id',
+         'businesses_details.updated_at'
         )->orderBy('businesses_details.updated_at', 'desc')->get();
 
 
@@ -707,8 +715,8 @@ public function getAllListSubmitedPurchaeOrderByVendorOwnerside(){
             'vendors.vendor_address', 
             'vendors.contact_no', 
             'vendors.gst_no', 
-  
-          )->get();
+            'purchase_orders.updated_at'
+            )->orderBy('purchase_orders.updated_at', 'desc')->get();
      
    
     return $data_output;
@@ -781,10 +789,9 @@ public function getAllListMaterialSentFromQualityToStoreGeneratedGRN()
                 'design_revision_for_prod.reject_reason_prod',
                 'design_revision_for_prod.id as design_revision_for_prod_id',
                 'designs.bom_image',
-                'designs.design_image'
-
-            )
-            ->get();
+                'designs.design_image',
+                'purchase_orders.updated_at'
+                )->orderBy('purchase_orders.updated_at', 'desc')->get();
            
         // return $data_output;
         return $data_output;
@@ -812,11 +819,13 @@ public function getAllListMaterialSentFromQualityToStoreGeneratedGRNBusinessWise
             'vendors.vendor_address', 
             'vendors.contact_no', 
             'vendors.gst_no', 
-            'purchase_orders.is_active'
+            'purchase_orders.is_active',
+             'purchase_orders.updated_at'
         )
         ->where('purchase_orders.business_details_id', $id)
         ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
-        ->get(); // Added to execute the query and get results
+        ->orderBy('purchase_orders.updated_at', 'desc')->get();
+   
        
         return $data_output;
     } catch (\Exception $e) {
@@ -852,7 +861,8 @@ public function getOwnerAllListMaterialRecievedToProduction(){
       ->groupBy('businesses.id','businesses.customer_po_number','businesses.title','businesses_details.id','businesses_details.product_name',
       'businesses_details.description',
       'businesses_details.quantity',
-      'businesses_details.rate'
+      'businesses_details.rate',
+       'purchase_orders.updated_at'
       )
       ->select(
            'businesses.id',
@@ -862,10 +872,8 @@ public function getOwnerAllListMaterialRecievedToProduction(){
           'businesses_details.product_name',
           'businesses_details.description',
           'businesses_details.quantity',
-          
-
-      )
-      ->get();
+          'purchase_orders.updated_at'
+          )->orderBy('purchase_orders.updated_at', 'desc')->get();
     return $data_output;
   } catch (\Exception $e) {
       
@@ -902,7 +910,8 @@ public function getOwnerAllCompletedProduction(){
       ->groupBy('businesses.id','businesses.customer_po_number','businesses_details.id','businesses_details.product_name',
       'businesses_details.description',
       'businesses_details.quantity',
-      'businesses_details.rate'
+      'businesses_details.rate',
+      'purchase_orders.updated_at'
       )
       ->select(
           'businesses.customer_po_number',
@@ -911,6 +920,7 @@ public function getOwnerAllCompletedProduction(){
           'businesses_details.product_name',
           'businesses_details.description',
           'businesses_details.quantity',
+          'purchase_orders.updated_at'
           // 'production.business_id',
           // 'production.id as productionId',
           // 'design_revision_for_prod.reject_reason_prod',
@@ -919,8 +929,7 @@ public function getOwnerAllCompletedProduction(){
           // 'designs.design_image',
           // 'business_application_processes.store_material_sent_date'
 
-      )
-      ->get();
+          )->orderBy('purchase_orders.updated_at', 'desc')->get();
       
     return $data_output;
   } catch (\Exception $e) {
@@ -969,9 +978,9 @@ public function getOwnerFinalAllCompletedProductionLogistics(){
           'production.business_id',
           'production.id as productionId',
           'business_application_processes.store_material_sent_date',
-       
-      )
-      ->get();
+          'purchase_orders.updated_at'
+      
+      )->orderBy('purchase_orders.updated_at', 'desc')->get();
       
     return $data_output;
   } catch (\Exception $e) {
@@ -1022,6 +1031,7 @@ public function getOwnerAllListBusinessReceivedFromLogistics(){
         'businesses_details.description',
         'business_application_processes.id',
         'tbl_logistics.truck_no',
+        'purchase_orders.updated_at'
     )
       ->select(
         'businesses.customer_po_number',
@@ -1033,9 +1043,9 @@ public function getOwnerAllListBusinessReceivedFromLogistics(){
           // 'production.id as productionId',
           // 'business_application_processes.store_material_sent_date',
           'tbl_logistics.truck_no',
+          'purchase_orders.updated_at'
           // 'tbl_logistics.vendor_id',
-      )
-      ->get();
+      )->orderBy('purchase_orders.updated_at', 'desc')->get();
       // ->select(
       //     'businesses.id',
       //     'businesses_details.id',
@@ -1102,6 +1112,7 @@ public function getOwnerAllListBusinessFianaceSendToDispatch(){
       'businesses_details.description',
       'business_application_processes.id',
       'tbl_logistics.truck_no',
+        'tbl_logistics.updated_at'
   )
     ->select(
       'businesses.customer_po_number',
@@ -1111,8 +1122,8 @@ public function getOwnerAllListBusinessFianaceSendToDispatch(){
       'businesses_details.description',
       'businesses_details.quantity',
         'tbl_logistics.truck_no',
-    )
-    ->get();
+          'tbl_logistics.updated_at'
+    )->orderBy('purchase_orders.updated_at', 'desc')->get();
     return $data_output;
   } catch (\Exception $e) {
       return $e;
@@ -1164,6 +1175,7 @@ public function listProductDispatchCompletedFromDispatch(){
         'tbl_dispatch.gate_entry',
         'tbl_dispatch.remark',
         'tbl_dispatch.updated_at',
+          'tbl_dispatch.updated_at'
     )
       ->select(
         'businesses_details.id',
@@ -1177,6 +1189,7 @@ public function listProductDispatchCompletedFromDispatch(){
           'tbl_dispatch.gate_entry',
           'tbl_dispatch.remark',
           'tbl_dispatch.updated_at',
+            'tbl_dispatch.updated_at'
       )
       ->orderBy('tbl_dispatch.updated_at', 'desc')
       ->get();

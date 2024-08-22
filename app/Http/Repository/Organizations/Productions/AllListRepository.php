@@ -116,7 +116,7 @@ class AllListRepository  {
           })
           ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
           ->where('businesses.is_active', true)
-          ->groupBy('businesses.id', 'businesses.customer_po_number', 'businesses.title', 'businesses.remarks', 'businesses.is_active', 'production.business_id')
+          ->groupBy('businesses.id', 'businesses.customer_po_number', 'businesses.title', 'businesses.remarks', 'businesses.is_active', 'production.business_id', 'businesses.updated_at')
           ->select(
               'businesses.id',
               'businesses.customer_po_number',
@@ -124,7 +124,7 @@ class AllListRepository  {
               'businesses.remarks',
               'businesses.is_active',
               'production.business_id',
-              'businesses.updated_at',
+              'businesses.updated_at'
           )->orderBy('businesses.updated_at', 'desc')
           ->get();
 
