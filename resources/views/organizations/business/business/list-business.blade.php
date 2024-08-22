@@ -33,7 +33,7 @@
                         <div class="main-sparkline13-hd">
                             <h1>Business <span class="table-project-n">Data</span> Table</h1>
                             <div class="form-group-inner login-btn-inner row">
-                                <div class="col-lg-12">
+                                <div class="col-lg-2">
                                     <div class="login-horizental cancel-wp pull-left">
                                         <a href="{{ route('add-business') }}"><button
                                                 class="btn btn-sm btn-primary login-submit-cs" type="submit">Add
@@ -41,25 +41,8 @@
                                     </div>
                                 </div>
                                 
-                                <!-- <div class="col-lg-10"></div> -->
-                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                    <label>From Date : </label>
-                                    <input type="date" class="form-control" id="from_date" name="from_date" placeholder="From Date">
-                                </div>
-                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                    <label>End Date : </label>
-                                    <input type="date" class="form-control" id="end_date" name="end_date" placeholder="End Date">
-                                </div>
-                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                    <label>Business : </label>
-                                    <select class="form-control">
-                                        <option value="">Select Business</option>
-                                        <<option value="monthly">Monthly</option>
-                                        <<option value="yearly">Yearly</option>
-                                    </select>
-                                </div>
-                            </div> 
-                           
+                                <div class="col-lg-10"></div>
+                               
                             
                         </div>
                     </div>
