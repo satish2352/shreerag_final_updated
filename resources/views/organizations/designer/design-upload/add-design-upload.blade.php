@@ -9,6 +9,10 @@
             color: red;
             font-size: 12px;
         }
+
+        .red-text {
+            color: red;
+        }
     </style>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -79,109 +83,80 @@
                                                     </div>
 
                                                 </div>
-                                                    <div style="margin-top:20px">
-                                                        <table class="table table-bordered" id="dynamicTable">
+                                                <div style="margin-top:20px">
+                                                    <table class="table table-bordered" id="dynamicTable">
+                                                        <tr>
+                                                            <th class="col-sm-2">Product Name</th>
+                                                            <th class="col-md-2">Description</th>
+                                                            <th class="col-md-1">Quantity</th>
+                                                            <th class="col-md-1">Rate</th>
+                                                            <th class="col-sm-3">Upload Design Layout (upload pdf file)</th>
+                                                            <th class="col-sm-3">Upload BOM (upload excel file)</th>
+                                                            {{-- <th>Action</th> --}}
+                                                        </tr>
+                                                        @foreach ($business_details_data as $index => $item)
                                                             <tr>
-                                                                <th class="col-sm-2">Product Name</th>
-                                                                <th class="col-md-2">Description</th>
-                                                                <th class="col-md-1">Quantity</th>
-                                                                <th class="col-md-1">Rate</th>
-                                                                <th class="col-sm-3">Upload Design Layout (upload pdf file)</th>
-                                                                <th class="col-sm-3">Upload BOM (upload excel file)</th>
-                                                                {{-- <th>Action</th> --}}
-                                                            </tr>
-                                                            @foreach ($business_details_data as $index => $item)
-    <tr>
-        <input type="hidden" name="addmore[{{ $index }}][edit_id]" class="form-control" value="{{ $item->id }}" readonly />
+                                                                <input type="hidden"
+                                                                    name="addmore[{{ $index }}][edit_id]"
+                                                                    class="form-control" value="{{ $item->id }}"
+                                                                    readonly />
 
-        <td><input type="text" name="addmore[{{ $index }}][product_name]" class="form-control" value="{{ $item->product_name }}" readonly /></td>
-        <td><input type="text" name="addmore[{{ $index }}][description]" class="form-control" value="{{ $item->description }}" readonly /></td>
-        <td><input type="text" name="addmore[{{ $index }}][quantity]" class="form-control" value="{{ $item->quantity }}" readonly /></td>
-        <td><input type="text" name="addmore[{{ $index }}][rate]" class="form-control" value="{{ $item->rate }}" readonly /></td>
-        
-        <td>
-            <input type="file" class="form-control" accept="application/pdf" name="addmore[{{ $index }}][design_image]">
-            @if ($errors->has("addmore.{$index}.design_image"))
-                <span class="red-text">{{ $errors->first("addmore.{$index}.design_image") }}</span>
-            @endif
-        </td>
-        <td>
-            <input type="file" class="form-control" accept=".xls, .xlsx" name="addmore[{{ $index }}][bom_image]">
-            @if ($errors->has("addmore.{$index}.bom_image"))
-                <span class="red-text">{{ $errors->first("addmore.{$index}.bom_image") }}</span>
-            @endif
-        </td>
-    </tr>
-@endforeach
-
-                                                            {{-- @foreach ($business_details_data as $item)
-                                                           
-                                                                <tr>
-                                                                    <input type="hidden" name="addmore[0][edit_id]"
-                                                                        placeholder="Enter Description" class="form-control"
-                                                                        value="{{ $item->id }}" readonly />
-
-                                                                    <td><input type="text" name="addmore[0][product_name]"
-                                                                            placeholder="Enter product name"
-                                                                            class="form-control"
-                                                                            value="{{ $item->product_name }}" readonly />
-                                                                    </td>
-                                                                    <td><input type="text"
-                                                                            name="addmore[0][description]"
-                                                                            placeholder="Enter description"
-                                                                            class="form-control"
-                                                                            value="{{ $item->description }}" readonly />
-                                                                    </td>
-                                                                    <td><input type="text"
-                                                                        name="addmore[0][quantity]"
-                                                                        placeholder="Enter quantity"
-                                                                        class="form-control"
-                                                                        value="{{ $item->quantity }}" readonly />
-                                                                </td>
                                                                 <td><input type="text"
-                                                                    name="addmore[0][rate]"
-                                                                    placeholder="Enter rate"
-                                                                    class="form-control"
-                                                                    value="{{ $item->rate }}" readonly />
-                                                            </td>
-                                                                    <td> 
-                                                                        <input type="file" class="form-control" accept="application/pdf"
-                                                                        id="design_image" name="design_image">
-                                                                    @if ($errors->has('design_image'))
-                                                                        <span class="red-text"><?php //echo $errors->first('design_image', ':message'); ?></span>
-                                                                    @endif
-                                                                    </td>
-                                                                    <td>
-                                                                        <input type="file" class="form-control" accept=".xls, .xlsx"
-                                                                        id="bom_image" name="bom_image">
-                                                                    @if ($errors->has('bom_image'))
-                                                                        <span class="red-text"><?php //echo $errors->first('bom_image', ':message'); ?></span>
-                                                                    @endif
-                                                                    </td>
-                                                                </tr>
-                                                            @endforeach --}}
-                                                        </table>
-                                                    </div>
-                                                </div>
+                                                                        name="addmore[{{ $index }}][product_name]"
+                                                                        class="form-control"
+                                                                        value="{{ $item->product_name }}" readonly /></td>
+                                                                <td><input type="text"
+                                                                        name="addmore[{{ $index }}][description]"
+                                                                        class="form-control"
+                                                                        value="{{ $item->description }}" readonly /></td>
+                                                                <td><input type="text"
+                                                                        name="addmore[{{ $index }}][quantity]"
+                                                                        class="form-control" value="{{ $item->quantity }}"
+                                                                        readonly /></td>
+                                                                <td><input type="text"
+                                                                        name="addmore[{{ $index }}][rate]"
+                                                                        class="form-control" value="{{ $item->rate }}"
+                                                                        readonly /></td>
 
-                                                <div class="login-btn-inner">
-                                                    <div class="row">
-                                                        <div class="col-lg-5"></div>
-                                                        <div class="col-lg-7">
-                                                            <div class="login-horizental cancel-wp pull-left">
-                                                                <a href="{{ route('list-design-upload') }}"
-                                                                    class="btn btn-white"
-                                                                    style="margin-bottom:50px">Cancel</a>
-                                                                <button class="btn btn-sm btn-primary login-submit-cs"
-                                                                    type="submit" style="margin-bottom:50px">Save
-                                                                    Data</button>
-                                                            </div>
+                                                                <td>
+                                                                    <input type="file" class="form-control"
+                                                                        accept="application/pdf"
+                                                                        name="addmore[{{ $index }}][design_image]">
+                                                                    @if ($errors->has("addmore.{$index}.design_image"))
+                                                                        <span
+                                                                            class="red-text">{{ $errors->first("addmore.{$index}.design_image") }}</span>
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                    <input type="file" class="form-control"
+                                                                        accept=".xls, .xlsx"
+                                                                        name="addmore[{{ $index }}][bom_image]">
+                                                                    @if ($errors->has("addmore.{$index}.bom_image"))
+                                                                        <span
+                                                                            class="red-text">{{ $errors->first("addmore.{$index}.bom_image") }}</span>
+                                                                    @endif
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="login-btn-inner">
+                                                <div class="row">
+                                                    <div class="col-lg-5"></div>
+                                                    <div class="col-lg-7">
+                                                        <div class="login-horizental cancel-wp pull-left">
+                                                            <a href="{{ route('list-design-upload') }}"
+                                                                class="btn btn-white" style="margin-bottom:50px">Cancel</a>
+                                                            <button class="btn btn-sm btn-primary login-submit-cs"
+                                                                type="submit" style="margin-bottom:50px">Save
+                                                                Data</button>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </form>
-                                    </div>
+                                </div>
                                 </div>
                             </div>
                         </div>
@@ -189,6 +164,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
