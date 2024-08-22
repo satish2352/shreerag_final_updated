@@ -40,7 +40,6 @@ Route::get('/register', ['as' => 'register', 'uses' => 'App\Http\Controllers\Adm
 Route::group(['middleware' => ['admin']], function () {
 
     Route::get('/dashboard', ['as' => '/dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
-    Route::get('/yearly-report', ['as' => '/dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@reports']);
 
     // Route::get('/forms', ['as' => 'forms', 'uses' => 'App\Http\Controllers\Admin\Forms\FormsController@index']);
     Route::get('/admin-log-out', ['as' => 'log-out', 'uses' => 'App\Http\Controllers\Admin\LoginRegister\LoginController@logout']);
@@ -216,6 +215,17 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-product-dispatch-completed', ['as' => 'list-product-dispatch-completed', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@listProductDispatchCompletedFromDispatch']);
 
         Route::post('/delete-addmore', ['as' => 'delete-addmore', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@destroyAddmore']);
+        Route::get('/list-owner-submited-po-to-vendor', ['as' => 'list-owner-submited-po-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListSubmitedPurchaeOrderByVendorOwnerside']);
+        Route::get('/list-owner-gatepass', ['as' => 'list-owner-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getOwnerReceivedGatePass']);
+        Route::get('/list-owner-grn', ['as' => 'list-owner-grn', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getOwnerGRN']);
+        Route::get('/list-material-sent-to-store-generated-grn', ['as' => 'list-material-sent-to-store-generated-grn', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListMaterialSentFromQualityToStoreGeneratedGRN']);
+        Route::get('/list-material-sent-to-store-generated-grn-businesswise/{id}', ['as' => 'list-material-sent-to-store-generated-grn-businesswise', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListMaterialSentFromQualityToStoreGeneratedGRNBusinessWise']);
+        Route::get('/list-owner-material-recived-from-store', ['as' => 'list-owner-material-recived-from-store', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getOwnerAllListMaterialRecievedToProduction']);
+        Route::get('/list-owner-final-production-completed', ['as' => 'list-owner-final-production-completed', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getOwnerAllCompletedProduction']);
+        Route::get('/list-owner-final-production-completed-recive-to-logistics', ['as' => 'list-owner-final-production-completed-recive-to-logistics', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getOwnerFinalAllCompletedProductionLogistics']);
+        Route::get('/recive-owner-logistics-list', ['as' => 'recive-owner-logistics-list', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getOwnerAllListBusinessReceivedFromLogistics']);
+        Route::get('/list-owner-send-to-dispatch', ['as' => 'list-owner-send-to-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getOwnerAllListBusinessFianaceSendToDispatch']);
+    
 
     });
     

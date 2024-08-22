@@ -6,18 +6,18 @@
 }
 </style>
 <!-- ============= pratiksha (21/08/24) ============= change for sidebar changes and change icon -->
+
 <div class="left-sidebar-pro">
     <nav id="sidebar" class="">
         <div class="sidebar-header">
-        <img class="main-logo1"
-        src="{{ asset('website/assets/img/logo/LANSCAPE LOG.png') }}"  style="height: 3.9rem!important;" alt="">
-            <a href="{{ route('login') }}"><img class="main-logo"
-                    src="{{ asset('website/assets/img/logo/LANSCAPE LOG.png') }}" alt=""></a>
-            <!-- <strong><img src="{{ asset('img/logo/logo_updated.png') }}" alt="" ></strong> -->
+            <img class="main-logo1"
+            src="{{ asset('website/assets/img/logo/LANSCAPE LOG.png') }}"  style="height: 3.9rem!important;" alt="">
+                <a href="{{ route('login') }}"><img class="main-logo"
+                        src="{{ asset('website/assets/img/logo/LANSCAPE LOG.png') }}" alt=""></a>
+                <!-- <strong><img src="{{ asset('img/logo/logo_updated.png') }}" alt="" ></strong> -->
         </div>
         <div class="left-custom-menu-adp-wrap comment-scrollbar">
             <nav class="sidebar-nav left-sidebar-menu-pro">
-
                 <ul class="metismenu" id="menu1">
                     @if (session()->get('role_id') == config('constants.ROLE_ID.SUPER'))
                         <li
@@ -105,67 +105,67 @@
                             </li>
                             <li
                                 class="nav-item {{ request()->is('owner/list-owner-submited-po-to-vendor') ? 'active' : '' }}">
-                                <a title="Inbox" href="{{ route('list-owner-submited-po-to-vendor') }}"><i
+                                <a href="{{ route('list-owner-submited-po-to-vendor') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-user-tag icon-wrap" aria-hidden="true"></i> <span
-                                        class="mini-sub-pro">Submitted PO by Vendor</span></a>
+                                        class="mini-click-non">Submitted PO by Vendor</span></a>
                             </li>
                             <li class="nav-item {{ request()->is('owner/list-owner-gatepass') ? 'active' : '' }}">
-                            <a title="Inbox" href="{{ route('list-owner-gatepass') }}"><i
+                            <a href="{{ route('list-owner-gatepass') }}"><i
                                     class="fa big-icon fa-shield-alt icon-wrap" aria-hidden="true"></i> <span
-                                    class="mini-sub-pro">Security Created Gate Pass</span></a>
+                                    class="mini-click-non">Security Created Gate Pass</span></a>
                             </li>
                             <li
                             class="nav-item {{ request()->is('owner/list-owner-grn') ? 'active' : '' }}">
-                            <a title="Inbox" href="{{ route('list-owner-grn') }}"><i
+                            <a href="{{ route('list-owner-grn') }}"><i
                                     class="fa big-icon fa-clipboard-check icon-wrap" aria-hidden="true"></i> <span
-                                    class="mini-sub-pro">Material Received for GRN Generate</span></a>
+                                    class="mini-click-non">Material Received for GRN Generate</span></a>
                              </li>
 
                              <li
                              class="nav-item {{ request()->is('owner/list-material-sent-to-store-generated-grn') ? 'active' : '' }}">
-                             <a title="Inbox" href="{{ route('list-material-sent-to-store-generated-grn') }}"><i
+                             <a href="{{ route('list-material-sent-to-store-generated-grn') }}"><i
                                      class="fa big-icon fa-clipboard-list icon-wrap" aria-hidden="true"></i> <span
-                                     class="mini-sub-pro">Generated GRN Material send Quality Dept to Store </span></a>
+                                     class="mini-click-non">Generated GRN Material send Quality Dept to Store </span></a>
                          </li>
            
                          <li
                          class="nav-item {{ request()->is('owner/list-owner-material-recived-from-store') ? 'active' : '' }}">
-                         <a title="Inbox" href="{{ route('list-owner-material-recived-from-store') }}"><i
-                                 class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                                 class="mini-sub-pro">Store Dept Material send to Production Dept</span></a>
+                         <a href="{{ route('list-owner-material-recived-from-store') }}"><i
+                                 class="fa fa-boxes icon-wrap" aria-hidden="true"></i> <span
+                                 class="mini-click-non">Store Dept Material send to Production Dept</span></a>
                          </li>
                          <li
                          class="nav-item {{ request()->is('owner/list-owner-final-production-completed') ? 'active' : '' }}">
-                         <a title="Inbox" href="{{ route('list-owner-final-production-completed') }}"><i
-                                 class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                                 class="mini-sub-pro">Production Department Completed Production</span></a>
+                         <a href="{{ route('list-owner-final-production-completed') }}"><i
+                                 class="fa fa-check-circle icon-wrap" aria-hidden="true"></i> <span
+                                 class="mini-click-non">Production Department Completed Production</span></a>
                           </li>
                      <li
                      class="nav-item {{ request()->is('owner/list-owner-final-production-completed-recive-to-logistics') ? 'active' : '' }}">
-                     <a title="Inbox" href="{{ route('list-owner-final-production-completed-recive-to-logistics') }}"><i
-                             class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                             class="mini-sub-pro">Logistics Dept Received Product completed list</span></a>
+                     <a href="{{ route('list-owner-final-production-completed-recive-to-logistics') }}"><i
+                             class="fa fa-clipboard-list icon-wrap" aria-hidden="true"></i> <span
+                             class="mini-click-non">Logistics Dept Received Product completed list</span></a>
                       </li>
 
                       <li
                      class="nav-item {{ request()->is('owner/recive-owner-logistics-list') ? 'active' : '' }}">
-                     <a title="Inbox" href="{{ route('recive-owner-logistics-list') }}"><i
-                             class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                             class="mini-sub-pro">Fianance Dept Production Recevied from Logistics Dept</span></a>
+                     <a href="{{ route('recive-owner-logistics-list') }}"><i
+                             class="fa fa-receipt  icon-wrap" aria-hidden="true"></i> <span
+                             class="mini-click-non">Fianance Dept Production Recevied from Logistics Dept</span></a>
                       </li>
 
                       <li
                       class="nav-item {{ request()->is('owner/list-owner-send-to-dispatch') ? 'active' : '' }}">
-                      <a title="Inbox" href="{{ route('list-owner-send-to-dispatch') }}"><i
-                              class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                              class="mini-sub-pro">Fianance Dept Production Request Send to Dispatch Dept</span></a>
+                      <a href="{{ route('list-owner-send-to-dispatch') }}"><i
+                              class="fa fa-paper-plane icon-wrap" aria-hidden="true"></i> <span
+                              class="mini-click-non">Fianance Dept Production Request Send to Dispatch Dept</span></a>
                        </li>
                      
                        <li
                        class="nav-item {{ request()->is('owner/list-product-dispatch-completed') ? 'active' : '' }}">
-                       <a title="Inbox" href="{{ route('list-product-dispatch-completed') }}"><i
-                               class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
-                               class="mini-sub-pro">Dispatch Dept Production Dispatch Completed</span></a>
+                       <a href="{{ route('list-product-dispatch-completed') }}"><i
+                               class="fa fa-truck icon-wrap" aria-hidden="true"></i> <span
+                               class="mini-click-non">Dispatch Dept Production Dispatch Completed</span></a>
                    </li> 
                             <li
                             class="nav-item {{ Request::is('list-rejected-chalan-po-wise') ? 'active' : '' }}">
@@ -185,12 +185,7 @@
                                         class="fa big-icon fa-file-invoice icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">PO Payment Release Request</span></a>
                             </li>
-                            <li
-                                class="nav-item {{ request()->is('owner/yearly-report') ? 'active' : '' }}">
-                                <a href="{{ route('yearly-report') }}" aria-expanded="false"><i
-                                        class="fa big-icon fa-file-invoice icon-wrap" aria-hidden="true"></i> <span
-                                        class="mini-click-non">Reports</span></a>
-                            </li>
+                           
                             
                             <li><a href="{{ route('list-rules-regulations') }}" aria-expanded="false"><i
                                 class="fa big-icon fa-file-alt  icon-wrap" aria-hidden="true"></i> <span
@@ -598,11 +593,11 @@
                 </li>
             @endif
                     @if (session()->get('user_id'))
-                        <li>
-                            <a class="has-arrow" href="{{ route('list-leaves') }}" aria-expanded="false"><i
+                        <li class="nav-item">
+                            <a class="nav-item" href="{{ route('list-leaves') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-paper-plane icon-wrap"></i> <span class="mini-click-non">Leaves
                                     Request</span></a>
-                            <ul class="submenu-angle" aria-expanded="false">
+                            <ul class="nav-item" aria-expanded="false">
                                 <li><a  href="{{ route('list-leaves') }}"><i
                                             class="fa big-icon fa-calendar icon-wrap" aria-hidden="true"></i> <span
                                             class="mini-click-non">Add Leaves Request</span></a></li>
