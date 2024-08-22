@@ -32,6 +32,9 @@ class DashboardController extends Controller {
         return view('admin.pages.dashboard.dashboard');
     }
 
-
+    public function reports()
+    {
+        return view('admin.pages.reports.list-yearly-report');
+    }
 
 }
