@@ -6,6 +6,7 @@
     margin: 0;
     list-style: none;
     background: #f5f5f5;
+    
 }
 
 .sidebar-nav .metismenu {
@@ -21,13 +22,16 @@
 
 .sidebar-nav .metismenu li + li {
   margin-top: 5px;
+  
 }
 
 .sidebar-nav .metismenu li:first-child {
   margin-top: 5px;
+  
 }
 .sidebar-nav .metismenu li:last-child {
   margin-bottom: 5px;
+  
 }
 
 
@@ -53,13 +57,14 @@
     transition: all .3s ease-out;
 	font-size:16px;
 }
-
-.sidebar-nav .metismenu ul a {
+/* pratiksha (21/08/24) */
+/* .sidebar-nav .metismenu ul a {
     padding: 10px 15px 10px 30px;
-}
+} */
 
 .sidebar-nav .metismenu ul ul a {
     padding: 10px 15px 10px 45px;
+    /* list-style-position: outside!important; */
 }
 
 .sidebar-nav .metismenu a:hover,
@@ -82,7 +87,7 @@
 	margin-right:5px;
 	font-size:16px;
 }
-#sidebar.active .metismenu li .mini-click-non{
+#sidebar.active .metismenu li .mini-click-non {
 	display:none;
 }
 #sidebar.active .metismenu li .has-arrow:after{
