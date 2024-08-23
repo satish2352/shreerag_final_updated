@@ -185,7 +185,8 @@ class AllListRepository
           // 'design_revision_for_prod.id',
           'designs.bom_image',
           'designs.design_image',
-          'requisition.id'
+          'requisition.id',
+          'businesses.updated_at'
 
       )
         ->select(
@@ -206,8 +207,8 @@ class AllListRepository
           'designs.bom_image',
           'designs.design_image',
           'requisition.id as requistition_id',
-
-        )
+          'businesses.updated_at'
+          )->orderBy('businesses.updated_at', 'desc')
         ->get();
         
        

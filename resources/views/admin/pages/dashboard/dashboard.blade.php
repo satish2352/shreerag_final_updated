@@ -681,20 +681,112 @@
                                                     <ul>
                                                         <li>
                                                             <span>{{ $data->product_name }}
-                                                                @if($data->business_status_id == 1112 && $data->design_status_id == 1111)
-                                                                    Business Department
-                                                                @elseif($data->business_status_id == 1112 && $data->design_status_id == 1113 && $data->production_status_id == 1113)
-                                                                    Design Department
-                                                                @elseif($data->business_status_id == 1127)
-                                                                    Production Department
-                                                                @elseif($data->business_status_id == 1127)
+
+                                                                @if($data->business_status_id == 1118 && 
+                                                                $data->design_status_id == 1114 && 
+                                                                $data->production_status_id == 1121 && 
+                                                                $data->store_status_id == 1123 && 
+                                                                $data->purchase_status_from_owner == "1129" &&  
+                                                                $data->purchase_status_from_purchase == 1129 && 
+                                                                $data->finanace_store_receipt_status_id == 1136 && 
+                                                                $data->security_status_id == 1132 && 
+                                                                $data->quality_status_id == 1134 && $data->logistics_status_id ==1146 && $data->dispatch_status_id ==1148 )
+                                                                 Dispatch Department Completed Dispatch
+
+                                                                @elseif($data->business_status_id == 1118 && 
+                                                                $data->design_status_id == 1114 && 
+                                                                $data->production_status_id == 1121 && 
+                                                                $data->store_status_id == 1123 && 
+                                                                $data->purchase_status_from_owner == "1129" &&  
+                                                                $data->purchase_status_from_purchase == 1129 && 
+                                                                $data->finanace_store_receipt_status_id == 1136 && 
+                                                                $data->security_status_id == 1132 && 
+                                                                $data->quality_status_id == 1134 && $data->logistics_status_id ==1146 && $data->dispatch_status_id ==1148 )
+                                                                Finance Department sent to Dispatch Department
+
+                                                                @elseif($data->business_status_id == 1118 && 
+                                                                $data->design_status_id == 1114 && 
+                                                                $data->production_status_id == 1121 && 
+                                                                $data->store_status_id == 1123 && 
+                                                                $data->purchase_status_from_owner == "1129" &&  
+                                                                $data->purchase_status_from_purchase == 1129 && 
+                                                                $data->finanace_store_receipt_status_id == 1136 && 
+                                                                $data->security_status_id == 1132 && 
+                                                                $data->quality_status_id == 1134 && $data->logistics_status_id ==1146 && $data->dispatch_status_id ==1148 )
+                                                                Finance Department Received from Logistics Department
+
+                                                               @elseif($data->business_status_id == 1118 && 
+                                                                $data->design_status_id == 1114 && 
+                                                                $data->production_status_id == 1121 && 
+                                                                $data->store_status_id == 1123 && 
+                                                                $data->purchase_status_from_owner == "1129" &&  
+                                                                $data->purchase_status_from_purchase == 1129 && 
+                                                                $data->finanace_store_receipt_status_id == 1136 && 
+                                                                $data->security_status_id == 1132 && 
+                                                                $data->quality_status_id == 1134 && $data->logistics_status_id ==1145 )
+                                                                Logistics Department
+
+                                                                @elseif($data->business_status_id == 1118 && 
+                                                                $data->design_status_id == 1114 && 
+                                                                $data->production_status_id == 1121 && 
+                                                                $data->store_status_id == 1123 && 
+                                                                $data->purchase_status_from_owner == "1129" &&  
+                                                                $data->purchase_status_from_purchase == 1129 && 
+                                                                $data->finanace_store_receipt_status_id == 1136 && 
+                                                                $data->security_status_id == 1132 && 
+                                                                $data->quality_status_id == 1134 )
+                                                                Production Department Completed Production
+
+                                                                @elseif($data->business_status_id == 1118 && 
+                                                                $data->design_status_id == 1114 && 
+                                                                $data->production_status_id == 1119 && 
+                                                                $data->store_status_id == 1123 && 
+                                                                $data->purchase_status_from_owner == "1129" &&  
+                                                                $data->purchase_status_from_purchase == 1129 && 
+                                                                $data->finanace_store_receipt_status_id == 1136 && 
+                                                                $data->security_status_id == 1132 && 
+                                                                $data->quality_status_id == 1134 )
+                                                                Store Department forward to Production Department
+                                                                @elseif($data->business_status_id == 1126 && 
+                                                                    $data->design_status_id == 1114 && 
+                                                                    $data->production_status_id == 1117 && 
+                                                                    $data->store_status_id == 1123 && 
+                                                                    $data->purchase_status_from_owner == "1129" &&  
+                                                                    $data->purchase_status_from_purchase == 1129 && 
+                                                                    $data->finanace_store_receipt_status_id == 1140 && 
+                                                                    $data->security_status_id == 1132 && 
+                                                                    $data->quality_status_id == 1134)
+                                                                    Store Department Material Received from Quality Department
+                                                                @elseif($data->business_status_id == 1126 && 
+                                                                        $data->design_status_id == 1114 && 
+                                                                        $data->production_status_id == 1117 && 
+                                                                        $data->store_status_id == 1123 && 
+                                                                        $data->purchase_status_from_owner == "1129" && 
+                                                                        $data->purchase_status_from_purchase == 1129 && 
+                                                                        $data->finanace_store_receipt_status_id == 1140)
+                                                                    Purchase Department PO Send to Vendor
+                                                                @elseif($data->business_status_id == 1126 && 
+                                                                        $data->design_status_id == 1114 && 
+                                                                        $data->production_status_id == 1117 && 
+                                                                        $data->store_status_id == 1123 && 
+                                                                        $data->purchase_status_from_purchase == 1126)
+                                                                    Purchase Department Approved Owner
+                                                                @elseif($data->business_status_id == 1123 && 
+                                                                        $data->design_status_id == 1114 && 
+                                                                        $data->production_status_id == 1117 && 
+                                                                        $data->store_status_id == 1123)
                                                                     Store Department
-                                                                @elseif($data->business_status_id == 1127)
-                                                                    Purchase Department
-                                                                @elseif($data->business_status_id == 1127)
-                                                                    Security Department
-                                                                @elseif($data->business_status_id == 1127)
-                                                                    Quality Department
+                                                                @elseif($data->business_status_id == 1112 && 
+                                                                        $data->design_status_id == 1114 && 
+                                                                        $data->production_status_id == 1114)
+                                                                    Production Department
+                                                                @elseif($data->business_status_id == 1112 && 
+                                                                        $data->design_status_id == 1113 && 
+                                                                        $data->production_status_id == 1113)
+                                                                    Design Department
+                                                                @elseif($data->business_status_id == 1112 && 
+                                                                        $data->design_status_id == 1111)
+                                                                    Business Department
                                                                 @elseif($data->business_status_id == 1127)
                                                                     Logistics Department
                                                                 @elseif($data->business_status_id == 1127)
@@ -702,6 +794,8 @@
                                                                 @else
                                                                     Unknown Department
                                                                 @endif
+
+                                                              
                                                             </span>
                                                         </li>
                                                         

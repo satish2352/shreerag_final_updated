@@ -31,18 +31,15 @@
                 <div class="sparkline13-list">
                     <div class="sparkline13-hd">
                         <div class="main-sparkline13-hd">
-                            <h1>Business <span class="table-project-n">Data</span> Table wetweterter</h1>
+                            <h1>Business <span class="table-project-n">Data</span> Table</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2" >
                                         <div class="login-horizental cancel-wp pull-left">
                                                 <a href="{{ route('add-business') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Business</button></a>
                                         </div>
                                     </div>
-                                </div>
-                                
                                 <div class="col-lg-10"></div>
-                               
-                            
+                            </div>
                         </div>
                     </div>
                 

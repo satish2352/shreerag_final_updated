@@ -143,9 +143,10 @@ class GRNController extends Controller
                     'design_revision_for_prod.reject_reason_prod',
                     'design_revision_for_prod.id as design_revision_for_prod_id',
                     'designs.bom_image',
-                    'designs.design_image'
+                    'designs.design_image',
+                    'businesses.updated_at', 
 
-                )
+                )->orderBy('businesses.updated_at', 'desc')
                 ->get();
                
             // return $data_output;
