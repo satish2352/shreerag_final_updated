@@ -668,11 +668,51 @@
                               <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                             </div>
                             <div class="offcanvas-body">
-                                <ul>
-                                <li><span  class="">Leave Management</span></li>
-                                <li><span  class="">Leave Management</span></li>
-                                </ul>
+                                <div class="accordion" id="accordionExample">
+                                    @foreach($return_data['data_output_offcanvas'] as $index => $data)
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="heading{{ $index }}">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $index }}" aria-expanded="true" aria-controls="collapse{{ $index }}">
+                                                    {{ $data->customer_po_number }} - {{ $data->title }}
+                                                </button>
+                                            </h2>
+                                            <div id="collapse{{ $index }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $index }}" data-bs-parent="#accordionExample">
+                                                <div class="accordion-body">
+                                                    <ul>
+                                                        <li>
+                                                            <span>{{ $data->product_name }}
+                                                                @if($data->business_status_id == 1112 && $data->design_status_id == 1111)
+                                                                    Business Department
+                                                                @elseif($data->business_status_id == 1112 && $data->design_status_id == 1113 && $data->production_status_id == 1113)
+                                                                    Design Department
+                                                                @elseif($data->business_status_id == 1127)
+                                                                    Production Department
+                                                                @elseif($data->business_status_id == 1127)
+                                                                    Store Department
+                                                                @elseif($data->business_status_id == 1127)
+                                                                    Purchase Department
+                                                                @elseif($data->business_status_id == 1127)
+                                                                    Security Department
+                                                                @elseif($data->business_status_id == 1127)
+                                                                    Quality Department
+                                                                @elseif($data->business_status_id == 1127)
+                                                                    Logistics Department
+                                                                @elseif($data->business_status_id == 1127)
+                                                                    Dispatch Department
+                                                                @else
+                                                                    Unknown Department
+                                                                @endif
+                                                            </span>
+                                                        </li>
+                                                        
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
+                            
                        </div>
                        @endif
                 </div>
