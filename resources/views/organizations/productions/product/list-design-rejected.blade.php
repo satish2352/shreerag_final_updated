@@ -81,10 +81,9 @@ padding-left: 20px !important;
                                             
                                             <th data-field="id">ID</th>   
                                             <th data-field="grn_number" data-editable="true">PO Number</th>
-                                            <th data-field="grn_date" data-editable="true">Product Nmae</th>
-                                            <th data-field="grn_date" data-editable="true">Description</th>
-                                            <th data-field="grn_date" data-editable="true">Quantity</th>
-                                            {{-- <th data-field="purchase_id" data-editable="true">Remark</th>                                          --}}
+                                            <th data-field="product_name" data-editable="true">Product Nmae</th>
+                                            <th data-field="description" data-editable="true">Description</th>
+                                            <th data-field="quantity" data-editable="true">Quantity</th>
                                             <th data-field="reject_reason" data-editable="true">Reject Reason</th>                                         
                                             <th data-field="design_image" data-editable="false">Design Layout</th>
                                             <th data-field="bom_image" data-editable="false">BOM</th>                                                                                                                           
@@ -101,9 +100,9 @@ padding-left: 20px !important;
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ucwords($data->customer_po_number)}}</td>
                                             <td>{{ucwords($data->product_name)}}</td>
-                                            <td>{{ucwords($data->quantity)}}</td>
                                             <td>{{ucwords($data->description)}}</td>
-                                            <td>{{ucwords($data->remarks)}}</td>
+                                            <td>{{ucwords($data->quantity)}}</td>
+                                            {{-- <td>{{ucwords($data->remarks)}}</td> --}}
                                             <td>{{ucwords($data->reject_reason_prod)}}</td>
                                             <td> <a class="img-size" target="_blank"
                                                 href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
