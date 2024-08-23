@@ -669,19 +669,19 @@
                             </div>
                             <div class="offcanvas-body">
                                 <div class="accordion" id="accordionExample">
-                                    @foreach($return_data['data_output_offcanvas'] as $index => $data)
+                                    @foreach($return_data['data_output_offcanvas'] as $po_number => $grouped_data)
                                         <div class="accordion-item">
-                                            <h2 class="accordion-header" id="heading{{ $index }}">
-                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $index }}" aria-expanded="true" aria-controls="collapse{{ $index }}">
-                                                    {{ $data->customer_po_number }} - {{ $data->title }}
+                                            <h2 class="accordion-header" id="heading{{ $loop->index }}">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $loop->index }}" aria-expanded="true" aria-controls="collapse{{ $loop->index }}">
+                                                    {{ $po_number }} - {{ $grouped_data->first()->title }}
                                                 </button>
                                             </h2>
-                                            <div id="collapse{{ $index }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $index }}" data-bs-parent="#accordionExample">
+                                            <div id="collapse{{ $loop->index }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $loop->index }}" data-bs-parent="#accordionExample">
                                                 <div class="accordion-body">
-                                                    <ul>
-                                                        <li>
-                                                            <span>{{ $data->product_name }}
-
+                                                    <ul style="list-style-type: disc; margin-left: 20px;">
+                                                        @foreach($grouped_data as $data)
+                                                            <li>
+                                                                <span>{{ $data->product_name }}</span>
                                                                 @if($data->business_status_id == 1118 && 
                                                                 $data->design_status_id == 1114 && 
                                                                 $data->production_status_id == 1121 && 
@@ -795,16 +795,15 @@
                                                                     Unknown Department
                                                                 @endif
 
-                                                              
-                                                            </span>
-                                                        </li>
-                                                        
+                                                            </li>
+                                                        @endforeach
                                                     </ul>
                                                 </div>
                                             </div>
                                         </div>
                                     @endforeach
                                 </div>
+                                
                             </div>
                             
                        </div>

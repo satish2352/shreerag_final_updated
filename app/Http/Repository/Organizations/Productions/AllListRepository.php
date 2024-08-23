@@ -498,10 +498,11 @@ public function getAllNewRequirementBusinessWise($business_id) {
               'businesses_details.is_active',
               'production.business_id',
               'design_revision_for_prod.reject_reason_prod',
+              'businesses.updated_at'
               // 'designs.bom_image',
               // 'designs.design_image'
 
-          )->get();
+          )->orderBy('businesses.updated_at', 'desc')->get();
         return $data_output;
     } catch (\Exception $e) {
         

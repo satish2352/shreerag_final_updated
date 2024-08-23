@@ -108,7 +108,8 @@ class DashboardController extends Controller {
              'business_application_processes.logistics_status_id', 'business_application_processes.dispatch_status_id') // Adjust if you need more fields
             ->orderBy('businesses.updated_at', 'desc')
            
-            ->get();
+            ->get()
+            ->groupBy('customer_po_number'); 
             // ->groupBy('businesses.customer_po_number'); 
         
             // dd($data_output_offcanvas);

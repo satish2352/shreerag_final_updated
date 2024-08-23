@@ -48,9 +48,10 @@ class AllListRepositor
           'businesses.remarks',
           'businesses.is_active',
           'designs.business_id',
-          'designs.created_at'
+          'designs.created_at',
+          'businesses.updated_at'
           
-        )->get();
+        )->orderBy('businesses.updated_at', 'desc')->get();
 
 
 // dd($data_output);
