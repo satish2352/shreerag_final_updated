@@ -19,6 +19,13 @@
         <div class="left-custom-menu-adp-wrap comment-scrollbar">
             <nav class="sidebar-nav left-sidebar-menu-pro">
                 <ul class="metismenu" id="menu1">
+                   
+
+                    <li class="nav-item {{ Request::is('dashboard') ? 'active' : '' }}">
+                        <a  href="{{ route('/dashboard') }}"><i
+                        class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
+                        class="mini-click-non">Dashboard</span></a></li>
+
                     @if (session()->get('role_id') == config('constants.ROLE_ID.SUPER'))
                         <li
                             class="{{ Request::is('list-organizations', 'organizations-list-employees', 'list-departments', 'list-roles') ? 'active' : '' }}">

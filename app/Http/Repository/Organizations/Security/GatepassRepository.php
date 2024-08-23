@@ -17,14 +17,14 @@ class GatepassRepository
     public function getAll()
     {
         try {
-            $data_output = Gatepass::get();
-
+            $data_output = Gatepass::orderBy('updated_at', 'desc')->get();
+    
             return $data_output;
         } catch (\Exception $e) {
-
             return $e;
         }
     }
+    
 
     public function addAll($request)
     {

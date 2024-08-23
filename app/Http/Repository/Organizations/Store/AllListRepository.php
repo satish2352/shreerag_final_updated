@@ -53,6 +53,7 @@ class AllListRepository  {
             'businesses.remarks',
             'businesses.is_active',
             'production.business_id',
+             'businesses.updated_at'
               // 'production.id as productionId',
               // 'design_revision_for_prod.reject_reason_prod',
               // 'design_revision_for_prod.id as design_revision_for_prod_id'
@@ -66,13 +67,15 @@ class AllListRepository  {
               'businesses.remarks',
               'businesses.is_active',
               'production.business_id',
+               'businesses.updated_at'
               // 'production.id as productionId',
               // 'design_revision_for_prod.reject_reason_prod',
               // 'design_revision_for_prod.id as design_revision_for_prod_id',
               // 'designs.bom_image',
               // 'designs.design_image'
 
-          )
+              )
+              ->orderBy('businesses.updated_at', 'desc')
           ->get();
         return $data_output;
       } catch (\Exception $e) {
@@ -127,7 +130,8 @@ class AllListRepository  {
             // 'design_revision_for_prod.id as design_revision_for_prod_id',
                  'design_revision_for_prod.id',
             'designs.bom_image',
-            'designs.design_image'
+            'designs.design_image',
+            'production.updated_at'
             )
 
             ->select(
@@ -143,8 +147,10 @@ class AllListRepository  {
                   'design_revision_for_prod.id',
                 // 'design_revision_for_prod.id as design_revision_for_prod_id',
                 'designs.bom_image',
-                'designs.design_image'
-            )
+                'designs.design_image',
+                'production.updated_at'
+                )
+                ->orderBy('production.updated_at', 'desc')
             ->get();
 
             // dd($data_output);
@@ -240,9 +246,10 @@ class AllListRepository  {
             'design_revision_for_prod.reject_reason_prod',
             'design_revision_for_prod.id as design_revision_for_prod_id',
             'designs.bom_image',
-            'designs.design_image'
+            'designs.design_image',
+            'businesses.updated_at'
 
-        )
+        )->orderBy('businesses.updated_at', 'desc')
         ->get();
       return $data_output;
     } catch (\Exception $e) {
@@ -294,9 +301,10 @@ class AllListRepository  {
             'design_revision_for_prod.id as design_revision_for_prod_id',
             'designs.bom_image',
             'designs.design_image',
-            'business_application_processes.store_receipt_no'
+            'business_application_processes.store_receipt_no',
+            'businesses.updated_at'
 
-        )
+        )->orderBy('businesses.updated_at', 'desc')
         ->get();
 
      
@@ -340,11 +348,12 @@ class AllListRepository  {
           
               'designs.bom_image',
           'designs.design_image',
-            'purchase_orders.is_active'
+            'purchase_orders.is_active',
+            'businesses_details.updated_at'
         )
          ->whereIn('purchase_orders.quality_status_id',$array_to_be_check)
         // ->whereIn('purchase_orders.store_receipt_no',$array_to_be_check_new)
-      
+        ->orderBy('businesses_details.updated_at', 'desc')
         ->get(); 
         // dd( $data_output);
         // die();

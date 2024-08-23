@@ -741,7 +741,8 @@ public function getAllCompletedProduction(){
       ->groupBy('businesses.id','businesses.customer_po_number','businesses_details.id','businesses_details.product_name',
       'businesses_details.description',
       'businesses_details.quantity',
-      'businesses_details.rate'
+      'businesses_details.rate',
+      'production.updated_at'
       )
       ->select(
           'businesses.customer_po_number',
@@ -750,6 +751,7 @@ public function getAllCompletedProduction(){
           'businesses_details.product_name',
           'businesses_details.description',
           'businesses_details.quantity',
+          'production.updated_at'
           // 'production.business_id',
           // 'production.id as productionId',
           // 'design_revision_for_prod.reject_reason_prod',
@@ -758,7 +760,7 @@ public function getAllCompletedProduction(){
           // 'designs.design_image',
           // 'business_application_processes.store_material_sent_date'
 
-      )
+      )->orderBy('production.updated_at', 'desc')
       ->get();
       
     return $data_output;
