@@ -9,6 +9,10 @@ use Validator;
 use Config;
 use Carbon;
 
+use App\Models\{
+    BusinessApplicationProcesses
+};
+
 class AllListController extends Controller
 { 
     public function __construct(){
@@ -41,6 +45,12 @@ class AllListController extends Controller
     public function getAllNewRequirement(Request $request){
         try {
             $data_output = $this->service->getAllNewRequirement();
+
+            $update_data['prod_is_view'] = '1';
+            BusinessApplicationProcesses::where('production_status_id', 1113)
+                                          ->where('design_status_id', 1113)
+                                          ->where('prod_is_view', '0')
+                                          ->update($update_data);
           
             return view('organizations.productions.product.list_design_received_for_production', compact('data_output'));
         } catch (\Exception $e) {
@@ -89,6 +99,12 @@ class AllListController extends Controller
         try {
             $data_output = $this->service->getAllreviseddesign();
 
+            $update_data['prod_is_view_revised'] = '1';
+            BusinessApplicationProcesses::where('production_status_id', 1116)
+                                          ->where('design_status_id', 1116)
+                                          ->where('prod_is_view_revised', '0')
+                                          ->update($update_data);
+
             return view('organizations.productions.product.list-design-revised', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
@@ -99,6 +115,12 @@ class AllListController extends Controller
     public function getAllListMaterialRecievedToProduction(){
         try {
             $data_output = $this->service->getAllListMaterialRecievedToProduction();
+
+            $update_data['prod_is_view_material_received'] = '1';
+            BusinessApplicationProcesses::where('production_status_id', 1119)
+                                          ->where('store_status_id', 1118)
+                                          ->where('prod_is_view_material_received', '0')
+                                          ->update($update_data);
 
             return view('organizations.productions.product.list-recived-material', compact('data_output'));
         } catch (\Exception $e) {

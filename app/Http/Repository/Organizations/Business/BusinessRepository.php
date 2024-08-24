@@ -12,7 +12,8 @@ use App\Models\{
     PurchaseOrdersModel,
     OrganizationModel,
     Vendors,
-    BusinessDetails
+    BusinessDetails,
+    AdminView
 };
 use Config;
 use App\Http\Controllers\Organizations\CommanController;
@@ -85,6 +86,11 @@ class BusinessRepository
             $design_data->bom_image = '';
             $design_data->save();
 
+            $admin_view_data = new AdminView();
+            $admin_view_data->business_id = $last_insert_id;
+            $admin_view_data->current_department = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
+            $admin_view_data->save();
+            
 
             $business_application = new BusinessApplicationProcesses();
             $business_application->business_id = $business_data->id;

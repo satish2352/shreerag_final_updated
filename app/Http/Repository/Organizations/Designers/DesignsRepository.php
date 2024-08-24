@@ -8,7 +8,8 @@ Business,
 DesignModel,
 BusinessApplicationProcesses,
 ProductionModel,
-DesignRevisionForProd
+DesignRevisionForProd,
+AdminView
 };
 use Config;
 
@@ -211,6 +212,11 @@ class DesignsRepository  {
                 $business_application->save();
                 // dd($business_application);
                 // die();
+// dd($request->business_id);
+                $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
+                $update_data_admin['is_view'] = '0';
+            AdminView::where('business_id', $request->business_id)
+                        ->update($update_data_admin);
                 
             }
 
@@ -422,6 +428,11 @@ class DesignsRepository  {
                 // $business_application->production_id = $designRevisionForProd->production_id;
                 $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECIVED_FROM_PRODUCTION_DEPT_REVISED');
                 $business_application->save();
+
+                $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_REVISED');
+                $update_data_admin['is_view'] = '0';
+                AdminView::where('business_id', $designRevisionForProd->business_id)
+                        ->update($update_data_admin);
 
             }
     

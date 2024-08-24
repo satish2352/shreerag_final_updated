@@ -707,7 +707,7 @@
                                             <li class="nav-item">
                                                 <a href="#" data-toggle="dropdown" role="button"
                                                     aria-expanded="false" class="nav-link dropdown-toggle"><i class="fa fa-bell"></i></i><span
-                                                        class="">1</span>
+                                                        class="" id="notification-count"></span>
                                                 </a>
                                                 
                                                 <div role="menu"
@@ -715,16 +715,14 @@
                                                     <div class="notification-single-top" style="background-color: linear-gradient(178deg, #175CA2 0%, #121416 100%)">
                                                         <h1 style="color: #fff; ">Notifications</h1>
                                                     </div>
-                                                    <ul class="notification-menu" style="background-color:#fff;">
+                                                    <ul class="notification-menu" id="notification-messages" style="background-color:#fff;">
                                                         <li>
-                                                            <a href="#">
+                                                            <!-- <a href="#">
                                                              
                                                                 <div class="notification-content" >
-                                                                   
                                                                     <h2 style="color:#444;">Business Sent For Design</h2>
-                                                                   
                                                                 </div>
-                                                            </a>
+                                                            </a> -->
                                                         </li>
                                                     </ul>
                                                     <div class="notification-view">
