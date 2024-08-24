@@ -196,7 +196,7 @@
         <div class="row ">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="sparkline14-list">
-                    <h6>HR</h6>
+                    @if (session()->get('role_id') == config('constants.ROLE_ID.HR'))
                     <div class="product-sales-area mg-tb-30">
                         <!-- <div class="container-fluid"> -->
                         <div class="row">
@@ -262,6 +262,8 @@
                             </div>
                         </div>
                     </div>
+                    @endif
+                    @if (session()->get('role_id') == config('constants.ROLE_ID.DESIGNER'))
                     <h6>DESIGNER</h6>
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
@@ -309,6 +311,8 @@
                             </div>
                         </div>
                     </div>
+                    @endif
+                    @if (session()->get('role_id') == config('constants.ROLE_ID.PRODUCTION'))
                     <h6>PRODUCTION</h6>
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
@@ -385,7 +389,9 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <h6>STORE</h6>
+                    @endif
+                    @if (session()->get('role_id') == config('constants.ROLE_ID.STORE'))
+                    <h6>STORE</h6>
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
                             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
@@ -445,8 +451,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div> -->
-                    <!-- <h6>PURCHASE</h6>
+                    </div> 
+                    @endif
+                    @if (session()->get('role_id') == config('constants.ROLE_ID.PURCHASE'))
+                    <h6>PURCHASE</h6>
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
                             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
@@ -520,8 +528,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div> -->
-                    <!-- <h6>QUALITY</h6>
+                    </div>
+                    @endif
+                    @if (session()->get('role_id') == config('constants.ROLE_ID.QUALITY'))
+                     <h6>QUALITY</h6>
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
                             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
@@ -553,8 +563,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div> -->
-                    <!-- <h6>LOGISTICS</h6>
+                    </div> 
+                    @endif
+                    @if (session()->get('role_id') == config('constants.ROLE_ID.LOGISTICS'))
+                    <h6>LOGISTICS</h6>
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
                             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
@@ -586,8 +598,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div> -->
-                    <!-- <h6>DISPATCH</h6>
+                    </div> 
+                    @endif
+                    @if (session()->get('role_id') == config('constants.ROLE_ID.DISPATCH'))
+                    <h6>DISPATCH</h6>
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
                             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
@@ -619,8 +633,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div> -->
-                    <!-- <h6>DISPATCH</h6>
+                    </div> 
+                    @endif
+                    @if (session()->get('role_id') == config('constants.ROLE_ID.PRODUCTION'))
+                     <h6>DISPATCH</h6>
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
                             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
@@ -680,7 +696,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div> -->
+                    </div>
+                    @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.HIGHER_AUTHORITY'))
                     <div class="d-flex flex-column flex-lg-row h-lg-full">
 
@@ -904,7 +921,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {{-- <div class="col-xl-4 col-sm-6 col-12">
+                                       <div class="col-xl-4 col-sm-6 col-12">
                                                 <div class="card shadow border-0">
                                                     <div class="card-body">
                                                         <div class="row border-bottom">
@@ -958,7 +975,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div> --}}
+                                            </div>
                                         <!-- ============= -->
                                         {{-- <div class="col-xl-4 col-sm-6 col-12 mb-2">
                                                 <div class="card shadow border-0">
