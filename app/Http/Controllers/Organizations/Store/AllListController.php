@@ -8,6 +8,12 @@ use Session;
 use Validator;
 use Config;
 use Carbon;
+use App\Models\ {
+    Business,
+    BusinessApplicationProcesses,
+    AdminView
+
+};
 
 class AllListController extends Controller
 { 
@@ -18,6 +24,12 @@ class AllListController extends Controller
     public function getAllListDesignRecievedForMaterial(Request $request){
         try {
             $data_output = $this->service->getAllListDesignRecievedForMaterial();
+
+            $update_data['store_is_view'] = '1';
+            BusinessApplicationProcesses::where('production_status_id',1114)
+                                          ->where('design_status_id',1114)
+                                          ->where('store_is_view', '0')
+                                          ->update($update_data);
         
             return view('organizations.store.list.list-accepted-design', compact('data_output'));
         } catch (\Exception $e) {

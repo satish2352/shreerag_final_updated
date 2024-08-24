@@ -51,6 +51,14 @@ return new class extends Migration
             $table->boolean('is_approve')->default(false);
             $table->boolean('is_active')->default(true);
             $table->boolean('is_deleted')->default(false);
+            $table->boolean('design_is_view')->default(0);
+            $table->boolean('design_is_view_rejected')->default(0);
+            $table->boolean('design_is_view_resended')->default(0);
+            $table->boolean('prod_is_view')->default(0);
+            $table->boolean('prod_is_view_revised')->default(0);
+            $table->boolean('prod_is_view_material_received')->default(0);
+            $table->boolean('store_is_view')->default(0);
+            $table->boolean('purchase_is_view')->default(0);
             $table->timestamps();
       });
     }

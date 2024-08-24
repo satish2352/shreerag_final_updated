@@ -8,6 +8,12 @@ use Session;
 use Validator;
 use Config;
 use Carbon;
+use App\Models\ {
+    Business,
+    BusinessApplicationProcesses,
+    AdminView
+
+};
 
 class AllListController extends Controller
 { 
@@ -41,6 +47,13 @@ class AllListController extends Controller
 
         try {
             $data_output = $this->service->getAllListMaterialReceivedForPurchase();
+
+            $update_data['purchase_is_view'] = '1';
+            BusinessApplicationProcesses::where('store_status_id',1123)
+                                          ->where('business_status_id',1123)
+                                          ->where('purchase_is_view', '0')
+                                          ->update($update_data);
+
             // dd($data_output);
             // die();
             return view('organizations.purchase.list.list-bom-material-recived-for-purchase', compact('data_output'));

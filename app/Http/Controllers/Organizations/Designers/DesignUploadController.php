@@ -12,7 +12,9 @@ use Config;
 use Carbon;
 use App\Models\{
     Business,
-    BusinessDetails
+    BusinessDetails,
+    BusinessApplicationProcesses,
+    AdminView
 };
 class DesignUploadController extends Controller
 { 
@@ -23,6 +25,12 @@ class DesignUploadController extends Controller
     public function getAllNewRequirement(Request $request){
         try {
             $data_output = $this->service->getAllNewRequirement();
+
+            $update_data['design_is_view'] = '1';
+            BusinessApplicationProcesses::where('business_status_id', 1112)
+                                          ->where('design_status_id', 1111)
+                                          ->where('design_is_view', '0')
+                                          ->update($update_data);
      
             return view('organizations.designer.design-upload.list-new-requirements-received-for-design', compact('data_output'));
         } catch (\Exception $e) {

@@ -1,14 +1,23 @@
 <?php
 
 namespace App\Http\Controllers\Admin\Dashboard;
-
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 // use App\Http\Services\DashboardServices;
 use App\Models\ {
     Business,
+    BusinessApplicationProcesses,
+    AdminView,
+//     Gallery,
+//     AdditionalSolutions,
+//     OurSolutions,
+//     ResourcesAndInsights,
+//     WebsiteContactDetails,
+//     AboutUsContact,
+//     ContactUs,
+//     Subcribers
     BusinessDetails,
-    BusinessApplicationProcesses
 
 };
 use Validator;
@@ -132,6 +141,205 @@ class DashboardController extends Controller {
     }
 }
 
+
+    public function getNotification(Request $request)
+    {
+
+
+        $ses_userId = session()->get('user_id');
+        $ses_roleId = session()->get('role_id');
+        // dd($ses_userId);
+        
+            if ($ses_roleId == '1') {
+                // Fetch design data
+                $design_data = AdminView::where('current_department', 1112)
+                                        ->where('is_view', '0')
+                                        ->select('id')
+                                        ->get();
+                $design_count = $design_data->count();
+            
+                // Create notifications array
+                $notifications[] = ['admin_count' => $design_count,
+                        'message' => 'Business Sent For Design',
+                        'url' => 'list-forwarded-to-design',
+                ];
+
+                $design_resend_data = AdminView::where('current_department', 1116)
+                                        ->where('is_view', '0')
+                                        ->select('id')
+                                        ->get();
+                $design_resend_count = $design_resend_data->count();
+            
+                // Create notifications array
+                $notifications[] = ['admin_count' => $design_resend_count,
+                        'message' => 'Design Resend To Production Department',
+                        'url' => 'list-forwarded-to-design',
+                ];
+            
+                // Fetch production data
+                $prod_data = AdminView::where('current_department', 1113)
+                                        ->where('is_view', '0')
+                                        ->select('id')
+                                        ->get();
+                $prod_count = $prod_data->count();
+            
+                // Add production notification to the array
+                $notifications[] = [
+                    'admin_count' => $prod_count,
+                    'message' => 'Business Sent For Production',
+                    'url' => 'list-design-uploaded-owner',
+                ];
+
+                // Fetch production data
+                $design_rejected_data = AdminView::where('current_department', 1115)
+                                        ->where('is_view', '0')
+                                        ->select('id')
+                                        ->get();
+                $design_rejected_count = $design_rejected_data->count();
+            
+                // Add production notification to the array
+                $notifications[] = [
+                    'admin_count' => $design_rejected_count,
+                    'message' => 'Design Received For Design Correction',
+                    'url' => 'list-design-uploaded-owner',
+                ];
+
+                $design_sended_store_data = AdminView::where('current_department', 1114)
+                                        ->where('is_view', '0')
+                                        ->select('id')
+                                        ->get();
+                $design_sended_store_count = $design_sended_store_data->count();
+            
+                // Add production notification to the array
+                $notifications[] = [
+                    'admin_count' => $design_sended_store_count,
+                    'message' => 'Design Received For Design Correction',
+                    'url' => 'list-design-uploaded-owner',
+                ];
+
+                $purchase_material_req_from_store = AdminView::where('current_department', 1123)
+                                        ->where('is_view', '0')
+                                        ->select('id')
+                                        ->get();
+                $purchase_material_req_from_store_count = $purchase_material_req_from_store->count();
+            
+                // Add production notification to the array
+                $notifications[] = [
+                    'admin_count' => $purchase_material_req_from_store_count,
+                    'message' => 'Material Req. Sended To Purchase',
+                    'url' => 'list-design-uploaded-owner',
+                ];
+
+                
+            
+                // Log the notifications for debugging
+                // Log::info($notifications);
+            
+                // Calculate the total count
+                $count = $design_count + $prod_count + $design_rejected_count + $design_resend_count + $purchase_material_req_from_store_count;
+
+             }elseif($ses_roleId == '3'){
+
+                $sent_to_prod_data = BusinessApplicationProcesses::where('business_status_id',1112)
+                            ->where('design_status_id',1111)
+                            ->where('design_is_view','0')
+                            ->select('id')
+                            ->get();
+                        $received_for_design = $sent_to_prod_data->count();
+
+                        $notifications[] = ['admin_count' => $received_for_design,
+                            'message' => 'Business Recrived For Design',
+                            'url' => 'list-new-requirements-received-for-design'
+                        ];
+
+                $rejected_design_data = BusinessApplicationProcesses::where('production_status_id',1115)
+                            ->where('business_status_id',1115)
+                            ->where('design_is_view_rejected','0')
+                            ->select('id')
+                            ->get();
+                        $rejected_count = $rejected_design_data->count();
+
+                        $notifications[] = ['admin_count' => $rejected_count,
+                             'message' => 'Business Recrived For Design Revised',
+                             'url' => 'list-reject-design-from-prod'
+                        ];
+                        $count = $received_for_design + $rejected_count;
+        }elseif($ses_roleId == '4'){
+            $received_for_production = BusinessApplicationProcesses::where('production_status_id',1113)
+                 ->where('design_status_id',1113)
+                 ->where('prod_is_view','0')
+                 ->select('id')
+                 ->get();
+                 $received_for_production_count = $received_for_production->count();
+     
+                 $notifications[] = ['admin_count' => $received_for_production_count,
+                     'message' => 'New Design Received For Production',
+                    'url' => 'list-new-requirements-received-for-production'
+                    ];
+
+                    $received_for_production_revised = BusinessApplicationProcesses::where('production_status_id',1116)
+                 ->where('design_status_id',1116)
+                 ->where('prod_is_view_revised','0')
+                 ->select('id')
+                 ->get();
+                 $received_for_production_revised_count = $received_for_production_revised->count();
+     
+                 $notifications[] = ['admin_count' => $received_for_production_revised_count,
+                     'message' => 'Revised Design Received For Production',
+                    'url' => 'list-new-requirements-received-for-production'
+                    ];
+
+                    $material_received = BusinessApplicationProcesses::where('production_status_id',1119)
+                    ->where('store_status_id', 1118)
+                 ->where('prod_is_view_material_received','0')
+                 ->select('id')
+                 ->get();
+                 $material_received_count = $material_received->count();
+     
+                 $notifications[] = ['admin_count' => $material_received_count,
+                     'message' => 'Material Received From Store',
+                    'url' => 'list-material-recived'
+                    ];
+
+                    $count = $received_for_production_count + $received_for_production_revised_count + $material_received_count;
+             }elseif($ses_roleId == '7'){
+                $received_to_store = BusinessApplicationProcesses::where('production_status_id',1114)
+                     ->where('design_status_id',1114)
+                     ->where('store_is_view','0')
+                     ->select('id')
+                     ->get();
+                     $received_to_store_count = $received_to_store->count();
+         
+                     $notifications[] = ['admin_count' => $received_to_store_count,
+                         'message' => 'New Design Received To Store',
+                        'url' => 'list-new-requirements-received-for-production'
+                        ];
+    
+                        $count = $received_to_store_count;
+                 }elseif($ses_roleId == '2'){
+                    $received_to_store = BusinessApplicationProcesses::where('store_status_id',1123)
+                         ->where('business_status_id',1123)
+                         ->where('purchase_is_view','0')
+                         ->select('id')
+                         ->get();
+                         $received_to_store_count = $received_to_store->count();
+             
+                         $notifications[] = ['admin_count' => $received_to_store_count,
+                             'message' => 'New Req. Received From Store',
+                            'url' => 'list-new-requirements-received-for-production'
+                            ];
+        
+                            $count = $received_to_store_count;
+                     }
+
+
+
+            return response()->json([
+                'notification_count' => $count,
+                'notifications' => $notifications
+            ]);
+        
+    }
     
 
 }

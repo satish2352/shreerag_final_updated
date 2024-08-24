@@ -154,7 +154,84 @@ alert('ID: ' + id);
         }, 1000); // 1000 milliseconds = 1 second
     </script>
 
-    
+<script>
+            
+                function fetch_new_hold(){
+                    var TestVal='1';
+                    if (TestVal !== '') {
+                        $.ajax({
+                            url: '{{ route('get-notification') }}',
+                            type: 'GET',
+                            data: {
+                                TestVal: TestVal
+                            },
+                            // headers: {
+                            //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            // },
+                            success: function(response) {
+                                console.log(response);
+                                if (response.notification_count > 0) {
+                                        $('#notification-count').text(response.notification_count);
+
+                                        var notificationMessages = '';
+                                        $.each(response.notifications, function(index, notification) {
+                                        // response.notifications.forEach(function(notification) {
+                                        var urlvar=notification.url;
+                                        if(notification.admin_count > 0){        
+                                            notificationMessages += `
+                                                <li>
+                                                    <a href="${urlvar}">
+                                                        <div class="notification-content">
+                                                            <h2 style="color:#444;">${notification.message}</h2>
+                                                        </div>
+                                                    </a>
+                                                </li>`;
+                                        }    
+                                        });
+                                        console.log(notificationMessages);
+
+                                        $('#notification-messages').html(notificationMessages);
+                                    
+                                }else{
+                                        $('#notification-count').text('0');
+                                    }
+                            }
+                        });
+                    }
+                }
+
+
+                $(document).ready(function(){
+                    setInterval(fetch_new_hold,1000);
+                });
+        </script>
+
+        <!-- <script>
+        $(document).ready(function() {
+            // var agent_id = '1';
+            // if (agent_id != '') {
+                $.ajax({
+                    url: "",
+                    method: "POST",
+                    data: {
+                        agent_id: agent_id
+                    },
+                    success: function(responce) {
+                        //  console.log(responce);
+                        //  console.log('jjjjjjjjjjjjjjjjjjjj');
+                        if (responce > 0) {
+                            $('#total_notification_count').append('' + responce + '');
+                            // $('#btn_agent').prop('disabled', true)
+
+                        } else {
+                            $('#total_notification_count').html('No Enquiry');
+                            //  $('#btn_agent').prop('disabled', false)
+                        }
+                    }
+                });
+            // }
+        });
+        </script> -->
 
     
 

@@ -11,7 +11,8 @@ ProductionModel,
 DesignRevisionForProd,
 Logistics,
 Dispatch,
-BusinessDetails
+BusinessDetails,
+AdminView
 };
 use Config;
 
@@ -37,6 +38,12 @@ class ProductionRepository  {
                 $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION');
                
                 $business_application->save();
+                
+
+                $update_data_admin['current_department'] = config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION');
+                $update_data_admin['is_view'] = '0';
+            AdminView::where('business_id', $business_application->business_id)
+                        ->update($update_data_admin);
             }
             // $business = Business::find($id);
             // $business = BusinessDetails::find($id);
@@ -117,6 +124,11 @@ class ProductionRepository  {
                 // $business_application->production_id =  $production_data->id;
                 $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.DESIGN_SENT_TO_DESIGN_DEPT_FOR_REVISED');
                 $business_application->save();
+
+                $update_data_admin['current_department'] = config('constants.PRODUCTION_DEPARTMENT.DESIGN_SENT_TO_DESIGN_DEPT_FOR_REVISED');
+                $update_data_admin['is_view'] = '0';
+            AdminView::where('business_id', $production_data->business_id)
+                        ->update($update_data_admin);
             }
 
         } catch (\Exception $e) {

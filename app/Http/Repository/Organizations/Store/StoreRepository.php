@@ -11,7 +11,8 @@ use App\Models\{
     ProductionModel,
     DesignRevisionForProd,
     Requisition,
-    PurchaseOrderModel
+    PurchaseOrderModel,
+    AdminView
 };
 use Config;
 
@@ -70,6 +71,12 @@ class StoreRepository
                 $business_application->purchase_order_id = '0';
                 $dataOutput->purchase_dept_req_sent_date = date('Y-m-d');
                 $business_application->save();
+
+
+                $update_data_admin['current_department'] = config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE');
+                $update_data_admin['is_view'] = '0';
+            AdminView::where('business_id', $business_application->business_id)
+                        ->update($update_data_admin);
 
             }
             // PurchaseOrderModel::where('business_id', $business_application->business_id)->update(['purchase_status_from_purchase', config('constants.PUCHASE_DEPARTMENT.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE')]);

@@ -8,7 +8,9 @@ use Session;
 use Validator;
 use Config;
 use Carbon;
-
+use App\Models\{
+    AdminView
+};
 class AllListController extends Controller
 { 
     public function __construct(){
@@ -18,6 +20,11 @@ class AllListController extends Controller
     public function getAllListForwardedToDesign(Request $request){
         try {
             $data_output = $this->service->getAllListForwardedToDesign();
+
+            $update_data_admin['is_view'] = '1';
+            AdminView::where('current_department', 1112)
+                        ->where('is_view', '0')
+                        ->update($update_data_admin);
             return view('organizations.business.list.list-business', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
@@ -27,6 +34,11 @@ class AllListController extends Controller
     public function getAllListCorrectionToDesignFromProduction(Request $request){
         try {
             $data_output = $this->service->getAllListCorrectionToDesignFromProduction();
+
+            $update_data_admin['is_view'] = '1';
+            AdminView::where('current_department', 1115)
+                        ->where('is_view', '0')
+                        ->update($update_data_admin);
         
             return view('organizations.business.list.list-business-design-correction-from-prod', compact('data_output'));
         } catch (\Exception $e) {
@@ -38,6 +50,11 @@ class AllListController extends Controller
         try {
             $data_output = $this->service->materialAskByProdToStore();
         
+            $update_data_admin['is_view'] = '1';
+            AdminView::where('current_department', 1114)
+                        ->where('is_view', '0')
+                        ->update($update_data_admin);
+
             return view('organizations.business.list.list-material-ask-by-prod-to-store', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
@@ -97,6 +114,12 @@ class AllListController extends Controller
     public function loadDesignSubmittedForProduction(){
         try {
             $data_output = $this->service->loadDesignSubmittedForProduction();
+
+            $update_data_admin['is_view'] = '1';
+            AdminView::where('current_department', 1113)
+                        ->where('is_view', '0')
+                        ->update($update_data_admin);
+
             return view('organizations.business.design.list-design-upload', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
