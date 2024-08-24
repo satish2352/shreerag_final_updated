@@ -36,8 +36,10 @@ class StoreServices
 
             $path = Config::get('FileConstant.REQUISITION_ADD');
             $ImageName = $last_id['ImageName'];
-            uploadImage($request, 'bom_file', $path, $ImageName);
-
+          
+            uploadImage($request, 'bom_file_req', $path, $ImageName);
+            // dd($path);
+            // die();
             if ($last_id) {
                 return ['status' => 'success', 'msg' => 'Data Added Successfully.'];
             } else {

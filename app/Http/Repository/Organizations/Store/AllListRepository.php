@@ -131,6 +131,8 @@ class AllListRepository  {
                  'design_revision_for_prod.id',
             'designs.bom_image',
             'designs.design_image',
+            'design_revision_for_prod.bom_image',
+            'design_revision_for_prod.design_image',
             'production.updated_at'
             )
 
@@ -148,6 +150,8 @@ class AllListRepository  {
                 // 'design_revision_for_prod.id as design_revision_for_prod_id',
                 'designs.bom_image',
                 'designs.design_image',
+                'design_revision_for_prod.bom_image',
+              'design_revision_for_prod.design_image',
                 'production.updated_at'
                 )
                 ->orderBy('production.updated_at', 'desc')
@@ -229,6 +233,9 @@ class AllListRepository  {
         ->leftJoin('businesses_details', function($join) {
           $join->on('production.business_details_id', '=', 'businesses_details.id');
       })
+      ->leftJoin('requisition', function($join) {
+        $join->on('business_application_processes.business_details_id', '=', 'requisition.business_details_id');
+    })
         ->whereIn('business_application_processes.store_status_id',$array_to_be_check)
         // ->whereIn('purchase_orders.grn_no',$array_not_to_be_check)
         ->where('businesses.is_active',true)
@@ -247,6 +254,7 @@ class AllListRepository  {
             'design_revision_for_prod.id as design_revision_for_prod_id',
             'designs.bom_image',
             'designs.design_image',
+            'requisition.bom_file',
             'businesses.updated_at'
 
         )->orderBy('businesses.updated_at', 'desc')

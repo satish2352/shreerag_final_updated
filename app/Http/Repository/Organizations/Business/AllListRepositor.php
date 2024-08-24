@@ -254,7 +254,9 @@ class AllListRepositor
           ->leftJoin('businesses_details', function($join) {
               $join->on('production.business_details_id', '=', 'businesses_details.id');
           })
-
+          ->leftJoin('requisition as req2', function($join) {  // Second requisition join with alias `req2`
+            $join->on('business_application_processes.business_details_id', '=', 'req2.business_details_id');
+        })
           ->whereIn('business_application_processes.store_status_id', $array_to_be_check)
           ->whereIn('business_application_processes.business_status_id', $array_to_be_check_business)
           ->where('business_application_processes.purchase_order_id', '0')
@@ -277,8 +279,10 @@ class AllListRepositor
               'businesses_details.description',
               'businesses_details.quantity',
               'businesses_details.rate',
-              'production.updated_at'
-          )->orderBy('production.updated_at', 'desc')->get();
+              'production.updated_at',
+              'req2.bom_file',  // Use alias `req2`
+              'req2.updated_at' 
+          )->orderBy('req2.updated_at', 'desc')->get();
   
           return $data_output;
       } catch (\Exception $e) {

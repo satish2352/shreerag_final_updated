@@ -149,7 +149,7 @@
                 </table>
               </div>
               @if(!$getOutput->isEmpty())
-              <form action="{{ route('submit-purchase-order-to-owner-for-review') }}" method="POST">
+              <form action="{{ route('submit-purchase-order-to-owner-for-review') }}" method="POST" style="padding-top: 14px;">
                 @csrf
                 <input type="hidden" name="requistition_id" id="requistition_id" value="{{$requistition_id}}">
                 <button class="btn btn-sm btn-primary login-submit-cs mt-0"

@@ -84,7 +84,7 @@
                   <div class="form-group">
                     <label>Payment Terms <span class="text-danger">*</span></label>
                     <select name="payment_terms" class="form-control" title="select tax" id="">
-                      <option value="">Select Tax</option>
+                      <option value="">Select Payment Terms</option>
                       <option value="30">30 Days</option>
                       <option value="60">60 Days</option>
                       <option value="90">90 Days</option>
@@ -123,7 +123,7 @@
                                     </td>
                                     <td>
                                                 <select class="form-control part-no mb-2" name="addmore[0][part_no_id]" id="">
-                                                <option value="" default>Tax</option>
+                                                <option value="" default>Select Part Item</option>
                                                 @foreach ($dataOutputPartItem as $data)
                                                         <option value="{{ $data['id'] }}" >
                                                             {{ $data['name'] }}</option>

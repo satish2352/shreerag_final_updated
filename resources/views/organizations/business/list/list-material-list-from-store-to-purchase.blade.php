@@ -103,7 +103,7 @@
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                   
                                                     <td> <a class="img-size"
-                                                            href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
+                                                            href="{{ Config::get('FileConstant.REQUISITION_VIEW') }}{{ $data['bom_file'] }}"
                                                             alt="bill of material" >Click to download</a>
                                                     </td>
 

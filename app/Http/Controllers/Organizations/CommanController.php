@@ -115,19 +115,21 @@ class CommanController
             }
     
             // Fetch related Purchase Order Details
-            $purchaseOrderDetails = PurchaseOrderDetailsModel::where('purchase_id', $purchaseOrder->id)
+            $purchaseOrderDetails = PurchaseOrderDetailsModel::join('tbl_part_item', 'tbl_part_item.id', '=', 'purchase_order_details.part_no_id')
+            ->where('purchase_id', $purchaseOrder->id)
                 ->select(
-                    'purchase_id',
-                    'part_no_id',
-                    'description',
-                    'due_date',
-                    'quantity',
-                    'unit',
-                    'actual_quantity',
-                    'accepted_quantity',
-                    'rejected_quantity',
-                    'rate',
-                    'amount'
+                    'purchase_order_details.purchase_id',
+                    'purchase_order_details.part_no_id',
+                    'tbl_part_item.name',
+                    'purchase_order_details.description',
+                    'purchase_order_details.due_date',
+                    'purchase_order_details.quantity',
+                    'purchase_order_details.unit',
+                    'purchase_order_details.actual_quantity',
+                    'purchase_order_details.accepted_quantity',
+                    'purchase_order_details.rejected_quantity',
+                    'purchase_order_details.rate',
+                    'purchase_order_details.amount'
                 )
                 ->get();
    
