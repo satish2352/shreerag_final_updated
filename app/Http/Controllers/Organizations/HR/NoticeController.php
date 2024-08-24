@@ -91,7 +91,9 @@ class NoticeController extends Controller
         
         public function edit(Request $request){
             $edit_data_id = base64_decode($request->edit_id);
+           
             $editData = $this->service->getById($edit_data_id);
+        
             $dept=DepartmentsModel::where('is_active', true)->get();
             return view('organizations.hr.notice.edit-notice', compact('editData', 'dept'));
         }

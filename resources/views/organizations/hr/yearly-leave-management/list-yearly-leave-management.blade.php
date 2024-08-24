@@ -32,7 +32,7 @@ padding-left: 20px !important;
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2" >
                                         <div class="login-horizental cancel-wp pull-left">
-                                                <a href="{{ route('add-yearly-leave-management') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Leaves</button></a>
+                                                <a href="{{ route('add-yearly-leave-management') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Leaves Type</button></a>
                                         </div>
                                     </div>
                                 <div class="col-lg-10"></div>

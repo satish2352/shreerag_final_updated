@@ -24,7 +24,6 @@
         }
     </style>
 
-
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">
@@ -32,15 +31,16 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>All <span class="table-project-n">Business</span></h1>
+                                <h1>Gatepass <span class="table-project-n">Data</span> Table</h1>
                                 <div class="form-group-inner login-btn-inner row">
-                                   
-                                        <div class="col-lg-2">
-                                            <div class="login-horizental cancel-wp pull-left">
-                                                    <a href="{{ route('add-employees') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" href="{{route('add-organizations')}}">Add Employees</button></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-10"></div>
+                                    <div class="col-lg-2">
+                                        {{-- <div class="login-horizental cancel-wp pull-left">
+                                            <a href="{{ route('add-gatepass') }}"><button
+                                                    class="btn btn-sm btn-primary login-submit-cs" type="submit">Add Gate
+                                                    Pass</button></a>
+                                        </div> --}}
+                                    </div>
+                                    <div class="col-lg-10"></div>
                                 </div>
                             </div>
                         </div>
@@ -50,7 +50,7 @@
                                 <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
                                     <span class="icon-sc-cl" aria-hidden="true">&times;</span>
                                 </button>
-                                {{-- <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i> --}}
+                                <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i>
                                 <p><strong>Success!</strong> {{ Session::get('msg') }}</p>
                             </div>
                         @endif
@@ -76,43 +76,49 @@
 
 
                                 <div class="table-responsive">
-                                    <input type="hidden" class="form-control" id="business_id" name="business_id">
-
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
                                         data-key-events="true" data-show-toggle="true" data-resizable="true"
                                         data-cookie="true" data-cookie-id-table="saveId" data-show-export="true"
                                         data-click-to-select="true" data-toolbar="#toolbar">
-
                                         <thead>
                                             <tr>
-                                                <th data-field="id">Sr.No.</th>
-                                                <th data-field="customer_po_number" data-editable="true">PO Number</th>
-                                                {{-- <th data-field="product_name" data-editable="true">Product Name</th> --}}
-                                                <th data-field="title" data-editable="true">Name</th>
-                                                {{-- <th data-field="quantity" data-editable="true">Quantity</th> --}}
-                                                {{-- <th data-field="grn_date" data-editable="true">Description</th> --}}
-                                                <th data-field="purchase_id" data-editable="true">Remark</th>
-                                                <th data-field="date" data-editable="true">Sent Date</th>
+
+                                                <th data-field="id">ID</th>
+                                                <th data-field="purchase_id" data-editable="true">PO Number</th>
+                                                <th data-field="name" data-editable="true">Name</th>
+                                                <th data-field="date" data-editable="true">Date</th>
+                                                <th data-field="time" data-editable="true">Time</th>
+                                                <th data-field="remark" data-editable="true">Remark</th>
+                                                {{-- <th data-field="status" data-editable="true">Status</th> --}}
+                                                {{-- <th data-field="action">Action</th> --}}
                                             </tr>
 
                                         </thead>
                                         <tbody>
-                                            @foreach ($data_output as $data)
+
+                                            @foreach ($all_gatepass as $data)
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ ucwords($data->customer_po_number) }}</td>
-                                                    {{-- <td>{{ucwords($data->product_name)}}</td> --}}
-                                                    <td>{{ucwords($data->title)}}</td>
-                                                    {{-- <td>{{ucwords($data->quantity)}}</td> --}}
-                                                    {{-- <td>{{ ucwords($data->descriptions) }}</td> --}}
-                                                    <td>{{ ucwords($data->remarks) }}</td>
-                                                    <td>{{ $data->created_at }}</td>
+                                                    <td>{{ ucwords($data->purchase_orders_id) }}</td>
+                                                    <td>{{ ucwords($data->gatepass_name) }}</td>
+                                                    <td>{{ ucwords($data->gatepass_date) }}</td>
+                                                    <td>{{ ucwords($data->gatepass_time) }}</td>
+                                                    <td>{{ ucwords($data->remark) }}</td>
 
 
+                                                    {{-- <td>
+                                                        
+                                                        <div style="display: flex; align-items: center;">
+                                                            <a href="{{route('edit-gatepass', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+                                                          
+                                                        </div>
+                                                    </td> --}}
                                                 </tr>
                                             @endforeach
+
+
                                         </tbody>
                                     </table>
                                 </div>

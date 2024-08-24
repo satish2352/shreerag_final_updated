@@ -87,10 +87,11 @@ body {}
     z-index: 9999;
     width: 240px;
 }
+/* pratiksha (21/08/24 */
 #sidebar {
     /* min-width: 200px; */
     /* new */
-    width: 211px;
+    width: 12.5rem;
     /* background: #fff; */
     background: #f5f5f5;
     color: #fff;
@@ -125,10 +126,10 @@ body {}
 }
 
 #sidebar .sidebar-header {
-    padding: 1px 0px;
+    /* padding: 1px 0px; */
     /* new */
     /* background: #1963AB; */
-    background: #3687d5;
+    /* background: #3687d5; */
     /* background: #1963abab; */
 }
 
@@ -139,6 +140,7 @@ body {}
 
 .sidebar-header {
     text-align: center;
+    
 }
 .sidebar-header h3 {
     font-size: 20px;
@@ -146,8 +148,11 @@ body {}
     margin-top: 10px;
     margin-bottom: 5px;
 }
+.main-logo1{
+    background-color: #243772;
+}
 #sidebar.active .sidebar-header .main-logo{
-	display:none;
+	/* display:none; */
 }
 #sidebar.active
 #sidebar.active .sidebar-header h3{
@@ -324,6 +329,7 @@ body {}
 .header-right-info .navbar-nav{
 	float:right;
 	padding:17px 0px;
+    display: inline;
 }
 /*----------------------------------------*/
 /*  3.  Header top Menu CSS
@@ -887,8 +893,8 @@ ul.cus-product-sl-rp li i{
 	font-size:20px;
 }
 ul.two-part-sp li{
-	display:inline-block;
-	width: 49%;
+	display:inline-block!important;
+	/* width: 49%; */
 }
 .analytics-info-cs h3{
 	font-size:20px;
@@ -3320,7 +3326,9 @@ div#sparklinehome canvas {
 .sidebar-menu .active a {
     background-color: #243772;
     color: #fff; 
-}
+    
+} 
+
 .navbar-fixed-bottom{
     z-index: 0 !important;
 }
@@ -3355,9 +3363,24 @@ div#sparklinehome canvas {
 .main-logo{
     display: none;
 }
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .main-logo1{
+        display: none;
+        height: 3.6rem!important;
+    }
+   
+}
+
+    .main-logo1{
+        display: block;
+    }
 .sparkline13-list{
     margin-top: 60px !important;
 }
 .sparkline12-list{
     margin-top: 75px !important;  
+}
+.sparkline14-list{
+    margin-top: 40px !important;
 }

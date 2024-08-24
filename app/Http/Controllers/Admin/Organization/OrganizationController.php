@@ -20,7 +20,6 @@ class OrganizationController extends Controller
         }
 
 
-
     public function index(){
         try {
             $getOutput = $this->service->getAll();

@@ -38,9 +38,12 @@ class DesignsRepository  {
                 //   'businesses.descriptions',
                   'businesses.remarks',
                   'businesses.is_active',
-                  'designs.business_id'
+                  'designs.business_id',
+                  'businesses.updated_at'
                  
-              )->get();
+              )
+              ->orderBy('businesses.updated_at', 'desc')
+              ->get();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -78,7 +81,8 @@ class DesignsRepository  {
                 //   'businesses.quantity',
                   'businesses.remarks',
                   'businesses.is_active',
-                  'production.business_id'
+                  'production.business_id',
+                  'businesses.updated_at'
                 //   'designs.id',
                 //   'designs.design_image',
                 //   'designs.bom_image',
@@ -96,8 +100,10 @@ class DesignsRepository  {
                   'designs.id',
                   'designs.design_image',
                   'designs.bom_image',
-                  'designs.business_id'
+                  'designs.business_id',
+                  'businesses.updated_at'
               )
+              ->orderBy('businesses.updated_at', 'desc')
               ->get();
 
          

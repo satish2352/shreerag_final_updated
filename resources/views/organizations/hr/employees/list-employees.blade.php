@@ -81,7 +81,7 @@ padding-left: 20px !important;
                                         <tr>
                                             <th>Sr. No.</th>
                                             <th>Name</th>
-                                            <th>Role</th>
+                                            <th>Department</th>
                                             {{-- <th>Status</th> --}}
                                             <th>Action</th>
                                         </tr>
@@ -118,7 +118,12 @@ padding-left: 20px !important;
                                                 <td class="d-flex">
 
                                                     <div style="display: flex; align-items: center;">
+                                                        <a href="{{route('show-users', base64_encode($item->id))}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-eye" aria-hidden="true"></i></button></a>
+
                                                         <a href="{{route('edit-users', base64_encode($item->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+                                                        {{-- <a data-id="{{ $item->id }}"
+                                                            class="show-btn btn btn-sm btn-outline-primary m-1"><i
+                                                                class="fas fa-eye"></i></a> --}}
                                                         <a href="{{route('delete-users', base64_encode($item->id))}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash" aria-hidden="true"></i></button></a>
                                                     </div>
 
@@ -155,7 +160,17 @@ padding-left: 20px !important;
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+        
+    $('.show-btn').click(function(e) {
+        alert('hii');
+        $("#show_id").val($(this).attr("data-id"));
+        $("#showform").submit();
+    })
+</script>
 {{-- <form method="POST" action="{{ url('/delete-users') }}" id="deleteform">
     @csrf
     <input type="hidden" name="delete_id" id="delete_id" value="">
@@ -172,5 +187,8 @@ padding-left: 20px !important;
     @csrf
     <input type="hidden" name="active_id" id="active_id" value="">
 </form> --}}
-
+<form method="POST" action="{{ url('/show-users') }}" id="showform">
+    @csrf
+    <input type="hidden" name="show_id" id="show_id" value="">
+</form>
 @endsection

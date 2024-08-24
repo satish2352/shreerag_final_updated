@@ -100,7 +100,7 @@ class NoticeRepository  {
                 ->where('tbl_notice.id', $id)
                 ->where('tbl_departments.is_deleted', 0) 
                 ->orderBy('tbl_notice.id', 'desc')
-                ->get();
+                ->first();
     
             if ($data_output) {
                 return $data_output;

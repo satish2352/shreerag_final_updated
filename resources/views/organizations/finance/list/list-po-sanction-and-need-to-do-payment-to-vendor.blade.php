@@ -82,12 +82,15 @@
                                             <tr>
 
                                                 <th data-field="id">ID</th>
+                                                
+                                                <th data-field="product_name" data-editable="true">Product Name</th>
                                                 <th data-field="purchase_order_id" data-editable="true">Purchase Order No</th>
                                                 <th data-field="grn_no" data-editable="true">GRN No</th>
                                                 <th data-field="store_receipt_no" data-editable="true">SR No</th>
-                                                <th data-field="grn_number" data-editable="true">Title</th>
-                                                <th data-field="grn_date" data-editable="true">Description</th>
-                                                <th data-field="purchase_id" data-editable="true">Remark</th>
+                                                <th data-field="vendor_name" data-editable="true">Vendor Name</th>
+                                                <th data-field="vendor_company_name" data-editable="true">Vendor Company Name</th>
+                                                <th data-field="vendor_email" data-editable="true">Vendor Email</th>
+                                                <th data-field="contact_no" data-editable="true">Vendor Contact Number</th>
                                                 <th data-field="action" data-editable="false">Action</th>
                                             </tr>
                                         </thead>
@@ -96,17 +99,18 @@
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ ucwords($data->purchase_orders_id	) }}</td>
+                                                    <td>{{ ucwords($data->product_name) }}</td>
+                                                    <td>{{ ucwords($data->purchase_orders_id) }}</td>
                                                     <td>{{ ucwords($data->grn_no) }}</td>
                                                     <td>{{ ucwords($data->store_receipt_no) }}</td>
-                                                    <td>{{ ucwords($data->title) }}</td>
-                                                    <td>{{ ucwords($data->descriptions) }}</td>
-                                                    <td>{{ ucwords($data->remarks) }}</td>
-
+                                                    <td>{{ ucwords($data->vendor_name) }}</td>
+                                                    <td>{{ ucwords($data->vendor_company_name) }}</td>
+                                                    <td>{{ ucwords($data->vendor_email) }}</td>
+                                                    <td>{{ ucwords($data->contact_no) }}</td>
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
                                                             <a
-                                                                href="{{ route('send-payment-to-vendor', [$data->purchase_orders_id, $data->business_id]) }} "><button
+                                                                href="{{ route('send-payment-to-vendor', [$data->purchase_orders_id, $data->business_details_id]) }} "><button
                                                                     data-toggle="tooltip" title="Payment Paid To Vendor"
                                                                     class="pd-setting-ed">Payment Paid To Vendor</button></a>
                                                         </div>

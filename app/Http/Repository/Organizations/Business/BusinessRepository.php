@@ -29,7 +29,7 @@ class BusinessRepository
     public function getAll()
     {
         try {
-            $data_output = Business::get();
+            $data_output = Business::orderBy('businesses.updated_at', 'desc')->get();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -319,7 +319,7 @@ class BusinessRepository
     public function acceptPurchaseOrder($purchase_order_id, $business_id)
     {
         try {
-            $business_application = BusinessApplicationProcesses::where('business_id', $business_id)->first();
+            $business_application = BusinessApplicationProcesses::where('business_details_id', $business_id)->first();
             $po_count = $this->serviceCommon->getNumberOfPOCount($business_id, $purchase_order_id);
             if ($business_application) {
 

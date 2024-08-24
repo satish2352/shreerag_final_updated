@@ -85,8 +85,8 @@
                                                 <th data-field="customer_po_number" data-editable="true">PO Number</th>
                                                 <th data-field="product_name" data-editable="true">Product Name</th>
                                                 <th data-field="quantity" data-editable="true">Quantity</th>
-                                                <th data-field="remark" data-editable="true">Remark</th>
                                                 <th data-field="title" data-editable="true">customer Name</th>
+                                                <th data-field="truck_no" data-editable="true">Truck Number</th>
                                                 
                                             </tr>
 
@@ -99,9 +99,8 @@
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
-                                                    <td>{{ ucwords($data->remark) }}</td>
                                                     <td>{{ ucwords($data->title) }}</td>
-                                               
+                                                    <td>{{ ucwords($data->truck_no) }}</td>
                                                 <td>
                                                     <div style="display: flex; align-items: center;">
                                                         <a href="{{route('add-dispatch', $data->id)}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>

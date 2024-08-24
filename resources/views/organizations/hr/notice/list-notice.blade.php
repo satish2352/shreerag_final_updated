@@ -83,9 +83,13 @@
                                                                 class="btn btn-sm btn-outline-primary m-1"
                                                                 title="Edit Slide"><i class="fas fa-pencil-alt"></i></a>
 
-                                                            <a data-id="{{ $item->id }}"
+                                                                <a href="{{ route('show-notice', base64_encode($item->id)) }}"
+                                                                    class="btn btn-sm btn-outline-primary m-1"
+                                                                    title="Edit Slide"><i class="fas fa-eye"></i></a>
+
+                                                            {{-- <a data-id="{{ $item->id }}"
                                                                 class="show-btn btn btn-sm btn-outline-primary m-1"
-                                                                title="Show Slide "><i class="fas fa-eye"></i></a>
+                                                                title="Show Slide "><i class="fas fa-eye"></i></a> --}}
                                                             <a
                                                                 href="{{ route('delete-notice', base64_encode($item->id)) }} "><button
                                                                     data-toggle="tooltip" title="Trash"

@@ -56,19 +56,32 @@
                                         <div class="row">
                                             <div class="col-lg-6 col-md-6 col-sm-6">
                                                 <div class="form-group">
-                                                    <label for="company_id">Select Department:</label>
-                                                    <select class="form-control custom-select-value" name="department_id">
-                                                        <ul class="dropdown-menu ">
-                                                            <option value="">Select Department</option>
-                                                            @foreach($dept as $datas)
-                                                            <option value="{{$datas->id}}">{{ucfirst($datas->department_name)}}</option>
-                                                            @endforeach
+                                                    <label for="department_id">Department  <span class="text-danger">*</span></label> &nbsp<span
+                                                        class="red-text">*</span>
+                                                    <select class="form-control mb-2" name="department_id"
+                                                        id="department_id">
+                                                        <option value="" default>Select Department</option>
+                                                        @foreach ($dept as $data)
+                                                            <option value="{{ $data->id }}"
+                                                                @if ($editData->department_id == $data->id) {{ 'selected' }} @endif>
+                                                                {{ $data->department_name }}
+                                                            </option>
+                                                        @endforeach
                                                     </select>
+                                                    @if ($errors->has('department_id'))
+                                                        <span class="red-text">
+                                                            <?php echo $errors->first('department_id', ':message'); ?>
+                                                        </span>
+                                                    @endif
                                                 </div>
                                             </div>
+                                            <?php
+// dd($editData);
+// die();
+                                            ?>
                                             <div class="col-lg-6 col-md-6 col-sm-6">
                                                 <div class="form-group">
-                                                    <label for="title">Title </label>
+                                                    <label for="title">Title <span class="text-danger">*</span></label>
                                                     <input class="form-control" name="title" id="title"
                                                         placeholder="Enter the Title"
                                                         value="@if (old('title')) {{ old('title') }}@else{{ $editData->title }} @endif">
@@ -80,7 +93,7 @@
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6">
                                                 <div class="form-group" id="summernote_id">
-                                                    <label for="english_description">Description</label>
+                                                    <label for="english_description">Description <span class="text-danger">*</span></label>
                                                     <span class="summernote1">
                                                         <textarea class="form-control" name="description" id="description" placeholder="Enter the Description">
                                              @if (old('description'))
@@ -96,7 +109,7 @@
 
                                             <div class="col-lg-6 col-md-6 col-sm-6">
                                                 <div class="form-group">
-                                                    <label for="image"> Image</label>
+                                                    <label for="image"> Upload <span class="text-danger">*</span></label>
                                                     <input type="file" name="image" class="form-control" id="image"
                                                     accept="application/pdf" placeholder="image">
 

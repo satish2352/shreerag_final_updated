@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Organizations\Purchase;
 
 use App\Models\PurchaseOrdersModel;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Services\Organizations\Purchase\PurchaseOrderServices;
 use App\Http\Controllers\Controller;
 use Validator;
@@ -496,24 +498,78 @@ class PurchaseOrderController extends Controller
         }
     } 
 
+    // public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id)
+    // {
+    //     try {
+    //         $delete = $this->service->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id);
+    //         if ($delete) {
+    //             $status = 'success';
+    //             $msg = 'Purchase order mail sent to vendor.';
+    //         } else {
+    //             $status = 'success';
+    //             $msg = 'Purchase order mail sent to vendor.';
+    //         }
+
+    //         return redirect('purchase/list-purchase-order-approved-sent-to-vendor')->with(compact('msg', 'status'));
+
+    //     } catch (Exception $e) {
+    //         return ['status' => 'error', 'msg' => $e->getMessage()];
+    //     }
+    // }
+
     public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id)
     {
         try {
-            $delete = $this->service->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id);
-            if ($delete) {
-                $status = 'success';
-                $msg = 'Purchase order mail sent to vendor.';
-            } else {
-                $status = 'success';
-                $msg = 'Purchase order mail sent to vendor.';
+            // Fetch purchase order details
+            $purchaseOrder = $this->service->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id);
+    
+            $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
+    
+            $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
+            $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
+            $business_id = $data['purchaseOrder']->business_id;
+            $purchaseOrder = $data['purchaseOrder'];
+            $purchaseOrderDetails = $data['purchaseOrderDetails'];
+    
+            if (!$purchaseOrder) {
+                return response()->json(['status' => 'error', 'message' => 'Purchase order not found'], 404);
             }
-
-            return redirect('purchase/list-purchase-order-approved-sent-to-vendor')->with(compact('msg', 'status'));
-
-        } catch (Exception $e) {
-            return ['status' => 'error', 'msg' => $e->getMessage()];
+    
+            // Generate PDF with specific settings
+            $pdf = Pdf::loadView('organizations.common-pages.purchase-order-view', [
+                'purchase_order_id' => $purchase_order_id,
+                'purchaseOrder' => $purchaseOrder,
+                'purchaseOrderDetails' => $purchaseOrderDetails,
+                'getOrganizationData' => $getOrganizationData,
+                'getAllRulesAndRegulations' => $getAllRulesAndRegulations,
+                'business_id' => $business_id,
+            ])
+            ->setPaper('a4', 'portrait') // You can change to 'landscape' if needed
+            ->setWarnings(false) // Disable warnings (optional)
+            ->setOptions([
+                'margin-top' => 10,     // Adjust top margin
+                'margin-right' => 400,   // Adjust right margin
+                'margin-bottom' => 10,  // Adjust bottom margin
+                'margin-left' => 10,    // Adjust left margin
+            ])
+            ->save(storage_path('app/public/purchase_order_' . $purchase_order_id . '.pdf')); // Save the PDF
+    
+            $pdfPath = storage_path('app/public/purchase_order_' . $purchase_order_id . '.pdf');
+    
+            // Send email with PDF attachment
+            Mail::send([], [], function ($message) use ($purchaseOrder, $pdfPath) {
+                $message->to($purchaseOrder->vendor_email)
+                    ->subject('Purchase Order Notification')
+                    ->attach($pdfPath);
+                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+            });
+    
+            return redirect('purchase/list-purchase-order-approved-sent-to-vendor')->with('status', 'success')->with('msg', 'Purchase order mail sent to vendor.');
+    
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
-
     
 }

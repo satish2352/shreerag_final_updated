@@ -92,6 +92,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            
                                             @foreach ($data_output as $data)
                                                 <tr>
 
@@ -106,7 +107,7 @@
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
                                                             <a
-                                                                href="{{ route('accept-purchase-order', [$data->purchase_orders_id, $data->business_id]) }} "><button
+                                                                href="{{ route('accept-purchase-order', [$data->purchase_orders_id, $data->business_details_id]) }} "><button
                                                                     data-toggle="tooltip" title="Check details"
                                                                     class="pd-setting-ed">Check details</button></a>
 

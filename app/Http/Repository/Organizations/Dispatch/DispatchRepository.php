@@ -20,9 +20,9 @@ public function storeDispatch($request)
     try {
         // $dataOutput = Dispatch::first();
 
-       
+     
         $dataOutput = Dispatch::where('business_details_id', $request->business_details_id)->first();
-      
+    
 
         if ($dataOutput) {
             // Update the fields
@@ -36,7 +36,7 @@ public function storeDispatch($request)
             } 
             $dataOutput->save();
        
-            $business_application = BusinessApplicationProcesses::where('business_details_id', $dataOutput->business_id)->first();
+            $business_application = BusinessApplicationProcesses::where('business_details_id', $dataOutput->business_details_id)->first();
             
             if ($business_application) {
                 $business_application->dispatch_status_id = config('constants.DISPATCH_DEPARTMENT.DISPATCH_DEPARTMENT_MARKED_DISPATCH_COMPLETED');

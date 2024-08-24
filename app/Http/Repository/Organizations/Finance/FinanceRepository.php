@@ -48,7 +48,7 @@ class FinanceRepository
            
             $purchase_order = PurchaseOrderModel::where('purchase_orders_id', $purchase_orders_id)->first();
             
-            $business_application = BusinessApplicationProcesses::where('business_id', $business_id)->first();
+            $business_application = BusinessApplicationProcesses::where('business_details_id', $business_id)->first();
         
             if ($business_application && $purchase_order) {
                 // Update the business application statuses and dates
@@ -71,7 +71,7 @@ class FinanceRepository
         try {
             $purchase_order = PurchaseOrderModel::where('purchase_orders_id', $purchase_order_id)->first();
            
-            $business_application = BusinessApplicationProcesses::where('business_id', $business_id)->first();
+            $business_application = BusinessApplicationProcesses::where('business_details_id', $business_id)->first();
             if ( $business_application  &&  $purchase_order) {
                 $business_application->purchase_order_id = $purchase_order_id;
                 $business_application->business_status_id = config('constants.FINANCE_DEPARTMENT.INVOICE_PAID_AGAINST_PO');
@@ -88,7 +88,7 @@ class FinanceRepository
     }
     public function sendToDispatch($id) {
         try {
-           
+          
             $business_application = BusinessApplicationProcesses::where('business_details_id', $id)->first();
             if ($business_application) {
                 $business_application->dispatch_status_id = config('constants.FINANCE_DEPARTMENT.LIST_LOGISTICS_SEND_TO_DISPATCH_DEAPRTMENT');

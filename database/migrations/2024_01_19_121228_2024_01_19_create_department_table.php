@@ -16,6 +16,7 @@ return new class extends Migration
        Schema::create('tbl_departments', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('department_name');
+            $table->boolean('is_active')->default(true);
             $table->boolean('is_deleted')->default(false);
             $table->timestamps();
 

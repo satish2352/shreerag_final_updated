@@ -94,7 +94,7 @@
 
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="role_id">Role Type</label>&nbsp<span class="red-text">*</span>
+                                            <label for="role_id">Department</label>&nbsp<span class="red-text">*</span>
                                             <select class="form-control" id="role_id" name="role_id"
                                                 onchange="myFunction(this.value)">
                                                 <option>Select</option>

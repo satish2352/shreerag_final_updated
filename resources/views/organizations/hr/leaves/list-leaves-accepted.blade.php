@@ -77,9 +77,9 @@
                                             <th data-field="leave_start_date" data-editable="true">Leave Start Date</th>
                                             <th data-field="leave_end_date" data-editable="true">Leave End Date</th>
                                             <th data-field="leave_day" data-editable="true">Leave Day</th>
-                                            <th data-field="leave_type_id" data-editable="true">Leave Type</th>
-                                            <th data-field="leave_count" data-editable="true">Leave Count</th>
-                                            <th data-field="reason" data-editable="true">Reason</th>
+                                            {{-- <th data-field="leave_type_id" data-editable="true">Leave Type</th> --}}
+                                            {{-- <th data-field="leave_count" data-editable="true">Leave Count</th>
+                                            <th data-field="reason" data-editable="true">Reason</th> --}}
                                             <th data-field="action">Action</th>
                                         </tr>
                                     </thead>
@@ -98,10 +98,12 @@
                                               @else
                                                   Unknown Status
                                               @endif</td>
-                                            <td>{{ ucwords($data->leave_type_name) }}</td>
-                                            <td>{{ ucwords($data->leave_count) }}</td>
-                                            <td>{{ ucwords($data->reason) }}</td>
+                                            {{-- <td>{{ ucwords($data->leave_type_name) }}</td> --}}
+                                            {{-- <td>{{ ucwords($data->leave_count) }}</td>
+                                            <td>{{ ucwords($data->reason) }}</td> --}}
                                             <td>
+                                               <a href="{{route('show-leaves', base64_encode($data->id))}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-eye" aria-hidden="true"></i></button></a>
+
                                                 <div style="display: flex; align-items: center;">
                                                     <button data-id="{{ $data->id }}" data-action="approve" data-toggle="tooltip" title="Approve" class="approve-btn pd-setting-ed" style="color: green;
                                                         border: 1px solid;">
