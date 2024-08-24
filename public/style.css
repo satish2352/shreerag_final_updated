@@ -893,8 +893,8 @@ ul.cus-product-sl-rp li i{
 	font-size:20px;
 }
 ul.two-part-sp li{
-	display:inline-block;
-	width: 49%;
+	display:inline-block!important;
+	/* width: 49%; */
 }
 .analytics-info-cs h3{
 	font-size:20px;

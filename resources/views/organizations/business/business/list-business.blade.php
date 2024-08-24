@@ -72,8 +72,6 @@
                                     <option value="selected">Export Selected</option>
                                 </select>
                             </div>
-
-
                             <div class="table-responsive">
 
                                 <table id="table" data-toggle="table" data-pagination="true" data-search="true"
