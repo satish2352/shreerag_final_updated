@@ -95,7 +95,11 @@ padding-left: 20px !important;
                                             <td>{{ucwords($data->product_name)}}</td>
                                             <td>{{ucwords($data->quantity)}}</td>
                                             <td>{{ ucwords($data->description) }}</td>
-                                            <td><div style="display: inline-block; align-items: center;">
+                                            <td>
+                                                {{-- <div style="display: inline-block; align-items: center;">
+                                                    <a href="{{route('update-final-production-completed-status', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>Edit Product</button></a>
+                                                </div> --}}
+                                                <div style="display: inline-block; align-items: center;">
                                                 <a href="{{route('update-final-production-completed-status', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>Production Completed</button></a>
                                             </div></td>
                                            </tr>
