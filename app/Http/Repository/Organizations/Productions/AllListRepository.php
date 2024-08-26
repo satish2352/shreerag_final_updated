@@ -486,6 +486,9 @@ public function getAllNewRequirementBusinessWise($business_id) {
         ->leftJoin('businesses_details', function($join) {
           $join->on('production.business_details_id', '=', 'businesses_details.id');
       })
+          ->leftJoin('designs', function($join) {
+            $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+          })
              ->leftJoin('design_revision_for_prod', function($join) {
             $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
           })
@@ -501,9 +504,9 @@ public function getAllNewRequirementBusinessWise($business_id) {
               'businesses_details.is_active',
               'production.business_id',
               'design_revision_for_prod.reject_reason_prod',
-              'businesses.updated_at'
-              // 'designs.bom_image',
-              // 'designs.design_image'
+              'businesses.updated_at',
+              'designs.bom_image',
+              'designs.design_image'
 
           )->orderBy('businesses.updated_at', 'desc')->get();
         return $data_output;

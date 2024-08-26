@@ -752,7 +752,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="mt-2 mb-0 text-sm">
-                                                        <a href="">
+                                                        <a href="{{ route('list-business') }}">
                                                             <span
                                                                 class="badge badge-pill bg-soft-success text-success me-2">
                                                                 <i class="fa-solid fa-arrow-right"></i> </span>
@@ -783,12 +783,43 @@
                                                         </div>
                                                     </div>
                                                     <div class="mt-2 mb-0 text-sm">
-                                                        <a href="">
+                                                        <a href="{{ route('list-business') }}">
                                                             <span
                                                                 class="badge badge-pill bg-soft-success text-success me-2">
                                                                 <i class="fa-solid fa-arrow-right"></i> </span>
                                                             <span class="text-nowrap text-xs text-muted">View
                                                                 Details</span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4 col-sm-6 col-12">
+                                            <div class="card shadow border-0">
+                                                <div class="card-body">
+                                                    <div class="row border-bottom">
+                                                        <div class="col mb-2">
+                                                            <span
+                                                                class="h6 font-semibold text-muted text-sm d-block mb-2">Inprocess
+                                                                Product</span>
+                                                            <span
+                                                                class="h5 font-bold mb-0">{{ $return_data['product_inprocess'] }}</span>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <div
+                                                                class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                                <i class="fa-solid fa-store"></i>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-2 mb-0 text-sm">
+                                                        <a href="{{ route('list-product-dispatch-completed') }}">
+                                                            <span
+                                                                class="badge badge-pill bg-soft-success text-success me-2">
+                                                                <i class="fa-solid fa-arrow-right"></i> </span>
+                                                            <span class="text-nowrap text-xs text-muted">view
+                                                                details</span>
                                                         </a>
                                                     </div>
                                                 </div>
@@ -816,7 +847,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="mt-2 mb-0 text-sm">
-                                                        <a href="">
+                                                        <a href="{{ route('list-product-dispatch-completed') }}">
                                                             <span
                                                                 class="badge badge-pill bg-soft-success text-success me-2">
                                                                 <i class="fa-solid fa-arrow-right"></i> </span>
@@ -847,7 +878,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="mt-2 mb-0 text-sm">
-                                                        <a href="">
+                                                        <a href="{{ route('list-product-dispatch-completed') }}">
                                                             <span
                                                                 class="badge badge-pill bg-soft-success text-success me-2">
                                                                 <i class="fa-solid fa-arrow-right"></i> </span>
@@ -858,8 +889,38 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- ============= -->
                                         <div class="col-xl-4 col-sm-6 col-12 mb-2">
+                                            <div class="card shadow border-0">
+                                                <div class="card-body">
+                                                    <div class="row border-bottom">
+                                                        <div class="col mb-2">
+                                                            <span
+                                                                class="h6 font-semibold text-muted text-sm d-block mb-2">Total Employee</span>
+                                                            <span
+                                                                class="h5 font-bold mb-0">{{ $return_data['user_active_count'] }}</span>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <div
+                                                                class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                                <i class="fa-solid fa-shopping-cart"></i>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-2 mb-0 text-sm">
+                                                        <a href="{{ route('organizations-list-employees') }}">
+                                                            <span
+                                                                class="badge badge-pill bg-soft-success text-success me-2">
+                                                                <i class="fa-solid fa-arrow-right"></i> </span>
+                                                            <span class="text-nowrap text-xs text-muted">view
+                                                                details</span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        <!-- ============= -->
+                                        {{-- <div class="col-xl-4 col-sm-6 col-12 mb-2">
                                             <div class="card shadow border-0">
                                                 <div class="card-body">
                                                     <div class="row border-bottom">
@@ -879,7 +940,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="mt-2 mb-0 text-sm">
-                                                        <a href="">
+                                                        <a href="{{ route('list-product-dispatch-completed') }}">
                                                             <span
                                                                 class="badge badge-pill bg-soft-success text-success me-2">
                                                                 <i class="fa-solid fa-arrow-right"></i> </span>
@@ -889,39 +950,9 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-xl-4 col-sm-6 col-12">
-                                            <div class="card shadow border-0">
-                                                <div class="card-body">
-                                                    <div class="row border-bottom">
-                                                        <div class="col mb-2">
-                                                            <span
-                                                                class="h6 font-semibold text-muted text-sm d-block mb-2">Inprocess
-                                                                Product</span>
-                                                            <span
-                                                                class="h5 font-bold mb-0">{{ $return_data['product_inprocess'] }}</span>
-                                                        </div>
-                                                        <div class="col-auto">
-                                                            <div
-                                                                class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                                <i class="fa-solid fa-store"></i>
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="mt-2 mb-0 text-sm">
-                                                        <a href="">
-                                                            <span
-                                                                class="badge badge-pill bg-soft-success text-success me-2">
-                                                                <i class="fa-solid fa-arrow-right"></i> </span>
-                                                            <span class="text-nowrap text-xs text-muted">view
-                                                                details</span>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                       <div class="col-xl-4 col-sm-6 col-12">
+                                        </div> --}}
+                                        
+                                       {{-- <div class="col-xl-4 col-sm-6 col-12">
                                                 <div class="card shadow border-0">
                                                     <div class="card-body">
                                                         <div class="row border-bottom">
@@ -975,7 +1006,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         <!-- ============= -->
                                         {{-- <div class="col-xl-4 col-sm-6 col-12 mb-2">
                                                 <div class="card shadow border-0">
@@ -1236,7 +1267,7 @@
                                                     @foreach($grouped_data as $data)
                                                     <li class="right-side"
                                                         style="color:#{{ str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) . str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) . str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) }};">
-                                                        <span>{{ $data->product_name }}</span>
+                                                        <span><b>{{ $data->product_name }}</b> : -</span>
                                                         @if($data->business_status_id == 1118 &&
                                                         $data->design_status_id == 1114 &&
                                                         $data->production_status_id == 1121 &&
@@ -1311,6 +1342,25 @@
                                                         $data->security_status_id == 1132 &&
                                                         $data->quality_status_id == 1134)
                                                         Store Department Material Received from Quality Department
+
+                                                        @elseif($data->business_status_id == 1126 &&
+                                                        $data->design_status_id == 1114 &&
+                                                        $data->production_status_id == 1117 &&
+                                                        $data->store_status_id == 1123 &&
+                                                        $data->purchase_status_from_owner == "1129" &&
+                                                        $data->purchase_status_from_purchase == 1129 &&
+                                                        $data->finanace_store_receipt_status_id == 1140 && $data->security_status_id ==1132)
+                                                        Quality Department
+
+
+                                                        @elseif($data->business_status_id == 1126 &&
+                                                        $data->design_status_id == 1114 &&
+                                                        $data->production_status_id == 1117 &&
+                                                        $data->store_status_id == 1123 &&
+                                                        $data->purchase_status_from_owner == "1129" &&
+                                                        $data->purchase_status_from_purchase == 1129 &&
+                                                        $data->finanace_store_receipt_status_id == 1140 && $data->security_status_id ==1132)
+                                                        Security Department Received and Material
                                                         @elseif($data->business_status_id == 1126 &&
                                                         $data->design_status_id == 1114 &&
                                                         $data->production_status_id == 1117 &&
@@ -1323,13 +1373,27 @@
                                                         $data->design_status_id == 1114 &&
                                                         $data->production_status_id == 1117 &&
                                                         $data->store_status_id == 1123 &&
-                                                        $data->purchase_status_from_purchase == 1126)
+                                                        $data->purchase_status_from_purchase == 1126 && $data->finanace_store_receipt_status_id == 1140)
                                                         Purchase Department Approved Owner
+                                                        @elseif($data->business_status_id == 1126 &&
+                                                        $data->design_status_id == 1114 &&
+                                                        $data->production_status_id == 1117 &&
+                                                        $data->store_status_id == 1123 &&
+                                                        $data->purchase_status_from_purchase == 1126)
+                                                        Purchase Department 
                                                         @elseif($data->business_status_id == 1123 &&
                                                         $data->design_status_id == 1114 &&
                                                         $data->production_status_id == 1117 &&
                                                         $data->store_status_id == 1123)
                                                         Store Department
+                                                        @elseif($data->business_status_id == 1116 &&
+                                                        $data->design_status_id == 1116 &&
+                                                        $data->production_status_id == 1116)
+                                                        Production Department Received Revise Design
+                                                        @elseif($data->business_status_id == 1115 &&
+                                                        $data->design_status_id == 1115 &&
+                                                        $data->production_status_id == 1115)
+                                                        Production Department Rejected Design and Received Design Department
                                                         @elseif($data->business_status_id == 1112 &&
                                                         $data->design_status_id == 1114 &&
                                                         $data->production_status_id == 1114)
@@ -1341,10 +1405,6 @@
                                                         @elseif($data->business_status_id == 1112 &&
                                                         $data->design_status_id == 1111)
                                                         Business Department
-                                                        @elseif($data->business_status_id == 1127)
-                                                        Logistics Department
-                                                        @elseif($data->business_status_id == 1127)
-                                                        Dispatch Department
                                                         @else
                                                         Unknown Department
                                                         @endif

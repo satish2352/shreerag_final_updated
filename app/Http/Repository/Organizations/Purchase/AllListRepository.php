@@ -290,6 +290,7 @@ class AllListRepository
           'businesses_details.product_name',
           // 'businesses.title',
           'businesses_details.description',
+          'purchase_orders.updated_at',
           // 'businesses.remarks',
           // 'businesses.is_active',
           // 'production.business_id',
@@ -297,7 +298,7 @@ class AllListRepository
           // 'designs.bom_image',
           // 'designs.design_image'
 
-        )->get();
+        )->orderBy('purchase_orders.updated_at', 'desc')->get();
 
       return $data_output;
     } catch (\Exception $e) {

@@ -73,7 +73,7 @@
 
                                                 <div class="row">
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="design_image">Upload Design Layout:</label>
+                                                        <label for="design_image">Upload Design Layout (upload pdf file min:10KB to max:2MB) :</label>
                                                         <input type="file" class="form-control" accept="application/pdf"
                                                             id="design_image" name="design_image">
                                                         @if ($errors->has('design_image'))
@@ -81,7 +81,7 @@
                                                         @endif
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="bom_image">Upload Bill Of Material:</label>
+                                                        <label for="bom_image">Upload BOM (upload excel file min:10KB to max:2MB) :</label>
                                                         <input type="file" class="form-control" accept=".xls, .xlsx"
                                                             id="bom_image" name="bom_image">
                                                         @if ($errors->has('bom_image'))
@@ -139,42 +139,57 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
-
-      <script>
+    <script>
         jQuery.noConflict();
         jQuery(document).ready(function($) {
+            // Custom validation method to check file extension
+            $.validator.addMethod("fileExtension", function(value, element, param) {
+                const extension = value.split('.').pop().toLowerCase();
+                return $.inArray(extension, param) !== -1;
+            }, "Invalid file extension.");
+    
+            // Custom validation method to check file size
+            $.validator.addMethod("fileSize", function(value, element, param) {
+                const fileSizeKB = element.files[0].size / 1024;
+                return fileSizeKB >= param[0] && fileSizeKB <= param[1];
+            }, "File size must be between {0} KB and {1} KB.");
+    
             $("#addDesignsForm").validate({
                 rules: {
                     design_image: {
                         required: true,
-                        accept: "application/pdf", // Specify PDF MIME type
+                        fileExtension: ["pdf"], // Validate for PDF extension
+                        fileSize: [10, 2048], // Min 10KB and Max 2MB
                     },
                     bom_image: {
                         required: true,
-                        accept: ".xls,.xlsx",
+                        fileExtension: ["xls", "xlsx"], // Validate for Excel files
+                        fileSize: [10, 2048], // Min 10KB and Max 2MB
                     },
                 },
                 messages: {
                     design_image: {
-                        required: "Please select design layout pdf .",
-                        accept: "Please select an  design layout pdf file.",
+                        required: "Please select design layout PDF.",
+                        fileExtension: "Only PDF files are allowed.",
+                        fileSize: "File size must be between 10 KB and 2 MB.",
                     },
                     bom_image: {
-                        required: "Please select bom excel .",
-                        accept: "Please select an bom excel file.",
+                        required: "Please select BOM Excel file.",
+                        fileExtension: "Only Excel files (.xls, .xlsx) are allowed.",
+                        fileSize: "File size must be between 10 KB and 2 MB.",
                     },
                 },
                 submitHandler: function(form) {
-                // Use SweetAlert to show a success message
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'Design re-submit added successfully.',
-                }).then(function() {
-                    form.submit(); // Submit the form after the user clicks OK
-                });
-            }
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Design re-submit added successfully.',
+                    }).then(function() {
+                        form.submit(); // Submit the form after the user clicks OK
+                    });
+                }
+            });
         });
-    });
     </script>
+    
 @endsection

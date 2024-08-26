@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 // use App\Http\Services\DashboardServices;
 use App\Models\ {
+    User,
     Business,
     BusinessApplicationProcesses,
     AdminView,
@@ -84,19 +85,49 @@ class DashboardController extends Controller {
 {
     try {
         // Get the counts
+        $user_active_count = User::where('is_active', 1)->count(); 
         $active_count = Business::where('is_active', 1)->count(); 
         $business_details_count = BusinessDetails::where('is_active', 1)->count(); 
-        $business_completed_count = BusinessApplicationProcesses::where('is_active', 1)
-            ->where('dispatch_status_id', 1148)
-            ->count();
         $product_completed_count = BusinessApplicationProcesses::where('is_active', 1)
             ->where('dispatch_status_id', 1148)
             ->count();
+        // $product_completed_count = BusinessApplicationProcesses::where('is_active', 1)
+        //     ->where('dispatch_status_id', 1148)
+        //     ->count();
+        $business_completed_count = BusinessApplicationProcesses::where('business_application_processes.is_active', 1)
+        ->join('businesses_details', 'business_application_processes.business_details_id', '=', 'businesses_details.id')
+        ->where('business_application_processes.dispatch_status_id', 1140)
+        ->count();
+    
+   
         $business_inprocess_count = BusinessApplicationProcesses::where('is_active', 1)
-            ->where('dispatch_status_id', 1148)
-            ->count();
+        ->where(function($query) {
+            $query->orWhere('business_status_id', 1118)
+                ->orWhere('design_status_id', 1114)
+                ->orWhere('production_status_id', 1121)
+                ->orWhere('store_status_id', 1123)
+                // ->orWhere('purchase_status_from_owner', 1129)
+                ->orWhere('purchase_status_from_purchase', 1129)
+                // ->orWhere('finanace_store_receipt_status_id', 1136)
+                // ->orWhere('security_status_id', 1132)
+                ->orWhere('quality_status_id', 1134)
+                ->orWhere('logistics_status_id', 1145);
+        })
+        ->count();
+    
         $product_inprocess_count = BusinessApplicationProcesses::where('is_active', 1)
-            ->where('dispatch_status_id', 1148)
+        ->where(function($query) {
+            $query->orWhere('business_status_id', 1118)
+                ->orWhere('design_status_id', 1114)
+                ->orWhere('production_status_id', 1121)
+                ->orWhere('store_status_id', 1123)
+                // ->orWhere('purchase_status_from_owner', 1129)
+                ->orWhere('purchase_status_from_purchase', 1129)
+                // ->orWhere('finanace_store_receipt_status_id', 1136)
+                // ->orWhere('security_status_id', 1132)
+                ->orWhere('quality_status_id', 1134)
+                ->orWhere('logistics_status_id', 1145);
+        })
             ->count();
 
         $data_output_offcanvas = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
@@ -125,6 +156,7 @@ class DashboardController extends Controller {
             // die();
         // Prepare the data for the chart
         $counts = [
+            'user_active_count' => $user_active_count,
             'active_businesses' => $active_count,
             'business_details' => $business_details_count,
             'business_completed' => $business_completed_count,

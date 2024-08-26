@@ -290,7 +290,7 @@ class AllListRepository
           'vendors.vendor_address', 
           'vendors.contact_no', 
           'vendors.gst_no', 
-         
+         'purchase_orders.updated_at',
       )
         ->select(
           'purchase_orders.purchase_orders_id',
@@ -317,8 +317,9 @@ class AllListRepository
             'vendors.vendor_address', 
             'vendors.contact_no', 
             'vendors.gst_no', 
+            'purchase_orders.updated_at',
            
-        )
+        )->orderBy('purchase_orders.updated_at', 'desc')
         ->get();
 
         // ->select(

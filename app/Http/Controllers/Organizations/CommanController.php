@@ -92,6 +92,7 @@ class CommanController
                     'purchase_orders.po_date', 
                     'purchase_orders.terms_condition', 
                     'purchase_orders.transport_dispatch', 
+                    'purchase_orders.purchase_status_from_purchase',
                     'purchase_orders.image', 
                     'purchase_orders.tax_type', 
                     'purchase_orders.tax_id', 

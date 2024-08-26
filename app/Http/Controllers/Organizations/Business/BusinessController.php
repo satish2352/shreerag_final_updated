@@ -8,6 +8,9 @@ use Session;
 use Validator;
 use Config;
 use Carbon;
+use App\Models\{
+    Business,
+};
 use App\Http\Controllers\Organizations\CommanController;
 
 class BusinessController extends Controller
@@ -36,7 +39,7 @@ class BusinessController extends Controller
         $rules = [
                'title' => 'required|string|max:255',
                 // 'product_name' => 'required',
-                'customer_po_number' => 'required|string|min:10|max:16',
+                'customer_po_number' => 'required|unique:businesses|string|min:10|max:16',
                 // 'quantity' => 'required',
                 'po_validity' => 'required',
                 // 'hsn_number' => 'required',
@@ -59,6 +62,7 @@ class BusinessController extends Controller
                         // 'customer_payment_terms.required' => 'The customer payment terms is required.',
                         // 'customer_terms_condition.required' => 'The customer terms condition is required.',
                         'remarks.required' => 'The remarks is required.',
+                        'customer_po_number.unique' => 'PO number already exist.',
                     ];
   
           try {
@@ -110,6 +114,7 @@ class BusinessController extends Controller
             // 'customer_payment_terms' => 'required',
             // 'customer_terms_condition' => 'required',
             // 'remarks' => 'required',
+            'customer_po_number' => ['required', 'max:255','regex:/^[a-zA-Z\s]+$/u', Rule::unique('businesses', 'customer_po_number')->ignore($id, 'id')],
             ];       
         $messages = [
             // 'title.required' => 'The design customer name is required.',
@@ -125,6 +130,7 @@ class BusinessController extends Controller
             // 'customer_payment_terms.required' => 'The customer payment terms is required.',
             // 'customer_terms_condition.required' => 'The customer terms condition is required.',
             // 'remarks.required' => 'The remarks is required.',
+            'customer_po_number.unique' => 'po number already exist.',
             ];
 
         try {
