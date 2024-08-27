@@ -158,7 +158,7 @@ public function getAllDispatch(){
           'tbl_dispatch.gate_entry',
           'tbl_dispatch.remark',
           'tbl_dispatch.updated_at',
-      )
+      )->orderBy('tbl_dispatch.updated_at', 'desc')
       ->get();
      
  

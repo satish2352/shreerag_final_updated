@@ -150,7 +150,8 @@ public function getAllLogistics(){
       'businesses_details.product_name',
       'businesses_details.quantity',
       'businesses_details.description',
-      'business_application_processes.id'
+      'business_application_processes.id',
+      'tbl_logistics.updated_at',
   )
   ->select(
       'businesses.customer_po_number',
@@ -159,8 +160,9 @@ public function getAllLogistics(){
       'businesses_details.product_name',
       'businesses_details.description',
       'businesses_details.quantity',
+      'tbl_logistics.updated_at',
       // Add the columns here
-  )
+  )->orderBy('tbl_logistics.updated_at', 'desc')
   ->get();
  
     return $data_output;
