@@ -599,6 +599,42 @@
                     </a>
                 </li>
             @endif
+                    @if (session()->get('role_id') == config('constants.ROLE_ID.CMS'))
+                       <!-- <li>
+                        <a class="has-arrow" href="{{ route('list-product') }}"
+                            aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span
+                                class="mini-click-non">CMS</span></a>
+                        <ul class="submenu-angle" aria-expanded="false"> -->
+                            <li class="nav-item"><a  href="{{ route('list-product') }}" aria-expanded="false"><i
+                                        class="fa big-icon fa-cube icon-wrap" aria-hidden="true"></i> <span
+                                        class="mini-click-non">Product</span></a></li>
+                            <li class="nav-item"><a  href="{{ route('list-services') }}" aria-expanded="false"><i
+                                        class="fa big-icon fa-tools icon-wrap" aria-hidden="true"></i> <span
+                                        class="mini-click-non">Services</span></a></li>
+
+                            <li class="nav-item"><a  href="{{ route('list-testimonial') }}" aria-expanded="false"><i
+                                        class="fa big-icon fa-quote-right icon-wrap" aria-hidden="true"></i> <span
+                                        class="mini-click-non">Testimonial</span></a></li>
+                                        
+                            <li class="nav-item"><a  href="{{ route('list-director-desk') }}" aria-expanded="false"><i
+                                            class="fa big-icon fa-briefcase icon-wrap" aria-hidden="true"></i> <span
+                                            class="mini-click-non">Director Desk</span></a></li> 
+                            <li class="nav-item"><a  href="{{ route('list-vision-mission') }}" aria-expanded="false"><i
+                                                class="fa big-icon fa-bullseye icon-wrap" aria-hidden="true"></i> <span
+                                                class="mini-click-non">Vision Mission</span></a></li> 
+                            <li class="nav-item"><a  href="{{ route('list-team') }}" aria-expanded="false"><i
+                                                    class="fa big-icon fa-user-friends icon-wrap" aria-hidden="true"></i> <span
+                                                    class="mini-click-non">Team</span></a></li>   
+                            <!-- <li class="nav-item"><a  href="{{ route('list-testimonial') }}" aria-expanded="false"><i
+                                                        class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
+                                                        class="mini-click-non">Testimonial</span></a></li>  -->
+                            <li class="nav-item"><a  href="{{ route('list-contactus-form') }}" aria-expanded="false"><i
+                                                            class="fa big-icon fa-edit icon-wrap" aria-hidden="true"></i> <span
+                                                            class="mini-click-non">Contactus Form </span></a></li>                               
+                        <!-- </ul>
+                    </li>                    -->
+                    @endif
+
                     @if (session()->get('user_id'))
                         <li class="nav-item">
                             <a class="nav-item" href="{{ route('list-leaves') }}" aria-expanded="false"><i
@@ -619,43 +655,7 @@
                         
                     @endif
 
-                       @if (session()->get('role_id') == config('constants.ROLE_ID.CMS'))
-                       <li>
-                        <a class="has-arrow" href="{{ route('list-product') }}"
-                            aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span
-                                class="mini-click-non">CMS</span></a>
-                        <ul class="submenu-angle" aria-expanded="false">
-                            <li><a  href="{{ route('list-product') }}"><i
-                                        class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
-                                        class="mini-click-non">Product</span></a></li>
-
-                            <li><a  href="{{ route('list-services') }}"><i
-                                        class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
-                                        class="mini-click-non">Services</span></a></li>
-
-                            <li><a  href="{{ route('list-testimonial') }}"><i
-                                        class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
-                                        class="mini-click-non">Testimonial</span></a></li>
-                                        
-                            <li><a  href="{{ route('list-director-desk') }}"><i
-                                            class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
-                                            class="mini-click-non">Director Desk</span></a></li> 
-                            <li><a  href="{{ route('list-vision-mission') }}"><i
-                                                class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
-                                                class="mini-click-non">Vision Mission</span></a></li> 
-                            <li><a  href="{{ route('list-team') }}"><i
-                                                    class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
-                                                    class="mini-click-non">Team</span></a></li>   
-                            <li><a  href="{{ route('list-testimonial') }}"><i
-                                                        class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
-                                                        class="mini-click-non">Testimonial</span></a></li> 
-                            <li><a  href="{{ route('list-contactus-form') }}"><i
-                                                            class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
-                                                            class="mini-click-non">Contactus Form </span></a></li> 
-                                                                 
-                        </ul>
-                    </li>                   
-                    @endif
+                    
 
                     {{-- =====sample routing============= --}}
                     {{-- <li>
