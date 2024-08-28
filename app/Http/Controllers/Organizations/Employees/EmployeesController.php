@@ -9,17 +9,20 @@ use Session;
 use Validator;
 use Config;
 use Carbon;
-use App\Models\DepartmentsModel;
-use App\Models\RolesModel;
-use App\Models\EmployeesModel;
+// use App\Models\DepartmentsModel;
+// use App\Models\RolesModel;
+// use App\Models\EmployeesModel;
+use App\Models\
+{
+    DepartmentsModel, RolesModel,EmployeesModel,
+    TblArea
+};
 
 class EmployeesController extends Controller
 { 
     public function __construct(){
         $this->service = new EmployeesServices();
     }
-
-
 
     public function index(){
         try {
@@ -33,8 +36,17 @@ class EmployeesController extends Controller
 
     public function add(){
             $dept=DepartmentsModel::get();
-            $roles=RolesModel::get();
-        return view('organizations.pages.employees.add-employees',compact('dept','roles'));
+
+            $roles = RolesModel::where('is_active', true)
+                        ->select('id','role_name')
+                        ->get()
+                        ->toArray();
+            $dynamic_state = TblArea::where('location_type', 1)
+                                ->select('location_id','name')
+                                ->get()
+                                ->toArray();
+           
+        return view('organizations.pages.employees.add-employees',compact('dept','dynamic_state'));
     }
 
 
@@ -53,39 +65,84 @@ class EmployeesController extends Controller
 
 
          $rules = [
-                    'employee_name' => 'required|string|max:255',
+                    // 'employee_name' => 'required|string|max:255',
+                    // 'email' => 'required|email|max:255',
+                    // 'mobile_number' => 'required|string|max:20',
+                    // 'address' => 'required|string|max:255',
+                    // 'image' => 'required|image|mimes:jpeg,png,jpg|max:10240|min:5',
+                    // 'password' => 'required|min:6',
+                    'f_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
+                    'm_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
+                    'l_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
                     'email' => 'required|email|max:255',
-                    'mobile_number' => 'required|string|max:20',
-                    'address' => 'required|string|max:255',
-                    'image' => 'required|image|mimes:jpeg,png,jpg|max:10240|min:5',
+                    'number' =>  'required|regex:/^[0-9]{10}$/',
+                    'state' => 'required',
+                    'city' => 'required',
+                    'pincode' => 'required|regex:/^[0-9]{6}$/',
+                    'address' => ['required','regex:/^(?![0-9\s]+$)[A-Za-z0-9\s\.,#\-\(\)\[\]\{\}]+$/','max:255'],
+                    'designation' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
                     'password' => 'required|min:6',
                 ];
 
                 $messages = [
-                    'employee_name.required' => 'Please enter the company name.',
-                    'employee_name.string' => 'The company name must be a valid string.',
-                    'employee_name.max' => 'The company name must not exceed 255 characters.',
+                    // 'employee_name.required' => 'Please enter the company name.',
+                    // 'employee_name.string' => 'The company name must be a valid string.',
+                    // 'employee_name.max' => 'The company name must not exceed 255 characters.',
                     
-                    'email.required' => 'Please enter the email.',
-                    'email.email' => 'Please enter a valid email address.',
-                    'email.max' => 'The email must not exceed 255 characters.',
+                    // 'email.required' => 'Please enter the email.',
+                    // 'email.email' => 'Please enter a valid email address.',
+                    // 'email.max' => 'The email must not exceed 255 characters.',
                     
-                    'mobile_number.required' => 'Please enter the mobile number.',
-                    'mobile_number.string' => 'The mobile number must be a valid string.',
-                    'mobile_number.max' => 'The mobile number must not exceed 20 characters.',
+                    // 'mobile_number.required' => 'Please enter the mobile number.',
+                    // 'mobile_number.string' => 'The mobile number must be a valid string.',
+                    // 'mobile_number.max' => 'The mobile number must not exceed 20 characters.',
                     
-                    'address.required' => 'Please enter the address.',
-                    'address.string' => 'The address must be a valid string.',
-                    'address.max' => 'The address must not exceed 255 characters.',
+                    // 'address.required' => 'Please enter the address.',
+                    // 'address.string' => 'The address must be a valid string.',
+                    // 'address.max' => 'The address must not exceed 255 characters.',
                     
-                    'employee_count.integer' => 'The employee count must be an integer.',
+                    // 'employee_count.integer' => 'The employee count must be an integer.',
                     
                                         
-                    'image.required' => 'The image is required.',
-                    'image.image' => 'The image must be a valid image file.',
-                    'image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
-                    'image.max' => 'The image size must not exceed 10MB.',
-                    'image.min' => 'The image size must not be less than 5KB.',
+                    // 'image.required' => 'The image is required.',
+                    // 'image.image' => 'The image must be a valid image file.',
+                    // 'image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
+                    // 'image.max' => 'The image size must not exceed 10MB.',
+                    // 'image.min' => 'The image size must not be less than 5KB.',
+                        'f_name.required' => 'Please enter first name.',
+                        'f_name.regex' => 'Please  enter text only.',
+                        'f_name.max'   => 'Please  enter first name length upto 255 character only.',
+
+                        'm_name.required' =>'Please enter middle name.',
+                        'm_name.regex' => 'Please  enter text only.',
+                        'm_name.max'   => 'Please  enter middle name length upto 255 character only.',
+
+                        'l_name.required' => 'Please enter last name.',
+                        'l_name.regex' => 'Please  enter text only.',
+                        'l_name.max'   => 'Please  enter last name length upto 255 character only.',
+
+                        'email.required' => 'Please enter the email.',
+                        'email.email' => 'Please enter a valid email address.',
+                        'email.max' => 'The email must not exceed 255 characters.',
+
+                        'number.required' => 'Please enter number.',
+                        'number.regex' => 'Please enter only numbers with 10-digit.',
+
+                        'state.required' => 'Please select state.',
+
+                        'city.required' =>'Please select city.',
+
+                        'pincode.required' => 'Please enter pincode.',
+                        'pincode.regex' => 'Please enter a 6-digit pincode.',
+
+                        'address.required' => 'Please enter address.',
+                        'address.regex' => 'Please enter right address.',
+                        'address.max'   => 'Please  enter address length upto 255 character only.',
+
+                        'designation.required' =>'Please enter designation.',
+                        'designation.regex' => 'Please  enter text only.',
+                        'designation.max'   => 'Please  enter designation length upto 255 character only.',
+                
                 ];
   
           try {

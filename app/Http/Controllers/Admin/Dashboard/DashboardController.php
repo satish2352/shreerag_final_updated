@@ -10,6 +10,13 @@ use App\Models\ {
     Business,
     BusinessApplicationProcesses,
     AdminView,
+    Products,
+    Testimonial,
+    ProductServices,
+    Team,
+    DirectorDesk,
+    ContactUs,
+    VisionMission,
 //     Gallery,
 //     AdditionalSolutions,
 //     OurSolutions,
@@ -84,6 +91,7 @@ class DashboardController extends Controller {
     public function index()
 {
     try {
+      
         // Get the counts
         $user_active_count = User::where('is_active', 1)->count(); 
         $active_count = Business::where('is_active', 1)->count(); 
@@ -98,8 +106,16 @@ class DashboardController extends Controller {
         ->join('businesses_details', 'business_application_processes.business_details_id', '=', 'businesses_details.id')
         ->where('business_application_processes.dispatch_status_id', 1140)
         ->count();
-    
-   
+        
+        $product_count = Products::where('is_active', 1)->count();
+        $testimonial_count = Testimonial::where('is_active', 1)->count();
+        $product_services_count = ProductServices::where('is_active', 1)->count();
+        $team_count = Team::where('is_active',1)->count();
+        $ContactUs_count = ContactUs::where('is_active',1)->count();
+        $VisionMission_count = ContactUs::where('is_active',1)->count();
+        $directorDeskCount = DirectorDesk::where('is_active',1)->count();
+        $progressPercentage = min(100, max(0, $directorDeskCount));
+
         $business_inprocess_count = BusinessApplicationProcesses::where('is_active', 1)
         ->where(function($query) {
             $query->orWhere('business_status_id', 1118)
@@ -164,6 +180,13 @@ class DashboardController extends Controller {
             'business_inprocess' => $business_inprocess_count,
             'product_inprocess' => $product_inprocess_count,
             'data_output_offcanvas' => $data_output_offcanvas,
+            'product_count'=>$product_count,
+            'testimonial_count'=>$testimonial_count,
+            'product_services_count'=>$product_services_count,
+            'team_count'=>$team_count,
+            'progressPercentage'=>$progressPercentage,
+            'ContactUs_count'=>$ContactUs_count,
+            'VisionMission_count'=>$VisionMission_count,
         ];
 
         return view('admin.pages.dashboard.dashboard', ['return_data' => $counts]);
