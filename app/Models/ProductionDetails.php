@@ -10,6 +10,6 @@ class ProductionDetails extends Model
     use HasFactory;
     protected $table = 'production_details';
     protected $primaryKey = 'id';
-    protected $fillable = ['title','description', 'image'];
+    // protected $fillable = ['title','description', 'image'];
     
 }

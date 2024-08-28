@@ -92,6 +92,14 @@ class AllListController extends Controller
             return $e;
         }
     }
-    
+    public function getAllInprocessProductProduction(){
+        try {
+            $data_output = $this->service->getAllInprocessProductProduction();
+           
+            return view('organizations.store.list.list-material-received-from-production-inprocess', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
 
 }

@@ -69,7 +69,8 @@ use Config;
     public function updateAll($request){
         try {
             $last_id = $this->repo->updateAll($request);
-         
+        //  dd($last_id);
+        //  die();
             $path = Config::get('FileConstant.DESIGNS_ADD');
     
             // Upload images

@@ -77,4 +77,18 @@ class AllListServices
         }
     }
 
+    public function getAllInprocessProductProduction()
+    {
+        try {
+            $data_output = $this->repo->getAllInprocessProductProduction();
+        // dd($data_output);
+        // die();
+            return $data_output;
+
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    
+
 }

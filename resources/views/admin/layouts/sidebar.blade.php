@@ -461,6 +461,14 @@
                                 <span class="mini-click-non">Material Received From Quality</span>
                             </a>
                         </li>
+                        <li
+                        class="nav-item {{ request()->is('storedept/list-product-inprocess-received-from-production') ? 'active' : '' }}">
+                        <a href="{{ route('list-product-inprocess-received-from-production') }}">
+                            <i class="fa big-icon fa-box-open icon-wrap"></i>
+                            <span class="mini-click-non">Production Department send material list</span>
+                        </a>
+                    </li>
+                        
                         <li>
                             <a class="has-arrow" href="{{ route('list-rejected-chalan') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-ban  icon-wrap"></i> <span class="mini-click-non">Rejected Chalan

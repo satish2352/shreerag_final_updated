@@ -371,5 +371,68 @@ class AllListRepository  {
     }
 }
 
+public function getAllInprocessProductProduction(){
+  try {
+     
+    $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_BOM_PART_MATERIAL_RECIVED_FROM_STORE_DEPT_FOR_PRODUCTION')];
+      
+    $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
+      $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+    })
+    ->leftJoin('designs', function($join) {
+      $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+    })
+    // ->leftJoin('businesses', function($join) {
+    //   $join->on('business_application_processes.business_id', '=', 'businesses.id');
+    // })
+    ->leftJoin('businesses_details', function($join) {
+      $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+  })
+    ->leftJoin('design_revision_for_prod', function($join) {
+      $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+    })
+    ->leftJoin('purchase_orders', function($join) {
+      $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+    })
+    // ->where('businesses_details.id',$id)
+    ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
+    ->where('businesses_details.is_active',true)
+    ->distinct('businesses.id')
+    ->groupBy('businesses_details.id',
+    'businesses_details.product_name',
+    'businesses_details.quantity',
+    'businesses_details.description',
+    'businesses_details.is_active',
+    'production.business_details_id',
+    // 'design_revision_for_prod.reject_reason_prod',
+    // 'design_revision_for_prod.id as design_revision_for_prod_id',
+    'designs.bom_image',
+    'designs.design_image',
+    'business_application_processes.store_material_sent_date'
+            )
 
+    ->select(
+        'businesses_details.id',
+        'businesses_details.product_name',
+        'businesses_details.quantity',
+        'businesses_details.description',
+        'businesses_details.is_active',
+        'production.business_details_id',
+        // 'design_revision_for_prod.reject_reason_prod',
+        // 'design_revision_for_prod.id as design_revision_for_prod_id',
+        'designs.bom_image',
+        'designs.design_image',
+        'business_application_processes.store_material_sent_date'
+
+    )
+    ->get();
+
+      return $data_output ;
+  } catch (\Exception $e) {
+      return [
+          'msg' => $e->getMessage(),
+          'status' => 'error'
+      ];
+  }
+}
 }

@@ -9,7 +9,8 @@ DesignModel,
 BusinessApplicationProcesses,
 ProductionModel,
 DesignRevisionForProd,
-AdminView
+AdminView,
+ProductionDetails
 };
 use Config;
 
@@ -188,9 +189,25 @@ class DesignsRepository  {
             $production_data->business_details_id = $dataOutputNew->id;
             $production_data->save();
 
+            // Handle ProductionModel update/creation for each design detail
+            $production_data_details = ProductionDetails::where('design_id', $dataOutputNew->id)->first();
+            if (!$production_data_details) {
+                $production_data_details = new ProductionDetails();
+            }
+
+            $production_data_details->business_id = $dataOutput->business_id;
+            $production_data_details->design_id = $dataOutputNew->id;
+            $production_data_details->business_details_id = $dataOutputNew->id;
+            $production_data_details->production_id = $production_data->id;
+            $production_data_details->part_item_id = 'null';
+            $production_data_details->quantity = 'null';
+            $production_data_details->unit = 'null';
+            $production_data_details->save();
+
              // Store design and production IDs
              $designIds[] = $dataOutputNew->id;
              $productionIds[] = $production_data->id;
+             $productionIdsDetails[] = $production_data_details->id;
 
              $designRevisionForProdIDInsert = new DesignRevisionForProd();
              $designRevisionForProdIDInsert->business_id = $dataOutput->business_id;

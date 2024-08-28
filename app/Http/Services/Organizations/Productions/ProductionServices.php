@@ -45,6 +45,39 @@ use Config;
             return $e;
         }
     } 
+    public function editProduct($id) {
+        try {
+            $data_output = $this->repo->editProduct($id);
+            // dd($data_output);
+            // die();
+return $data_output;
+        } catch (\Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
+    }
     
-
+    // public function updatePrdouctMaterial(Request $request) {
+    //     try {
+    //         $result = $this->repo->updatePrdouctMaterial($request);
+    //         //    dd($result);
+    //         // die();
+    //         return $result;
+    //     } catch (\Exception $e) {
+    //         return ['status' => 'error', 'msg' => $e->getMessage()];
+    //     }
+    // }
+    
+    public function updateProductMaterial($request) {
+        try {
+            $result = $this->repo->updateProductMaterial($request);
+            // dd( $result);
+            // die();
+            return $result;
+        } catch (\Exception $e) {
+            return ['status' => 'error', 'message' => $e->getMessage()];
+        }
+    }
+    
+    
+    
 }
