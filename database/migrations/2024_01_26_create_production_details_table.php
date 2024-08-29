@@ -19,9 +19,10 @@ return new class extends Migration
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('design_id');
             $table->unsignedBigInteger('business_details_id');
-            $table->unsignedBigInteger('part_item_id');
-            $table->string('quantity');
-            $table->string('unit');
+            $table->unsignedBigInteger('production_id');
+            $table->unsignedBigInteger('part_item_id')->nullable();
+            $table->string('quantity')->nullable();
+            $table->string('unit')->nullable();
             $table->boolean('is_approve')->default(false);
             $table->boolean('is_active')->default(true);
             $table->boolean('is_deleted')->default(false);

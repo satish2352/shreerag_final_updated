@@ -199,9 +199,9 @@ class DesignsRepository  {
             $production_data_details->design_id = $dataOutputNew->id;
             $production_data_details->business_details_id = $dataOutputNew->id;
             $production_data_details->production_id = $production_data->id;
-            $production_data_details->part_item_id = 'null';
-            $production_data_details->quantity = 'null';
-            $production_data_details->unit = 'null';
+            $production_data_details->part_item_id = NULL;
+            $production_data_details->quantity = NULL;
+            $production_data_details->unit = NULL;
             $production_data_details->save();
 
              // Store design and production IDs
