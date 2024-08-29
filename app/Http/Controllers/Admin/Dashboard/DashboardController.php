@@ -107,14 +107,7 @@ class DashboardController extends Controller {
         ->where('business_application_processes.dispatch_status_id', 1140)
         ->count();
         
-        $product_count = Products::where('is_active', 1)->count();
-        $testimonial_count = Testimonial::where('is_active', 1)->count();
-        $product_services_count = ProductServices::where('is_active', 1)->count();
-        $team_count = Team::where('is_active',1)->count();
-        $ContactUs_count = ContactUs::where('is_active',1)->count();
-        $VisionMission_count = ContactUs::where('is_active',1)->count();
-        $directorDeskCount = DirectorDesk::where('is_active',1)->count();
-        $progressPercentage = min(100, max(0, $directorDeskCount));
+      
 
         $business_inprocess_count = BusinessApplicationProcesses::where('is_active', 1)
         ->where(function($query) {
@@ -171,6 +164,16 @@ class DashboardController extends Controller {
             // dd($data_output_offcanvas);
             // die();
         // Prepare the data for the chart
+
+        $product_count = Products::where('is_active', 1)->count();
+        $testimonial_count = Testimonial::where('is_active', 1)->count();
+        $product_services_count = ProductServices::where('is_active', 1)->count();
+        $team_count = Team::where('is_active',1)->count();
+        $ContactUs_count = ContactUs::where('is_active',1)->count();
+        $VisionMission_count = ContactUs::where('is_active',1)->count();
+        $directorDeskCount = DirectorDesk::where('is_active',1)->count();
+        $progressPercentage = min(100, max(0, $directorDeskCount));
+
         $counts = [
             'user_active_count' => $user_active_count,
             'active_businesses' => $active_count,
@@ -181,15 +184,21 @@ class DashboardController extends Controller {
             'product_inprocess' => $product_inprocess_count,
             'data_output_offcanvas' => $data_output_offcanvas,
             'product_count'=>$product_count,
-            'testimonial_count'=>$testimonial_count,
-            'product_services_count'=>$product_services_count,
-            'team_count'=>$team_count,
-            'progressPercentage'=>$progressPercentage,
-            'ContactUs_count'=>$ContactUs_count,
-            'VisionMission_count'=>$VisionMission_count,
+            
+        ];
+          
+          $cms_counts = [
+            'product_count' => $product_count,
+            'testimonial_count' => $testimonial_count,
+            'product_services_count' => $product_services_count,
+            // 'vision_mission_count' => $vision_mission_count,
+            // 'progress_percentage' => $progress_percentage,
+            'team_count' => $team_count,
+            // 'contact_us_count' => $contact_us_count,
+            
         ];
 
-        return view('admin.pages.dashboard.dashboard', ['return_data' => $counts]);
+        return view('admin.pages.dashboard.dashboard', ['return_data' => $counts, 'cms_counts' =>$cms_counts ]);
     } catch (\Exception $e) {
         \Log::error("Error fetching business data: " . $e->getMessage());
         return redirect()->back()->with('error', 'An error occurred while fetching data.');

@@ -698,7 +698,8 @@
                         </div>
                     </div>
                     @endif
-                    <h6>CMS</h6>
+                    @if (session()->get('role_id') == config('constants.ROLE_ID.CMS'))
+                    
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
                             <div class="col-xl-4 col-sm-6 col-12">
@@ -709,7 +710,7 @@
                                                 <span
                                                     class="h6 font-semibold text-muted text-sm d-block mb-2">Product</span>
                                                 <span class="h5 font-bold mb-0">
-                                                {{ $return_data['product_count'] }}
+                                                {{ $cms_counts['product_count'] }}
                                                 </span>
                                             </div>
                                             <div class="col-auto">
@@ -739,7 +740,7 @@
                                                 <span
                                                     class="h6 font-semibold text-muted text-sm d-block mb-2">Services</span>
                                                 <span class="h5 font-bold mb-0">
-                                                {{ $return_data['product_services_count'] }}
+                                                {{ $cms_counts['product_services_count'] }}
                                                 </span>
                                             </div>
                                             <div class="col-auto">
@@ -769,7 +770,7 @@
                                                 <span
                                                     class="h6 font-semibold text-muted text-sm d-block mb-2">Testimonial</span>
                                                 <span class="h5 font-bold mb-0">
-                                                {{ $return_data['testimonial_count'] }}
+                                                {{ $cms_counts['testimonial_count'] }}
                                                 </span>
                                             </div>
                                             <div class="col-auto">
@@ -799,7 +800,7 @@
                                                 <span
                                                     class="h6 font-semibold text-muted text-sm d-block mb-2">Director Desk</span>
                                                 <span class="h5 font-bold mb-0">
-                                                {{ $return_data['progressPercentage'] }}
+                                                {{-- {{ $cms_counts['progressPercentage'] }} --}}
                                                 </span>
                                             </div>
                                             <div class="col-auto">
@@ -829,7 +830,7 @@
                                                 <span
                                                     class="h6 font-semibold text-muted text-sm d-block mb-2">Vision Mission</span>
                                                 <span class="h5 font-bold mb-0">
-                                                {{ $return_data['VisionMission_count'] }}
+                                                {{-- {{ $cms_counts['VisionMission_count'] }} --}}
                                                 </span>
                                             </div>
                                             <div class="col-auto">
@@ -859,7 +860,7 @@
                                                 <span
                                                     class="h6 font-semibold text-muted text-sm d-block mb-2">Team</span>
                                                 <span class="h5 font-bold mb-0">
-                                                {{ $return_data['team_count'] }}
+                                                {{-- {{ $cms_counts['team_count'] }} --}}
                                                 </span>
                                             </div>
                                             <div class="col-auto">
@@ -889,7 +890,7 @@
                                                 <span
                                                     class="h6 font-semibold text-muted text-sm d-block mb-2">Contactus Form</span>
                                                 <span class="h5 font-bold mb-0">
-                                                {{ $return_data['ContactUs_count'] }}
+                                                {{-- {{ $cms_counts['ContactUs_count'] }} --}}
                                                 </span>
                                             </div>
                                             <div class="col-auto">
@@ -913,6 +914,7 @@
                             </div>
                         </div>
                     </div>
+                    @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.HIGHER_AUTHORITY'))
                     <div class="d-flex flex-column flex-lg-row h-lg-full">
 

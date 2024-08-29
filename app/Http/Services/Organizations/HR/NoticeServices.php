@@ -16,6 +16,7 @@ class NoticeServices
     public function getAll(){
         try {
             $data_output = $this->repo->getAll();
+          
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -40,6 +41,7 @@ class NoticeServices
     public function departmentWiseNotice(){
         try {
             $data_output = $this->repo->departmentWiseNotice();
+          
             return $data_output;
         } catch (\Exception $e) {
             return $e;

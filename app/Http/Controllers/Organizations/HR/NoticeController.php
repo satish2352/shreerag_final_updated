@@ -83,6 +83,7 @@ class NoticeController extends Controller
         public function departmentWiseNotice(Request $request){
             try {
                 $showData = $this->service->departmentWiseNotice();
+             
                 return view('organizations.hr.notice.particular-notice-department-wise', compact('showData'));
             } catch (\Exception $e) {
                 return $e;
