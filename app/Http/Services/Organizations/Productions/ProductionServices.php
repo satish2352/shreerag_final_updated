@@ -20,7 +20,8 @@ use Config;
     public function acceptdesign($id){
         try {
            $data_output = $update_data = $this->repo->acceptdesign($id);
-          
+        //   dd($data_output );
+        //   die();
            return $data_output;
         } catch (\Exception $e) {
             return $e;

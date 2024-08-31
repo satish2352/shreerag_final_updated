@@ -22,67 +22,135 @@ class ProductionRepository  {
 
 
 
-    public function acceptdesign($id){
-        try {
-            // dd($id);
-            // die();
-            $business_application = BusinessApplicationProcesses::where('production_id', $id)->first();
-        //  dd($business_application);
-        //  die();
+    // public function acceptdesign($id){
+    //     try {
+    //         // dd($id);
+    //         // die();
+    //         $business_application = BusinessApplicationProcesses::where('business_details_id', $id)->first();
+        
 
-            if ($business_application) {
-                // $business_application->business_id = $id;
-                $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
-                // $business_application->design_id = $dataOutput->id;
-                $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.ACCEPTED_DESIGN_BY_PRODUCTION');
-                // $business_application->production_id = $production_data->id;
-                $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION');
+    //         if ($business_application) {
+    //             // $business_application->business_id = $id;
+    //             $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
+    //             // $business_application->design_id = $dataOutput->id;
+    //             $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.ACCEPTED_DESIGN_BY_PRODUCTION');
+    //             // $business_application->production_id = $production_data->id;
+    //             $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION');
                
-                $business_application->save();
-                
+    //             $business_application->save();
+    //             // dd($business_application);
+    //             // die();
 
-                $update_data_admin['current_department'] = config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION');
-                $update_data_admin['is_view'] = '0';
-            AdminView::where('business_id', $business_application->business_id)
-                        ->update($update_data_admin);
-            }
-            // $business = Business::find($id);
-            // $business = BusinessDetails::find($id);
-            $business = ProductionModel::find($id);
+    //             $update_data_admin['current_department'] = config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION');
+    //             $update_data_admin['is_view'] = '0';
+    //         AdminView::where('business_id', $business_application->business_id)
+    //                     ->update($update_data_admin);
+    //         }
+    //         // $business = Business::find($id);
+    //         // $business = BusinessDetails::find($id);
+    //         $business = ProductionModel::where('business_details_id', $id)->first();
             
+    //         // dd($business);
+    //         // die();
+    //         if ($business) {
+    //             $business->is_approved_production = '1';
+    //             $business->save();
+    //         } else {
+    //             return [
+    //                 'msg' => 'Product not found',
+    //                 'status' => 'error',
+    //             ];
+    //         }
+    
+    //         $designRevisionForProdID = DesignRevisionForProd::where('business_details_id', $business_application->business_details_id)->first();
 
+    //         $dataOutput = DesignModel::where('business_details_id', $business_application->business_details_id)->first();
+    //         // Check if the record was found
+    //         if (!$dataOutput) {
+    //             return [
+    //                 'msg' => 'Record not found',
+    //                 'status' => 'error',
+    //             ];
+    //         }
+    //         $dataOutput->design_image = $designRevisionForProdID->design_image;
+    //         $dataOutput->bom_image = $designRevisionForProdID->bom_image;
+
+           
+    //         $dataOutput->save();
+
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // } 
+
+    public function acceptdesign($id)
+    {
+        try {
+            // Fetch the business application process for the given business details ID
+            $business_application = BusinessApplicationProcesses::where('business_details_id', $id)->first();
+    
+            if ($business_application) {
+                // Update business application statuses
+                $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
+                $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.ACCEPTED_DESIGN_BY_PRODUCTION');
+                $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION');
+                $business_application->save();
+    
+                // Update admin view for the business
+                AdminView::where('business_id', $business_application->business_id)
+                    ->update([
+                        'current_department' => config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION'),
+                        'is_view' => '0'
+                    ]);
+            } else {
+                return [
+                    'msg' => 'Business application process not found',
+                    'status' => 'error',
+                ];
+            }
+    
+            // Fetch and update the production model for the given business details ID
+            $business = ProductionModel::where('business_details_id', $id)->first();
+    
             if ($business) {
                 $business->is_approved_production = '1';
                 $business->save();
             } else {
                 return [
-                    'msg' => 'Product not found',
+                    'msg' => 'Production model not found',
                     'status' => 'error',
                 ];
             }
     
-            $designRevisionForProdID = DesignRevisionForProd::where('production_id', $business_application->production_id)->orderBy('id','desc')->first();
-
-            $dataOutput = DesignModel::where('business_id', $business_application->business_id)->first();
-            // Check if the record was found
+            // Fetch the design revision and design model for the business details ID
+            $designRevisionForProdID = DesignRevisionForProd::where('business_details_id', $business_application->business_details_id)->first();
+            $dataOutput = DesignModel::where('business_details_id', $business_application->business_details_id)->first();
+    
             if (!$dataOutput) {
                 return [
-                    'msg' => 'Record not found',
+                    'msg' => 'Design model not found',
                     'status' => 'error',
                 ];
             }
+    
+            // Update design model images
             $dataOutput->design_image = $designRevisionForProdID->design_image;
             $dataOutput->bom_image = $designRevisionForProdID->bom_image;
-
-           
             $dataOutput->save();
-
+    
+            return [
+                'msg' => 'Design accepted and updated successfully',
+                'status' => 'success',
+            ];
+    
         } catch (\Exception $e) {
-            return $e;
+            return [
+                'msg' => 'An error occurred: ' . $e->getMessage(),
+                'status' => 'error',
+            ];
         }
-    } 
-
-
+    }
+    
     public function rejectdesign($request){
         try {
 

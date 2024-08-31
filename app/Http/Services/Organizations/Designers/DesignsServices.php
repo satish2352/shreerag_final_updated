@@ -24,7 +24,15 @@ use Config;
             return $e;
         }
     }
-
+    public function getAllNewRequirementBusinessWise($id){
+        try {
+            $data_output = $this->repo->getAllNewRequirementBusinessWise($id);
+      
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     public function getAll(){
         try {
             $data_output = $this->repo->getAll();
@@ -44,57 +52,53 @@ use Config;
             return $e;
         }
     }
-    // public function updateAll($request){
-    //     try {
-           
-    //         $last_id = $this->repo->updateAll($request);
-    //     //   dd($last_id);
-    //     //   die();
-    //         $path = Config::get('FileConstant.DESIGNS_ADD');
-    //         $designImageName = $last_id['designImageName'];
-    //         $bomImageName = $last_id['bomImageName'];
-    //         uploadImage($request, 'design_image', $path, $designImageName);
-    //         uploadImage($request, 'bom_image', $path, $bomImageName);
-
-    //         if ($last_id) {
-    //             return ['status' => 'success', 'msg' => 'Data Added Successfully.'];
-    //         } else {
-    //             return ['status' => 'error', 'msg' => ' Data get Not Added.'];
-    //         } 
-    //     } catch (Exception $e) {
-    //         // If an exception occurs, return error response with the error message
-    //         return ['status' => 'error', 'msg' => $e->getMessage()];
-    //     }
-    // }
     public function updateAll($request){
         try {
-            $last_id = $this->repo->updateAll($request);
-        //  dd($last_id);
-        //  die();
+            $return_data = $this->repo->updateAll($request);
+            $productName = $return_data['product_name']; 
             $path = Config::get('FileConstant.DESIGNS_ADD');
-    
-            // Upload images
-            foreach ($last_id['designImageNames'] as $index => $designImageName) {
-                uploadImage($request, "addmore.{$index}.design_image", $path, $designImageName);
+            if ($request->hasFile('design_image')) {
+                if ($return_data['design_image']) {
+                    if (file_exists(Config::get('DocumentConstant.DESIGNS_DELETE') . $return_data['design_image'])) {
+                        removeImage(Config::get('DocumentConstant.DESIGNS_DELETE') . $return_data['design_image']);
+                    }
+
+                }
+                $englishImageName = $return_data['last_insert_id'] . '_' . $productName .'_'. rand(100000, 999999) . '.' . $request->design_image->extension();
+                uploadImage($request, 'design_image', $path, $englishImageName);
+                $slide_data = DesignModel::find($return_data['last_insert_id']);
+                $slide_data->design_image = $englishImageName;
+                $slide_data->save();
             }
     
-            foreach ($last_id['bomImageNames'] as $index => $bomImageName) {
-                uploadImage($request, "addmore.{$index}.bom_image", $path, $bomImageName);
+            if ($request->hasFile('bom_image')) {
+                if ($return_data['bom_image']) {
+                    if (file_exists(Config::get('DocumentConstant.DESIGNS_DELETE') . $return_data['bom_image'])) {
+                        removeImage(Config::get('DocumentConstant.DESIGNS_DELETE') . $return_data['bom_image']);
+                    }
+                }
+                $marathiImageName = $return_data['last_insert_id'] . '_' . $productName .'_' . rand(100000, 999999) . '.' . $request->bom_image->extension();
+                uploadImage($request, 'bom_image', $path, $marathiImageName);
+                $slide_data = DesignModel::find($return_data['last_insert_id']);
+                $slide_data->bom_image = $marathiImageName;
+                $slide_data->save();
             }
-    // dd($last_id);
-    // die();
-            if ($last_id) {
-                return ['status' => 'success', 'msg' => 'Data Added Successfully.'];
+            
+            if ($return_data) {
+                return ['status' => 'success', 'msg' => 'Design Updated Successfully.'];
             } else {
-                return ['status' => 'error', 'msg' => ' Data get Not Added.'];
-            }
+                return ['status' => 'error', 'msg' => 'Design  Not Updated.'];
+            }  
         } catch (Exception $e) {
-            // If an exception occurs, return error response with the error message
             return ['status' => 'error', 'msg' => $e->getMessage()];
-        }
+        }      
     }
+
+
+ 
     
-    
+
+
 //     public function updateAll($request)
 // {
 //     try {

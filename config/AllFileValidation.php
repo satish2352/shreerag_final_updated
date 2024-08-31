@@ -3,6 +3,9 @@
 namespace App\Constants;
 
 return [
+    'DESIGNS_PDF_MAX_SIZE'=>'5120',
+    'DESIGNS_PDF_MIN_SIZE'=>'10',
+
     'DESIGNS_IMAGE_MAX_SIZE'=>'2048',
     'DESIGNS_IMAGE_MIN_SIZE'=>'10',
     

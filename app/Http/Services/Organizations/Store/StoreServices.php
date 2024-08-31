@@ -33,7 +33,8 @@ class StoreServices
     {
         try {
             $last_id = $this->repo->storeRequesition($request);
-
+// dd( $last_id);
+// die();
             $path = Config::get('FileConstant.REQUISITION_ADD');
             $ImageName = $last_id['ImageName'];
           

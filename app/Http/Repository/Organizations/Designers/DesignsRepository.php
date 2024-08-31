@@ -10,7 +10,8 @@ BusinessApplicationProcesses,
 ProductionModel,
 DesignRevisionForProd,
 AdminView,
-ProductionDetails
+ProductionDetails,
+BusinessDetails
 };
 use Config;
 
@@ -45,11 +46,63 @@ class DesignsRepository  {
               )
               ->orderBy('businesses.updated_at', 'desc')
               ->get();
+
+            //   dd($data_output);
+            //   die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
+   
+    public function getAllNewRequirementBusinessWise($id)
+{
+    try {
+        $decoded_business_id = base64_decode($id);
+
+        // Fetch the design data based on the given id
+        $dataOutputNew = DesignModel::where('business_id', $decoded_business_id)->get();
+
+        // Define the array to be checked against
+        $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN')];
+
+        // Perform the query using the provided id
+        $data_output = DesignModel::leftJoin('businesses', function($join) {
+                $join->on('designs.business_id', '=', 'businesses.id');
+            })
+            ->leftJoin('businesses_details', function($join) {
+                $join->on('designs.business_details_id', '=', 'businesses_details.id');
+            })
+            ->leftJoin('business_application_processes', function($join) {
+                $join->on('designs.business_details_id', '=', 'business_application_processes.business_details_id');
+            })
+            ->where('business_application_processes.production_status_id', 0) 
+            ->where('business_application_processes.production_id', 0)
+            ->where('designs.business_id', $decoded_business_id)
+            ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
+            ->groupBy('businesses_details.product_name', 'designs.business_id', 'designs.business_details_id','businesses_details.description',
+                'businesses_details.quantity','businesses_details.business_id','business_application_processes.production_id',
+                'business_application_processes.production_status_id','designs.updated_at')
+            ->select(
+              'businesses_details.business_id',
+                'designs.business_id',
+                'designs.business_details_id',
+                'businesses_details.business_id',
+                'businesses_details.product_name',
+                'businesses_details.description',
+                'businesses_details.quantity',
+                'business_application_processes.production_id',
+                'business_application_processes.production_status_id',
+                'designs.updated_at'
+            )->orderBy('designs.updated_at', 'desc')
+            ->get();
+// dd($data_output);
+// die();
+        return $data_output;
+    } catch (\Exception $e) {
+        return $e;
+    }
+}
 
     public function getAll(){
         try {
@@ -116,6 +169,7 @@ class DesignsRepository  {
     public function getById($id){
     try {
             $dataOutputByid = DesignModel::find($id);
+            
             if ($dataOutputByid) {
                 return $dataOutputByid;
             } else {
@@ -128,135 +182,313 @@ class DesignsRepository  {
             ];
         }
     }
-    public function updateAll($request)
+//     public function updateAll($request)
+// {
+//     try {
+//         $return_data = array();
+        
+//         $dataOutput = DesignModel::where('business_id', $request->business_id)->first();
+//         // Check if the record was found
+//         if (!$dataOutput) {
+//             return [
+//                 'msg' => 'Record not found',
+//                 'status' => 'error',
+//             ];
+//         }
+
+//         $businessDetails = $request->input('addmore'); // Assuming 'addmore' contains the details
+//         $designImageNames = [];
+//         $bomImageNames = [];
+//         $designIds = [];
+//         $productionIds = [];
+
+//         foreach ($businessDetails as $index => $detail) {
+//             $dataOutputNew = DesignModel::where('id', $detail['edit_id'])->first();
+//             if (!$dataOutputNew) {
+//                 continue; // Skip if the record is not found
+//             }
+
+//             // if ($request->hasFile("addmore.{$index}.design_image")) {
+//             //     $designImageName = $dataOutputNew->id . '_' . rand(100000, 999999) . '_design.' . $request->file("addmore.{$index}.design_image")->getClientOriginalExtension();
+//             //     // $request->file("addmore.{$index}.design_image")->move(public_path('uploads/designs'), $designImageName);
+//             //     $dataOutputNew->design_image = $designImageName;
+//             // }
+
+//             // if ($request->hasFile("addmore.{$index}.bom_image")) {
+//             //     $bomImageName = $dataOutputNew->id . '_' . rand(100000, 999999) . '_bom.' . $request->file("addmore.{$index}.bom_image")->getClientOriginalExtension();
+//             //     // $request->file("addmore.{$index}.bom_image")->move(public_path('uploads/boms'), $bomImageName);
+//             //     $dataOutputNew->bom_image = $bomImageName;
+//             // }
+//             if ($request->hasFile("addmore.{$index}.design_image")) {
+//                 $designImageName = $dataOutputNew->id . '_' . rand(100000, 999999) . '_design.' . $request->file("addmore.{$index}.design_image")->getClientOriginalExtension();
+//                 $designImageNames[$index] = $designImageName;
+//                 $dataOutputNew->design_image = $designImageName;
+//             }
+
+//             if ($request->hasFile("addmore.{$index}.bom_image")) {
+//                 $bomImageName = $dataOutputNew->id . '_' . rand(100000, 999999) . '_bom.' . $request->file("addmore.{$index}.bom_image")->getClientOriginalExtension();
+//                 $bomImageNames[$index] = $bomImageName;
+//                 $dataOutputNew->bom_image = $bomImageName;
+//             }
+//             $dataOutputNew->save();
+
+//             // Handle ProductionModel update/creation for each design detail
+//             $production_data = ProductionModel::where('design_id', $dataOutputNew->id)->first();
+//             if (!$production_data) {
+//                 $production_data = new ProductionModel();
+//             }
+
+//             $production_data->business_id = $dataOutput->business_id;
+//             $production_data->design_id = $dataOutputNew->id;
+//             $production_data->business_details_id = $dataOutputNew->id;
+//             $production_data->save();
+
+//             // Handle ProductionModel update/creation for each design detail
+//             $production_data_details = ProductionDetails::where('design_id', $dataOutputNew->id)->first();
+//             if (!$production_data_details) {
+//                 $production_data_details = new ProductionDetails();
+//             }
+
+//             $production_data_details->business_id = $dataOutput->business_id;
+//             $production_data_details->design_id = $dataOutputNew->id;
+//             $production_data_details->business_details_id = $dataOutputNew->id;
+//             $production_data_details->production_id = $production_data->id;
+//             $production_data_details->part_item_id = NULL;
+//             $production_data_details->quantity = NULL;
+//             $production_data_details->unit = NULL;
+//             $production_data_details->save();
+
+//              // Store design and production IDs
+//              $designIds[] = $dataOutputNew->id;
+//              $productionIds[] = $production_data->id;
+//              $productionIdsDetails[] = $production_data_details->id;
+
+//              $designRevisionForProdIDInsert = new DesignRevisionForProd();
+//              $designRevisionForProdIDInsert->business_id = $dataOutput->business_id;
+//              $designRevisionForProdIDInsert->business_details_id = $dataOutputNew->business_details_id;
+//              $designRevisionForProdIDInsert->design_id = $dataOutputNew->id;
+//              $designRevisionForProdIDInsert->production_id = $production_data->id;
+//              $designRevisionForProdIDInsert->reject_reason_prod = '';
+//              $designRevisionForProdIDInsert->remark_by_design = '';
+//              $designRevisionForProdIDInsert->design_image = $designImageNames[$index] ?? null;
+//             $designRevisionForProdIDInsert->bom_image = $bomImageNames[$index] ?? null;
+//              $designRevisionForProdIDInsert->save();
+
+//             // Update BusinessApplicationProcesses if record exists
+//             $business_applications = BusinessApplicationProcesses::where('business_id', $request->business_id)->get();
+        
+//             // foreach ($business_applications as $business_application) {
+//                 foreach ($business_applications as $app_index => $business_application) {
+//                 $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
+//                 // $business_application->design_id = $dataOutputNew->id;
+//                 $business_application->design_id = $designIds[$app_index] ?? null;
+//                 $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
+//                 // $business_application->production_id = $dataOutputNew->id;
+//                 $business_application->production_id = $productionIds[$app_index] ?? null;
+//                 $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_PRODUCTION');
+//                 $business_application->save();
+//                 // dd($business_application);
+//                 // die();
+// // dd($request->business_id);
+//                 $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
+//                 $update_data_admin['is_view'] = '0';
+//             AdminView::where('business_id', $request->business_id)
+//                         ->update($update_data_admin);
+                
+//             }
+
+         
+//         }
+
+//         $return_data['designImageNames'] = $designImageNames ?? null;
+//         $return_data['bomImageNames'] = $bomImageNames ?? null;
+//         $return_data['last_insert_id'] = $dataOutput->business_id;
+
+//         // Return the data
+//         return $return_data;
+//     } catch (\Exception $e) {
+//         return [
+//             'msg' => 'Failed to update Report Incident Crowdsourcing.',
+//             'status' => 'error',
+//             'error' => $e->getMessage() // Return the error message for debugging purposes
+//         ];
+//     }
+// }
+
+// public function updateAll($request)
+// {
+//     try {
+//         $return_data = array();
+//         $businessDetails = $request->input('addmore'); // Assuming 'addmore' contains the details
+
+//         foreach ($businessDetails as $index => $detail) {
+//             $dataOutputNew = DesignModel::where('id', $detail['edit_id'])->first();
+            
+//             // Check if the record was found
+//             if (!$dataOutputNew) {
+//                 continue; // Skip if the record is not found
+//             }
+
+//             $designImageName = null;
+//             $bomImageName = null;
+
+//             if ($request->hasFile("addmore.{$index}.design_image")) {
+//                 $designImageName = $dataOutputNew->id . '_' . rand(100000, 999999) . '_design.' . $request->file("addmore.{$index}.design_image")->getClientOriginalExtension();
+//                 $request->file("addmore.{$index}.design_image")->move(public_path('uploads/design_images'), $designImageName);
+//                 $dataOutputNew->design_image = $designImageName;
+//             }
+
+//             if ($request->hasFile("addmore.{$index}.bom_image")) {
+//                 $bomImageName = $dataOutputNew->id . '_' . rand(100000, 999999) . '_bom.' . $request->file("addmore.{$index}.bom_image")->getClientOriginalExtension();
+//                 $request->file("addmore.{$index}.bom_image")->move(public_path('uploads/bom_images'), $bomImageName);
+//                 $dataOutputNew->bom_image = $bomImageName;
+//             }
+
+//             $dataOutputNew->save();
+
+//             // Handle ProductionModel update/creation for each design detail
+//             $production_data = ProductionModel::firstOrNew(['design_id' => $dataOutputNew->id]);
+//             $production_data->business_id = $dataOutputNew->business_id;
+//             $production_data->save();
+
+//             // Handle ProductionDetails update/creation for each design detail
+//             $production_data_details = ProductionDetails::firstOrNew(['design_id' => $dataOutputNew->id]);
+//             $production_data_details->business_id = $dataOutputNew->business_id;
+//             $production_data_details->production_id = $production_data->id;
+//             $production_data_details->save();
+
+//             $designRevisionForProdIDInsert = new DesignRevisionForProd();
+//             $designRevisionForProdIDInsert->business_id = $dataOutputNew->business_id;
+//             $designRevisionForProdIDInsert->design_id = $dataOutputNew->id;
+//             $designRevisionForProdIDInsert->production_id = $production_data->id;
+//             $designRevisionForProdIDInsert->design_image = $designImageName;
+//             $designRevisionForProdIDInsert->bom_image = $bomImageName;
+//             $designRevisionForProdIDInsert->save();
+//         }
+
+//         return [
+//             'msg' => 'Designs updated successfully!',
+//             'status' => 'success',
+//         ];
+//     } catch (\Exception $e) {
+//         return [
+//             'msg' => 'Failed to update designs.',
+//             'status' => 'error',
+//             'error' => $e->getMessage()
+//         ];
+//     }
+// }
+public function updateAll($request)
 {
     try {
         $return_data = array();
-        
-        $dataOutput = DesignModel::where('business_id', $request->business_id)->first();
+        $edit_id = $request->business_id;
+
+
+        $dataOutputNew = DesignModel::where('id', $edit_id)->first();
+
         // Check if the record was found
-        if (!$dataOutput) {
+        if (!$dataOutputNew) {
             return [
-                'msg' => 'Record not found',
+                'msg' => 'Design not found.',
                 'status' => 'error',
             ];
         }
 
-        $businessDetails = $request->input('addmore'); // Assuming 'addmore' contains the details
-        $designImageNames = [];
-        $bomImageNames = [];
-        $designIds = [];
-        $productionIds = [];
-
-        foreach ($businessDetails as $index => $detail) {
-            $dataOutputNew = DesignModel::where('id', $detail['edit_id'])->first();
-            if (!$dataOutputNew) {
-                continue; // Skip if the record is not found
-            }
-
-            // if ($request->hasFile("addmore.{$index}.design_image")) {
-            //     $designImageName = $dataOutputNew->id . '_' . rand(100000, 999999) . '_design.' . $request->file("addmore.{$index}.design_image")->getClientOriginalExtension();
-            //     // $request->file("addmore.{$index}.design_image")->move(public_path('uploads/designs'), $designImageName);
-            //     $dataOutputNew->design_image = $designImageName;
-            // }
-
-            // if ($request->hasFile("addmore.{$index}.bom_image")) {
-            //     $bomImageName = $dataOutputNew->id . '_' . rand(100000, 999999) . '_bom.' . $request->file("addmore.{$index}.bom_image")->getClientOriginalExtension();
-            //     // $request->file("addmore.{$index}.bom_image")->move(public_path('uploads/boms'), $bomImageName);
-            //     $dataOutputNew->bom_image = $bomImageName;
-            // }
-            if ($request->hasFile("addmore.{$index}.design_image")) {
-                $designImageName = $dataOutputNew->id . '_' . rand(100000, 999999) . '_design.' . $request->file("addmore.{$index}.design_image")->getClientOriginalExtension();
-                $designImageNames[$index] = $designImageName;
-                $dataOutputNew->design_image = $designImageName;
-            }
-
-            if ($request->hasFile("addmore.{$index}.bom_image")) {
-                $bomImageName = $dataOutputNew->id . '_' . rand(100000, 999999) . '_bom.' . $request->file("addmore.{$index}.bom_image")->getClientOriginalExtension();
-                $bomImageNames[$index] = $bomImageName;
-                $dataOutputNew->bom_image = $bomImageName;
-            }
-            $dataOutputNew->save();
-
-            // Handle ProductionModel update/creation for each design detail
-            $production_data = ProductionModel::where('design_id', $dataOutputNew->id)->first();
-            if (!$production_data) {
-                $production_data = new ProductionModel();
-            }
-
-            $production_data->business_id = $dataOutput->business_id;
-            $production_data->design_id = $dataOutputNew->id;
-            $production_data->business_details_id = $dataOutputNew->id;
-            $production_data->save();
-
-            // Handle ProductionModel update/creation for each design detail
-            $production_data_details = ProductionDetails::where('design_id', $dataOutputNew->id)->first();
-            if (!$production_data_details) {
-                $production_data_details = new ProductionDetails();
-            }
-
-            $production_data_details->business_id = $dataOutput->business_id;
-            $production_data_details->design_id = $dataOutputNew->id;
-            $production_data_details->business_details_id = $dataOutputNew->id;
-            $production_data_details->production_id = $production_data->id;
-            $production_data_details->part_item_id = NULL;
-            $production_data_details->quantity = NULL;
-            $production_data_details->unit = NULL;
-            $production_data_details->save();
-
-             // Store design and production IDs
-             $designIds[] = $dataOutputNew->id;
-             $productionIds[] = $production_data->id;
-             $productionIdsDetails[] = $production_data_details->id;
-
-             $designRevisionForProdIDInsert = new DesignRevisionForProd();
-             $designRevisionForProdIDInsert->business_id = $dataOutput->business_id;
-             $designRevisionForProdIDInsert->business_details_id = $dataOutputNew->business_details_id;
-             $designRevisionForProdIDInsert->design_id = $dataOutputNew->id;
-             $designRevisionForProdIDInsert->production_id = $production_data->id;
-             $designRevisionForProdIDInsert->reject_reason_prod = '';
-             $designRevisionForProdIDInsert->remark_by_design = '';
-             $designRevisionForProdIDInsert->design_image = $designImageNames[$index] ?? null;
-            $designRevisionForProdIDInsert->bom_image = $bomImageNames[$index] ?? null;
-             $designRevisionForProdIDInsert->save();
-
-            // Update BusinessApplicationProcesses if record exists
-            $business_applications = BusinessApplicationProcesses::where('business_id', $request->business_id)->get();
-        
-            // foreach ($business_applications as $business_application) {
-                foreach ($business_applications as $app_index => $business_application) {
-                $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
-                // $business_application->design_id = $dataOutputNew->id;
-                $business_application->design_id = $designIds[$app_index] ?? null;
-                $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
-                // $business_application->production_id = $dataOutputNew->id;
-                $business_application->production_id = $productionIds[$app_index] ?? null;
-                $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_PRODUCTION');
-                $business_application->save();
-                // dd($business_application);
-                // die();
-// dd($request->business_id);
-                $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
-                $update_data_admin['is_view'] = '0';
-            AdminView::where('business_id', $request->business_id)
-                        ->update($update_data_admin);
-                
-            }
-
-         
+        $businessDetails = BusinessDetails::where('id', $dataOutputNew->business_details_id)->first();
+        if (!$businessDetails) {
+            return [
+                'msg' => 'Business details not found.',
+                'status' => 'error',
+            ];
         }
 
-        $return_data['designImageNames'] = $designImageNames ?? null;
-        $return_data['bomImageNames'] = $bomImageNames ?? null;
-        $return_data['last_insert_id'] = $dataOutput->business_id;
+        $productName = $businessDetails->product_name;
+        $designImageName = $dataOutputNew->design_image;
+        $bomImageName = $dataOutputNew->bom_image;
 
-        // Return the data
+        // Handle design image upload
+        if ($request->hasFile('design_image')) {
+            $designImageName = $dataOutputNew->id . '_'. $productName .'_'. rand(100000, 999999) . '.' . $request->file('design_image')->getClientOriginalExtension();
+            $dataOutputNew->design_image = $designImageName;
+        }
+
+        // Handle BOM image upload
+        if ($request->hasFile('bom_image')) {
+            $bomImageName = $dataOutputNew->id . '_'. $productName .'_'. rand(100000, 999999) . '.' . $request->file('bom_image')->getClientOriginalExtension();
+            $dataOutputNew->bom_image = $bomImageName;
+        }
+
+        $dataOutputNew->save();
+
+        $production_data = ProductionModel::firstOrNew(['design_id' => $dataOutputNew->id]);
+
+        $production_data->business_id = $dataOutputNew->business_id;
+        $production_data->business_details_id = $dataOutputNew->business_details_id;
+        $production_data->design_id = $dataOutputNew->id;
+        $production_data->save();
+
+        // Handle ProductionModel update/creation for each design detail
+        $production_data_details = ProductionDetails::where('design_id', $dataOutputNew->id)->first();
+        if (!$production_data_details) {
+            $production_data_details = new ProductionDetails();
+        }
+
+        $production_data_details->business_id = $dataOutputNew->business_id;
+        $production_data_details->design_id = $dataOutputNew->id;
+        $production_data_details->business_details_id = $dataOutputNew->id;
+        $production_data_details->production_id = $production_data->id;
+        $production_data_details->part_item_id = NULL;
+        $production_data_details->quantity = NULL;
+        $production_data_details->unit = NULL;
+        $production_data_details->save();
+
+        // Store design and production IDs
+        $designIds[] = $dataOutputNew->id;
+        $productionIds[] = $production_data->id;
+        $productionIdsDetails[] = $production_data_details->id;
+
+        $designRevisionForProdIDInsert = new DesignRevisionForProd();
+        $designRevisionForProdIDInsert->business_id = $dataOutputNew->business_id;
+        $designRevisionForProdIDInsert->business_details_id = $dataOutputNew->business_details_id;
+        $designRevisionForProdIDInsert->design_id = $dataOutputNew->id;
+        $designRevisionForProdIDInsert->production_id = $production_data->id;
+        $designRevisionForProdIDInsert->reject_reason_prod = '';
+        $designRevisionForProdIDInsert->remark_by_design = '';
+        $designRevisionForProdIDInsert->design_image = $designImageName ?? null;
+        $designRevisionForProdIDInsert->bom_image = $bomImageName ?? null;
+        $designRevisionForProdIDInsert->save();
+
+        // Update BusinessApplicationProcesses if record exists
+        $business_applications = BusinessApplicationProcesses::where('design_id', $dataOutputNew->id)->get();
+
+        foreach ($business_applications as $business_application) {
+            $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
+            $business_application->design_id = $designIds[0] ?? null; // Use first element if available
+            $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
+            $business_application->production_id = $productionIds[0] ?? null; // Use first element if available
+            $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_PRODUCTION');
+            $business_application->save();
+        }
+
+        $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
+        $update_data_admin['is_view'] = '0';
+    AdminView::where('business_id', $request->business_id)
+                ->update($update_data_admin);
+
+        $last_insert_id = $dataOutputNew->id; 
+
+        $return_data['last_insert_id'] = $last_insert_id;
+        $return_data['design_image'] = $designImageName;
+        $return_data['bom_image'] = $bomImageName;
+        $return_data['product_name'] = $productName;
         return $return_data;
+
     } catch (\Exception $e) {
         return [
-            'msg' => 'Failed to update Report Incident Crowdsourcing.',
+            'msg' => 'Failed to update design.',
             'status' => 'error',
-            'error' => $e->getMessage() // Return the error message for debugging purposes
+            'error' => $e->getMessage()
         ];
     }
 }

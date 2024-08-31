@@ -123,7 +123,7 @@
                                                                     class="pd-setting-ed">Need To Purchase</button></a> --}}
 
                                                                     <a
-                                                                    href="{{ route('need-to-create-req', base64_encode($data->id)) }} "><button
+                                                                    href="{{ route('need-to-create-req', base64_encode($data->business_details_id)) }} "><button
                                                                         data-toggle="tooltip" title="Need To Purchase"
                                                                         class="pd-setting-ed">Need To Purchase</button></a>
                                                                     

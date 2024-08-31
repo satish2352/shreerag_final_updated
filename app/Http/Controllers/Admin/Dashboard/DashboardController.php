@@ -169,10 +169,10 @@ class DashboardController extends Controller {
         $testimonial_count = Testimonial::where('is_active', 1)->count();
         $product_services_count = ProductServices::where('is_active', 1)->count();
         $team_count = Team::where('is_active',1)->count();
-        $ContactUs_count = ContactUs::where('is_active',1)->count();
-        $VisionMission_count = ContactUs::where('is_active',1)->count();
-        $directorDeskCount = DirectorDesk::where('is_active',1)->count();
-        $progressPercentage = min(100, max(0, $directorDeskCount));
+        $contact_us_count = ContactUs::where('is_active',1)->count();
+        $vision_mission_count = VisionMission::where('is_active',1)->count();
+        $director_desk_count = DirectorDesk::where('is_active',1)->count();
+        // $progressPercentage = min(100, max(0, $directorDeskCount));
 
         $counts = [
             'user_active_count' => $user_active_count,
@@ -191,10 +191,10 @@ class DashboardController extends Controller {
             'product_count' => $product_count,
             'testimonial_count' => $testimonial_count,
             'product_services_count' => $product_services_count,
-            // 'vision_mission_count' => $vision_mission_count,
-            // 'progress_percentage' => $progress_percentage,
+            'vision_mission_count' => $vision_mission_count,
+            'director_desk_count' => $director_desk_count,
             'team_count' => $team_count,
-            // 'contact_us_count' => $contact_us_count,
+            'contact_us_count' => $contact_us_count,
             
         ];
 

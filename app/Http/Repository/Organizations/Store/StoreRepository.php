@@ -13,6 +13,7 @@ use App\Models\{
     Requisition,
     PurchaseOrderModel,
     AdminView,
+    BusinessDetails
     
 };
 use Config;
@@ -44,8 +45,16 @@ class StoreRepository
         try {
             
             $production_id = base64_decode($request->production_id);
-           
-            $business_application = BusinessApplicationProcesses::where('production_id', $production_id)->first();
+            $businessDetails = BusinessDetails::where('id', $production_id)->first();
+            if (!$businessDetails) {
+                return [
+                    'msg' => 'Business details not found.',
+                    'status' => 'error',
+                ];
+            }
+    
+            $productName = $businessDetails->product_name;
+            $business_application = BusinessApplicationProcesses::where('design_id', $production_id)->first();
            
             $dataOutput = new Requisition();
             $dataOutput->business_id = $business_application->business_id;
@@ -59,7 +68,7 @@ class StoreRepository
             $last_insert_id = $dataOutput->id;
 
             // Updating image name in requisition
-            $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_bom_reisition_for_purchase_image.' . $request->bom_file_req->getClientOriginalExtension();
+            $imageName = $last_insert_id . '_'. $productName.'_' . rand(100000, 999999) . '_requisition_bom.' . $request->bom_file_req->getClientOriginalExtension();
             $finalOutput = Requisition::find($last_insert_id);
             $finalOutput->bom_file = $imageName;
             $finalOutput->save();

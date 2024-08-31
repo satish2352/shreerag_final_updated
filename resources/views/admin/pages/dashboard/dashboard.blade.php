@@ -716,7 +716,7 @@
                                             <div class="col-auto">
                                                 <div
                                                     class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                    <i class="fa-solid fa-industry"></i>
+                                                    <i class="fa big-icon fa-cube icon-wrap"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -746,7 +746,7 @@
                                             <div class="col-auto">
                                                 <div
                                                     class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                    <i class="fa-solid fa-industry"></i>
+                                                    <i class="fa big-icon fa-tools icon-wrap"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -776,7 +776,7 @@
                                             <div class="col-auto">
                                                 <div
                                                     class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                    <i class="fa-solid fa-industry"></i>
+                                                    <i class="fa big-icon fa-quote-right icon-wrap"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -806,7 +806,7 @@
                                             <div class="col-auto">
                                                 <div
                                                     class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                    <i class="fa-solid fa-industry"></i>
+                                                    <i class="fa big-icon fa-briefcase icon-wrap"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -830,13 +830,13 @@
                                                 <span
                                                     class="h6 font-semibold text-muted text-sm d-block mb-2">Vision Mission</span>
                                                 <span class="h5 font-bold mb-0">
-                                                {{-- {{ $cms_counts['VisionMission_count'] }} --}}
+                                                {{ $cms_counts['vision_mission_count'] }}
                                                 </span>
                                             </div>
                                             <div class="col-auto">
                                                 <div
                                                     class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                    <i class="fa-solid fa-industry"></i>
+                                                    <i class="fa big-icon fa-bullseye icon-wrap"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -860,13 +860,13 @@
                                                 <span
                                                     class="h6 font-semibold text-muted text-sm d-block mb-2">Team</span>
                                                 <span class="h5 font-bold mb-0">
-                                                {{-- {{ $cms_counts['team_count'] }} --}}
+                                                {{ $cms_counts['team_count'] }}
                                                 </span>
                                             </div>
                                             <div class="col-auto">
                                                 <div
                                                     class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                    <i class="fa-solid fa-industry"></i>
+                                                    <i class="fa big-icon fa-user-friends icon-wrap"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -890,13 +890,13 @@
                                                 <span
                                                     class="h6 font-semibold text-muted text-sm d-block mb-2">Contactus Form</span>
                                                 <span class="h5 font-bold mb-0">
-                                                {{-- {{ $cms_counts['ContactUs_count'] }} --}}
+                                                {{ $cms_counts['contact_us_count'] }}
                                                 </span>
                                             </div>
                                             <div class="col-auto">
                                                 <div
                                                     class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                    <i class="fa-solid fa-industry"></i>
+                                                    <i class="fa big-icon fa-edit icon-wrap"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -912,8 +912,42 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <canvas id="myPieChart11" width="400" height="400"></canvas>
+                            </div>
                         </div>
                     </div>
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Step 2: Create Pie Chart using JavaScript
+    const ctx = document.getElementById('myPieChart11').getContext('2d');
+
+    // Getting PHP data into JavaScript
+    const cmsCounts = @json($cms_counts);
+
+    const myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: Object.keys(cmsCounts), // Dynamically set the labels
+            datasets: [{
+                data: Object.values(cmsCounts), // Dynamically set the data values
+                backgroundColor: ['#243772', '#2b4288', '#3755ae', '#516ec8', '#778fd4', '#9eafe0', '#c5cfed'], // Add more colors if needed
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'CMS Counts Distribution'
+                }
+            }
+        }
+    });
+</script>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.HIGHER_AUTHORITY'))
                     <div class="d-flex flex-column flex-lg-row h-lg-full">
@@ -1579,7 +1613,7 @@
                                                         $data->store_status_id == 1123 &&
                                                         $data->purchase_status_from_purchase == 1126 && $data->finanace_store_receipt_status_id == 1140 && $data->purchase_status_from_owner == "1127")
                                                         Purchase Department Approved Owner
-                                                        @elseif($data->business_status_id == 1123 &&
+                                                        @elseif($data->business_status_id == 1126 &&
                                                         $data->design_status_id == 1114 &&
                                                         $data->production_status_id == 1117 &&
                                                         $data->store_status_id == 1123 &&
@@ -1606,8 +1640,8 @@
                                                         $data->design_status_id == 1113 &&
                                                         $data->production_status_id == 1113)
                                                         Design Department
-                                                        @elseif($data->business_status_id == 1112 &&
-                                                        $data->design_status_id == 1111)
+                                                        @elseif($data->business_status_id == 1112 || $data->business_status_id == 1126 &&
+                                                        $data->design_status_id == 1111 )
                                                         Business Department
                                                         @else
                                                         Unknown Department

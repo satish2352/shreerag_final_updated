@@ -118,7 +118,7 @@ class AllListRepository  {
             // ->where('businesses.is_active', true)
            
            
-            ->groupBy( 'businesses_details.id',
+            ->groupBy( 'production.business_details_id',
             'businesses_details.product_name',
             'businesses_details.description',
             'businesses_details.quantity',
@@ -137,7 +137,7 @@ class AllListRepository  {
             )
 
             ->select(
-                'businesses_details.id',
+                'production.business_details_id',
                 'businesses_details.product_name',
                 'businesses_details.description',
                 'businesses_details.quantity',
