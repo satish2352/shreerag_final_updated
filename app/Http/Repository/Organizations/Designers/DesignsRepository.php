@@ -385,8 +385,8 @@ public function updateAll($request)
         $edit_id = $request->business_id;
 
 
-        $dataOutputNew = DesignModel::where('id', $edit_id)->first();
-
+        // $dataOutputNew = DesignModel::where('id', $edit_id)->first();
+        $dataOutputNew = DesignModel::where('business_details_id', $edit_id)->first();
         // Check if the record was found
         if (!$dataOutputNew) {
             return [
@@ -458,8 +458,7 @@ public function updateAll($request)
         $designRevisionForProdIDInsert->design_image = $designImageName ?? null;
         $designRevisionForProdIDInsert->bom_image = $bomImageName ?? null;
         $designRevisionForProdIDInsert->save();
-dd($designRevisionForProdIDInsert);
-die();
+
         // Update BusinessApplicationProcesses if record exists
         $business_applications = BusinessApplicationProcesses::where('design_id', $dataOutputNew->id)->get();
 

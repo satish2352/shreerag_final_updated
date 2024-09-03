@@ -11,7 +11,10 @@ use Carbon;
 use App\Models\ {
     Business,
     BusinessApplicationProcesses,
-    AdminView
+    AdminView,
+    PurchaseOrdersModel,
+    PurchaseOrderDetailsModel,
+    GRNModel
 
 };
 
@@ -88,6 +91,23 @@ class AllListController extends Controller
             $data_output = $this->service->getPurchaseOrderBusinessWise($id);
            
             return view('organizations.store.list.list-material-received-from-quality-businesswise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function getGRNDetails($purchase_orders_id)
+    {
+        try {
+            $idtoedit = base64_decode($purchase_orders_id);
+            $purchase_order_data = PurchaseOrdersModel::where('purchase_orders_id', '=', $idtoedit)->first();
+            $grn_data = GRNModel::where('purchase_orders_id', '=', $idtoedit)->first();
+            $po_id = $purchase_order_data->id;
+
+            $purchase_order_details_data = PurchaseOrderDetailsModel::where('purchase_id', $po_id)
+                ->get();
+              
+            return view('organizations.store.list.list-grn', compact('purchase_order_data', 'purchase_order_details_data', 'grn_data'));
         } catch (\Exception $e) {
             return $e;
         }

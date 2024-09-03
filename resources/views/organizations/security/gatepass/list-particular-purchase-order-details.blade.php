@@ -1,234 +1,173 @@
-<style>
-    .form-control {
-        border: 2px solid #ced4da;
-        border-radius: 4px;
-    }
+<!-- Static Table Start -->
+@extends('admin.layouts.master')
+@section('content')
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
 
-    .error {
-        color: red;
-    }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
 
-    .no-print {
-        display: none !important;
-    }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-    body {
-        font-size: 12px;
-    }
+        .header h1 {
+            margin: 0;
+        }
 
-    .selfProfile {
-        float: left;
-        width: 50%;
-    }
+        .company-info,
+        .purchase-info {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
 
-    .imgLogo {
-        float: left;
-        width: 30%;
-    }
+        .purchase-info {
+            font-size: 0.9em;
+        }
 
-    .profile {
-        /* float: right; */
-        /* width: 70%; */
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-    .data {
-        float: right;
-        width: 50%;
-    }
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
 
-    .bordersBottom {
-        border-top: 1px solid black;
-        border-left: 1px solid black;
-        border-right: 1px solid black;
-    }
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+        }
 
-    .borders {
-        border: 1px solid black;
-    }
+        .totals {
+            margin-top: 20px;
+            float: right;
+            width: 40%;
+        }
 
-    .no-border {
-        border: none !important;
-    }
+        .totals table {
+            border: none;
+        }
 
-    .invoice-payments {
-        float: left;
-        width: 60%;
-    }
+        .totals th,
+        .totals td {
+            border: none;
+        }
 
-    .tops {
-        margin-top: -63px;
-    }
+        .signatures {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+        }
 
-    table th,
-    table td {
-        border: 1px solid black;
-        padding: 8px;
-        /* Optional: add padding for better readability */
-    }
+        .signatures div {
+            width: 30%;
+            text-align: center;
+            border-top: 1px solid black;
+            padding-top: 10px;
+        }
+    </style>
 
-    table th {
-        background-color: #f2f2f2;
-        /* Optional: add background color for table header */
-    }
-
-    /* table tr td {
-                                border: 1px solid red;
-                            } */
-</style>
-
-
-<div class="data-table-area mg-tb-15">
-    <div class="container-fluid">
-        <div class="row">
-
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="sparkline13-list" >
-                  
-                        <div style="border: 1px solid black; padding: 10px; width: 100%;">
-                            <!-- Header Section -->
-                            <div style="border-bottom: 1px solid black; padding-bottom: 10px;">
-                                <div style="text-align: center; font-size: 20px; font-weight: bold;">Share</div>
-                                <div style="text-align: center;">
-                                    {{ $getOrganizationData->name }}: {{ $getOrganizationData->mobile_number }}, {{ $getOrganizationData->email }}
-                                </div>
+    <div class="data-table-area mg-tb-15">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="sparkline13-list">
+                        <div class="sparkline13-hd">
+                            <div class="main-sparkline13-hd">
+                                <h1 style="display: flex; justify-content: center;">Purchase Order</h1>
+                                
                             </div>
-                    
-                            <!-- Company and PO Details -->
-                            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid black; padding-top: 10px; padding-bottom: 10px;">
-                                <div>
-                                    <div style="font-weight: bold;">{{ $purchaseOrder->vendor_company_name }}</div>
-                                    <div>{{ $purchaseOrder->vendor_address }}</div>
-                                    <div style="margin-top: 10px;">PO Number: {{ $purchaseOrder->purchase_orders_id }}</div>
-                                    <div>Date: {{ $purchaseOrder->created_at }}</div>
-                                </div>
-                                <div>
-                                    <div>P.O. No.: {{ $purchaseOrder->purchase_orders_id }}</div>
-                                    <div>Date Ref No.: {{ $purchaseOrder->quote_no }}</div>
-                                    <div>Payment Terms: {{ $purchaseOrder->payment_terms }} DAYS</div>
-                                </div>
-                            </div>
-                    
-                            <!-- Message Section -->
-                            <div style="border-bottom: 1px solid black; padding-top: 10px; padding-bottom: 10px;">
-                                <div><b>Dear Sir, Please arrange to supply the following Material as per quantity, specification, and schedule mentioned below</b></div>
-                            </div>
-                    
-                            <!-- Table for PO Details -->
-                            <table style="width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px;">
-                                <thead>
-                                    <tr>
-                                        <th style="border: 1px solid black; padding: 5px;">Sr. No.</th>
-                                        <th style="border: 1px solid black; padding: 5px;">Part No.</th>
-                                        <th style="border: 1px solid black; padding: 5px;">Description</th>
-                                        <th style="border: 1px solid black; padding: 5px;">Due Date</th>
-                                        <th style="border: 1px solid black; padding: 5px;">Quantity</th>
-                                        <th style="border: 1px solid black; padding: 5px;">Rate</th>
-                                        <th  style="border: 1px solid black; padding: 5px;">Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($purchaseOrderDetails as $index => $item)
-                                    <tr>
-                                        <td style="border: 1px solid black; padding: 5px; text-align: center;">{{ $index + 1 }}</td>
-                                        <td style="border: 1px solid black; padding: 5px;">{{ $item->name }}</td>
-                                        <td style="border: 1px solid black; padding: 5px; max-width: 150px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-all;">
-                                            {{ $item->description }}</td>
-                                        <td style="border: 1px solid black; padding: 5px; text-align: center;">{{ $item->due_date }}</td>
-                                        <td style="border: 1px solid black; padding: 5px; text-align: right;">{{ $item->quantity }} {{ $item->unit }}</td>
-                                        <td style="border: 1px solid black; padding: 5px; text-align: left;">{{ $item->rate }}</td>
-                                        <td style="border: 1px solid black; padding: 5px; text-align: right;">{{ $item->amount }}</td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                                <tfoot style="border: 1px solid black;">
-                                    <tr>
-                                        <td class="no-border" colspan="2">
-                                            <strong>Terms & Condition :- {{ $getOrganizationData->terms_condition }}</strong>
-                                        </td>
-                                        <td class="no-border" colspan="3"></td>
-                                        <td>Sub Total</td>
-                                        <td class="text-right">{{ $purchaseOrderDetails->sum('amount') }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="no-border" colspan="2">
-                                            <strong>Remark :- {{ $purchaseOrder->remark }}</strong>
-                                        </td>
-                                        <td class="no-border" colspan="3"></td>
-                                        <td>Discount {{ $purchaseOrder->discount }}%</td>
-                                        <td class="text-right">{{ $purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="no-border" colspan="5"></td>
-                                        <td>Freight</td>
-                                        <td class="text-right">0.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="no-border" colspan="5"></td>
-                                        <td>{{ $purchaseOrder->tax_type }} {{ $purchaseOrder->tax_id }}%</td>
-                                        <td class="text-right">{{ ($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * (1 + ($purchaseOrder->tax_id / 100)) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="no-border" colspan="5"></td>
-                                        <td>NIL GST</td>
-                                        <td class="text-right">0.00</td>
-                                    </tr>
-                                    <tr style="border-bottom: 1px solid black;">
-                                        <td class="no-border" colspan="3">
-                                            <strong>Transport/Dispatch :-</strong>
-                                        </td>
-                                        <td class="no-border" colspan="2"></td>
-                                        <td><strong>Net Total</strong></td>
-                                        <td class="text-right">
-                                            <strong>{{ $purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100) + ($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * 0.09 * 2 }}</strong>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="8" class="no-border">
-                                            Delivery AS PER ATTACHED DELIVERY SCHEDULE
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="8" class="no-border">
-                                            <div style="float: right;"><strong>For: {{ $getOrganizationData->company_name }}</strong></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="no-border" colspan="2">
-                                            <strong>Prepared By</strong>
-                                        </td>
-                                        <td class="no-border" colspan="2">( Finance Signatory )</td>
-                                        <td class="no-border" colspan="2">( Purchase Signatory )</td>
-                                        <td class="no-border" colspan="1">( Authorized Signatory )</td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                    
-                          
-                    
-                            <!-- Print Button -->
-                            <a>
-                                <button data-toggle="tooltip" onclick="printInvoice()" title="Accept Purchase Order" style="margin-top: 20px;">Print</button>
-                            </a>
                         </div>
-                    
-                        <script>
-                            function printInvoice() {
-                                window.print();
-                            }
-                        </script>
-                 
-                    
-               
+                        <div class="sparkline13-graph" style="border: 1px solid black; padding:20px;">
+                            <div class="datatable-dashv1-list custom-datatable-overright">
+                                <div >
+                                    <div style="text-align: center; font-size: 20px; font-weight: bold;"> {{ $getOrganizationData->company_name }}</div>
+                                    <div style="text-align: center;">
+                                        {{ $getOrganizationData->mobile_number }}, {{ $getOrganizationData->email }}
+                                    </div>
+                                </div>
+                        
+
+                                <div class="company-info">
+                                    <div>
+                                        <p><strong>{{ $purchaseOrder->vendor_company_name }}</strong></p>
+                                        <p>{{ $purchaseOrder->vendor_address }}</p>
+                                    </div>
+                                    <div>
+                                        <p>PO Number: {{ $purchaseOrder->purchase_orders_id }}</p>
+                                        <p>Date: {{ $purchaseOrder->po_date }}</p>
+                                        <p>Date Ref No: {{ $purchaseOrder->date_ref }}</p>
+                                        <p>Payment Terms: {{ $purchaseOrder->payment_terms }}</p>
+                                    </div>
+                                </div>
+
+                                <p>Dear Sir, Please arrange to supply the following Material as per quantity, specification,
+                                    and
+                                    schedule mentioned below:</p>
+
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Sr. No.</th>
+                                            <th>Part No.</th>
+                                            <th>Description</th>
+                                            <th>Due Date</th>
+                                            <th>Quantity</th>
+                                            {{-- <th>Rate</th>
+                                            <th>Amount</th> --}}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($purchaseOrderDetails as $index => $detail)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ $detail->part_no_id }}</td>
+                                                <td>{{ $detail->description }}</td>
+                                                <td>{{ $detail->due_date }}</td>
+                                                <td>{{ $detail->quantity }} {{ $detail->unit }}</td>
+                                                {{-- <td>{{ $detail->rate }}</td>
+                                                <td>{{ $detail->amount }}</td> --}}
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+
+
+                            </div>
+                            {{-- <a>
+                                <button data-toggle="tooltip" onclick="printInvoice()" title="Accept Purchase Order"
+                                    style="margin-top: 20px;">Print</button>
+                            </a> --}}
+                        </div>
+
+
                     </div>
-
-                
-
-               
-                <script>
-                    function printInvoice() {
-                        window.print();
-                    }
-                </script>
-
+                </div>
             </div>
         </div>
+    </div>
+
+
+
+
+    <!-- Print Button -->
+   
+    </div>
+
+    <script>
+        function printInvoice() {
+            window.print();
+        }
+    </script>
+@endsection

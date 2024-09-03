@@ -344,7 +344,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/search-by-po-no', ['as' => 'search-by-po-no', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@searchByPONo']);
         // Route::get('/list-purchase-order-approved-sent-to-vendor-security', ['as' => 'list-purchase-order-approved-sent-to-vendor-security', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@searchByPONo']);
         Route::get('/list-gatepass', ['as' => 'list-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@index']);
-        Route::get('/list-po-details/{id}', ['as' => 'list-po-details', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@getPurchaseDetails']);
+        Route::get('/list-po-details/{purchase_order_id}', ['as' => 'list-po-details', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@getPurchaseDetails']);
         Route::get('/add-gatepass', ['as' => 'add-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@add']);
     
         Route::get('/edit-gatepass/{id}', ['as' => 'edit-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@edit']);
@@ -373,6 +373,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-material-sent-to-purchase', ['as' => 'list-material-sent-to-purchase', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialSentToPurchase']);
         Route::get('/list-material-received-from-quality', ['as' => 'list-material-received-from-quality', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialReceivedFromQuality']);
         Route::get('/list-material-received-from-quality-bussinesswise/{id}', ['as' => 'list-material-received-from-quality-bussinesswise', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@submitFinalPurchaseOrder']);
+        Route::get('/list-grn-details/{purchase_orders_id}/{business_id}', ['as' => 'list-grn-details', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getGRNDetails']);
 
         Route::get('/accepted-store-material-sent-to-production/{purchase_orders_id}/{business_id}', ['as' => 'accepted-store-material-sent-to-production', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@genrateStoreReciptAndForwardMaterialToTheProduction']);
     

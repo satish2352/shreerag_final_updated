@@ -109,11 +109,13 @@
                                                     <td>{{ ucwords($data->gatepass_time) }}</td>
                                                     <td>{{ ucwords($data->remark) }}</td>
                                                     <td>
-                                                        <a href="{{ route('list-po-details', $data->id) }}"><button data-toggle="tooltip"
-                                                            title="Send Mail" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>Send Mail To
-                                                            Vendor</button></a>
-                                                        
-                                                    </td>
+                                                          
+                                                                <a href="{{ route('list-po-details', base64_encode($data->id)) }}">
+                                                                    <button data-toggle="tooltip" title="Check Details" class="pd-setting-ed">Check Details</button>
+                                                                </a>
+                                                           
+                                                            
+                                                        </td>
 
                                                     <td>
                                                         

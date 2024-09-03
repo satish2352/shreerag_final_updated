@@ -6,21 +6,23 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 // use App\Http\Services\Organizations\Productions\ProductionServices;
 use App\Http\Services\Organizations\Security\GatepassServices;
+use App\Http\Controllers\Organizations\CommanController;
 use Session;
 use Validator;
 use Config;
 use Carbon;
 
-// use App\Models\ {
-//     DesignModel,
-//     DesignDetailsModel
-//     };
+use App\Models\ {
+    DesignModel,
+    PurchaseOrdersModel
+    };
 
 class GatepassController extends Controller
 {
     public function __construct()
     {
         $this->service = new GatepassServices();
+        $this->serviceCommon = new CommanController();
     }
 
     public function searchByPONo()
@@ -53,16 +55,65 @@ class GatepassController extends Controller
             return $e;
         }
     }
-    public function getPurchaseDetails($id)
+    public function getPurchaseDetails($purchase_order_id)
     {
         try {
-            $all_gatepass = $this->service->getPurchaseDetails($id);
-
-            return view('organizations.security.gatepass.list-particular-purchase-order-details', compact('all_gatepass'));
+            // Fetch the purchase order along with vendor and related purchase order details
+            $data = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
+                ->join('gatepass', 'gatepass.purchase_orders_id', '=', 'purchase_orders.purchase_orders_id')
+                ->join('purchase_order_details', 'purchase_order_details.purchase_id', '=', 'purchase_orders.id')
+                // ->where('purchase_orders.id', $purchase_order_id) // Filter by purchase_order_id
+                ->select(
+                    'purchase_orders.id as purchase_order_id',
+                    'purchase_orders.purchase_orders_id',
+                    'purchase_orders.requisition_id', 
+                    'purchase_orders.business_id', 
+                    'purchase_orders.business_details_id', 
+                    'purchase_orders.production_id', 
+                    'purchase_orders.po_date', 
+                    'purchase_orders.terms_condition', 
+                    'purchase_orders.transport_dispatch', 
+                    'purchase_orders.purchase_status_from_purchase',
+                    'purchase_orders.image', 
+                    'purchase_orders.tax_type', 
+                    'purchase_orders.tax_id', 
+                    'purchase_orders.invoice_date', 
+                    'purchase_orders.payment_terms', 
+                    'purchase_orders.discount', 
+                    'vendors.vendor_name', 
+                    'vendors.vendor_company_name', 
+                    'vendors.vendor_email', 
+                    'vendors.vendor_address', 
+                    'vendors.gst_no', 
+                    'vendors.quote_no', 
+                    'purchase_orders.is_active',
+                    'purchase_orders.created_at',
+                    'purchase_order_details.*' // Fetch all columns from purchase_order_details
+                )->get();
+    // dd($data);
+    // die();
+            // Separate the purchase order data and details
+            $purchaseOrder = $data->first();
+            $purchaseOrderDetails = $data;
+    
+            // Extract business_id from the fetched purchase order
+            $business_id = $purchaseOrder->business_id;
+            $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
+           
+            // Pass all necessary data to the view
+            return view('organizations.security.gatepass.list-particular-purchase-order-details', compact(
+                'purchase_order_id',
+                'purchaseOrder',
+                'purchaseOrderDetails',
+                'business_id',
+                'getOrganizationData'
+            ));
         } catch (\Exception $e) {
-            return $e;
+            // Handle exceptions and errors
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    
     
     public function add()
     {

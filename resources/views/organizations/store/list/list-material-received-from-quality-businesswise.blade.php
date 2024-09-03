@@ -85,6 +85,7 @@
                                                 <th data-field="grn_number" data-editable="true">PO Number</th>
                                                 <th data-field="grn_date" data-editable="true">Title</th>
                                                 <th data-field="grn_date" data-editable="true">Description</th>
+                                                <th data-field="grn" data-editable="true">GRN</th>
                                                 {{-- <th data-field="purchase_id" data-editable="true">Remark</th> --}}
                                                 {{-- <th data-field="design_image" data-editable="false">Design Layout</th>
                                                 <th data-field="bom_image" data-editable="false">BOM</th> --}}
@@ -109,6 +110,13 @@
                                                         href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
                                                         alt="bill of material" >Click to download</a>
                                                 </td> --}}
+                                                <td>
+                                                    <div style="display: flex; align-items: center;">
+                                                        <a href="{{ route('list-grn-details', [base64_encode($data->purchase_orders_id), base64_encode($data->business_details_id)]) }}">
+                                                            <button data-toggle="tooltip" title="GRN Details" class="pd-setting-ed">GRN Details</button>
+                                                        </a>
+                                                    </div>
+                                                </td>
                                                     <td>
                                                         {{-- <div style="display: flex; align-items: center;">
                                                             <a
@@ -117,6 +125,8 @@
                                                                     class="pd-setting-ed">Forwared For production  </button></a>
 
                                                         </div> --}}
+                                                        
+                                                        
                                                         <div style="display: flex; align-items: center;">
                                                             <a href="{{ route('accepted-store-material-sent-to-production', [base64_encode($data->purchase_orders_id), base64_encode($data->business_details_id)]) }}">
                                                                 <button data-toggle="tooltip" title="Forwarded For Production" class="pd-setting-ed">Forwarded For Production</button>
