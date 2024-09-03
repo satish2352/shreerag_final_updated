@@ -1599,7 +1599,7 @@
                                                         $data->purchase_status_from_purchase == 1129 &&
                                                         $data->finanace_store_receipt_status_id == 1140 && $data->security_status_id ==1132)
                                                         Security Department Received Material and PO
-                                                        @elseif($data->business_status_id == 1123 &&
+                                                        @elseif($data->business_status_id == 1123 ||$data->business_status_id == 1126 &&
                                                         $data->design_status_id == 1114 &&
                                                         $data->production_status_id == 1117 &&
                                                         $data->store_status_id == 1123 &&
@@ -1607,7 +1607,7 @@
                                                         $data->purchase_status_from_purchase == 1129 &&
                                                         $data->finanace_store_receipt_status_id == 1140)
                                                         Purchase Department PO Send to Vendor
-                                                        @elseif($data->business_status_id == 1123 &&
+                                                        @elseif($data->business_status_id == 1123 ||$data->business_status_id == 1126 &&
                                                         $data->design_status_id == 1114 &&
                                                         $data->production_status_id == 1117 &&
                                                         $data->store_status_id == 1123 &&

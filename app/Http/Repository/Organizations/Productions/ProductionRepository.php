@@ -279,10 +279,60 @@ class ProductionRepository  {
         }
     }
     
-    public function editProduct($id){
-        try {
-            $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_BOM_PART_MATERIAL_RECIVED_FROM_STORE_DEPT_FOR_PRODUCTION')];
+    // public function editProduct($id){
+    //     try {
+    //         $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_BOM_PART_MATERIAL_RECIVED_FROM_STORE_DEPT_FOR_PRODUCTION')];
     
+    //         $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function($join) {
+    //                 $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+    //             })
+    //             ->leftJoin('designs', function($join) {
+    //                 $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+    //             })
+    //             ->leftJoin('businesses_details', function($join) {
+    //                 $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+    //             })
+    //             ->leftJoin('design_revision_for_prod', function($join) {
+    //                 $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+    //             })
+    //             ->leftJoin('purchase_orders', function($join) {
+    //                 $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+    //             })
+    //             ->where('businesses_details.id', $id)
+    //             ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
+    //             ->where('businesses_details.is_active', true)
+    //             ->distinct('businesses_details.id')
+    //             ->select(
+    //                 'businesses_details.id',
+    //                 'businesses_details.product_name',
+    //                 'businesses_details.quantity',
+    //                 'businesses_details.description',
+    //                 'businesses_details.is_active',
+    //                 'production.business_details_id',
+    //                 'design_revision_for_prod.reject_reason_prod',
+    //                 'design_revision_for_prod.id as design_revision_for_prod_id',
+    //                 'designs.bom_image',
+    //                 'designs.design_image',
+    //                 'business_application_processes.store_material_sent_date'
+    //             )
+    //             ->first();
+    
+    //         return $dataOutputByid ?: null;
+    //     } catch (\Exception $e) {
+    //         return [
+    //             'msg' => $e->getMessage(),
+    //             'status' => 'error'
+    //         ];
+    //     }
+    // }
+    
+    public function editProduct($id) {
+        try {
+            $array_to_be_check = [
+                config('constants.PRODUCTION_DEPARTMENT.LIST_BOM_PART_MATERIAL_RECIVED_FROM_STORE_DEPT_FOR_PRODUCTION')
+            ];
+    
+            // Fetch all related data
             $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
                 })
@@ -298,46 +348,95 @@ class ProductionRepository  {
                 ->leftJoin('purchase_orders', function($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
                 })
+                ->leftJoin('production_details', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
+                })
                 ->where('businesses_details.id', $id)
                 ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
                 ->where('businesses_details.is_active', true)
-                ->distinct('businesses_details.id')
                 ->select(
                     'businesses_details.id',
                     'businesses_details.product_name',
                     'businesses_details.quantity',
                     'businesses_details.description',
-                    'businesses_details.is_active',
-                    'production.business_details_id',
-                    'design_revision_for_prod.reject_reason_prod',
-                    'design_revision_for_prod.id as design_revision_for_prod_id',
+                    'production_details.part_item_id',
+                    'production_details.quantity',
+                    'production_details.unit',
+                    'production_details.material_send_production',
                     'designs.bom_image',
                     'designs.design_image',
                     'business_application_processes.store_material_sent_date'
                 )
-                ->first();
+                ->get(); 
     
-            return $dataOutputByid ?: null;
+            // Extract product details and data for table
+            $productDetails = $dataOutputByid->first(); // Assuming the first entry contains the product details
+            $dataGroupedById = $dataOutputByid->groupBy('business_details_id');
+    
+            return [
+                'productDetails' => $productDetails,
+                'dataGroupedById' => $dataGroupedById
+            ];
         } catch (\Exception $e) {
             return [
-                'msg' => $e->getMessage(),
-                'status' => 'error'
+                'status' => 'error',
+                'msg' => $e->getMessage()
             ];
         }
     }
+    // public function updateProductMaterial($request) {
+    //     try {
+    //         $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $request->business_details_id)->firstOrFail();
+            
+    //         // Remove existing records related to the business_details_id before saving new ones
+    //         ProductionDetails::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)->delete();
+    
+    //         // Loop through the addmore array and update or create new ProductionDetails
+    //         foreach ($request->addmore as $item) {
+    //             $dataOutput = new ProductionDetails();
+    //             $dataOutput->part_item_id = $item['part_no_id'];
+    //             $dataOutput->quantity = $item['quantity'];
+    //             $dataOutput->unit = $item['unit'];
+    //             $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
+    //             $dataOutput->business_id = $dataOutput_ProductionDetails->business_id;
+    //             $dataOutput->design_id = $dataOutput_ProductionDetails->design_id;
+    //             $dataOutput->business_details_id = $dataOutput_ProductionDetails->business_details_id;
+    //             $dataOutput->production_id = $dataOutput_ProductionDetails->production_id;
+    //             $dataOutput->save();
+    //         }
+    
+    //         // Update the BusinessApplicationProcesses status
+    //         $businessOutput = BusinessApplicationProcesses::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)
+    //             ->firstOrFail();
+    //         $businessOutput->product_production_inprocess_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_INPROCESS_FOR_PRODUCTION');
+    //         $businessOutput->save();
+    
+    //         return [
+    //             'status' => 'success',
+    //             'message' => 'Production materials updated successfully.',
+    //             'updated_details' => $request->all()
+    //         ];
+    
+    //     } catch (\Exception $e) {
+    //         return [
+    //             'status' => 'error',
+    //             'message' => 'Failed to update production materials.',
+    //             'error' => $e->getMessage()
+    //         ];
+    //     }
+    // }
+    
     public function updateProductMaterial($request) {
         try {
             $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $request->business_details_id)->firstOrFail();
             
-            // Remove existing records related to the business_details_id before saving new ones
-            ProductionDetails::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)->delete();
-    
             // Loop through the addmore array and update or create new ProductionDetails
             foreach ($request->addmore as $item) {
                 $dataOutput = new ProductionDetails();
                 $dataOutput->part_item_id = $item['part_no_id'];
                 $dataOutput->quantity = $item['quantity'];
                 $dataOutput->unit = $item['unit'];
+                $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
                 $dataOutput->business_id = $dataOutput_ProductionDetails->business_id;
                 $dataOutput->design_id = $dataOutput_ProductionDetails->design_id;
                 $dataOutput->business_details_id = $dataOutput_ProductionDetails->business_details_id;
@@ -365,7 +464,6 @@ class ProductionRepository  {
             ];
         }
     }
-    
     
 
 }

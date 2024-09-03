@@ -89,8 +89,8 @@ padding-left: 20px !important;
                                     </thead>
                                     <tbody>
                                         <?php
-dd($data_output);
-die();
+// dd($data_output);
+// die();
                                         ?>
                                         @foreach($data_output as $data)
                                         <tr>

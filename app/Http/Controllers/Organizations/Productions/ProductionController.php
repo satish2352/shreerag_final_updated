@@ -63,12 +63,28 @@ class ProductionController extends Controller
         }
     } 
 
+    // public function editProduct($id) {
+    //     try {
+    //         $editData = $this->service->editProduct($id);
+          
+    //         $dataOutputPartItem = PartItem::where('is_active', true)->get();
+    //         return view('organizations.productions.product.edit-recived-bussinesswise', compact('editData', 'dataOutputPartItem'));
+    //     } catch (\Exception $e) {
+    //         return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+    //     }
+    // }
+
     public function editProduct($id) {
         try {
             $editData = $this->service->editProduct($id);
-          
             $dataOutputPartItem = PartItem::where('is_active', true)->get();
-            return view('organizations.productions.product.edit-recived-bussinesswise', compact('editData', 'dataOutputPartItem'));
+            
+            return view('organizations.productions.product.edit-recived-bussinesswise', [
+                'productDetails' => $editData['productDetails'],
+                'dataGroupedById' => $editData['dataGroupedById'],
+                'dataOutputPartItem' => $dataOutputPartItem,
+                'id' => $id
+            ]);
         } catch (\Exception $e) {
             return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
         }
@@ -102,7 +118,8 @@ class ProductionController extends Controller
     
         try {
             $updateData = $this->service->updateProductMaterial($request);
-    
+    // dd($updateData);
+    // die();
             if ($updateData['status'] == 'success') {
                 return redirect('proddept/list-material-recived')->with(['status' => 'success', 'msg' => $updateData['message']]);
             } else {

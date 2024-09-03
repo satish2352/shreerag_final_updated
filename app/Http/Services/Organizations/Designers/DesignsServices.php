@@ -55,6 +55,7 @@ use Config;
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
+           
             $productName = $return_data['product_name']; 
             $path = Config::get('FileConstant.DESIGNS_ADD');
             if ($request->hasFile('design_image')) {
@@ -83,7 +84,7 @@ use Config;
                 $slide_data->bom_image = $marathiImageName;
                 $slide_data->save();
             }
-            
+        
             if ($return_data) {
                 return ['status' => 'success', 'msg' => 'Design Updated Successfully.'];
             } else {

@@ -83,11 +83,13 @@ class CommanController
     {
         try {
             $purchaseOrder = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
-                ->select(
+              
+            ->select(
                     'purchase_orders.id',
                     'purchase_orders.purchase_orders_id',
                     'purchase_orders.requisition_id', 
                     'purchase_orders.business_id', 
+                    'purchase_orders.business_details_id', 
                     'purchase_orders.production_id', 
                     'purchase_orders.po_date', 
                     'purchase_orders.terms_condition', 
@@ -110,7 +112,8 @@ class CommanController
                 )
                 ->where('purchase_orders.purchase_orders_id', $purchase_order_id)
                 ->first();
-    
+    // dd($purchaseOrder);
+    // die();
             if (!$purchaseOrder) {
                 throw new \Exception('Purchase order not found.');
             }

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('design_id');
             $table->unsignedBigInteger('business_details_id');
+            $table->unsignedBigInteger('material_send_production')->nullable();
             $table->unsignedBigInteger('production_id');
             $table->unsignedBigInteger('part_item_id')->nullable();
             $table->string('quantity')->nullable();
