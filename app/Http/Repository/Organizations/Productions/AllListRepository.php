@@ -495,8 +495,21 @@ public function getAllNewRequirementBusinessWise($business_id) {
           ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
           ->distinct('businesses_details.id')
           ->where('businesses.is_active',true)
+          ->groupBy( 'businesses.id',
+          'businesses_details.id',
+          'businesses.customer_po_number',
+          'businesses_details.product_name',
+          'businesses_details.description',
+          'businesses_details.quantity',
+          'businesses_details.is_active',
+          'production.business_id',
+          'design_revision_for_prod.reject_reason_prod',
+          'businesses.updated_at',
+          'designs.bom_image',
+          'designs.design_image')
           ->select(
               'businesses.id',
+              'businesses_details.id',
               'businesses.customer_po_number',
               'businesses_details.product_name',
               'businesses_details.description',
@@ -509,6 +522,7 @@ public function getAllNewRequirementBusinessWise($business_id) {
               'designs.design_image'
 
           )->orderBy('businesses.updated_at', 'desc')->get();
+        
         return $data_output;
     } catch (\Exception $e) {
         

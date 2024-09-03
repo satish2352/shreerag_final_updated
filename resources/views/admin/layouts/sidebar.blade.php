@@ -386,13 +386,13 @@
                     </li> --}}
 
                         <li><a class="nav-item" href="{{ route('list-gatepass') }}" aria-expanded="false"><i
-                                class="fa big-icon fa-id-badge icon-wrap"></i> <span class="mini-click-non">Gate
+                                class="fa big-icon fa-id-badge icon-wrap"></i> <span class="mini-click-non">List Gate
                                 Pass</span></a></li>
-                        <ul class="submenu-angle" aria-expanded="false">
+                        {{-- <ul class="submenu-angle" aria-expanded="false">
                             <li><a  href="{{ route('list-gatepass') }}"><i
                                         class="fa big-icon fa-clipboard-list icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">List Gate Pass</span></a></li>
-                        </ul>
+                        </ul> --}}
                         </li>
                         <li>
                             <a class="has-arrow" href="{{ route('list-security-remark') }}" aria-expanded="false"><i

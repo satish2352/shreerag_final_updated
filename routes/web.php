@@ -344,6 +344,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/search-by-po-no', ['as' => 'search-by-po-no', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@searchByPONo']);
         // Route::get('/list-purchase-order-approved-sent-to-vendor-security', ['as' => 'list-purchase-order-approved-sent-to-vendor-security', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@searchByPONo']);
         Route::get('/list-gatepass', ['as' => 'list-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@index']);
+        Route::get('/list-po-details/{id}', ['as' => 'list-po-details', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@getPurchaseDetails']);
         Route::get('/add-gatepass', ['as' => 'add-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@add']);
     
         Route::get('/edit-gatepass/{id}', ['as' => 'edit-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@edit']);

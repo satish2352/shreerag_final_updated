@@ -153,12 +153,15 @@ class ProductionRepository  {
     
     public function rejectdesign($request){
         try {
-
+// dd($request);
+// die();
             $idtoedit = base64_decode($request->business_id);
+            // $idtoedit = BusinessApplicationProcesses::where('business_details_id', $id)->first();
 // dd($idtoedit);
 // die();
-            $production_data = ProductionModel::where('id', $idtoedit)->first();
-
+            $production_data = ProductionModel::where('business_details_id', $idtoedit)->first();
+// dd($production_data);
+// die();
             $designRevisionForProdID = DesignRevisionForProd::where('id', $production_data->id)->orderBy('id','desc')->first();
             if($designRevisionForProdID) {
 
@@ -170,6 +173,9 @@ class ProductionRepository  {
                 $designRevisionForProdID->reject_reason_prod = $request->reject_reason_prod;
                 $designRevisionForProdID->remark_by_design = '';
                 $designRevisionForProdID->save();
+
+                // dd($designRevisionForProdID);
+                // die();
 
             } else {
                 $designRevisionForProdIDInsert = new DesignRevisionForProd();

@@ -27,8 +27,16 @@ class GatepassServices
             return $e;
         }
     }
-
-
+    public function getPurchaseDetails($id)
+    {
+        try {
+            $data = $this->repo->getPurchaseDetails($id);
+            return $data; 
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    
 
     public function addAll($request)
     {

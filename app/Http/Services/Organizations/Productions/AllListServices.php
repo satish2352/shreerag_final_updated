@@ -78,7 +78,7 @@ class AllListServices
     public function getAllrejectdesign(){
         try {
             $data_output = $this->repo->getAllrejectdesign();
-            // dd($data_output);
+            
             return $data_output; 
         } catch (\Exception $e) {
             return $e;

@@ -24,6 +24,75 @@ class GatepassRepository
             return $e;
         }
     }
+
+    public function getPurchaseDetails($id)
+    {
+        try {
+            $purchaseOrder = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
+              
+            ->select(
+                    'purchase_orders.id',
+                    'purchase_orders.purchase_orders_id',
+                    'purchase_orders.requisition_id', 
+                    'purchase_orders.business_id', 
+                    'purchase_orders.business_details_id', 
+                    'purchase_orders.production_id', 
+                    'purchase_orders.po_date', 
+                    'purchase_orders.terms_condition', 
+                    'purchase_orders.transport_dispatch', 
+                    'purchase_orders.purchase_status_from_purchase',
+                    'purchase_orders.image', 
+                    'purchase_orders.tax_type', 
+                    'purchase_orders.tax_id', 
+                    'purchase_orders.invoice_date', 
+                    'purchase_orders.payment_terms', 
+                    'purchase_orders.discount', 
+                    'vendors.vendor_name', 
+                    'vendors.vendor_company_name', 
+                    'vendors.vendor_email', 
+                    'vendors.vendor_address', 
+                    'vendors.gst_no', 
+                    'vendors.quote_no', 
+                    'purchase_orders.is_active',
+                    'purchase_orders.created_at'
+                )
+                ->where('purchase_orders.purchase_orders_id', $purchase_order_id)
+                ->first();
+  
+            if (!$purchaseOrder) {
+                throw new \Exception('Purchase order not found.');
+            }
+    
+            // Fetch related Purchase Order Details
+            $purchaseOrderDetails = PurchaseOrderDetailsModel::join('tbl_part_item', 'tbl_part_item.id', '=', 'purchase_order_details.part_no_id')
+
+            ->where('purchase_id', $purchaseOrder->id)
+                ->select(
+                    'purchase_order_details.purchase_id',
+                    'purchase_order_details.part_no_id',
+                    'tbl_part_item.name',
+                    'purchase_order_details.description',
+                    'purchase_order_details.due_date',
+                    'purchase_order_details.quantity',
+                    'purchase_order_details.unit',
+                    'purchase_order_details.actual_quantity',
+                    'purchase_order_details.accepted_quantity',
+                    'purchase_order_details.rejected_quantity',
+                    'purchase_order_details.rate',
+                    'purchase_order_details.amount'
+                )
+                ->get();
+   
+            return [
+                'purchaseOrder' => $purchaseOrder,
+                'purchaseOrderDetails' => $purchaseOrderDetails,
+            ];
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    
+ 
     
 
     public function addAll($request)

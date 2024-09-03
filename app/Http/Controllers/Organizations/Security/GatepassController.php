@@ -53,7 +53,17 @@ class GatepassController extends Controller
             return $e;
         }
     }
+    public function getPurchaseDetails($id)
+    {
+        try {
+            $all_gatepass = $this->service->getPurchaseDetails($id);
 
+            return view('organizations.security.gatepass.list-particular-purchase-order-details', compact('all_gatepass'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    
     public function add()
     {
         try {

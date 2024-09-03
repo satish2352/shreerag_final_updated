@@ -55,7 +55,8 @@ use Config;
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
-           
+        //    dd($return_data);
+        //    die();
             $productName = $return_data['product_name']; 
             $path = Config::get('FileConstant.DESIGNS_ADD');
             if ($request->hasFile('design_image')) {

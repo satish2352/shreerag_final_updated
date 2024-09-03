@@ -458,7 +458,8 @@ public function updateAll($request)
         $designRevisionForProdIDInsert->design_image = $designImageName ?? null;
         $designRevisionForProdIDInsert->bom_image = $bomImageName ?? null;
         $designRevisionForProdIDInsert->save();
-
+dd($designRevisionForProdIDInsert);
+die();
         // Update BusinessApplicationProcesses if record exists
         $business_applications = BusinessApplicationProcesses::where('design_id', $dataOutputNew->id)->get();
 

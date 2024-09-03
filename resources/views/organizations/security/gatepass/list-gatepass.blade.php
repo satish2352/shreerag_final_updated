@@ -1,6 +1,7 @@
 <!-- Static Table Start -->
 @extends('admin.layouts.master')
 @section('content')
+
     <style>
         .fixed-table-loading {
             display: none;
@@ -90,6 +91,7 @@
                                                 <th data-field="date" data-editable="true">Date</th>
                                                 <th data-field="time" data-editable="true">Time</th>
                                                 <th data-field="remark" data-editable="true">Remark</th>
+                                                <th data-field="purchase_order" data-editable="true">Purchase Order</th>
                                                 {{-- <th data-field="status" data-editable="true">Status</th> --}}
                                                 <th data-field="action">Action</th>
                                             </tr>
@@ -106,7 +108,12 @@
                                                     <td>{{ ucwords($data->gatepass_date) }}</td>
                                                     <td>{{ ucwords($data->gatepass_time) }}</td>
                                                     <td>{{ ucwords($data->remark) }}</td>
-
+                                                    <td>
+                                                        <a href="{{ route('list-po-details', $data->id) }}"><button data-toggle="tooltip"
+                                                            title="Send Mail" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>Send Mail To
+                                                            Vendor</button></a>
+                                                        
+                                                    </td>
 
                                                     <td>
                                                         
