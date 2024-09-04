@@ -264,48 +264,96 @@
                     </div>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.DESIGNER'))
-                    <h6>DESIGNER</h6>
+                    
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>Receive For Design</h5>
-                                        <h2><span class="counter">90</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 68%;" class="progress-bar"></div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Receive For Design</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $design_dept_counts['business_received_for_designs'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
                                         </div>
-                                        <!-- <div class="m-t-sm small">
-                                            <p>Server down since 1:32 pm.</p>
-                                        </div> -->
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-new-requirements-received-for-design') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>Accept For Design</h5>
-                                        <h2><span class="counter">70</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 78%;" class="progress-bar"></div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Accept For Design</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $design_dept_counts['design_sent_for_production'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
                                         </div>
-                                        <!-- <div class="m-t-sm small">
-                                            <p>Server down since 12:32 pm.</p>
-                                        </div> -->
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-reject-design-from-prod') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30 res-mg-t-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>Rejecte For Design</h5>
-                                        <h2><span class="counter">50</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 38%;" class="progress-bar progress-bar-danger"></div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Rejecte For Design</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $design_dept_counts['corected_design_need_to_upload'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
                                         </div>
-                                        <!-- <div class="m-t-sm small">
-                                            <p>Server down since 8:32 pm.</p>
-                                        </div> -->
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-reject-design-from-prod') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -313,76 +361,128 @@
                     </div>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.PRODUCTION'))
-                    <h6>PRODUCTION</h6>
+                  
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>New Design </h5>
-                                        <h2><span class="counter">90</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 68%;" class="progress-bar"></div>
-                                        </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 1:32 pm.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>Accepted Design</h5>
-                                        <h2><span class="counter">70</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 78%;" class="progress-bar"></div>
-                                        </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 12:32 pm.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30 res-mg-t-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>Rejected Design</h5>
-                                        <h2><span class="counter">50</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 38%;" class="progress-bar progress-bar-danger"></div>
-                                        </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 8:32 pm.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30 res-mg-t-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>Revised Design</h5>
-                                        <h2><span class="counter">50</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 38%;" class="progress-bar progress-bar-danger"></div>
-                                        </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 8:32 pm.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">New Design</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $production_dept_counts['design_recived_for_production'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
 
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mt-1">
-                                <div class="analysis-progrebar reso-mg-b-30 res-mg-t-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>Revised Design</h5>
-                                        <h2><span class="counter">50</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 38%;" class="progress-bar progress-bar-danger"></div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 8:32 pm.</p>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-new-requirements-received-for-production') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Accepted Design</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $production_dept_counts['accepted_and_sent_to_store'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-accept-design') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Rejected Design</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $production_dept_counts['rejected_design_list_sent'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-reject-design') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Revised Design</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $production_dept_counts['corected_design_list_recived'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-new-requirements-received-for-design') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -566,33 +666,96 @@
                     </div> 
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.LOGISTICS'))
-                    <h6>LOGISTICS</h6>
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>List Logistics</h5>
-                                        <h2><span class="counter">90</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 68%;" class="progress-bar"></div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Total
+                                                     Logistics  List</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $logistics_counts['logistics_list_count'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 1:32 pm.</p>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-logistics') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>Submited by Fianance</h5>
-                                        <h2><span class="counter">70</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 78%;" class="progress-bar"></div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Submited by Fianance</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $logistics_counts['logistics_send_by_finance_count'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 12:32 pm.</p>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-send-to-fianance-by-logistics') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Total
+                                                    Vehicle Type</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $logistics_counts['vehicle_type_count'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-vehicle-type') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -636,8 +799,8 @@
                     </div> 
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.PRODUCTION'))
-                     <h6>DISPATCH</h6>
-                    <div class="analysis-progrebar-area mg-b-15">
+                     {{-- <h6>DISPATCH</h6> --}}
+                    {{-- <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
                             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                                 <div class="analysis-progrebar reso-mg-b-30">
@@ -696,7 +859,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.CMS'))
                     

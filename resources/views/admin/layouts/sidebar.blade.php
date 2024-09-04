@@ -590,6 +590,10 @@
                             <span class="mini-click-non">Submited by Fianance</span>
                         </a>
                     </li>
+                    <a class="" href="{{ route('list-vehicle-type') }}" aria-expanded="false"><i
+                        class="fa big-icon fa-cogs icon-wrap"></i> <span
+                        class="mini-click-non">Vehicle Type</span></a>
+            </li>
                 @endif
 
                 @if (session()->get('role_id') == config('constants.ROLE_ID.DISPATCH'))

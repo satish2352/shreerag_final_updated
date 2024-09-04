@@ -413,6 +413,12 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-send-to-fianance-by-logistics', ['as' => 'list-send-to-fianance-by-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\AllListController@getAllListSendToFiananceByLogistics']);
 
     
+        Route::any('/list-vehicle-type', ['as' => 'list-vehicle-type', 'uses' => 'App\Http\Controllers\Organizations\Logistics\VehicleTypeController@index']);
+        Route::any('/add-vehicle-type', ['as' => 'add-vehicle-type', 'uses' => 'App\Http\Controllers\Organizations\Logistics\VehicleTypeController@add']);
+        Route::any('/store-vehicle-type', ['as' => 'store-vehicle-type', 'uses' => 'App\Http\Controllers\Organizations\Logistics\VehicleTypeController@store']);
+        Route::any('/edit-vehicle-type/{id}', ['as' => 'edit-vehicle-type', 'uses' => 'App\Http\Controllers\Organizations\Logistics\VehicleTypeController@edit']);
+        Route::any('/update-vehicle-type', ['as' => 'update-vehicle-type', 'uses' => 'App\Http\Controllers\Organizations\Logistics\VehicleTypeController@update']);
+        Route::any('/delete-vehicle-type/{id}', ['as' => 'delete-vehicle-type', 'uses' => 'App\Http\Controllers\Organizations\Logistics\VehicleTypeController@destroy']);
     });
     Route::group(['prefix' => 'dispatchdept'], function () {
         Route::get('/list-final-production-completed-received-from-fianance', ['as' => 'list-final-production-completed-received-from-fianance', 'uses' => 'App\Http\Controllers\Organizations\Dispatch\AllListController@getAllReceivedFromFianance']);

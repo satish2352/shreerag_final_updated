@@ -17,6 +17,8 @@ use App\Models\ {
     DirectorDesk,
     ContactUs,
     VisionMission,
+    VehicleType,
+    DesignModel,
 //     Gallery,
 //     AdditionalSolutions,
 //     OurSolutions,
@@ -172,7 +174,50 @@ class DashboardController extends Controller {
         $contact_us_count = ContactUs::where('is_active',1)->count();
         $vision_mission_count = VisionMission::where('is_active',1)->count();
         $director_desk_count = DirectorDesk::where('is_active',1)->count();
+        $logistics_list_count = BusinessApplicationProcesses::where('logistics_status_id', 1146)
+        ->where('is_active',1)->count();
+        $logistics_send_by_finance_count = BusinessApplicationProcesses::leftJoin('tbl_logistics', function($join) {
+            $join->on('business_application_processes.business_details_id', '=', 'tbl_logistics.business_details_id');
+        })->where('business_application_processes.logistics_status_id', 1146)
+          ->count();
+          $vehicle_type_count = VehicleType::where('is_active',1)->count();
+        
+          $business_received_for_designs = DesignModel::leftJoin('businesses', function($join) {
+            $join->on('designs.business_id', '=', 'businesses.id');
+        })
+        ->leftJoin('businesses_details', function($join) {
+            $join->on('designs.business_details_id', '=', 'businesses_details.id');
+        })
+        ->leftJoin('business_application_processes', function($join) {
+            $join->on('designs.business_details_id', '=', 'business_application_processes.business_details_id');
+        })
+        ->where('business_application_processes.production_status_id', 0) 
+        ->where('business_application_processes.production_id', 0)
+        ->count();
+        $business_received_for_designs = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1111)
+        ->where('production_status_id', 0)
+        ->where('is_active',1)->count();
+        $design_sent_for_production = BusinessApplicationProcesses::where('business_status_id',1116)->where('design_status_id', 1116)
+        ->where('production_status_id', 1116)
+        ->where('is_active',1)->count();
+        $corected_design_need_to_upload = BusinessApplicationProcesses::where('business_status_id',1115)->where('design_status_id', 1115)
+        ->where('production_status_id', 1115)
+        ->where('is_active',1)->count();
+
+        $design_recived_for_production = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1113)
+        ->where('production_status_id', 1113)
+        ->where('is_active',1)->count();
+        $accepted_and_sent_to_store = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1114)
+        ->where('production_status_id', 1114)
+        ->where('is_active',1)->count();
+        $rejected_design_list_sent = BusinessApplicationProcesses::where('business_status_id',1115)->where('design_status_id', 1115)
+        ->where('production_status_id', 1115)
+        ->where('is_active',1)->count();
+        $corected_design_list_recived = BusinessApplicationProcesses::where('business_status_id',1116)->where('design_status_id', 1116)
+        ->where('production_status_id', 1116)
+        ->where('is_active',1)->count();
         // $progressPercentage = min(100, max(0, $directorDeskCount));
+
 
         $counts = [
             'user_active_count' => $user_active_count,
@@ -198,7 +243,26 @@ class DashboardController extends Controller {
             
         ];
 
-        return view('admin.pages.dashboard.dashboard', ['return_data' => $counts, 'cms_counts' =>$cms_counts ]);
+        $logistics_counts = [
+            'logistics_list_count' => $logistics_list_count,
+            'logistics_send_by_finance_count' => $logistics_send_by_finance_count,
+            'vehicle_type_count' => $vehicle_type_count,
+         ];
+         $design_dept_counts = [
+            'business_received_for_designs' => $business_received_for_designs,
+            'design_sent_for_production' => $design_sent_for_production,
+            'corected_design_need_to_upload' => $corected_design_need_to_upload,
+         ];
+
+         $production_dept_counts = [
+            'design_recived_for_production' => $design_recived_for_production,
+            'accepted_and_sent_to_store' => $accepted_and_sent_to_store,
+            'rejected_design_list_sent' => $rejected_design_list_sent,
+            'corected_design_list_recived' => $corected_design_list_recived,
+         ];
+
+        return view('admin.pages.dashboard.dashboard', ['return_data' => $counts, 'cms_counts' =>$cms_counts, 'logistics_counts'=>$logistics_counts, 'design_dept_counts'=>$design_dept_counts,
+    'production_dept_counts'=>$production_dept_counts ]);
     } catch (\Exception $e) {
         \Log::error("Error fetching business data: " . $e->getMessage());
         return redirect()->back()->with('error', 'An error occurred while fetching data.');
