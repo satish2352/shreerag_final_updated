@@ -87,6 +87,8 @@
                                                 <th data-field="description" data-editable="true">Description</th>
                                                 <th data-field="quantity" data-editable="true">Quantity</th>
                                                 <th data-field="truck_no" data-editable="true">Truck Number</th>
+                                                <th data-field="transport_name" data-editable="true">Transport Name</th>
+                                                <th data-field="vehicle_name" data-editable="true">Vehicle Name</th>
                                                 {{-- <th data-field="store_material_sent_date" data-editable="true">Matrial Recieved Date</th> --}}
                                                 {{-- <th data-field="design_image" data-editable="false">Design Layout</th>
                                                 <th data-field="bom_image" data-editable="false">BOM</th> --}}
@@ -103,6 +105,8 @@
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
                                                     <td>{{ ucwords($data->truck_no) }}</td>
+                                                    <td>{{ ucwords($data->transport_name) }}</td>
+                                                    <td>{{ ucwords($data->vehicle_name) }}</td>
                                                     {{-- <td>{{ ucwords($data->remarks) }}</td> --}}
                                                     {{-- <td>{{ ucwords($data->store_material_sent_date) }}</td> --}}
                                                     {{-- <td> <a class="img-size" target="_blank"

@@ -540,7 +540,14 @@ class AllListRepository
         })
         ->leftJoin('tbl_logistics', function($join) {
           $join->on('business_application_processes.business_details_id', '=', 'tbl_logistics.business_details_id');
-        })
+      })
+      ->leftJoin('tbl_transport_name', function($join) {
+          $join->on('tbl_logistics.transport_name_id', '=', 'tbl_transport_name.id');
+      })
+      ->leftJoin('tbl_vehicle_type', function($join) {
+          $join->on('tbl_logistics.vehicle_type_id', '=', 'tbl_vehicle_type.id');
+      })
+    
         ->whereNull('business_application_processes.dispatch_status_id')
         ->whereIn('business_application_processes.logistics_status_id',$array_to_be_check)
 
@@ -555,6 +562,8 @@ class AllListRepository
           'businesses_details.quantity',
           'businesses_details.description',
           'business_application_processes.id',
+          'tbl_transport_name.name',
+          'tbl_vehicle_type.name',
           'tbl_logistics.truck_no',
       )
         ->select(
@@ -564,28 +573,13 @@ class AllListRepository
           'businesses_details.product_name',
           'businesses_details.description',
           'businesses_details.quantity',
-            // 'production.id as productionId',
-            // 'business_application_processes.store_material_sent_date',
+          'tbl_transport_name.name as transport_name',
+            'tbl_vehicle_type.name as vehicle_name',
             'tbl_logistics.truck_no',
-            // 'tbl_logistics.vendor_id',
+            
         )
         ->get();
-        // ->select(
-        //     'businesses.id',
-        //     'businesses_details.id',
-        //     'businesses.title',
-        //     'businesses.customer_po_number',
-        //     'businesses_details.product_name',
-        //     'businesses.title',
-        //     'businesses_details.quantity',
-        //     'businesses.remarks',
-        //     'businesses.is_active',
-        //     'production.business_id',
-        //     'production.id as productionId',
-        //     'business_application_processes.store_material_sent_date',
-        //     'tbl_logistics.truck_no',
-        //     // 'tbl_logistics.vendor_id',
-        // );
+      
        
      
       return $data_output;
@@ -623,6 +617,12 @@ class AllListRepository
       ->leftJoin('tbl_logistics', function($join) {
         $join->on('business_application_processes.business_details_id', '=', 'tbl_logistics.business_details_id');
       })
+      ->leftJoin('tbl_transport_name', function($join) {
+        $join->on('tbl_logistics.transport_name_id', '=', 'tbl_transport_name.id');
+    })
+    ->leftJoin('tbl_vehicle_type', function($join) {
+        $join->on('tbl_logistics.vehicle_type_id', '=', 'tbl_vehicle_type.id');
+    })
       ->whereIn('business_application_processes.dispatch_status_id',$array_to_be_check)
       // ->whereIn('purchase_orders.store_receipt_no',$array_to_be_check_new)
       ->where('businesses.is_active',true)
@@ -636,6 +636,8 @@ class AllListRepository
         'businesses_details.description',
         'business_application_processes.id',
         'tbl_logistics.truck_no',
+        'tbl_transport_name.name',
+        'tbl_vehicle_type.name',
     )
       ->select(
         'businesses.customer_po_number',
@@ -645,6 +647,8 @@ class AllListRepository
         'businesses_details.description',
         'businesses_details.quantity',
           'tbl_logistics.truck_no',
+          'tbl_transport_name.name as transport_name',
+          'tbl_vehicle_type.name as vehicle_name',
       )
       ->get();
       // ->select(
