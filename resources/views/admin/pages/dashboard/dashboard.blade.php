@@ -2175,7 +2175,7 @@
                                                         $data->purchase_status_from_purchase == 1129 &&
                                                         $data->finanace_store_receipt_status_id == 1140)
                                                         Purchase Department PO Send to Vendor
-                                                        @elseif($data->business_status_id == 1123 ||$data->business_status_id == 1127 &&
+                                                        @elseif($data->business_status_id == 1127 &&
                                                         $data->design_status_id == 1114 &&
                                                         $data->production_status_id == 1117 &&
                                                         $data->store_status_id == 1123 &&
