@@ -57,26 +57,28 @@ class DispatchController extends Controller
     {
         try {
             $purchase_order_data = BusinessApplicationProcesses::where('business_application_processes.business_details_id', $business_id)
-                ->leftJoin('businesses', function ($join) {
-                    $join->on('business_application_processes.business_id', '=', 'businesses.id');
-                })
-                ->leftJoin('businesses_details', function($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-                })
-                ->leftJoin('tbl_logistics', function($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'tbl_logistics.business_details_id');
-                })
+                ->leftJoin('businesses', 'business_application_processes.business_id', '=', 'businesses.id')
+                ->leftJoin('businesses_details', 'business_application_processes.business_details_id', '=', 'businesses_details.id')
+                ->leftJoin('tbl_logistics', 'business_application_processes.business_details_id', '=', 'tbl_logistics.business_details_id')
+                ->leftJoin('tbl_transport_name', 'tbl_logistics.transport_name_id', '=', 'tbl_transport_name.id')
+                ->leftJoin('tbl_vehicle_type', 'tbl_logistics.vehicle_type_id', '=', 'tbl_vehicle_type.id')
+                ->select(
+                    'businesses.*', 
+                    'businesses_details.*', 
+                    'tbl_logistics.*', 
+                    'tbl_transport_name.name as transport_name', 
+                    'tbl_vehicle_type.name as vehicle_type'
+                )
                 ->first();
             
             $editData = $purchase_order_data;
     
-            // dd($editData);
-            // die();
             return view('organizations.dispatch.dispatchdept.add-dispatch', compact('editData'));
         } catch (\Exception $e) {
             return $e;
         }
     }
+    
     
     public function storeDispatch(Request $request)
     {
