@@ -2149,7 +2149,7 @@
                                                         $data->security_status_id == 1132 &&
                                                         $data->quality_status_id == 1134 )
                                                         Store Department forward to Production Department
-                                                        @elseif($data->business_status_id == 1123 || $data->business_status_id == 1127 &&
+                                                        @elseif($data->business_status_id == 1127 &&
                                                         $data->design_status_id == 1114 &&
                                                         $data->production_status_id == 1117 &&
                                                         $data->store_status_id == 1123 &&
