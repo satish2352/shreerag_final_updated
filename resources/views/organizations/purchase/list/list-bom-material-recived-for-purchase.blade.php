@@ -30,7 +30,7 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                            <h1>BOM Recived For <span class="table-project-n">Purchase</span></h1>
+                            <h1>BOM Received For <span class="table-project-n">Purchase</span></h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
                                         {{-- <div class="login-horizental cancel-wp pull-left">

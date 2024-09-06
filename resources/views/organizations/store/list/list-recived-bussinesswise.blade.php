@@ -28,7 +28,7 @@ padding-left: 20px !important;
                 <div class="sparkline13-list">
                     <div class="sparkline13-hd">
                         <div class="main-sparkline13-hd">
-                            <h1>Material Recived From Store Department BusinessWise<span class="table-project-n"></span></h1>
+                            <h1>Material Received From Store Department BusinessWise<span class="table-project-n"></span></h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2" >
                                         {{-- <div class="login-horizental cancel-wp pull-left">

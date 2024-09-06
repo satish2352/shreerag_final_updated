@@ -22,7 +22,7 @@
                 <div class="sparkline12-hd">
                     <div class="main-sparkline12-hd">
                         <center>
-                            <h1>Rejected Design List Sent For Corection</h1>
+                            <h1>Rejected Design List Sent For Correction</h1>
                         </center>
                     </div>
                 </div>

@@ -111,9 +111,10 @@
                                                     <td>
                                                           
                                                                 <a href="{{ route('list-po-details', base64_encode($data->id)) }}">
-                                                                    <button data-toggle="tooltip" title="Check Details" class="pd-setting-ed">Check Details</button>
+                                                                    {{-- <button data-toggle="tooltip" title="Check Details" class="pd-setting-ed">Check Details</button> --}}
                                                                 </a>
-                                                           
+                                                                <a href="{{ route('list-po-details', base64_encode($data->id)) }}"><button data-toggle="tooltip"
+                                                                    title="Send Mail" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>Check Details</button></a>
                                                             
                                                         </td>
 

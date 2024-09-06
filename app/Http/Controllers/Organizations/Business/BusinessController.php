@@ -8,6 +8,7 @@ use Session;
 use Validator;
 use Config;
 use Carbon;
+use Illuminate\Validation\Rule;
 use App\Models\{
     Business,
 };
@@ -105,6 +106,7 @@ class BusinessController extends Controller
         }
     }
        public function update(Request $request){
+        // $id = $request->input('id');
         $rules = [
             // 'customer_po_number' => 'required|string|min:10|max:16',
             // 'product_name' => 'required',
@@ -114,7 +116,7 @@ class BusinessController extends Controller
             // 'customer_payment_terms' => 'required',
             // 'customer_terms_condition' => 'required',
             // 'remarks' => 'required',
-            'customer_po_number' => ['required', 'max:255','regex:/^[a-zA-Z\s]+$/u', Rule::unique('businesses', 'customer_po_number')->ignore($id, 'id')],
+            // 'customer_po_number' => ['required', 'max:255','regex:/^[a-zA-Z\s]+$/u', Rule::unique('businesses', 'customer_po_number')->ignore($id, 'id')],
             ];       
         $messages = [
             // 'title.required' => 'The design customer name is required.',
@@ -130,7 +132,7 @@ class BusinessController extends Controller
             // 'customer_payment_terms.required' => 'The customer payment terms is required.',
             // 'customer_terms_condition.required' => 'The customer terms condition is required.',
             // 'remarks.required' => 'The remarks is required.',
-            'customer_po_number.unique' => 'po number already exist.',
+            // 'customer_po_number.unique' => 'po number already exist.',
             ];
 
         try {

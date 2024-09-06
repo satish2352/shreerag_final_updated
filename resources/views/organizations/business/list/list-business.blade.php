@@ -35,11 +35,11 @@
                                 <h1>All <span class="table-project-n">Business</span></h1>
                                 <div class="form-group-inner login-btn-inner row">
                                    
-                                        <div class="col-lg-2">
+                                        {{-- <div class="col-lg-2">
                                             <div class="login-horizental cancel-wp pull-left">
                                                     <a href="{{ route('add-employees') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" href="{{route('add-organizations')}}">Add Employees</button></a>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="col-lg-10"></div>
                                 </div>
                             </div>

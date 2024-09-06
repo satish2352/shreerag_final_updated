@@ -201,70 +201,133 @@
                         <!-- <div class="container-fluid"> -->
                         <div class="row">
                             <!-- Total Visit -->
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="white-box analytics-info-cs mg-b-10 res-mg-t-30">
-                                    <h3 class="box-title">Leave Request</h3>
-                                    <ul class="list-inline two-part-sp">
-                                        <li>
-                                            <div id="sparklinedash"></div>
-                                        </li>
-                                        <li class="text-right sp-cn-r">
-                                            <i class="fa fa-level-up" aria-hidden="true"></i>
-                                            <span class="counter text-success">8659</span>
-                                        </li>
-                                    </ul>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Leave Request</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $design_dept_counts['business_received_for_designs'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-leaves-acceptedby-hr') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <!-- Total Page Views -->
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="white-box analytics-info-cs mg-b-10">
-                                    <h3 class="box-title">Leave Approved</h3>
-                                    <ul class="list-inline two-part-sp">
-                                        <li>
-                                            <div id="sparklinedash2"></div>
-                                        </li>
-                                        <li class="text-right">
-                                            <i class="fa fa-level-up" aria-hidden="true"></i>
-                                            <span class="counter text-purple">7469</span>
-                                        </li>
-                                    </ul>
+
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Leave Approved</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $design_dept_counts['business_received_for_designs'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-leaves-approvedby-hr') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <!-- Unique Visitor -->
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="white-box analytics-info-cs mg-b-10">
-                                    <h3 class="box-title">Leave Not Approved</h3>
-                                    <ul class="list-inline two-part-sp">
-                                        <li>
-                                            <div id="sparklinedash3"></div>
-                                        </li>
-                                        <li class="text-right">
-                                            <i class="fa fa-level-up" aria-hidden="true"></i>
-                                            <span class="counter text-info">6011</span>
-                                        </li>
-                                    </ul>
+                            
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Leave Not Approved</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $design_dept_counts['business_received_for_designs'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-leaves-not-approvedby-hr') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <!-- Bounce Rate -->
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="white-box analytics-info-cs">
-                                    <h3 class="box-title">Pending Leave</h3>
-                                    <ul class="list-inline two-part-sp">
-                                        <li>
-                                            <div id="sparklinedash4"></div>
-                                        </li>
-                                        <li class="text-right">
-                                            <i class="fa fa-level-down" aria-hidden="true"></i>
-                                            <span class="text-danger">18%</span>
-                                        </li>
-                                    </ul>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Pending Leave</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $design_dept_counts['business_received_for_designs'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-new-requirements-received-for-design') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                          
                         </div>
                     </div>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.DESIGNER'))
-                    
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
                             <div class="col-xl-4 col-sm-6 col-12">
@@ -491,61 +554,157 @@
                     </div>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.STORE'))
-                    <h6>STORE</h6>
+                    
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>New Requirements</h5>
-                                        <h2><span class="counter">90</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 68%;" class="progress-bar"></div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">New Requirements</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $store_dept_counts['material_need_to_sent_to_production'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 1:32 pm.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>Sent To Production</h5>
-                                        <h2><span class="counter">70</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 78%;" class="progress-bar"></div>
-                                        </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 12:32 pm.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30 res-mg-t-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>Material For Purchase</h5>
-                                        <h2><span class="counter">50</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 38%;" class="progress-bar progress-bar-danger"></div>
-                                        </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 8:32 pm.</p>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-accepted-design-from-prod') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30 res-mg-t-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>Rejected Chalan</h5>
-                                        <h2><span class="counter">50</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 38%;" class="progress-bar progress-bar-danger"></div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Sent To Production</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $store_dept_counts['material_sent_to_production'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 8:32 pm.</p>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-material-sent-to-prod') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Material For Purchase</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $store_dept_counts['material_for_purchase'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-material-sent-to-purchase') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Received From Quality</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $store_dept_counts['material_received_from_quality'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-material-received-from-quality') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Rejected Chalan</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $store_dept_counts['rejected_chalan'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-rejected-chalan') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -554,75 +713,186 @@
                     </div> 
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.PURCHASE'))
-                    <h6>PURCHASE</h6>
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>Purchase Orders</h5>
-                                        <h2><span class="counter">90</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 68%;" class="progress-bar"></div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Purchase Orders</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $purchase_dept_counts['BOM_recived_for_purchase'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 1:32 pm.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>Vendor</h5>
-                                        <h2><span class="counter">70</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 78%;" class="progress-bar"></div>
-                                        </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 12:32 pm.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30 res-mg-t-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>Part Item</h5>
-                                        <h2><span class="counter">50</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 38%;" class="progress-bar progress-bar-danger"></div>
-                                        </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 8:32 pm.</p>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-purchase') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30 res-mg-t-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>Purchase Order Approved</h5>
-                                        <h2><span class="counter">50</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 38%;" class="progress-bar progress-bar-danger"></div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Vendor</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $purchase_dept_counts['vendor_list'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 8:32 pm.</p>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-vendor') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mt-1">
-                                <div class="analysis-progrebar reso-mg-b-30 res-mg-t-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>Purchase Order Sent To Vendor</h5>
-                                        <h2><span class="counter">50</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 38%;" class="progress-bar progress-bar-danger"></div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Tax</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $purchase_dept_counts['tax'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 8:32 pm.</p>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-tax') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Part Item</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $purchase_dept_counts['part_item'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-part-item') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">PO Approved</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $purchase_dept_counts['purchase_order_approved'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-approved-purchase-orders') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">PO Sent To Vendor</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $purchase_dept_counts['purchase_order_submited_by_vendor'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-submited-po-to-vendor') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -630,38 +900,142 @@
                         </div>
                     </div>
                     @endif
-                    @if (session()->get('role_id') == config('constants.ROLE_ID.QUALITY'))
-                     <h6>QUALITY</h6>
+                    @if (session()->get('role_id') == config('constants.ROLE_ID.SECURITY'))
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>GRN</h5>
-                                        <h2><span class="counter">90</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 68%;" class="progress-bar"></div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Gate Pass</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $secuirty_dept_counts['get_pass'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 1:32 pm.</p>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-gatepass') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>Material Sent to Store</h5>
-                                        <h2><span class="counter">70</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 78%;" class="progress-bar"></div>
+                        </div>
+                    </div> 
+                    @endif
+
+                    @if (session()->get('role_id') == config('constants.ROLE_ID.QUALITY'))
+                    <div class="analysis-progrebar-area mg-b-15">
+                        <div class="row">
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">GRN</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $quality_dept_counts['GRN_genration'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 12:32 pm.</p>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-grn') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Material Sent to Store</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $quality_dept_counts['material_need_to_sent_to_production'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-material-sent-to-quality') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Rejected Chalan</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $quality_dept_counts['rejected_chalan_po_wise'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-rejected-chalan-po-wise') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                         
+                          
                         </div>
                     </div> 
                     @endif
@@ -764,37 +1138,68 @@
                     </div> 
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.DISPATCH'))
-                    <h6>DISPATCH</h6>
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>Received From Finance</h5>
-                                        <h2><span class="counter">90</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 68%;" class="progress-bar"></div>
-                                        </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 1:32 pm.</p>
+                    <div class="col-xl-4 col-sm-6 col-12">
+                        <div class="card shadow border-0">
+                            <div class="card-body">
+                                <div class="row border-bottom">
+                                    <div class="col mb-2">
+                                        <span
+                                            class="h6 font-semibold text-muted text-sm d-block mb-2">Received From Finance</span>
+                                        <span
+                                            class="h5 font-bold mb-0">{{ $dispatch_counts['dispatch_received_from_finance'] }}</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div
+                                            class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                            <i class="fa-solid fa-paint-brush"></i>
+
                                         </div>
                                     </div>
                                 </div>
+                                <div class="mt-2 mb-0 text-sm">
+                                    <a href="{{ route('list-vehicle-type') }}">
+                                        <span
+                                            class="badge badge-pill bg-soft-success text-success me-2">
+                                            <i class="fa-solid fa-arrow-right"></i> </span>
+                                        <span class="text-nowrap text-xs text-muted">View
+                                            Details</span>
+                                    </a>
+                                </div>
                             </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>Completed Dispatch</h5>
-                                        <h2><span class="counter">70</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 78%;" class="progress-bar"></div>
-                                        </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 12:32 pm.</p>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-sm-6 col-12">
+                        <div class="card shadow border-0">
+                            <div class="card-body">
+                                <div class="row border-bottom">
+                                    <div class="col mb-2">
+                                        <span
+                                            class="h6 font-semibold text-muted text-sm d-block mb-2">Completed Dispatch</span>
+                                        <span
+                                            class="h5 font-bold mb-0">{{ $dispatch_counts['dispatch_completed'] }}</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div
+                                            class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                            <i class="fa-solid fa-paint-brush"></i>
+
                                         </div>
                                     </div>
                                 </div>
+                                <div class="mt-2 mb-0 text-sm">
+                                    <a href="{{ route('list-vehicle-type') }}">
+                                        <span
+                                            class="badge badge-pill bg-soft-success text-success me-2">
+                                            <i class="fa-solid fa-arrow-right"></i> </span>
+                                        <span class="text-nowrap text-xs text-muted">View
+                                            Details</span>
+                                    </a>
+                                </div>
                             </div>
+                        </div>
+                    </div>
                         </div>
                     </div> 
                     @endif
@@ -1726,8 +2131,8 @@
                                                         Logistics Department
                                                         @elseif($data->business_status_id == 1118 &&
                                                         $data->design_status_id == 1114 &&
-                                                        $data->production_status_id == 1121 &&
-                                                        $data->store_status_id == 1123 &&
+                                                        $data->production_status_id == 1121 ||  $data->production_status_id == 1119 &&
+                                                        $data->store_status_id == 1123 ||$data->store_status_id == 1119 &&
                                                         $data->purchase_status_from_owner == "1129" &&
                                                         $data->purchase_status_from_purchase == 1129 &&
                                                         $data->finanace_store_receipt_status_id == 1136 &&
@@ -1744,7 +2149,7 @@
                                                         $data->security_status_id == 1132 &&
                                                         $data->quality_status_id == 1134 )
                                                         Store Department forward to Production Department
-                                                        @elseif($data->business_status_id == 1123 &&
+                                                        @elseif($data->business_status_id == 1123 || $data->business_status_id == 1127 &&
                                                         $data->design_status_id == 1114 &&
                                                         $data->production_status_id == 1117 &&
                                                         $data->store_status_id == 1123 &&
@@ -1754,7 +2159,7 @@
                                                         $data->security_status_id == 1132 &&
                                                         $data->quality_status_id == 1134)
                                                         Store Department Material Received from Quality Department(Generated GRN)
-                                                        @elseif($data->business_status_id == 1123 &&
+                                                        @elseif($data->business_status_id == 1123 || $data->business_status_id == 1127 &&
                                                         $data->design_status_id == 1114 &&
                                                         $data->production_status_id == 1117 &&
                                                         $data->store_status_id == 1123 &&
@@ -1762,7 +2167,7 @@
                                                         $data->purchase_status_from_purchase == 1129 &&
                                                         $data->finanace_store_receipt_status_id == 1140 && $data->security_status_id ==1132)
                                                         Security Department Received Material and PO
-                                                        @elseif($data->business_status_id == 1123 ||$data->business_status_id == 1126 &&
+                                                        @elseif($data->business_status_id == 1123 ||$data->business_status_id == 1127 &&
                                                         $data->design_status_id == 1114 &&
                                                         $data->production_status_id == 1117 &&
                                                         $data->store_status_id == 1123 &&
@@ -1770,7 +2175,7 @@
                                                         $data->purchase_status_from_purchase == 1129 &&
                                                         $data->finanace_store_receipt_status_id == 1140)
                                                         Purchase Department PO Send to Vendor
-                                                        @elseif($data->business_status_id == 1123 ||$data->business_status_id == 1126 &&
+                                                        @elseif($data->business_status_id == 1123 ||$data->business_status_id == 1127 &&
                                                         $data->design_status_id == 1114 &&
                                                         $data->production_status_id == 1117 &&
                                                         $data->store_status_id == 1123 &&

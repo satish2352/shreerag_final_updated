@@ -330,7 +330,7 @@ class AllListRepositor
         // ->orWhereNotIn('business_application_processes.business_status_id', $array_not_to_be_check)
         ->whereNull('purchase_orders.grn_no')
         ->whereNull('purchase_orders.store_receipt_no')
-        // ->distinct('businesses.id')
+        ->distinct('businesses_details.id')
         ->where('businesses.is_active', true)
         ->groupBy('businesses.id','businesses_details.id','businesses_details.product_name',
         'businesses_details.description',

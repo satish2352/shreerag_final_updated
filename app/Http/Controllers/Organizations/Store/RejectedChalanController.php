@@ -76,14 +76,14 @@ class RejectedChalanController extends Controller
                     $status = $add_record['status'];
 
                     if ($status == 'success') {
-                        return redirect('store/list-rejected-chalan')->with(compact('msg', 'status'));
+                        return redirect('storedept/list-rejected-chalan')->with(compact('msg', 'status'));
                     } else {
-                        return redirect('store/add-rejected-chalan')->withInput()->with(compact('msg', 'status'));
+                        return redirect('storedept/add-rejected-chalan')->withInput()->with(compact('msg', 'status'));
                     }
                 }
             }
         } catch (Exception $e) {
-            return redirect('store/add-rejected-chalan')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('storedept/add-rejected-chalan')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
 }

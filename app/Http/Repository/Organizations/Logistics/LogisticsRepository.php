@@ -28,6 +28,8 @@ public function storeLogistics($request)
         // die();
         if ($dataOutput) {
             // Update the fields
+            $dataOutput->vehicle_type_id = $request->vehicle_type_id;
+            $dataOutput->transport_name_id = $request->transport_name_id;
             $dataOutput->truck_no = $request->truck_no;
             $dataOutput->is_approve = '0';
             $dataOutput->is_active = '1';

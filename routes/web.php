@@ -159,7 +159,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::any('/show-notice/{id}', ['as' => 'show-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@show']);
     Route::any('/delete-notice/{id}', ['as' => 'delete-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@destroy']);
     Route::post('/update-active-notice', ['as' => 'update-active-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@updateOne']);
-    Route::post('/particular-notice-department-wise', ['as' => 'particular-notice-department-wise', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@departmentWiseNotice']);
+    Route::get('/particular-notice-department-wise', ['as' => 'particular-notice-department-wise', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@departmentWiseNotice']);
 
 
     Route::group(['prefix' => 'quality'], function () {
@@ -419,6 +419,13 @@ Route::group(['middleware' => ['admin']], function () {
         Route::any('/edit-vehicle-type/{id}', ['as' => 'edit-vehicle-type', 'uses' => 'App\Http\Controllers\Organizations\Logistics\VehicleTypeController@edit']);
         Route::any('/update-vehicle-type', ['as' => 'update-vehicle-type', 'uses' => 'App\Http\Controllers\Organizations\Logistics\VehicleTypeController@update']);
         Route::any('/delete-vehicle-type/{id}', ['as' => 'delete-vehicle-type', 'uses' => 'App\Http\Controllers\Organizations\Logistics\VehicleTypeController@destroy']);
+
+        Route::any('/list-transport-name', ['as' => 'list-transport-name', 'uses' => 'App\Http\Controllers\Organizations\Logistics\NameOfTransportController@index']);
+        Route::any('/add-transport-name', ['as' => 'add-transport-name', 'uses' => 'App\Http\Controllers\Organizations\Logistics\NameOfTransportController@add']);
+        Route::any('/store-transport-name', ['as' => 'store-transport-name', 'uses' => 'App\Http\Controllers\Organizations\Logistics\NameOfTransportController@store']);
+        Route::any('/edit-transport-name/{id}', ['as' => 'edit-transport-name', 'uses' => 'App\Http\Controllers\Organizations\Logistics\NameOfTransportController@edit']);
+        Route::any('/update-transport-name', ['as' => 'update-transport-name', 'uses' => 'App\Http\Controllers\Organizations\Logistics\NameOfTransportController@update']);
+        Route::any('/delete-transport-name/{id}', ['as' => 'delete-transport-name', 'uses' => 'App\Http\Controllers\Organizations\Logistics\NameOfTransportController@destroy']);
     });
     Route::group(['prefix' => 'dispatchdept'], function () {
         Route::get('/list-final-production-completed-received-from-fianance', ['as' => 'list-final-production-completed-received-from-fianance', 'uses' => 'App\Http\Controllers\Organizations\Dispatch\AllListController@getAllReceivedFromFianance']);

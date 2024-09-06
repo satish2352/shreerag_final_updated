@@ -34,7 +34,7 @@ button.pd-setting-ed {
                 <div class="sparkline13-list">
                     <div class="sparkline13-hd">
                         <div class="main-sparkline13-hd">
-                            <h1>New Design Recived For Production <span class="table-project-n"></span></h1>
+                            <h1>New Design Received  For Production <span class="table-project-n"></span></h1>
                             <div class="form-group-inner login-btn-inner row">
                                 <div class="col-lg-2" >
                                     {{-- <div class="login-horizental cancel-wp pull-left">

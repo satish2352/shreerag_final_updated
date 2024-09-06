@@ -87,24 +87,24 @@ label.error {
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="contact_no">Contact No. :</label>
                                                     <input type="text" class="form-control" id="contact_no"
-                                                        name="contact_no" placeholder="Enter your contact No."
-                                                        value=" @if (old('contact_no')) {{ old('contact_no') }}@else{{ $editData->contact_no }} @endif">
+                                                           name="contact_no" placeholder="Enter your contact No."
+                                                           value="@if(old('contact_no')){{ old('contact_no') }}@else{{$editData->contact_no}}@endif">
                                                 </div>
-
+                                                
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="gst_no">Vendor GST No:</label>
                                                     <input type="text" class="form-control" id="gst_no"
-                                                        name="gst_no" placeholder="Enter GST number"
-                                                        value=" @if (old('gst_no')) {{ old('gst_no') }}@else{{ $editData->gst_no }} @endif">
+                                                           name="gst_no" placeholder="Enter GST number"
+                                                           value="@if(old('gst_no')){{ old('gst_no') }}@else{{$editData->gst_no}}@endif">
                                                 </div>
-
+                                                
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="quote_no">Vendor Quote No:</label>
                                                     <input type="text" class="form-control" id="quote_no"
-                                                        name="quote_no" placeholder="Enter your quote no"
-                                                        value=" @if (old('quote_no')) {{ old('quote_no') }}@else{{ $editData->quote_no }} @endif">
+                                                           name="quote_no" placeholder="Enter your quote no"
+                                                           value="@if(old('quote_no')){{ old('quote_no') }}@else{{$editData->quote_no}}@endif">
                                                 </div>
-
+                                                
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="payment_terms">Payment Terms:</label>
                                                     <input type="text" class="form-control" id="payment_terms"

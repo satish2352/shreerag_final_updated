@@ -9,7 +9,9 @@ use App\Models\ {
     
     BusinessApplicationProcesses,
     Vendors,
-    Business
+    Business,
+    VehicleType,
+    TransportName
     };
 use Session;
 use Validator;
@@ -36,10 +38,12 @@ class LogisticsController extends Controller
                 $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
             })
             ->first();
-            $dataOutputVendor = Vendors::get();
+            $dataOutputVendor = Vendors::where('is_active', 1)->get();
+            $dataOutputVehicleType = VehicleType::where('is_active', 1)->get();
+            $dataOutputTransportName = TransportName::where('is_active', 1)->get();
             $editData = $purchase_order_data;
             return view('organizations.logistics.logisticsdept.add-logistics'
-            , compact('dataOutputVendor', 'editData')
+            , compact('dataOutputVendor', 'editData', 'dataOutputVehicleType', 'dataOutputTransportName')
         );
         } catch (\Exception $e) {
             return $e;

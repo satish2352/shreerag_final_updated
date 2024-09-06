@@ -71,7 +71,10 @@ class AllListServices
     
     public function getAllListPurchaseOrderMailSentToVendor(){
         try {
-            return $this->repo->getAllListPurchaseOrderMailSentToVendor();
+            $data_output = $this->repo->getAllListPurchaseOrderMailSentToVendor();
+            // dd($data_output);
+            // die();
+            return $data_output;
         } catch (\Exception $e) {
             return $e;
         }

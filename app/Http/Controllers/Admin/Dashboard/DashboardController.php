@@ -19,6 +19,12 @@ use App\Models\ {
     VisionMission,
     VehicleType,
     DesignModel,
+    Vendors,
+    Tax,
+    PartItem,
+    PurchaseOrderModel,
+    Gatepass,
+    RejectedChalan,
 //     Gallery,
 //     AdditionalSolutions,
 //     OurSolutions,
@@ -166,7 +172,8 @@ class DashboardController extends Controller {
             // dd($data_output_offcanvas);
             // die();
         // Prepare the data for the chart
-
+// dd($data_output_offcanvas);
+// die();
         $product_count = Products::where('is_active', 1)->count();
         $testimonial_count = Testimonial::where('is_active', 1)->count();
         $product_services_count = ProductServices::where('is_active', 1)->count();
@@ -216,6 +223,49 @@ class DashboardController extends Controller {
         $corected_design_list_recived = BusinessApplicationProcesses::where('business_status_id',1116)->where('design_status_id', 1116)
         ->where('production_status_id', 1116)
         ->where('is_active',1)->count();
+
+        $material_need_to_sent_to_production = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1114)
+        ->where('production_status_id', 1114)
+        ->where('is_active',1)->count();
+        $material_sent_to_production = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
+        ->where('production_status_id', 1119)->where('store_status_id', 1118)
+        ->where('is_active',1)->count();
+        $material_for_purchase = BusinessApplicationProcesses::where('business_status_id',1123)->where('design_status_id', 1114)
+        ->where('production_status_id', 1117)->where('store_status_id',1123)
+        ->where('is_active',1)->count();
+        $material_received_from_quality = BusinessApplicationProcesses::where('business_status_id',1123)->where('design_status_id', 1114)
+        ->where('production_status_id', 1117)->where('store_status_id',1123)
+        ->where('is_active',1)->count();
+        $rejected_chalan = BusinessApplicationProcesses::where('business_status_id',1116)->where('design_status_id', 1116)
+        ->where('production_status_id', 1116)
+        ->where('is_active',1)->count();
+
+        $BOM_recived_for_purchase= BusinessApplicationProcesses::where('business_status_id',1123)->where('design_status_id', 1114)
+        ->where('production_status_id', 1117)->where('store_status_id',1123)
+        ->where('is_active',1)->count();
+        $vendor_list = Vendors::where('is_active',1)->count();
+        $tax = Tax::where('is_active',1)->count();
+        $part_item = PartItem::where('is_active',1)->count();
+        $purchase_order_approved = PurchaseOrderModel::where('purchase_status_from_owner',1127)->where('purchase_status_from_purchase',1126)
+        ->where('is_active',1)->count();
+        $purchase_order_submited_by_vendor =PurchaseOrderModel::where('purchase_status_from_owner',1129)->where('purchase_status_from_purchase',1129)
+        ->where('is_active',1)->count();
+     
+        $get_pass = Gatepass::where('is_active',1)->count();
+      
+
+        $GRN_genration= PurchaseOrderModel::where('purchase_status_from_owner',1129)->where('purchase_status_from_purchase',1129)
+        ->where('security_status_id',1132)->where('quality_status_id', null)->where('is_active',1)->count();
+        $material_need_to_sent_to_production = PurchaseOrderModel::where('purchase_status_from_owner',1129)->where('purchase_status_from_purchase',1129)
+        ->where('security_status_id',1132)->where('quality_status_id', 1134)->where('is_active',1)->count();
+        $rejected_chalan_po_wise = RejectedChalan::where('chalan_no', '!=', '')->where('is_active', 1)->count();
+
+        $dispatch_received_from_finance= BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1114)
+        ->where('production_status_id', 1114)
+        ->where('is_active',1)->count();
+        $dispatch_completed = Vendors::where('is_active',1)->count();
+    
+       
         // $progressPercentage = min(100, max(0, $directorDeskCount));
 
 
@@ -242,27 +292,54 @@ class DashboardController extends Controller {
             'contact_us_count' => $contact_us_count,
             
         ];
-
-        $logistics_counts = [
-            'logistics_list_count' => $logistics_list_count,
-            'logistics_send_by_finance_count' => $logistics_send_by_finance_count,
-            'vehicle_type_count' => $vehicle_type_count,
-         ];
          $design_dept_counts = [
             'business_received_for_designs' => $business_received_for_designs,
             'design_sent_for_production' => $design_sent_for_production,
             'corected_design_need_to_upload' => $corected_design_need_to_upload,
          ];
-
          $production_dept_counts = [
             'design_recived_for_production' => $design_recived_for_production,
             'accepted_and_sent_to_store' => $accepted_and_sent_to_store,
             'rejected_design_list_sent' => $rejected_design_list_sent,
             'corected_design_list_recived' => $corected_design_list_recived,
          ];
-
+         $store_dept_counts = [
+            'material_need_to_sent_to_production' => $material_need_to_sent_to_production,
+            'material_sent_to_production' => $material_sent_to_production,
+            'material_for_purchase' => $material_for_purchase,
+            'material_received_from_quality' => $material_received_from_quality,
+            'rejected_chalan' => $rejected_chalan,
+         ];
+         $purchase_dept_counts = [
+            'BOM_recived_for_purchase' => $BOM_recived_for_purchase,
+            'vendor_list' => $vendor_list,
+            'tax' => $tax,
+            'part_item' => $part_item,
+            'purchase_order_approved' => $purchase_order_approved,
+            'purchase_order_submited_by_vendor' => $purchase_order_submited_by_vendor,
+         ];
+         $secuirty_dept_counts = [
+            'get_pass' => $get_pass,
+         ];
+         $quality_dept_counts = [
+            'GRN_genration' => $GRN_genration,
+            'material_need_to_sent_to_production' => $material_need_to_sent_to_production,
+            'rejected_chalan_po_wise' => $rejected_chalan_po_wise,
+         ];
+         $logistics_counts = [
+            'logistics_list_count' => $logistics_list_count,
+            'logistics_send_by_finance_count' => $logistics_send_by_finance_count,
+            'vehicle_type_count' => $vehicle_type_count,
+        ];
+        $dispatch_counts = [
+            'dispatch_received_from_finance' => $dispatch_received_from_finance,
+            'dispatch_completed' => $dispatch_completed,
+           
+        ];
         return view('admin.pages.dashboard.dashboard', ['return_data' => $counts, 'cms_counts' =>$cms_counts, 'logistics_counts'=>$logistics_counts, 'design_dept_counts'=>$design_dept_counts,
-    'production_dept_counts'=>$production_dept_counts ]);
+    'production_dept_counts'=>$production_dept_counts, 'store_dept_counts'=>$store_dept_counts,
+'purchase_dept_counts'=>$purchase_dept_counts, 'secuirty_dept_counts'=>$secuirty_dept_counts, 'quality_dept_counts'=>$quality_dept_counts,
+'dispatch_counts'=>$dispatch_counts ]);
     } catch (\Exception $e) {
         \Log::error("Error fetching business data: " . $e->getMessage());
         return redirect()->back()->with('error', 'An error occurred while fetching data.');

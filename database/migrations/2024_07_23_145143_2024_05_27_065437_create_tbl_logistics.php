@@ -18,6 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('business_details_id');
             $table->unsignedBigInteger('business_application_processes_id');
+            $table->unsignedBigInteger('vehicle_type_id')->nullable();
+            $table->unsignedBigInteger('transport_name_id')->nullable();
             $table->string('truck_no')->nullable();
             $table->string('remark')->nullable();
             $table->boolean('is_approve')->default(false);

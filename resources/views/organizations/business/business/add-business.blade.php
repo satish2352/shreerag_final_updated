@@ -360,6 +360,11 @@
                 var i = parseInt(i_count) + 1;
                 $('#i_id').val(i);
     
+                if (i_count === "0") {
+                    i = 2;
+                }
+
+                $('#i_id').val(i);
                 var newRow = `
                     <tr>
                         <td>

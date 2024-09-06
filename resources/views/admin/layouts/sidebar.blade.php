@@ -394,7 +394,7 @@
                                         class="mini-click-non">List Gate Pass</span></a></li>
                         </ul> --}}
                         </li>
-                        <li>
+                        {{-- <li>
                             <a class="has-arrow" href="{{ route('list-security-remark') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-edit icon-wrap"></i> <span
                                     class="mini-click-non">Remark</span></a>
@@ -403,7 +403,7 @@
                                             class="fa big-icon fa-clipboard-list icon-wrap" aria-hidden="true"></i> <span
                                             class="mini-click-non">List Remark</span></a></li>
                             </ul>
-                        </li>
+                        </li> --}}
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.QUALITY'))
                         <li>
@@ -590,10 +590,16 @@
                             <span class="mini-click-non">Submited by Fianance</span>
                         </a>
                     </li>
+                    <li>
                     <a class="" href="{{ route('list-vehicle-type') }}" aria-expanded="false"><i
                         class="fa big-icon fa-cogs icon-wrap"></i> <span
                         class="mini-click-non">Vehicle Type</span></a>
-            </li>
+                   </li>
+                   <li>
+                    <a class="" href="{{ route('list-transport-name') }}" aria-expanded="false"><i
+                        class="fa big-icon fa-truck icon-wrap"></i> <span
+                        class="mini-click-non">Transport Name</span></a>
+                   </li>
                 @endif
 
                 @if (session()->get('role_id') == config('constants.ROLE_ID.DISPATCH'))

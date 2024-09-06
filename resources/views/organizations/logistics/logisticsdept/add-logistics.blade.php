@@ -89,6 +89,48 @@
                                                         <span class="red-text"><?php echo $errors->first('title', ':message'); ?></span>
                                                     @endif
                                                 </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="vehicle_type_id">Vehicle Type</label>&nbsp<span class="red-text">*</span>
+                                                        <select class="form-control" id="vehicle_type_id" name="vehicle_type_id"
+                                                            onchange="myFunction(this.value)">
+                                                            <option value="">Select Vehicle Type</option>
+                                                            @foreach ($dataOutputVehicleType as $role)
+                                                                @if (old('vehicle_type_id') == $role['id'])
+                                                                    <option value="{{ $role['id'] }}" selected>
+                                                                        {{ $role['name'] }}</option>
+                                                                @else
+                                                                    <option value="{{ $role['id'] }}">{{ $role['name'] }}
+                                                                    </option>
+                                                                @endif
+                                                            @endforeach
+                                                        </select>
+                                                        @if ($errors->has('vehicle_type_id'))
+                                                            <span class="red-text"><?php echo $errors->first('vehicle_type_id', ':message'); ?></span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="transport_name_id">Transport Name</label>&nbsp<span class="red-text">*</span>
+                                                        <select class="form-control" id="transport_name_id" name="transport_name_id"
+                                                            onchange="myFunction(this.value)">
+                                                            <option value="">Select Transport Name</option>
+                                                            @foreach ($dataOutputTransportName as $role)
+                                                                @if (old('transport_name_id') == $role['id'])
+                                                                    <option value="{{ $role['id'] }}" selected>
+                                                                        {{ $role['name'] }}</option>
+                                                                @else
+                                                                    <option value="{{ $role['id'] }}">{{ $role['name'] }}
+                                                                    </option>
+                                                                @endif
+                                                            @endforeach
+                                                        </select>
+                                                        @if ($errors->has('transport_name_id'))
+                                                            <span class="red-text"><?php echo $errors->first('transport_name_id', ':message'); ?></span>
+                                                        @endif
+                                                    </div>
+                                                </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="truck_no">Truck Number :  <span class="text-danger">*</span></label> 
                                                     <input type="text" class="form-control" id="truck_no"
