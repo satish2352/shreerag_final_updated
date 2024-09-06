@@ -55,8 +55,8 @@ class StoreRepository
             }
     
             $productName = $businessDetails->product_name;
-            $business_application = BusinessApplicationProcesses::where('design_id', $production_id)->first();
-           
+            // $business_application = BusinessApplicationProcesses::where('design_id', $production_id)->first();
+            $business_application = BusinessApplicationProcesses::where('business_details_id', $businessDetails->id)->first();
             $dataOutput = new Requisition();
             $dataOutput->business_id = $business_application->business_id;
             $dataOutput->business_details_id = $business_application->business_details_id;
