@@ -2187,10 +2187,10 @@
                                                         $data->store_status_id == 1123 &&
                                                         $data->purchase_status_from_purchase == 1126)
                                                         Purchase Department 
-                                                        @elseif($data->business_status_id == 1123 &&
-                                                        $data->design_status_id == 1114 &&
-                                                        $data->production_status_id == 1117 &&
-                                                        $data->store_status_id == 1123)
+                                                        @elseif($data->business_status_id == "1123" &&
+                                                        $data->design_status_id == "1114" &&
+                                                        $data->production_status_id == "1117" &&
+                                                        $data->store_status_id == "1123")
                                                         Store Department
                                                         @elseif($data->business_status_id == 1116 &&
                                                         $data->design_status_id == 1116 &&
