@@ -1699,8 +1699,7 @@
                                                             <span
                                                                 class="badge badge-pill bg-soft-success text-success me-2">
                                                                 <i class="fa-solid fa-arrow-right"></i> </span>
-                                                            <span class="text-nowrap text-xs text-muted">view
-                                                                details</span>
+                                                            <span class="text-nowrap text-xs text-muted">view details</span>
                                                         </a>
                                                     </div>
                                                 </div>
@@ -1729,8 +1728,7 @@
                                                             <span
                                                                 class="badge badge-pill bg-soft-success text-success me-2">
                                                                 <i class="fa-solid fa-arrow-right"></i> </span>
-                                                            <span class="text-nowrap text-xs text-muted">view
-                                                                details</span>
+                                                            <span class="text-nowrap text-xs text-muted">view details</span>
                                                         </a>
                                                     </div>
                                                 </div>

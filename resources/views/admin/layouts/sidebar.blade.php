@@ -64,8 +64,8 @@
 
                     @if (session()->get('role_id') == config('constants.ROLE_ID.HIGHER_AUTHORITY'))
                         <ul class="sidebar-menu" id="nav-accordion">
-                            <li class="nav-item {{ request()->is('owner/organizations-list-employees') ? 'active' : '' }}">
-                                <a  href="{{ route('organizations-list-employees') }}" aria-expanded="false"><i
+                            <li>
+                                <a  href="{{ route('list-users') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-users icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">Add Employees</span></a>
                             </li>
