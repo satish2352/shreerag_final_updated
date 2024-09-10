@@ -25,6 +25,9 @@ use App\Models\ {
     PurchaseOrderModel,
     Gatepass,
     RejectedChalan,
+    Leaves,
+    LeaveManagement,
+    Notice,
 //     Gallery,
 //     AdditionalSolutions,
 //     OurSolutions,
@@ -46,58 +49,7 @@ class DashboardController extends Controller {
     {
         // $this->service = new DashboardServices();
     }
-
-    // public function index()
-    // {
-    //     try {
-    //         // Get the counts
-    //         $active_count = Business::where('is_active', 1)->count(); 
-    //         $business_details_count = BusinessDetails::where('is_active', 1)->count(); 
-    //         $business_completed_count = BusinessApplicationProcesses::where('is_active', 1)
-    //             ->where('dispatch_status_id', 1148)
-    //             ->count();
-    //         $product_completed_count = BusinessApplicationProcesses::where('is_active', 1)
-    //             ->where('dispatch_status_id', 1148)
-    //             ->count();
-    //         $business_inprocess_count = BusinessApplicationProcesses::where('is_active', 1)
-    //             ->where('dispatch_status_id', 1148)
-    //             ->count();
-    //         $product_inprocess_count = BusinessApplicationProcesses::where('is_active', 1)
-    //             ->where('dispatch_status_id', 1148)
-    //             ->count();
-
-    //             $data_output_offcanvas  = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
-    //                 $join->on('business_application_processes.business_id', '=', 'businesses.id');
-    //               })
-    //             ->leftJoin('businesses_details', function($join) {
-    //                 $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-    //             })
-    //             ->where('dispatch_status_id', 1148)
-    //             ->get();
- 
-    //         // Prepare the data for the chart
-    //         $counts = [
-    //             'active_businesses' => $active_count,
-    //             'business_details' => $business_details_count,
-    //             'business_completed' => $business_completed_count,
-    //             'product_completed' => $product_completed_count,
-    //             'business_inprocess' => $business_inprocess_count,
-    //             'product_inprocess' => $product_inprocess_count,
-    //             'data_output_offcanvas' => $data_output_offcanvas,
-    //         ];
-
-    //         // dd($data_output_offcanvas);
-    //         // die();
-    
-    //         return view('admin.pages.dashboard.dashboard', ['return_data' => $counts]);
-    //     } catch (\Exception $e) {
-    //         \Log::error("Error fetching business data: " . $e->getMessage());
-    //         return redirect()->back()->with('error', 'An error occurred while fetching data.');
-    //     }
-    // }
-
-    public function index()
-{
+    public function index(){
     try {
       
         // Get the counts
@@ -264,8 +216,44 @@ class DashboardController extends Controller {
         ->where('production_status_id', 1114)
         ->where('is_active',1)->count();
         $dispatch_completed = Vendors::where('is_active',1)->count();
-    
-       
+
+
+        
+        $leave_request= Leaves::where(['is_active' => 1, 'is_approved' => 0])->count();
+        $accepted_leave_request = Leaves::where(['is_active' => 1, 'is_approved' => 2])->count();
+        $rejected__leave_request = Leaves::where(['is_active' => 1, 'is_approved' => 1])->count();
+        $total_employee= User::where('is_active',1)->count();
+        $total_leaves_type= LeaveManagement::where('is_active',1)->count();
+        $total_notice= Notice::where('is_active',1)->count();
+
+        $ses_userId = session()->get('user_id');
+
+        $employee_leave_request = Leaves::leftJoin('users', function($join) {
+            $join->on('tbl_leaves.employee_id', '=', 'users.id');
+        })
+        ->where('users.id', $ses_userId)
+        ->where('tbl_leaves.is_active', 1)
+        ->where('tbl_leaves.is_approved', 0)
+        ->count();
+        $employee_accepted_leave_request = Leaves::leftJoin('users', function($join) {
+            $join->on('tbl_leaves.employee_id', '=', 'users.id');
+        })
+        ->where('users.id', $ses_userId)
+        ->where('tbl_leaves.is_active', 1)
+        ->where('tbl_leaves.is_approved', 2)
+        ->count();
+        $employee_rejected_leave_request = Leaves::leftJoin('users', function($join) {
+            $join->on('tbl_leaves.employee_id', '=', 'users.id');
+        })
+        ->where('users.id', $ses_userId)
+        ->where('tbl_leaves.is_active', 1)
+        ->where('tbl_leaves.is_approved', 1)
+        ->count();
+        // $employee_leave_type= LeaveManagement::where('is_active',1)->get();
+        $employee_leave_type = LeaveManagement::where('is_active', 1)
+        ->select('name', 'leave_count') 
+        ->get();
+
         // $progressPercentage = min(100, max(0, $directorDeskCount));
 
 
@@ -336,10 +324,26 @@ class DashboardController extends Controller {
             'dispatch_completed' => $dispatch_completed,
            
         ];
+        $hr_counts = [
+            'leave_request' => $leave_request,
+            'accepted_leave_request' => $accepted_leave_request,
+            'rejected__leave_request' => $rejected__leave_request,
+            'total_employee'=>$total_employee,
+            'total_leaves_type'=>$total_leaves_type,
+            'total_notice'=>$total_notice
+
+           
+        ];
+        $employee_counts = [
+            'employee_leave_request' => $employee_leave_request,
+            'employee_accepted_leave_request' => $employee_accepted_leave_request,
+            'employee_rejected_leave_request' => $employee_rejected_leave_request,
+        ];
+
         return view('admin.pages.dashboard.dashboard', ['return_data' => $counts, 'cms_counts' =>$cms_counts, 'logistics_counts'=>$logistics_counts, 'design_dept_counts'=>$design_dept_counts,
     'production_dept_counts'=>$production_dept_counts, 'store_dept_counts'=>$store_dept_counts,
 'purchase_dept_counts'=>$purchase_dept_counts, 'secuirty_dept_counts'=>$secuirty_dept_counts, 'quality_dept_counts'=>$quality_dept_counts,
-'dispatch_counts'=>$dispatch_counts ]);
+'dispatch_counts'=>$dispatch_counts, 'hr_counts'=>$hr_counts, 'employee_counts'=>$employee_counts, 'employee_leave_type'=>$employee_leave_type ]);
     } catch (\Exception $e) {
         \Log::error("Error fetching business data: " . $e->getMessage());
         return redirect()->back()->with('error', 'An error occurred while fetching data.');

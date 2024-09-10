@@ -527,7 +527,14 @@
                             <span class="mini-click-non">Notice</span>
                         </a></li>
                     @endif
-
+                    @if (session()->get('role_id') == config('constants.ROLE_ID.EMPOLYEE'))
+                    <li class="nav-item {{ request()->is('list-sr-and-gr-genrated-business') ? 'active' : '' }}">
+                        <a href="{{ route('list-sr-and-gr-genrated-business') }}">
+                            <i class="fa big-icon fa-money-check icon-wrap"></i>
+                            <span class="mini-click-non">Profile</span>
+                        </a>
+                    </li>
+                    @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.FINANCE'))
                         <li class="nav-item {{ request()->is('list-sr-and-gr-genrated-business') ? 'active' : '' }}">
                             <a href="{{ route('list-sr-and-gr-genrated-business') }}">

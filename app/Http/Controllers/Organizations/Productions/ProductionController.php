@@ -53,16 +53,26 @@ class ProductionController extends Controller
             return $e;
         }
     } 
+    // public function acceptProductionCompleted($id){
+    //     try {
+    //         // $accepted = base64_decode($id);
+    //         $update_data = $this->service->acceptProductionCompleted($id);
+    //         return redirect('proddept/list-final-production-completed', compact('update_data'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // } 
     public function acceptProductionCompleted($id){
         try {
-            // $accepted = base64_decode($id);
             $update_data = $this->service->acceptProductionCompleted($id);
-            return redirect('proddept/list-final-production-completed', compact('update_data'));
+    
+            // Redirect to the specified URL without passing the array
+            return redirect('proddept/list-final-production-completed')->with('status', $update_data);
         } catch (\Exception $e) {
             return $e;
         }
-    } 
-
+    }
+    
     // public function editProduct($id) {
     //     try {
     //         $editData = $this->service->editProduct($id);

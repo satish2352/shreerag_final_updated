@@ -163,8 +163,9 @@ class LeavesController extends Controller
     public function updateLabourStatus(Request $request) {
         try {
             $leaves_id = $request->input('active_id');
+            
             $action = $request->input('action');
-    
+          
             $validator = Validator::make($request->all(), [
                 'active_id' => 'required|exists:tbl_leaves,id',
                 'action' => 'required|in:approve,notapprove',
@@ -175,15 +176,19 @@ class LeavesController extends Controller
             }
     
             $leaves = Leaves::find($leaves_id);
+           
+
              $employeeId = $leaves->employee_id;
              $leaveType = $leaves->leave_type_id;
-
+           
             if ($action === 'approve') {
                 if ($leaves->is_approved === 0) {
                     $leaves->is_approved = 2;                
                     $financialRecord = FinancialYearLeaveRecord::where('tbl_financial_year_leave_record.user_id', $employeeId)
                     ->where('tbl_financial_year_leave_record.leave_management_id', $leaveType)
                    ->first();
+
+                  
                     if ($financialRecord) {
                         $financialRecord->leave_balance -= $leaves->leave_count;
                         $financialRecord->save();

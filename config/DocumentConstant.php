@@ -82,7 +82,10 @@ return [
         'STORE'             => 7,
         'FINANCE'           => 8,
         'HR'                => 9,
-        'EMPOLYEE'          =>10,
+        'LOGISTICS'         => 10,
+        'DISPATCH'          => 11,
+        'CMS'               => 12,
+        'EMPOLYEE'          => 13,
     ],
     
     'HIGHER_AUTHORITY' => [

@@ -18,6 +18,7 @@ return [
         'LOGISTICS'         => 10,
         'DISPATCH'          => 11,
         'CMS'               => 12,
+        'EMPOLYEE'          => 13,
     ],
 
 
@@ -35,6 +36,7 @@ return [
         '10' => 'LOGISTICS',
         '11' => 'DISPATCH',
         '12' => 'CMS',
+        '13' => 'EMPOLYEE',
     ],
     
     'HIGHER_AUTHORITY' => [

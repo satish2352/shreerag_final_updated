@@ -209,7 +209,7 @@
                                                 <span
                                                     class="h6 font-semibold text-muted text-sm d-block mb-2">Leave Request</span>
                                                 <span
-                                                    class="h5 font-bold mb-0">{{ $design_dept_counts['business_received_for_designs'] }}</span>
+                                                    class="h5 font-bold mb-0">{{ $hr_counts['leave_request'] }}</span>
                                             </div>
                                             <div class="col-auto">
                                                 <div
@@ -240,7 +240,7 @@
                                                 <span
                                                     class="h6 font-semibold text-muted text-sm d-block mb-2">Leave Approved</span>
                                                 <span
-                                                    class="h5 font-bold mb-0">{{ $design_dept_counts['business_received_for_designs'] }}</span>
+                                                    class="h5 font-bold mb-0">{{ $hr_counts['accepted_leave_request'] }}</span>
                                             </div>
                                             <div class="col-auto">
                                                 <div
@@ -271,7 +271,7 @@
                                                 <span
                                                     class="h6 font-semibold text-muted text-sm d-block mb-2">Leave Not Approved</span>
                                                 <span
-                                                    class="h5 font-bold mb-0">{{ $design_dept_counts['business_received_for_designs'] }}</span>
+                                                    class="h5 font-bold mb-0">{{ $hr_counts['rejected__leave_request'] }}</span>
                                             </div>
                                             <div class="col-auto">
                                                 <div
@@ -293,38 +293,100 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-sm-6 col-12">
-                                <div class="card shadow border-0">
-                                    <div class="card-body">
-                                        <div class="row border-bottom">
-                                            <div class="col mb-2">
-                                                <span
-                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Pending Leave</span>
-                                                <span
-                                                    class="h5 font-bold mb-0">{{ $design_dept_counts['business_received_for_designs'] }}</span>
-                                            </div>
-                                            <div class="col-auto">
-                                                <div
-                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                    <i class="fa-solid fa-paint-brush"></i>
-
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-xl-4 col-sm-6 col-12">
+                                    <div class="card shadow border-0">
+                                        <div class="card-body">
+                                            <div class="row border-bottom">
+                                                <div class="col mb-2">
+                                                    <span
+                                                        class="h6 font-semibold text-muted text-sm d-block mb-2">Total Leaves Type</span>
+                                                    <span
+                                                        class="h5 font-bold mb-0">{{ $hr_counts['total_leaves_type'] }}</span>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div
+                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                        <i class="fa-solid fa-paint-brush"></i>
+    
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <div class="mt-2 mb-0 text-sm">
+                                                <a href="{{ route('list-users') }}">
+                                                    <span
+                                                        class="badge badge-pill bg-soft-success text-success me-2">
+                                                        <i class="fa-solid fa-arrow-right"></i> </span>
+                                                    <span class="text-nowrap text-xs text-muted">View
+                                                        Details</span>
+                                                </a>
+                                            </div>
                                         </div>
-                                        <div class="mt-2 mb-0 text-sm">
-                                            <a href="{{ route('list-new-requirements-received-for-design') }}">
-                                                <span
-                                                    class="badge badge-pill bg-soft-success text-success me-2">
-                                                    <i class="fa-solid fa-arrow-right"></i> </span>
-                                                <span class="text-nowrap text-xs text-muted">View
-                                                    Details</span>
-                                            </a>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-sm-6 col-12">
+                                    <div class="card shadow border-0">
+                                        <div class="card-body">
+                                            <div class="row border-bottom">
+                                                <div class="col mb-2">
+                                                    <span
+                                                        class="h6 font-semibold text-muted text-sm d-block mb-2">Total Notice</span>
+                                                    <span
+                                                        class="h5 font-bold mb-0">{{ $hr_counts['total_notice'] }}</span>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div
+                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                        <i class="fa-solid fa-paint-brush"></i>
+    
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-2 mb-0 text-sm">
+                                                <a href="{{ route('list-users') }}">
+                                                    <span
+                                                        class="badge badge-pill bg-soft-success text-success me-2">
+                                                        <i class="fa-solid fa-arrow-right"></i> </span>
+                                                    <span class="text-nowrap text-xs text-muted">View
+                                                        Details</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-4 col-sm-6 col-12">
+                                    <div class="card shadow border-0">
+                                        <div class="card-body">
+                                            <div class="row border-bottom">
+                                                <div class="col mb-2">
+                                                    <span
+                                                        class="h6 font-semibold text-muted text-sm d-block mb-2">Total Employee</span>
+                                                    <span
+                                                        class="h5 font-bold mb-0">{{ $hr_counts['total_employee'] }}</span>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div
+                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                        <i class="fa-solid fa-paint-brush"></i>
+    
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-2 mb-0 text-sm">
+                                                <a href="{{ route('list-users') }}">
+                                                    <span
+                                                        class="badge badge-pill bg-soft-success text-success me-2">
+                                                        <i class="fa-solid fa-arrow-right"></i> </span>
+                                                    <span class="text-nowrap text-xs text-muted">View
+                                                        Details</span>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                          
-                        </div>
                     </div>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.DESIGNER'))
@@ -1200,6 +1262,125 @@
                             </div>
                         </div>
                     </div>
+                        </div>
+                    </div> 
+                    @endif
+                    @if (session()->get('role_id') == config('constants.ROLE_ID.EMPOLYEE'))
+                    <div class="analysis-progrebar-area mg-b-15">
+                        <div class="row">
+                            <div class="col-xl-6 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Total Leave Request</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $employee_counts['employee_leave_request'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-leaves') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">accept Leave Request</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $employee_counts['employee_accepted_leave_request'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-leaves') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-xl-6 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Rejected Leave Request</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $employee_counts['employee_rejected_leave_request'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-leaves') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- <div class="col-xl-6 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body"> <span
+                                        class="h6 font-semibold text-muted text-sm d-block mb-2">Total Leaves Count:
+                                    
+                                    @foreach($employee_leave_type as $leave)
+                                       <p>{{ $leave->name }}: {{ $leave->leave_count }}</p>
+                                    @endforeach
+                                </span>
+                                    <h2>
+                                        
+                                      <span class="counter"></span>/<span class="counter"
+                                        >54</span
+                                      >
+                                    </h2>
+                                    <div class="text-center">
+                                      <div id="sparkline52"></div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div> --}}
                         </div>
                     </div> 
                     @endif
@@ -2225,6 +2406,8 @@
                         </div>
                     </div>
                     @endif
+                    
+
                 </div>
             </div>
         </div>
