@@ -557,6 +557,7 @@ public function getAllNewRequirementBusinessWise($business_id) {
               'businesses.id',
               'businesses.customer_po_number',
               'businesses.title',
+              'businesses_details.id',
               'businesses_details.product_name',
               'businesses_details.quantity',
               'businesses_details.description',

@@ -100,7 +100,10 @@
 
                                         </thead>
 
-
+<?php
+// dd($data_output);
+// die();
+?>
 
                                         <tbody>
                                             @foreach ($data_output as $data)
@@ -135,7 +138,7 @@
                                                         <div style="display: flex; align-items: center;">
 
                                                             <a
-                                                                href="{{ route('accept-design', base64_encode($data->productionId)) }} "><button
+                                                                href="{{ route('accept-design', base64_encode($data->id)) }} "><button
                                                                     data-toggle="tooltip" title="Accept Design"
                                                                     class="pd-setting-ed"><i class="fa fa-check"
                                                                         aria-hidden="true"></i></button></a>

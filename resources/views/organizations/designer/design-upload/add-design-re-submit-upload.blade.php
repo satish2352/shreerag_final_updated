@@ -159,12 +159,12 @@
                     design_image: {
                         required: true,
                         fileExtension: ["pdf"], // Validate for PDF extension
-                        fileSize: [10, 2048], // Min 10KB and Max 2MB
+                        fileSize: [10, 6144], // Min 10KB and Max 2MB
                     },
                     bom_image: {
                         required: true,
                         fileExtension: ["xls", "xlsx"], // Validate for Excel files
-                        fileSize: [10, 2048], // Min 10KB and Max 2MB
+                        fileSize: [10, 6144], // Min 10KB and Max 2MB
                     },
                 },
                 messages: {
