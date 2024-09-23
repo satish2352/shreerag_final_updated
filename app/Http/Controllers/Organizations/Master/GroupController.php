@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Organizations\Master;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Services\Organizations\Master\HSNServices;
+use App\Http\Services\Organizations\Master\GroupServices;
 use Session;
 use Validator;
 use Config;
@@ -14,7 +14,7 @@ use Illuminate\Validation\Rule;
 class GroupController extends Controller
 { 
     public function __construct(){
-        $this->service = new HSNServices();
+        $this->service = new GroupServices();
     }
 
 
