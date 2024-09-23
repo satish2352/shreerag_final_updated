@@ -1,8 +1,12 @@
 @extends('admin.layouts.master')
 @section('content')
 <style>
-    label {
-        margin-top: 20px;
+    .form-control {
+      border: 2px solid #ced4da;
+      border-radius: 4px;
+    }
+    .error {
+      color: red !important;
     }
 </style>
 <div class="row">
@@ -24,20 +28,98 @@
 
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="all-form-element-inner">
-                               
+                              
                                 <form action="{{ route('update-part-item') }}" method="POST" enctype="multipart/form-data" id="regForm" autocomplete="off">
                                     @csrf
                                     <div class="form-group-inner">
                                         <input type="hidden" class="form-control" value="@if (old('id')) {{ old('id') }}@else{{ $editData->id }} @endif" id="id" name="id">
                                         <div class="row">
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="name">Name:</label>
-                                                <input type="text" class="form-control" value="@if (old('name')) {{ old('name') }}@else{{ $editData->name }} @endif" id="name" name="name" placeholder="Enter part item name">
+                                                <label for="part_number">Part Number:</label>
+                                                <input type="text" class="form-control" value="@if (old('part_number')) {{ old('part_number') }}@else{{ $editData->part_number }} @endif" id="part_number" name="part_number" placeholder="Enter part item name">
                                             </div>
-                                           
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <label for="description">Description:</label>
+                                                <input type="text" class="form-control" value="@if (old('description')) {{ old('description') }}@else{{ $editData->description }} @endif" id="description" name="description" placeholder="Enter part item name">
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <label for="extra_description">Extra Description:</label>
+                                                <input type="text" class="form-control" value="@if (old('extra_description')) {{ old('extra_description') }}@else{{ $editData->extra_description }} @endif" id="extra_description" name="extra_description" placeholder="Enter part extra description">
+                                            </div>
+                                          
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <div class="form-group">
+                                                    <label for="unit_id">Unit Name :</label> &nbsp;<span
+                                                        class="red-text">*</span>
+                                                    <select class="form-control mb-2"
+                                                        name="unit_id" id="unit_id">
+                                                        <option value="" default>Select
+                                                            Unit Name</option>
+                                                        @foreach ($dataOutputUnitMaster as $service)
+                                                            <option value="{{ $service['id'] }}"
+                                                                {{ old('unit_id', $editData->unit_id) == $service->id ? 'selected' : '' }}>
+                                                                {{ $service->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('unit_id'))
+                                                        <span
+                                                            class="red-text">{{ $errors->first('unit_id') }}</span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <div class="form-group">
+                                                    <label for="hsn_id">HSN Name:</label> &nbsp;<span
+                                                        class="red-text">*</span>
+                                                    <select class="form-control mb-2"
+                                                        name="hsn_id" id="hsn_id">
+                                                        <option value="" default>Select
+                                                            HSN Name</option>
+                                                        @foreach ($dataOutputHSNMaster as $hsn_data)
+                                                            <option value="{{ $hsn_data['id'] }}"
+                                                                {{ old('hsn_id', $editData->hsn_id) == $hsn_data->id ? 'selected' : '' }}>
+                                                                {{ $hsn_data->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('hsn_id'))
+                                                        <span
+                                                            class="red-text">{{ $errors->first('hsn_id') }}</span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <div class="form-group">
+                                                    <label for="group_type_id">Group Name:</label> &nbsp;<span
+                                                        class="red-text">*</span>
+                                                    <select class="form-control mb-2"
+                                                        name="group_type_id" id="group_type_id">
+                                                        <option value="" default>Select
+                                                            Group Name</option>
+                                                        @foreach ($dataOutputGroupMaster as $group_data)
+                                                            <option value="{{ $group_data['id'] }}"
+                                                                {{ old('group_type_id', $editData->group_type_id) == $group_data->id ? 'selected' : '' }}>
+                                                                {{ $group_data->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('group_type_id'))
+                                                        <span
+                                                            class="red-text">{{ $errors->first('group_type_id') }}</span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <label for="basic_rate">Basic Rate:</label>
+                                                <input type="text" class="form-control" value="@if (old('basic_rate')) {{ old('basic_rate') }}@else{{ $editData->basic_rate }} @endif" id="basic_rate" name="basic_rate" placeholder="Enter part item name">
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <label for="opening_stock">Open Stock:</label>
+                                                <input type="text" class="form-control" value="@if (old('opening_stock')) {{ old('opening_stock') }}@else{{ $editData->opening_stock }} @endif" id="opening_stock" name="opening_stock" placeholder="Enter open stock">
+                                            </div>
                                         </div>
 
-                                      
                                     <div class="login-btn-inner">
                                         <div class="row">
                                             <div class="col-lg-5"></div>
@@ -63,32 +145,79 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
-    <script>
-        $(document).ready(function() {
-            // Custom validation rule to check if the input does not contain only spaces
-            $.validator.addMethod("spcenotallow", function(value, element) {
-                return this.optional(element) || value.trim().length > 0;
-            }, "Enter some valid text");
-        
-            // Initialize the form validation
-            $("#regForm").validate({
-                rules: {
-                    name: {
-                        required: true,
-                        spcenotallow: true,
-                    },
-                    // You can add more fields here as needed
+
+<script>
+    $(document).ready(function() {
+        // Custom validation rule to check if the input does not contain only spaces
+        $.validator.addMethod("spcenotallow", function(value, element) {
+            return this.optional(element) || value.trim().length > 0;
+        }, "Enter some valid text");
+
+        // Initialize the form validation
+        $("#regForm").validate({
+            rules: {
+                part_number: {
+                    required: true,
+                    spcenotallow: true,  // Apply custom space check
                 },
-                messages: {
-                    name: {
-                        required: "Please enter the name.",
-                        spcenotallow: "Name cannot contain only spaces.",
-                    },
-                    // Custom error messages for other fields can go here
+                description: {
+                    required: true,
+                    spcenotallow: true,  // Apply custom space check
                 },
-            });
+                // extra_description: {
+                //     spcenotallow: true,  // Extra description is optional but cannot be only spaces
+                // },
+                unit_id: {
+                    required: true,
+                },
+                hsn_id: {
+                    required: true,
+                },
+                group_type_id: {
+                    required: true,
+                },
+                basic_rate: {
+                    required: true,
+                    number: true, // Ensure it's a valid number
+                },
+                opening_stock: {
+                    required: true,
+                    number: true,  // Ensure it's a valid number
+                }
+            },
+            messages: {
+                part_number: {
+                    required: "Please enter the part number.",
+                    spcenotallow: "Part number cannot contain only spaces.",
+                },
+                description: {
+                    required: "Please enter the description.",
+                    spcenotallow: "Description cannot contain only spaces.",
+                },
+                // extra_description: {
+                //     spcenotallow: "Extra description cannot contain only spaces.",
+                // },
+                unit_id: {
+                    required: "Please select a unit name.",
+                },
+                hsn_id: {
+                    required: "Please select an HSN name.",
+                },
+                group_type_id: {
+                    required: "Please select a group name.",
+                },
+                basic_rate: {
+                    required: "Please enter the basic rate.",
+                    number: "Please enter a valid number for the basic rate.",
+                },
+                opening_stock: {
+                    required: "Please enter the opening stock.",
+                    number: "Please enter a valid number for the opening stock.",
+                }
+            }
         });
-        </script>
-        
+    });
+</script>
+
 
 @endsection

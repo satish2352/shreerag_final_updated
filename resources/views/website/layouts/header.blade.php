@@ -131,5 +131,7 @@
         </div>
         <i class="fas fa-times close-search-modal" data-dismiss="modal" aria-label="Close"></i>
     </div>
+
+    
     <!-- The search Modal end -->
     <!-- Header end -->

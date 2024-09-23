@@ -72,18 +72,6 @@ class ProductionController extends Controller
             return $e;
         }
     }
-    
-    // public function editProduct($id) {
-    //     try {
-    //         $editData = $this->service->editProduct($id);
-          
-    //         $dataOutputPartItem = PartItem::where('is_active', true)->get();
-    //         return view('organizations.productions.product.edit-recived-bussinesswise', compact('editData', 'dataOutputPartItem'));
-    //     } catch (\Exception $e) {
-    //         return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
-    //     }
-    // }
-
     public function editProduct($id) {
         try {
             $editData = $this->service->editProduct($id);
@@ -102,22 +90,9 @@ class ProductionController extends Controller
     
     public function updateProductMaterial(Request $request) {
         $rules = [
-            // 'business_details_id' => 'required|exists:business_details,id',
-            // 'addmore.*.part_no_id' => 'required|exists:parts,id',
-            // 'addmore.*.quantity' => 'required|numeric|min:1',
-            // 'addmore.*.unit' => 'required|string',
         ];
     
         $messages = [
-            // 'business_details_id.required' => 'The business details ID is required.',
-            // 'business_details_id.exists' => 'The business details ID does not exist.',
-            // 'addmore.*.part_no_id.required' => 'Each item must have a part number.',
-            // 'addmore.*.part_no_id.exists' => 'The part number does not exist.',
-            // 'addmore.*.quantity.required' => 'Each item must have a quantity.',
-            // 'addmore.*.quantity.numeric' => 'The quantity must be a number.',
-            // 'addmore.*.quantity.min' => 'The quantity must be at least 1.',
-            // 'addmore.*.unit.required' => 'Each item must have a unit.',
-            // 'addmore.*.unit.string' => 'The unit must be a string.',
         ];
     
         $validation = Validator::make($request->all(), $rules, $messages);

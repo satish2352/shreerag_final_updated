@@ -15,7 +15,7 @@
         <div class="sparkline12-list">
             <div class="sparkline12-hd">
                 <div class="main-sparkline12-hd">
-                    <center><h1>Received Product Production material Data</h1></center>
+                    <center><h1>Issue Material for Product</h1></center>
                 </div>
             </div>
             <div class="sparkline12-graph">
@@ -48,7 +48,7 @@
                              <form action="{{ route('update-recived-inprocess-production-material', $id) }}" method="POST" id="addProductForm" enctype="multipart/form-data">
                                 @csrf
                                 <input type="hidden" name="business_details_id" id="business_details_id" value="{{ $id }}">
-                                
+                                <input type="hidden" name="part_item_id" id="part_item_id" value="{{ $id }}">
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                         <label for="product_name">Name:</label>
@@ -77,7 +77,7 @@
                                                 </th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        {{-- <tbody>
                                             @foreach ($dataGroupedById as $key => $items)
                                                 @foreach ($items as $index => $item)
                                                     <tr>
@@ -89,7 +89,7 @@
                                                                 <option value="">Select Part Item</option>
                                                                 @foreach ($dataOutputPartItem as $partItem)
                                                                     <option value="{{ $partItem->id }}" {{ $partItem->id == $item->part_item_id ? 'selected' : '' }}>
-                                                                        {{ $partItem->name }}
+                                                                        {{ $partItem->description }}
                                                                     </option>
                                                                 @endforeach
                                                             </select>
@@ -112,7 +112,43 @@
                                                     </tr>
                                                 @endforeach
                                             @endforeach
+                                        </tbody> --}}
+                                        <tbody>
+                                            @foreach ($dataGroupedById as $key => $items)
+                                                @foreach ($items as $index => $item)
+                                                    <tr>
+                                                        <td>
+                                                            {{ $loop->iteration }}
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-control part-no" name="addmore[{{ $index }}][part_no_id]">
+                                                                <option value="">Select Part Item</option>
+                                                                @foreach ($dataOutputPartItem as $partItem)
+                                                                    <option value="{{ $partItem->id }}" {{ $partItem->id == $item->part_item_id ? 'selected' : '' }}>
+                                                                        {{ $partItem->description }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control quantity" name="addmore[{{ $index }}][quantity]" type="text" value="{{ $item->quantity }}">
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control unit" name="addmore[{{ $index }}][unit]" type="text" value="{{ $item->unit }}">
+                                                        </td>
+                                                        <td>
+                                                            <input type="checkbox" name="addmore[{{ $index }}][material_send_production]" value="1" {{ $item->material_send_production ? 'checked' : '' }}>
+                                                        </td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-sm btn-danger remove-row">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endforeach
                                         </tbody>
+                                        
                                     </table>
                                 </div>
                                 
@@ -153,7 +189,7 @@ $("#add_more_btn").click(function() {
                 <select class="form-control part-no mb-2" name="addmore[${i}][part_no_id]">
                     <option value="">Select Part Item</option>
                     @foreach ($dataOutputPartItem as $data)
-                        <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                        <option value="{{ $data['id'] }}">{{ $data['description'] }}</option>
                     @endforeach
                 </select>
             </td>
@@ -179,6 +215,19 @@ $("#add_more_btn").click(function() {
     // Attach validation to the new row
     initializeValidation(row);
     validator.resetForm(); // Reset validation state after adding a new row
+
+
+    $(document).on('click', '.remove-row', function() {
+    $(this).closest('tr').remove();
+    updateSerialNumbers(); // This function should update the serial numbers dynamically after deletion
+});
+
+function updateSerialNumbers() {
+    $('#purchase_order_table tbody tr').each(function(index, row) {
+        $(row).find('td:first').text(index + 1); // Updates the serial number
+    });
+}
+
 });
 
 </script>

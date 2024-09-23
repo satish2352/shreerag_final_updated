@@ -27,8 +27,12 @@ class StoreController extends Controller
     public function orderAcceptedAndMaterialForwareded($id)
     {
         try {
-            $acceptdesign = base64_decode($id);
+            $acceptdesign = $id;
+            // dd($acceptdesign);
+            // die();
             $update_data = $this->service->orderAcceptedAndMaterialForwareded($acceptdesign);
+            //  dd($update_data);
+            // die();
             return redirect('storedept/list-accepted-design-from-prod');
         } catch (\Exception $e) {
             return $e;
@@ -39,6 +43,8 @@ class StoreController extends Controller
     public function createRequesition($createRequesition)
     {
         try {
+            // dd($createRequesition);
+            // die();
             return view('organizations.store.requistion.add-requistion', compact('createRequesition'));
         } catch (\Exception $e) {
             return $e;
@@ -127,6 +133,51 @@ class StoreController extends Controller
     //         return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
     //     }
     // }
+    public function editProductMaterialWiseAdd($id) {
+        try {
+            // dd($id);
+            // die();
+            $editData = $this->service->editProductMaterialWiseAdd($id);
+        //   dd($editData);
+        //   die();
+            $dataOutputPartItem = PartItem::where('is_active', true)->get();
+            
+            return view('organizations.store.list.edit-material-bom-wise-add', [
+                'productDetails' => $editData['productDetails'],
+                'dataGroupedById' => $editData['dataGroupedById'],
+                'dataOutputPartItem' => $dataOutputPartItem,
+                'id' => $id
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+        }
+    }
+    public function updateProductMaterialWiseAdd(Request $request) {
+        $rules = [
+        ];
+        
+        $messages = [
+        ];
+        
+        $validation = Validator::make($request->all(), $rules, $messages);
+        
+        if ($validation->fails()) {
+            return redirect()->back()->withInput()->withErrors($validation);
+        }
+    
+        try {
+            $updateData = $this->service->updateProductMaterialWiseAdd($request);
+    
+            if ($updateData['status'] == 'success') {
+                return redirect('storedept/list-product-inprocess-received-from-production')->with(['status' => 'success', 'msg' => $updateData['message']]);
+            } else {
+                return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $updateData['message']]);
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+        }
+    }
+    
     public function editProduct($id) {
         try {
             $editData = $this->service->editProduct($id);

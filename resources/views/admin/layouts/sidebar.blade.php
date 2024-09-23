@@ -234,11 +234,6 @@
                                     class="fa big-icon fa-receipt icon-wrap"></i> <span
                                     class="mini-click-non">Tax</span></a>
                         </li>
-                        <li class="nav-item {{ request()->is('purchase/list-part-item') ? 'active' : '' }}">
-                            <a class="" href="{{ route('list-part-item') }}" aria-expanded="false"><i
-                                    class="fa big-icon fa-cogs icon-wrap"></i> <span
-                                    class="mini-click-non">Part Item</span></a>
-                        </li>
                         <li class="{{ Request::is('list-approved-purchase-orders') ? 'active' : '' }}">
                             <a class="has-arrow" href="{{ route('list-approved-purchase-orders') }}"
                                 aria-expanded="false"><i class="fa big-icon fa-file-signature icon-wrap"></i> <span
@@ -388,6 +383,8 @@
                         <li><a class="nav-item" href="{{ route('list-gatepass') }}" aria-expanded="false"><i
                                 class="fa big-icon fa-id-badge icon-wrap"></i> <span class="mini-click-non">List Gate
                                 Pass</span></a></li>
+                                <li><a class="nav-item" href="{{ route('list-gatepass') }}" aria-expanded="false"><i
+                                    class="fa big-icon fa-id-badge icon-wrap"></i> <span class="mini-click-non">Closed PO List</span></a></li>
                         {{-- <ul class="submenu-angle" aria-expanded="false">
                             <li><a  href="{{ route('list-gatepass') }}"><i
                                         class="fa big-icon fa-clipboard-list icon-wrap" aria-hidden="true"></i> <span
@@ -477,6 +474,51 @@
                                 <li><a  href="{{ route('list-rejected-chalan') }}"><i
                                             class="fa big-icon fa-list icon-wrap" aria-hidden="true"></i> <span
                                             class="mini-click-non">List Rejected Chalan</span></a></li>
+                            </ul>
+                        </li>
+
+
+                        <li>
+                            <a class="has-arrow" href="{{ route('list-unit') }}" aria-expanded="false"><i
+                                    class="fa big-icon fa-ban  icon-wrap"></i> <span class="mini-click-non">Master
+                                    </span></a>
+                            <ul class="submenu-angle" aria-expanded="false">
+                                <li><a  href="{{ route('list-unit') }}"><i
+                                            class="fa big-icon fa-list icon-wrap" aria-hidden="true"></i> <span
+                                            class="mini-click-non">List Unit</span></a></li>
+                                <li><a  href="{{ route('list-hsn') }}"><i
+                                    class="fa big-icon fa-list icon-wrap" aria-hidden="true"></i> <span
+                                    class="mini-click-non">List HSN</span></a></li>
+                                    <li><a  href="{{ route('list-group') }}"><i
+                                        class="fa big-icon fa-list icon-wrap" aria-hidden="true"></i> <span
+                                        class="mini-click-non">List Group</span></a></li>
+                                        <li><a  href="{{ route('list-rack') }}"><i
+                                            class="fa big-icon fa-list icon-wrap" aria-hidden="true"></i> <span
+                                            class="mini-click-non">List Rack</span></a></li>
+                                            <li><a  href="{{ route('list-process') }}"><i
+                                                class="fa big-icon fa-list icon-wrap" aria-hidden="true"></i> <span
+                                                class="mini-click-non">List Process</span></a></li>
+                                                <li><a  href="{{ route('list-accessories') }}"><i
+                                                    class="fa big-icon fa-list icon-wrap" aria-hidden="true"></i> <span
+                                                    class="mini-click-non">List Accessories</span></a></li>
+                                                    <li class="nav-item {{ request()->is('purchase/list-part-item') ? 'active' : '' }}">
+                                                        <a class="" href="{{ route('list-part-item') }}" aria-expanded="false"><i
+                                                                class="fa big-icon fa-cogs icon-wrap"></i> <span
+                                                                class="mini-click-non">Part Item</span></a>
+                                                    </li>
+                                        
+                            </ul>
+                        </li>
+                        <li>
+                            <a class="has-arrow" href="{{ route('list-inventory-material') }}" aria-expanded="false"><i
+                                    class="fa big-icon fa-ban  icon-wrap"></i> <span class="mini-click-non">Inventory
+                                    </span></a>
+                            <ul class="submenu-angle" aria-expanded="false">
+                                <li><a  href="{{ route('list-inventory-material') }}"><i
+                                            class="fa big-icon fa-list icon-wrap" aria-hidden="true"></i> <span
+                                            class="mini-click-non">Material List</span></a></li>
+                               
+                                        
                             </ul>
                         </li>
                     @endif

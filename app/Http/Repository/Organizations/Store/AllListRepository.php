@@ -105,6 +105,9 @@ class AllListRepository  {
           ->leftJoin('designs', function($join) {
             $join->on('production.business_details_id', '=', 'designs.business_details_id');
         })
+        ->leftJoin('production_details', function($join) {
+          $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
+      })
             ->leftJoin('design_revision_for_prod', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
             })
@@ -133,6 +136,7 @@ class AllListRepository  {
             'designs.design_image',
             'design_revision_for_prod.bom_image',
             'design_revision_for_prod.design_image',
+            'production_details.material_send_production',
             'production.updated_at'
             )
 
@@ -152,6 +156,7 @@ class AllListRepository  {
                 'designs.design_image',
                 'design_revision_for_prod.bom_image',
               'design_revision_for_prod.design_image',
+              'production_details.material_send_production',
                 'production.updated_at'
                 )
                 ->orderBy('production.updated_at', 'desc')

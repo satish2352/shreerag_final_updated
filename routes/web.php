@@ -381,11 +381,63 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/add-rejected-chalan/{purchase_orders_id}', ['as' => 'add-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\RejectedChalanController@add']);
         Route::post('/store-rejected-chalan', ['as' => 'store-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\RejectedChalanController@store']);
    
+        Route::get('/edit-material-list-bom-wise/{id}', ['as' => 'edit-material-list-bom-wise', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@editProductMaterialWiseAdd']);
+        Route::post('/update-material-list-bom-wise/{id}', ['as' => 'update-material-list-bom-wise', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@updateProductMaterialWiseAdd']);
+
         Route::get('/list-product-inprocess-received-from-production', ['as' => 'list-product-inprocess-received-from-production', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllInprocessProductProduction']);
         Route::get('/edit-recived-inprocess-production-material/{id}', ['as' => 'edit-recived-inprocess-production-material', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@editProduct']);
         Route::post('/update-recived-inprocess-production-material/{id}', ['as' => 'update-recived-inprocess-production-material', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@updateProductMaterial']);
    
+        Route::any('/list-unit', ['as' => 'list-unit', 'uses' => 'App\Http\Controllers\Organizations\Master\UnitController@index']);
+        Route::any('/add-unit', ['as' => 'add-unit', 'uses' => 'App\Http\Controllers\Organizations\Master\UnitController@add']);
+        Route::any('/store-unit', ['as' => 'store-unit', 'uses' => 'App\Http\Controllers\Organizations\Master\UnitController@store']);
+        Route::any('/edit-unit/{id}', ['as' => 'edit-unit', 'uses' => 'App\Http\Controllers\Organizations\Master\UnitController@edit']);
+        Route::any('/update-unit', ['as' => 'update-unit', 'uses' => 'App\Http\Controllers\Organizations\Master\UnitController@update']);
+        Route::any('/delete-unit/{id}', ['as' => 'delete-unit', 'uses' => 'App\Http\Controllers\Organizations\Master\UnitController@destroy']);
+
+        Route::any('/list-hsn', ['as' => 'list-hsn', 'uses' => 'App\Http\Controllers\Organizations\Master\HSNController@index']);
+        Route::any('/add-hsn', ['as' => 'add-hsn', 'uses' => 'App\Http\Controllers\Organizations\Master\HSNController@add']);
+        Route::any('/store-hsn', ['as' => 'store-hsn', 'uses' => 'App\Http\Controllers\Organizations\Master\HSNController@store']);
+        Route::any('/edit-hsn/{id}', ['as' => 'edit-hsn', 'uses' => 'App\Http\Controllers\Organizations\Master\HSNController@edit']);
+        Route::any('/update-hsn', ['as' => 'update-hsn', 'uses' => 'App\Http\Controllers\Organizations\Master\HSNController@update']);
+        Route::any('/delete-hsn/{id}', ['as' => 'delete-hsn', 'uses' => 'App\Http\Controllers\Organizations\Master\HSNController@destroy']);
+
+        Route::any('/list-group', ['as' => 'list-group', 'uses' => 'App\Http\Controllers\Organizations\Master\GroupController@index']);
+        Route::any('/add-group', ['as' => 'add-group', 'uses' => 'App\Http\Controllers\Organizations\Master\GroupController@add']);
+        Route::any('/store-group', ['as' => 'store-group', 'uses' => 'App\Http\Controllers\Organizations\Master\GroupController@store']);
+        Route::any('/edit-group/{id}', ['as' => 'edit-group', 'uses' => 'App\Http\Controllers\Organizations\Master\GroupController@edit']);
+        Route::any('/update-group', ['as' => 'update-group', 'uses' => 'App\Http\Controllers\Organizations\Master\GroupController@update']);
+        Route::any('/delete-group/{id}', ['as' => 'delete-group', 'uses' => 'App\Http\Controllers\Organizations\Master\GroupController@destroy']);
+
+        Route::any('/list-rack', ['as' => 'list-rack', 'uses' => 'App\Http\Controllers\Organizations\Master\RackController@index']);
+        Route::any('/add-rack', ['as' => 'add-rack', 'uses' => 'App\Http\Controllers\Organizations\Master\RackController@add']);
+        Route::any('/store-rack', ['as' => 'store-rack', 'uses' => 'App\Http\Controllers\Organizations\Master\RackController@store']);
+        Route::any('/edit-rack/{id}', ['as' => 'edit-rack', 'uses' => 'App\Http\Controllers\Organizations\Master\RackController@edit']);
+        Route::any('/update-rack', ['as' => 'update-rack', 'uses' => 'App\Http\Controllers\Organizations\Master\RackController@update']);
+        Route::any('/delete-rack/{id}', ['as' => 'delete-rack', 'uses' => 'App\Http\Controllers\Organizations\Master\RackController@destroy']);
+        
+        Route::any('/list-process', ['as' => 'list-process', 'uses' => 'App\Http\Controllers\Organizations\Master\ProcessController@index']);
+        Route::any('/add-process', ['as' => 'add-process', 'uses' => 'App\Http\Controllers\Organizations\Master\ProcessController@add']);
+        Route::any('/store-process', ['as' => 'store-process', 'uses' => 'App\Http\Controllers\Organizations\Master\ProcessController@store']);
+        Route::any('/edit-process/{id}', ['as' => 'edit-process', 'uses' => 'App\Http\Controllers\Organizations\Master\ProcessController@edit']);
+        Route::any('/update-process', ['as' => 'update-process', 'uses' => 'App\Http\Controllers\Organizations\Master\ProcessController@update']);
+        Route::any('/delete-process/{id}', ['as' => 'delete-process', 'uses' => 'App\Http\Controllers\Organizations\Master\ProcessController@destroy']);
+
+        Route::any('/list-accessories', ['as' => 'list-accessories', 'uses' => 'App\Http\Controllers\Organizations\Master\AccessoriesController@index']);
+        Route::any('/add-accessories', ['as' => 'add-accessories', 'uses' => 'App\Http\Controllers\Organizations\Master\AccessoriesController@add']);
+        Route::any('/store-accessories', ['as' => 'store-accessories', 'uses' => 'App\Http\Controllers\Organizations\Master\AccessoriesController@store']);
+        Route::any('/edit-accessories/{id}', ['as' => 'edit-accessories', 'uses' => 'App\Http\Controllers\Organizations\Master\AccessoriesController@edit']);
+        Route::any('/update-accessories', ['as' => 'update-accessories', 'uses' => 'App\Http\Controllers\Organizations\Master\AccessoriesController@update']);
+        Route::any('/delete-accessories/{id}', ['as' => 'delete-accessories', 'uses' => 'App\Http\Controllers\Organizations\Master\AccessoriesController@destroy']);
+        
+        Route::any('/list-inventory-material', ['as' => 'list-inventory-material', 'uses' => 'App\Http\Controllers\Organizations\Inventory\InventoryController@getMaterialList']);
+        Route::any('/add-product-stock', ['as' => 'add-product-stock', 'uses' => 'App\Http\Controllers\Organizations\Inventory\InventoryController@add']);
+        Route::any('/store-product-stock', ['as' => 'store-product-stock', 'uses' => 'App\Http\Controllers\Organizations\Inventory\InventoryController@store']);
+        Route::any('/edit-product-stock/{id}', ['as' => 'edit-product-stock', 'uses' => 'App\Http\Controllers\Organizations\Inventory\InventoryController@edit']);
+        Route::any('/update-product-stock', ['as' => 'update-product-stock', 'uses' => 'App\Http\Controllers\Organizations\Inventory\InventoryController@update']);
+
     });
+
     
     Route::group(['prefix' => 'financedept'], function () {
     

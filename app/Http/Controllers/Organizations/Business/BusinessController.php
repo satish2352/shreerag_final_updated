@@ -225,6 +225,7 @@ class BusinessController extends Controller
             $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
             // $business_id = $data['purchaseOrder']->business_id;
             $business_id = $data['purchaseOrder']->business_id;
+          
             $purchaseOrder = $data['purchaseOrder'];
             $purchaseOrderDetails = $data['purchaseOrderDetails'];
 

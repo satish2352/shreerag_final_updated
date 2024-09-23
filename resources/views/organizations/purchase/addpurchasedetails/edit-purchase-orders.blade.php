@@ -127,11 +127,11 @@
                                                                         <select class="form-control mb-2"
                                                                             name="tax_id" id="tax_id">
                                                                             <option value="" default>Select
-                                                                                Tax</option>
+                                                                                Item Part</option>
                                                                             @foreach ($dataOutputTax as $taxData)
                                                                                 <option value="{{ $taxData['id'] }}"
                                                                                     {{ old('tax_id', $editDataNew->tax_id) == $taxData->id ? 'selected' : '' }}>
-                                                                                    {{ $taxData->name }}
+                                                                                    {{ $taxData->description }}
                                                                                 </option>
                                                                             @endforeach
                                                                         </select>
@@ -472,9 +472,9 @@
                     '][purchase_id]" class="form-control" value="' + i + '" placeholder="">' +
                     '<td>' +
             '<select class="form-control part_no_id mb-2" name="addmore[' + i + '][part_no_id]" id="">' +
-                '<option value="" default>Tax</option>' +
+                '<option value="" default>Select Part Item</option>' +
                 '@foreach ($dataOutputPartItem as $data)' +
-                    '<option value="{{ $data['id'] }}">{{ $data['name'] }}</option>' +
+                    '<option value="{{ $data['id'] }}">{{ $data['description'] }}</option>' +
                 '@endforeach' +
             '</select>' +
             '</td>' +

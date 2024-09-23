@@ -37,7 +37,7 @@ class TaxController extends Controller
 
       public function store(Request $request){
          $rules = [
-                    'name' => 'required|string|max:255',
+                    'name' => 'required|unique:tbl_unit|string|max:255',
                     
                 ];
 
@@ -45,6 +45,7 @@ class TaxController extends Controller
                     'name.required' => 'Please enter the department name.',
                     'name.string' => 'The company name must be a valid string.',
                     'name.max' => 'The company name must not exceed 255 characters.',
+                    'name.unique' => 'unit already exist.',
                 ];
   
           try {

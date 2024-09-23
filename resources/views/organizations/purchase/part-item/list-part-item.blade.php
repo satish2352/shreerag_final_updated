@@ -78,7 +78,14 @@ padding-left: 20px !important;
                                     <thead>
                                         <tr>
                                              <th data-field="id">Sr.No.</th>
-                                            <th data-field="name" data-editable="true">Name</th>
+                                            <th data-field="part_number" data-editable="true">Part Number</th>
+                                            <th data-field="description" data-editable="true">Description</th>
+                                            <th data-field="extra_description" data-editable="true">Extra Description</th>
+                                            <th data-field="unit_id" data-editable="true">Unit Name</th>
+                                            <th data-field="hsn_id" data-editable="true">HSN Name</th>
+                                            <th data-field="group_type_id" data-editable="true">Group Name</th>
+                                            <th data-field="basic_rate" data-editable="true">Basic Rate</th>
+                                            <th data-field="opening_stock" data-editable="true">Open Stock</th>
                                             <th data-field="action">Action</th>
                                         </tr>
                                     </thead>
@@ -86,7 +93,15 @@ padding-left: 20px !important;
                                         @foreach($getOutput as $data)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
+                                            <td>{{ucwords($data->part_number)}}</td>
+                                            <td>{{ucwords($data->description)}}</td>
+                                            <td>{{ucwords($data->extra_description)}}</td>
                                             <td>{{ucwords($data->name)}}</td>
+                                            <td>{{ucwords($data->hsn_name)}}</td>
+                                            <td>{{ucwords($data->group_name)}}</td>
+                                            <td>{{ucwords($data->basic_rate)}}</td>
+                                            <td>{{ucwords($data->opening_stock)}}</td>
+                                          
                                             <td>
                                                 <div style="display: flex; align-items: center;">
                                                     <a href="{{route('edit-part-item', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>

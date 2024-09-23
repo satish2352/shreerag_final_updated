@@ -107,7 +107,7 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->getAllListMaterialRecievedToProductionBusinessWise($id);
-          
+         
             return $data_output;
 
         } catch (\Exception $e) {

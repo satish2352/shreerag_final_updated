@@ -22,6 +22,19 @@
             font-size: 14px;
             text-align: left;
         }
+         /* Style for disabled buttons */
+    .disabled-btn {
+        background-color: #ccc;  /* Light gray background */
+        color: #666;             /* Darker gray text */
+        cursor: not-allowed;     /* Show not-allowed cursor */
+        opacity: 0.7;            /* Slightly transparent */
+    }
+
+    /* Style for enabled buttons */
+    .enabled-btn {
+        background-color: #28a745; /* Green background */
+        color: black;              /* White text */
+    }
     </style>
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
@@ -95,6 +108,10 @@
                                         // die(); 
                                         ?>
                                         <tbody>
+                                            <?php
+                                            // dd($data_output);
+                                            // die();
+                                            ?>
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     
@@ -112,10 +129,20 @@
                                                 </td>
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
-                                                            <a
-                                                                href="{{ route('accepted-and-material-sent', base64_encode($data->productionId)) }} "><button
+                                                            <div style="display: inline-block; align-items: center;">
+                                                                <a href="{{route('edit-material-list-bom-wise',base64_encode($data->business_details_id))}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>Edit Product Material</button></a>
+                                                            </div>
+                                                            @if($data->material_send_production == 1)
+                                                            <a href="{{ route('accepted-and-material-sent', base64_encode($data->business_details_id)) }}">
+                                                                <button class="pd-setting-ed enabled-btn" title="Requirement forwarded for production">Requirement forwarded For production</button>
+                                                            </a>
+                                                        @else
+                                                        <button class="pd-setting-ed disabled-btn" title="Requirement forwarded for production" disabled>Requirement forwarded For production</button>  
+                                                        @endif
+                                                            {{-- <a
+                                                                href="{{ route('accepted-and-material-sent', base64_encode($data->business_details_id)) }} "><button
                                                                     data-toggle="tooltip" title="Requirement forwareded For production"
-                                                                    class="pd-setting-ed">Requirement forwareded For production</button></a>
+                                                                    class="pd-setting-ed">Requirement forwareded For production</button></a> --}}
 
                                                             {{-- <a
                                                                 href="{{ route('need-to-create-req', base64_encode($data->productionId)) }} "><button

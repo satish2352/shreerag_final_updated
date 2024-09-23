@@ -269,7 +269,8 @@ class BusinessRepository
     try {
         // Debugging: Log the request data
         \Log::info('Request Data:', $request->all());
-
+// dd($request);
+// die();
         // Update existing design details
         for ($i = 0; $i <= $request->design_count; $i++) {
             $designId = $request->input("design_id_" . $i);
@@ -307,7 +308,8 @@ class BusinessRepository
         if (isset($request['customer_terms_condition'])) {
             $dataOutput->customer_terms_condition = $request['customer_terms_condition'];
         }
-
+// dd($dataOutput);
+// die();
         $dataOutput->save();
 
         // Add new design details

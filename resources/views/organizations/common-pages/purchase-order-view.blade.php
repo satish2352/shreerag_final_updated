@@ -130,7 +130,7 @@
                                     @foreach ($purchaseOrderDetails as $index => $item)
                                     <tr>
                                         <td style="border: 1px solid black; padding: 5px; text-align: center;">{{ $index + 1 }}</td>
-                                        <td style="border: 1px solid black; padding: 5px;">{{ $item->name }}</td>
+                                        <td style="border: 1px solid black; padding: 5px;">{{ $item->item_description }}</td>
                                         <td style="border: 1px solid black; padding: 5px; max-width: 150px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-all;">
                                             {{ $item->description }}</td>
                                         <td style="border: 1px solid black; padding: 5px; text-align: center;">{{ $item->due_date }}</td>

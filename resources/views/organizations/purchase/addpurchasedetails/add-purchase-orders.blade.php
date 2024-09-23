@@ -126,7 +126,7 @@
                                                 <option value="" default>Select Part Item</option>
                                                 @foreach ($dataOutputPartItem as $data)
                                                         <option value="{{ $data['id'] }}" >
-                                                            {{ $data['name'] }}</option>
+                                                            {{ $data['description'] }}</option>
                                                 @endforeach
                                             </select>
                                         
@@ -411,10 +411,10 @@
                     </td>
                     <td>
                          <select class="form-control part-no mb-2" name="addmore[${i}][part_no_id]" id="">
-                                                <option value="" default>Tax</option>
+                                                <option value="" default>Select Part Item</option>
                                                 @foreach ($dataOutputPartItem as $data)
                                                         <option value="{{ $data['id'] }}" >
-                                                            {{ $data['name'] }}</option>
+                                                            {{ $data['description'] }}</option>
                                                 @endforeach
                                             </select>
                        

@@ -23,6 +23,8 @@ class ItemServices
     public function addAll($request){
       try {
           $last_id = $this->repo->addAll($request);
+          dd($last_id);
+          die();
           if ($last_id) {
               return ['status' => 'success', 'msg' => 'Data Added Successfully.'];
           } else {

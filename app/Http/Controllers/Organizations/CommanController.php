@@ -124,7 +124,7 @@ class CommanController
                 ->select(
                     'purchase_order_details.purchase_id',
                     'purchase_order_details.part_no_id',
-                    'tbl_part_item.name',
+                    'tbl_part_item.description as item_description',
                     'purchase_order_details.description',
                     'purchase_order_details.due_date',
                     'purchase_order_details.quantity',

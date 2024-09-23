@@ -9,7 +9,13 @@ use Session;
 use Validator;
 use Config;
 use Carbon;
-use App\Models\OrganizationModel;
+use App\Models\ {
+    UnitMaster,
+    HSNMaster,
+    GroupMaster,
+    OrganizationModel
+
+};
 use Illuminate\Validation\Rule;
 class ItemController extends Controller
 { 
@@ -30,33 +36,54 @@ class ItemController extends Controller
 
 
     public function add(){
-        return view('organizations.purchase.part-item.add-part-item');
+        $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
+        $dataOutputHSNMaster = HSNMaster::where('is_active', true)->get();
+        $dataOutputGroupMaster = GroupMaster::where('is_active', true)->get();
+        return view('organizations.purchase.part-item.add-part-item', compact(
+            'dataOutputUnitMaster', 'dataOutputHSNMaster', 'dataOutputGroupMaster'
+        ));
     }
 
 
 
 
       public function store(Request $request){
-         $rules = [
-                    'name' => 'required|max:255',
-                    
-                ];
-
-                $messages = [
-                    'name.required' => 'Please enter the department name.',
-                    // 'name.unique' => 'Part Name already exist.',
-                    'name.max' => 'The name must not exceed 255 characters.',
-                ];
+        $rules = [
+            'part_number' => 'required|max:255',
+            'description' => 'required|unique:tbl_part_item|max:255',
+            'unit_id' => 'required',
+            'hsn_id' => 'required',
+            'group_type_id' => 'required',
+            'basic_rate' => 'required|numeric|min:0',
+            'opening_stock' => 'required|numeric|min:0',
+        ];
+    
+        $messages = [
+            'part_number.required' => 'Please enter the part number.',
+            'description.required' => 'Please enter a description.',
+            'description.unique' => 'This description already exists.',
+            'description.max' => 'This description  max 255.',
+            'unit_id.required' => 'Please select a unit.',
+            'hsn_id.required' => 'Please select an HSN.',
+            'group_type_id.required' => 'Please select a group type.',
+            'basic_rate.required' => 'Please enter the basic rate.',
+            'basic_rate.numeric' => 'The basic rate must be a number.',
+            'basic_rate.min' => 'The basic rate cannot be negative.',
+            'opening_stock.required' => 'Please enter the opening stock.',
+            'opening_stock.numeric' => 'The opening stock must be a number.',
+            'opening_stock.min' => 'The opening stock cannot be negative.',
+        ];
   
           try {
               $validation = Validator::make($request->all(), $rules, $messages);
-              
+          
               if ($validation->fails()) {
-                  return redirect('add-part-item')
+                  return redirect('purchase/add-part-item')
                       ->withInput()
                       ->withErrors($validation);
               } else {
                   $add_record = $this->service->addAll($request);
+                 
                   if ($add_record) {
                       $msg = $add_record['msg'];
                       $status = $add_record['status'];
@@ -80,24 +107,44 @@ class ItemController extends Controller
     $edit_data_id = base64_decode($request->id);
     $editData = $this->service->getById($edit_data_id);
     $data=OrganizationModel::orderby('updated_at','desc')->get();
-    return view('organizations.purchase.part-item.edit-part-item', compact('editData','data'));
+    $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
+    $dataOutputHSNMaster = HSNMaster::where('is_active', true)->get();
+    // dd($dataOutputHSNMaster);
+    // die();
+    $dataOutputGroupMaster = GroupMaster::where('is_active', true)->get();
+    return view('organizations.purchase.part-item.edit-part-item', compact('editData','data', 'dataOutputUnitMaster', 'dataOutputHSNMaster', 'dataOutputGroupMaster'));
 }
 
 
         public function update(Request $request){
             $id = $request->edit_id;
+
             $rules = [
-                    // 'name' => ['required', 'max:255', Rule::unique('tbl_part_item', 'name')->ignore($id, 'id')],
-                ];
-    
-                     
+                'part_number' => 'required|max:255',
+                'description' => ['required', 'max:255', Rule::unique('tbl_part_item', 'description')->ignore($id, 'id')],
+                // 'description' => 'required|unique:tbl_part_item|max:255',
+                'unit_id' => 'required',
+                'hsn_id' => 'required',
+                'group_type_id' => 'required',
+                'basic_rate' => 'required|numeric|min:0',
+                'opening_stock' => 'required|numeric|min:0',
+            ];
+        
             $messages = [
-                    // 'name.required' => 'Please enter the department name.',
-                    // 'name.string' => 'The company name must be a valid string.',
-                    // 'name.max' => 'The company name must not exceed 255 characters.',
-                    // 'name.unique' => 'Part Name Already Exist.',
-                ];
-    
+                'part_number.required' => 'Please enter the part number.',
+                'description.required' => 'Please enter a description.',
+                'description.unique' => 'This description already exists.',
+                'description.max' => 'This description  max 255.',
+                'unit_id.required' => 'Please select a unit.',
+                'hsn_id.required' => 'Please select an HSN.',
+                'group_type_id.required' => 'Please select a group type.',
+                'basic_rate.required' => 'Please enter the basic rate.',
+                'basic_rate.numeric' => 'The basic rate must be a number.',
+                'basic_rate.min' => 'The basic rate cannot be negative.',
+                'opening_stock.required' => 'Please enter the opening stock.',
+                'opening_stock.numeric' => 'The opening stock must be a number.',
+                'opening_stock.min' => 'The opening stock cannot be negative.',
+            ];
             try {
                 $validation = Validator::make($request->all(),$rules, $messages);
                 if ($validation->fails()) {
