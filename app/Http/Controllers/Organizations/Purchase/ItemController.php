@@ -120,30 +120,30 @@ class ItemController extends Controller
             $id = $request->edit_id;
 
             $rules = [
-                'part_number' => 'required|max:255',
-                'description' => ['required', 'max:255', Rule::unique('tbl_part_item', 'description')->ignore($id, 'id')],
-                // 'description' => 'required|unique:tbl_part_item|max:255',
-                'unit_id' => 'required',
-                'hsn_id' => 'required',
-                'group_type_id' => 'required',
-                'basic_rate' => 'required|numeric|min:0',
-                'opening_stock' => 'required|numeric|min:0',
+                // 'part_number' => 'required|max:255',
+                // 'description' => ['required', 'max:255', Rule::unique('tbl_part_item', 'description')->ignore($id, 'id')],
+                // // 'description' => 'required|unique:tbl_part_item|max:255',
+                // 'unit_id' => 'required',
+                // 'hsn_id' => 'required',
+                // 'group_type_id' => 'required',
+                // 'basic_rate' => 'required|numeric|min:0',
+                // 'opening_stock' => 'required|numeric|min:0',
             ];
         
             $messages = [
-                'part_number.required' => 'Please enter the part number.',
-                'description.required' => 'Please enter a description.',
-                'description.unique' => 'This description already exists.',
-                'description.max' => 'This description  max 255.',
-                'unit_id.required' => 'Please select a unit.',
-                'hsn_id.required' => 'Please select an HSN.',
-                'group_type_id.required' => 'Please select a group type.',
-                'basic_rate.required' => 'Please enter the basic rate.',
-                'basic_rate.numeric' => 'The basic rate must be a number.',
-                'basic_rate.min' => 'The basic rate cannot be negative.',
-                'opening_stock.required' => 'Please enter the opening stock.',
-                'opening_stock.numeric' => 'The opening stock must be a number.',
-                'opening_stock.min' => 'The opening stock cannot be negative.',
+                // 'part_number.required' => 'Please enter the part number.',
+                // 'description.required' => 'Please enter a description.',
+                // 'description.unique' => 'This description already exists.',
+                // 'description.max' => 'This description  max 255.',
+                // 'unit_id.required' => 'Please select a unit.',
+                // 'hsn_id.required' => 'Please select an HSN.',
+                // 'group_type_id.required' => 'Please select a group type.',
+                // 'basic_rate.required' => 'Please enter the basic rate.',
+                // 'basic_rate.numeric' => 'The basic rate must be a number.',
+                // 'basic_rate.min' => 'The basic rate cannot be negative.',
+                // 'opening_stock.required' => 'Please enter the opening stock.',
+                // 'opening_stock.numeric' => 'The opening stock must be a number.',
+                // 'opening_stock.min' => 'The opening stock cannot be negative.',
             ];
             try {
                 $validation = Validator::make($request->all(),$rules, $messages);

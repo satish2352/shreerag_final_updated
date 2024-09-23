@@ -149,7 +149,8 @@ class ItemRepository  {
     {
         try {
             $return_data = array();
-    
+            // dd($return_data);
+            // die();
             $dataOutput = PartItem::find($request->id);
     
             if (!$dataOutput) {
