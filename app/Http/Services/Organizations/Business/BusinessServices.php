@@ -77,8 +77,8 @@ class BusinessServices
     {
         try {
             $return_data = $this->repo->updateAll($request);
-        //    dd($return_data);
-        //    die();
+           dd($return_data);
+           die();
             if ($return_data['status'] == 'success') {
                 return ['status' => 'success', 'msg' => 'Data Updated Successfully.'];
             } else {

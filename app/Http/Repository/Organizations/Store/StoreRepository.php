@@ -634,7 +634,7 @@ if ($existingEntry && isset($existingEntry->part_item_id)) {
     //         $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $request->business_details_id)->firstOrFail();
             
     //         // Remove existing records related to the business_details_id before saving new ones
-    //         ProductionDetails::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)->delete();
+    //         // ProductionDetails::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)->delete();
     
     //         $errorMessages = []; // Array to hold error messages
     
@@ -695,71 +695,86 @@ if ($existingEntry && isset($existingEntry->part_item_id)) {
     //     }
     // }
     
+  
     public function updateProductMaterial($request) {
-    try {
-        $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $request->business_details_id)->firstOrFail();
-        
-        // Remove existing records related to the business_details_id before saving new ones
-        ProductionDetails::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)->delete();
-
-        $errorMessages = []; // Array to hold error messages
-
-        // Loop through the addmore array and update or create new ProductionDetails
-        foreach ($request->addmore as $item) {
-            $dataOutput = new ProductionDetails();
-            $dataOutput->part_item_id = $item['part_no_id'];
-            $dataOutput->quantity = $item['quantity'];
-            $dataOutput->unit = $item['unit'];
-            $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
-            $dataOutput->business_id = $dataOutput_ProductionDetails->business_id;
-            $dataOutput->design_id = $dataOutput_ProductionDetails->design_id;
-            $dataOutput->business_details_id = $dataOutput_ProductionDetails->business_details_id;
-            $dataOutput->production_id = $dataOutput_ProductionDetails->production_id;
-            $dataOutput->save();
-
-            $itemStock = ItemStock::where('part_item_id', $item['part_no_id'])->first();
-            if ($itemStock && $dataOutput->material_send_production === 1) {
-                // Check if enough stock is available
-                if ($itemStock->quantity >= $item['quantity']) {
-                    // Subtract the requested quantity from stock
-                    $itemStock->quantity -= $item['quantity'];
-                    $itemStock->save();
+        try {
+            $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $request->business_details_id)->firstOrFail();
+            
+            $errorMessages = []; // Array to hold error messages
+    
+            // Loop through the addmore array and update or create new ProductionDetails
+            foreach ($request->addmore as $item) {
+                // First, check if part_item_id already exists with material_send_production == 0
+                $existingDetail = ProductionDetails::where('business_details_id', $request->business_details_id)
+                    ->where('part_item_id', $item['part_no_id'])
+                    ->where('material_send_production', 0)
+                    ->first();
+    
+                // If found, update the existing record, otherwise create a new one
+                if ($existingDetail) {
+                    $dataOutput = $existingDetail; // Update the existing record
                 } else {
-                    $errorMessages[] = "Not enough stock for part item ID: " . $item['part_no_id'];
+                    $dataOutput = new ProductionDetails(); // Create a new record
                 }
-            } else {
-                $errorMessages[] = "Item stock not found for part item ID: " . $item['part_no_id'];
+    
+                // Update fields with request data
+                $dataOutput->part_item_id = $item['part_no_id'];
+                $dataOutput->quantity = $item['quantity'];
+                $dataOutput->unit = $item['unit'];
+                $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
+                $dataOutput->business_id = $dataOutput_ProductionDetails->business_id;
+                $dataOutput->design_id = $dataOutput_ProductionDetails->design_id;
+                $dataOutput->business_details_id = $dataOutput_ProductionDetails->business_details_id;
+                $dataOutput->production_id = $dataOutput_ProductionDetails->production_id;
+                $dataOutput->save();
+    
+                // Now handle stock decrement logic if material_send_production is 0
+                if ($dataOutput->material_send_production == 1) {
+                    $itemStock = ItemStock::where('part_item_id', $item['part_no_id'])->first();
+                    if ($itemStock) {
+                        // Check if enough stock is available
+                        if ($itemStock->quantity >= $item['quantity']) {
+                            // Decrement the stock quantity
+                            $itemStock->quantity -= $item['quantity'];
+                            $itemStock->save();
+                        } else {
+                            $errorMessages[] = "Not enough stock for part item ID: " . $item['part_no_id'];
+                        }
+                    } else {
+                        $errorMessages[] = "Item stock not found for part item ID: " . $item['part_no_id'];
+                    }
+                }
             }
-        }
-
-        // If there are error messages, return them without a generic error message
-        if (!empty($errorMessages)) {
+    
+            // If there are error messages, return them without a generic error message
+            if (!empty($errorMessages)) {
+                return [
+                    'status' => 'error',
+                    'errors' => $errorMessages // Only return specific error messages
+                ];
+            }
+    
+            // Update the BusinessApplicationProcesses status
+            $businessOutput = BusinessApplicationProcesses::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)
+                ->firstOrFail();
+            $businessOutput->product_production_inprocess_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_INPROCESS_FOR_PRODUCTION');
+            $businessOutput->save();
+    
+            return [
+                'status' => 'success',
+                'message' => 'Production materials updated successfully.',
+                'updated_details' => $request->all()
+            ];
+    
+        } catch (\Exception $e) {
+            // Optionally, you can log the exception message if needed
             return [
                 'status' => 'error',
-                'errors' => $errorMessages
+                'error' => $e->getMessage() // Return the exception message only if necessary
             ];
         }
-
-        // Update the BusinessApplicationProcesses status
-        $businessOutput = BusinessApplicationProcesses::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)
-            ->firstOrFail();
-        $businessOutput->product_production_inprocess_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_INPROCESS_FOR_PRODUCTION');
-        $businessOutput->save();
-
-        return [
-            'status' => 'success',
-            'message' => 'Production materials updated successfully.',
-            'updated_details' => $request->all()
-        ];
-
-    } catch (\Exception $e) {
-        return [
-            'status' => 'error',
-            'error' => $e->getMessage()
-        ];
     }
-}
-
+    
 
     
 }

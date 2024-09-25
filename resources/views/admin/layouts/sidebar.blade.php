@@ -521,7 +521,10 @@
                                         
                             </ul>
                         </li>
-                    @endif
+                        <li><a  href="{{ route('list-delivery-chalan') }}"><i
+                            class="fa big-icon fa-list icon-wrap" aria-hidden="true"></i> <span
+                            class="mini-click-non">Delivery Chalan</span></a></li>
+                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.HR'))
                         <li>
                             <a class="has-arrow" href="{{ route('list-users') }}" aria-expanded="false"><i

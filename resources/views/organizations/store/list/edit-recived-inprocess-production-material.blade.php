@@ -9,6 +9,12 @@
         font-size: 12px; /* Adjust font size if needed */
         /* Add any other styling as per your design */
     }
+    .disabled-btn {
+        background-color: #ccc;  /* Light gray background */
+        color: #666;             /* Darker gray text */
+        cursor: not-allowed;     /* Show not-allowed cursor */
+        opacity: 0.7;            /* Slightly transparent */
+    }
 </style>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -50,7 +56,7 @@
                                 <input type="hidden" name="business_details_id" id="business_details_id" value="{{ $id }}">
                                 <input type="hidden" name="part_item_id" id="part_item_id" value="{{ $id }}">
                                 <div class="row">
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                         <label for="product_name">Name:</label>
                                         <input type="text" class="form-control" id="name" name="product_name" value="{{ $productDetails->product_name }}" placeholder="Enter Product Name" readonly>
                                     </div>
@@ -58,7 +64,22 @@
                                         <label for="description">Description:</label>
                                         <input type="text" class="form-control" id="description" name="description" value="{{ $productDetails->description }}" placeholder="Enter Description" readonly>
                                     </div>
+                                    {{-- <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                        <label for="unit_id">Employee <span class="text-danger">*</span></label>
+                                        <select class="form-control" name="user_id" id="user_id">
+                                            <option value="">Select Employee</option>
+                                            @foreach ($dataOutputUser as $data)
+                                                <option value="{{ $data['id'] }}" {{ old('user_id') == $data['id'] ? 'selected' : '' }}>{{ $data['f_name'] }}{{ $data['l_name'] }}{{ $data['m_name'] }}</option>
+                                            @endforeach
+                                        </select>
+                                        @if ($errors->has('user_id'))
+                                        <span class="red-text">{{ $errors->first('user_id') }}</span>
+                                        @endif
+                                    </div> --}}
+                                    
+                                  
                                 </div>
+                              
                                 
                                 <div class="table-responsive">
                                     <table class="table table-hover table-white repeater" id="purchase_order_table">
@@ -121,6 +142,7 @@
                                                             {{ $loop->iteration }}
                                                         </td>
                                                         <td>
+                                                            @if($item->material_send_production == 0)
                                                             <select class="form-control part-no" name="addmore[{{ $index }}][part_no_id]">
                                                                 <option value="">Select Part Item</option>
                                                                 @foreach ($dataOutputPartItem as $partItem)
@@ -129,21 +151,52 @@
                                                                     </option>
                                                                 @endforeach
                                                             </select>
+                                                            @else
+                                                            <select class="form-control part-no disabled-btn" name="addmore[{{ $index }}][part_no_id]" disabled>
+                                                                <option value="">Select Part Item</option>
+                                                                @foreach ($dataOutputPartItem as $partItem)
+                                                                    <option value="{{ $partItem->id }}" {{ $partItem->id == $item->part_item_id ? 'selected' : '' }}>
+                                                                        {{ $partItem->description }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                            @endif
+
                                                         </td>
                                                         <td>
+                                                            @if($item->material_send_production == 0)
                                                             <input class="form-control quantity" name="addmore[{{ $index }}][quantity]" type="text" value="{{ $item->quantity }}">
+                                                            @else
+                                                            <input class="form-control quantity disabled-btn" name="addmore[{{ $index }}][quantity]" type="text" value="{{ $item->quantity }}" disabled>
+                                                            @endif
                                                         </td>
                                                         <td>
+                                                            @if($item->material_send_production == 0)
                                                             <input class="form-control unit" name="addmore[{{ $index }}][unit]" type="text" value="{{ $item->unit }}">
+                                                            @else
+                                                            <input class="form-control unit disabled-btn" name="addmore[{{ $index }}][unit]" type="text" value="{{ $item->unit }}" disabled>
+                                                            @endif
                                                         </td>
                                                         <td>
-                                                            <input type="checkbox" name="addmore[{{ $index }}][material_send_production]" value="1" {{ $item->material_send_production ? 'checked' : '' }}>
+                                                            @if($item->material_send_production == 0)
+                                                            <input type="checkbox" name="addmore[{{ $index }}][material_send_production]"  value="1" {{ $item->material_send_production ? 'checked' : '' }}>
+                                                            @else
+                                                            <input type="checkbox" name="addmore[{{ $index }}][material_send_production]" class="disabled-btn" value="1" {{ $item->material_send_production ? 'checked' : '' }} disabled>
+                                                            @endif
                                                         </td>
+                                                        
                                                         <td>
+                                                            @if($item->material_send_production == 0)
                                                             <button type="button" class="btn btn-sm btn-danger remove-row">
                                                                 <i class="fa fa-trash"></i>
                                                             </button>
+                                                            @else
+                                                        <button type="button" class="btn btn-sm btn-danger remove-row disabled-btn" disabled>
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                        @endif
                                                         </td>
+                                                        
                                                     </tr>
                                                 @endforeach
                                             @endforeach

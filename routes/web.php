@@ -436,6 +436,15 @@ Route::group(['middleware' => ['admin']], function () {
         Route::any('/edit-product-stock/{id}', ['as' => 'edit-product-stock', 'uses' => 'App\Http\Controllers\Organizations\Inventory\InventoryController@edit']);
         Route::any('/update-product-stock', ['as' => 'update-product-stock', 'uses' => 'App\Http\Controllers\Organizations\Inventory\InventoryController@update']);
 
+        Route::get('/list-delivery-chalan', ['as' => 'list-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@index']);
+        // Route::post('/list-delivery-chalan', ['as' => 'list-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Purchase\DeliveryChalanController@index']);
+        Route::post('/add-delivery-chalan', ['as' => 'add-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@create']);
+        Route::post('/store-delivery-chalan', ['as' => 'store-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@store']);
+        Route::get('/show-delivery-chalan/{id}', ['as' => 'show-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@show']);
+        Route::get('/edit-delivery-chalan/{id}', ['as' => 'edit-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@edit']);
+        Route::post('/update-delivery-chalan', ['as' => 'update-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@update']);
+        Route::any('/delete-delivery-chalan/{id}', ['as' => 'delete-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@destroy']);
+        Route::post('/delete-addmore', ['as' => 'delete-addmore', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@destroyAddmore']);
     });
 
     

@@ -135,10 +135,19 @@
                                         <input type="hidden" name="business_details_id" id="business_details_id" value="{{ $id }}">
                                         <input type="hidden" name="part_item_id" id="part_item_id" value="{{ $id }}">
                                         <div class="row">
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                            <div class="row">
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="product_name">Name:</label>
+                                                    <input type="text" class="form-control" id="name" name="product_name" value="{{ $productDetails->product_name }}" placeholder="Enter Product Name" readonly>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="description">Description:</label>
+                                                    <input type="text" class="form-control" id="description" name="description" value="{{ $productDetails->description }}" placeholder="Enter Description" readonly>
+                                                </div>
+                                            {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                 <label for="description">Description:</label>
                                                 <input type="text" class="form-control" id="description" name="description" value="{{ $productDetails->description }}" placeholder="Enter Description" readonly>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                         
                                         <div class="table-responsive">

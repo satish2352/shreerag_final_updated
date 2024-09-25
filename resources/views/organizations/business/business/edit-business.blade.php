@@ -1,17 +1,19 @@
 @extends('admin.layouts.master')
 @section('content')
     <style>
-         label {
+        label {
             margin-top: 10px;
         }
+
         label.error {
             color: red;
             font-size: 12px;
         }
-        .form-display-center{
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center;
+
+        .form-display-center {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center;
         }
     </style>
     <div class="">
@@ -49,160 +51,168 @@
                                 </div>
                             @endif
                             <?php
-
+                            
                             ?>
                             <div class="all-form-element-inner">
                                 <div class="row d-flex justify-content-center form-display-center">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <form action="{{ route('update-business', $editData[0]->business_main_id) }}" method="POST" enctype="multipart/form-data" id="addEmployeeForm">
-                                    @csrf
-                                    <input type="hidden" name="business_main_id" id=""
-                                    class="form-control" value="{{ $editData[0]->business_main_id }}"
-                                    placeholder="">
-                                    <div class="form-group-inner">
-                                            @foreach ($editData as $key => $editDataNew)
-                                            @if ($key == 0)
-                                        <div class="row">
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="customer_po_number">PO  Number :  <span class="text-danger">*</span></label>
-                                                <input class="form-control" name="customer_po_number" id="customer_po_number"
-                                                    placeholder="Enter the customer po number"
-                                                    value="@if(old('customer_po_number')){{old('customer_po_number')}}@else{{$editDataNew->customer_po_number}}@endif">
-                                            </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="title">Customer Name :  <span class="text-danger">*</span></label>
-                                                <input class="form-control" name="title" id="title"
-                                                    placeholder="Enter the customer po number"
-                                                    value=" @if (old('title')) {{ old('title') }}@else{{ $editDataNew->title }} @endif">
-                                            </div>
-                                        </div>
-                                            @endif
-                                            @endforeach
-                                           {{-- <div  class="mt-2 d-flex justify-content-end" style="display: flex; justify-content: end; margin-top:30px;">
-                                            <button type="button" name="add" id="add"
-                                            class="btn btn-success ">Add More</button>
-                                           </div> --}}
-                                           <th>
-                                            {{-- <button type="button" class="btn btn-sm btn-success font-18 mr-1" id="add_more_btn"
-                                                title="Add" data-repeater-create>
-                                                <i class="fa fa-plus"></i>
-                                            </button> --}}
-                                        </th>
-                                            <div class="table-responsive">
-                                            <table  class="table table-hover table-white repeater" id="purchase_order_table">
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Product Nmae</th>
-                                                    <th>Description</th>
-                                                    <th>Quantity</th>
-                                                    <th>Rate</th>
-                                                    <th>
-                                                        <button type="button" class="btn btn-sm btn-success font-18 mr-1" id="add_more_btn"
-                                                            title="Add" data-repeater-create>
-                                                            <i class="fa fa-plus"></i>
-                                                        </button>
-                                                    </th>
-                                                </tr>
+                                        <form action="{{ route('update-business', $editData[0]->business_main_id) }}"
+                                            method="POST" enctype="multipart/form-data" id="addEmployeeForm">
+                                            @csrf
+                                            <input type="hidden" name="business_main_id" id=""
+                                                class="form-control" value="{{ $editData[0]->business_main_id }}"
+                                                placeholder="">
+                                            <div class="form-group-inner">
                                                 @foreach ($editData as $key => $editDataNew)
-                                                    <tr>
-
-                                                        <input type="hidden" name="design_count"
-                                                            id="design_id_{{ $key }}"
-                                                            class="form-control"
-                                                            value="{{ $key }}" placeholder="">
-
-                                                        <input type="hidden"
-                                                            name="design_id_{{ $key }}"
-                                                            id="design_id_{{ $key }}"
-                                                            class="form-control"
-                                                            value="{{ $editDataNew->business_id }}"
-                                                            placeholder="">
-                                                            <td>
-                                                                <input type="text" name="id" class="form-control" style="min-width:50px" readonly value="1">
-                                                                <input type="hidden" id="i_id" class="form-control" style="min-width:50px" readonly value="0">
-                                                            </td>
-                                                        <td>
-                                                            <input type="text"
-                                                            name="product_name_{{ $key }}"
-                                                            value="{{ $editDataNew->product_name }}"
-                                                            placeholder="Enter product_name"
-                                                            class="form-control product_name" />
-                                                        </td>
-                                                        <td>
-                                                            <input type="text"
-                                                                name="description_{{ $key }}"
-                                                                value="{{ $editDataNew->description }}"
-                                                                placeholder="Enter Description"
-                                                                class="form-control description" />
-                                                        </td>
-                                                        <td>
-                                                            <input type="text"
-                                                                name="quantity_{{ $key }}"
-                                                                value="{{ $editDataNew->quantity }}"
-                                                                placeholder="Enter Quantity"
-                                                                class="form-control quantity" />
-                                                        </td>
-                                                        <td>
-                                                            <input type="text"
-                                                                name="rate_{{ $key }}"
-                                                                value="{{ $editDataNew->rate }}"
-                                                                placeholder="Enter Rate"
-                                                                class="form-control rate" />
-                                                        </td>
-                                                        <td>
-                                                            <a data-id="{{ $editDataNew->id }}"
-                                                                class="btn btn-sm btn-danger font-18 ml-2 remove-row"
-                                                                title="Delete"><i
-                                                                    class="fas fa-archive"></i></a>
-                                                        </td>
-                                                    </tr>
+                                                    @if ($key == 0)
+                                                        <div class="row">
+                                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                <label for="customer_po_number">PO Number : <span
+                                                                        class="text-danger">*</span></label>
+                                                                <input class="form-control" name="customer_po_number"
+                                                                    id="customer_po_number"
+                                                                    placeholder="Enter the customer po number"
+                                                                    value="@if (old('customer_po_number')) {{ old('customer_po_number') }}@else{{ $editDataNew->customer_po_number }} @endif">
+                                                            </div>
+                                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                <label for="title">Customer Name : <span
+                                                                        class="text-danger">*</span></label>
+                                                                <input class="form-control" name="title" id="title"
+                                                                    placeholder="Enter the customer po number"
+                                                                    value=" @if (old('title')) {{ old('title') }}@else{{ $editDataNew->title }} @endif">
+                                                            </div>
+                                                        </div>
+                                                    @endif
                                                 @endforeach
-                                            </table>
-                                            @foreach ($editData as $key => $editDataNew)
-                                            @if ($key == 0)
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="po_validity">PO Validity: <span class="text-danger">*</span></label>
-                                                <input type="date" class="form-control" name="po_validity" id="po_validity"
-                                                    value="{{ old('po_validity', $editDataNew->po_validity) }}">
-                                            </div>
+                                                <th>
+                                                </th>
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover table-white repeater"
+                                                        id="purchase_order_table">
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Product Nmae</th>
+                                                            <th>Description</th>
+                                                            <th>Quantity</th>
+                                                            <th>Rate</th>
+                                                            <th>
+                                                                <button type="button"
+                                                                    class="btn btn-sm btn-success font-18 mr-1"
+                                                                    id="add_more_btn" title="Add" data-repeater-create>
+                                                                    <i class="fa fa-plus"></i>
+                                                                </button>
+                                                            </th>
+                                                        </tr>
+                                                        @foreach ($editData as $key => $editDataNew)
+                                                            <tr>
 
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="customer_payment_terms">Payment Terms:</label> (optional)
-                                                <input class="form-control" name="customer_payment_terms" id="customer_payment_terms"
-                                                    placeholder="Enter the customer po number"
-                                                    value=" @if (old('customer_payment_terms')) {{ old('customer_payment_terms') }}@else{{ $editDataNew->customer_payment_terms }} @endif">
-                                            </div>
-                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="customer_terms_condition">Terms Condition:</label> (optional)
-                                                <input class="form-control" name="customer_terms_condition" id="customer_terms_condition"
-                                                    placeholder="Enter the customer po number"
-                                                    value=" @if (old('customer_terms_condition')) {{ old('customer_terms_condition') }}@else{{ $editDataNew->customer_terms_condition }} @endif">
-                                            </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="remarks">Remark:</label> (optional)
-                                                <textarea class="form-control english_description" name="remarks" id="remarks" placeholder="Enter the Description">@if (old('remarks')){{ old('remarks') }}@else{{ $editDataNew->remarks }}@endif
-                                            </textarea>
-                                            </div>
-                                            @endif
-                                            @endforeach
-                                        </div>
-                                        <div class="login-btn-inner">
-                                            <div class="row">
-                                                <div class="col-lg-5"></div>
-                                                <div class="col-lg-7">
-                                                    <div class="login-horizental cancel-wp pull-left">
-                                                        <button class="btn btn-sm btn-primary login-submit-cs"
-                                                            type="submit" style="margin-bottom:50px">Update Data</button>
+                                                                <input type="hidden" name="design_count"
+                                                                    id="design_id_{{ $key }}" class="form-control"
+                                                                    value="{{ $key }}" placeholder="">
 
-                                                            <a href="{{ route('list-business') }}"><button
-                                                                class="btn btn-white"
-                                                                style="margin-bottom:50px">Cancel</button></a>
+                                                                <input type="hidden" name="design_id_{{ $key }}"
+                                                                    id="design_id_{{ $key }}" class="form-control"
+                                                                    value="{{ $editDataNew->business_id }}" placeholder="">
+                                                                <td>
+                                                                    <input type="text" name="id"
+                                                                        class="form-control" style="min-width:50px" readonly
+                                                                        value="1">
+                                                                    <input type="hidden" id="i_id"
+                                                                        class="form-control" style="min-width:50px" readonly
+                                                                        value="0">
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text"
+                                                                        name="product_name_{{ $key }}"
+                                                                        value="{{ $editDataNew->product_name }}"
+                                                                        placeholder="Enter product_name"
+                                                                        class="form-control product_name" />
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text"
+                                                                        name="description_{{ $key }}"
+                                                                        value="{{ $editDataNew->description }}"
+                                                                        placeholder="Enter Description"
+                                                                        class="form-control description" />
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text"
+                                                                        name="quantity_{{ $key }}"
+                                                                        value="{{ $editDataNew->quantity }}"
+                                                                        placeholder="Enter Quantity"
+                                                                        class="form-control quantity" />
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text" name="rate_{{ $key }}"
+                                                                        value="{{ $editDataNew->rate }}"
+                                                                        placeholder="Enter Rate"
+                                                                        class="form-control rate" />
+                                                                </td>
+                                                                <td>
+                                                                    <a data-id="{{ $editDataNew->id }}"
+                                                                        class="btn btn-sm btn-danger font-18 ml-2 remove-row"
+                                                                        title="Delete"><i class="fas fa-archive"></i></a>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </table>
+                                                    @foreach ($editData as $key => $editDataNew)
+                                                        @if ($key == 0)
+                                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                <label for="po_validity">PO Validity: <span
+                                                                        class="text-danger">*</span></label>
+                                                                <input type="date" class="form-control"
+                                                                    name="po_validity" id="po_validity"
+                                                                    value="{{ old('po_validity', $editDataNew->po_validity) }}">
+                                                            </div>
+
+                                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                <label for="customer_payment_terms">Payment Terms:</label>
+                                                                (optional)
+                                                                <input class="form-control" name="customer_payment_terms"
+                                                                    id="customer_payment_terms"
+                                                                    placeholder="Enter the customer po number"
+                                                                    value=" @if (old('customer_payment_terms')) {{ old('customer_payment_terms') }}@else{{ $editDataNew->customer_payment_terms }} @endif">
+                                                            </div>
+                                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                <label for="customer_terms_condition">Terms
+                                                                    Condition:</label> (optional)
+                                                                <input class="form-control"
+                                                                    name="customer_terms_condition"
+                                                                    id="customer_terms_condition"
+                                                                    placeholder="Enter the customer po number"
+                                                                    value=" @if (old('customer_terms_condition')) {{ old('customer_terms_condition') }}@else{{ $editDataNew->customer_terms_condition }} @endif">
+                                                            </div>
+                                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                <label for="remarks">Remark:</label> (optional)
+                                                                <textarea class="form-control english_description" name="remarks" id="remarks"
+                                                                    placeholder="Enter the Description">
+                                                                    @if (old('remarks'))
+{{ old('remarks') }}@else{{ $editDataNew->remarks }}
+@endif
+                                                                    </textarea>
+                                                            </div>
+                                                        @endif
+                                                    @endforeach
+                                                </div>
+                                                <div class="login-btn-inner">
+                                                    <div class="row">
+                                                        <div class="col-lg-5"></div>
+                                                        <div class="col-lg-7">
+                                                            <div class="login-horizental cancel-wp pull-left">
+                                                                <button class="btn btn-sm btn-primary login-submit-cs"
+                                                                    type="submit" style="margin-bottom:50px">Update
+                                                                    Data</button>
+
+                                                                <a href="{{ route('list-business') }}"><button
+                                                                        class="btn btn-white"
+                                                                        style="margin-bottom:50px">Cancel</button></a>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </form>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -229,11 +239,11 @@
                 var month = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
                 var year = today.getFullYear();
                 var todayDate = year + '-' + month + '-' + day;
-    
+
                 $('#po_validity').attr('min', todayDate);
             }
-             // Call the function to set the minimum date
-        setMinDate();
+            // Call the function to set the minimum date
+            setMinDate();
             // Initialize jQuery Validation
             var validator = $("#addEmployeeForm").validate({
                 ignore: [], // Validate hidden inputs as well
@@ -328,10 +338,10 @@
                     }
                 }
             });
-    
+
             // Attach validation to the default row
             initializeValidation($("#purchase_order_table tbody tr"));
-    
+
             // Function to attach validation rules to dynamic fields
             function initializeValidation(row) {
                 row.find('.product_name').rules("add", {
@@ -373,45 +383,56 @@
                     }
                 });
             }
-    
-            // Add more rows when the "Add More" button is clicked
-            $("#add_more_btn").click(function() {
-                var i_count = $('#i_id').val();
-                var i = parseInt(i_count) + 1;
-                $('#i_id').val(i);
-    
-                var newRow = `
-                    <tr>
-                        <td>
-                            <input type="text" name="id" class="form-control" style="min-width:50px" readonly value="${i}">
-                        </td>
-                        <td>
-                            <input class="form-control product_name" name="addmore[${i}][product_name]" type="text" style="min-width:150px">
-                        </td>
-                        <td>
-                            <input class="form-control description" name="addmore[${i}][description]" type="text" style="min-width:150px">
-                        </td>
-                        <td>
-                            <input class="form-control quantity" name="addmore[${i}][quantity]" type="text">
-                        </td>
-                        <td>
-                            <input class="form-control rate" name="addmore[${i}][rate]" type="text">
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete" data-repeater-delete>
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-    
-                var row = $(newRow).appendTo("#purchase_order_table tbody");
-    
-                // Attach validation to the new row
-                initializeValidation(row);
-                validator.resetForm(); // Reset validation state after adding a new row
-            });
-    
+
+             // Initialize the counter for new rows
+    var rowCount = {{ count($editData) }};
+
+$("#add_more_btn").click(function() {
+    rowCount++;
+
+    var newRow = `
+        <tr>
+           <td>
+                    <input type="text" name="addmore[${rowCount}][business_id]" class="form-control" value="${rowCount}">
+                </td>
+            <td>
+                <input type="hidden" name="design_id_${rowCount}" value="0">
+                <input type="text" name="product_name_${rowCount}" class="form-control product_name" placeholder="Enter product name" />
+            </td>
+            <td>
+                <input type="text" name="description_${rowCount}" class="form-control description" placeholder="Enter description" />
+            </td>
+            <td>
+                <input type="text" name="quantity_${rowCount}" class="form-control quantity" placeholder="Enter quantity" />
+            </td>
+            <td>
+                <input type="text" name="rate_${rowCount}" class="form-control rate" placeholder="Enter rate" />
+            </td>
+            <td>
+                <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+    `;
+
+    $("#purchase_order_table tbody").append(newRow);
+
+    // Attach validation to the new row
+    initializeValidation($("#purchase_order_table tbody tr:last-child"));
+});
+
+$(document).on("click", ".remove-row", function() {
+    $(this).closest("tr").remove();
+    rowCount--; // Decrease the row count
+    validator.resetForm(); // Reset validation state after removing a row
+});
+
+// Initialize validation for the current rows
+$("#purchase_order_table tbody tr").each(function() {
+    initializeValidation($(this));
+});
+
             // Remove a row when the "Remove" button is clicked
             $(document).on("click", ".remove-row", function() {
                 $(this).closest("tr").remove();

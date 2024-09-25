@@ -10,7 +10,8 @@ use Validator;
 use Config;
 use Carbon;
 use App\Models\ {
-    PartItem
+    PartItem,
+    User
 
 };
 
@@ -169,7 +170,7 @@ class StoreController extends Controller
             $updateData = $this->service->updateProductMaterialWiseAdd($request);
     
             if ($updateData['status'] == 'success') {
-                return redirect('storedept/list-product-inprocess-received-from-production')->with(['status' => 'success', 'msg' => $updateData['message']]);
+                return redirect('storedept/list-accepted-design-from-prod')->with(['status' => 'success', 'msg' => $updateData['message']]);
             } else {
                 return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $updateData['message']]);
             }
@@ -182,11 +183,12 @@ class StoreController extends Controller
         try {
             $editData = $this->service->editProduct($id);
             $dataOutputPartItem = PartItem::where('is_active', true)->get();
-            
+            $dataOutputUser = User::where('is_active', true)->get();
             return view('organizations.store.list.edit-recived-inprocess-production-material', [
                 'productDetails' => $editData['productDetails'],
                 'dataGroupedById' => $editData['dataGroupedById'],
                 'dataOutputPartItem' => $dataOutputPartItem,
+                // 'dataOutputUser'=>$dataOutputUser,
                 'id' => $id
             ]);
         } catch (\Exception $e) {
