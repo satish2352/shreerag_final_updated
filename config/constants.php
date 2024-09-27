@@ -19,6 +19,7 @@ return [
         'DISPATCH'          => 11,
         'CMS'               => 12,
         'EMPOLYEE'          => 13,
+        'INVENTORY'         => 14,
     ],
 
 
@@ -37,6 +38,7 @@ return [
         '11' => 'DISPATCH',
         '12' => 'CMS',
         '13' => 'EMPOLYEE',
+        '14' => 'INVENTORY',
     ],
     
     'HIGHER_AUTHORITY' => [

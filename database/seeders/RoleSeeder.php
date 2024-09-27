@@ -80,6 +80,11 @@ class RoleSeeder extends Seeder
                 'id'=> 13,
                 'role_name' => 'Employee',
             ]); 
+       RolesModel::create(
+                [
+                    'id'=> 13,
+                    'role_name' => 'Inventory',
+                ]); 
 
         
     }

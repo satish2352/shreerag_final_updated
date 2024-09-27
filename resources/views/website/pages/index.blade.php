@@ -142,7 +142,7 @@
                 <div class="container">
                     <div class="row d-flex justify-content-center">
                         <h3 class="d-flex justify-content-center" style="color: #00000">No Data Found For
-                            Vision Mission</h3>
+                            Product</h3>
                     </div>
                 </div>
             @else

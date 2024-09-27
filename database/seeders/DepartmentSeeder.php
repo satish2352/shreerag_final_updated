@@ -80,7 +80,11 @@ class DepartmentSeeder extends Seeder
                 'id'=> 13,
                 'department_name' => 'Employee',
             ]); 
-
+        DepartmentsModel::create(
+                [
+                    'id'=> 14,
+                    'department_name' => 'Inventory',
+                ]); 
                 
       
     }

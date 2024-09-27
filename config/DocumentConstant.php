@@ -86,6 +86,7 @@ return [
         'DISPATCH'          => 11,
         'CMS'               => 12,
         'EMPOLYEE'          => 13,
+        'INVENTORY'         => 14,
     ],
     
     'HIGHER_AUTHORITY' => [

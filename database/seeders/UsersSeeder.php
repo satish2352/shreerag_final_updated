@@ -263,6 +263,24 @@ class UsersSeeder extends Seeder
                 'ip_address' => '192.168.1.32',
             ]
         );
+        User::create(
+            [
+                'u_email' => 'inventory@gmail.com',
+                'u_password' => bcrypt('12345678'),
+                'role_id' => 14,
+                'org_id' => 0,
+                'f_name' => 'fname',
+                'm_name' => 'mname',
+                'l_name' => 'lname',
+                'number' => 'number',
+                'designation' => 'designation',
+                'address' => 'address',
+                'state' => 'state',
+                'city' => 'city',
+                'pincode' => 'pincode',
+                'ip_address' => '192.168.1.32',
+            ]
+        );
         
     }
 
