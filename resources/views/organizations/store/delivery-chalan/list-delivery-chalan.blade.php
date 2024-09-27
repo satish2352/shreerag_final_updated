@@ -42,7 +42,7 @@
         <div class="sparkline13-list">
           <div class="sparkline13-hd">
             <div class="main-sparkline13-hd">
-              <h1>Purchase Order<span class="table-project-n">Data</span> Table</h1>
+              <h1>Delivery Chalan <span class="table-project-n">Data</span> Table</h1>
               <div class="form-group-inner login-btn-inner row">
                 <div class="col-lg-2">
                   <div class="login-horizental cancel-wp pull-left">
@@ -51,7 +51,7 @@
              
                     {{-- <input type="hidden" name="requistition_id" id="requistition_id" value="{{$requistition_id}}"> --}}
                     <button class="btn btn-sm btn-primary login-submit-cs"
-                    type="submit">Add Purchase</button>
+                    type="submit">Add Delivery Chalan</button>
 
                     </form>
                   </div>
@@ -98,20 +98,12 @@
                   data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
                   <thead>
                     <tr>
-                      
                       <th data-field="#">#</th>
-                      <th data-field="po_id">ID</th>
-                      <th data-field="purchase_orders_id" data-editable="true"> PO Number</th>
-                      <th data-field="vendor_name" data-editable="true"> Name</th>
-                      <th data-field="name" data-editable="true">Company Name</th>
-                      <th data-field="email" data-editable="true">Email</th>
-                      <th data-field="contact_no" data-editable="true">Contact No.</th>
-                      <th data-field="gst_number" data-editable="true">GST Number</th>
-                      <th data-field="payment_terms" data-editable="true">Payment Terms</th>
-                      <th data-field="invoice_date" data-editable="true">Invoice terms</th>
-                      {{-- <th data-field="total" data-editable="true">Total Amount</th> --}}
-                      <th data-field="quote_no" data-editable="true">Quote Number</th>
-                      <th data-field="discount" data-editable="true">Discounts</th>
+                      <th data-field="customer_po_number" data-editable="true"> PO Number</th>
+                      <th data-field="vendor_name" data-editable="true">Vendor Name</th>
+                      <th data-field="transport_name" data-editable="true">Transport Name</th>
+                      <th data-field="vehicle_name" data-editable="true">Vehicle Name</th>
+                      
                       <th data-field="action">Action</th>
                     </tr>
 
@@ -122,40 +114,38 @@
                     <tr>
                       
                       <td>{{ $loop->iteration }}</td>
-                      <td>{{ $data->id }}</td>
-                      <td>{{ucwords($data->purchase_orders_id)}}</td>
+                      <td>{{ucwords($data->customer_po_number)}}</td>
                       <td>{{ucwords($data->vendor_name)}}</td>
-                      <td>{{ucwords($data->vendor_company_name)}}</td>
-                      <td>{{ucwords($data->vendor_email)}}</td>
-                      <td>{{ucwords($data->contact_no)}}</td>
-                      <td>{{ucwords($data->gst_no)}}</td>
-                      <td>{{ucwords($data->payment_terms)}}</td>
-                      <td>{{ucwords($data->invoice_date)}}</td>
-                      {{-- <td>{{ucwords($data->total)}}.00 Rs</td> --}}
-                      <td>{{ucwords($data->quote_no)}}</td>
-                      <td>{{ucwords($data->discount)}}</td>
-                      {{-- <td>{{ucwords($data->status)}}</td> --}}
-
+                      <td>{{ucwords($data->transport_name)}}</td>
+                      <td>{{ucwords($data->vehicle_name)}}</td>
+                      
+                      {{-- <td>
+                        <div style="display: flex; align-items: center;">
+                          <a href="{{route('show-delivery-chalan', $data->id)}}"><button
+                              data-toggle="tooltip" title="Edit" class="pd-setting-ed">View Details</button></a>
+                        </div>
+                      </td> --}}
                       <td>
                         <div style="display: flex; align-items: center;">
-                          <a href="{{route('edit-delivery-chalan', $data->purchase_orders_id)}}"><button
-                              data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o"
-                                aria-hidden="true"></i></button></a>
+                            <a href="{{ route('show-delivery-chalan', base64_encode($data->id)) }}">
+                                <button data-toggle="tooltip" title="View Details" class="pd-setting-ed">View Details</button>
+                            </a>
                         </div>
-                      </td>
+                    </td>
+                    
                     </tr>
                     @endforeach
                   </tbody>
                 </table>
               </div>
-              @if(!$getOutput->isEmpty())
+              {{-- @if(!$getOutput->isEmpty())
               <form action="{{ route('submit-delivery-chalan-to-owner-for-review') }}" method="POST" style="padding-top: 14px;">
                 @csrf
                 <input type="hidden" name="requistition_id" id="requistition_id" value="{{$requistition_id}}">
                 <button class="btn btn-sm btn-primary login-submit-cs mt-0"
                 type="submit">Send to the owner for approval</button>
                 </form>
-                @endif
+                @endif --}}
             </div>
           </div>
         </div>

@@ -19,8 +19,6 @@ return new class extends Migration
             $table->unsignedBigInteger('part_item_id')->nullable();
             $table->unsignedBigInteger('unit_id')->nullable();
             $table->unsignedBigInteger('hsn_id')->nullable();
-            // $table->string('tax_type')->nullable();
-            // $table->string('tax_id')->nullable();
             $table->unsignedBigInteger('process_id')->nullable();
             $table->string('quantity')->nullable();
             $table->string('size')->nullable();

@@ -19,7 +19,9 @@ use App\Models\{
     TransportName,
     UnitMaster,
     HSNMaster,
-    ProcessMaster
+    ProcessMaster,
+    DeliveryChalan,
+    DeliveryChalanItemDetails,
 };
 use App\Http\Controllers\Organizations\CommanController;
 
@@ -35,16 +37,15 @@ class DeliveryChalanController extends Controller
 
     public function index()
     {
-        // $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL')];
-        // $getOutput = PurchaseOrdersModel::where('requisition_id', base64_decode($requistition_id))->get();
-        $getOutput = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
-        // ->where('purchase_orders.business_id')
-        ->whereNull('purchase_status_from_owner')
-        // ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
-        // ->where('requisition_id', base64_decode($requistition_id))
+        $getOutput = DeliveryChalan::join('vendors', 'vendors.id', '=', 'tbl_delivery_chalan.vendor_id')
+          ->join('businesses', 'businesses.id', '=', 'tbl_delivery_chalan.business_id')
+          ->join('tbl_transport_name', 'tbl_transport_name.id', '=', 'tbl_delivery_chalan.transport_id')
+          ->join('tbl_vehicle_type', 'tbl_vehicle_type.id', '=', 'tbl_delivery_chalan.vehicle_id')
+        ->select('tbl_delivery_chalan.id','tbl_delivery_chalan.vendor_id','tbl_delivery_chalan.transport_id',
+        'tbl_delivery_chalan.business_id','tbl_delivery_chalan.vehicle_id','vendors.vendor_name'
+        ,'businesses.customer_po_number','tbl_transport_name.name as transport_name','tbl_vehicle_type.name as vehicle_name'
+        )
         ->get();
-       
-
         return view(
             'organizations.store.delivery-chalan.list-delivery-chalan',
             compact(
@@ -55,7 +56,6 @@ class DeliveryChalanController extends Controller
 
     public function create(Request $request)
     {
-        
         $requistition_id = $request->requistition_id;
         $title = 'create invoice';
         $dataOutputVendor = Vendors::where('is_active', true)->get();
@@ -95,49 +95,30 @@ class DeliveryChalanController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'vendor_id' => 'required',
-            'tax_id' => 'required',
-            'invoice_date' => 'required',
-            'payment_terms' => 'required',
-            // 'discount' => 'required',
-            // 'quote_no' => 'required',
-            // 'status' => 'required',
-            'note' => 'nullable',
         ];
-
         $messages = [
-            'vendor_id.required' => 'The select vendor comapny name is required.',
-            'tax_id.required' => 'The Tax is required.',
-            'invoice_date.required' => 'The Invoice Date is required.',
-            'payment_terms.required' => 'The Payment Terms is required.',
-            'discount.required' => 'The Discount is required.',
-            'quote_no.required' => 'The quote number is required.',
-            // 'status.required' => 'The Status is required.',
-            'note.required' => 'The Note is required.',
         ];
-
         try {
             $validation = Validator::make($request->all(), $rules, $messages);
 
             if ($validation->fails()) {
-                return redirect('purchase/add-purchase-order')
+                return redirect('storedept/add-delivery-chalan')
                     ->withInput()
                     ->withErrors($validation);
             } else {
-                $requi_id = $request->requistition_id;
                 $add_record = $this->service->submitBOMToOwner($request);
                 if ($add_record) {
                     $msg = $add_record['msg'];
                     $status = $add_record['status'];
                     if ($status == 'success') {
-                        return redirect('purchase/list-purchase-order/' . $requi_id)->with(compact('msg', 'status'));
+                        return redirect('storedept/list-delivery-chalan')->with(compact('msg', 'status'));
                     } else {
-                        return redirect('purchase/add-purchase-order')->withInput()->with(compact('msg', 'status'));
+                        return redirect('storedept/add-delivery-chalan')->withInput()->with(compact('msg', 'status'));
                     }
                 }
             }
         } catch (Exception $e) {
-            return redirect('purchase/add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('storedept/add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
 
@@ -188,12 +169,12 @@ class DeliveryChalanController extends Controller
             $msg = 'Invoice has been created';
             $status = 'success';
 
-            return redirect('purchase/list-purchase-order')->with(compact('msg', 'status'));
+            return redirect('storedept/list-delivery-chalan')->with(compact('msg', 'status'));
         } else {
             $msg = 'Failed to create invoice';
             $status = 'error';
 
-            return redirect('purchase/add-purchase-order')->withInput()->with(compact('msg', 'status'));
+            return redirect('storedept/add-delivery-chalan')->withInput()->with(compact('msg', 'status'));
         }
     }
 
@@ -201,11 +182,16 @@ class DeliveryChalanController extends Controller
 
     public function show(Request $request)
     {
+        // Decode the id
         $show_data_id = base64_decode($request->id);
-        $invoice = PurchaseOrdersModel::find($show_data_id);
-        $title = 'view invoice';
-        return view('organizations.store.delivery-chalan.show-delivery-chalan', compact('invoice', 'title'));
+    
+        // Call service to fetch purchase order details
+        $showData = $this->service->getPurchaseOrderDetails($show_data_id);
+        $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
+        $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
+        return view('organizations.store.delivery-chalan.show-delivery-chalan', compact('showData', 'getOrganizationData', 'getAllRulesAndRegulations'));
     }
+    
 
     public function show21(Request $request)
     {
@@ -223,89 +209,6 @@ class DeliveryChalanController extends Controller
         return view('organizations.store.delivery-chalan.show-delivery-chalan1', compact('invoice', 'title'));
     }
 
-
-    // public function edit(Request $request)
-    // {
-    //     $show_data_id = base64_decode($request->id);
-    //     $invoice = PurchaseOrdersModel::find($show_data_id);
-    //     $dataOutputVendor = Vendors::get();
-    //     $title = 'edit invoice';
-    //     return view(
-    //         'organizations.store.delivery-chalan.edit-delivery-chalan',
-    //         compact(
-    //             'title',
-    //             'invoice',
-    //             'dataOutputVendor'
-    //         )
-    //     );
-    // }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Invoice $invoice
-     * @return \Illuminate\Http\Response
-     */
-    // public function update(Request $request)
-    // {
-
-    //     $this->validate($request, [
-    //         // 'client_name' => 'required',
-    //         // 'phone_number' => 'required',
-    //         // 'email' => 'required',
-    //         'tax' => 'required',
-    //         // 'client_address' => 'required',
-    //         // 'gst_number' => 'required',
-    //         'invoice_date' => 'required',
-    //         'items' => 'required',
-    //         'note' => 'nullable',
-    //         'quote_no' => 'required',
-    //     ]);
-
-
-    //     $itemsJson = json_encode($request->items);
-
-
-    //     $amount = 0;
-    //     foreach ($request->items as $item) {
-    //         $amount += $item['amount'];
-    //     }
-
-    //     $invoice = PurchaseOrdersModel::find($request->id);
-    //     $invoice->update([
-    //         // 'client_name' => $request->client_name,
-    //         // 'phone_number' => $request->phone_number,
-    //         'tax' => $request->tax,
-    //         // 'email' => $request->email,
-    //         // 'client_address' => $request->client_address,
-    //         // 'gst_number' => $request->gst_number,
-    //         'invoice_date' => $request->invoice_date,
-    //         'payment_terms' => $request->payment_terms,
-    //         'items' => $itemsJson,
-    //         'discount' => $request->discount,
-    //         'total' => $amount,
-    //         'note' => $request->note,
-    //         // 'status' => $request->status,
-    //     ]);
-
-    //     if ($invoice->wasChanged()) {
-    //         $msg = 'Invoice has been updated';
-    //         $status = 'success';
-    //         return redirect('purchase/list-purchase-order')->with(compact('msg', 'status'));
-    //     } else {
-    //         $msg = 'No changes were made to the invoice';
-    //         $status = 'error';
-    //         return redirect('purchase/list-purchase-order')->with(compact('msg', 'status'));
-    //     }
-    // }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
         Invoice::findOrFail($request->id)->delete();
@@ -340,7 +243,7 @@ class DeliveryChalanController extends Controller
 
             $msg = 'Purchase order submitted successfully';
             $status = 'success';
-            return redirect('purchase/list-purchase')->with(compact('msg', 'status'));
+            return redirect('storedept/list-purchase')->with(compact('msg', 'status'));
         } catch (\Exception $e) {
             return [
                 'msg' => $e->getMessage(),
@@ -362,12 +265,12 @@ class DeliveryChalanController extends Controller
             $purchaseOrderDetails = $data['purchaseOrderDetails'];
 
             return view(
-                'organizations.purchase.purchase.purchase-order-details',
+                'organizations.purchase.purchase.delivery-chalan-details',
                 compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData', 'getAllRulesAndRegulations','business_id')
             );
 
 
-            // return view('organizations.business.purchase-order.purchase-order-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData'));
+            // return view('organizations.business.delivery-chalan.delivery-chalan-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData'));
 
 
         } catch (Exception $e) {
@@ -389,7 +292,7 @@ class DeliveryChalanController extends Controller
                 $msg = 'Purchase order mail sent to vendor.';
             }
 
-            return redirect('purchase/list-purchase-order-approved-sent-to-vendor')->with(compact('msg', 'status'));
+            return redirect('purchase/list-delivery-chalan-approved-sent-to-vendor')->with(compact('msg', 'status'));
 
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
@@ -501,8 +404,8 @@ class DeliveryChalanController extends Controller
 
                 $id = base64_encode($request->delete_id);
                 if ($status == 'success') {
-                    return redirect('purchase/edit-purchase-order/{id}')->with(compact('msg', 'status'));
-                    // return redirect()->route('purchase.edit-purchase-order', ['id' => $id])
+                    return redirect('purchase/edit-delivery-chalan/{id}')->with(compact('msg', 'status'));
+                    // return redirect()->route('purchase.edit-delivery-chalan', ['id' => $id])
                     // ->with(compact('msg', 'status'));
                 } else {
                     return redirect()->back()
@@ -527,7 +430,7 @@ class DeliveryChalanController extends Controller
     //             $msg = 'Purchase order mail sent to vendor.';
     //         }
 
-    //         return redirect('purchase/list-purchase-order-approved-sent-to-vendor')->with(compact('msg', 'status'));
+    //         return redirect('purchase/list-delivery-chalan-approved-sent-to-vendor')->with(compact('msg', 'status'));
 
     //     } catch (Exception $e) {
     //         return ['status' => 'error', 'msg' => $e->getMessage()];
@@ -553,7 +456,7 @@ class DeliveryChalanController extends Controller
             }
     
             // Generate PDF with specific settings
-            $pdf = Pdf::loadView('organizations.common-pages.purchase-order-view', [
+            $pdf = Pdf::loadView('organizations.common-pages.delivery-chalan-view', [
                 'purchase_order_id' => $purchase_order_id,
                 'purchaseOrder' => $purchaseOrder,
                 'purchaseOrderDetails' => $purchaseOrderDetails,
@@ -581,7 +484,7 @@ class DeliveryChalanController extends Controller
                 $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
             });
     
-            return redirect('purchase/list-purchase-order-approved-sent-to-vendor')->with('status', 'success')->with('msg', 'Purchase order mail sent to vendor.');
+            return redirect('purchase/list-delivery-chalan-approved-sent-to-vendor')->with('status', 'success')->with('msg', 'Purchase order mail sent to vendor.');
     
         } catch (\Exception $e) {
             \Log::error($e->getMessage());

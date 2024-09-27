@@ -30,18 +30,42 @@ use Config;
         }
     }
    
-    public function submitBOMToOwner($request){
+    // public function submitBOMToOwner($request){
+    //     try {
+    //         $data = $this->repo->submitBOMToOwner($request);
+    //         if ($data) {
+    //             return ['status' => 'success', 'msg' => 'Purchase Order Added Successfully.'];
+    //         } else {
+    //             return ['status' => 'error', 'msg' => 'Purchase Order Not Added.'];
+    //         }
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+    // public function submitBOMToOwner($request)
+    // {
+    //     try {
+    //         $data = $this->repo->submitBOMToOwner($request);
+    //     } catch (\Exception $e) {
+    //         return [
+    //             'status' => 'error',
+    //             'msg' => 'An error occurred while submitting: ' . $e->getMessage(),
+    //         ];
+    //     }
+    // }
+    public function submitBOMToOwner($request)
+    {
         try {
-            $data = $this->repo->submitBOMToOwner($request);
-            // dd($data);
+            $result = $this->repo->submitBOMToOwner($request);
+            // dd($result);
             // die();
-            if ($data) {
-                return ['status' => 'success', 'msg' => 'Purchase Order Added Successfully.'];
+            if ($result['status'] === 'success') {
+                return ['status' => 'success', 'msg' => 'This business send to Design Department Successfully.'];
             } else {
-                return ['status' => 'error', 'msg' => 'Purchase Order Not Added.'];
+                return ['status' => 'error', 'msg' => 'Failed to Add Data.'];
             }
-        } catch (\Exception $e) {
-            return $e;
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
 
@@ -61,15 +85,15 @@ use Config;
     
 
     
-    public function listAllApprovedPOToBeChecked($id)
-    {
-        try {
-            $listAllApprovedPOToBeChecked = $this->repo->listAllApprovedPOToBeChecked($id);
-            return $listAllApprovedPOToBeChecked;
-        } catch (Exception $e) {
-            return ['status' => 'error', 'msg' => $e->getMessage()];
-        }
-    }
+    // public function getPurchaseOrderDetails($id)
+    // {
+    //     try {
+    //         $listAllApprovedPOToBeChecked = $this->repo->listAllApprovedPOToBeChecked($id);
+    //         return $listAllApprovedPOToBeChecked;
+    //     } catch (Exception $e) {
+    //         return ['status' => 'error', 'msg' => $e->getMessage()];
+    //     }
+    // }
 
 
         
@@ -83,15 +107,18 @@ use Config;
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
-    public function getById($id){
+    public function getPurchaseOrderDetails($id)
+    {
         try {
-            $result = $this->repo->getById($id);
-         
+            $result = $this->repo->getPurchaseOrderDetails($id);
+            // dd($result);
+            // die();
             return $result;
         } catch (\Exception $e) {
             return $e;
         }
     }
+    
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
