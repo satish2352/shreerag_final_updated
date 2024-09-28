@@ -93,6 +93,31 @@
                                             </div>
 
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <label for="rack_id">Rack Number <span class="text-danger">*</span></label>
+                                                <select class="form-control" name="rack_id" id="rack_id">
+                                                    <option value="">Select Rack Number</option>
+                                                    @foreach ($dataOutputGroupMaster as $GroupMaster)
+                                                        <option value="{{ $GroupMaster['id'] }}" {{ old('rack_id') == $GroupMaster['id'] ? 'selected' : '' }}>{{ $GroupMaster['name'] }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @if ($errors->has('rack_id'))
+                                                <span class="red-text">{{ $errors->first('rack_id') }}</span>
+                                                @endif
+                                            </div>
+                                            
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <label for="rack_id">Rack Number<span class="text-danger">*</span></label>
+                                                <select class="form-control" name="rack_id" id="rack_id">
+                                                    <option value="">Select Rack Number</option>
+                                                    @foreach ($dataOutputGroupMaster as $GroupMaster)
+                                                        <option value="{{ $GroupMaster['id'] }}" {{ old('rack_id') == $GroupMaster['id'] ? 'selected' : '' }}>{{ $GroupMaster['name'] }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @if ($errors->has('rack_id'))
+                                                <span class="red-text">{{ $errors->first('rack_id') }}</span>
+                                                @endif
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                 <label for="basic_rate">Basic Rate:</label>
                                                 <input type="text" class="form-control" id="basic_rate" name="basic_rate"  value="{{old('basic_rate') }}" placeholder="Enter basic rate">
                                                 @if ($errors->has('basic_rate'))
@@ -159,6 +184,9 @@
                 group_type_id: {
                     required: true
                 },
+                rack_id: {
+                    required: true
+                },
                 basic_rate: {
                     required: true,
                     number: true
@@ -185,6 +213,9 @@
                 },
                 group_type_id: {
                     required: "Please select a group."
+                },
+                rack_id: {
+                    required: "Please select a rack number."
                 },
                 basic_rate: {
                     required: "Please enter the basic rate.",

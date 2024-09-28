@@ -18,7 +18,15 @@ class GatepassRepository
     public function getAll()
     {
         try {
-            $data_output = Gatepass::orderBy('updated_at', 'desc')->get();
+            $data_output = Gatepass::leftJoin('purchase_orders', function ($join) {
+                $join->on('gatepass.purchase_orders_id', '=', 'purchase_orders.purchase_orders_id');
+              })
+              ->select(
+                'gatepass.*',     
+                'purchase_orders.quality_status_id', // Replace with the fields you need from purchase_orders
+            )
+            // ->orderBy('gatepass.updated_at', 'desc') // Sorting by gatepass table's updated_at
+            ->get();
     
             return $data_output;
         } catch (\Exception $e) {

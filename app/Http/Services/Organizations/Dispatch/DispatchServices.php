@@ -16,7 +16,6 @@ class DispatchServices
     {
         try {
             $data = $this->repo->storeDispatch($request);
-       
             if ($data) {
                 return ['status' => 'success', 'msg' => 'Rejected Chalan Added Successfully.'];
             } else {

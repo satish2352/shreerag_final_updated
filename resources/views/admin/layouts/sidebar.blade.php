@@ -197,6 +197,18 @@
                             <li><a href="{{ route('list-rules-regulations') }}" aria-expanded="false"><i
                                 class="fa big-icon fa-file-alt  icon-wrap" aria-hidden="true"></i> <span
                                 class="mini-click-non">Rules and Regulations</span></a></li>
+                            <li>
+                                <li>
+                                    <a class="has-arrow" href="{{ route('list-product-completed-report') }}" aria-expanded="false"><i
+                                            class="fa fa-check-circle icon-wrap"></i> <span class="mini-click-non">Report
+                                            </span></a>
+                                    <ul class="submenu-angle" aria-expanded="false">
+                                        <li><a  href="{{ route('list-product-completed-report') }}"><i
+                                                    class="fa fa-check-circle icon-wrap" aria-hidden="true"></i> <span
+                                                    class="mini-click-non">List Product Completed</span></a></li>
+                                    </ul>
+                                </li>
+                                                        </li>
                                 {{-- <li class="nav-item {{ Request::is('list-roles') ? 'active' : '' }}">
                                     <a href="{{ route('list-roles') }}" aria-expanded="false">
                                         <i class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i>
@@ -525,6 +537,32 @@
                             class="fa big-icon fa-list icon-wrap" aria-hidden="true"></i> <span
                             class="mini-click-non">Delivery Chalan</span></a></li>
                      @endif
+                     @if (session()->get('role_id') == config('constants.ROLE_ID.INVENTORY'))
+                     {{-- <li class="nav-item {{ request()->is('storedept/list-accepted-design-from-prod') ? 'active' : '' }}">
+                        <a href="{{ route('list-accepted-design-from-prod') }}" aria-expanded="false"><i
+                                class="fa big-icon fa-list icon-wrap"></i> <span class="mini-click-non">All
+                                New Requirements</span></a>
+                    </li> --}}
+                    <li>
+                        <a class="has-arrow" href="{{ route('list-inventory-material') }}" aria-expanded="false"><i
+                                class="fa big-icon fa-ban  icon-wrap"></i> <span class="mini-click-non">Inventory
+                                </span></a>
+                        <ul class="submenu-angle" aria-expanded="false">
+                            <li><a  href="{{ route('list-inventory-material') }}"><i
+                                        class="fa big-icon fa-list icon-wrap" aria-hidden="true"></i> <span
+                                        class="mini-click-non">Material List</span></a></li>
+                           
+                                    
+                        </ul>
+                    </li>
+                    <li
+                    class="nav-item {{ request()->is('storedept/list-product-inprocess-received-from-production') ? 'active' : '' }}">
+                    <a href="{{ route('list-product-inprocess-received-from-production') }}">
+                        <i class="fa big-icon fa-box-open icon-wrap"></i>
+                        <span class="mini-click-non">Production Department send material list</span>
+                    </a>
+                </li>
+                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.HR'))
                         <li>
                             <a class="has-arrow" href="{{ route('list-users') }}" aria-expanded="false"><i
@@ -578,6 +616,18 @@
                             <i class="fa big-icon fa-money-check icon-wrap"></i>
                             <span class="mini-click-non">Profile</span>
                         </a>
+                    </li>
+                    <li>
+                        <a class="has-arrow" href="{{ route('list-inventory-material') }}" aria-expanded="false"><i
+                                class="fa big-icon fa-ban  icon-wrap"></i> <span class="mini-click-non">Inventory
+                                </span></a>
+                        <ul class="submenu-angle" aria-expanded="false">
+                            <li><a  href="{{ route('list-inventory-material') }}"><i
+                                        class="fa big-icon fa-list icon-wrap" aria-hidden="true"></i> <span
+                                        class="mini-click-non">Material List</span></a></li>
+                           
+                                    
+                        </ul>
                     </li>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.FINANCE'))

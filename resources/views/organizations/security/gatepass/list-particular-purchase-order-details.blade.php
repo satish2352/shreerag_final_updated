@@ -78,7 +78,7 @@
         }
     </style>
 
-    <div class="data-table-area mg-tb-15">
+    <div class="data-table-area mg-tb-15" id="printableArea">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -152,7 +152,11 @@
                         </div>
 
 
+
                     </div>
+                    <a style="padding-bottom: 100px; padding-left:20px;">
+                        <button data-toggle="tooltip" onclick="printInvoice()" title="Accept Purchase Order" style="margin-top: 20px;">Print</button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -164,10 +168,40 @@
     <!-- Print Button -->
    
     </div>
-
+  
     <script>
-        function printInvoice() {
-            window.print();
-        }
-    </script>
+            // function printInvoice() {
+            //     window.print();
+            // }
+            function printInvoice() {
+    // Get the content you want to print
+    var contentToPrint = document.getElementById("printableArea").innerHTML;
+
+    // Open a new window
+    var printWindow = window.open('', '', 'height=600,width=800');
+
+    // Write the content to the new window with proper styles
+    printWindow.document.write('<html><head><title>Print</title>');
+    printWindow.document.write('<style>');
+    printWindow.document.write('body { font-family: Arial, sans-serif; margin: 0; padding: 50px; }'); // Add padding to body
+    printWindow.document.write('#printableArea { width: 100%; overflow: hidden; }'); // Ensure full width of content
+    printWindow.document.write('</style>');
+    printWindow.document.write('</head><body>');
+    printWindow.document.write(contentToPrint);
+    printWindow.document.write('</body></html>');
+
+    // Close the document to render
+    printWindow.document.close();
+    printWindow.focus();
+
+    // Trigger the print dialog
+    printWindow.print();
+
+    // Close the print window after printing
+    printWindow.close();
+}
+
+
+
+        </script>
 @endsection

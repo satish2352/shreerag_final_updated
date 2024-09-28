@@ -82,7 +82,7 @@ class RoleSeeder extends Seeder
             ]); 
        RolesModel::create(
                 [
-                    'id'=> 13,
+                    'id'=> 14,
                     'role_name' => 'Inventory',
                 ]); 
 

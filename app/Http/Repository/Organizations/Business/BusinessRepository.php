@@ -30,6 +30,8 @@ class BusinessRepository
     {
         try {
             $data_output = Business::orderBy('businesses.updated_at', 'desc')->get();
+            // dd( $data_output);
+            // die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -41,6 +43,7 @@ class BusinessRepository
     {
         try {
             $data_output = OrganizationModel::pluck('id')->first();
+           
                if (!$data_output) {
                    throw new \Exception('No organization found');
                }
@@ -137,6 +140,7 @@ class BusinessRepository
     public function getById($id) {
         try {
             $designData = Business::leftJoin('businesses_details', 'businesses.id', '=', 'businesses_details.business_id')
+            ->leftJoin('business_application_processes', 'business_application_processes.business_details_id', '=', 'businesses_details.id')
                 ->select('businesses_details.*',
                 'businesses_details.id as businesses_details_id',
                     'businesses.id as business_main_id',
@@ -145,10 +149,11 @@ class BusinessRepository
                     'businesses.po_validity',
                     'businesses.customer_payment_terms',
                     'businesses.customer_terms_condition',
-                    'businesses.remarks')
+                    'businesses.remarks',
+                    'business_application_processes.production_status_id')
                 ->where('businesses.id', $id)
                 ->get();
-               
+             
             if ($designData->isEmpty()) {
                 return null;
             } else {
@@ -162,191 +167,115 @@ class BusinessRepository
             ];
         }
     }
-
-    // public function getById($id) {
-    //     try {
-    //         $designData = Business::leftJoin('businesses_details', 'businesses.id', '=', 'businesses_details.business_id')
-    //             ->select(
-    //                 'businesses_details.*',
-    //                 'businesses_details.id as businesses_details_id',
-    //                 'businesses.id as business_main_id',
-    //                 'businesses.customer_po_number',
-    //                 'businesses.title',
-    //                 'businesses.po_validity',
-    //                 'businesses.customer_payment_terms',
-    //                 'businesses.customer_terms_condition',
-    //                 'businesses.remarks'
-    //             )
-    //             ->where('businesses_details.id', $id) // Checking by businesses_details.id
-
-    //             ->first(); // Use first() instead of get() to retrieve a single record
-            
-    //             // dd($designData);
-    //             // die();
-    //         if (!$designData) {
-    //             return null;
-    //         } else {
-    //             return $designData;
-    //         }
-    //     } catch (\Exception $e) {
-    //         return [
-    //             'msg' => 'Failed to get by id Citizen Volunteer.',
-    //             'status' => 'error',
-    //             'error' => $e->getMessage(), 
-    //         ];
-    //     }
-    // }
+    public function updateAll($request)
+    {
+        try {
+            \Log::info('Request Data:', $request->all());
     
+            // Validate the required fields
+            $request->validate([
+                'design_count' => 'required|integer',
+                'business_main_id' => 'required|integer|exists:businesses,id',
+                'customer_po_number' => 'required|string',
+                'title' => 'required|string',
+                'po_validity' => 'required|date',
+                'remarks' => 'nullable|string',
+                'addmore.*.product_name' => 'required|string',
+                'addmore.*.description' => 'required|string',
+                'addmore.*.quantity' => 'required|integer',
+                'addmore.*.rate' => 'required|numeric',
+            ]);
     
-        // public function updateAll($request)
-        // {
-        //     try {
+            // Update existing design details
+            for ($i = 0; $i < $request->design_count; $i++) {
+                $designId = $request->input("design_id_" . $i);
+                $productName = $request->input("product_name_" . $i);
+                $description = $request->input("description_" . $i);
+                $quantity = $request->input("quantity_" . $i);
+                $rate = $request->input("rate_" . $i);
+    
+                // Ensure product_name is not null
+                if ($designId && !is_null($productName)) {
+                    $designDetails = BusinessDetails::findOrFail($designId);
+                    $designDetails->product_name = $productName;
+                    $designDetails->description = $description;
+                    $designDetails->quantity = $quantity;
+                    $designDetails->rate = $rate;
+                    $designDetails->save();
+                    \Log::info("Updated ID: $designId", compact('productName', 'description', 'quantity', 'rate'));
+                }
+            }
+    
+            // Update main business record
+            $dataOutput = Business::findOrFail($request->business_main_id);
+            $dataOutput->customer_po_number = $request->customer_po_number;
+            $dataOutput->title = $request->title;
+            $dataOutput->po_validity = $request->po_validity;
+            $dataOutput->remarks = $request->remarks;
+    
+            // Optional fields
+            if ($request->has('customer_payment_terms')) {
+                $dataOutput->customer_payment_terms = $request['customer_payment_terms'];
+            }
+            if ($request->has('customer_terms_condition')) {
+                $dataOutput->customer_terms_condition = $request['customer_terms_condition'];
+            }
+            $dataOutput->save();
+    
+            // Add new details if provided
+            if ($request->has('addmore')) {
+                foreach ($request->addmore as $item) {
+                    $addDetails = new BusinessDetails();
+                    $addDetails->business_id = $request->business_main_id;
+                    $addDetails->product_name = $item['product_name'];
+                    $addDetails->description = $item['description'];
+                    $addDetails->quantity = $item['quantity'];
+                    $addDetails->rate = $item['rate'];
+                    $addDetails->save();
+    
+                    // Insert into DesignModel and BusinessApplicationProcesses
+                    $design_data = new DesignModel();
+                    $design_data->business_id = $dataOutput->id;
+                    $design_data->business_details_id = $addDetails->id;
+                    $design_data->design_image = '';
+                    $design_data->bom_image = '';
+                    $design_data->save();
+    
+                    $business_application = new BusinessApplicationProcesses();
+                    $business_application->business_id = $dataOutput->id;
+                    $business_application->business_details_id = $addDetails->id;
+                    $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
+                    $business_application->design_id = $design_data->id;
+                    $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN');
+                    $business_application->production_id = '0';
+                    $business_application->production_status_id = '0';
+                    $business_application->save();
+                }
+            }
+    
+            return [
+                'msg' => 'Data updated successfully.',
+                'status' => 'success',
+                'last_insert_id' => $dataOutput->id
+            ];
+        } catch (\Exception $e) {
+            \Log::error('Update Failed: ' . $e->getMessage());
+            return [
+                'msg' => 'Failed to update data.',
+                'status' => 'error',
+                'error' => $e->getMessage()
+            ];
+        }
+    }
+    
+   
 
-        //         for ($i = 0; $i <= $request->design_count; $i++) {
-        //             $designDetails = BusinessDetails::findOrFail($request->input("design_id_" . $i));
-        //             $designDetails->product_name = $request->input("product_name_" . $i);
-        //             $designDetails->description = $request->input("description_" . $i);
-        //             $designDetails->quantity = $request->input("quantity_" . $i);
-        //             $designDetails->rate = $request->input("rate_" . $i);
-
-
-        //             $designDetails->save();
-        //         }
-
-        
-        //         // Update main design data
-        //         $dataOutput = Business::findOrFail($request->business_main_id);
-        //         $dataOutput->customer_po_number = $request->customer_po_number;
-        //         $dataOutput->title = $request->title;
-        //         $dataOutput->po_validity = $request->po_validity;
-        //         $dataOutput->remarks = $request->remarks;
-        //         if (isset($request['customer_payment_terms'])) {
-        //             $dataOutput->customer_payment_terms = $request['customer_payment_terms'];
-        //         } 
-        //         if (isset($request['customer_terms_condition'])) {
-        //             $dataOutput->customer_terms_condition = $request['customer_terms_condition'];
-        //         }  
-        //         // if (isset($request['remarks'])) {
-        //         //     $dataOutput->remarks = $request['remarks'];
-        //         // } 
-
-                
-        //         $dataOutput->save();
-        
-        //         // Add new design details
-        //         if ($request->has('addmore')) {
-        //             foreach ($request->addmore as $key => $item) {
-        //                 $addDetails = new BusinessDetails();
-        //                 $addDetails->business_id = $request->business_main_id; // Set the parent design ID
-        //                 $addDetails->product_name = $item['product_name'];
-        //                 $addDetails->description = $item['description'];
-        //                 $addDetails->quantity = $item['quantity'];
-        //                 $addDetails->rate = $item['rate'];
-
-                        
-        //                 $addDetails->save();
-        //             }
-        //         }
-        //         $last_insert_id = $dataOutput->id;
-        //         $return_data['last_insert_id'] = $last_insert_id;
-        
-        //         // Returning success message
-        //         return [
-        //             'msg' => 'Data updated successfully.',
-        //             'status' => 'success',
-        //             'addDetails' => $request->all()
-        //         ];
-        //     } catch (\Exception $e) {
-        //         return [
-        //             'msg' => 'Failed to update data.',
-        //             'status' => 'error',
-        //             'error' => $e->getMessage()
-        //         ];
-        //     }
-        // }
-//         public function updateAll($request)
-// {
-//     try {
-//         // Debugging: Log the request data
-//         \Log::info('Request Data:', $request->all());
-//         // Update existing design details
-//         for ($i = 0; $i <= $request->design_count; $i++) {
-//             $designId = $request->input("design_id_" . $i);
-//             $productName = $request->input("addmore[" . $i . "][product_name]");
-//             $description = $request->input("addmore[" . $i . "][description]");
-//             $quantity = $request->input("addmore[" . $i . "][quantity]");
-//             $rate = $request->input("addmore[" . $i . "][rate]");
-
-//             // Debugging: Check the values before saving
-//             \Log::info("Updating ID: $designId", compact('productName', 'description', 'quantity', 'rate'));
-
-//             // Ensure values are not null
-//             if (is_null($productName) || is_null($description) || is_null($quantity) || is_null($rate)) {
-//                 throw new \Exception("One or more required fields are missing.");
-//             }
-
-//             $designDetails = BusinessDetails::findOrFail($designId);
-//             $designDetails->product_name = $productName;
-//             $designDetails->description = $description;
-//             $designDetails->quantity = $quantity;
-//             $designDetails->rate = $rate;
-
-//             $designDetails->save();
-//         }
-
-//         // Update main design data
-//         $dataOutput = Business::findOrFail($request->business_main_id);
-//         $dataOutput->customer_po_number = $request->customer_po_number;
-//         $dataOutput->title = $request->title;
-//         $dataOutput->po_validity = $request->po_validity;
-//         $dataOutput->remarks = $request->remarks;
-//         if (isset($request['customer_payment_terms'])) {
-//             $dataOutput->customer_payment_terms = $request['customer_payment_terms'];
-//         }
-//         if (isset($request['customer_terms_condition'])) {
-//             $dataOutput->customer_terms_condition = $request['customer_terms_condition'];
-//         }
-// // dd($dataOutput);
-// // die();
-//         $dataOutput->save();
-
-//         // Add new design details
-//         if ($request->has('addmore')) {
-//             foreach ($request->addmore as $item) {
-//                 $addDetails = new BusinessDetails();
-//                 $addDetails->business_id = $request->business_main_id; // Set the parent design ID
-//                 $addDetails->product_name = $item['product_name'];
-//                 $addDetails->description = $item['description'];
-//                 $addDetails->quantity = $item['quantity'];
-//                 $addDetails->rate = $item['rate'];
-
-//                 $addDetails->save();
-//             }
-//         }
-
-//         $last_insert_id = $dataOutput->id;
-//         $return_data['last_insert_id'] = $last_insert_id;
-
-//         return [
-//             'msg' => 'Data updated successfully.',
-//             'status' => 'success',
-//             'addDetails' => $request->all()
-//         ];
-//     } catch (\Exception $e) {
-//         // Log the exception message for debugging
-//         \Log::error('Update Failed: ' . $e->getMessage());
-//         return [
-//             'msg' => 'Failed to update data.',
-//             'status' => 'error',
-//             'error' => $e->getMessage()
-//         ];
-//     }
-// }
 // public function updateAll($request)
 // {
 //     try {
 //         \Log::info('Request Data:', $request->all());
-
+//         // dd($request);
+//         // die();
 //         // Update existing design details
 //         for ($i = 0; $i < $request->design_count; $i++) {
 //             $designId = $request->input("design_id_" . $i);
@@ -355,50 +284,66 @@ class BusinessRepository
 //             $quantity = $request->input("quantity_" . $i);
 //             $rate = $request->input("rate_" . $i);
 
-//             \Log::info("Updating ID: $designId", compact('productName', 'description', 'quantity', 'rate'));
-
-//             if (is_null($productName) || is_null($description) || is_null($quantity) || is_null($rate)) {
-//                 throw new \Exception("One or more required fields are missing.");
+//             // Update existing record
+//             if ($designId) {
+//                 $designDetails = BusinessDetails::findOrFail($designId);
+//                 $designDetails->product_name = $productName;
+//                 $designDetails->description = $description;
+//                 $designDetails->quantity = $quantity;
+//                 $designDetails->rate = $rate;
+//                 $designDetails->save();
+//                 \Log::info("Updated ID: $designId", compact('productName', 'description', 'quantity', 'rate'));
 //             }
-
-//             $designDetails = BusinessDetails::findOrFail($designId);
-//             $designDetails->product_name = $productName;
-//             $designDetails->description = $description;
-//             $designDetails->quantity = $quantity;
-//             $designDetails->rate = $rate;
-//             $designDetails->save();
 //         }
 
-//         // Update the main business details
+//         // Update main business record
 //         $dataOutput = Business::findOrFail($request->business_main_id);
 //         $dataOutput->customer_po_number = $request->customer_po_number;
 //         $dataOutput->title = $request->title;
 //         $dataOutput->po_validity = $request->po_validity;
 //         $dataOutput->remarks = $request->remarks;
 
-//         if (isset($request['customer_payment_terms'])) {
+//         // Optional fields
+//         if ($request->has('customer_payment_terms')) {
 //             $dataOutput->customer_payment_terms = $request['customer_payment_terms'];
 //         }
-//         if (isset($request['customer_terms_condition'])) {
+//         if ($request->has('customer_terms_condition')) {
 //             $dataOutput->customer_terms_condition = $request['customer_terms_condition'];
 //         }
-        
 //         $dataOutput->save();
 
-//         // Add new design details
+//         // Add new details if provided
 //         if ($request->has('addmore')) {
-//             foreach ($request->addmore as $index => $item) {
+//             foreach ($request->addmore as $item) {
 //                 $addDetails = new BusinessDetails();
-//                 $addDetails->business_id = $request->business_main_id; // Set the parent design ID
+//                 $addDetails->business_id = $request->business_main_id;
 //                 $addDetails->product_name = $item['product_name'];
 //                 $addDetails->description = $item['description'];
 //                 $addDetails->quantity = $item['quantity'];
 //                 $addDetails->rate = $item['rate'];
 //                 $addDetails->save();
+
+//                 $design_data = new DesignModel();
+//                 $design_data->business_id = $dataOutput->id;
+//                 $design_data->business_details_id = $addDetails->id;
+//                 $design_data->design_image = '';
+//                 $design_data->bom_image = '';
+//                 $design_data->save();
+        
+        
+//                 $business_application = new BusinessApplicationProcesses();
+//                 $business_application->business_id = $dataOutput->id;
+//                 $business_application->business_details_id = $addDetails->id;
+//                 $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
+//                 $business_application->design_id = $design_data->id;
+//                 $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN');
+//                 $business_application->production_id = '0';
+//                 $business_application->production_status_id = '0';
+//                 $business_application->save();
+
 //             }
 //         }
-// // dd($request);
-// // die();
+       
 //         return [
 //             'msg' => 'Data updated successfully.',
 //             'status' => 'success',
@@ -413,79 +358,6 @@ class BusinessRepository
 //         ];
 //     }
 // }
-public function updateAll($request)
-{
-    try {
-        \Log::info('Request Data:', $request->all());
-
-        // Update existing design details
-        for ($i = 0; $i < $request->design_count; $i++) {
-            $designId = $request->input("design_id_" . $i); // Check if this key exists
-            $productName = $request->input("product_name_" . $i);
-            $description = $request->input("description_" . $i);
-            $quantity = $request->input("quantity_" . $i);
-            $rate = $request->input("rate_" . $i);
-
-            // Check if required fields exist
-            // if (is_null($productName) || is_null($description) || is_null($quantity) || is_null($rate)) {
-            //     throw new \Exception("One or more required fields are missing for design index $i.");
-            // }
-
-            $designDetails = BusinessDetails::findOrFail($designId);
-            $designDetails->product_name = $productName;
-            $designDetails->description = $description;
-            $designDetails->quantity = $quantity;
-            $designDetails->rate = $rate;
-            $designDetails->save();
-dd($designDetails);
-die();
-            \Log::info("Updated ID: $designId", compact('productName', 'description', 'quantity', 'rate'));
-        }
-
-        // Update the main business details
-        $dataOutput = Business::findOrFail($request->business_main_id);
-        $dataOutput->customer_po_number = $request->customer_po_number;
-        $dataOutput->title = $request->title;
-        $dataOutput->po_validity = $request->po_validity;
-        $dataOutput->remarks = $request->remarks;
-
-        if (isset($request['customer_payment_terms'])) {
-            $dataOutput->customer_payment_terms = $request['customer_payment_terms'];
-        }
-        if (isset($request['customer_terms_condition'])) {
-            $dataOutput->customer_terms_condition = $request['customer_terms_condition'];
-        }
-        
-        $dataOutput->save();
-
-        // Add new design details
-        if ($request->has('addmore')) {
-            foreach ($request->addmore as $index => $item) {
-                $addDetails = new BusinessDetails();
-                $addDetails->business_id = $request->business_main_id; // Set the parent design ID
-                $addDetails->product_name = $item['product_name'];
-                $addDetails->description = $item['description'];
-                $addDetails->quantity = $item['quantity'];
-                $addDetails->rate = $item['rate'];
-                $addDetails->save();
-            }
-        }
-
-        return [
-            'msg' => 'Data updated successfully.',
-            'status' => 'success',
-            'last_insert_id' => $dataOutput->id
-        ];
-    } catch (\Exception $e) {
-        \Log::error('Update Failed: ' . $e->getMessage());
-        return [
-            'msg' => 'Failed to update data.',
-            'status' => 'error',
-            'error' => $e->getMessage()
-        ];
-    }
-}
-
 
         public function deleteByIdAddmore($id){
             try {

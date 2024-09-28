@@ -33,6 +33,7 @@ class BusinessServices
     {
         try {
             $result = $this->repo->addAll($request);
+           
             if ($result['status'] === 'success') {
                 return ['status' => 'success', 'msg' => 'This business send to Design Department Successfully.'];
             } else {
@@ -42,28 +43,6 @@ class BusinessServices
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
-
-    //     public function addAll( $request )
-//  {
-//         try {
-//             $last_id = $this->repo->addAll( $request );
-//             $path = Config::get( 'DocumentConstant.ORGANIZATION_ADD' );
-//             $ImageName = $last_id[ 'ImageName' ];
-
-    //             uploadImage( $request, 'image', $path, $ImageName );
-
-    //             if ( $last_id ) {
-//                 return [ 'status' => 'success', 'msg' => 'Data Added Successfully.' ];
-//             } else {
-//                 return [ 'status' => 'error', 'msg' => ' Data get Not Added.' ];
-//             }
-
-    //         } catch ( Exception $e ) {
-//             return [ 'status' => 'error', 'msg' => $e->getMessage() ];
-//         }
-
-    //     }
-
     public function getById($id)
     {
         try {
@@ -77,8 +56,8 @@ class BusinessServices
     {
         try {
             $return_data = $this->repo->updateAll($request);
-           dd($return_data);
-           die();
+         dd($return_data);
+         die();
             if ($return_data['status'] == 'success') {
                 return ['status' => 'success', 'msg' => 'Data Updated Successfully.'];
             } else {

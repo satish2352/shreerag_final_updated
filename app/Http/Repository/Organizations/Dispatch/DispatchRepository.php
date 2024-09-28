@@ -18,11 +18,12 @@ class DispatchRepository  {
 public function storeDispatch($request)
 {
     try {
-        // $dataOutput = Dispatch::first();
+    $dataOutput = Dispatch::where('business_details_id', $request->business_details_id)->first();
 
-     
-        $dataOutput = Dispatch::where('business_details_id', $request->business_details_id)->first();
-    
+if (!$dataOutput) {
+    return response()->json(['status' => 'error', 'message' => 'Logistics record for this business does not exist.'], 404);
+}
+
 
         if ($dataOutput) {
             // Update the fields

@@ -13,7 +13,8 @@ class ItemServices
 
     public function getAll(){
         try {
-            return $this->repo->getAll();
+            $data_output = $this->repo->getAll();
+            return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
@@ -23,7 +24,7 @@ class ItemServices
     public function addAll($request){
       try {
           $last_id = $this->repo->addAll($request);
-        
+       
           if ($last_id) {
               return ['status' => 'success', 'msg' => 'Data Added Successfully.'];
           } else {

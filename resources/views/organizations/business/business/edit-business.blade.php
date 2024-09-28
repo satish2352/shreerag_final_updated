@@ -67,13 +67,13 @@
                                                     @if ($key == 0)
                                                         <div class="row">
                                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                <label for="customer_po_number">PO Number : <span
-                                                                        class="text-danger">*</span></label>
+                                                                <label for="customer_po_number">PO Number : <span class="text-danger">*</span></label>
                                                                 <input class="form-control" name="customer_po_number"
                                                                     id="customer_po_number"
                                                                     placeholder="Enter the customer po number"
-                                                                    value="@if (old('customer_po_number')) {{ old('customer_po_number') }}@else{{ $editDataNew->customer_po_number }} @endif">
+                                                                    value="@if(old('customer_po_number')){{trim(old('customer_po_number'))}}@else{{trim($editDataNew->customer_po_number)}} @endif">
                                                             </div>
+                                                            
                                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                                 <label for="title">Customer Name : <span
                                                                         class="text-danger">*</span></label>
@@ -87,75 +87,89 @@
                                                 <th>
                                                 </th>
                                                 <div class="table-responsive">
-                                                    <table class="table table-hover table-white repeater"
-                                                        id="purchase_order_table">
+                                                    <table class="table table-hover table-white repeater" id="purchase_order_table">
                                                         <tr>
                                                             <th>#</th>
-                                                            <th>Product Nmae</th>
+                                                            <th>Product Name</th>
                                                             <th>Description</th>
                                                             <th>Quantity</th>
                                                             <th>Rate</th>
                                                             <th>
-                                                                <button type="button"
-                                                                    class="btn btn-sm btn-success font-18 mr-1"
-                                                                    id="add_more_btn" title="Add" data-repeater-create>
+                                                                <button type="button" class="btn btn-sm btn-success font-18 mr-1" id="add_more_btn" title="Add" data-repeater-create>
                                                                     <i class="fa fa-plus"></i>
                                                                 </button>
                                                             </th>
                                                         </tr>
-                                                        @foreach ($editData as $key => $editDataNew)
+                                                        {{-- @foreach ($editData as $key => $editDataNew)
                                                             <tr>
-
-                                                                <input type="hidden" name="design_count"
-                                                                    id="design_id_{{ $key }}" class="form-control"
-                                                                    value="{{ $key }}" placeholder="">
-
-                                                                <input type="hidden" name="design_id_{{ $key }}"
-                                                                    id="design_id_{{ $key }}" class="form-control"
-                                                                    value="{{ $editDataNew->business_id }}" placeholder="">
-                                                                <td>
-                                                                    <input type="text" name="id"
-                                                                        class="form-control" style="min-width:50px" readonly
-                                                                        value="1">
-                                                                    <input type="hidden" id="i_id"
-                                                                        class="form-control" style="min-width:50px" readonly
-                                                                        value="0">
-                                                                </td>
-                                                                <td>
-                                                                    <input type="text"
-                                                                        name="product_name_{{ $key }}"
-                                                                        value="{{ $editDataNew->product_name }}"
-                                                                        placeholder="Enter product_name"
-                                                                        class="form-control product_name" />
-                                                                </td>
-                                                                <td>
-                                                                    <input type="text"
-                                                                        name="description_{{ $key }}"
-                                                                        value="{{ $editDataNew->description }}"
-                                                                        placeholder="Enter Description"
-                                                                        class="form-control description" />
-                                                                </td>
-                                                                <td>
-                                                                    <input type="text"
-                                                                        name="quantity_{{ $key }}"
-                                                                        value="{{ $editDataNew->quantity }}"
-                                                                        placeholder="Enter Quantity"
-                                                                        class="form-control quantity" />
-                                                                </td>
-                                                                <td>
-                                                                    <input type="text" name="rate_{{ $key }}"
-                                                                        value="{{ $editDataNew->rate }}"
-                                                                        placeholder="Enter Rate"
-                                                                        class="form-control rate" />
-                                                                </td>
-                                                                <td>
-                                                                    <a data-id="{{ $editDataNew->id }}"
-                                                                        class="btn btn-sm btn-danger font-18 ml-2 remove-row"
-                                                                        title="Delete"><i class="fas fa-archive"></i></a>
-                                                                </td>
+                                                                <input type="hidden" name="design_count" value="{{ count($editData) }}">
+                                                                <input type="hidden" name="design_id_{{ $key }}" value="{{ $editDataNew->id }}">
+                                                                <td>{{ $key + 1 }}</td>
+                                                                <td><input type="text" name="product_name_{{ $key }}" value="{{ $editDataNew->product_name }}" class="form-control" /></td>
+                                                                <td><input type="text" name="description_{{ $key }}" value="{{ $editDataNew->description }}" class="form-control" /></td>
+                                                                <td><input type="text" name="quantity_{{ $key }}" value="{{ $editDataNew->quantity }}" class="form-control" /></td>
+                                                                <td><input type="text" name="rate_{{ $key }}" value="{{ $editDataNew->rate }}" class="form-control" /></td>
+                                                                <td><a data-id="{{ $editDataNew->id }}" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete"><i class="fas fa-archive"></i></a></td>
                                                             </tr>
-                                                        @endforeach
+                                                        @endforeach --}}
+
+                                                        @foreach ($editData as $key => $editDataNew)
+    <tr>
+        <input type="hidden" name="design_count" value="{{ count($editData) }}">
+        <input type="hidden" name="design_id_{{ $key }}" value="{{ $editDataNew->id }}">
+        <td>{{ $key + 1 }}</td>
+        <td>
+            <input 
+                type="text" 
+                name="product_name_{{ $key }}" 
+                value="{{ $editDataNew->product_name }}" 
+                class="form-control" 
+                @if($editDataNew->production_status_id === 1113) disabled @endif
+            />
+        </td>
+        <td>
+            <input 
+                type="text" 
+                name="description_{{ $key }}" 
+                value="{{ $editDataNew->description }}" 
+                class="form-control" 
+                @if($editDataNew->production_status_id === 1113) disabled @endif
+            />
+        </td>
+        <td>
+            <input 
+                type="text" 
+                name="quantity_{{ $key }}" 
+                value="{{ $editDataNew->quantity }}" 
+                class="form-control" 
+                @if($editDataNew->production_status_id === 1113) disabled @endif
+            />
+        </td>
+        <td>
+            <input 
+                type="text" 
+                name="rate_{{ $key }}" 
+                value="{{ $editDataNew->rate }}" 
+                class="form-control" 
+                @if($editDataNew->production_status_id === 1113) disabled @endif
+            />
+        </td>
+        <td>
+            <a 
+                data-id="{{ $editDataNew->id }}" 
+                class="btn btn-sm btn-danger font-18 ml-2 remove-row" 
+                title="Delete"
+                @if($editDataNew->production_status_id === 1113) disabled @endif
+            >
+                <i class="fas fa-archive"></i>
+            </a>
+        </td>
+    </tr>
+@endforeach
+
                                                     </table>
+                                                </div>
+                                        
                                                     @foreach ($editData as $key => $editDataNew)
                                                         @if ($key == 0)
                                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -231,27 +245,15 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+    
     <script>
         $(document).ready(function() {
-            function setMinDate() {
-                var today = new Date();
-                var day = String(today.getDate()).padStart(2, '0');
-                var month = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-                var year = today.getFullYear();
-                var todayDate = year + '-' + month + '-' + day;
-
-                $('#po_validity').attr('min', todayDate);
-            }
-            // Call the function to set the minimum date
-            setMinDate();
-            // Initialize jQuery Validation
             var validator = $("#addEmployeeForm").validate({
                 ignore: [], // Validate hidden inputs as well
                 rules: {
                     title: {
                         required: true,
-                        maxlength: 50, // Maximum length of 50 characters
-                        // alphanumeric: true // Alphanumeric validation
+                        maxlength: 50 // Maximum length of 50 characters
                     },
                     customer_po_number: {
                         required: true,
@@ -269,8 +271,7 @@
                     },
                     'addmore[0][product_name]': {
                         required: true,
-                        maxlength: 100, // Maximum length of 100 characters
-                        // alphanumeric: true // Alphanumeric validation
+                        maxlength: 100 // Maximum length of 100 characters
                     },
                     'addmore[0][description]': {
                         required: true,
@@ -290,8 +291,7 @@
                 messages: {
                     title: {
                         required: "Please enter Customer Name.",
-                        maxlength: "Customer Name must be at most 50 characters long.",
-                        // alphanumeric: "Customer Name can only contain letters and numbers."
+                        maxlength: "Customer Name must be at most 50 characters long."
                     },
                     customer_po_number: {
                         required: "Please enter PO number.",
@@ -309,8 +309,7 @@
                     },
                     'addmore[0][product_name]': {
                         required: "Please enter the Product Name.",
-                        maxlength: "Product Name must be at most 100 characters long.",
-                        // alphanumeric: "Product Name can only contain letters and numbers."
+                        maxlength: "Product Name must be at most 100 characters long."
                     },
                     'addmore[0][description]': {
                         required: "Please enter the Description.",
@@ -338,20 +337,16 @@
                     }
                 }
             });
-
-            // Attach validation to the default row
+    
             initializeValidation($("#purchase_order_table tbody tr"));
-
-            // Function to attach validation rules to dynamic fields
+    
             function initializeValidation(row) {
                 row.find('.product_name').rules("add", {
                     required: true,
                     maxlength: 100, // Maximum length of 100 characters
-                    // alphanumeric: true, // Alphanumeric validation
                     messages: {
                         required: "Please enter the Product Name.",
-                        maxlength: "Product Name must be at most 100 characters long.",
-                        // alphanumeric: "Product Name can only contain letters and numbers."
+                        maxlength: "Product Name must be at most 100 characters long."
                     }
                 });
                 row.find('.description').rules("add", {
@@ -383,61 +378,41 @@
                     }
                 });
             }
-
-             // Initialize the counter for new rows
-    var rowCount = {{ count($editData) }};
-
-$("#add_more_btn").click(function() {
-    rowCount++;
-
-    var newRow = `
-        <tr>
-           <td>
-                    <input type="text" name="addmore[${rowCount}][business_id]" class="form-control" value="${rowCount}">
-                </td>
-            <td>
-                <input type="hidden" name="design_id_${rowCount}" value="0">
-                <input type="text" name="product_name_${rowCount}" class="form-control product_name" placeholder="Enter product name" />
-            </td>
-            <td>
-                <input type="text" name="description_${rowCount}" class="form-control description" placeholder="Enter description" />
-            </td>
-            <td>
-                <input type="text" name="quantity_${rowCount}" class="form-control quantity" placeholder="Enter quantity" />
-            </td>
-            <td>
-                <input type="text" name="rate_${rowCount}" class="form-control rate" placeholder="Enter rate" />
-            </td>
-            <td>
-                <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete">
-                    <i class="fa fa-trash"></i>
-                </button>
-            </td>
-        </tr>
-    `;
-
-    $("#purchase_order_table tbody").append(newRow);
-
-    // Attach validation to the new row
-    initializeValidation($("#purchase_order_table tbody tr:last-child"));
-});
-
-$(document).on("click", ".remove-row", function() {
-    $(this).closest("tr").remove();
-    rowCount--; // Decrease the row count
-    validator.resetForm(); // Reset validation state after removing a row
-});
-
-// Initialize validation for the current rows
-$("#purchase_order_table tbody tr").each(function() {
-    initializeValidation($(this));
-});
-
-            // Remove a row when the "Remove" button is clicked
+    
+            var rowCount = {{ count($editData) }};
+            
+            $("#add_more_btn").click(function() {
+                rowCount++;
+                var newRow = `
+                    <tr>
+                        <td><input type="text" name="addmore[${rowCount}][business_id]" class="form-control" value="${rowCount}"></td>
+                        <td>
+                            <input type="hidden" name="design_id_${rowCount}" value="0">
+                            <input type="text" name="addmore[${rowCount}][product_name]" class="form-control product_name" placeholder="Enter product name" />
+                        </td>
+                        <td><input type="text" name="addmore[${rowCount}][description]" class="form-control description" placeholder="Enter description" /></td>
+                        <td><input type="text" name="addmore[${rowCount}][quantity]" class="form-control quantity" placeholder="Enter quantity" /></td>
+                        <td><input type="text" name="addmore[${rowCount}][rate]" class="form-control rate" placeholder="Enter rate" /></td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+                $("#purchase_order_table tbody").append(newRow);
+                initializeValidation($("#purchase_order_table tbody tr:last-child"));
+            });
+    
             $(document).on("click", ".remove-row", function() {
                 $(this).closest("tr").remove();
+                rowCount--; // Decrease the row count
                 validator.resetForm(); // Reset validation state after removing a row
+            });
+    
+            $("#purchase_order_table tbody tr").each(function() {
+                initializeValidation($(this));
             });
         });
     </script>
+    
 @endsection

@@ -84,6 +84,7 @@ padding-left: 20px !important;
                                             <th data-field="unit_id" data-editable="true">Unit Name</th>
                                             <th data-field="hsn_id" data-editable="true">HSN Name</th>
                                             <th data-field="group_type_id" data-editable="true">Group Name</th>
+                                            <th data-field="rack_id" data-editable="true">Rack Number</th>
                                             <th data-field="basic_rate" data-editable="true">Basic Rate</th>
                                             <th data-field="opening_stock" data-editable="true">Open Stock</th>
                                             <th data-field="action">Action</th>
@@ -99,6 +100,7 @@ padding-left: 20px !important;
                                             <td>{{ucwords($data->name)}}</td>
                                             <td>{{ucwords($data->hsn_name)}}</td>
                                             <td>{{ucwords($data->group_name)}}</td>
+                                            <td>{{ucwords($data->rack_name)}}</td>
                                             <td>{{ucwords($data->basic_rate)}}</td>
                                             <td>{{ucwords($data->opening_stock)}}</td>
                                           

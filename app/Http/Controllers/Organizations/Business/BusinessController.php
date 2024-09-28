@@ -105,65 +105,33 @@ class BusinessController extends Controller
             return $e;
         }
     }
-       public function update(Request $request){
-        // $id = $request->input('id');
-        $rules = [
-            // 'customer_po_number' => 'required|string|min:10|max:16',
-            // 'product_name' => 'required',
-            // 'quantity' => 'required',
-            // 'po_validity' => 'required',
-            // 'hsn_number' => 'required',
-            // 'customer_payment_terms' => 'required',
-            // 'customer_terms_condition' => 'required',
-            // 'remarks' => 'required',
-            // 'customer_po_number' => ['required', 'max:255','regex:/^[a-zA-Z\s]+$/u', Rule::unique('businesses', 'customer_po_number')->ignore($id, 'id')],
-            ];       
-        $messages = [
-            // 'title.required' => 'The design customer name is required.',
-            // 'title.string' => 'The design customer name must be a valid string.',
-            // 'title.max' => 'The design customer name must not exceed 255 characters.',
-            // 'customer_po_number.required' => 'The customer po number is required.',
-            // 'customer_po_number.min' => 'The customer po number must be at least 10 characters.',
-            // 'customer_po_number.max' => 'The customer po number must not exceed 16 characters.',
-            // 'product_name.required' => 'The product name is required.',
-            // 'quantity.required' => 'The customer quantity is required.',
-            // 'po_validity.required' => 'The po validity is required.',
-            // 'hsn_number.required' => 'The hsn number is required.',
-            // 'customer_payment_terms.required' => 'The customer payment terms is required.',
-            // 'customer_terms_condition.required' => 'The customer terms condition is required.',
-            // 'remarks.required' => 'The remarks is required.',
-            // 'customer_po_number.unique' => 'po number already exist.',
-            ];
-
+   
+    public function update(Request $request)
+    {
+        $rules = []; // Define your validation rules
+        $messages = []; // Define your custom messages
+    
         try {
-            $validation = Validator::make($request->all(),$rules, $messages);
+            // Validate the request
+            $validation = Validator::make($request->all(), $rules, $messages);
             if ($validation->fails()) {
                 return redirect()->back()
                     ->withInput()
                     ->withErrors($validation);
             } else {
+                // Update data
                 $update_data = $this->service->updateAll($request);
-                // dd($update_data);
-                // die();
-                if ($update_data) {
-                    $msg = $update_data['msg'];
-                    $status = $update_data['status'];
-                    if ($status == 'success') {
-                        return redirect('owner/list-business')->with(compact('msg', 'status'));
-                    } else {
-                        return redirect()->back()
-                            ->withInput()
-                            ->with(compact('msg', 'status'));
-                    }
+                if ($update_data['status'] == 'success') {
+                    return redirect('owner/list-business')->with('msg', $update_data['msg'])->with('status', $update_data['status']);
+                } else {
+                    return redirect()->back()->withInput()->with('msg', $update_data['msg'])->with('status', $update_data['status']);
                 }
             }
         } catch (Exception $e) {
-            return redirect()->back()
-                ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect()->back()->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
-
+    
     public function destroy(Request $request){
         $delete_data_id = base64_decode($request->id);
         try {
@@ -186,8 +154,8 @@ class BusinessController extends Controller
     public function destroyAddmore(Request $request){
         try {
             $delete_rti = $this->service->deleteByIdAddmore($request->delete_id);    
-                 dd($delete_rti);
-                 die();
+                //  dd($delete_rti);
+                //  die();
             if ($delete_rti) {
                 $msg = $delete_rti['msg'];
                 $status = $delete_rti['status'];

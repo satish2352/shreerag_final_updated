@@ -111,6 +111,26 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <div class="form-group">
+                                                    <label for="rack_id">Rack Number:</label> &nbsp;<span
+                                                        class="red-text">*</span>
+                                                    <select class="form-control mb-2"
+                                                        name="rack_id" id="rack_id">
+                                                        <option value="" default>Select Rack Number</option>
+                                                        @foreach ($dataOutputGroupMaster as $group_data)
+                                                            <option value="{{ $group_data['id'] }}"
+                                                                {{ old('rack_id', $editData->rack_id) == $group_data->id ? 'selected' : '' }}>
+                                                                {{ $group_data->rack_name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('rack_id'))
+                                                        <span
+                                                            class="red-text">{{ $errors->first('rack_id') }}</span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                 <label for="basic_rate">Basic Rate:</label>
                                                 <input type="text" class="form-control" value="@if (old('basic_rate')) {{ old('basic_rate') }}@else{{ $editData->basic_rate }} @endif" id="basic_rate" name="basic_rate" placeholder="Enter part item name">
                                             </div>
@@ -176,6 +196,9 @@
                 group_type_id: {
                     required: true,
                 },
+                rack_id: {
+                    required: true,
+                },
                 basic_rate: {
                     required: true,
                     number: true, // Ensure it's a valid number
@@ -205,6 +228,9 @@
                 },
                 group_type_id: {
                     required: "Please select a group name.",
+                },
+                rack_id: {
+                    required: "Please select a rack number."
                 },
                 basic_rate: {
                     required: "Please enter the basic rate.",

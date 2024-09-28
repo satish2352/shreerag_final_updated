@@ -9,7 +9,7 @@ UnitMaster,
 HSNMaster,
 GroupMaster,
 ItemStock,
-ItemStockHistory
+ItemStockHistory,
 };
 use Config;
 
@@ -27,6 +27,9 @@ class ItemRepository  {
         ->leftJoin('tbl_group_master', function ($join) {
             $join->on('tbl_part_item.group_type_id', '=', 'tbl_group_master.id');
         })
+        ->leftJoin('tbl_rack_master', function ($join) {
+            $join->on('tbl_part_item.rack_id', '=', 'tbl_rack_master.id');
+        })
         ->select(
             'tbl_part_item.id',
             'tbl_part_item.part_number',
@@ -40,6 +43,7 @@ class ItemRepository  {
             'tbl_hsn.name as hsn_name',
             'tbl_part_item.group_type_id',
             'tbl_group_master.name as group_name',
+            'tbl_rack_master.name as rack_name'
         )
           ->get();
      
@@ -60,13 +64,14 @@ class ItemRepository  {
             $dataOutput->unit_id = $request->unit_id;
             $dataOutput->hsn_id = $request->hsn_id;
             $dataOutput->group_type_id = $request->group_type_id;
+            $dataOutput->rack_id = $request->rack_id;
             $dataOutput->basic_rate = $request->basic_rate;
             $dataOutput->opening_stock = $request->opening_stock;
             
             if ($request->has('extra_description')) {
                 $dataOutput->extra_description = $request->extra_description;
             }
-         
+           
     
             $dataOutput->save();
     
@@ -165,6 +170,7 @@ class ItemRepository  {
             $dataOutput->unit_id = $request->unit_id;
             $dataOutput->hsn_id = $request->hsn_id;
             $dataOutput->group_type_id = $request->group_type_id;
+            $dataOutput->rack_id = $request->rack_id;
             $dataOutput->basic_rate = $request->basic_rate;
             $dataOutput->opening_stock = $request->opening_stock;
     

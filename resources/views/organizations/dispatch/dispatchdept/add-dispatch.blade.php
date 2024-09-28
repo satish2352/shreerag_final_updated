@@ -48,9 +48,9 @@
                               
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="all-form-element-inner">
-                                        <form action="{{ route('store-dispatch', $editData->business_details_id
-                                       ) }}"
-                                            method="POST" id="editDesignsForm" enctype="multipart/form-data">
+                                        <form  action="{{ route('store-dispatch') }}" method="POST"
+                                       
+                                          id="editDesignsForm" enctype="multipart/form-data">
                                             @csrf
                                             <input type="hidden" name="business_details_id" id=""
                                             class="form-control" value="{{ $editData->business_details_id }}"

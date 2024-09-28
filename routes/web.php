@@ -227,6 +227,8 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/recive-owner-logistics-list', ['as' => 'recive-owner-logistics-list', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getOwnerAllListBusinessReceivedFromLogistics']);
         Route::get('/list-owner-send-to-dispatch', ['as' => 'list-owner-send-to-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getOwnerAllListBusinessFianaceSendToDispatch']);
     
+        Route::get('/list-product-completed-report', ['as' => 'list-product-completed-report', 'uses' => 'App\Http\Controllers\Organizations\Report\ReportController@getCompletedProductList']);
+
 
     });
     
