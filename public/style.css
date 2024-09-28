@@ -269,7 +269,7 @@ body {}
 /*  8. Scroll Area
 /*----------------------------------------*/
 .comment-scrollbar, .timeline-scrollbar, .messages-scrollbar, .project-list-scrollbar {
-    height: 580px;
+    height: 100% !important;
 }
 .mCSB_outside+.mCSB_scrollTools {
     right: 0px;

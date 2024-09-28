@@ -19,7 +19,7 @@
         <div class="sparkline13-list">
           <div class="sparkline13-hd">
             <div class="main-sparkline13-hd">
-              <h1>Purchase Order <span class="table-project-n">Data</span> Table</h1>
+              <h1>Purchase Order <span class="table-project-n">Form</span> </h1>
             </div><br>
             <form action="{{route('store-purchase-order')}} " id="forms" method="post" enctype="multipart/form-data">
               @csrf
