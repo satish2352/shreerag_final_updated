@@ -84,14 +84,14 @@ padding-left: 20px !important;
                                             <th data-field="description" data-editable="true">Description</th>
                                             <th data-field="quantity" data-editable="true">Quantity</th>                                         
                                             <th data-field="design_image" data-editable="false">Design Layout</th>
-                                            <th data-field="bom_image" data-editable="false">BOM</th>                                                                                                                           
+                                            <th data-field="bom_image" data-editable="false">BOM</th>  
+                                            <th data-field="design_image_re" data-editable="false">Revised Design Layout
+                                            </th>
+                                            <th data-field="bom_image_re" data-editable="false">Revised BOM</th>                                                                                                                              
                                             {{-- <th data-field="action">Action</th> --}}
                                         </tr>
 
                                     </thead>
-
-                                   
-
                                     <tbody>
                                         @foreach($data_output as $data)
                                         <tr>
@@ -108,9 +108,22 @@ padding-left: 20px !important;
                                                 href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
                                                 alt="bill of material" >Click to download</a>
                                         </td>
-                                        
+                                    </td>
+@if($data->reject_reason_prod == '')
+<td>-</td>
+<td>-</td>
 
-                                            {{-- <td>
+@else
+                                <td> <a class="img-size" target="_blank"
+                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_design_image'] }}"
+                                        alt="Design"> Click to view</a>
+                                </td>
+                                <td> <a class="img-size"
+                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_bom_image'] }}"
+                                        alt="bill of material" >Click to download</a>
+                                </td>
+
+                        @endif                    {{-- <td>
                                                 <div style="display: flex; align-items: center;">
                                                     <a href="{{route('edit-business', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
                                                     <a href="{{route('delete-business', base64_encode($data->id))}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash" aria-hidden="true"></i></button></a>

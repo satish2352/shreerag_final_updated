@@ -28,6 +28,7 @@ class AllListController extends Controller
                                           ->where('design_status_id', 1115)
                                           ->where('design_is_view_rejected', '0')
                                           ->update($update_data);
+                                          
         
             return view('organizations.designer.list.list_design_received_from_production_for_correction', compact('data_output'));
         } catch (\Exception $e) {

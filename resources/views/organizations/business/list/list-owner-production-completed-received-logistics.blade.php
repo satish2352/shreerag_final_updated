@@ -85,8 +85,8 @@
                                                 <th data-field="customer_po_number" data-editable="true">PO Number</th>
                                                 <th data-field="product_name" data-editable="true">Product Name</th>
                                                 <th data-field="quantity" data-editable="true">Quantity</th>
-                                                <th data-field="remark" data-editable="true">Remark</th>
-                                                <th data-field="title" data-editable="true">customer Name</th>
+                                                <th data-field="description" data-editable="true">Description</th>
+                                                {{-- <th data-field="title" data-editable="true">customer Name</th> --}}
                                                 {{-- <th data-field="" data-editable="false">Action</th> --}}
                                             </tr>
 
@@ -104,8 +104,8 @@
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
-                                                    <td>{{ ucwords($data->remarks) }}</td>
-                                                    <td>{{ ucwords($data->title) }}</td>
+                                                    <td>{{ ucwords($data->description) }}</td>
+                                                    {{-- <td>{{ ucwords($data->title) }}</td> --}}
                                                     
                                                 {{-- <td>
                                                     <div style="display: flex; align-items: center;">

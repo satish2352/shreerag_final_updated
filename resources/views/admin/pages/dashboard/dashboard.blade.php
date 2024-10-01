@@ -2385,6 +2385,10 @@
                                                         Production Department
                                                         @elseif($data->business_status_id == 1112 || $data->business_status_id == 1126 &&
                                                         $data->design_status_id == 1113 &&
+                                                        $data->production_status_id == 1113 && $data->reject_reason_prod == "")
+                                                        Rejected Design in Production Department
+                                                        @elseif($data->business_status_id == 1112 || $data->business_status_id == 1126 &&
+                                                        $data->design_status_id == 1113 &&
                                                         $data->production_status_id == 1113)
                                                         Design Department
                                                         @elseif($data->business_status_id == 1112 || $data->business_status_id == 1126 &&

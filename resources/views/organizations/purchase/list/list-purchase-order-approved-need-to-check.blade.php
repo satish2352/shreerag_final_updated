@@ -88,8 +88,7 @@ padding-left: 20px !important;
 
                                     </thead>
 
-                                   <?php
-                                   ?>
+                                   
 
                                     <tbody>
                                         @foreach($data_output as $data)

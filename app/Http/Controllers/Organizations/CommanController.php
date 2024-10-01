@@ -83,7 +83,7 @@ class CommanController
     {
         try {
             $purchaseOrder = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
-              
+              ->join('business_application_processes', 'business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id')
             ->select(
                     'purchase_orders.id',
                     'purchase_orders.purchase_orders_id',
@@ -108,7 +108,8 @@ class CommanController
                     'vendors.gst_no', 
                     'vendors.quote_no', 
                     'purchase_orders.is_active',
-                    'purchase_orders.created_at'
+                    'purchase_orders.created_at',
+                    'business_application_processes.business_status_id'
                 )
                 ->where('purchase_orders.purchase_orders_id', $purchase_order_id)
                 ->first();

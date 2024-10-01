@@ -557,13 +557,23 @@ class PurchaseOrderController extends Controller
             $pdfPath = storage_path('app/public/purchase_order_' . $purchase_order_id . '.pdf');
     
             // Send email with PDF attachment
-            Mail::send([], [], function ($message) use ($purchaseOrder, $pdfPath) {
+            // Mail::send([], [], function ($message) use ($purchaseOrder, $pdfPath) {
+            //     $message->to($purchaseOrder->vendor_email)
+            //         ->subject('Purchase Order Notification')
+            //         ->attach($pdfPath);
+            //     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+            // });
+            $vendorName = $purchaseOrder->vendor_name;
+            Mail::send([], [], function ($message) use ($purchaseOrder, $pdfPath, $vendorName) {
                 $message->to($purchaseOrder->vendor_email)
                     ->subject('Purchase Order Notification')
-                    ->attach($pdfPath);
-                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+                    ->attach($pdfPath)
+                    ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+            
+                // Set plain text body
+                $message->text("Respected $vendorName, \n\n I hope this message finds you well.\n\nWe would like to place a purchase order with your company for the following items. Please find the details of the purchase order below:\n\nThank you!");
             });
-    
+            
             return redirect('purchase/list-purchase-order-approved-sent-to-vendor')->with('status', 'success')->with('msg', 'Purchase order mail sent to vendor.');
     
         } catch (\Exception $e) {

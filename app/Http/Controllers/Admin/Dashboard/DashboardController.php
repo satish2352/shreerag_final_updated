@@ -105,6 +105,12 @@ class DashboardController extends Controller {
             ->leftJoin('businesses_details', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
             })
+            ->leftJoin('designs', function($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+              })
+              ->leftJoin('design_revision_for_prod', function($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+              })
             ->leftJoin('purchase_orders', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
             })
@@ -114,7 +120,8 @@ class DashboardController extends Controller {
              'business_application_processes.production_status_id', 'business_application_processes.store_status_id','purchase_orders.purchase_status_from_purchase',
              'purchase_orders.finanace_store_receipt_status_id', 'purchase_orders.purchase_status_from_owner',
              'purchase_orders.security_status_id', 'purchase_orders.quality_status_id', 'purchase_orders.finanace_store_receipt_status_id',
-             'business_application_processes.logistics_status_id', 'business_application_processes.dispatch_status_id') // Adjust if you need more fields
+             'business_application_processes.logistics_status_id', 'business_application_processes.dispatch_status_id',
+             'design_revision_for_prod.reject_reason_prod') // Adjust if you need more fields
             ->orderBy('businesses.updated_at', 'desc')
            
             ->get()

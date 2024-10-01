@@ -225,7 +225,7 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
-<script>
+{{-- <script>
    
     // Add more rows when the "Add More" button is clicked
 $("#add_more_btn").click(function() {
@@ -283,8 +283,75 @@ function updateSerialNumbers() {
 
 });
 
-</script>
+</script> --}}
 
+<script>
+    $(document).ready(function() {
+    // Initialize the row count
+    var rowCount = $("#purchase_order_table tbody tr").length;
+    var i_count = rowCount > 0 ? rowCount : 0;
+    $('#i_id').val(i_count); // Set initial value of hidden input
 
+    // Function to update serial numbers
+    function updateSerialNumbers() {
+        $('#purchase_order_table tbody tr').each(function(index) {
+            $(this).find('td:first input[type="text"]').val(index + 1); // Update serial number in the input
+        });
+    }
+
+    // Event handler for the "Add More" button
+    $("#add_more_btn").click(function() {
+        i_count++; // Increment the count
+        $('#i_id').val(i_count); // Update hidden input with the new count
+
+        // Create a new row
+        var newRow = `
+            <tr>
+                <td>
+                    <input type="text" name="addmore[${i_count}][id]" class="form-control" style="min-width:50px" readonly value="${i_count}">
+                </td>
+                <td>
+                    <select class="form-control part-no mb-2" name="addmore[${i_count}][part_no_id]">
+                        <option value="">Select Part Item</option>
+                        @foreach ($dataOutputPartItem as $data)
+                            <option value="{{ $data['id'] }}">{{ $data['description'] }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td>
+                    <input class="form-control quantity" name="addmore[${i_count}][quantity]" type="text">
+                </td>
+                <td>
+                    <input class="form-control unit" name="addmore[${i_count}][unit]" type="text">
+                </td>
+                <td>
+                    <input type="checkbox" name="addmore[${i_count}][material_send_production]" value="1">
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete" data-repeater-delete>
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+
+        // Append the new row
+        var row = $(newRow).appendTo("#purchase_order_table tbody");
+
+        // Attach validation to the new row (if applicable)
+        initializeValidation(row);
+        validator.resetForm(); // Reset validation state after adding a new row
+
+        // Attach event handler for removing rows
+        $(document).on('click', '.remove-row', function() {
+            $(this).closest('tr').remove();
+            updateSerialNumbers(); // Update serial numbers after deletion
+        });
+
+        // Update serial numbers after adding a new row
+        updateSerialNumbers();
+    });
+});
+</script>>
 
 @endsection

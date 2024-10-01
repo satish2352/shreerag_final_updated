@@ -77,14 +77,14 @@
 </style>
 
 
-<div class="data-table-area mg-tb-15">
+<div class="data-table-area mg-tb-15" >
     <div class="container-fluid">
-        <div class="row">
+        <div class="row" >
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="sparkline13-list" >
+                <div class="sparkline13-list" id="printableArea">
                   
-                        <div style="border: 1px solid black; padding: 10px; width: 100%;">
+                        <div style="border: 1px solid black; padding: 10px; width: 100%; margin-bottom:70px;">
                             <!-- Header Section -->
                             <div style="border-bottom: 1px solid black; padding-bottom: 10px;">
                                 <div style="text-align: center; font-size: 20px; font-weight: bold;">Share</div>
@@ -146,42 +146,80 @@
                                             <strong>Terms & Condition :- {{ $getOrganizationData->terms_condition }}</strong>
                                         </td>
                                         <td class="no-border" colspan="3"></td>
-                                        <td>Sub Total</td>
-                                        <td class="text-right">{{ $purchaseOrderDetails->sum('amount') }}</td>
+                                        <td style="border: 1px solid black;">Sub Total</td>
+                                        <td style="border: 1px solid black;" class="text-right">{{ $purchaseOrderDetails->sum('amount') }}</td>
                                     </tr>
-                                    <tr>
+                                    {{-- <tr>
                                         <td class="no-border" colspan="2">
                                             <strong>Remark :- {{ $purchaseOrder->remark }}</strong>
                                         </td>
                                         <td class="no-border" colspan="3"></td>
                                         <td>Discount {{ $purchaseOrder->discount }}%</td>
                                         <td class="text-right">{{ $purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100) }}</td>
+                                    </tr> --}}
+                                    <tr>
+                                        <td class="no-border" colspan="2"></td>
+                                        <td class="no-border" colspan="3"></td>
+                                        <td style="border: 1px solid black;">Discount Amount</td>
+                                        <td class="text-right" style="border: 1px solid black;">
+                                            {{ $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100) }} <!-- Discount Amount -->
+                                        </td>
                                     </tr>
+                                    {{-- <tr>
+                                        <td class="no-border" colspan="2"></td>
+                                        <td class="no-border" colspan="3"></td>
+                                        <td>Total After Discount</td>
+                                        <td class="text-right">
+                                            {{ $purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100) }} <!-- Total After Discount -->
+                                        </td>
+                                    </tr> --}}
                                     <tr>
                                         <td class="no-border" colspan="5"></td>
-                                        <td>Freight</td>
-                                        <td class="text-right">0.00</td>
+                                        <td style="border: 1px solid black;">Freight</td>
+                                        <td style="border: 1px solid black;" class="text-right">0.00</td>
                                     </tr>
-                                    <tr>
+                                    {{-- <tr>
                                         <td class="no-border" colspan="5"></td>
                                         <td>{{ $purchaseOrder->tax_type }} {{ $purchaseOrder->tax_id }}%</td>
                                         <td class="text-right">{{ ($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * (1 + ($purchaseOrder->tax_id / 100)) }}</td>
-                                    </tr>
+                                    </tr> --}}
                                     <tr>
                                         <td class="no-border" colspan="5"></td>
-                                        <td>NIL GST</td>
-                                        <td class="text-right">0.00</td>
+                                        <td style="border: 1px solid black;">{{ $purchaseOrder->tax_type }} {{ $purchaseOrder->tax_id }}%</td>
+                                        <td style="border: 1px solid black;" class="text-right">
+                                            {{ 
+                                                ($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * ($purchaseOrder->tax_id / 100) 
+                                            }} <!-- GST Amount -->
+                                        </td>
+                                    </tr>
+                                    {{-- <tr>
+                                        <td class="no-border" colspan="2"></td>
+                                        <td class="no-border" colspan="3"></td>
+                                        <td>Total Amount Including GST</td>
+                                        <td class="text-right">
+                                            {{ 
+                                                ($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * (1 + ($purchaseOrder->tax_id / 100)) 
+                                            }} <!-- Total Amount Including GST -->
+                                        </td>
+                                    </tr> --}}
+                                    <tr>
+                                        <td class="no-border" colspan="5"></td>
+                                        <td style="border: 1px solid black;">NIL GST</td>
+                                        <td style="border: 1px solid black;" class="text-right">0.00</td>
                                     </tr>
                                     <tr style="border-bottom: 1px solid black;">
                                         <td class="no-border" colspan="3">
                                             <strong>Transport/Dispatch :-</strong>
                                         </td>
                                         <td class="no-border" colspan="2"></td>
-                                        <td><strong>Net Total</strong></td>
-                                        <td class="text-right">
-                                            <strong>{{ $purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100) + ($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * 0.09 * 2 }}</strong>
+                                        <td style="border: 1px solid black;"><strong>Net Total (Including {{ $purchaseOrder->tax_type }})</strong></td>
+                                        <td style="border: 1px solid black;" class="text-right">
+                                            <strong>  {{ 
+                                                ($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * (1 + ($purchaseOrder->tax_id / 100)) 
+                                            }} <!-- Total Amount Including GST --></strong>
                                         </td>
                                     </tr>
+                                   
                                     <tr>
                                         <td colspan="8" class="no-border">
                                             Delivery AS PER ATTACHED DELIVERY SCHEDULE
@@ -213,16 +251,11 @@
                     
                             <!-- Print Button -->
                             <a>
-                                <button data-toggle="tooltip" onclick="printInvoice()" title="Accept Purchase Order" style="margin-top: 20px;">Print</button>
+                                <button data-toggle="tooltip" onclick="printInvoice()" style="margin-top: 20px;">Print</button>
                             </a>
                         </div>
                     
-                        <script>
-                            function printInvoice() {
-                                window.print();
-                            }
-                        </script>
-                 
+                      
                     
                
                     </div>
@@ -230,11 +263,43 @@
                 
 
                
-                <script>
-                    function printInvoice() {
-                        window.print();
-                    }
-                </script>
+                
 
             </div>
+          
         </div>
+  <script>
+                // function printInvoice() {
+                //     window.print();
+                // }
+                function printInvoice() {
+        // Get the content you want to print
+        var contentToPrint = document.getElementById("printableArea").innerHTML;
+    
+        // Open a new window
+        var printWindow = window.open('', '', 'height=600,width=800');
+    
+        // Write the content to the new window with proper styles
+        printWindow.document.write('<html><head><title>Print</title>');
+        printWindow.document.write('<style>');
+        printWindow.document.write('body { font-family: Arial, sans-serif; margin: 0; padding: 50px; }'); // Add padding to body
+        printWindow.document.write('#printableArea { width: 100%; overflow: hidden; }'); // Ensure full width of content
+        printWindow.document.write('</style>');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(contentToPrint);
+        printWindow.document.write('</body></html>');
+    
+        // Close the document to render
+        printWindow.document.close();
+        printWindow.focus();
+    
+        // Trigger the print dialog
+        printWindow.print();
+    
+        // Close the print window after printing
+        printWindow.close();
+    }
+    
+    
+    
+            </script>

@@ -154,19 +154,22 @@
 
 $(document).ready(function() {
 
-    // Add more rows when the "Add More" button is clicked
-$("#add_more_btn").click(function() {
-    var i_count = $('#i_id').val();
-    var i = parseInt(i_count) + 1;
-    $('#i_id').val(i);
+    var rowCount = $("#purchase_order_table tbody tr").length;
+    var i_count = rowCount > 0 ? rowCount : 0;
+      // Set the initial value of the hidden input to the current count
+      $('#i_id').val(i_count);
 
+$("#add_more_btn").click(function() {
+      i_count++; // Increment the count
+
+        $('#i_id').val(i_count); // Update the hidden input with the new count
     var newRow = `
         <tr>
+           <td>
+                    <input type="text" name="addmore[${i_count}][id]" class="form-control" style="min-width:50px" readonly value="${i_count}">
+                </td>
             <td>
-                <input type="text" name="addmore[${i}][id]" class="form-control" style="min-width:50px" readonly value="${i}">
-            </td>
-            <td>
-                <select class="form-control part-no mb-2" name="addmore[${i}][part_item_id]">
+                <select class="form-control part-no mb-2" name="addmore[${i_count}][part_item_id]">
                     <option value="">Select Part Item</option>
                     @foreach ($dataOutputPartItem as $data)
                         <option value="{{ $data['id'] }}">{{ $data['description'] }}</option>
@@ -174,13 +177,13 @@ $("#add_more_btn").click(function() {
                 </select>
             </td>
             <td>
-                <input class="form-control quantity" name="addmore[${i}][quantity]" type="text">
+                <input class="form-control quantity" name="addmore[${i_count}][quantity]" type="text">
             </td>
             <td>
-                <input class="form-control unit" name="addmore[${i}][unit]" type="text">
+                <input class="form-control unit" name="addmore[${i_count}][unit]" type="text">
             </td>
             <td>
-                <input type="checkbox" name="addmore[${i}][material_send_production]" value="1">
+                <input type="checkbox" name="addmore[${i_count}][material_send_production]" value="1">
             </td>
             <td>
                 <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete" data-repeater-delete>

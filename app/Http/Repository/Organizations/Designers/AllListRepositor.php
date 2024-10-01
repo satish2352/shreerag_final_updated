@@ -47,15 +47,20 @@ class AllListRepositor  {
               'businesses.remarks',
               'businesses.is_active',
               'production.business_id',
+              'designs.bom_image',
+              'designs.design_image',
               'design_revision_for_prod.reject_reason_prod',
               'design_revision_for_prod.id as design_revision_for_prod_id',
-              // 'design_revision_for_prod.id as reject_reason_prod',
-              'designs.bom_image',
-              'designs.design_image'
+              'design_revision_for_prod.bom_image as re_bom_image',
+              'design_revision_for_prod.design_image as re_design_image',
+           
 
           )
           ->distinct('design_revision_for_prod.id')
+          ->orderBy('designs.updated_at', 'desc')
           ->get();
+          dd($data_output);
+          die();
         return $data_output;
     } catch (\Exception $e) {
         

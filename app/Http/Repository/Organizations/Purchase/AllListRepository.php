@@ -348,6 +348,7 @@ class AllListRepository
       //   )->get();
       $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL')];
       $data_output = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
+      ->join('businesses_details', 'businesses_details.id', '=', 'purchase_orders.business_details_id')
       ->select(
           'purchase_orders.id',
           'purchase_orders.purchase_orders_id',         
@@ -357,6 +358,7 @@ class AllListRepository
           'vendors.vendor_address', 
           'vendors.contact_no', 
           'vendors.gst_no', 
+          'purchase_orders.business_details_id',
           'purchase_orders.is_active'
       )
       ->where('purchase_orders.business_details_id', $id)
@@ -368,7 +370,8 @@ class AllListRepository
       ->whereIn('purchase_status_from_purchase', $array_to_be_check)
 
       ->get(); // Added to execute the query and get results
-      
+      // dd($data_output);
+      // die();
       return $data_output;
     } catch (\Exception $e) {
 
@@ -648,6 +651,7 @@ class AllListRepository
               'business_application_processes.requisition_id as requistition_id',
               
               'businesses.id',
+              'businesses_details.id',
               'businesses_details.product_name',
               'businesses.title',
               'businesses_details.description',
