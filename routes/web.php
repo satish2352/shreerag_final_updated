@@ -312,6 +312,7 @@ Route::group(['middleware' => ['admin']], function () {
     
         //ALL List
         Route::get('/list-reject-design-from-prod', ['as' => 'list-reject-design-from-prod', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@getAllListDesignRecievedForCorrection']);
+        Route::get('/list-accept-design-by-production', ['as' => 'list-accept-design-by-production', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@acceptdesignbyProduct']);
     });
     
     Route::group(['prefix' => 'proddept'], function () {

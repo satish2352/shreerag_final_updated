@@ -428,7 +428,7 @@
                                         <div class="row border-bottom">
                                             <div class="col mb-2">
                                                 <span
-                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Accept For Design</span>
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Designs Sent To Production</span>
                                                 <span
                                                     class="h5 font-bold mb-0">{{ $design_dept_counts['design_sent_for_production'] }}</span>
                                             </div>
@@ -441,7 +441,7 @@
                                             </div>
                                         </div>
                                         <div class="mt-2 mb-0 text-sm">
-                                            <a href="{{ route('list-reject-design-from-prod') }}">
+                                            <a href="{{ route('list-design-upload') }}">
                                                 <span
                                                     class="badge badge-pill bg-soft-success text-success me-2">
                                                     <i class="fa-solid fa-arrow-right"></i> </span>
@@ -452,7 +452,37 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-sm-6 col-12">
+                            <div class="col-xl-4 col-sm-6 col-12 ">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Accept For Design</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $design_dept_counts['accepted_design_production_dept'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-accept-design-by-production') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-sm-6 col-12 mt-4">
                                 <div class="card shadow border-0">
                                     <div class="card-body">
                                         <div class="row border-bottom">
@@ -460,7 +490,7 @@
                                                 <span
                                                     class="h6 font-semibold text-muted text-sm d-block mb-2">Rejecte For Design</span>
                                                 <span
-                                                    class="h5 font-bold mb-0">{{ $design_dept_counts['corected_design_need_to_upload'] }}</span>
+                                                    class="h5 font-bold mb-0">{{ $design_dept_counts['rejected_design_production_dept'] }}</span>
                                             </div>
                                             <div class="col-auto">
                                                 <div
@@ -602,6 +632,68 @@
                                         </div>
                                         <div class="mt-2 mb-0 text-sm">
                                             <a href="{{ route('list-new-requirements-received-for-design') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Material Received For Production</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $production_dept_counts['material_received_for_production'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-material-recived') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Production Completed</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $production_dept_counts['production_completed_prod_dept'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-final-production-completed') }}">
                                                 <span
                                                     class="badge badge-pill bg-soft-success text-success me-2">
                                                     <i class="fa-solid fa-arrow-right"></i> </span>
@@ -1040,7 +1132,7 @@
                                                 <span
                                                     class="h6 font-semibold text-muted text-sm d-block mb-2">Material Sent to Store</span>
                                                 <span
-                                                    class="h5 font-bold mb-0">{{ $quality_dept_counts['material_need_to_sent_to_production'] }}</span>
+                                                    class="h5 font-bold mb-0">{{ $quality_dept_counts['material_need_to_sent_to_store'] }}</span>
                                             </div>
                                             <div class="col-auto">
                                                 <div
@@ -1110,8 +1202,38 @@
                                         <div class="row border-bottom">
                                             <div class="col mb-2">
                                                 <span
-                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Total
-                                                     Logistics  List</span>
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Production Completed Product</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $logistics_counts['production_completed_prod_dept_logisitics'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-final-production-completed-recive-to-logistics') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Total Logistics  List</span>
                                                 <span
                                                     class="h5 font-bold mb-0">{{ $logistics_counts['logistics_list_count'] }}</span>
                                             </div>
@@ -1165,7 +1287,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-sm-6 col-12">
+                            <div class="col-xl-4 col-sm-6 col-12 mt-4">
                                 <div class="card shadow border-0">
                                     <div class="card-body">
                                         <div class="row border-bottom">
@@ -1196,9 +1318,318 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-xl-4 col-sm-6 col-12 mt-4">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Total Transport Name</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $logistics_counts['transport_name_count'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-transport-name') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div> 
                     @endif
+                    @if (session()->get('role_id') == config('constants.ROLE_ID.FINANCE'))
+                    <div class="analysis-progrebar-area mg-b-15">
+                        <div class="row">
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Need to check for Payment</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $logistics_counts['production_completed_prod_dept_logisitics'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-sr-and-gr-genrated-business') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">PO Submited For Sanction For Payment</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $logistics_counts['production_completed_prod_dept_logisitics'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-po-sent-for-approval') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">PO Pyament Need To Release</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $logistics_counts['production_completed_prod_dept_logisitics'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-po-sent-for-approval') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-sm-6 col-12 mt-4">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Recive Logistics List</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $fianance_counts['logistics_send_by_finance_received_fianance_count'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('recive-logistics-list') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-sm-6 col-12 mt-4">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Product Submited to Dispatch</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $fianance_counts['fianance_send_to_dispatch_count'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-send-to-dispatch') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                           
+                        </div>
+                    </div> 
+                    @endif
+
+                    @if (session()->get('role_id') == config('constants.ROLE_ID.INVENTORY'))
+                    <div class="analysis-progrebar-area mg-b-15">
+                        <div class="row">
+                                    <div class="col-xl-4 col-sm-6 col-12">
+                                        <div class="card shadow border-0">
+                                            <div class="card-body">
+                                                <div class="row border-bottom">
+                                                    <div class="col mb-2">
+                                                        <span
+                                                            class="h6 font-semibold text-muted text-sm d-block mb-2"> All New Requirements</span>
+                                                        <span
+                                                            class="h5 font-bold mb-0">{{ $inventory_dept_counts['material_need_to_sent_to_production_inventory'] }}</span>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <div
+                                                            class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                            <i class="fa-solid fa-paint-brush"></i>
+        
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-2 mb-0 text-sm">
+                                                    <a href="{{ route('list-accepted-design-from-prod') }}">
+                                                        <span
+                                                            class="badge badge-pill bg-soft-success text-success me-2">
+                                                            <i class="fa-solid fa-arrow-right"></i> </span>
+                                                        <span class="text-nowrap text-xs text-muted">View
+                                                            Details</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-sm-6 col-12">
+                                        <div class="card shadow border-0">
+                                            <div class="card-body">
+                                                <div class="row border-bottom">
+                                                    <div class="col mb-2">
+                                                        <span
+                                                            class="h6 font-semibold text-muted text-sm d-block mb-2">Inventory Material List</span>
+                                                        <span
+                                                            class="h5 font-bold mb-0">{{ $inventory_dept_counts['part_item_inventory'] }}</span>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <div
+                                                            class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                            <i class="fa-solid fa-paint-brush"></i>
+        
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-2 mb-0 text-sm">
+                                                    <a href="{{ route('list-inventory-material') }}">
+                                                        <span
+                                                            class="badge badge-pill bg-soft-success text-success me-2">
+                                                            <i class="fa-solid fa-arrow-right"></i> </span>
+                                                        <span class="text-nowrap text-xs text-muted">View
+                                                            Details</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Production Department send material list</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $logistics_counts['production_completed_prod_dept_logisitics'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-product-inprocess-received-from-production') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     @if (session()->get('role_id') == config('constants.ROLE_ID.DISPATCH'))
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
@@ -1251,7 +1682,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-2 mb-0 text-sm">
-                                    <a href="{{ route('list-vehicle-type') }}">
+                                    <a href="{{ route('list-dispatch') }}">
                                         <span
                                             class="badge badge-pill bg-soft-success text-success me-2">
                                             <i class="fa-solid fa-arrow-right"></i> </span>
@@ -2264,7 +2695,7 @@
                                                     <li class="right-side"
                                                         style="color:#{{ str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) . str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) . str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) }};">
                                                         <span><b>{{ $data->product_name }}</b> : -</span>
-                                                        @if($data->business_status_id == 1118 &&
+                                                        @if($data->off_canvas_status == 22 && $data->business_status_id == 1118 || $data->business_status_id == 1126 &&
                                                         $data->design_status_id == 1114 &&
                                                         $data->production_status_id == 1121 &&
                                                         $data->store_status_id == 1123 &&
@@ -2273,9 +2704,9 @@
                                                         $data->finanace_store_receipt_status_id == 1136 &&
                                                         $data->security_status_id == 1132 &&
                                                         $data->quality_status_id == 1134 && $data->logistics_status_id
-                                                        ==1146 && $data->dispatch_status_id ==1148 )
+                                                        =="1146" && $data->dispatch_status_id =="1148" )
                                                         Dispatch Department Product Dispatch Completed 
-                                                        @elseif($data->business_status_id == 1118 &&
+                                                        @elseif($data->off_canvas_status == 21 && $data->business_status_id == 1118 &&
                                                         $data->design_status_id == 1114 &&
                                                         $data->production_status_id == 1121 &&
                                                         $data->store_status_id == 1123 &&
@@ -2286,7 +2717,7 @@
                                                         $data->quality_status_id == 1134 && $data->logistics_status_id
                                                         =="1146" && $data->dispatch_status_id =="1147" )
                                                         Finance Department sent to Dispatch Department
-                                                        @elseif($data->business_status_id == 1118 &&
+                                                        @elseif($data->off_canvas_status == 20 && $data->dispatch_status_id ==NULL && $data->business_status_id == 1118 &&
                                                         $data->design_status_id == 1114 &&
                                                         $data->production_status_id == 1121 &&
                                                         $data->store_status_id == 1123 &&
@@ -2295,9 +2726,9 @@
                                                         $data->finanace_store_receipt_status_id == 1136 &&
                                                         $data->security_status_id == 1132 &&
                                                         $data->quality_status_id == 1134 && $data->logistics_status_id
-                                                        =="1146" && $data->dispatch_status_id ==NULL )
+                                                        =="1146")
                                                         Finance Department Received from Logistics Department
-                                                        @elseif($data->business_status_id == 1118 &&
+                                                        @elseif($data->off_canvas_status == 19 && $data->business_status_id == 1118 &&
                                                         $data->design_status_id == 1114 &&
                                                         $data->production_status_id == 1121 &&
                                                         $data->store_status_id == 1123 &&
@@ -2305,28 +2736,13 @@
                                                         $data->purchase_status_from_purchase == 1129 &&
                                                         $data->finanace_store_receipt_status_id == 1136 &&
                                                         $data->security_status_id == 1132 &&
-                                                        $data->quality_status_id == 1134 && $data->logistics_status_id
-                                                        ==1145 )
-                                                        Logistics Department
-                                                        @elseif($data->business_status_id == 1118 &&
-                                                        $data->design_status_id == 1114 &&
-                                                        $data->production_status_id == 1121 ||  $data->production_status_id == 1119 &&
-                                                        $data->store_status_id == 1123 ||$data->store_status_id == 1119 &&
-                                                        $data->purchase_status_from_owner == "1129" &&
-                                                        $data->purchase_status_from_purchase == 1129 &&
-                                                        $data->finanace_store_receipt_status_id == 1136 &&
-                                                        $data->security_status_id == 1132 &&
-                                                        $data->quality_status_id == 1134 )
-                                                        Production Department Completed Production
-                                                        @elseif($data->business_status_id == 1118 &&
-                                                        $data->design_status_id == 1114 &&
-                                                        $data->production_status_id == 1119 &&
-                                                        $data->store_status_id == 1123 &&
-                                                        $data->purchase_status_from_owner == "1129" &&
-                                                        $data->purchase_status_from_purchase == 1129 &&
-                                                        $data->finanace_store_receipt_status_id == 1136 &&
-                                                        $data->security_status_id == 1132 &&
-                                                        $data->quality_status_id == 1134 )
+                                                        $data->quality_status_id == 1134 && $data->logistics_status_id =="1145" )
+                                                         Logistics Department  Submitted Form
+                                                        @elseif($data->off_canvas_status == 18 && $data->business_status_id == 1118 &&
+                                                        $data->design_status_id == 1114)
+                                                        Production Department Completed Production and Received Logistics Department
+                                                        @elseif($data->off_canvas_status == 17 && $data->business_status_id == 1118 &&
+                                                        $data->design_status_id == 1114)
                                                         Store Department forward to Production Department
                                                         @elseif($data->business_status_id == 1127 &&
                                                         $data->design_status_id == 1114 &&
@@ -2337,7 +2753,7 @@
                                                         $data->finanace_store_receipt_status_id == 1140 &&
                                                         $data->security_status_id == 1132 &&
                                                         $data->quality_status_id == 1134)
-                                                        Store Department Material Received from Quality Department(Generated GRN)
+                                                        Quality Department(Generated GRN) and Store Department Material Received
                                                         @elseif($data->business_status_id == 1127 &&
                                                         $data->design_status_id == 1114 &&
                                                         $data->production_status_id == 1117 &&
@@ -2345,7 +2761,7 @@
                                                         $data->purchase_status_from_owner == "1129" &&
                                                         $data->purchase_status_from_purchase == 1129 &&
                                                         $data->finanace_store_receipt_status_id == 1140 && $data->security_status_id ==1132)
-                                                        Security Department Received Material and PO
+                                                        Security Department Received Material and PO also Generated Gate Pass
                                                         @elseif($data->business_status_id == 1127 &&
                                                         $data->design_status_id == 1114 &&
                                                         $data->production_status_id == 1117 &&
@@ -2362,38 +2778,43 @@
                                                         Purchase Department Approved Owner
                                                         @elseif($data->business_status_id == 1126 &&
                                                         $data->design_status_id == 1114 &&
-                                                        $data->production_status_id == 1117 &&
+                                                        $data->production_status_id == 1117 ||$data->production_status_id == 1121 &&
                                                         $data->store_status_id == 1123 &&
                                                         $data->purchase_status_from_purchase == 1126)
                                                         Purchase Department 
-                                                        @elseif($data->business_status_id == "1123" &&
+                                                        @elseif($data->off_canvas_status == 16 && $data->business_status_id == "1123" &&
                                                         $data->design_status_id == "1114" &&
                                                         $data->production_status_id == "1117" &&
                                                         $data->store_status_id == "1123")
-                                                        Store Department
-                                                        @elseif($data->business_status_id == 1116 &&
-                                                        $data->design_status_id == 1116 &&
-                                                        $data->production_status_id == 1116)
-                                                        Production Department Received Revise Design
-                                                        @elseif($data->business_status_id == 1115 &&
+                                                        Store Department submitted requistion form
+                                                   
+                                                        {{-- @elseif($data->business_status_id == 1115 &&
                                                         $data->design_status_id == 1115 &&
                                                         $data->production_status_id == 1115)
-                                                        Production Department Rejected Design and Received Design Department
-                                                        @elseif($data->business_status_id == 1112 &&
+                                                        Production Department Rejected Design and Received Design Department --}}
+                                                        @elseif($data->off_canvas_status == 15 && $data->business_status_id == 1112 &&
                                                         $data->design_status_id == 1114 &&
                                                         $data->production_status_id == 1114)
-                                                        Production Department
-                                                        @elseif($data->business_status_id == 1112 || $data->business_status_id == 1126 &&
-                                                        $data->design_status_id == 1113 &&
-                                                        $data->production_status_id == 1113 && $data->reject_reason_prod == "")
+                                                        Accepted Production Department and send to store Department
+                                                        @elseif($data->off_canvas_status == 14 && $data->business_status_id == 1116 || $data->business_status_id == 1126 &&
+                                                        $data->design_status_id == 1116 &&
+                                                        $data->production_status_id == 1116 )
+                                                        Corrected Design Submitted to Production Department
+                                                        {{-- @elseif($data->off_canvas_status == 14 && $data->business_status_id == 1115 || $data->business_status_id == 1126 &&
+                                                        $data->design_status_id == 1115 &&
+                                                        $data->production_status_id == 1115 && $data->reject_reason_prod == "")
+                                                        Corrected Design Submitted to Production Department --}}
+
+                                                        @elseif($data->off_canvas_status == 13 && $data->business_status_id == 1115 || $data->business_status_id == 1126 &&
+                                                        $data->design_status_id == 1115 &&
+                                                        $data->production_status_id == 1115 && $data->reject_reason_prod == "")
                                                         Rejected Design in Production Department
-                                                        @elseif($data->business_status_id == 1112 || $data->business_status_id == 1126 &&
-                                                        $data->design_status_id == 1113 &&
-                                                        $data->production_status_id == 1113)
-                                                        Design Department
-                                                        @elseif($data->business_status_id == 1112 || $data->business_status_id == 1126 &&
+                                                        @elseif($data->off_canvas_status == 12 && $data->business_status_id == 1112 || $data->business_status_id == 1126 &&
+                                                        $data->design_status_id == 1111 && $data->production_status_id == 0 && $data->design_image == "" && $data->bom_image == "")
+                                                         Design Department Submited Design and Received Production Department
+                                                        @elseif($data->off_canvas_status == 11 && $data->business_status_id == 1112 || $data->business_status_id == 1126 &&
                                                         $data->design_status_id == 1111 )
-                                                        Business Department
+                                                        Business Department Request send to Design Department
                                                         @else
                                                         Unknown Department
                                                         @endif

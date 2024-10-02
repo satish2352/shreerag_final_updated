@@ -468,6 +468,8 @@ public function updateAll($request)
             $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
             $business_application->production_id = $productionIds[0] ?? null; // Use first element if available
             $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_PRODUCTION');
+            $business_application->	off_canvas_status = 12;
+
             $business_application->save();
         }
 
@@ -682,6 +684,7 @@ public function updateAll($request)
                 $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_REVISED');
                 // $business_application->production_id = $designRevisionForProd->production_id;
                 $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECIVED_FROM_PRODUCTION_DEPT_REVISED');
+                $business_application->	off_canvas_status = 14;
                 $business_application->save();
 
                 $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_REVISED');

@@ -18,7 +18,17 @@ class AllListController extends Controller
     public function __construct(){
         $this->service = new AllListServices();
     }
-  
+    public function acceptdesignbyProduct(){
+        try {
+            // $acceptdesign = base64_decode($id);
+           
+            $data_output = $this->service->acceptdesignbyProduct();
+           
+            return view('organizations.designer.list.list-accept-design-by-production', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
     public function getAllListDesignRecievedForCorrection(Request $request){
         try {
             $data_output = $this->service->getAllListDesignRecievedForCorrection();

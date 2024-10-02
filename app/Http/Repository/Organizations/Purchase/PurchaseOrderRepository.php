@@ -75,6 +75,8 @@ class PurchaseOrderRepository
             // Update related BusinessApplicationProcesses record
             $businessOutput = BusinessApplicationProcesses::where('business_id', $data_for_requistition->business_id)->firstOrFail();
             $businessOutput->business_status_id = config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL');
+            $businessOutput->off_canvas_status = 17;
+
             $businessOutput->save();
 
                

@@ -40,6 +40,7 @@ public function storeLogistics($request)
          
             if ($business_application) {
                 $business_application->logistics_status_id = config('constants.LOGISTICS_DEPARTMENT.LOGISTICS_FILL_COMPLETED_PRODUCTION_FORM_IN_LOGISTICS');
+                $business_application->off_canvas_status =19;
                 $business_application->save();
                 // dd($business_application);
                 // die();
@@ -63,6 +64,7 @@ public function sendToFianance($id) {
         $business_application = BusinessApplicationProcesses::where('business_details_id', $id)->first();
         if ($business_application) {
             $business_application->logistics_status_id = config('constants.LOGISTICS_DEPARTMENT.LOGISTICS_SEND_PRODUCTION_REQUEST_TO_FINANCE');
+            $business_application->off_canvas_status =20;
             $business_application->save();
 
             return response()->json(['status' => 'success', 'message' => 'Production status updated successfully.']);

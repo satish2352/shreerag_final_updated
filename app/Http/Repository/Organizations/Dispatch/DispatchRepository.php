@@ -41,6 +41,7 @@ if (!$dataOutput) {
             
             if ($business_application) {
                 $business_application->dispatch_status_id = config('constants.DISPATCH_DEPARTMENT.DISPATCH_DEPARTMENT_MARKED_DISPATCH_COMPLETED');
+                $business_application->off_canvas_status = 22;
                 $business_application->save();
 
                 return response()->json(['status' => 'success', 'message' => 'Production status updated successfully.']);

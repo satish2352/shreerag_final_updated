@@ -96,6 +96,10 @@ class StoreRepository
                         ->update($update_data_admin);
 
             }
+          // Updating off_canvas_status for the business application
+        $business_application->off_canvas_status = 16;
+        $business_application->save();
+           
             // PurchaseOrderModel::where('business_id', $business_application->business_id)->update(['purchase_status_from_purchase', config('constants.PUCHASE_DEPARTMENT.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE')]);
         
             return [
@@ -164,7 +168,7 @@ class StoreRepository
                 $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.ACCEPTED_DESIGN_BY_PRODUCTION');
                 $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.LIST_BOM_PART_MATERIAL_RECIVED_FROM_STORE_DEPT_FOR_PRODUCTION');
                 $business_application->store_material_sent_date = date('Y-m-d');
-                
+                $business_application->off_canvas_status = 17; 
                 // Update the purchase order statuses, receipt number, and dates
                 $purchase_order->store_status_id = config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION');
                 $purchase_order->store_receipt_no = $store_receipt_no;
@@ -451,6 +455,7 @@ class StoreRepository
                 $dataOutput->production_id = $dataOutput_ProductionDetails->production_id;
 
                 $dataOutput->save();
+
   
     $partItemId = (int) $item['part_item_id'];
 
@@ -498,8 +503,7 @@ if ($existingEntry && isset($existingEntry->part_item_id)) {
 }
 
             }
-    
-            // If there are error messages, return them without a generic error message
+                // If there are error messages, return them without a generic error message
             if (!empty($errorMessages)) {
                 return [
                     'status' => 'error',

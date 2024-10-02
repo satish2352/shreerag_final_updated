@@ -343,6 +343,9 @@ class AllListRepository  {
         ->leftJoin('designs', function ($join) {
           $join->on('purchase_orders.business_details_id', '=', 'designs.business_details_id');
         })
+        ->leftJoin('production_details', function($join) {
+          $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
+      })
         ->where('businesses_details.id', $id)
         ->distinct('purchase_orders.purchase_orders_id')
         ->select(
@@ -358,9 +361,9 @@ class AllListRepository  {
             'vendors.gst_no',
             'businesses_details.product_name', 
             'businesses_details.description', 
-          
-              'designs.bom_image',
-          'designs.design_image',
+            'production_details.material_send_production',
+            'designs.bom_image',
+            'designs.design_image',
             'purchase_orders.is_active',
             'businesses_details.updated_at'
         )

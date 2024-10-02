@@ -48,6 +48,7 @@ return new class extends Migration
             $table->string('product_production_inprocess_status_id')->nullable();
             $table->string('logistics_status_id')->nullable();
             $table->string('dispatch_status_id')->nullable();
+            $table->string('off_canvas_status')->nullable();
             $table->boolean('design_is_view')->default(0);
             $table->boolean('design_is_view_rejected')->default(0);
             $table->boolean('design_is_view_resended')->default(0);

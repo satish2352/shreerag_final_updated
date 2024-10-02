@@ -94,6 +94,7 @@ class ProductionRepository  {
                 $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
                 $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.ACCEPTED_DESIGN_BY_PRODUCTION');
                 $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION');
+                $business_application->off_canvas_status = 15;
                 $business_application->save();
     
                 // Update admin view for the business
@@ -198,6 +199,7 @@ class ProductionRepository  {
                 $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.LIST_DESIGN_RECIEVED_FROM_PROD_DEPT_FOR_REVISED');
                 // $business_application->production_id =  $production_data->id;
                 $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.DESIGN_SENT_TO_DESIGN_DEPT_FOR_REVISED');
+                $business_application->off_canvas_status = 13;
                 $business_application->save();
 
                 $update_data_admin['current_department'] = config('constants.PRODUCTION_DEPARTMENT.DESIGN_SENT_TO_DESIGN_DEPT_FOR_REVISED');
@@ -243,6 +245,7 @@ class ProductionRepository  {
             $business_application = BusinessApplicationProcesses::where('business_details_id', $id)->first();
             if ($business_application) {
                 $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN');
+                $business_application->off_canvas_status = 18; 
                 $business_application->save();
     
                 $dataOutput = Logistics::where('business_details_id', $id)->first();

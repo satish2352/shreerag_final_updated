@@ -15,6 +15,8 @@ class AllListServices
         $this->repo = new AllListRepository();
 
     }
+
+   
     public function getAllReceivedFromFianance(){
         try {
           $data_output = $this->repo->getAllReceivedFromFianance();

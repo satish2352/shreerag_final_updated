@@ -15,6 +15,16 @@ class AllListServices
         $this->repo = new AllListRepositor();
 
     }
+    public function acceptdesignbyProduct(){
+        try {
+            $data_output = $this->repo->acceptdesignbyProduct();
+            // dd($data_output);
+            // die();
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
 
     public function getAllListDesignRecievedForCorrection(){
         try {

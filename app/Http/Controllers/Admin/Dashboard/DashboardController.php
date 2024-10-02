@@ -28,6 +28,7 @@ use App\Models\ {
     Leaves,
     LeaveManagement,
     Notice,
+    TransportName,
 //     Gallery,
 //     AdditionalSolutions,
 //     OurSolutions,
@@ -121,7 +122,7 @@ class DashboardController extends Controller {
              'purchase_orders.finanace_store_receipt_status_id', 'purchase_orders.purchase_status_from_owner',
              'purchase_orders.security_status_id', 'purchase_orders.quality_status_id', 'purchase_orders.finanace_store_receipt_status_id',
              'business_application_processes.logistics_status_id', 'business_application_processes.dispatch_status_id',
-             'design_revision_for_prod.reject_reason_prod') // Adjust if you need more fields
+             'design_revision_for_prod.reject_reason_prod','designs.design_image','designs.bom_image','designs.design_image','business_application_processes.off_canvas_status') // Adjust if you need more fields
             ->orderBy('businesses.updated_at', 'desc')
            
             ->get()
@@ -140,14 +141,26 @@ class DashboardController extends Controller {
         $contact_us_count = ContactUs::where('is_active',1)->count();
         $vision_mission_count = VisionMission::where('is_active',1)->count();
         $director_desk_count = DirectorDesk::where('is_active',1)->count();
-        $logistics_list_count = BusinessApplicationProcesses::where('logistics_status_id', 1146)
+        $production_completed_prod_dept_logisitics = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
+        ->where('production_status_id', 1121)->where('store_status_id', 1123)->where('off_canvas_status', 18)
         ->where('is_active',1)->count();
-        $logistics_send_by_finance_count = BusinessApplicationProcesses::leftJoin('tbl_logistics', function($join) {
-            $join->on('business_application_processes.business_details_id', '=', 'tbl_logistics.business_details_id');
-        })->where('business_application_processes.logistics_status_id', 1146)
-          ->count();
+        $logistics_list_count = BusinessApplicationProcesses::where('logistics_status_id', 1145)->where('off_canvas_status',19)
+        ->where('is_active',1)->count();
+        $logistics_send_by_finance_count = BusinessApplicationProcesses::where('logistics_status_id', 1146)->where('off_canvas_status',20)
+        ->where('is_active',1)->count();
+      
           $vehicle_type_count = VehicleType::where('is_active',1)->count();
-        
+          $transport_name_count = TransportName::where('is_active',1)->count();
+          $logistics_send_by_finance_received_fianance_count = BusinessApplicationProcesses::where('logistics_status_id', 1146)->where('off_canvas_status',20)
+          ->where('is_active',1)->count();
+          $fianance_send_to_dispatch_count = BusinessApplicationProcesses::where('logistics_status_id', 1146)->where('off_canvas_status',21)
+          ->where('dispatch_status_id', 1147)
+          ->where('is_active',1)->count();
+
+
+
+
+
           $business_received_for_designs = DesignModel::leftJoin('businesses', function($join) {
             $join->on('designs.business_id', '=', 'businesses.id');
         })
@@ -163,13 +176,16 @@ class DashboardController extends Controller {
         $business_received_for_designs = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1111)
         ->where('production_status_id', 0)
         ->where('is_active',1)->count();
-        $design_sent_for_production = BusinessApplicationProcesses::where('business_status_id',1116)->where('design_status_id', 1116)
-        ->where('production_status_id', 1116)
+        $design_sent_for_production = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1113)
+        ->where('production_status_id', 1113)
         ->where('is_active',1)->count();
-        $corected_design_need_to_upload = BusinessApplicationProcesses::where('business_status_id',1115)->where('design_status_id', 1115)
+       
+        $accepted_design_production_dept = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1114)
+        ->where('production_status_id', 1114)
+        ->where('is_active',1)->count();
+        $rejected_design_production_dept = BusinessApplicationProcesses::where('business_status_id',1115)->where('design_status_id', 1115)
         ->where('production_status_id', 1115)
         ->where('is_active',1)->count();
-
         $design_recived_for_production = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1113)
         ->where('production_status_id', 1113)
         ->where('is_active',1)->count();
@@ -183,18 +199,27 @@ class DashboardController extends Controller {
         ->where('production_status_id', 1116)
         ->where('is_active',1)->count();
 
-        $material_need_to_sent_to_production = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1114)
-        ->where('production_status_id', 1114)
+        $material_received_for_production = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
+        ->where('production_status_id', 1119)->where('store_status_id', 1123)->where('off_canvas_status', 17)
         ->where('is_active',1)->count();
+        $production_completed_prod_dept = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
+        ->where('production_status_id', 1121)->where('store_status_id', 1123)->where('off_canvas_status', 18)
+        ->where('is_active',1)->count();
+
+        $material_need_to_sent_to_production = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1114)
+        ->where('production_status_id', 1114)->where('off_canvas_status', 15)
+        ->where('is_active',1)->count();
+
         $material_sent_to_production = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
         ->where('production_status_id', 1119)->where('store_status_id', 1118)
         ->where('is_active',1)->count();
         $material_for_purchase = BusinessApplicationProcesses::where('business_status_id',1123)->where('design_status_id', 1114)
         ->where('production_status_id', 1117)->where('store_status_id',1123)
         ->where('is_active',1)->count();
-        $material_received_from_quality = BusinessApplicationProcesses::where('business_status_id',1123)->where('design_status_id', 1114)
+        $material_received_from_quality = BusinessApplicationProcesses::where('business_status_id',1127)->where('design_status_id', 1114)
         ->where('production_status_id', 1117)->where('store_status_id',1123)
         ->where('is_active',1)->count();
+
         $rejected_chalan = BusinessApplicationProcesses::where('business_status_id',1116)->where('design_status_id', 1116)
         ->where('production_status_id', 1116)
         ->where('is_active',1)->count();
@@ -215,17 +240,21 @@ class DashboardController extends Controller {
 
         $GRN_genration= PurchaseOrderModel::where('purchase_status_from_owner',1129)->where('purchase_status_from_purchase',1129)
         ->where('security_status_id',1132)->where('quality_status_id', null)->where('is_active',1)->count();
-        $material_need_to_sent_to_production = PurchaseOrderModel::where('purchase_status_from_owner',1129)->where('purchase_status_from_purchase',1129)
+        $material_need_to_sent_to_store = PurchaseOrderModel::where('purchase_status_from_owner',1129)->where('purchase_status_from_purchase',1129)
         ->where('security_status_id',1132)->where('quality_status_id', 1134)->where('is_active',1)->count();
         $rejected_chalan_po_wise = RejectedChalan::where('chalan_no', '!=', '')->where('is_active', 1)->count();
 
-        $dispatch_received_from_finance= BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1114)
-        ->where('production_status_id', 1114)
+        $dispatch_received_from_finance= BusinessApplicationProcesses::where('logistics_status_id', 1146)->where('off_canvas_status',21)
+        ->where('dispatch_status_id', 1147)
         ->where('is_active',1)->count();
-        $dispatch_completed = Vendors::where('is_active',1)->count();
+        $dispatch_completed = BusinessApplicationProcesses::where('logistics_status_id', 1146)->where('off_canvas_status',22)
+        ->where('dispatch_status_id', 1148)
+        ->where('is_active',1)->count();
 
-
-        
+        $material_need_to_sent_to_production_inventory = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1114)
+        ->where('production_status_id', 1114)->where('off_canvas_status', 15)
+        ->where('is_active',1)->count();
+        $part_item_inventory = PartItem::where('is_active',1)->count();
         $leave_request= Leaves::where(['is_active' => 1, 'is_approved' => 0])->count();
         $accepted_leave_request = Leaves::where(['is_active' => 1, 'is_approved' => 2])->count();
         $rejected__leave_request = Leaves::where(['is_active' => 1, 'is_approved' => 1])->count();
@@ -289,14 +318,19 @@ class DashboardController extends Controller {
         ];
          $design_dept_counts = [
             'business_received_for_designs' => $business_received_for_designs,
+            // 'business_design_send_to_product' => $business_design_send_to_product,
             'design_sent_for_production' => $design_sent_for_production,
-            'corected_design_need_to_upload' => $corected_design_need_to_upload,
+            'accepted_design_production_dept' => $accepted_design_production_dept,
+            'rejected_design_production_dept' => $rejected_design_production_dept,
          ];
+      
          $production_dept_counts = [
             'design_recived_for_production' => $design_recived_for_production,
             'accepted_and_sent_to_store' => $accepted_and_sent_to_store,
             'rejected_design_list_sent' => $rejected_design_list_sent,
             'corected_design_list_recived' => $corected_design_list_recived,
+            'material_received_for_production' => $material_received_for_production,
+            'production_completed_prod_dept' => $production_completed_prod_dept,
          ];
          $store_dept_counts = [
             'material_need_to_sent_to_production' => $material_need_to_sent_to_production,
@@ -318,19 +352,31 @@ class DashboardController extends Controller {
          ];
          $quality_dept_counts = [
             'GRN_genration' => $GRN_genration,
-            'material_need_to_sent_to_production' => $material_need_to_sent_to_production,
+            'material_need_to_sent_to_store' => $material_need_to_sent_to_store,
             'rejected_chalan_po_wise' => $rejected_chalan_po_wise,
          ];
          $logistics_counts = [
+            'production_completed_prod_dept_logisitics' => $production_completed_prod_dept_logisitics,
             'logistics_list_count' => $logistics_list_count,
             'logistics_send_by_finance_count' => $logistics_send_by_finance_count,
             'vehicle_type_count' => $vehicle_type_count,
+            'transport_name_count'=>$transport_name_count,
         ];
+        $fianance_counts = [
+            'logistics_send_by_finance_received_fianance_count' => $logistics_send_by_finance_received_fianance_count,
+            'fianance_send_to_dispatch_count'=>$fianance_send_to_dispatch_count,
+        ];
+
         $dispatch_counts = [
             'dispatch_received_from_finance' => $dispatch_received_from_finance,
             'dispatch_completed' => $dispatch_completed,
            
         ];
+        $inventory_dept_counts = [
+
+            'material_need_to_sent_to_production_inventory' => $material_need_to_sent_to_production_inventory,
+            'part_item_inventory'=>$part_item_inventory
+         ];
         $hr_counts = [
             'leave_request' => $leave_request,
             'accepted_leave_request' => $accepted_leave_request,
@@ -349,8 +395,8 @@ class DashboardController extends Controller {
 
         return view('admin.pages.dashboard.dashboard', ['return_data' => $counts, 'cms_counts' =>$cms_counts, 'logistics_counts'=>$logistics_counts, 'design_dept_counts'=>$design_dept_counts,
     'production_dept_counts'=>$production_dept_counts, 'store_dept_counts'=>$store_dept_counts,
-'purchase_dept_counts'=>$purchase_dept_counts, 'secuirty_dept_counts'=>$secuirty_dept_counts, 'quality_dept_counts'=>$quality_dept_counts,
-'dispatch_counts'=>$dispatch_counts, 'hr_counts'=>$hr_counts, 'employee_counts'=>$employee_counts, 'employee_leave_type'=>$employee_leave_type ]);
+'purchase_dept_counts'=>$purchase_dept_counts, 'secuirty_dept_counts'=>$secuirty_dept_counts, 'quality_dept_counts'=>$quality_dept_counts,'fianance_counts'=>$fianance_counts,
+'inventory_dept_counts'=>$inventory_dept_counts,'dispatch_counts'=>$dispatch_counts, 'hr_counts'=>$hr_counts, 'employee_counts'=>$employee_counts, 'employee_leave_type'=>$employee_leave_type ]);
     } catch (\Exception $e) {
         \Log::error("Error fetching business data: " . $e->getMessage());
         return redirect()->back()->with('error', 'An error occurred while fetching data.');
