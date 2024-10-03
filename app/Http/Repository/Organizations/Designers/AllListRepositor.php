@@ -110,10 +110,7 @@ class AllListRepositor  {
               'design_revision_for_prod.reject_reason_prod',
               'design_revision_for_prod.id as design_revision_for_prod_id',
               'design_revision_for_prod.bom_image as re_bom_image',
-              'design_revision_for_prod.design_image as re_design_image',
-           
-
-          )
+              'design_revision_for_prod.design_image as re_design_image')
           ->distinct('design_revision_for_prod.id')
           ->orderBy('designs.updated_at', 'desc')
           ->get();
