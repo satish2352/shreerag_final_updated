@@ -112,7 +112,7 @@ class AllListRepositor  {
               'design_revision_for_prod.bom_image as re_bom_image',
               'design_revision_for_prod.design_image as re_design_image')
           ->distinct('design_revision_for_prod.id')
-          ->orderBy('designs.updated_at', 'desc')
+          ->orderBy('design_revision_for_prod.updated_at', 'desc')
           ->get();
           // dd($data_output);
           // die();
