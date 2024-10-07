@@ -224,7 +224,6 @@ class StoreRepository
         try {
             // dd($request->business_details_id);
           $business_details_id = base64_decode($request->business_details_id);
-            // die($business_details_id);
             $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $business_details_id)->firstOrFail();
            
 
@@ -280,8 +279,6 @@ class StoreRepository
     
 
             $existingEntry = ProductionDetails::find($dataOutput->id);
-// dd($existingEntry );
-// die();
 // Ensure $existingEntry exists and has a part_item_id
 if ($existingEntry && isset($existingEntry->part_item_id)) {
 

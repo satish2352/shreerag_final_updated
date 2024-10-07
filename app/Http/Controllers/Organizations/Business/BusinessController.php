@@ -152,8 +152,6 @@ class BusinessController extends Controller
     public function destroyAddmore(Request $request){
         try {
             $delete_rti = $this->service->deleteByIdAddmore($request->delete_id);    
-                //  dd($delete_rti);
-                //  die();
             if ($delete_rti) {
                 $msg = $delete_rti['msg'];
                 $status = $delete_rti['status'];

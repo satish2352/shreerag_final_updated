@@ -319,11 +319,7 @@ class DeliveryChalanController extends Controller
     public function edit(Request $request){
         $edit_data_id = $request->id;
         // $edit_data_id = base64_decode($request->id);
-    //    dd($edit_data_id);
-    //    die();
         $editData = $this->service->getById($edit_data_id);
-    //        dd($editData);
-    //    die();
         $dataOutputVendor = Vendors::where('is_active', true)->get();
         $dataOutputTax = Tax::where('is_active', true)->get();
         $dataOutputPartItem = PartItem::where('is_active', true)->get();

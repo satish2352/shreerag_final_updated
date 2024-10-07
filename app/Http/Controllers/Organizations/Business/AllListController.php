@@ -147,8 +147,6 @@ class AllListController extends Controller
     public function submitFinalPurchaseOrder($id){
         try {
             $data_output = $this->service->getPurchaseOrderBusinessWise($id);
-        //    dd($data_output);
-        //    die();
             return view('organizations.business.list.list-purchase-order-approved-bussinesswise', compact('data_output'));
         } catch (\Exception $e) {
             return $e;

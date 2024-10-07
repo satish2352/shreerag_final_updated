@@ -42,8 +42,6 @@ class RejectedChalanServices
     {
         try {
             $data = $this->repo->storeRejectedChalan($request);
-            // dd($data);
-            // die();
             if ($data) {
                 return ['status' => 'success', 'msg' => 'Rejected Chalan Added Successfully.'];
             } else {
