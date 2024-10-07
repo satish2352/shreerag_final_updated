@@ -162,8 +162,6 @@ class AllListRepository  {
                 ->orderBy('production.updated_at', 'desc')
             ->get();
 
-            // dd($data_output);
-            // die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -371,8 +369,7 @@ class AllListRepository  {
         // ->whereIn('purchase_orders.store_receipt_no',$array_to_be_check_new)
         ->orderBy('businesses_details.updated_at', 'desc')
         ->get(); 
-        // dd( $data_output);
-        // die();
+     
         return $data_output;
     } catch (\Exception $e) {
         return $e->getMessage(); 

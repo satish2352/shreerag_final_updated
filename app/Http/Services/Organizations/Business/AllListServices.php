@@ -23,8 +23,7 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->getAllListForwardedToDesign();
-        //  dd($data_output);
-        //  die();
+       
             return $data_output;
 
         } catch (\Exception $e) {
@@ -36,8 +35,6 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->getAllListCorrectionToDesignFromProduction();
-            // dd($data_output);
-            // die();
             return $data_output; 
         } catch (\Exception $e) {
             return $e;
@@ -48,8 +45,6 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->materialAskByProdToStore();
-            // dd($data_output);
-            // die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -61,8 +56,6 @@ class AllListServices
     {
         try {
             $data_output =  $this->repo->getAllStoreDeptSentForPurchaseMaterials();
-        //  dd( $data_output);
-        //  die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -75,8 +68,6 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->getAllListPurchaseOrder();
-            // dd($data_output);
-            // die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -102,8 +93,6 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->listPOReceivedForApprovaTowardsOwner();
-            // dd( $data_output);
-            // die();
         return $data_output;
     } catch (\Exception $e) {
             return $e;
@@ -114,8 +103,6 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->loadDesignSubmittedForProduction();
-        // dd($data_output);
-        // die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -125,8 +112,6 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->loadDesignSubmittedForProductionBusinessWise($business_id);
-        // dd($data_output);
-        // die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -137,8 +122,6 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->getPurchaseOrderBusinessWise($purchase_order_id);
-        //    dd($data_output);
-        //    die();
             return $data_output;
 
         } catch (\Exception $e) {
@@ -205,8 +188,7 @@ class AllListServices
     public function getOwnerAllCompletedProduction(){
         try {
           $data_output = $this->repo->getOwnerAllCompletedProduction();
-        //  dd($data_output);
-        //  die();
+       
           return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -215,8 +197,7 @@ class AllListServices
     public function getOwnerFinalAllCompletedProductionLogistics(){
         try {
           $data_output = $this->repo->getOwnerFinalAllCompletedProductionLogistics();
-        //  dd($data_output);
-        //  die();
+       
           return $data_output;
         } catch (\Exception $e) {
             return $e;

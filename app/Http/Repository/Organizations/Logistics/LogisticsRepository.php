@@ -26,8 +26,6 @@ public function storeLogistics($request)
         // $dataOutput = Logistics::where('id', $request->id)->first();
         // $dataOutput = BusinessApplicationProcesses::where('business_id', $request->business_id)->first();
         $dataOutput = Logistics::where('business_details_id', $request->business_id)->first();
-        // dd($dataOutput);
-        // die();
         if ($dataOutput) {
             // Update the fields
             $dataOutput->vehicle_type_id = $request->vehicle_type_id;
@@ -53,8 +51,6 @@ public function storeLogistics($request)
                 ->update($update_data_admin);
                 NotificationStatus::where('business_details_id', $business_application->business_details_id)
                 ->update($update_data_business);
-                // dd($business_application);
-                // die();
                 return response()->json(['status' => 'success', 'message' => 'Production status updated successfully.']);
             } else {
                 return response()->json(['status' => 'error', 'message' => 'Business application not found.'], 404);

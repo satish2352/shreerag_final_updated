@@ -31,8 +31,6 @@ class BusinessRepository
     {
         try {
             $data_output = Business::orderBy('businesses.updated_at', 'desc')->get();
-            // dd( $data_output);
-            // die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;

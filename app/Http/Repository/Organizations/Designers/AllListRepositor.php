@@ -110,8 +110,6 @@ class AllListRepositor  {
           ->distinct('design_revision_for_prod.id')
           // ->orderBy('design_revision_for_prod.updated_at', 'desc')
           ->get();
-          // dd($data_output);
-          // die();
         return $data_output;
     } catch (\Exception $e) {
         

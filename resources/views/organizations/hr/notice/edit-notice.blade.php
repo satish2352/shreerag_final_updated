@@ -75,10 +75,7 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            <?php
-// dd($editData);
-// die();
-                                            ?>
+                                          
                                             <div class="col-lg-6 col-md-6 col-sm-6">
                                                 <div class="form-group">
                                                     <label for="title">Title <span class="text-danger">*</span></label>

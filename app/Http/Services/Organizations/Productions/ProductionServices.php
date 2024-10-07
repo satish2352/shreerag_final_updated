@@ -20,8 +20,6 @@ use Config;
     public function acceptdesign($id){
         try {
            $data_output = $update_data = $this->repo->acceptdesign($id);
-        //   dd($data_output );
-        //   die();
            return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -32,8 +30,6 @@ use Config;
     public function rejectdesign($request) {
         try {
             $update_data = $this->repo->rejectdesign($request);
-        //    dd($update_data);
-        //    die();
             return $update_data;
         } catch (\Exception $e) {
             return $e;
@@ -52,8 +48,6 @@ use Config;
     public function editProduct($id) {
         try {
             $data_output = $this->repo->editProduct($id);
-            // dd( $data_output);
-            // die();
 return $data_output;
         } catch (\Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
@@ -62,8 +56,6 @@ return $data_output;
     public function updateProductMaterial($request) {
         try {
             $result = $this->repo->updateProductMaterial($request);
-            // dd( $result);
-            // die();
             return $result;
         } catch (\Exception $e) {
             return ['status' => 'error', 'message' => $e->getMessage()];

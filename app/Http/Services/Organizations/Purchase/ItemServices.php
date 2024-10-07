@@ -44,10 +44,7 @@ class ItemServices
 
     public function updateAll($request){
         try {
-            $return_data = $this->repo->updateAll($request);
-            // dd($return_data);
-            // die();
-      
+            $return_data = $this->repo->updateAll($request);      
             if ($return_data) {
                 return ['status' => 'success', 'msg' => 'Data Updated Successfully.'];
             } else {

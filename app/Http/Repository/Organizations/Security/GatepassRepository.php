@@ -139,8 +139,6 @@ class GatepassRepository
     public function updateAll($request)
     {
         try {
-            // dd($request->purchase_orders_id);
-            // die();
             // Find the Gatepass by ID
             $dataOutput = Gatepass::findOrFail($request->purchase_orders_id);
          

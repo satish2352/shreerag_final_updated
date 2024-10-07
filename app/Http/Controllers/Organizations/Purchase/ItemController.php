@@ -111,8 +111,6 @@ class ItemController extends Controller
     $data=OrganizationModel::orderby('updated_at','desc')->get();
     $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
     $dataOutputHSNMaster = HSNMaster::where('is_active', true)->get();
-    // dd($dataOutputHSNMaster);
-    // die();
     $dataOutputGroupMaster = GroupMaster::where('is_active', true)->get();
     return view('organizations.purchase.part-item.edit-part-item', compact('editData','data', 'dataOutputUnitMaster', 'dataOutputHSNMaster', 'dataOutputGroupMaster'));
 }

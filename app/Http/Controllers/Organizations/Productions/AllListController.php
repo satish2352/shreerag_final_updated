@@ -106,8 +106,6 @@ class AllListController extends Controller
     public function getAllListMaterialRecievedToProduction(){
         try {
             $data_output = $this->service->getAllListMaterialRecievedToProduction();
-// dd($data_output);
-// die();
         //     $data_output = $this->service->getAllreviseddesign();
         //     if ($data_output->isNotEmpty()) {
         //        foreach ($data_output as $data) {

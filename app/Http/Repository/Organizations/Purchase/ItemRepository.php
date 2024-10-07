@@ -83,8 +83,6 @@ class ItemRepository  {
             $itemStock->part_item_id = $last_insert_id;
             $itemStock->quantity = $dataOutput->opening_stock;
             $itemStock->save();
-            // dd($last_insert_id);
-            // die();
             // Insert new record into ItemStockHistory
             $itemStockHistory = new ItemStockHistory();
             $itemStockHistory->part_item_id = $last_insert_id;
@@ -135,8 +133,6 @@ class ItemRepository  {
             )
             ->where('tbl_part_item.id', $id)
             ->first();
-            //   dd($dataOutputByid);
-            //   die();
             if ($dataOutputByid) {
                 return $dataOutputByid;
             } else {
@@ -154,8 +150,6 @@ class ItemRepository  {
     {
         try {
             $return_data = array();
-            // dd($return_data);
-            // die();
             $dataOutput = PartItem::find($request->id);
     
             if (!$dataOutput) {

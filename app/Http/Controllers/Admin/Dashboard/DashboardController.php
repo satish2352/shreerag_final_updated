@@ -129,13 +129,7 @@ class DashboardController extends Controller {
             ->get()
             ->groupBy('customer_po_number'); 
             // ->groupBy('businesses.customer_po_number'); 
-        
-            // dd($data_output_offcanvas);
-            // die();
-        // Prepare the data for the chart
-// dd($data_output_offcanvas);
-// die();
-        $product_count = Products::where('is_active', 1)->count();
+                $product_count = Products::where('is_active', 1)->count();
         $testimonial_count = Testimonial::where('is_active', 1)->count();
         $product_services_count = ProductServices::where('is_active', 1)->count();
         $team_count = Team::where('is_active',1)->count();
@@ -658,8 +652,6 @@ class DashboardController extends Controller {
            
         }
         elseif($ses_userId == '6'){
-// dd($ses_userId);
-// die();
             $received_requistion_req = NotificationStatus::where('off_canvas_status',16)
             ->where('purchase_is_view','0')
             ->select('id')

@@ -113,8 +113,6 @@ class CommanController
                 )
                 ->where('purchase_orders.purchase_orders_id', $purchase_order_id)
                 ->first();
-    // dd($purchaseOrder);
-    // die();
             if (!$purchaseOrder) {
                 throw new \Exception('Purchase order not found.');
             }

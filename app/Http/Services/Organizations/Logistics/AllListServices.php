@@ -18,8 +18,7 @@ class AllListServices
     public function getAllCompletedProduction(){
         try {
           $data_output = $this->repo->getAllCompletedProduction();
-        //  dd($data_output);
-        //  die();
+    
           return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -28,8 +27,7 @@ class AllListServices
     public function getAllLogistics(){
         try {
           $data_output = $this->repo->getAllLogistics();
-        //  dd($data_output);
-        //  die();
+      
           return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -38,8 +36,7 @@ class AllListServices
     public function getAllListSendToFiananceByLogistics(){
       try {
         $data_output = $this->repo->getAllListSendToFiananceByLogistics();
-      //  dd($data_output);
-      //  die();
+    
         return $data_output;
       } catch (\Exception $e) {
           return $e;

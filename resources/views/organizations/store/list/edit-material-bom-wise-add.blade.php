@@ -44,10 +44,6 @@
                            
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="all-form-element-inner">
-           <?php
-        //    dd($productDetails);
-        //    die();
-           ?>
                              <form action="{{ route('update-material-list-bom-wise', $id) }}" method="POST" id="addProductForm" enctype="multipart/form-data">
                                 @csrf
                                 <input type="hidden" name="business_details_id" id="business_details_id" value="{{ $id }}">
@@ -121,10 +117,6 @@
                                 <div class="login-btn-inner">
                                     <button class="btn btn-sm btn-primary" type="submit" id="saveBtn">Save Data</button>
                                 </div>
-                                <?php
-                                // dd($productDetails);
-                                // die();
-                                ?>
                                 {{-- <a href="{{ route('accepted-and-material-sent', base64_encode($productDetails->id)) }}">
                                     <button data-toggle="tooltip" title="Requirement forwarded for production" class="pd-setting-ed">
                                         Requirement forwarded for production

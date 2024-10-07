@@ -110,10 +110,6 @@
                                     {{-- <table style="width: 100%; border-collapse: collapse;"> --}}
                                         <!-- Organization Details -->
                                         <tr>
-                                            <?php
-                                            // dd($getOrganizationData);
-                                            // die();
-                                            ?>
                                             <td style="width: 50%; padding: 10px; border: 1px solid black; padding: 5px">
                                                 <strong><p style="font-size: 20px; margin-bottom:0px;">{{ $getOrganizationData->company_name }}</p></strong><br>
                                                 {{ $getOrganizationData->address }}</br>

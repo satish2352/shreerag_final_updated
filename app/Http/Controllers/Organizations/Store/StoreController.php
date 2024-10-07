@@ -29,11 +29,7 @@ class StoreController extends Controller
     {
         try {
             $acceptdesign = $id;
-            // dd($acceptdesign);
-            // die();
             $update_data = $this->service->orderAcceptedAndMaterialForwareded($acceptdesign);
-            //  dd($update_data);
-            // die();
             return redirect('storedept/list-accepted-design-from-prod');
         } catch (\Exception $e) {
             return $e;
@@ -44,8 +40,6 @@ class StoreController extends Controller
     public function createRequesition($createRequesition)
     {
         try {
-            // dd($createRequesition);
-            // die();
             return view('organizations.store.requistion.add-requistion', compact('createRequesition'));
         } catch (\Exception $e) {
             return $e;
@@ -136,11 +130,7 @@ class StoreController extends Controller
     // }
     public function editProductMaterialWiseAdd($id) {
         try {
-            // dd($id);
-            // die();
             $editData = $this->service->editProductMaterialWiseAdd($id);
-        //   dd($editData);
-        //   die();
             $dataOutputPartItem = PartItem::where('is_active', true)->get();
             
             return view('organizations.store.list.edit-material-bom-wise-add', [

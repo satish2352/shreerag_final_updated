@@ -188,7 +188,7 @@ alert('ID: ' + id);
                                                 </li>`;
                                         }    
                                         });
-                                        console.log(notificationMessages);
+                                        // console.log(notificationMessages);
 
                                         $('#notification-messages').html(notificationMessages);
                                     

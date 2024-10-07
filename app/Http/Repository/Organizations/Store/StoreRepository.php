@@ -204,10 +204,6 @@ class StoreRepository
                     'business_application_processes.store_material_sent_date'
                 )
                 ->get(); 
-                // dd($dataOutputByid);
-                // die();
-    // dd($dataOutputByid);
-    // die();
             // Extract product details and data for table
             $productDetails = $dataOutputByid->first(); // Assuming the first entry contains the product details
             $dataGroupedById = $dataOutputByid->groupBy('business_details_id');

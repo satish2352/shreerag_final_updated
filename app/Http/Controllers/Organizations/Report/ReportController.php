@@ -44,8 +44,6 @@ public function getCompletedProductList(Request $request)
 {
     try {
         $data_output = $this->service->getCompletedProductList($request);
-        // dd($data_output);
-        // die();
         return view('organizations.report.list-report-product-completed', [
             'data_output' => $data_output['data'],
             'total_count' => $data_output['total_count'],

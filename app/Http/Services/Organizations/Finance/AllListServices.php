@@ -21,8 +21,6 @@ class AllListServices
     public function getAllListSRAndGRNGeanrated(){
         try {
             $data_output = $this->repo->getAllListSRAndGRNGeanrated();
-        //    dd($data_output);
-        //    die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -32,8 +30,6 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->getAllListSRAndGRNGeanratedBusinessWise($id);
-        //        dd($data_output);
-        //    die();
             return $data_output;
 
         } catch (\Exception $e) {
@@ -52,8 +48,6 @@ class AllListServices
     public function listPOSentForApprovaTowardsOwner(){
         try {
             $data_output = $this->repo->listPOSentForApprovaTowardsOwner();
-            // dd($data_output);
-            // die();
             return $data_output; 
         } catch (\Exception $e) {
             return $e;
@@ -65,8 +59,7 @@ class AllListServices
     public function listPOSanctionAndNeedToDoPaymentToVendor(){
         try {
             $data_output = $this->repo->listPOSanctionAndNeedToDoPaymentToVendor();
-        //  dd($data_output);
-        //  die();
+    
             return $data_output;
 
         } catch (\Exception $e) {

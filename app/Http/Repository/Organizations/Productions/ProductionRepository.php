@@ -19,70 +19,6 @@ NotificationStatus
 use Config;
 
 class ProductionRepository  {
-    
-
-
-
-    // public function acceptdesign($id){
-    //     try {
-    //         // dd($id);
-    //         // die();
-    //         $business_application = BusinessApplicationProcesses::where('business_details_id', $id)->first();
-        
-
-    //         if ($business_application) {
-    //             // $business_application->business_id = $id;
-    //             $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
-    //             // $business_application->design_id = $dataOutput->id;
-    //             $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.ACCEPTED_DESIGN_BY_PRODUCTION');
-    //             // $business_application->production_id = $production_data->id;
-    //             $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION');
-               
-    //             $business_application->save();
-    //             // dd($business_application);
-    //             // die();
-
-    //             $update_data_admin['current_department'] = config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION');
-    //             $update_data_admin['is_view'] = '0';
-    //         AdminView::where('business_id', $business_application->business_id)
-    //                     ->update($update_data_admin);
-    //         }
-    //         // $business = Business::find($id);
-    //         // $business = BusinessDetails::find($id);
-    //         $business = ProductionModel::where('business_details_id', $id)->first();
-            
-    //         // dd($business);
-    //         // die();
-    //         if ($business) {
-    //             $business->is_approved_production = '1';
-    //             $business->save();
-    //         } else {
-    //             return [
-    //                 'msg' => 'Product not found',
-    //                 'status' => 'error',
-    //             ];
-    //         }
-    
-    //         $designRevisionForProdID = DesignRevisionForProd::where('business_details_id', $business_application->business_details_id)->first();
-
-    //         $dataOutput = DesignModel::where('business_details_id', $business_application->business_details_id)->first();
-    //         // Check if the record was found
-    //         if (!$dataOutput) {
-    //             return [
-    //                 'msg' => 'Record not found',
-    //                 'status' => 'error',
-    //             ];
-    //         }
-    //         $dataOutput->design_image = $designRevisionForProdID->design_image;
-    //         $dataOutput->bom_image = $designRevisionForProdID->bom_image;
-
-           
-    //         $dataOutput->save();
-
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // } 
 
     public function acceptdesign($id)
     {
@@ -166,15 +102,9 @@ class ProductionRepository  {
     
     public function rejectdesign($request){
         try {
-// dd($request);
-// die();
             $idtoedit = base64_decode($request->business_id);
             // $idtoedit = BusinessApplicationProcesses::where('business_details_id', $id)->first();
-// dd($idtoedit);
-// die();
             $production_data = ProductionModel::where('business_details_id', $idtoedit)->first();
-// dd($production_data);
-// die();
             $designRevisionForProdID = DesignRevisionForProd::where('id', $production_data->id)->orderBy('id','desc')->first();
             if($designRevisionForProdID) {
 
@@ -186,9 +116,6 @@ class ProductionRepository  {
                 $designRevisionForProdID->reject_reason_prod = $request->reject_reason_prod;
                 $designRevisionForProdID->remark_by_design = '';
                 $designRevisionForProdID->save();
-
-                // dd($designRevisionForProdID);
-                // die();
 
             } else {
                 $designRevisionForProdIDInsert = new DesignRevisionForProd();
@@ -228,36 +155,9 @@ class ProductionRepository  {
         } catch (\Exception $e) {
             return $e;
         }
-    } 
-
-    // public function acceptProductionCompleted($id) {
-    //     try {
-           
-    //         // Fetch the business application process record for the given business ID
-    //         $business_application = BusinessApplicationProcesses::where('business_id', $id)->first();
-    //         // dd($business_application);
-    //         // die();
-    //         // Check if the record exists
-    //         if ($business_application) {
-    //             $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN');
-    //             $business_application->save();
-    
-    //             return response()->json(['status' => 'success', 'message' => 'Production status updated successfully.']);
-    //         } else {
-    //             // Return an error response if the record does not exist
-    //             return response()->json(['status' => 'error', 'message' => 'Business application not found.'], 404);
-    //         }
-    
-    //     } catch (\Exception $e) {
-    //         // Return an error response if an exception occurs
-    //         return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
-    //     }
-    // }
-    
+    }     
     public function acceptProductionCompleted($id) {
         try {
-            // dd($id);
-            // die();
             // Fetch the business application process record for the given business ID
             $business_application = BusinessApplicationProcesses::where('business_details_id', $id)->first();
             if ($business_application) {
@@ -318,54 +218,6 @@ class ProductionRepository  {
             return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
-    
-    // public function editProduct($id){
-    //     try {
-    //         $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_BOM_PART_MATERIAL_RECIVED_FROM_STORE_DEPT_FOR_PRODUCTION')];
-    
-    //         $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function($join) {
-    //                 $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-    //             })
-    //             ->leftJoin('designs', function($join) {
-    //                 $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-    //             })
-    //             ->leftJoin('businesses_details', function($join) {
-    //                 $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-    //             })
-    //             ->leftJoin('design_revision_for_prod', function($join) {
-    //                 $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-    //             })
-    //             ->leftJoin('purchase_orders', function($join) {
-    //                 $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-    //             })
-    //             ->where('businesses_details.id', $id)
-    //             ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
-    //             ->where('businesses_details.is_active', true)
-    //             ->distinct('businesses_details.id')
-    //             ->select(
-    //                 'businesses_details.id',
-    //                 'businesses_details.product_name',
-    //                 'businesses_details.quantity',
-    //                 'businesses_details.description',
-    //                 'businesses_details.is_active',
-    //                 'production.business_details_id',
-    //                 'design_revision_for_prod.reject_reason_prod',
-    //                 'design_revision_for_prod.id as design_revision_for_prod_id',
-    //                 'designs.bom_image',
-    //                 'designs.design_image',
-    //                 'business_application_processes.store_material_sent_date'
-    //             )
-    //             ->first();
-    
-    //         return $dataOutputByid ?: null;
-    //     } catch (\Exception $e) {
-    //         return [
-    //             'msg' => $e->getMessage(),
-    //             'status' => 'error'
-    //         ];
-    //     }
-    // }
-    
     public function editProduct($id) {
         try {
             $array_to_be_check = [
@@ -425,258 +277,8 @@ class ProductionRepository  {
             ];
         }
     }
-    // public function updateProductMaterial($request) {
-    //     try {
-    //         $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $request->business_details_id)->firstOrFail();
-            
-    //         // Remove existing records related to the business_details_id before saving new ones
-    //         ProductionDetails::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)->delete();
-    
-    //         // Loop through the addmore array and update or create new ProductionDetails
-    //         foreach ($request->addmore as $item) {
-    //             $dataOutput = new ProductionDetails();
-    //             $dataOutput->part_item_id = $item['part_no_id'];
-    //             $dataOutput->quantity = $item['quantity'];
-    //             $dataOutput->unit = $item['unit'];
-    //             $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
-    //             $dataOutput->business_id = $dataOutput_ProductionDetails->business_id;
-    //             $dataOutput->design_id = $dataOutput_ProductionDetails->design_id;
-    //             $dataOutput->business_details_id = $dataOutput_ProductionDetails->business_details_id;
-    //             $dataOutput->production_id = $dataOutput_ProductionDetails->production_id;
-    //             $dataOutput->save();
-    //         }
-    
-    //         // Update the BusinessApplicationProcesses status
-    //         $businessOutput = BusinessApplicationProcesses::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)
-    //             ->firstOrFail();
-    //         $businessOutput->product_production_inprocess_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_INPROCESS_FOR_PRODUCTION');
-    //         $businessOutput->save();
-    
-    //         return [
-    //             'status' => 'success',
-    //             'message' => 'Production materials updated successfully.',
-    //             'updated_details' => $request->all()
-    //         ];
-    
-    //     } catch (\Exception $e) {
-    //         return [
-    //             'status' => 'error',
-    //             'message' => 'Failed to update production materials.',
-    //             'error' => $e->getMessage()
-    //         ];
-    //     }
-    // }
-    
-    // public function updateProductMaterial($request) {
-    //     try {
-    //         $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $request->business_details_id)->firstOrFail();
-            
-    //         // Loop through the addmore array and update or create new ProductionDetails
-    //         foreach ($request->addmore as $item) {
-    //             $dataOutput = new ProductionDetails();
-    //             $dataOutput->part_item_id = $item['part_no_id'];
-    //             $dataOutput->quantity = $item['quantity'];
-    //             $dataOutput->unit = $item['unit'];
-    //             $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
-    //             $dataOutput->business_id = $dataOutput_ProductionDetails->business_id;
-    //             $dataOutput->design_id = $dataOutput_ProductionDetails->design_id;
-    //             $dataOutput->business_details_id = $dataOutput_ProductionDetails->business_details_id;
-    //             $dataOutput->production_id = $dataOutput_ProductionDetails->production_id;
-    //             $dataOutput->save();
-    //         }
-    
-    //         // Update the BusinessApplicationProcesses status
-    //         $businessOutput = BusinessApplicationProcesses::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)
-    //             ->firstOrFail();
-    //         $businessOutput->product_production_inprocess_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_INPROCESS_FOR_PRODUCTION');
-    //         $businessOutput->save();
-    
-    //         return [
-    //             'status' => 'success',
-    //             'message' => 'Production materials updated successfully.',
-    //             'updated_details' => $request->all()
-    //         ];
-    
-    //     } catch (\Exception $e) {
-    //         return [
-    //             'status' => 'error',
-    //             'message' => 'Failed to update production materials.',
-    //             'error' => $e->getMessage()
-    //         ];
-    //     }
-    // }
-    
-//     public function updateProductMaterial($request) {
-//         try {
-//             // Fetch existing production details based on the business_details_id
-//             $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $request->business_details_id)->firstOrFail();
-    
-//             // Loop through the addmore array
-//             foreach ($request->addmore as $item) {
-//                 if (isset($item['id']) && $item['id'] != '') {
-//                     // Update existing ProductionDetails if 'id' is present
-//                     $dataOutput = ProductionDetails::find($item['id']);
-    
-//                     if ($dataOutput) {
-//                         $dataOutput->part_item_id = $item['part_no_id'];
-//                         $dataOutput->quantity = $item['quantity'];
-//                         $dataOutput->unit = $item['unit'];
-//                         $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
-//                         $dataOutput->save();
-//                     }
-//                 } else {
-//                     // Create new ProductionDetails if 'id' is not present
-//                     $dataOutput = new ProductionDetails();
-//                     $dataOutput->part_item_id = $item['part_no_id'];
-//                     $dataOutput->quantity = $item['quantity'];
-//                     $dataOutput->unit = $item['unit'];
-//                     $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
-//                     $dataOutput->business_id = $dataOutput_ProductionDetails->business_id;
-//                     $dataOutput->design_id = $dataOutput_ProductionDetails->design_id;
-//                     $dataOutput->business_details_id = $dataOutput_ProductionDetails->business_details_id;
-//                     $dataOutput->production_id = $dataOutput_ProductionDetails->production_id;
-//                     $dataOutput->save();
-// dd($dataOutput);
-// die();
-                    
-//                 }
-//             }
-    
-//             // Update the BusinessApplicationProcesses status
-//             $businessOutput = BusinessApplicationProcesses::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)
-//                 ->firstOrFail();
-//             $businessOutput->product_production_inprocess_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_INPROCESS_FOR_PRODUCTION');
-//             $businessOutput->save();
-    
-//             return [
-//                 'status' => 'success',
-//                 'message' => 'Production materials updated successfully.',
-//                 'updated_details' => $request->all()
-//             ];
-    
-//         } catch (\Exception $e) {
-//             return [
-//                 'status' => 'error',
-//                 'message' => 'Failed to update production materials.',
-//                 'error' => $e->getMessage()
-//             ];
-//         }
-//     }
-    
-// public function updateProductMaterial($request) {
-//     try {
-//         // Fetch existing production details based on the business_details_id
-//         $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $request->business_details_id)->firstOrFail();
-
-//         // Loop through the addmore array
-//         foreach ($request->addmore as $item) {
-//             if (isset($item['id']) && $item['id'] != '') {
-//                 // Update existing ProductionDetails if 'id' is present
-//                 $dataOutput = ProductionDetails::find($item['id']);
-
-//                 if ($dataOutput) {
-//                     $dataOutput->part_item_id = $item['part_no_id'];
-//                     $dataOutput->quantity = $item['quantity'];
-//                     $dataOutput->unit = $item['unit'];
-//                     $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
-//                     $dataOutput->save();
-//                 }
-//             } else {
-//                 // Create new ProductionDetails if 'id' is not present
-//                 $dataOutput = new ProductionDetails();
-//                 $dataOutput->part_item_id = $item['part_no_id'];
-//                 $dataOutput->quantity = $item['quantity'];
-//                 $dataOutput->unit = $item['unit'];
-//                 $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
-//                 $dataOutput->business_id = $dataOutput_ProductionDetails->business_id;
-//                 $dataOutput->design_id = $dataOutput_ProductionDetails->design_id;
-//                 $dataOutput->business_details_id = $dataOutput_ProductionDetails->business_details_id;
-//                 $dataOutput->production_id = $dataOutput_ProductionDetails->production_id;
-//                 $dataOutput->save();
-//             }
-//         }
-
-//         // Update the BusinessApplicationProcesses status
-//         $businessOutput = BusinessApplicationProcesses::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)
-//             ->firstOrFail();
-//         $businessOutput->product_production_inprocess_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_INPROCESS_FOR_PRODUCTION');
-//         $businessOutput->save();
-
-//         return [
-//             'status' => 'success',
-//             'message' => 'Production materials updated successfully.',
-//             'updated_details' => $request->all()
-//         ];
-
-//     } catch (\Exception $e) {
-//         return [
-//             'status' => 'error',
-//             'message' => 'Failed to update production materials.',
-//             'error' => $e->getMessage()
-//         ];
-//     }
-// }
-// public function updateProductMaterial($request) {
-//     try {
-//         // Fetch existing production details based on the business_details_id
-//         $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $request->business_details_id)->get();
-// // dd($dataOutput_ProductionDetails);
-// // die();
-//         // Loop through the addmore array
-//         foreach ($request->addmore as $item) {
-//             if (isset($item['id']) && $item['id'] != '') {
-//                 // Update existing ProductionDetails if 'id' is present
-//                 $dataOutput = ProductionDetails::find($item['id']);
-
-//                 if ($dataOutput) {
-//                     // Only update the fields that need to be updated
-//                     $dataOutput->part_item_id = $item['part_item_id'];
-//                     $dataOutput->quantity = $item['quantity'];
-//                     $dataOutput->unit = $item['unit'];
-//                     $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
-//                     $dataOutput->save();
-//                 }
-//             } else {
-//                 // Create new ProductionDetails if 'id' is not present
-//                 $dataOutput = new ProductionDetails();
-//                 $dataOutput->part_item_id = $item['part_item_id'];
-//                 $dataOutput->quantity = $item['quantity'];
-//                 $dataOutput->unit = $item['unit'];
-//                 $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
-
-//                 // Set the necessary relationships
-//                 $dataOutput->business_id = $dataOutput_ProductionDetails->first()->business_id;
-//                 $dataOutput->design_id = $dataOutput_ProductionDetails->first()->design_id;
-//                 $dataOutput->business_details_id = $dataOutput_ProductionDetails->first()->business_details_id;
-//                 $dataOutput->production_id = $dataOutput_ProductionDetails->first()->production_id;
-//                 $dataOutput->save();
-//             }
-//         }
-
-//         // Update the BusinessApplicationProcesses status
-//         $businessOutput = BusinessApplicationProcesses::where('business_details_id', $dataOutput_ProductionDetails->first()->business_details_id)
-//             ->firstOrFail();
-//         $businessOutput->product_production_inprocess_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_INPROCESS_FOR_PRODUCTION');
-//         $businessOutput->save();
-
-//         return [
-//             'status' => 'success',
-//             'message' => 'Production materials updated successfully.',
-//             'updated_details' => $request->all()
-//         ];
-//     } catch (\Exception $e) {
-//         return [
-//             'status' => 'error',
-//             'message' => 'Failed to update production materials.',
-//             'error' => $e->getMessage()
-//         ];
-//     }
-// }
-
 public function updateProductMaterial($request) {
     try {
-        // dd($request->business_details_id);
-        // die();
         // Fetch existing production details based on the business_details_id
         $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $request->business_details_id)->get();
 

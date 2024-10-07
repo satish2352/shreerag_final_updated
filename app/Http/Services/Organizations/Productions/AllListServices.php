@@ -47,8 +47,6 @@ class AllListServices
         try {
             $data_output = $this->repo->getAllNewRequirementBusinessWise($business_id);
             // Remove debugging code
-            // dd($data_output);
-            // die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -58,8 +56,6 @@ class AllListServices
     public function getAllacceptdesign(){
         try {
             $data_output = $this->repo->getAllacceptdesign();
-        //    dd($data_output);
-        //    die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -68,8 +64,6 @@ class AllListServices
     public function acceptdesignlistBusinessWise($business_id){
         try {
             $data_output = $this->repo->acceptdesignlistBusinessWise($business_id);
-        //    dd($data_output);
-        //    die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -118,8 +112,6 @@ class AllListServices
     public function getAllCompletedProduction(){
         try {
           $data_output = $this->repo->getAllCompletedProduction();
-        //  dd($data_output);
-        //  die();
           return $data_output;
         } catch (\Exception $e) {
             return $e;

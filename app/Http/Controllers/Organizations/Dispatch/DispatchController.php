@@ -44,9 +44,6 @@ class DispatchController extends Controller
     //         ->first();
           
     //         $editData = $purchase_order_data;
-
-    //         dd($editData);
-    //         die();
     //         return view('organizations.dispatch.dispatchdept.add-dispatch', compact('editData')
     //     );
     //     } catch (\Exception $e) {

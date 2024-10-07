@@ -158,8 +158,7 @@ class InventoryRepository  {
             )
             ->where('tbl_part_item.id', $id)
             ->first();
-            //   dd($dataOutputByid);
-            //   die();
+           
             if ($dataOutputByid) {
                 return $dataOutputByid;
             } else {

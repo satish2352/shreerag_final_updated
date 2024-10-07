@@ -28,8 +28,6 @@ class ReportServices
     // public function getCompletedProductList(Request $request){
     //     try {
     //       $data_output = $this->repo->getCompletedProductList($request);
-    //     //   dd( $data_output);
-    //     //   die();
     //       return $data_output;
     //     } catch (\Exception $e) {
     //         return $e;

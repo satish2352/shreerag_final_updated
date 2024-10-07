@@ -21,8 +21,6 @@ class StoreServices
     {
         try {
             $update_data = $this->repo->orderAcceptedAndMaterialForwareded($id);
-            // dd( $update_data);
-            // die();
             return $update_data;
         } catch (\Exception $e) {
             return $e;
@@ -33,14 +31,10 @@ class StoreServices
     {
         try {
             $last_id = $this->repo->storeRequesition($request);
-// dd( $last_id);
-// die();
             $path = Config::get('FileConstant.REQUISITION_ADD');
             $ImageName = $last_id['ImageName'];
           
             uploadImage($request, 'bom_file_req', $path, $ImageName);
-            // dd($path);
-            // die();
             if ($last_id) {
                 return ['status' => 'success', 'msg' => 'Data Added Successfully.'];
             } else {
@@ -63,8 +57,6 @@ class StoreServices
     public function editProductMaterialWiseAdd($id) {
         try {
             $data_output = $this->repo->editProductMaterialWiseAdd($id);
-            // dd($data_output);
-            // die();
 return $data_output;
         } catch (\Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
@@ -73,8 +65,6 @@ return $data_output;
     public function updateProductMaterialWiseAdd($request) {
         try {
             $result = $this->repo->updateProductMaterialWiseAdd($request);
-        //   dd($result);
-        //   die();
             return $result;
         } catch (\Exception $e) {
             return ['status' => 'error', 'message' => $e->getMessage()];
@@ -84,8 +74,7 @@ return $data_output;
     public function editProduct($id) {
         try {
             $data_output = $this->repo->editProduct($id);
-            // dd($data_output);
-            // die();
+       
 return $data_output;
         } catch (\Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
@@ -95,8 +84,6 @@ return $data_output;
     public function updateProductMaterial($request) {
         try {
             $result = $this->repo->updateProductMaterial($request);
-        //   dd($result);
-        //   die();
             return $result;
         } catch (\Exception $e) {
             return ['status' => 'error', 'message' => $e->getMessage()];

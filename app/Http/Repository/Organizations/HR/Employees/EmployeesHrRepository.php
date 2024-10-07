@@ -120,8 +120,6 @@ class EmployeesHrRepository  {
     //     $user_detail = User::find($last_insert_id);
     //     // $user_detail->user_profile = $imageProfile; 
     //     $user_detail->save();
-    //     // echo  $user_detail;
-	// 	// die();
     //     // $data['imageProfile'] =$imageProfile;
     //     return $data;
 

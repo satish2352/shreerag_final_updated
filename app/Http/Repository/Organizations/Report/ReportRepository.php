@@ -18,8 +18,7 @@ class ReportRepository  {
 // public function getCompletedProductList($request)
 // {
 //     try {
-//         // dd($request);
-//         // die();
+
 //         $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.LIST_DISPATCH_COMPLETED_FROM_DISPATCH_DEPARTMENT')];
 
 //         $query = BusinessApplicationProcesses::leftJoin('production', 'business_application_processes.business_details_id', '=', 'production.business_details_id')

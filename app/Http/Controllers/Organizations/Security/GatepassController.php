@@ -90,8 +90,7 @@ class GatepassController extends Controller
                     'purchase_orders.created_at',
                     'purchase_order_details.*' // Fetch all columns from purchase_order_details
                 )->get();
-    // dd($data);
-    // die();
+    
             // Separate the purchase order data and details
             $purchaseOrder = $data->first();
             $purchaseOrderDetails = $data;

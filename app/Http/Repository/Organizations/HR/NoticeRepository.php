@@ -36,8 +36,6 @@ class NoticeRepository  {
     public function departmentWiseNotice(){
         try {
              $roleId = Session::get('role_id');
-            //  dd($roleId);
-            //  die();
             $data_output = Notice::join('tbl_departments', 'tbl_departments.id', '=', 'tbl_notice.department_id')
             ->select(
                 'tbl_notice.id',

@@ -103,15 +103,9 @@
                                                 <th data-field="action" data-editable="false">Action</th>
                                             </tr>
                                         </thead>
-                                        <?php
-                                        // dd($data_output);
-                                        // die(); 
-                                        ?>
+                                      
                                         <tbody>
-                                            <?php
-                                            // dd($data_output);
-                                            // die();
-                                            ?>
+                                          
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     

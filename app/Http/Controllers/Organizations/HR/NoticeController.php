@@ -73,8 +73,6 @@ class NoticeController extends Controller
         public function show(Request $request){
             try {
                 $showData = $this->service->getById($request->show_id);
-                // dd($showData);
-                // die();
                 return view('organizations.hr.notice.show-notice', compact('showData'));
             } catch (\Exception $e) {
                 return $e;

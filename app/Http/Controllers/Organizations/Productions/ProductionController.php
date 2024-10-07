@@ -28,8 +28,6 @@ class ProductionController extends Controller
             $acceptdesign = base64_decode($id);
            
             $update_data = $this->service->acceptdesign($acceptdesign);
-            // dd($update_data);
-            // die();
             return redirect('proddept/list-accept-design');
         } catch (\Exception $e) {
             return $e;
@@ -103,8 +101,6 @@ class ProductionController extends Controller
     
         try {
             $updateData = $this->service->updateProductMaterial($request);
-    // dd($updateData);
-    // die();
             if ($updateData['status'] == 'success') {
                 return redirect('proddept/list-material-recived')->with(['status' => 'success', 'msg' => $updateData['message']]);
             } else {

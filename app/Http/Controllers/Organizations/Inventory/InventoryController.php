@@ -29,8 +29,6 @@ class InventoryController extends Controller
     public function getMaterialList(){
         try {
             $getOutput = $this->service->getAll();
-            // dd( $getOutput);
-            // die();
             return view('organizations.inventory.list-part-item', compact('getOutput'));
         } catch (\Exception $e) {
             return $e;
@@ -93,8 +91,6 @@ class InventoryController extends Controller
     $editData = $this->service->getById($edit_data_id);
     $data=OrganizationModel::orderby('updated_at','desc')->get();
     $dataOutputPartItem = PartItem::where('is_active', true)->get();
-    // dd($dataOutputHSNMaster);
-    // die();
     $dataOutputGroupMaster = GroupMaster::where('is_active', true)->get();
     return view('organizations.inventory.edit-stock', compact('editData','data', 'dataOutputPartItem'));
 }

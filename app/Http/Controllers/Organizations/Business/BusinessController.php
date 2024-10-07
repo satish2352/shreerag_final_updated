@@ -98,8 +98,6 @@ class BusinessController extends Controller
             // $edit_data_id = $request->id;
            
             $editData = $this->service->getById($edit_data_id);
-            // dd($edit_data_id);
-            // die();
             return view('organizations.business.business.edit-business', compact('editData'));
         } catch (\Exception $e) {
             return $e;

@@ -36,8 +36,6 @@ use Config;
     public function getAll(){
         try {
             $data_output = $this->repo->getAll();
-            // dd($data_output);
-            // die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -55,8 +53,7 @@ use Config;
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
-        //    dd($return_data);
-        //    die();
+    
             $productName = $return_data['product_name']; 
             $path = Config::get('FileConstant.DESIGNS_ADD');
             if ($request->hasFile('design_image')) {

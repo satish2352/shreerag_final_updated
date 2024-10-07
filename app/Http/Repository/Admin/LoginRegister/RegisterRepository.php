@@ -105,8 +105,6 @@ class RegisterRepository
         $user_detail = User::find($last_insert_id); // Assuming $request directly contains the ID
         $user_detail->user_profile = $imageProfile; // Save the image filename to the database
         $user_detail->save();
-        // echo  $user_detail;
-		// die();
         return $last_insert_id;
 
 	}

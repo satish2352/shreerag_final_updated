@@ -250,8 +250,6 @@ class AllListRepository
       ->whereIn('purchase_status_from_purchase', $array_to_be_check)
 
       ->get(); // Added to execute the query and get results
-      // dd($data_output);
-      // die();
       return $data_output;
     } catch (\Exception $e) {
 
