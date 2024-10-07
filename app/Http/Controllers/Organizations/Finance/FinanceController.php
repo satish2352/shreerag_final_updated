@@ -9,6 +9,10 @@ use Session;
 use Validator;
 use Config;
 use Carbon;
+use App\Models\{
+    AdminView,
+    NotificationStatus
+};
 
 
 class FinanceController extends Controller

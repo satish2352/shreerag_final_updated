@@ -1029,6 +1029,7 @@ public function getOwnerFinalAllCompletedProductionLogistics(){
     'purchase_orders.updated_at'
     )
     ->select(
+      'businesses.id',
         'businesses.customer_po_number',
         // 'businesses.title',
         // 'businesses.remarks',

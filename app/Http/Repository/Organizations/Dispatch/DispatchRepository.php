@@ -10,7 +10,9 @@ use App\Models\ {
     DesignRevisionForProd,
     PurchaseOrdersModel,
     Logistics,
-    Dispatch
+    Dispatch,
+    AdminView,
+    NotificationStatus
     };
 use Config;
 
@@ -43,6 +45,14 @@ if (!$dataOutput) {
                 $business_application->dispatch_status_id = config('constants.DISPATCH_DEPARTMENT.DISPATCH_DEPARTMENT_MARKED_DISPATCH_COMPLETED');
                 $business_application->off_canvas_status = 22;
                 $business_application->save();
+
+                $update_data_admin['off_canvas_status'] = 22;
+                $update_data_business['off_canvas_status'] = 22;
+                $update_data_admin['is_view'] = '0';
+                AdminView::where('business_details_id', $business_application->business_details_id)
+                    ->update($update_data_admin);
+                    NotificationStatus::where('business_details_id', $business_application->business_details_id)
+                    ->update($update_data_business);
 
                 return response()->json(['status' => 'success', 'message' => 'Production status updated successfully.']);
             } else {

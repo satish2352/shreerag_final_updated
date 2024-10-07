@@ -8,6 +8,9 @@ use Session;
 use Validator;
 use Config;
 use Carbon;
+use App\Models\{
+    NotificationStatus
+};
 
 class AllListController extends Controller
 { 
@@ -71,7 +74,22 @@ class AllListController extends Controller
     {
         try {
             $data_output = $this->service->getAllListBusinessReceivedFromLogistics();
-            
+            if ($data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
+                    $business_details_id = $data->id; 
+                    if (!empty($business_details_id)) {
+                        $update_data['logistics_to_fianance_visible'] = '1';
+                        NotificationStatus::where('logistics_to_fianance_visible', '0')
+                            ->where('business_details_id', $business_details_id)
+                            ->update($update_data);
+                    }
+                }
+            } else {
+                return view('organizations.finance.list.list-business-received-from-logistics', [
+                    'data_output' => [],
+                    'message' => 'No data found for designs received for correction'
+                ]);
+            }
             return view('organizations.finance.list.list-business-received-from-logistics', compact('data_output'));
         } catch (\Exception $e) {
             return $e;

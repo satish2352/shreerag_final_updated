@@ -508,8 +508,59 @@ class DashboardController extends Controller {
                 'message' => 'Generated GRN Material send Quality Dept to Store ',
                 'url' => 'list-material-sent-to-store-generated-grn',
                 ];
+
+                $production_completed = AdminView::where('off_canvas_status', '18')
+                ->where('is_view', '0')
+                ->select('id')
+                    ->get();
+                $production_completed_count = $production_completed->count();
+                $notifications[] = ['admin_count' => $production_completed_count,
+                'message' => 'Logistics Dept Received Product completed list',
+                'url' => 'list-owner-final-production-completed-recive-to-logistics',
+                ];
+
+                $logistics_send_to_fianance = AdminView::where('off_canvas_status', '19')
+                ->where('is_view', '0')
+                ->select('id')
+                    ->get();
+                $logistics_send_to_fianance_count = $logistics_send_to_fianance->count();
+                $notifications[] = ['admin_count' => $logistics_send_to_fianance_count,
+                'message' => 'Fianance Dept Production Recevied from Logistics Dept',
+                'url' => 'recive-owner-logistics-list',
+                ];
+
+                $send_fianance_to_dispatch = AdminView::where('off_canvas_status', '19')
+                ->where('is_view', '0')
+                ->select('id')
+                    ->get();
+                $send_fianance_to_dispatch_count = $send_fianance_to_dispatch->count();
+                $notifications[] = ['admin_count' => $send_fianance_to_dispatch_count,
+                'message' => 'Fianance Dept Production Recevied from Logistics Dept',
+                'url' => 'recive-owner-logistics-list',
+                ];
+
+                $received_fianance_to_dispatch = AdminView::where('off_canvas_status', '21')
+                ->where('is_view', '0')
+                ->select('id')
+                    ->get();
+                $received_fianance_to_dispatch_count = $received_fianance_to_dispatch->count();
+                $notifications[] = ['admin_count' => $received_fianance_to_dispatch_count,
+                'message' => 'Fianance Dept Production Request Send to Dispatch Dept',
+                'url' => 'list-owner-send-to-dispatch',
+                ];
+
+                $dispatch_completed = AdminView::where('off_canvas_status', '22')
+                ->where('is_view', '0')
+                ->select('id')
+                    ->get();
+                $dispatch_completed_count = $dispatch_completed->count();
+                $notifications[] = ['admin_count' => $dispatch_completed_count,
+                'message' => 'Dispatch Dept Production Dispatch Completed',
+                'url' => 'list-product-dispatch-completed',
+                ];
                 $count = $business_count + $uploaded_design_count + $material_ask_prod_to_store_count + $received_correction_design_count + $material_ask_by_store_to_purchase_count + $Purchase_order_need_to_check_count + $purchase_order_approved_count
-                 + $po_send_to_vendor_count + $gate_pass_generate_count + $quality_dept_material_received_in_store_count;
+                 + $po_send_to_vendor_count + $gate_pass_generate_count + $quality_dept_material_received_in_store_count + $production_completed_count + $logistics_send_to_fianance_count
+                 + $received_fianance_to_dispatch_count + $dispatch_completed_count;
        
             }elseif($ses_userId == '3'){
                     $sent_to_prod_data = NotificationStatus::where('off_canvas_status',11)
@@ -688,6 +739,46 @@ class DashboardController extends Controller {
                 'url' => 'list-material-sent-to-quality'
             ];
             $count = $po_material_received_by_quality_count + $visible_grn_count;
+        }
+        elseif($ses_userId == '9'){
+            $recived_logistics_to_fianance= NotificationStatus::where('off_canvas_status',19)
+            ->where('logistics_to_fianance_visible','0')
+            ->select('id')
+            ->get();
+            $recived_logistics_to_fianance_count = $recived_logistics_to_fianance->count();
+
+            $notifications[] = ['admin_count' => $recived_logistics_to_fianance_count,
+                'message' => 'Received Logistics List',
+                'url' => 'recive-logistics-list'
+            ];
+            $count = $recived_logistics_to_fianance_count;
+        }
+        elseif($ses_userId == '11'){
+            $visible_grn= NotificationStatus::where('off_canvas_status',18)
+            ->where('production_completed','0')
+            ->select('id')
+            ->get();
+            $visible_grn_count = $visible_grn->count();
+
+            $notifications[] = ['admin_count' => $visible_grn_count,
+                'message' => 'Production Completed',
+                'url' => 'list-final-production-completed-recive-to-logistics'
+            ];
+            $count = $po_material_received_by_quality_count;
+        }
+        elseif($ses_userId == '12'){
+          
+            $received_fianance_to_dispatch= NotificationStatus::where('off_canvas_status',21)
+            ->where('fianance_to_dispatch_visible','0')
+            ->select('id')
+            ->get();
+            $received_fianance_to_dispatch_count = $received_fianance_to_dispatch->count();
+
+            $notifications[] = ['admin_count' => $received_fianance_to_dispatch_count,
+                'message' => 'Received From Finance',
+                'url' => 'list-final-production-completed-received-from-fianance'
+            ];
+            $count = $received_fianance_to_dispatch;
         }
             return response()->json([
                 'notification_count' => $count,

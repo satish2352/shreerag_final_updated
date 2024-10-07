@@ -118,13 +118,13 @@
         <input type="hidden" name="design_count" value="{{ count($editData) }}">
         <input type="hidden" name="design_id_{{ $key }}" value="{{ $editDataNew->id }}">
         <td>{{ $key + 1 }}</td>
-        <td>
+        {{-- <td>
             <input 
                 type="text" 
                 name="product_name_{{ $key }}" 
                 value="{{ $editDataNew->product_name }}" 
                 class="form-control" 
-                @if($editDataNew->production_status_id === 1113) disabled @endif
+                @if($editDataNew->business_status_id === 1112 && $editDataNew->design_status_id === 1111) disabled @endif
             />
         </td>
         <td>
@@ -133,7 +133,7 @@
                 name="description_{{ $key }}" 
                 value="{{ $editDataNew->description }}" 
                 class="form-control" 
-                @if($editDataNew->production_status_id === 1113) disabled @endif
+                @if($editDataNew->business_status_id === 1112 && $editDataNew->design_status_id === 1111) disabled @endif
             />
         </td>
         <td>
@@ -142,7 +142,7 @@
                 name="quantity_{{ $key }}" 
                 value="{{ $editDataNew->quantity }}" 
                 class="form-control" 
-                @if($editDataNew->production_status_id === 1113) disabled @endif
+                @if($editDataNew->business_status_id === 1112 && $editDataNew->design_status_id === 1111) disabled @endif
             />
         </td>
         <td>
@@ -151,19 +151,56 @@
                 name="rate_{{ $key }}" 
                 value="{{ $editDataNew->rate }}" 
                 class="form-control" 
-                @if($editDataNew->production_status_id === 1113) disabled @endif
+                @if($editDataNew->business_status_id === 1112 && $editDataNew->design_status_id === 1111) disabled @endif
             />
-        </td>
-        <td>
-            <a 
-                data-id="{{ $editDataNew->id }}" 
-                class="btn btn-sm btn-danger font-18 ml-2 remove-row" 
-                title="Delete"
-                @if($editDataNew->production_status_id === 1113) disabled @endif
-            >
-                <i class="fas fa-archive"></i>
-            </a>
-        </td>
+        </td> --}}
+       <td>
+    <input 
+        type="text" 
+        name="product_name_{{ $key }}" 
+        value="{{ $editDataNew->product_name }}" 
+        class="form-control" 
+        @if(!($editDataNew->business_status_id === 1112 && $editDataNew->design_status_id === 1111)) disabled @endif
+    />
+</td>
+<td>
+    <input 
+        type="text" 
+        name="description_{{ $key }}" 
+        value="{{ $editDataNew->description }}" 
+        class="form-control" 
+        @if(!($editDataNew->business_status_id === 1112 && $editDataNew->design_status_id === 1111)) disabled @endif
+    />
+</td>
+<td>
+    <input 
+        type="text" 
+        name="quantity_{{ $key }}" 
+        value="{{ $editDataNew->quantity }}" 
+        class="form-control" 
+        @if(!($editDataNew->business_status_id === 1112 && $editDataNew->design_status_id === 1111)) disabled @endif
+    />
+</td>
+<td>
+    <input 
+        type="text" 
+        name="rate_{{ $key }}" 
+        value="{{ $editDataNew->rate }}" 
+        class="form-control" 
+        @if(!($editDataNew->business_status_id === 1112 && $editDataNew->design_status_id === 1111)) disabled @endif
+    />
+</td>
+<td>
+    <a 
+        data-id="{{ $editDataNew->id }}" 
+        class="btn btn-sm btn-danger font-18 ml-2 remove-row" 
+        title="Delete"
+        @if(!($editDataNew->business_status_id === 1112 && $editDataNew->design_status_id === 1111)) disabled @endif
+    >
+        <i class="fas fa-archive"></i>
+    </a>
+</td>
+
     </tr>
 @endforeach
 
@@ -201,9 +238,7 @@
                                                                 <label for="remarks">Remark:</label> (optional)
                                                                 <textarea class="form-control english_description" name="remarks" id="remarks"
                                                                     placeholder="Enter the Description">
-                                                                    @if (old('remarks'))
-{{ old('remarks') }}@else{{ $editDataNew->remarks }}
-@endif
+                                                                    @if (old('remarks')){{ old('remarks') }}@else{{ $editDataNew->remarks }}@endif
                                                                     </textarea>
                                                             </div>
                                                         @endif

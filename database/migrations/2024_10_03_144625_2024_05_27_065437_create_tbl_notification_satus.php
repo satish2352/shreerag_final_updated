@@ -34,12 +34,11 @@ return new class extends Migration
         $table->boolean('quality_po_material_visible')->default(0);
         $table->boolean('security_create_date_pass')->default(0);
         $table->boolean('quality_create_grn')->default(0);
-
         $table->boolean('received_material_to quality')->default(0);
         $table->boolean('material_received_from_store')->default(0);
-        // $table->boolean('quality_create_grn')->default(0);
-        // $table->boolean('quality_create_grn')->default(0);
-        // $table->boolean('quality_create_grn')->default(0);
+        $table->boolean('production_completed')->default(0);
+        $table->boolean('logistics_to_fianance_visible')->default(0);
+        $table->boolean('dispatch_completed')->default(0);
         // $table->boolean('quality_create_grn')->default(0);
 
         $table->string('is_deleted')->default(false);

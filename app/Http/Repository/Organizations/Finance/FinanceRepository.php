@@ -11,7 +11,9 @@ use App\Models\{
     ProductionModel,
     DesignRevisionForProd,
     Requisition,
-    PurchaseOrderModel
+    PurchaseOrderModel,
+    AdminView,
+    NotificationStatus
 };
 use Config;
 
@@ -95,6 +97,15 @@ class FinanceRepository
                 $business_application->off_canvas_status = 21;
 
                 $business_application->save();
+
+            // $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
+            $update_data_admin['off_canvas_status'] = 21;
+            $update_data_business['off_canvas_status'] = 21;
+            $update_data_admin['is_view'] = '0';
+            AdminView::where('business_details_id', $business_application->business_details_id)
+                ->update($update_data_admin);
+                NotificationStatus::where('business_details_id', $business_application->business_details_id)
+                ->update($update_data_business);
 
     
                 return response()->json(['status' => 'success', 'message' => 'Production status updated successfully.']);

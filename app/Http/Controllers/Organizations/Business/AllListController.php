@@ -310,6 +310,22 @@ class AllListController extends Controller
     public function getOwnerFinalAllCompletedProductionLogistics(){
         try {
             $data_output = $this->service->getOwnerFinalAllCompletedProductionLogistics();
+            if ($data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
+                    $business_id = $data->id; 
+                    if (!empty($business_id)) {
+                        $update_data['is_view'] = '1';
+                        AdminView::where('is_view', '0')
+                            ->where('business_id', $business_id)
+                            ->update($update_data);
+                    }
+                }
+            } else {
+                return view('organizations.business.list.list-owner-production-completed-received-logistics', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
             return view('organizations.business.list.list-owner-production-completed-received-logistics', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
@@ -319,7 +335,22 @@ class AllListController extends Controller
     {
         try {
             $data_output = $this->service->getOwnerAllListBusinessReceivedFromLogistics();
-            
+            if ($data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
+                    $business_id = $data->id; 
+                    if (!empty($business_id)) {
+                        $update_data['is_view'] = '1';
+                        AdminView::where('is_view', '0')
+                            ->where('business_id', $business_id)
+                            ->update($update_data);
+                    }
+                }
+            } else {
+                return view('organizations.business.list.list-owner-business-received-from-logistics', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
             return view('organizations.business.list.list-owner-business-received-from-logistics', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
@@ -329,7 +360,22 @@ class AllListController extends Controller
     {
         try {
             $data_output = $this->service->getOwnerAllListBusinessFianaceSendToDispatch();
-            
+            if ($data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
+                    $business_id = $data->id; 
+                    if (!empty($business_id)) {
+                        $update_data['is_view'] = '1';
+                        AdminView::where('is_view', '0')
+                            ->where('business_id', $business_id)
+                            ->update($update_data);
+                    }
+                }
+            } else {
+                return view('organizations.business.list.list-owner-business-send-to-dispatch', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
             return view('organizations.business.list.list-owner-business-send-to-dispatch', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
@@ -338,6 +384,22 @@ class AllListController extends Controller
     public function listProductDispatchCompletedFromDispatch(){
         try {
             $data_output = $this->service->listProductDispatchCompletedFromDispatch();
+            if ($data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
+                    $business_id = $data->id; 
+                    if (!empty($business_id)) {
+                        $update_data['is_view'] = '1';
+                        AdminView::where('is_view', '0')
+                            ->where('business_id', $business_id)
+                            ->update($update_data);
+                    }
+                }
+            } else {
+                return view('organizations.business.list.list-dispatch-completed', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
             return view('organizations.business.list.list-dispatch-completed', compact('data_output'));
         } catch (\Exception $e) {
             return $e;

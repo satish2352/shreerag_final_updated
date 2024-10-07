@@ -4,7 +4,8 @@ namespace App\Http\Services\Organizations\Finance;
 use App\Http\Repository\Organizations\Finance\FinanceRepository;
 use Carbon\Carbon;
 use App\Models\{
-    DesignModel
+    DesignModel,
+    AdminView
 };
 
 use Config;
