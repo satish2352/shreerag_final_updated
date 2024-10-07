@@ -16,7 +16,8 @@ return new class extends Migration
         Schema::create('admin_view', function (Blueprint $table) {
             $table->id(); // Primary key column
             $table->unsignedBigInteger('business_id');
-            $table->string('current_department');
+            $table->unsignedBigInteger('business_details_id');
+            $table->string('off_canvas_status');
             $table->boolean('is_view')->default(0); // 0 or 1 for false/true
             $table->timestamps(); // includes created_at and updated_at
         });

@@ -168,8 +168,8 @@ alert('ID: ' + id);
                             // headers: {
                             //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             // },
+                            
                             success: function(response) {
-                                console.log(response);
                                 if (response.notification_count > 0) {
                                         $('#notification-count').text(response.notification_count);
 

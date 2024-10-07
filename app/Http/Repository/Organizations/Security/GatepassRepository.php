@@ -8,7 +8,9 @@ use App\Models\{
     Gatepass,
     PurchaseOrderModel,
     BusinessApplicationProcesses,
-    PurchaseOrdersModel
+    PurchaseOrdersModel,
+    AdminView,
+    NotificationStatus
 };
 use Config;
 
@@ -33,113 +35,89 @@ class GatepassRepository
             return $e;
         }
     }
-
-    // public function getPurchaseDetails($id)
-    // {
-    //     try {
-    //         $purchaseOrder = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
-              
-    //         ->select(
-    //                 'purchase_orders.id',
-    //                 'purchase_orders.purchase_orders_id',
-    //                 'purchase_orders.requisition_id', 
-    //                 'purchase_orders.business_id', 
-    //                 'purchase_orders.business_details_id', 
-    //                 'purchase_orders.production_id', 
-    //                 'purchase_orders.po_date', 
-    //                 'purchase_orders.terms_condition', 
-    //                 'purchase_orders.transport_dispatch', 
-    //                 'purchase_orders.purchase_status_from_purchase',
-    //                 'purchase_orders.image', 
-    //                 'purchase_orders.tax_type', 
-    //                 'purchase_orders.tax_id', 
-    //                 'purchase_orders.invoice_date', 
-    //                 'purchase_orders.payment_terms', 
-    //                 'purchase_orders.discount', 
-    //                 'vendors.vendor_name', 
-    //                 'vendors.vendor_company_name', 
-    //                 'vendors.vendor_email', 
-    //                 'vendors.vendor_address', 
-    //                 'vendors.gst_no', 
-    //                 'vendors.quote_no', 
-    //                 'purchase_orders.is_active',
-    //                 'purchase_orders.created_at'
-    //             )
-    //             ->where('purchase_orders.purchase_orders_id', $purchase_order_id)
-    //             ->first();
-  
-    //         if (!$purchaseOrder) {
-    //             throw new \Exception('Purchase order not found.');
-    //         }
-    
-    //         // Fetch related Purchase Order Details
-    //         $purchaseOrderDetails = PurchaseOrderDetailsModel::join('tbl_part_item', 'tbl_part_item.id', '=', 'purchase_order_details.part_no_id')
-
-    //         ->where('purchase_id', $purchaseOrder->id)
-    //             ->select(
-    //                 'purchase_order_details.purchase_id',
-    //                 'purchase_order_details.part_no_id',
-    //                 'tbl_part_item.name',
-    //                 'purchase_order_details.description',
-    //                 'purchase_order_details.due_date',
-    //                 'purchase_order_details.quantity',
-    //                 'purchase_order_details.unit',
-    //                 'purchase_order_details.actual_quantity',
-    //                 'purchase_order_details.accepted_quantity',
-    //                 'purchase_order_details.rejected_quantity',
-    //                 'purchase_order_details.rate',
-    //                 'purchase_order_details.amount'
-    //             )
-    //             ->get();
-   
-    //         return [
-    //             'purchaseOrder' => $purchaseOrder,
-    //             'purchaseOrderDetails' => $purchaseOrderDetails,
-    //         ];
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => $e->getMessage()], 500);
-    //     }
-    // }
-    
- 
-    
-
     public function addAll($request)
     {
-        $existingGatepass = Gatepass::where('purchase_orders_id', $request->purchase_orders_id)->first();
-        
-        if ($existingGatepass) {
-            return [
-                'msg' => 'Gate pass already exists for this purchase order.',
-                'status' => 'error'
-            ];
-        }
+        try {
+            // Fetch the purchase order using purchase_orders_id
+            $purchase_orders_details = PurchaseOrderModel::where('purchase_orders_id', $request->purchase_orders_id)->first();
+    
+            // If no purchase order found, return an error
+            if (!$purchase_orders_details) {
+                return [
+                    'msg' => 'Purchase order not found.',
+                    'status' => 'error'
+                ];
+            }
+     // Fetch the business details ID from the purchase order
+     $business_details_id = $purchase_orders_details->business_details_id;
 
-        
-        $dataOutput = new Gatepass();
-        $dataOutput->purchase_orders_id = $request->purchase_orders_id;
-        $dataOutput->gatepass_name = $request->gatepass_name;
-        $dataOutput->gatepass_date = $request->gatepass_date;
-        $dataOutput->gatepass_time = $request->gatepass_time;
-        $dataOutput->remark = $request->remark;
-        $dataOutput->save();
-        $last_insert_id = $dataOutput->id;
+     // Fetch the business application process using business_details_id
+     $business_application = BusinessApplicationProcesses::where('business_details_id', $business_details_id)->first();
 
-        $purchase_orders_details = PurchaseOrderModel::where('purchase_orders_id', $request->purchase_orders_id)->first();
-        
-        if ($purchase_orders_details) {
+     if (!$business_application) {
+         return [
+             'msg' => 'Business Application not found.',
+             'status' => 'error'
+         ];
+     }
+            // Check if a gatepass already exists for the given purchase order
+            $existingGatepass = Gatepass::where('purchase_orders_id', $request->purchase_orders_id)->first();
+    
+            if ($existingGatepass) {
+                return [
+                    'msg' => 'Gate pass already exists for this purchase order.',
+                    'status' => 'error'
+                ];
+            }
+    
+            
+            // Create a new gatepass entry
+            $dataOutput = new Gatepass();
+            $dataOutput->purchase_orders_id = $request->purchase_orders_id;
+            $dataOutput->gatepass_name = $request->gatepass_name;
+            $dataOutput->gatepass_date = $request->gatepass_date;
+            $dataOutput->gatepass_time = $request->gatepass_time;
+            $dataOutput->remark = $request->remark;
+            $dataOutput->save();
+    
+            // Update purchase order details
             $purchase_orders_details->store_material_recived_for_grn_date = date('Y-m-d');
             $purchase_orders_details->store_status_id = config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION');
             $purchase_orders_details->security_material_recived_date = date('Y-m-d');
             $purchase_orders_details->security_status_id = config('constants.QUALITY_DEPARTMENT.LIST_PO_RECEIVED_FROM_SECURITY');
             $purchase_orders_details->save();
+    
+            // Update the business application process's off_canvas_status
+            $business_application->off_canvas_status = 26;
+            $business_application->save();
+    
+            // Prepare data to update admin and notification statuses
+            $update_data_admin['off_canvas_status'] = 26;
+            $update_data_admin['is_view'] = '0';
+            $update_data_business['off_canvas_status'] = 26;
+            // Update AdminView table
+            AdminView::where('business_details_id', $business_application->business_details_id)
+                ->update($update_data_admin);
+    
+            // Update NotificationStatus table
+            NotificationStatus::where('business_details_id', $business_application->business_details_id)
+                ->update($update_data_business);
+    
+            return [
+                'msg' => 'Data Added Successfully',
+                'status' => 'success'
+            ];
+    
+        } catch (\Exception $e) {
+            // Handle any exceptions that may occur
+            return [
+                'msg' => 'An error occurred: ' . $e->getMessage(),
+                'status' => 'error'
+            ];
         }
-
-        return [
-            'msg' => 'Data Added Successfully',
-            'status' => 'success'
-        ];
     }
+    
+    
    
     public function getById($id)
     {

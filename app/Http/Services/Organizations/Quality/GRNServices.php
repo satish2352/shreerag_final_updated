@@ -42,10 +42,12 @@ class GRNServices
     {
         try {
             $data = $this->repo->storeGRN($request);
+            // dd($data);
+            // die();
             $path = Config::get('DocumentConstant.GRN_ADD');
             $ImageName = $data['ImageName'];
             uploadImage($request, 'image', $path, $ImageName);
-
+           
             if ($data) {
                 return ['status' => 'success', 'msg' => 'GRN Added Successfully.'];
             } else {

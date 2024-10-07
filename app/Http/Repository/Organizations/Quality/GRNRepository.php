@@ -11,7 +11,9 @@ use App\Models\{
     PurchaseOrderModel,
     BusinessApplicationProcesses,
     RejectedChalan,
-    PurchaseOrdersModel
+    PurchaseOrdersModel,
+    AdminView,
+    NotificationStatus
     
 };
 use Config;
@@ -35,56 +37,187 @@ class GRNRepository
         return PurchaseOrdersModel::where('id', '=', $id)->first();
     }
     // repository
+    // public function storeGRN($request)
+    // {
+    //     try {
+    //         $grn_no = str_replace(array("-", ":"), "", date('Y-m-d') . time());
+
+
+
+            
+    //         // Fetch the business details ID from the purchase order
+    //         $business_details_id = $purchase_orders_details->business_details_id;
+    
+    //         // Fetch the business application process using business_details_id
+    //         $business_application = BusinessApplicationProcesses::where('business_details_id', $business_details_id)->first();
+    
+    //         if (!$business_application) {
+    //             return [
+    //                 'msg' => 'Business Application not found.',
+    //                 'status' => 'error'
+    //             ];
+    //         }
+
+
+    //         $dataOutput = new GRNModel();
+    //         $dataOutput->purchase_orders_id = $request->purchase_orders_id;
+    //         // $dataOutput->grn_no = $grn_no;
+    //         $dataOutput->po_date = $request->po_date;
+    //         $dataOutput->grn_date = $request->grn_date;
+    //         $dataOutput->remark = $request->remark;
+    //         $dataOutput->image = 'null';
+    //         $dataOutput->is_approve = '0';
+    //         $dataOutput->is_active = '1';
+    //         $dataOutput->is_deleted = '0';
+    //         $dataOutput->save();
+    //         $last_insert_id = $dataOutput->id;
+     
+    //         foreach ($request->addmore as $index => $item) {
+    //             $user_data = PurchaseOrderDetailsModel::where('id', $item['edit_id'])
+    //                 ->update([
+    //                     // 'qc_check_remark' => $item['qc_check_remark'],
+    //                     'actual_quantity' => $item['actual_quantity'],
+    //                     'accepted_quantity' => $item['accepted_quantity'],
+    //                     'rejected_quantity' => $item['rejected_quantity'],
+    //                 ]);
+    //         }
+    //         $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
+    //         $finalOutput = GRNModel::find($last_insert_id);
+    //         $finalOutput->image = $imageName;
+    //         $finalOutput->save();
+
+         
+            
+    //         $purchase_orders_details = PurchaseOrderModel::where('purchase_orders_id', $request->purchase_orders_id)->first();
+          
+           
+    //         $business_application = PurchaseOrderModel::where('purchase_orders_id', $purchase_orders_details->purchase_orders_id)->first();
+          
+
+    //         if ($business_application) {
+    //             $business_application->grn_no = $grn_no;
+    //             $business_application->quality_material_sent_to_store_date = date('Y-m-d');
+    //             $business_application->quality_status_id = config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE');
+    //             $business_application->save();               
+    //         }
+
+          
+    //         $updateGatepassTable = Gatepass::where('purchase_orders_id',$request->purchase_orders_id)->first();
+    //         $updateGatepassTable->is_checked_by_quality = true;
+    //         $updateGatepassTable->save();
+    //         $rejected_chalan_data = new RejectedChalan();
+    //         $rejected_chalan_data->purchase_orders_id = $request->purchase_orders_id;
+    //         $rejected_chalan_data->grn_id = $dataOutput->id;
+    //         $rejected_chalan_data->chalan_no = '';
+    //         $rejected_chalan_data->reference_no = '';
+    //         $rejected_chalan_data->remark = '';
+    //         $rejected_chalan_data->save();
+
+
+    //          // Update the business application process's off_canvas_status
+    //          $business_application->off_canvas_status = 27;
+    //          $business_application->save();
+     
+    //          // Prepare data to update admin and notification statuses
+    //          $update_data_admin['off_canvas_status'] = 27;
+     
+    //          // Update AdminView table
+    //          AdminView::where('business_details_id', $business_application->business_details_id)
+    //              ->update($update_data_admin);
+     
+    //          // Update NotificationStatus table
+    //          NotificationStatus::where('business_details_id', $business_application->business_details_id)
+    //              ->update($update_data_admin);
+    //         return [
+    //             'ImageName' => $imageName,
+    //             'status' => 'success'
+    //         ];
+    //     } catch (\Exception $e) {
+            
+    //         return [
+    //             'msg' => $e->getMessage(),
+    //             'status' => 'error'
+    //         ];
+    //     }
+    // }
     public function storeGRN($request)
     {
         try {
+            // Generate a unique GRN number
             $grn_no = str_replace(array("-", ":"), "", date('Y-m-d') . time());
+    
+            // Fetch purchase orders details
+            $purchase_orders_details = PurchaseOrderModel::where('purchase_orders_id', $request->purchase_orders_id)->first();
+            
+            if (!$purchase_orders_details) {
+                return [
+                    'msg' => 'Purchase order not found.',
+                    'status' => 'error'
+                ];
+            }
+    
+            // Fetch the business details ID from the purchase order
+            $business_details_id = $purchase_orders_details->business_details_id;
+    
+            // Fetch the business application process using business_details_id
+            $business_application = BusinessApplicationProcesses::where('business_details_id', $business_details_id)->first();
+    
+            if (!$business_application) {
+                return [
+                    'msg' => 'Business Application not found.',
+                    'status' => 'error'
+                ];
+            }
+    
+            // Create a new GRN entry
             $dataOutput = new GRNModel();
             $dataOutput->purchase_orders_id = $request->purchase_orders_id;
-            // $dataOutput->grn_no = $grn_no;
             $dataOutput->po_date = $request->po_date;
             $dataOutput->grn_date = $request->grn_date;
             $dataOutput->remark = $request->remark;
-            $dataOutput->image = 'null';
+            $dataOutput->image = 'null'; // Initial image state
             $dataOutput->is_approve = '0';
             $dataOutput->is_active = '1';
             $dataOutput->is_deleted = '0';
             $dataOutput->save();
+    
             $last_insert_id = $dataOutput->id;
-     
-            foreach ($request->addmore as $index => $item) {
-                $user_data = PurchaseOrderDetailsModel::where('id', $item['edit_id'])
+    
+            // Update purchase order details with quantities
+            foreach ($request->addmore as $item) {
+                PurchaseOrderDetailsModel::where('id', $item['edit_id'])
                     ->update([
-                        // 'qc_check_remark' => $item['qc_check_remark'],
                         'actual_quantity' => $item['actual_quantity'],
                         'accepted_quantity' => $item['accepted_quantity'],
                         'rejected_quantity' => $item['rejected_quantity'],
                     ]);
             }
-            $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
-            $finalOutput = GRNModel::find($last_insert_id);
-            $finalOutput->image = $imageName;
-            $finalOutput->save();
-
-         
-            
-            $purchase_orders_details = PurchaseOrderModel::where('purchase_orders_id', $request->purchase_orders_id)->first();
-          
-           
-            $business_application = PurchaseOrderModel::where('purchase_orders_id', $purchase_orders_details->purchase_orders_id)->first();
-          
-
-            if ($business_application) {
-                $business_application->grn_no = $grn_no;
-                $business_application->quality_material_sent_to_store_date = date('Y-m-d');
-                $business_application->quality_status_id = config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE');
-                $business_application->save();               
+    
+            // Handle image upload
+            if ($request->hasFile('image')) {
+                $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
+                $finalOutput = GRNModel::find($last_insert_id);
+                $finalOutput->image = $imageName;
+                $finalOutput->save();
             }
-
-          
-            $updateGatepassTable = Gatepass::where('purchase_orders_id',$request->purchase_orders_id)->first();
-            $updateGatepassTable->is_checked_by_quality = true;
-            $updateGatepassTable->save();
+             if ($purchase_orders_details) {
+                $purchase_orders_details->grn_no = $grn_no;
+                $purchase_orders_details->quality_material_sent_to_store_date = date('Y-m-d');
+                $purchase_orders_details->quality_status_id = config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE');
+                $purchase_orders_details->save();               
+            }
+            
+            $business_application->off_canvas_status = 27; // Update the off_canvas_status here
+            $business_application->save();
+    
+            // Update the gatepass table
+            $updateGatepassTable = Gatepass::where('purchase_orders_id', $request->purchase_orders_id)->first();
+            if ($updateGatepassTable) {
+                $updateGatepassTable->is_checked_by_quality = true;
+                $updateGatepassTable->save();
+            }
+    
+            // Save rejected chalan data if necessary
             $rejected_chalan_data = new RejectedChalan();
             $rejected_chalan_data->purchase_orders_id = $request->purchase_orders_id;
             $rejected_chalan_data->grn_id = $dataOutput->id;
@@ -92,20 +225,31 @@ class GRNRepository
             $rejected_chalan_data->reference_no = '';
             $rejected_chalan_data->remark = '';
             $rejected_chalan_data->save();
-
+    
+            // Prepare data to update admin and notification statuses
+            $update_data_admin['off_canvas_status'] = 27;
+            $update_data_admin['is_view'] = '0';
+            $update_data_business['off_canvas_status'] = 27;
+            // Update AdminView table
+            AdminView::where('business_details_id', $business_application->business_details_id)
+                ->update($update_data_admin);
+    
+            // Update NotificationStatus table
+            NotificationStatus::where('business_details_id', $business_application->business_details_id)
+                ->update($update_data_business);
+    
             return [
-                'ImageName' => $imageName,
+                'ImageName' => $imageName ?? null, // Return the image name if uploaded
                 'status' => 'success'
             ];
         } catch (\Exception $e) {
-            
             return [
                 'msg' => $e->getMessage(),
                 'status' => 'error'
             ];
         }
     }
-
+    
     public function getAllListMaterialSentFromQualityBusinessWise($id)
 {
     try {

@@ -95,46 +95,6 @@ use Config;
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }      
     }
-
-
- 
-    
-
-
-//     public function updateAll($request)
-// {
-//     try {
-//         $businessDetails = $request->input('addmore');
-//         // dd($businessDetails);
-//         // die();
-//         foreach ($businessDetails as $index => $detail) {
-//             $dataOutput = DesignModel::where('id', $detail['edit_id'])->first();
-//             if (!$dataOutput) {
-//                 continue; // Skip if the record is not found
-//             }
-
-//             if ($request->hasFile("addmore.{$index}.design_image")) {
-//                 $designImageName = $dataOutput->id . '_' . rand(100000, 999999) . '_design.' . $request->file("addmore.{$index}.design_image")->getClientOriginalExtension();
-//                 $request->file("addmore.{$index}.design_image")->move(public_path('uploads/designs'), $designImageName);
-//                 $dataOutput->design_image = $designImageName;
-//             }
-
-//             if ($request->hasFile("addmore.{$index}.bom_image")) {
-//                 $bomImageName = $dataOutput->id . '_' . rand(100000, 999999) . '_bom.' . $request->file("addmore.{$index}.bom_image")->getClientOriginalExtension();
-//                 $request->file("addmore.{$index}.bom_image")->move(public_path('uploads/boms'), $bomImageName);
-//                 $dataOutput->bom_image = $bomImageName;
-//             }
-
-//             $dataOutput->save();
-//         }
-
-//         return ['status' => 'success', 'msg' => 'Data Updated Successfully.'];
-//     } catch (Exception $e) {
-//         return ['status' => 'error', 'msg' => $e->getMessage()];
-//     }
-// }
-
-
     public function updateReUploadDesign($request){
         try {
            

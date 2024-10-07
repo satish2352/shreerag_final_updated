@@ -14,7 +14,8 @@ use App\Models\ {
     AdminView,
     PurchaseOrdersModel,
     PurchaseOrderDetailsModel,
-    GRNModel
+    GRNModel,
+    NotificationStatus
 
 };
 
@@ -28,11 +29,20 @@ class AllListController extends Controller
         try {
             $data_output = $this->service->getAllListDesignRecievedForMaterial();
 
+            $first_business_id = optional($data_output->first())->id;
+
+            if ($first_business_id) {
             $update_data['store_is_view'] = '1';
-            BusinessApplicationProcesses::where('production_status_id',1114)
-                                          ->where('design_status_id',1114)
-                                          ->where('store_is_view', '0')
-                                          ->update($update_data);
+            NotificationStatus::where('store_is_view', '0')
+                ->where('business_id', $first_business_id) 
+                ->update($update_data);
+        }
+
+            // $update_data['store_is_view'] = '1';
+            // BusinessApplicationProcesses::where('production_status_id',1114)
+            //                               ->where('design_status_id',1114)
+            //                               ->where('store_is_view', '0')
+            //                               ->update($update_data);
         
             return view('organizations.store.list.list-accepted-design', compact('data_output'));
         } catch (\Exception $e) {
@@ -55,6 +65,23 @@ class AllListController extends Controller
     public function getAllListMaterialSentToProduction(Request $request){
         try {
             $data_output = $this->service->getAllListMaterialSentToProduction();
+        
+            if ($data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
+                    $business_details_id = $data->id; 
+                    if (!empty($business_details_id)) {
+                        $update_data['material_received_from_store'] = '1';
+                        NotificationStatus::where('material_received_from_store', '0')
+                            ->where('business_details_id', $business_details_id)
+                            ->update($update_data);
+                    }
+                }
+            } else {
+                return view('organizations.store.list.list-material-sent-to-prod', [
+                    'data_output' => [],
+                    'message' => 'No data found for designs received for correction'
+                ]);
+            }
         
             return view('organizations.store.list.list-material-sent-to-prod', compact('data_output'));
         } catch (\Exception $e) {
@@ -81,6 +108,22 @@ class AllListController extends Controller
 
         try {
             $data_output = $this->service->getAllListMaterialReceivedFromQuality();
+            if ($data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
+                    $business_id = $data->id; 
+                    if (!empty($business_id)) {
+                        $update_data['received_material_to quality'] = '1';
+                        NotificationStatus::where('received_material_to quality', '0')
+                            ->where('business_id', $business_id)
+                            ->update($update_data);
+                    }
+                }
+            } else {
+                return view('organizations.security.list.list-recived-material', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
             return view('organizations.store.list.list-material-received-from-quality', compact('data_output'));
         } catch (\Exception $e) {
             return $e;

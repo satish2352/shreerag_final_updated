@@ -29,6 +29,7 @@ use App\Models\ {
     LeaveManagement,
     Notice,
     TransportName,
+    NotificationStatus,
 //     Gallery,
 //     AdditionalSolutions,
 //     OurSolutions,
@@ -406,196 +407,288 @@ class DashboardController extends Controller {
 
     public function getNotification(Request $request)
     {
-
-
+        
         $ses_userId = session()->get('user_id');
         $ses_roleId = session()->get('role_id');
-        // dd($ses_userId);
-        
-            if ($ses_roleId == '1') {
-                // Fetch design data
-                $design_data = AdminView::where('current_department', 1112)
-                                        ->where('is_view', '0')
-                                        ->select('id')
-                                        ->get();
-                $design_count = $design_data->count();
-            
-                // Create notifications array
-                $notifications[] = ['admin_count' => $design_count,
-                        'message' => 'Business Sent For Design',
-                        'url' => 'list-forwarded-to-design',
+        $count = 0;  // Initialize the $count variable
+        $notifications = [];  // Initialize the $notifications array
+
+        if ($ses_userId == '2') {
+  
+                $business_data = AdminView::where('off_canvas_status', 11)
+                                ->where('is_view', '0')
+                                ->select('id')
+                                ->get();
+
+                $business_count = $business_data->count();            
+                  $notifications[] = ['admin_count' => $business_count,
+                  'message' => 'Business Sent For Design',
+                  'url' => 'list-forwarded-to-design',
+                   ];
+                   
+                $uploaded_design = AdminView::where('off_canvas_status', '12')
+                                ->where('is_view', '0')
+                                ->select('id')
+                                    ->get();
+                $uploaded_design_count = $uploaded_design->count();
+                $notifications[] = ['admin_count' => $uploaded_design_count,
+                'message' => 'Design Upload and Received Production Department',
+                'url' => 'list-design-uploaded-owner',
+                ];
+                $received_correction_design = AdminView::where('off_canvas_status', '13')
+                ->where('is_view', '0')
+                ->select('id')
+                    ->get();
+                $received_correction_design_count = $received_correction_design->count();
+                $notifications[] = ['admin_count' => $received_correction_design_count,
+                'message' => 'Production Dept Rejected Design and Received Design Dept',
+                'url' => 'list-design-correction',
+                ];
+                $material_ask_prod_to_store = AdminView::where('off_canvas_status', '15')
+                                ->where('is_view', '0')
+                                ->select('id')
+                                    ->get();
+                $material_ask_prod_to_store_count = $material_ask_prod_to_store->count();
+                $notifications[] = ['admin_count' => $material_ask_prod_to_store_count,
+                'message' => 'Material Ask By Production To Store',
+                'url' => 'material-ask-by-prod-to-store',
+                ];
+                $material_ask_by_store_to_purchase = AdminView::where('off_canvas_status', '16')
+                ->where('is_view', '0')
+                ->select('id')
+                    ->get();
+                $material_ask_by_store_to_purchase_count = $material_ask_by_store_to_purchase->count();
+                $notifications[] = ['admin_count' => $material_ask_by_store_to_purchase_count,
+                'message' => 'Material ask by Store to Purchase',
+                'url' => 'material-ask-by-store-to-purchase',
+                ];
+                $Purchase_order_need_to_check = AdminView::where('off_canvas_status', '23')
+                ->where('is_view', '0')
+                ->select('id')
+                    ->get();
+                $Purchase_order_need_to_check_count = $Purchase_order_need_to_check->count();
+                $notifications[] = ['admin_count' => $Purchase_order_need_to_check_count,
+                'message' => 'Purchase order need to check',
+                'url' => 'list-purchase-orders',
+                ];
+                $purchase_order_approved = AdminView::where('off_canvas_status', '24')
+                ->where('is_view', '0')
+                ->select('id')
+                    ->get();
+                $purchase_order_approved_count = $purchase_order_approved->count();
+                $notifications[] = ['admin_count' => $purchase_order_approved_count,
+                'message' => 'Purchase Order Approved',
+                'url' => 'list-approved-purchase-orders-owner',
+                ];
+                $po_send_to_vendor = AdminView::where('off_canvas_status', '25')
+                ->where('is_view', '0')
+                ->select('id')
+                    ->get();
+                $po_send_to_vendor_count = $po_send_to_vendor->count();
+                $notifications[] = ['admin_count' => $po_send_to_vendor_count,
+                'message' => 'Submitted PO by Vendor',
+                'url' => 'list-owner-submited-po-to-vendor',
+                ];
+                $gate_pass_generate = AdminView::where('off_canvas_status', 26)
+                ->where('is_view', '0')
+                ->select('id')
+                    ->get();
+                $gate_pass_generate_count = $gate_pass_generate->count();
+                $notifications[] = ['admin_count' => $gate_pass_generate_count,
+                'message' => 'Security Created Gate Pass',
+                'url' => 'list-owner-gatepass',
                 ];
 
-                $design_resend_data = AdminView::where('current_department', 1116)
-                                        ->where('is_view', '0')
-                                        ->select('id')
-                                        ->get();
-                $design_resend_count = $design_resend_data->count();
-            
-                // Create notifications array
-                $notifications[] = ['admin_count' => $design_resend_count,
-                        'message' => 'Design Resend To Production Department',
-                        'url' => 'list-forwarded-to-design',
+                $quality_dept_material_received_in_store = AdminView::where('off_canvas_status', '27')
+                ->where('is_view', '0')
+                ->select('id')
+                    ->get();
+                $quality_dept_material_received_in_store_count = $quality_dept_material_received_in_store->count();
+                $notifications[] = ['admin_count' => $quality_dept_material_received_in_store_count,
+                'message' => 'Generated GRN Material send Quality Dept to Store ',
+                'url' => 'list-material-sent-to-store-generated-grn',
                 ];
-            
-                // Fetch production data
-                $prod_data = AdminView::where('current_department', 1113)
-                                        ->where('is_view', '0')
-                                        ->select('id')
-                                        ->get();
-                $prod_count = $prod_data->count();
-            
-                // Add production notification to the array
-                $notifications[] = [
-                    'admin_count' => $prod_count,
-                    'message' => 'Business Sent For Production',
-                    'url' => 'list-design-uploaded-owner',
-                ];
+                $count = $business_count + $uploaded_design_count + $material_ask_prod_to_store_count + $received_correction_design_count + $material_ask_by_store_to_purchase_count + $Purchase_order_need_to_check_count + $purchase_order_approved_count
+                 + $po_send_to_vendor_count + $gate_pass_generate_count + $quality_dept_material_received_in_store_count;
+       
+            }elseif($ses_userId == '3'){
+                    $sent_to_prod_data = NotificationStatus::where('off_canvas_status',11)
+                    ->where('design_is_view','0')
+                    ->select('id')
+                    ->get();
+                    $received_for_design = $sent_to_prod_data->count();
 
-                // Fetch production data
-                $design_rejected_data = AdminView::where('current_department', 1115)
-                                        ->where('is_view', '0')
-                                        ->select('id')
-                                        ->get();
-                $design_rejected_count = $design_rejected_data->count();
-            
-                // Add production notification to the array
-                $notifications[] = [
-                    'admin_count' => $design_rejected_count,
-                    'message' => 'Design Received For Design Correction',
-                    'url' => 'list-design-uploaded-owner',
-                ];
+                    $notifications[] = ['admin_count' => $received_for_design,
+                    'message' => 'Business Received For Design',
+                    'url' => 'list-new-requirements-received-for-design'
+                   ];
 
-                $design_sended_store_data = AdminView::where('current_department', 1114)
-                                        ->where('is_view', '0')
-                                        ->select('id')
-                                        ->get();
-                $design_sended_store_count = $design_sended_store_data->count();
-            
-                // Add production notification to the array
-                $notifications[] = [
-                    'admin_count' => $design_sended_store_count,
-                    'message' => 'Design Received For Design Correction',
-                    'url' => 'list-design-uploaded-owner',
-                ];
+                   $design_rejected_prod_dept= NotificationStatus::where('off_canvas_status',15)
+                   ->where('prod_design_accepted','0')
+                   ->select('id')
+                   ->get();
+                   $design_rejected_prod_dept_count = $design_rejected_prod_dept->count();
 
-                $purchase_material_req_from_store = AdminView::where('current_department', 1123)
-                                        ->where('is_view', '0')
-                                        ->select('id')
-                                        ->get();
-                $purchase_material_req_from_store_count = $purchase_material_req_from_store->count();
-            
-                // Add production notification to the array
-                $notifications[] = [
-                    'admin_count' => $purchase_material_req_from_store_count,
-                    'message' => 'Material Req. Sended To Purchase',
-                    'url' => 'list-design-uploaded-owner',
-                ];
+                   $notifications[] = ['admin_count' => $design_rejected_prod_dept_count,
+                       'message' => 'Product Department Design Accepted',
+                       'url' => 'designdept/list-accept-design-by-production'
+                   ];
 
-                
-            
-                // Log the notifications for debugging
-                // Log::info($notifications);
-            
-                // Calculate the total count
-                $count = $design_count + $prod_count + $design_rejected_count + $design_resend_count + $purchase_material_req_from_store_count;
 
-             }elseif($ses_roleId == '3'){
+                    $design_accepted_prod_dept= NotificationStatus::where('off_canvas_status',15)
+                    ->where('prod_design_accepted','0')
+                    ->select('id')
+                    ->get();
+                    $design_accepted_prod_count = $design_accepted_prod_dept->count();
 
-                $sent_to_prod_data = BusinessApplicationProcesses::where('business_status_id',1112)
-                            ->where('design_status_id',1111)
-                            ->where('design_is_view','0')
-                            ->select('id')
-                            ->get();
-                        $received_for_design = $sent_to_prod_data->count();
+                    $notifications[] = ['admin_count' => $design_accepted_prod_count,
+                        'message' => 'Product Department Design Accepted',
+                        'url' => 'designdept/list-accept-design-by-production'
+                    ];
+                    $design_rejected_prod_dept= NotificationStatus::where('off_canvas_status',13)
+                    ->where('prod_design_rejected','0')
+                    ->select('id')
+                    ->get();
+                    $design_rejected_prod_count = $design_rejected_prod_dept->count();
 
-                        $notifications[] = ['admin_count' => $received_for_design,
-                            'message' => 'Business Recrived For Design',
-                            'url' => 'list-new-requirements-received-for-design'
-                        ];
-
-                $rejected_design_data = BusinessApplicationProcesses::where('production_status_id',1115)
-                            ->where('business_status_id',1115)
-                            ->where('design_is_view_rejected','0')
-                            ->select('id')
-                            ->get();
-                        $rejected_count = $rejected_design_data->count();
-
-                        $notifications[] = ['admin_count' => $rejected_count,
-                             'message' => 'Business Recrived For Design Revised',
-                             'url' => 'list-reject-design-from-prod'
-                        ];
-                        $count = $received_for_design + $rejected_count;
-        }elseif($ses_roleId == '4'){
-            $received_for_production = BusinessApplicationProcesses::where('production_status_id',1113)
-                 ->where('design_status_id',1113)
-                 ->where('prod_is_view','0')
-                 ->select('id')
-                 ->get();
-                 $received_for_production_count = $received_for_production->count();
-     
-                 $notifications[] = ['admin_count' => $received_for_production_count,
-                     'message' => 'New Design Received For Production',
-                    'url' => 'list-new-requirements-received-for-production'
+                    $notifications[] = ['admin_count' => $design_rejected_prod_count,
+                        'message' => 'Product Department Design Rejected',
+                        'url' => 'list-reject-design-from-prod'
                     ];
 
-                    $received_for_production_revised = BusinessApplicationProcesses::where('production_status_id',1116)
-                 ->where('design_status_id',1116)
-                 ->where('prod_is_view_revised','0')
-                 ->select('id')
-                 ->get();
-                 $received_for_production_revised_count = $received_for_production_revised->count();
-     
-                 $notifications[] = ['admin_count' => $received_for_production_revised_count,
-                     'message' => 'Revised Design Received For Production',
-                    'url' => 'list-new-requirements-received-for-production'
-                    ];
+                   $count = $received_for_design + $design_rejected_prod_dept_count+ $design_accepted_prod_count + $design_rejected_prod_count;
+        }elseif($ses_userId == '4'){
+                    $received_prod_req = NotificationStatus::where('off_canvas_status',12)
+                    ->where('prod_is_view','0')
+                    ->select('id')
+                    ->get();
+                    $received_design_in_prod = $received_prod_req->count();
 
-                    $material_received = BusinessApplicationProcesses::where('production_status_id',1119)
-                    ->where('store_status_id', 1118)
-                 ->where('prod_is_view_material_received','0')
-                 ->select('id')
-                 ->get();
-                 $material_received_count = $material_received->count();
-     
-                 $notifications[] = ['admin_count' => $material_received_count,
-                     'message' => 'Material Received From Store',
-                    'url' => 'list-material-recived'
-                    ];
-
-                    $count = $received_for_production_count + $received_for_production_revised_count + $material_received_count;
-             }elseif($ses_roleId == '7'){
-                $received_to_store = BusinessApplicationProcesses::where('production_status_id',1114)
-                     ->where('design_status_id',1114)
-                     ->where('store_is_view','0')
-                     ->select('id')
-                     ->get();
-                     $received_to_store_count = $received_to_store->count();
-         
-                     $notifications[] = ['admin_count' => $received_to_store_count,
-                         'message' => 'New Design Received To Store',
+                    $notifications[] = ['admin_count' => $received_design_in_prod,
+                        'message' => 'New Design Received ',
                         'url' => 'list-new-requirements-received-for-production'
-                        ];
-    
-                        $count = $received_to_store_count;
-                 }elseif($ses_roleId == '2'){
-                    $received_to_store = BusinessApplicationProcesses::where('store_status_id',1123)
-                         ->where('business_status_id',1123)
-                         ->where('purchase_is_view','0')
-                         ->select('id')
-                         ->get();
-                         $received_to_store_count = $received_to_store->count();
-             
-                         $notifications[] = ['admin_count' => $received_to_store_count,
-                             'message' => 'New Req. Received From Store',
-                            'url' => 'list-new-requirements-received-for-production'
-                            ];
-        
-                            $count = $received_to_store_count;
-                     }
+                    ];
+                    $count = $received_design_in_prod;
+        }
+        elseif($ses_userId == '5'){
 
+            $store_view_req = NotificationStatus::where('off_canvas_status','15')
+            ->where('store_is_view','0')
+            ->select('id')
+            ->get();
+            $store_view_req_count = $store_view_req->count();
+            $notifications[] = ['admin_count' => $store_view_req_count,
+                'message' => 'New Design Received ',
+                'url' => 'list-new-requirements-received-for-production'
+            ];
 
+            $material_received_by_quality = NotificationStatus::where('off_canvas_status',27)
+            ->where('received_material_to quality','0')
+            ->select('id')
+            ->get();
+            $material_received_by_quality_count = $material_received_by_quality->count();
 
+            $notifications[] = ['admin_count' => $material_received_by_quality_count,
+                'message' => 'Material Received From Quality',
+                'url' => 'list-material-received-from-quality'
+            ];
+
+            $material_received_from_store = NotificationStatus::where('off_canvas_status',17)
+            ->where('material_received_from_store','0')
+            ->select('id')
+            ->get();
+            $material_received_from_store_count = $material_received_from_store->count();
+
+            $notifications[] = ['admin_count' => $material_received_from_store_count,
+                'message' => 'Material Received For Production',
+                'url' => 'list-material-recived'
+            ];
+            $count = $store_view_req_count + $material_received_by_quality_count + $material_received_from_store_count;
+           
+        }
+        elseif($ses_userId == '6'){
+// dd($ses_userId);
+// die();
+            $received_requistion_req = NotificationStatus::where('off_canvas_status',16)
+            ->where('purchase_is_view','0')
+            ->select('id')
+            ->get();
+            $received_requistion_req_count = $received_requistion_req->count();
+
+            $notifications[] = ['admin_count' => $received_requistion_req_count,
+                'message' => 'Received Requistion Request',
+                'url' => 'list-purchase'
+            ];
+            $list_purchase_orders_sent_to_owner = NotificationStatus::where('off_canvas_status',23)
+            ->where('purchase_order_is_view_po','0')
+            ->select('id')
+            ->get();
+            $list_purchase_orders_sent_to_owner_count = $list_purchase_orders_sent_to_owner->count();
+
+            $notifications[] = ['admin_count' => $list_purchase_orders_sent_to_owner_count,
+                'message' => 'Purchase Orders Sent to Owner',
+                'url' => 'list-purchase-orders-sent-to-owner'
+            ];
+            $list_approved_purchase_orders_owner= NotificationStatus::where('off_canvas_status',24)
+            ->where('purchase_order_is_view_po','0')
+            ->select('id')
+            ->get();
+            $list_approved_purchase_orders_owner_count = $list_approved_purchase_orders_owner->count();
+
+            $notifications[] = ['admin_count' => $list_approved_purchase_orders_owner_count,
+                'message' => 'Purchase Orders Sent to Owner',
+                'url' => 'list-approved-purchase-orders'
+            ];
+            $po_send_to_vendor= NotificationStatus::where('off_canvas_status',25)
+            ->where('po_send_to_vendor','0')
+            ->select('id')
+            ->get();
+            $po_send_to_vendor_count = $po_send_to_vendor->count();
+
+            $notifications[] = ['admin_count' => $po_send_to_vendor_count,
+                'message' => 'Submited PO by Vendor List',
+                'url' => 'list-submited-po-to-vendor'
+            ];
+            $count = $received_requistion_req_count + $list_purchase_orders_sent_to_owner_count + $list_approved_purchase_orders_owner_count + $po_send_to_vendor_count;
+        }
+        elseif($ses_userId == '7'){
+            $po_send_to_vendor_visible_security= NotificationStatus::where('off_canvas_status',25)
+            ->where('po_send_to_vendor_visible_security','0')
+            ->select('id')
+            ->get();
+            $po_send_to_vendor_visible_security_count = $po_send_to_vendor_visible_security->count();
+
+            $notifications[] = ['admin_count' => $po_send_to_vendor_visible_security_count,
+                'message' => 'Search By PO No',
+                'url' => 'list-all-po-number'
+            ];
+            $count = $po_send_to_vendor_visible_security_count;
+        }
+        elseif($ses_userId == '8'){
+          
+            $po_material_received_by_quality= NotificationStatus::where('off_canvas_status',25)
+            ->where('quality_po_material_visible','0')
+            ->select('id')
+            ->get();
+            $po_material_received_by_quality_count = $po_material_received_by_quality->count();
+
+            $notifications[] = ['admin_count' => $po_material_received_by_quality_count,
+                'message' => 'Search By PO No',
+                'url' => 'list-grn'
+            ];
+            
+            $visible_grn= NotificationStatus::where('off_canvas_status',27)
+            ->where('quality_create_grn','0')
+            ->select('id')
+            ->get();
+            $visible_grn_count = $visible_grn->count();
+
+            $notifications[] = ['admin_count' => $visible_grn_count,
+                'message' => 'Material Sent to Store',
+                'url' => 'list-material-sent-to-quality'
+            ];
+            $count = $po_material_received_by_quality_count + $visible_grn_count;
+        }
             return response()->json([
                 'notification_count' => $count,
                 'notifications' => $notifications

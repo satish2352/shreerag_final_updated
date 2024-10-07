@@ -262,7 +262,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-approved-purchase-orders', ['as' => 'list-approved-purchase-orders', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListApprovedPurchaseOrder']);
         Route::get('/check-details-of-po-before-send-vendor/{purchase_order_id}', ['as' => 'check-details-of-po-before-send-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@checkDetailsBeforeSendPOToVendor']);
         Route::get('/list-check-final-purchase-order/{purchase_order_id}', ['as' => 'list-check-final-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@listAllApprovedPOToBeChecked']);
-        Route::get('/finalize-and-submit-mail-to-vendor/{purchase_order_id}', ['as' => 'finalize-and-submit-mail-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@submitAndSentEmailToTheVendorFinalPurchaseOrder']);
+        Route::get('/finalize-and-submit-mail-to-vendor/{purchase_order_id}/{business_id}', ['as' => 'finalize-and-submit-mail-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@submitAndSentEmailToTheVendorFinalPurchaseOrder']);
     
         Route::post('/submit-purchase-order-to-owner-for-review', ['as' => 'submit-purchase-order-to-owner-for-review', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@submitPurchaseOrderToOwnerForReview']);
     

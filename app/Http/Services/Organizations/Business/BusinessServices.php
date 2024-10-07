@@ -33,7 +33,8 @@ class BusinessServices
     {
         try {
             $result = $this->repo->addAll($request);
-           
+        //    dd($result);
+        //    die();
             if ($result['status'] === 'success') {
                 return ['status' => 'success', 'msg' => 'This business send to Design Department Successfully.'];
             } else {
@@ -56,8 +57,8 @@ class BusinessServices
     {
         try {
             $return_data = $this->repo->updateAll($request);
-         dd($return_data);
-         die();
+        //  dd($return_data);
+        //  die();
             if ($return_data['status'] == 'success') {
                 return ['status' => 'success', 'msg' => 'Data Updated Successfully.'];
             } else {
@@ -101,6 +102,7 @@ class BusinessServices
     {
         try {
             $acceptPurchaseOrder = $this->repo->acceptPurchaseOrder($id, $business_id);
+         
             return $acceptPurchaseOrder;
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];

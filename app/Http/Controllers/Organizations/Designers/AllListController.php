@@ -10,7 +10,8 @@ use Config;
 use Carbon;
 use App\Models\{
     BusinessApplicationProcesses,
-    AdminView
+    AdminView,
+    NotificationStatus
 };
 
 class AllListController extends Controller
@@ -23,28 +24,61 @@ class AllListController extends Controller
             // $acceptdesign = base64_decode($id);
            
             $data_output = $this->service->acceptdesignbyProduct();
+            
+            $first_business_id = optional($data_output->first())->id;
+
+            if ($first_business_id) {
+            $update_data['prod_design_accepted'] = '1';
+            NotificationStatus::where('prod_design_accepted', '0')
+                ->where('business_id', $first_business_id) 
+                ->update($update_data);
+        }
            
             return view('organizations.designer.list.list-accept-design-by-production', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
         }
     } 
-    public function getAllListDesignRecievedForCorrection(Request $request){
+    public function getAllListDesignRecievedForCorrection(Request $request)
+    {
         try {
+            // Retrieve the list of designs received for correction
             $data_output = $this->service->getAllListDesignRecievedForCorrection();
-
-            $update_data['design_is_view_rejected'] = '1';
-            BusinessApplicationProcesses::where('business_status_id', 1115)
-                                          ->where('design_status_id', 1115)
-                                          ->where('design_is_view_rejected', '0')
-                                          ->update($update_data);
-                                          
-        
+    
+            // Check if $data_output is not empty
+            if ($data_output->isNotEmpty()) {
+                // Loop through each item in $data_output to process multiple business_ids
+                foreach ($data_output as $data) {
+                    $business_id = $data->business_id; // Get each business_id from the data
+    
+                    // Check if business_id is valid (not null or empty)
+                    if (!empty($business_id)) {
+                        // Prepare the update data
+                        $update_data['prod_design_rejected'] = '1';
+    
+                        // Update the NotificationStatus where the prod_design_rejected is '0' and business_id matches
+                        NotificationStatus::where('prod_design_rejected', '0')
+                            ->where('business_id', $business_id)
+                            ->update($update_data);
+                    }
+                }
+            } else {
+                // If no data is found, just return the view with an empty result and handle in the view
+                return view('organizations.designer.list.list_design_received_from_production_for_correction', [
+                    'data_output' => [],
+                    'message' => 'No data found for designs received for correction'
+                ]);
+            }
+    
+            // Return the view with the data_output
             return view('organizations.designer.list.list_design_received_from_production_for_correction', compact('data_output'));
+    
         } catch (\Exception $e) {
-            return $e;
+            // Handle the exception properly, log the error, and return a user-friendly message
+            \Log::error('Error in getting design corrections: ' . $e->getMessage());
+            return back()->withErrors('Something went wrong while fetching design corrections. Please try again later.');
         }
-    } 
+    }
     
 
 }

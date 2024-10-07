@@ -12,7 +12,9 @@ use App\Models\ {
     DesignModel,
     BusinessApplicationProcesses,
     ProductionModel,
-    DesignRevisionForProd
+    DesignRevisionForProd,
+    NotificationStatus,
+    
     };
 
 class AllListController extends Controller
@@ -53,6 +55,23 @@ class AllListController extends Controller
       
               )
               ->get();
+
+              if ($data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
+                    $business_id = $data->id; 
+                    if (!empty($business_id)) {
+                        $update_data['po_send_to_vendor_visible_security'] = '1';
+                        NotificationStatus::where('po_send_to_vendor_visible_security', '0')
+                            ->where('business_id', $business_id)
+                            ->update($update_data);
+                    }
+                }
+            } else {
+                return view('organizations.security.list.list-recived-material', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
             return view('organizations.security.list.list-recived-material', compact('data_output'));
         } catch (\Exception $e) {
             return $e;

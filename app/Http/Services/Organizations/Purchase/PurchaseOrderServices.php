@@ -33,8 +33,6 @@ use Config;
     public function submitBOMToOwner($request){
         try {
             $data = $this->repo->submitBOMToOwner($request);
-            // dd($data);
-            // die();
             if ($data) {
                 return ['status' => 'success', 'msg' => 'Purchase Order Added Successfully.'];
             } else {
@@ -73,11 +71,10 @@ use Config;
 
 
         
-    public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id)
+    public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id)
     {
         try {
-            $data = $this->repo->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id);
-          
+            $data = $this->repo->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id);
             return $data;
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];

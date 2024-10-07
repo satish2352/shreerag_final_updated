@@ -108,9 +108,14 @@
                                                         alt="Design"> Click to view</a>
                                                 </td>
 
-                                                <td> <a class="btn btn-sm btn-primary login-submit-cs" type="button"
+                                                <td> 
+                                                    <a class="btn btn-sm btn-primary login-submit-cs" type="button"
                                                     href="{{route('add-gatepass-with-po', base64_encode($data->purchase_orders_id))}}"
                                                     alt="Design">Ganerate Gate Pass</a>
+{{-- 
+                                                    <a class="btn btn-sm btn-primary login-submit-cs" type="button"
+                                                    href="{{ route('add-gatepass-with-po', ['id' => base64_encode($data->purchase_orders_id), 'productionId' => base64_encode($data->productionId)]) }}"
+                                                    alt="Design">Generate Gate Pass</a> --}}
                                             </td>
                                              
 

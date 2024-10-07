@@ -12,7 +12,8 @@ use Carbon;
 use App\Models\{
     PurchaseOrdersModel,
     PurchaseOrderDetailsModel,
-    BusinessApplicationProcesses
+    BusinessApplicationProcesses,
+    NotificationStatus
 };
 
 class GRNController extends Controller
@@ -28,6 +29,22 @@ class GRNController extends Controller
     {
         try {
             $all_gatepass = $this->service->getAll();
+            if ($all_gatepass->isNotEmpty()) {
+                foreach ($all_gatepass as $data) {
+                    $business_details_id = $data->id; 
+                    if (!empty($business_details_id)) {
+                        $update_data['quality_po_material_visible'] = '1';
+                        NotificationStatus::where('quality_po_material_visible', '0')
+                            ->where('business_details_id', $business_details_id)
+                            ->update($update_data);
+                    }
+                }
+            } else {
+                return view('organizations.designer.list.list_design_received_from_production_for_correction', [
+                    'data_output' => [],
+                    'message' => 'No data found for designs received for correction'
+                ]);
+            }
             return view('organizations.quality.grn.list-grn', compact('all_gatepass'));
         } catch (\Exception $e) {
             return $e;
@@ -149,6 +166,23 @@ class GRNController extends Controller
                 )->orderBy('businesses.updated_at', 'desc')
                 ->get();
                
+            if ($data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
+                    $business_id = $data->id; 
+                    if (!empty($business_id)) {
+                        $update_data['quality_create_grn'] = '1';
+                        NotificationStatus::where('quality_create_grn', '0')
+                            ->where('business_id', $business_id)
+                            ->update($update_data);
+                    }
+                }
+            } else {
+                return view('organizations.purchase.list.list-all-po-sent-to-vendor', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
+
             // return $data_output;
             return view('organizations.quality.list.list-checked-material-sent-to-store',compact('data_output'));
         } catch (\Exception $e) {
@@ -158,7 +192,7 @@ class GRNController extends Controller
     public function getAllListMaterialSentFromQualityBusinessWise($id){
         try {
             $data_output = $this->service->getAllListMaterialSentFromQualityBusinessWise($id);
-           
+          
             return view('organizations.quality.list.list-checked-material-sent-to-store-businesswise', compact('data_output'));
         } catch (\Exception $e) {
             return $e;

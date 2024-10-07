@@ -2500,125 +2500,50 @@
                                                     <li class="right-side"
                                                         style="color:#{{ str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) . str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) . str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) }};">
                                                         <span><b>{{ $data->product_name }}</b> : -</span>
-                                                        @if($data->off_canvas_status == 22 && $data->business_status_id == 1118 || $data->business_status_id == 1126 &&
-                                                        $data->design_status_id == 1114 &&
-                                                        $data->production_status_id == 1121 &&
-                                                        $data->store_status_id == 1123 &&
-                                                        $data->purchase_status_from_owner == "1129" &&
-                                                        $data->purchase_status_from_purchase == 1129 &&
-                                                        $data->finanace_store_receipt_status_id == 1136 &&
-                                                        $data->security_status_id == 1132 &&
-                                                        $data->quality_status_id == 1134 && $data->logistics_status_id
-                                                        =="1146" && $data->dispatch_status_id =="1148" )
+                                                        @if($data->off_canvas_status == 22)
                                                         Dispatch Department Product Dispatch Completed 
-                                                        @elseif($data->off_canvas_status == 21 && $data->business_status_id == 1118 &&
-                                                        $data->design_status_id == 1114 &&
-                                                        $data->production_status_id == 1121 &&
-                                                        $data->store_status_id == 1123 &&
-                                                        $data->purchase_status_from_owner == "1129" &&
-                                                        $data->purchase_status_from_purchase == 1129 &&
-                                                        $data->finanace_store_receipt_status_id == 1136 &&
-                                                        $data->security_status_id == 1132 &&
-                                                        $data->quality_status_id == 1134 && $data->logistics_status_id
-                                                        =="1146" && $data->dispatch_status_id =="1147" )
+                                                        @elseif($data->off_canvas_status == 21)
                                                         Finance Department sent to Dispatch Department
-                                                        @elseif($data->off_canvas_status == 20 && $data->dispatch_status_id ==NULL && $data->business_status_id == 1118 &&
-                                                        $data->design_status_id == 1114 &&
-                                                        $data->production_status_id == 1121 &&
-                                                        $data->store_status_id == 1123 &&
-                                                        $data->purchase_status_from_owner == "1129" &&
-                                                        $data->purchase_status_from_purchase == 1129 &&
-                                                        $data->finanace_store_receipt_status_id == 1136 &&
-                                                        $data->security_status_id == 1132 &&
-                                                        $data->quality_status_id == 1134 && $data->logistics_status_id
-                                                        =="1146")
+                                                        @elseif($data->off_canvas_status == 20)
                                                         Finance Department Received from Logistics Department
-                                                        @elseif($data->off_canvas_status == 19 && $data->business_status_id == 1118 &&
-                                                        $data->design_status_id == 1114 &&
-                                                        $data->production_status_id == 1121 &&
-                                                        $data->store_status_id == 1123 &&
-                                                        $data->purchase_status_from_owner == "1129" &&
-                                                        $data->purchase_status_from_purchase == 1129 &&
-                                                        $data->finanace_store_receipt_status_id == 1136 &&
-                                                        $data->security_status_id == 1132 &&
-                                                        $data->quality_status_id == 1134 && $data->logistics_status_id =="1145" )
+                                                        @elseif($data->off_canvas_status == 19)
                                                          Logistics Department  Submitted Form
                                                         @elseif($data->off_canvas_status == 18 && $data->business_status_id == 1118 &&
                                                         $data->design_status_id == 1114)
                                                         Production Department Completed Production and Received Logistics Department
-                                                        @elseif($data->off_canvas_status == 17 && $data->business_status_id == 1118 &&
-                                                        $data->design_status_id == 1114)
+                                                        @elseif($data->off_canvas_status == 17)
                                                         Store Department forward to Production Department
-                                                        @elseif($data->business_status_id == 1127 &&
-                                                        $data->design_status_id == 1114 &&
-                                                        $data->production_status_id == 1117 &&
-                                                        $data->store_status_id == 1123 &&
-                                                        $data->purchase_status_from_owner == "1129" &&
-                                                        $data->purchase_status_from_purchase == 1129 &&
-                                                        $data->finanace_store_receipt_status_id == 1140 &&
-                                                        $data->security_status_id == 1132 &&
-                                                        $data->quality_status_id == 1134)
+                                                        @elseif($data->off_canvas_status == 27)
                                                         Quality Department(Generated GRN) and Store Department Material Received
-                                                        @elseif($data->business_status_id == 1127 &&
-                                                        $data->design_status_id == 1114 &&
-                                                        $data->production_status_id == 1117 &&
-                                                        $data->store_status_id == 1123 &&
-                                                        $data->purchase_status_from_owner == "1129" &&
-                                                        $data->purchase_status_from_purchase == 1129 &&
-                                                        $data->finanace_store_receipt_status_id == 1140 && $data->security_status_id ==1132)
+                                                        @elseif($data->off_canvas_status == 26 )
                                                         Security Department Received Material and PO also Generated Gate Pass
-                                                        @elseif($data->business_status_id == 1127 &&
-                                                        $data->design_status_id == 1114 &&
-                                                        $data->production_status_id == 1117 &&
-                                                        $data->store_status_id == 1123 &&
-                                                        $data->purchase_status_from_owner == "1129" &&
-                                                        $data->purchase_status_from_purchase == 1129 &&
-                                                        $data->finanace_store_receipt_status_id == 1140)
+                                                        @elseif($data->off_canvas_status == 25)
                                                         Purchase Department PO Send to Vendor
-                                                        @elseif($data->business_status_id == 1127 &&
-                                                        $data->design_status_id == 1114 &&
-                                                        $data->production_status_id == 1117 &&
-                                                        $data->store_status_id == 1123 &&
-                                                        $data->purchase_status_from_purchase == 1126 && $data->finanace_store_receipt_status_id == 1140 && $data->purchase_status_from_owner == "1127")
+                                                        @elseif($data->off_canvas_status == 24 )
                                                         Purchase Department Approved Owner
-                                                        @elseif($data->business_status_id == 1126 &&
-                                                        $data->design_status_id == 1114 &&
-                                                        $data->production_status_id == 1117 ||$data->production_status_id == 1121 &&
-                                                        $data->store_status_id == 1123 &&
-                                                        $data->purchase_status_from_purchase == 1126)
+                                                        @elseif($data->off_canvas_status == 23)
                                                         Purchase Department 
-                                                        @elseif($data->off_canvas_status == 16 && $data->business_status_id == "1123" &&
-                                                        $data->design_status_id == "1114" &&
-                                                        $data->production_status_id == "1117" &&
-                                                        $data->store_status_id == "1123")
+                                                        @elseif($data->off_canvas_status == 16)
                                                         Store Department submitted requistion form
                                                    
                                                         {{-- @elseif($data->business_status_id == 1115 &&
                                                         $data->design_status_id == 1115 &&
                                                         $data->production_status_id == 1115)
                                                         Production Department Rejected Design and Received Design Department --}}
-                                                        @elseif($data->off_canvas_status == 15 && $data->business_status_id == 1112 &&
-                                                        $data->design_status_id == 1114 &&
-                                                        $data->production_status_id == 1114)
+                                                        @elseif($data->off_canvas_status == 15)
                                                         Accepted Production Department and send to store Department
-                                                        @elseif($data->off_canvas_status == 14 && $data->business_status_id == 1116 || $data->business_status_id == 1126 &&
-                                                        $data->design_status_id == 1116 &&
-                                                        $data->production_status_id == 1116 )
+                                                        @elseif($data->off_canvas_status == 14)
                                                         Corrected Design Submitted to Production Department
                                                         {{-- @elseif($data->off_canvas_status == 14 && $data->business_status_id == 1115 || $data->business_status_id == 1126 &&
                                                         $data->design_status_id == 1115 &&
                                                         $data->production_status_id == 1115 && $data->reject_reason_prod == "")
                                                         Corrected Design Submitted to Production Department --}}
 
-                                                        @elseif($data->off_canvas_status == 13 && $data->business_status_id == 1115 || $data->business_status_id == 1126 &&
-                                                        $data->design_status_id == 1115 &&
-                                                        $data->production_status_id == 1115 && $data->reject_reason_prod == "")
+                                                        @elseif($data->off_canvas_status == 13)
                                                         Rejected Design in Production Department
-                                                        @elseif($data->off_canvas_status == 12 && $data->business_status_id == 1112 || $data->business_status_id == 1126 &&
-                                                        $data->design_status_id == 1111 && $data->production_status_id == 0 && $data->design_image == "" && $data->bom_image == "")
+                                                        @elseif($data->off_canvas_status == 12 )
                                                          Design Department Submited Design and Received Production Department
-                                                        @elseif($data->off_canvas_status == 11 && $data->business_status_id == 1112 || $data->business_status_id == 1126 &&
-                                                        $data->design_status_id == 1111 )
+                                                        @elseif($data->off_canvas_status == 11)
                                                         Business Department Request send to Design Department
                                                         @else
                                                         Unknown Department

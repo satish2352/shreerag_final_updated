@@ -13,7 +13,8 @@ use App\Models\{
     OrganizationModel,
     Vendors,
     BusinessDetails,
-    AdminView
+    AdminView,
+    NotificationStatus
 };
 use Config;
 use App\Http\Controllers\Organizations\CommanController;
@@ -91,9 +92,15 @@ class BusinessRepository
 
             $admin_view_data = new AdminView();
             $admin_view_data->business_id = $last_insert_id;
-            $admin_view_data->current_department = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
+            $admin_view_data->business_details_id = $businessDetails->id;
+            $admin_view_data->off_canvas_status = 11;
             $admin_view_data->save();
             
+            $notification_status = new NotificationStatus();
+            $notification_status->business_id = $last_insert_id;
+            $notification_status->business_details_id = $businessDetails->id;
+            $notification_status->off_canvas_status = 11;
+            $notification_status->save();
 
             $business_application = new BusinessApplicationProcesses();
             $business_application->business_id = $business_data->id;
@@ -122,22 +129,6 @@ class BusinessRepository
             ];
         }
     }
-
-    // public function getById($id)
-    // {
-    //     try {
-    //         $dataOutputByid = Business::find($id);
-    //         if ($dataOutputByid) {
-    //             return $dataOutputByid;
-    //         } else {
-    //             return null;
-    //         }
-    //     } catch (\Exception $e) {
-    //         return [
-    //             'msg' => $e,
-    //             'status' => 'error'
-    //         ];
-    //     }
     public function getById($id) {
         try {
             $designData = Business::leftJoin('businesses_details', 'businesses.id', '=', 'businesses_details.business_id')
@@ -252,6 +243,18 @@ class BusinessRepository
                     $business_application->production_id = '0';
                     $business_application->production_status_id = '0';
                     $business_application->save();
+
+                    $admin_view_data = new AdminView();
+                    $admin_view_data->business_id = $dataOutput->id;
+                    $admin_view_data->business_details_id = $addDetails->id;
+                    $admin_view_data->off_canvas_status = 11;
+                    $admin_view_data->save();
+
+                    $notification_status = new NotificationStatus();
+                    $notification_status->business_id= $dataOutput->id;
+                    $notification_status->business_details_id = $addDetails->id;
+                    $notification_status->off_canvas_status = 11;
+                    $notification_status->save();
                 }
             }
     
@@ -269,98 +272,6 @@ class BusinessRepository
             ];
         }
     }
-    
-   
-
-// public function updateAll($request)
-// {
-//     try {
-//         \Log::info('Request Data:', $request->all());
-//         // dd($request);
-//         // die();
-//         // Update existing design details
-//         for ($i = 0; $i < $request->design_count; $i++) {
-//             $designId = $request->input("design_id_" . $i);
-//             $productName = $request->input("product_name_" . $i);
-//             $description = $request->input("description_" . $i);
-//             $quantity = $request->input("quantity_" . $i);
-//             $rate = $request->input("rate_" . $i);
-
-//             // Update existing record
-//             if ($designId) {
-//                 $designDetails = BusinessDetails::findOrFail($designId);
-//                 $designDetails->product_name = $productName;
-//                 $designDetails->description = $description;
-//                 $designDetails->quantity = $quantity;
-//                 $designDetails->rate = $rate;
-//                 $designDetails->save();
-//                 \Log::info("Updated ID: $designId", compact('productName', 'description', 'quantity', 'rate'));
-//             }
-//         }
-
-//         // Update main business record
-//         $dataOutput = Business::findOrFail($request->business_main_id);
-//         $dataOutput->customer_po_number = $request->customer_po_number;
-//         $dataOutput->title = $request->title;
-//         $dataOutput->po_validity = $request->po_validity;
-//         $dataOutput->remarks = $request->remarks;
-
-//         // Optional fields
-//         if ($request->has('customer_payment_terms')) {
-//             $dataOutput->customer_payment_terms = $request['customer_payment_terms'];
-//         }
-//         if ($request->has('customer_terms_condition')) {
-//             $dataOutput->customer_terms_condition = $request['customer_terms_condition'];
-//         }
-//         $dataOutput->save();
-
-//         // Add new details if provided
-//         if ($request->has('addmore')) {
-//             foreach ($request->addmore as $item) {
-//                 $addDetails = new BusinessDetails();
-//                 $addDetails->business_id = $request->business_main_id;
-//                 $addDetails->product_name = $item['product_name'];
-//                 $addDetails->description = $item['description'];
-//                 $addDetails->quantity = $item['quantity'];
-//                 $addDetails->rate = $item['rate'];
-//                 $addDetails->save();
-
-//                 $design_data = new DesignModel();
-//                 $design_data->business_id = $dataOutput->id;
-//                 $design_data->business_details_id = $addDetails->id;
-//                 $design_data->design_image = '';
-//                 $design_data->bom_image = '';
-//                 $design_data->save();
-        
-        
-//                 $business_application = new BusinessApplicationProcesses();
-//                 $business_application->business_id = $dataOutput->id;
-//                 $business_application->business_details_id = $addDetails->id;
-//                 $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
-//                 $business_application->design_id = $design_data->id;
-//                 $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN');
-//                 $business_application->production_id = '0';
-//                 $business_application->production_status_id = '0';
-//                 $business_application->save();
-
-//             }
-//         }
-       
-//         return [
-//             'msg' => 'Data updated successfully.',
-//             'status' => 'success',
-//             'last_insert_id' => $dataOutput->id
-//         ];
-//     } catch (\Exception $e) {
-//         \Log::error('Update Failed: ' . $e->getMessage());
-//         return [
-//             'msg' => 'Failed to update data.',
-//             'status' => 'error',
-//             'error' => $e->getMessage()
-//         ];
-//     }
-// }
-
         public function deleteByIdAddmore($id){
             try {
                 $rti = BusinessDetails::find($id);
@@ -400,8 +311,9 @@ class BusinessRepository
 
                 if($po_count > 0) {
                     $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.HALF_APPROVED_PO_FROM_PURCHASE');
+                    $business_application->off_canvas_status = 24;
                 } else {
-                    $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.APPROVED_PO_FROM_PURCHASE');
+                    $business_application->off_canvas_status = 24;
                 }
                 $business_application->save();
             }
@@ -409,6 +321,15 @@ class BusinessRepository
             $PurchaseOrdersData->owner_po_action_date= date('Y-m-d');
             $PurchaseOrdersData->finanace_store_receipt_status_id = config('constants.FINANCE_DEPARTMENT.INVOICE_APPROVED_FROM_HIGHER_AUTHORITY');
             $PurchaseOrdersData->save();
+
+             // $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
+            $update_data_admin['off_canvas_status'] = 24;
+            $update_data_business['off_canvas_status'] = 24;
+            $update_data_admin['is_view'] = '0';
+            AdminView::where('business_details_id', $business_application->business_details_id)
+                ->update($update_data_admin);
+                NotificationStatus::where('business_details_id', $business_application->business_details_id)
+                ->update($update_data_business);
 
             return $business_application;
 

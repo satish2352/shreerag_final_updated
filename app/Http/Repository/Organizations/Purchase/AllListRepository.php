@@ -160,99 +160,15 @@ class AllListRepository
                   'req2.id as requistition_id',
                   'req2.bom_file',
                   'req2.updated_at'
-              )->orderBy('req2.updated_at', 'desc')
+              ) ->distinct('businesses_details.id')->orderBy('req2.updated_at', 'desc')
               ->get();
-  
+
           return $data_output;
       } catch (\Exception $e) {
           return $e;
       }
   }
   
-  // public function getAllListMaterialReceivedForPurchase()
-  // {
-  //   try {
-  //     $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE')];
-  //     $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
-  //       $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-  //     })
-  //       ->leftJoin('designs', function ($join) {
-  //         $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-  //       })
-  //       ->leftJoin('requisition', function ($join) {
-  //         $join->on('business_application_processes.business_details_id', '=', 'requisition.business_details_id');
-  //       })
-  //       ->leftJoin('businesses', function ($join) {
-  //         $join->on('business_application_processes.business_id', '=', 'businesses.id');
-  //       })
-  //       ->leftJoin('businesses_details', function($join) {
-  //         $join->on('production.business_details_id', '=', 'businesses_details.id');
-  //     })
-  //       ->leftJoin('design_revision_for_prod', function ($join) {
-  //         $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-  //       })
-
-  //       ->leftJoin('purchase_orders', function($join) {
-  //         $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-  //       })
-  //       ->leftJoin('requisition as req2', function($join) {  // Second requisition join with alias `req2`
-  //         $join->on('business_application_processes.business_details_id', '=', 'req2.business_details_id');
-  //     })
-  //       ->whereIn('business_application_processes.store_status_id', $array_to_be_check)
-  //       ->where('businesses_details.is_active', true)
-
-  //       ->groupBy(
-  //         'businesses.id',
-  //          'businesses_details.id',
-  //         'businesses.customer_po_number',
-  //         'businesses_details.product_name',
-  //         // 'businesses_details.title',
-  //         'businesses_details.description',
-  //         'businesses_details.quantity',
-  //         // 'businesses_details.remarks',
-  //         'businesses_details.is_active',
-  //         'production.business_id',
-  //         'production.id',
-  //         // 'design_revision_for_prod.reject_reason_prod',
-  //         // 'design_revision_for_prod.id',
-  //         'designs.bom_image',
-  //         'designs.design_image',
-  //         'req2.id as requistition_id',
-  //         'req2.bom_file',  
-  //         'req2.updated_at' 
-  //     )
-  //       ->select(
-  //         'businesses.id',
-  //       'businesses_details.id',
-  //         'businesses.customer_po_number',
-  //         'businesses_details.product_name',
-  //         // 'businesses_details.title',
-  //         'businesses_details.description',
-  //         'businesses_details.quantity',
-  //         // 'businesses_details.remarks',
-  //         'businesses_details.is_active',
-  //         'production.id',
-  //         // 'production.id as productionId',
-  //            'production.id as productionId',
-  //         // 'design_revision_for_prod.reject_reason_prod',
-  //         // 'design_revision_for_prod.id as design_revision_for_prod_id',
-  //         'designs.bom_image',
-  //         'designs.design_image',
-  //         'req2.id as requistition_id',
-  //         'req2.bom_file',  
-  //         'req2.updated_at' 
-  //       )->orderBy('req2.updated_at', 'desc')
-  //       ->get();
-        
-       
-  //     return $data_output;
-  //   } catch (\Exception $e) {
-  //     return $e;
-  //   }
-  // }
-
-
-
   public function getAllListApprovedPurchaseOrder()
   {
     try {
@@ -310,42 +226,6 @@ class AllListRepository
   public function getPurchaseOrderSentToOwnerForApprovalBusinesWise($id)
   {
     try {
-
-      // $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.HALF_APPROVED_PO_FROM_PURCHASE')];
-
-      // $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
-      //   $join->on('business_application_processes.business_id', '=', 'production.business_id');
-      // })
-      //   ->leftJoin('designs', function ($join) {
-      //     $join->on('business_application_processes.business_id', '=', 'designs.business_id');
-      //   })
-      //   ->leftJoin('businesses', function ($join) {
-      //     $join->on('business_application_processes.business_id', '=', 'businesses.id');
-      //   })
-      //   ->leftJoin('design_revision_for_prod', function ($join) {
-      //     $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
-      //   })
-      //   ->leftJoin('purchase_orders', function($join) {
-      //     $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
-      //   })
-      //   ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check)
-      //   ->whereNull('purchase_orders.purchase_order_mail_submited_to_vendor_date')        
-      //   ->where('businesses.is_active', true)
-      //   ->distinct('businesses.id')
-      //   ->select(
-      //     'business_application_processes.purchase_order_id',
-      //     'businesses.id',
-      //     'businesses.product_name',
-      //     'businesses.title',
-      //     'businesses.descriptions',
-      //     'businesses.remarks',
-      //     'businesses.is_active',
-      //     'production.business_id',
-      //     'design_revision_for_prod.reject_reason_prod',
-      //     'designs.bom_image',
-      //     'designs.design_image'
-
-      //   )->get();
       $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL')];
       $data_output = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
       ->join('businesses_details', 'businesses_details.id', '=', 'purchase_orders.business_details_id')

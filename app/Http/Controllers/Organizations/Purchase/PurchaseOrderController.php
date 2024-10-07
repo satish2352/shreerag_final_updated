@@ -205,84 +205,6 @@ class PurchaseOrderController extends Controller
         $title = 'view invoice';
         return view('organizations.purchase.addpurchasedetails.show-purchase-orders1', compact('invoice', 'title'));
     }
-
-
-    // public function edit(Request $request)
-    // {
-    //     $show_data_id = base64_decode($request->id);
-    //     $invoice = PurchaseOrdersModel::find($show_data_id);
-    //     $dataOutputVendor = Vendors::get();
-    //     $title = 'edit invoice';
-    //     return view(
-    //         'organizations.purchase.addpurchasedetails.edit-purchase-orders',
-    //         compact(
-    //             'title',
-    //             'invoice',
-    //             'dataOutputVendor'
-    //         )
-    //     );
-    // }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Invoice $invoice
-     * @return \Illuminate\Http\Response
-     */
-    // public function update(Request $request)
-    // {
-
-    //     $this->validate($request, [
-    //         // 'client_name' => 'required',
-    //         // 'phone_number' => 'required',
-    //         // 'email' => 'required',
-    //         'tax' => 'required',
-    //         // 'client_address' => 'required',
-    //         // 'gst_number' => 'required',
-    //         'invoice_date' => 'required',
-    //         'items' => 'required',
-    //         'note' => 'nullable',
-    //         'quote_no' => 'required',
-    //     ]);
-
-
-    //     $itemsJson = json_encode($request->items);
-
-
-    //     $amount = 0;
-    //     foreach ($request->items as $item) {
-    //         $amount += $item['amount'];
-    //     }
-
-    //     $invoice = PurchaseOrdersModel::find($request->id);
-    //     $invoice->update([
-    //         // 'client_name' => $request->client_name,
-    //         // 'phone_number' => $request->phone_number,
-    //         'tax' => $request->tax,
-    //         // 'email' => $request->email,
-    //         // 'client_address' => $request->client_address,
-    //         // 'gst_number' => $request->gst_number,
-    //         'invoice_date' => $request->invoice_date,
-    //         'payment_terms' => $request->payment_terms,
-    //         'items' => $itemsJson,
-    //         'discount' => $request->discount,
-    //         'total' => $amount,
-    //         'note' => $request->note,
-    //         // 'status' => $request->status,
-    //     ]);
-
-    //     if ($invoice->wasChanged()) {
-    //         $msg = 'Invoice has been updated';
-    //         $status = 'success';
-    //         return redirect('purchase/list-purchase-order')->with(compact('msg', 'status'));
-    //     } else {
-    //         $msg = 'No changes were made to the invoice';
-    //         $status = 'error';
-    //         return redirect('purchase/list-purchase-order')->with(compact('msg', 'status'));
-    //     }
-    // }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -497,31 +419,11 @@ class PurchaseOrderController extends Controller
             return $e;
         }
     } 
-
-    // public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id)
-    // {
-    //     try {
-    //         $delete = $this->service->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id);
-    //         if ($delete) {
-    //             $status = 'success';
-    //             $msg = 'Purchase order mail sent to vendor.';
-    //         } else {
-    //             $status = 'success';
-    //             $msg = 'Purchase order mail sent to vendor.';
-    //         }
-
-    //         return redirect('purchase/list-purchase-order-approved-sent-to-vendor')->with(compact('msg', 'status'));
-
-    //     } catch (Exception $e) {
-    //         return ['status' => 'error', 'msg' => $e->getMessage()];
-    //     }
-    // }
-
-    public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id)
+    public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id)
     {
         try {
             // Fetch purchase order details
-            $purchaseOrder = $this->service->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id);
+            $purchaseOrder = $this->service->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id);
     
             $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
     
@@ -557,22 +459,22 @@ class PurchaseOrderController extends Controller
             $pdfPath = storage_path('app/public/purchase_order_' . $purchase_order_id . '.pdf');
     
             // Send email with PDF attachment
-            // Mail::send([], [], function ($message) use ($purchaseOrder, $pdfPath) {
-            //     $message->to($purchaseOrder->vendor_email)
-            //         ->subject('Purchase Order Notification')
-            //         ->attach($pdfPath);
-            //     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-            // });
-            $vendorName = $purchaseOrder->vendor_name;
-            Mail::send([], [], function ($message) use ($purchaseOrder, $pdfPath, $vendorName) {
+            Mail::send([], [], function ($message) use ($purchaseOrder, $pdfPath) {
                 $message->to($purchaseOrder->vendor_email)
                     ->subject('Purchase Order Notification')
-                    ->attach($pdfPath)
-                    ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-            
-                // Set plain text body
-                $message->text("Respected $vendorName, \n\n I hope this message finds you well.\n\nWe would like to place a purchase order with your company for the following items. Please find the details of the purchase order below:\n\nThank you!");
+                    ->attach($pdfPath);
+                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
             });
+            // $vendorName = $purchaseOrder->vendor_name;
+            // Mail::send([], [], function ($message) use ($purchaseOrder, $pdfPath, $vendorName) {
+            //     $message->to($purchaseOrder->vendor_email)
+            //         ->subject('Purchase Order Notification')
+            //         ->attach($pdfPath)
+            //         ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+            
+            //     // Set plain text body
+            //     $message->text("Respected $vendorName, \n\n I hope this message finds you well.\n\nWe would like to place a purchase order with your company for the following items. Please find the details of the purchase order below:\n\nThank you!");
+            // });
             
             return redirect('purchase/list-purchase-order-approved-sent-to-vendor')->with('status', 'success')->with('msg', 'Purchase order mail sent to vendor.');
     

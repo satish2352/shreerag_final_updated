@@ -13,7 +13,8 @@ Logistics,
 Dispatch,
 BusinessDetails,
 AdminView,
-ProductionDetails
+ProductionDetails,
+NotificationStatus
 };
 use Config;
 
@@ -97,12 +98,23 @@ class ProductionRepository  {
                 $business_application->off_canvas_status = 15;
                 $business_application->save();
     
-                // Update admin view for the business
-                AdminView::where('business_id', $business_application->business_id)
-                    ->update([
-                        'current_department' => config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION'),
-                        'is_view' => '0'
-                    ]);
+                // // Update admin view for the business
+                // AdminView::where('business_id', $business_application->business_id)
+                //     ->update([
+                //         'current_department' => config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION'),
+                //         'is_view' => '0'
+                //     ]);
+                 // Update AdminView and NotificationStatus with the correct business details
+                 $update_data_admin['off_canvas_status'] = 15;
+                 $update_data_admin['is_view'] = '0';
+                 $update_data_business['off_canvas_status'] = 15;
+                 AdminView::where('business_id', $business_application->business_id)
+                     ->where('business_details_id', $id)
+                     ->update($update_data_admin);
+ 
+                 NotificationStatus::where('business_id', $business_application->business_id)
+                     ->where('business_details_id', $id)
+                     ->update($update_data_business);
             } else {
                 return [
                     'msg' => 'Business application process not found',
@@ -202,10 +214,15 @@ class ProductionRepository  {
                 $business_application->off_canvas_status = 13;
                 $business_application->save();
 
-                $update_data_admin['current_department'] = config('constants.PRODUCTION_DEPARTMENT.DESIGN_SENT_TO_DESIGN_DEPT_FOR_REVISED');
-                $update_data_admin['is_view'] = '0';
-            AdminView::where('business_id', $production_data->business_id)
-                        ->update($update_data_admin);
+                 // Update admin view and notification status with the new off canvas status
+            $update_data_admin['off_canvas_status'] = 13;
+            AdminView::where('business_details_id', $production_data->business_details_id)
+                // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
+                ->update($update_data_admin);
+
+            NotificationStatus::where('business_details_id', $production_data->business_details_id)
+                // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
+                ->update($update_data_admin);
             }
 
         } catch (\Exception $e) {
@@ -247,6 +264,18 @@ class ProductionRepository  {
                 $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN');
                 $business_application->off_canvas_status = 18; 
                 $business_application->save();
+
+                // Update admin view and notification status with the new off canvas status
+              $update_data_admin['off_canvas_status'] = 18;
+              $update_data_admin['is_view'] = '0';
+               $update_data_business['off_canvas_status'] = 18;
+              AdminView::where('business_details_id', $business_application->business_details_id)
+                  // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
+                  ->update($update_data_admin);
+  
+              NotificationStatus::where('business_details_id', $business_application->business_details_id)
+                  // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
+                  ->update($update_data_business);
     
                 $dataOutput = Logistics::where('business_details_id', $id)->first();
                 if (!$dataOutput) {
@@ -275,7 +304,9 @@ class ProductionRepository  {
                 $dataOutputDispatch->is_active = '1';
                 $dataOutputDispatch->is_deleted = '0';
                 $dataOutputDispatch->save();
-  
+
+
+             
              
                 return response()->json(['status' => 'success', 'message' => 'Production status updated successfully.']);
             } else {

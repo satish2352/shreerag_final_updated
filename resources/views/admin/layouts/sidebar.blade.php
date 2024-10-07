@@ -230,7 +230,11 @@
                                             
                             </ul>
                         </li>
-                        <li class="{{ Request::is('list-vendor') ? 'active' : '' }}">
+                        <li class="nav-item {{ Request::is('list-vendor') ? 'active' : '' }}"><a
+                            href="{{ route('list-vendor') }}"><i
+                               class="fa big-icon fa-users icon-wrap" aria-hidden="true"></i> <span
+                               class="mini-click-non">Vendor List</span></a></li>
+                        {{-- <li class="{{ Request::is('list-vendor') ? 'active' : '' }}">
                             <a class="has-arrow" href="{{ route('list-vendor') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-users icon-wrap"></i> <span
                                     class="mini-click-non">Vendor</span></a>
@@ -240,7 +244,7 @@
                                             class="fa big-icon fa-users icon-wrap" aria-hidden="true"></i> <span
                                             class="mini-click-non">Vendor List</span></a></li>
                             </ul>
-                        </li>
+                        </li> --}}
                         <li class="nav-item {{ request()->is('purchase/list-tax') ? 'active' : '' }}">
                             <a class="" href="{{ route('list-tax') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-receipt icon-wrap"></i> <span
@@ -805,6 +809,7 @@
     </div>
     <div class="header-advance-area">
         <div class="header-top-area">
+
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

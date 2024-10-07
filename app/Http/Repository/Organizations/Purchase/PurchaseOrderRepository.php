@@ -8,7 +8,9 @@ use App\Models\{
     PurchaseOrdersModel,
     PurchaseOrderDetailsModel,
     Requisition,
-    BusinessApplicationProcesses
+    BusinessApplicationProcesses,
+    AdminView,
+    NotificationStatus
 };
 use Config;
 
@@ -75,10 +77,21 @@ class PurchaseOrderRepository
             // Update related BusinessApplicationProcesses record
             $businessOutput = BusinessApplicationProcesses::where('business_id', $data_for_requistition->business_id)->firstOrFail();
             $businessOutput->business_status_id = config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL');
-            $businessOutput->off_canvas_status = 17;
+            $businessOutput->off_canvas_status = 23;
 
             $businessOutput->save();
 
+              // Update admin view and notification status with the new off canvas status
+              $update_data_admin['off_canvas_status'] = 23;
+              $update_data_admin['is_view'] = '0';
+               $update_data_business['off_canvas_status'] = 23;
+              AdminView::where('business_details_id', $businessOutput->business_details_id)
+                  // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
+                  ->update($update_data_admin);
+  
+              NotificationStatus::where('business_details_id', $businessOutput->business_details_id)
+                  // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
+                  ->update($update_data_business);
                
             // Save data into DesignDetailsModel
             foreach ($request->addmore as $index => $item) {
@@ -114,11 +127,12 @@ class PurchaseOrderRepository
     }
 
 
-    public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id) {
+    public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id) {
         try {
             
             $purchaseOrdersModel = PurchaseOrdersModel::where('purchase_orders_id', $purchase_order_id)->first();
-            
+            $business_application = BusinessApplicationProcesses::where('business_details_id', $business_id)->first();
+
             if ($purchaseOrdersModel) {
                 // $purchaseOrdersModel->business_status_id = config('constants.HIGHER_AUTHORITY.LIST_APPROVED_PO_SENT_TO_VENDOR_BY_PURCHASE');
                 $purchaseOrdersModel->purchase_order_mail_submited_to_vendor_date= date('Y-m-d');
@@ -126,6 +140,21 @@ class PurchaseOrderRepository
                 $purchaseOrdersModel->purchase_status_from_purchase = config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR');
                 $purchaseOrdersModel->save();
             }
+           // Check if the business application exists
+        if ($business_application) {
+            $business_application->off_canvas_status = 25;
+            $business_application->save();
+            
+            $update_data_admin['off_canvas_status'] = 25;
+           
+           AdminView::where('business_details_id', $business_application->business_details_id)
+                ->update($update_data_admin);
+            
+            // Update the NotificationStatus table for the given business details
+            NotificationStatus::where('business_details_id', $business_application->business_details_id)
+                ->update($update_data_admin);
+        }
+ 
             return $purchaseOrdersModel;
 
         } catch (\Exception $e) {

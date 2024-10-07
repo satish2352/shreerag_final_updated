@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('gatepass', function (Blueprint $table) {
             $table->id();            
             $table->string('purchase_orders_id');
+            // $table->unsignedBigInteger('business_id');
             $table->string('gatepass_name');
             $table->string('gatepass_date');
             $table->string('gatepass_time');
