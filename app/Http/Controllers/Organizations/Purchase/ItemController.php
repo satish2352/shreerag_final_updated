@@ -13,6 +13,7 @@ use App\Models\ {
     UnitMaster,
     HSNMaster,
     GroupMaster,
+    RackMaster,
     OrganizationModel
 
 };
@@ -39,8 +40,9 @@ class ItemController extends Controller
         $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
         $dataOutputHSNMaster = HSNMaster::where('is_active', true)->get();
         $dataOutputGroupMaster = GroupMaster::where('is_active', true)->get();
+        $RackMasterpMaster = RackMaster::where('is_active', true)->get();
         return view('organizations.purchase.part-item.add-part-item', compact(
-            'dataOutputUnitMaster', 'dataOutputHSNMaster', 'dataOutputGroupMaster'
+            'dataOutputUnitMaster', 'dataOutputHSNMaster', 'dataOutputGroupMaster', 'RackMasterpMaster'
         ));
     }
 

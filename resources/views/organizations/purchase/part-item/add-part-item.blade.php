@@ -109,7 +109,7 @@
                                                 <label for="rack_id">Rack Number<span class="text-danger">*</span></label>
                                                 <select class="form-control" name="rack_id" id="rack_id">
                                                     <option value="">Select Rack Number</option>
-                                                    @foreach ($dataOutputGroupMaster as $GroupMaster)
+                                                    @foreach ($RackMasterpMaster as $GroupMaster)
                                                         <option value="{{ $GroupMaster['id'] }}" {{ old('rack_id') == $GroupMaster['id'] ? 'selected' : '' }}>{{ $GroupMaster['name'] }}</option>
                                                     @endforeach
                                                 </select>
