@@ -114,7 +114,8 @@ class ItemController extends Controller
     $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
     $dataOutputHSNMaster = HSNMaster::where('is_active', true)->get();
     $dataOutputGroupMaster = GroupMaster::where('is_active', true)->get();
-    return view('organizations.purchase.part-item.edit-part-item', compact('editData','data', 'dataOutputUnitMaster', 'dataOutputHSNMaster', 'dataOutputGroupMaster'));
+    $dataRackMaster = RackMaster::where('is_active', true)->get();
+    return view('organizations.purchase.part-item.edit-part-item', compact('editData','data', 'dataOutputUnitMaster', 'dataOutputHSNMaster', 'dataOutputGroupMaster', 'dataRackMaster'));
 }
 
 

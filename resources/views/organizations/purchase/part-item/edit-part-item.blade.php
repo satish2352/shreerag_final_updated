@@ -25,8 +25,7 @@
                                 {{ session('msg') }}
                             </div>
                         @endif
-
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="all-form-element-inner">
                               
                                 <form action="{{ route('update-part-item') }}" method="POST" enctype="multipart/form-data" id="regForm" autocomplete="off">
@@ -117,10 +116,10 @@
                                                     <select class="form-control mb-2"
                                                         name="rack_id" id="rack_id">
                                                         <option value="" default>Select Rack Number</option>
-                                                        @foreach ($dataOutputGroupMaster as $group_data)
-                                                            <option value="{{ $group_data['id'] }}"
-                                                                {{ old('rack_id', $editData->rack_id) == $group_data->id ? 'selected' : '' }}>
-                                                                {{ $group_data->rack_name }}
+                                                        @foreach ($dataRackMaster as $rack_data)
+                                                            <option value="{{ $rack_data['id'] }}"
+                                                                {{ old('rack_id', $editData->rack_id) == $rack_data->id ? 'selected' : '' }}>
+                                                                {{ $rack_data->name }}
                                                             </option>
                                                         @endforeach
                                                     </select>

@@ -8,6 +8,7 @@ PartItem,
 UnitMaster,
 HSNMaster,
 GroupMaster,
+RackMaster,
 ItemStock,
 ItemStockHistory,
 };
@@ -46,7 +47,7 @@ class ItemRepository  {
             'tbl_rack_master.name as rack_name'
         )
           ->get();
-     
+  
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -114,6 +115,9 @@ class ItemRepository  {
             ->leftJoin('tbl_group_master', function ($join) {
                 $join->on('tbl_part_item.group_type_id', '=', 'tbl_group_master.id');
             })
+            ->leftJoin('tbl_rack_master', function ($join) {
+                $join->on('tbl_part_item.rack_id', '=', 'tbl_rack_master.id');
+            })
             ->select(
                 'tbl_part_item.id',
                 'tbl_part_item.part_number',
@@ -130,6 +134,8 @@ class ItemRepository  {
                 'tbl_part_item.group_type_id',
                 'tbl_group_master.id',
                 'tbl_group_master.name as group_name',
+                'tbl_part_item.rack_id',
+                 'tbl_rack_master.name as rack_name'
             )
             ->where('tbl_part_item.id', $id)
             ->first();
