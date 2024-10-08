@@ -49,7 +49,7 @@ class NoticeController extends Controller
                 $validation = Validator::make($request->all(), $rules, $messages);
                 
                 if ($validation->fails()) {
-                    return redirect('add-notice')
+                    return redirect('hr/add-notice')
                         ->withInput()
                         ->withErrors($validation);
                 } else {
@@ -60,9 +60,9 @@ class NoticeController extends Controller
                         $status = $add_record['status'];
     
                         if ($status == 'success') {
-                            return redirect('list-notice')->with(compact('msg', 'status'));
+                            return redirect('hr/list-notice')->with(compact('msg', 'status'));
                         } else {
-                            return redirect('add-notice')->withInput()->with(compact('msg', 'status'));
+                            return redirect('hr/add-notice')->withInput()->with(compact('msg', 'status'));
                         }
                     }
                 }
