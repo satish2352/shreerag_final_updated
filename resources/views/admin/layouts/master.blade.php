@@ -7,7 +7,7 @@
     <title>Shreerag Engg.</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('website/assets/img/logo/Layer 2.png')}}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('website/assets/img/logo/Layer 2.png')}}" >
     <!-- favicon
 		============================================ -->
     {{-- <link rel="shortcut icon" type="image/x-icon" href="{{asset('img/favicon.ico')}}"> --}}
