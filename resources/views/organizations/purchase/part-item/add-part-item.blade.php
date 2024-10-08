@@ -91,26 +91,13 @@
                                                 <span class="red-text">{{ $errors->first('group_type_id') }}</span>
                                                 @endif
                                             </div>
-
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="rack_id">Rack Number <span class="text-danger">*</span></label>
-                                                <select class="form-control" name="rack_id" id="rack_id">
-                                                    <option value="">Select Rack Number</option>
-                                                    @foreach ($dataOutputGroupMaster as $GroupMaster)
-                                                        <option value="{{ $GroupMaster['id'] }}" {{ old('rack_id') == $GroupMaster['id'] ? 'selected' : '' }}>{{ $GroupMaster['name'] }}</option>
-                                                    @endforeach
-                                                </select>
-                                                @if ($errors->has('rack_id'))
-                                                <span class="red-text">{{ $errors->first('rack_id') }}</span>
-                                                @endif
-                                            </div>
                                             
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                 <label for="rack_id">Rack Number<span class="text-danger">*</span></label>
                                                 <select class="form-control" name="rack_id" id="rack_id">
                                                     <option value="">Select Rack Number</option>
-                                                    @foreach ($RackMasterpMaster as $GroupMaster)
-                                                        <option value="{{ $GroupMaster['id'] }}" {{ old('rack_id') == $GroupMaster['id'] ? 'selected' : '' }}>{{ $GroupMaster['name'] }}</option>
+                                                    @foreach ($dataRackMaster as $rackMaster)
+                                                        <option value="{{ $rackMaster['id'] }}" {{ old('rack_id') == $rackMaster['id'] ? 'selected' : '' }}>{{ $rackMaster['name'] }}</option>
                                                     @endforeach
                                                 </select>
                                                 @if ($errors->has('rack_id'))
