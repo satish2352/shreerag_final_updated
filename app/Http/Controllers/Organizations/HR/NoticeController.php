@@ -129,7 +129,7 @@ class NoticeController extends Controller
                         $msg = $update_data['msg'];
                         $status = $update_data['status'];
                         if ($status == 'success') {
-                            return redirect('list-notice')->with(compact('msg', 'status'));
+                            return redirect('hr/list-notice')->with(compact('msg', 'status'));
                         } else {
                             return redirect()->back()
                                 ->withInput()

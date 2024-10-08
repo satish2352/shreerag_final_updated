@@ -105,7 +105,7 @@ padding-left: 20px !important;
                                             <td>{{ ucwords($data->product_name) }}</td>
                                             <td>{{ ucwords($data->quantity) }}</td>
                                             <td>{{ucwords($data->description)}}</td>
-                                            {{-- <td>{{ucwords($data->remarks)}}</td> --}}
+                                            <td>{{ucwords($data->remark_by_design)}}</td>
                                             <td> <a class="img-size" target="_blank"
                                                 href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
                                                 alt="Design"> Click to view</a>

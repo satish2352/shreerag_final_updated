@@ -68,29 +68,40 @@
   .footer{
     padding-top: 10px;
   }
+  .cover-image {
+        width: 100%;
+        height: 100vh; /* Full height of the viewport */
+        display: flex; /* Center content inside if needed */
+        justify-content: center; /* Horizontal center */
+        align-items: center; /* Vertical center */
+    }
 </style>
 <body>
     <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-    <div class="color-line"></div>
+    {{-- <div class="color-line"></div> --}}
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            {{-- <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="back-link back-backend">
                   
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12"></div>
-            <div class="col-md-4 col-md-4 col-sm-4 col-xs-12">
+        <div class="row " style="display: flex; justify-content: center; ">
+          
+            <div class="col-md-6 col-md-6 col-sm-6  d-flex justify-content-center" style="display: flex;
+    justify-content: center;
+    align-items: center;">
+              <div class="col-md-8 col-md-8 col-sm-8 col-xs-12 ">
+             
                 <div class="text-center m-b-md custom-login">
-                    <hr>
-                    <h1>Login Details</h1><hr>
+                   
+                   <a href="https://shreeragengineering.com/"> <img src="{{ asset('website/assets/img/logo/Layer 2.png')}}" alt="" style="width:120px;"></a>
                     <p></p>
                 </div>
                 <div class="hpanel">
@@ -98,8 +109,8 @@
                         <form action="{{ route('submitLogin') }}" method="POST" id="loginForm">
                             @csrf
                             <div class="form-group">
-                                <label class="control-label" for="username">Email</label>
-                                <input type="text"  placeholder="Please enter your email" value="" name="email" id="email" class="form-control">
+                                <label class="control-label" for="username">Email Id</label>
+                                <input type="text"  placeholder="Please enter your email Id" value="" name="email" id="email" class="form-control">
                                 {{-- <span class="help-block small">Your unique username for the app</span> --}}
                             </div>
                             {{-- <div class="form-group">
@@ -120,14 +131,19 @@
 
                     </div>
                 </div>
+                <div class="row footer">
+                  <div class="col-md-12 col-md-12 col-sm-12 col-xs-12 text-center ">
+                      <p>Copyright &copy; {{date('Y')}} <a href="https://shreeragengineering.com">Shreerag Engineering Pvt Ltd</a> All rights reserved.</p>
+                  </div>
+              </div>
+              </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12"></div>
-        </div>
-        <div class="row footer">
-            <div class="col-md-12 col-md-12 col-sm-12 col-xs-12 text-center ">
-                <p>Copyright &copy; {{date('Y')}} <a href="https://shreeragengineering.com">Shreerag Engineering Pvt Ltd</a> All rights reserved.</p>
+           
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="padding-right: 0px;">
+              <img src="{{ asset('website/assets/img/logo/login.png')}}" class="cover-image img-fluid" alt="">
             </div>
         </div>
+        
     </div>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
@@ -153,8 +169,8 @@
                     },
                     messages: {
                       email: {
-                        required: "Please enter your email.",
-                        email: "Please enter a valid email address.",
+                        required: "Please enter your email Id.",
+                        email: "Please enter a valid email Id.",
                         // spcenotallow: "Email cannot contain only spaces."
 
                         },

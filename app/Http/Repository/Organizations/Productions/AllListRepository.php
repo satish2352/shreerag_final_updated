@@ -533,7 +533,7 @@ public function getAllNewRequirementBusinessWise($business_id) {
               'designs.id',
               'design_revision_for_prod.reject_reason_prod',
               'design_revision_for_prod.id as design_revision_for_prod_id',
-              // 'design_revision_for_prod.id as reject_reason_prod',
+              'design_revision_for_prod.remark_by_design',
               'designs.bom_image',
               'designs.design_image',
               'design_revision_for_prod.bom_image as re_bom_image',

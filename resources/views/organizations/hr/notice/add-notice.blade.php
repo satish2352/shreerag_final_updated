@@ -190,10 +190,10 @@
                     required: "Please slect deparment name",
                 },
                 title: {
-                    required: "Please Select Role Name",
+                    required: "Please Select Title Name",
                 },
                 description: {
-                    required: "Please Enter the Password",
+                    required: "Please Enter the Description",
                 },
                 image: {
                     required: "Please upload an pdf.",
