@@ -413,8 +413,8 @@ public function getAllNewRequirementBusinessWise($business_id) {
               'production.business_id',
               'designs.bom_image',
               'designs.design_image',
-              'design_revision_for_prod.bom_image',
-              'design_revision_for_prod.design_image',
+              'design_revision_for_prod.bom_image as re_bom_image',
+              'design_revision_for_prod.design_image as re_design_image',
               'production.updated_at',
               )->orderBy('production.updated_at', 'desc')
           ->get();
