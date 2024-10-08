@@ -87,7 +87,7 @@
                 </div>
                 <div class="hpanel">
                     <div class="panel-body">
-                        <form action="{{ route('organization-submitLogin') }}" method="POST" id="loginForm">
+                        <form action="{{ route('submitLogin') }}" method="POST" id="loginForm">
                             @csrf
                             <div class="form-group">
                                 <label class="control-label" for="username">Username</label>
