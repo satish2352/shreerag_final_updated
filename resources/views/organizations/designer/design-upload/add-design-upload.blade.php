@@ -55,7 +55,10 @@
                                         </div>
                                     </div>
                                 @endif
-                               
+                                <?php
+// dd($business_details_data);
+// die();
+                                ?>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="all-form-element-inner">
                                         <form action="{{ route('update-design-upload') }}" method="POST" id="addDesignsForm" enctype="multipart/form-data">
@@ -78,14 +81,18 @@
                                                     </div>
                                                     <div  class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
                                                         <label for="design_image">Upload Design Layout (PDF, 10KB - 5MB)   <span class="text-danger">*</span></label>  
-                                                        <input type="file" class="form-control" accept="application/pdf" name="design_image">
+                                                        {{-- <input type="file" class="form-control" accept="application/pdf" name="design_image"> --}}
+                                                        <input type="file" class="form-control" accept="application/pdf" name="design_image" data-maxsize="5242880"> <!-- 5MB -->
+                                                        
                                                         @if ($errors->has("design_image"))
                                                             <span class="red-text">{{ $errors->first("design_image") }}</span>
                                                         @endif
                                                     </div>
                                                     <div  class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="bom_image">Upload BOM (Excel, 10KB - 2MB)  <span class="text-danger">*</span></label>
-                                                        <input type="file" class="form-control" accept=".xls, .xlsx" name="bom_image">
+                                                        {{-- <input type="file" class="form-control" accept=".xls, .xlsx" name="bom_image"> --}}
+                                                        <input type="file" class="form-control" accept=".xls,.xlsx" name="bom_image" data-maxsize="2097152"> <!-- 2MB -->
+
                                                         @if ($errors->has("bom_image"))
                                                             <span class="red-text">{{ $errors->first("bom_image") }}</span>
                                                         @endif
@@ -123,11 +130,13 @@
         jQuery.noConflict();
         jQuery(document).ready(function($) {
             // Custom validation method for file size
-            $.validator.addMethod('filesize', function (value, element, param) {
+            $.validator.addMethod('filesize', function(value, element, param) {
+                // Check if a file is selected
+                if (element.files.length === 0) return true; // Allow if no file selected
                 var fileSize = element.files[0].size; // Get file size in bytes
                 return this.optional(element) || (fileSize >= param.min && fileSize <= param.max);
             }, 'Invalid file size.');
-
+    
             // Initialize jQuery Validation
             $("#addDesignsForm").validate({
                 ignore: [], // Validate hidden inputs as well
@@ -157,7 +166,7 @@
                 },
                 errorPlacement: function(error, element) {
                     error.addClass('text-danger'); // Add Bootstrap text-danger class for styling
-                    error.insertAfter(element);
+                    error.insertAfter(element); // Insert error message after the input
                 },
                 submitHandler: function(form) {
                     Swal.fire({
@@ -174,11 +183,16 @@
                     });
                 }
             });
-
+    
             // Event listener for file input changes
             $(document).on('change', 'input[type="file"]', function() {
-                $(this).rules("remove");
+                $(this).rules("remove"); // Remove existing rules
+                $(this).rules("add", { // Re-add rules for validation
+                    filesize: { min: 10 * 1024, max: $(this).data('maxsize') },
+                });
+                $(this).valid(); // Trigger validation immediately
             });
         });
     </script>
+    
 @endsection

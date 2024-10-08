@@ -140,6 +140,8 @@ class BusinessRepository
                     'businesses.customer_payment_terms',
                     'businesses.customer_terms_condition',
                     'businesses.remarks',
+                    'business_application_processes.business_status_id',
+                    'business_application_processes.design_status_id',
                     'business_application_processes.production_status_id')
                 ->where('businesses.id', $id)
                 ->get();

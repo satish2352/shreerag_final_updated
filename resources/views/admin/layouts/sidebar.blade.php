@@ -938,7 +938,7 @@
                                                         </li>
                                                     </ul>
                                                     <div class="notification-view">
-                                                        <a href="#">View All Notification</a>
+                                                        {{-- <a href="#">View All Notification</a> --}}
 
                                                     </div>
                                                 </div>
