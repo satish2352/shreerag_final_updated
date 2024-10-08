@@ -1185,7 +1185,7 @@ public function getOwnerAllListBusinessFianaceSendToDispatch(){
       'businesses_details.quantity',
         'tbl_logistics.truck_no',
           'tbl_logistics.updated_at'
-    )->orderBy('purchase_orders.updated_at', 'desc')->get();
+    )->orderBy('tbl_logistics.updated_at', 'desc')->get();
     return $data_output;
   } catch (\Exception $e) {
       return $e;

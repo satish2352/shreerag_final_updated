@@ -191,6 +191,14 @@ $("#add_more_btn").click(function() {
     initializeValidation(row);
     validator.resetForm(); // Reset validation state after adding a new row
 });
+  // Delegate the click event for dynamically added delete buttons
+  $("#purchase_order_table").on("click", ".remove-row", function() {
+        // Remove the closest <tr> element (the row containing the clicked delete button)
+        $(this).closest('tr').remove();
+
+        // Optionally, you can reindex the rows here if needed
+        reindexRows();
+    });
 });
 </script>
 

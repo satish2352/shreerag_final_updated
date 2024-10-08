@@ -61,6 +61,14 @@
 		============================================ -->
     <script src="{{asset('js/vendor/modernizr-2.8.3.min.js')}}"></script>
 </head>
+<style>
+  .error{
+    color: red !important;
+  }
+  .footer{
+    padding-top: 10px;
+  }
+</style>
 <body>
     <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -82,7 +90,7 @@
             <div class="col-md-4 col-md-4 col-sm-4 col-xs-12">
                 <div class="text-center m-b-md custom-login">
                     <hr>
-                    <h1>Super Admin Login</h1><hr>
+                    <h1>Login Details</h1><hr>
                     <p></p>
                 </div>
                 <div class="hpanel">
@@ -90,16 +98,23 @@
                         <form action="{{ route('submitLogin') }}" method="POST" id="loginForm">
                             @csrf
                             <div class="form-group">
-                                <label class="control-label" for="username">Username</label>
-                                <input type="text" placeholder="example@gmail.com" title="Please enter your Email" required="" value="" name="email" id="username" class="form-control">
-                                <span class="help-block small">Your unique username for the app</span>
+                                <label class="control-label" for="username">Email</label>
+                                <input type="text"  placeholder="Please enter your email" value="" name="email" id="email" class="form-control">
+                                {{-- <span class="help-block small">Your unique username for the app</span> --}}
                             </div>
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label class="control-label" for="password">Password</label>
-                                <input type="password" title="Please enter your password" placeholder="******" required="" value="" name="password" id="password" class="form-control">
-                                <span class="help-block small">Your strong password</span>
-                            </div>
-                            
+                                <input type="password" placeholder="Please enter your password" value="" name="password" id="password" class="form-control">
+                            </div> --}}
+                            <div class="form-group">
+                              <label class="control-label" for="password">Password</label>
+                              <div class="input-group">
+                                  <input type="password" placeholder="Please enter your password" name="password" id="password" class="form-control">
+                                  <div class="input-group-addon">
+                                      <i class="fa fa-eye" id="togglePassword" style="cursor: pointer;"></i>
+                                  </div>
+                              </div>
+                          </div>
                             <button type="submit" class="btn btn-success btn-block loginbtn">Login</button>
                         </form>
 
@@ -108,13 +123,67 @@
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12"></div>
         </div>
-        <div class="row">
-            <div class="col-md-12 col-md-12 col-sm-12 col-xs-12 text-center">
-                <p>Copyright &copy; {{date('Y')}} <a href="#">Shreerag</a> All rights reserved.</p>
+        <div class="row footer">
+            <div class="col-md-12 col-md-12 col-sm-12 col-xs-12 text-center ">
+                <p>Copyright &copy; {{date('Y')}} <a href="https://shreeragengineering.com">Shreerag Engineering Pvt Ltd</a> All rights reserved.</p>
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+        <script>
+            $(document).ready(function() {
+                // Custom validation rule to check if the input does not contain only spaces
+                $.validator.addMethod("spcenotallow", function(value, element) {
+                    return this.optional(element) || value.trim().length > 0;
+                }, "Enter some valid text");
+            
+                // Initialize the form validation
+                $("#loginForm").validate({
+                    rules: {
+                      email: {
+                            required: true,
+                            email: true,  // Check for valid email format
+                            // spcenotallow: true // Prevent spaces only
+                        },
+                        password: {
+                            required: true,
+                        },
+                    },
+                    messages: {
+                      email: {
+                        required: "Please enter your email.",
+                        email: "Please enter a valid email address.",
+                        // spcenotallow: "Email cannot contain only spaces."
 
+                        },
+                        password: {
+                            required: "Please enter the password.",
+                        },
+                    },
+                });
+            });
+            </script>
+            <script>
+              $(document).ready(function() {
+                  // Click event for eye icon
+                  $("#togglePassword").click(function() {
+                      // Get the password field
+                      const passwordField = $("#password");
+                      
+                      // Check the current type of the password field
+                      const type = passwordField.attr("type") === "password" ? "text" : "password";
+                      
+                      // Toggle the type attribute
+                      passwordField.attr("type", type);
+                      
+                      // Toggle the eye / eye-slash icon
+                      $(this).toggleClass("fa-eye fa-eye-slash");
+                  });
+              });
+          </script>
+          
     <!-- jquery
 		============================================ -->
     <script src="js/vendor/jquery-1.11.3.min.js"></script>

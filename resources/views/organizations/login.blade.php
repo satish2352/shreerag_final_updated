@@ -90,14 +90,14 @@
                         <form action="{{ route('submitLogin') }}" method="POST" id="loginForm">
                             @csrf
                             <div class="form-group">
-                                <label class="control-label" for="username">Username</label>
-                                <input type="text" placeholder="example@gmail.com" title="Please enter your Email" required="" value="" name="email" id="username" class="form-control">
-                                <span class="help-block small">Your unique username for the app</span>
+                                <label class="control-label" for="username">Email</label>
+                                <input type="text" placeholder="example@gmail.com" title="Please enter your Email" value="" name="email" id="email" class="form-control">
+                                {{-- <span class="help-block small">Your unique username for the app</span> --}}
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="password">Password</label>
-                                <input type="password" title="Please enter your password" placeholder="******" required="" value="" name="password" id="password" class="form-control">
-                                <span class="help-block small">Your strong password</span>
+                                <input type="password" title="Please enter your password" placeholder="******" value="" name="password" id="password" class="form-control">
+                                {{-- <span class="help-block small">Your strong password</span> --}}
                             </div>
                             <div class="checkbox login-checkbox">
                                 <label>
@@ -119,7 +119,38 @@
             </div>
         </div>
     </div>
-
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+        <script>
+            $(document).ready(function() {
+                // Custom validation rule to check if the input does not contain only spaces
+                $.validator.addMethod("spcenotallow", function(value, element) {
+                    return this.optional(element) || value.trim().length > 0;
+                }, "Enter some valid text");
+            
+                // Initialize the form validation
+                $("#loginForm").validate({
+                    rules: {
+                      email: {
+                            required: true,
+                        },
+                        password: {
+                            required: true,
+                        },
+                    },
+                    messages: {
+                      email: {
+                            required: "Please enter the email.",
+                        },
+                        password: {
+                            required: "Please enter the password.",
+                        },
+                    },
+                });
+            });
+            </script>
+            
     <!-- jquery
 		============================================ -->
     <script src="js/vendor/jquery-1.11.3.min.js"></script>
@@ -165,6 +196,7 @@
     <!-- main JS
 		============================================ -->
     <script src="js/main.js"></script>
+
 </body>
 
 </html>

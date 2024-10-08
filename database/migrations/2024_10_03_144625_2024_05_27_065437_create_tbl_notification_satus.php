@@ -38,6 +38,7 @@ return new class extends Migration
         $table->boolean('material_received_from_store')->default(0);
         $table->boolean('production_completed')->default(0);
         $table->boolean('logistics_to_fianance_visible')->default(0);
+        $table->boolean('fianance_to_dispatch_visible')->default(0);
         $table->boolean('dispatch_completed')->default(0);
         // $table->boolean('quality_create_grn')->default(0);
 
