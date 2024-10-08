@@ -37,14 +37,10 @@ Route::get('/login', ['as' => 'login', 'uses' => 'App\Http\Controllers\Admin\Log
 Route::post('/submitLogin', ['as' => 'submitLogin', 'uses' => 'App\Http\Controllers\Admin\LoginRegister\LoginController@submitLogin']);
 Route::get('/register', ['as' => 'register', 'uses' => 'App\Http\Controllers\Admin\LoginRegister\RegisterController@index']);
 
-Route::group(['middleware' => ['admin']], function () {
-
-    Route::get('/dashboard', ['as' => '/dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
+Route::group(['middleware' => ['admin']], function () {   
     Route::get('/get-notification', ['as' => 'get-notification', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@getNotification']);
-
     // Route::get('/forms', ['as' => 'forms', 'uses' => 'App\Http\Controllers\Admin\Forms\FormsController@index']);
     Route::get('/admin-log-out', ['as' => 'log-out', 'uses' => 'App\Http\Controllers\Admin\LoginRegister\LoginController@logout']);
-
 
     Route::get('/list-organizations', ['as' => 'list-organizations', 'uses' => 'App\Http\Controllers\Admin\Organization\OrganizationController@index']);
     Route::get('/add-organizations', ['as' => 'add-organizations', 'uses' => 'App\Http\Controllers\Admin\Organization\OrganizationController@add']);
@@ -86,10 +82,12 @@ Route::group(['middleware' => ['admin']], function () {
     Route::post('/show-rules-regulations', ['as' => 'show-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@show']);
     Route::any('/delete-rules-regulations/{id}', ['as' => 'delete-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@destroy']);
     Route::post('/update-active-rules-regulations', ['as' => 'update-active-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@updateOne']);
-
+});
     
     // Organization admin
-    Route::get('/admin-dashboard', ['as' => '/admin-dashboard', 'uses' => 'App\Http\Controllers\Organizations\Dashboard\DashboardController@index']);
+    Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
+
+    // Route::get('/admin-dashboard', ['as' => '/admin-dashboard', 'uses' => 'App\Http\Controllers\Organizations\Dashboard\DashboardController@index']);
     // Route::get('/organizations-list-employees', ['as' => 'organizations-list-employees', 'uses' => 'App\Http\Controllers\Organizations\Employees\EmployeesController@index']);
     Route::get('/organizations-add-employees', ['as' => 'organizations-add-employees', 'uses' => 'App\Http\Controllers\Organizations\Employees\EmployeesController@add']);
     Route::post('/organizations-store-employees', ['as' => 'organizations-store-employees', 'uses' => 'App\Http\Controllers\Organizations\Employees\EmployeesController@store']);
@@ -98,93 +96,8 @@ Route::group(['middleware' => ['admin']], function () {
     Route::any('/organizations-delete-employees/{id}', ['as' => 'organizations-delete-employees', 'uses' => 'App\Http\Controllers\Organizations\Employees\EmployeesController@destroy']);
     Route::post('/check-email-availability', ['as' => 'check-email-availability', 'uses' => 'App\Http\Controllers\Organizations\Employees\EmployeesController@checkEmailAvailability']);
 
-    //Organizations HR
-
-
-
-    Route::get('/hr-dashboard', ['as' => '/hr-dashboard', 'uses' => 'App\Http\Controllers\Organizations\Dashboard\DashboardController@index']);
-    Route::get('/hr-list-employees', ['as' => 'hr-list-employees', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@index']);
-    Route::get('/hr-add-employees', ['as' => 'hr-add-employees', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@add']);
-    Route::post('/hr-store-employees', ['as' => 'hr-store-employees', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@store']);
-    Route::get('/hr-edit-employees/{id}', ['as' => 'hr-edit-employees', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@edit']);
-    Route::post('/hr-update-employees', ['as' => 'hr-update-employees', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@update']);
-    Route::any('/hr-delete-employees/{id}', ['as' => 'hr-delete-employees', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@destroy']);
-
-
-    Route::get('/list-users', ['as' => 'list-users', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@index']);
-    Route::get('/add-users', ['as' => 'add-users', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@addUsers']);
-    Route::post('/add-users', ['as' => 'add-users', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@register']);
-    Route::get('/edit-users/{edit_id}', ['as' => 'edit-users', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@editUsers']);
-    Route::post('/update-users', ['as' => 'update-users', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@update']);
-    Route::any('/delete-users/{id}', ['as' => 'delete-users', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@destroy']);
-    Route::any('/show-users/{id}', ['as' => 'show-users', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@show']);
-
-    Route::get('/cities', ['as' => 'cities', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@getCities']);
-    Route::get('/states', ['as' => 'states', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@getState']);
-
-    Route::get('/list-yearly-leave-management', ['as' => 'list-yearly-leave-management', 'uses' => 'App\Http\Controllers\Organizations\HR\LeaveManagment\LeaveManagmentController@index']);
-    Route::get('/add-yearly-leave-management', ['as' => 'add-yearly-leave-management', 'uses' => 'App\Http\Controllers\Organizations\HR\LeaveManagment\LeaveManagmentController@add']);
-    Route::post('/store-yearly-leave-management', ['as' => 'store-yearly-leave-management', 'uses' => 'App\Http\Controllers\Organizations\HR\LeaveManagment\LeaveManagmentController@store']);
-    Route::get('/edit-yearly-leave-management/{id}', ['as' => 'edit-yearly-leave-management', 'uses' => 'App\Http\Controllers\Organizations\HR\LeaveManagment\LeaveManagmentController@edit']);
-    Route::post('/update-yearly-leave-management', ['as' => 'update-yearly-leave-management', 'uses' => 'App\Http\Controllers\Organizations\HR\LeaveManagment\LeaveManagmentController@update']);
-    Route::any('/delete-yearly-leave-management/{id}', ['as' => 'delete-yearly-leave-management', 'uses' => 'App\Http\Controllers\Organizations\HR\LeaveManagment\LeaveManagmentController@destroy']);
-
-
-
-    Route::get('/list-leaves', ['as' => 'list-leaves', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@index']);
-    Route::get('/add-leaves', ['as' => 'add-leaves', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@add']);
-    Route::post('/store-leaves', ['as' => 'store-leaves', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@store']);
-    Route::get('/edit-leaves/{id}', ['as' => 'edit-leaves', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@edit']);
-    Route::post('/update-leaves', ['as' => 'update-leaves', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@update']);
-    Route::any('/delete-leaves/{id}', ['as' => 'delete-leaves', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@destroy']);
-
-
-    Route::get('/list-leaves-acceptedby-hr', ['as' => 'list-leaves-acceptedby-hr', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@getAllLeavesRequest']);
-    Route::any('/show-leaves/{id}', ['as' => 'show-leaves', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@show']);
-    Route::get('/list-leaves-not-approvedby-hr', ['as' => 'list-leaves-not-approvedby-hr', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@getAllNotApprovedRequest']);
-    Route::get('/list-leaves-approvedby-hr', ['as' => 'list-leaves-approvedby-hr', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@getAllApprovedRequest']);
-
-    Route::post('/check-dates', ['as' => 'check-dates', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@checkDates']);
-
-    // Route::post('/update-status-approved', ['as' => 'update-status-approved', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@updateLabourStatusApproved']);
-    Route::post('/update-status', ['as' => 'update-status', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@updateLabourStatus']);
-
-    Route::post('/update-status-not-approved', ['as' => 'update-status-not-approved', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@updateLabourStatusNotApproved']);
-
-    Route::get('/list-notice', ['as' => 'list-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@index']);
-    Route::get('/add-notice', ['as' => 'add-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@add']);
-    Route::post('/add-notice', ['as' => 'add-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@store']);
-    Route::get('/edit-notice/{edit_id}', ['as' => 'edit-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@edit']);
-    Route::post('/update-notice', ['as' => 'update-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@update']);
-    Route::any('/show-notice/{id}', ['as' => 'show-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@show']);
-    Route::any('/delete-notice/{id}', ['as' => 'delete-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@destroy']);
-    Route::post('/update-active-notice', ['as' => 'update-active-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@updateOne']);
-    Route::get('/particular-notice-department-wise', ['as' => 'particular-notice-department-wise', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@departmentWiseNotice']);
-
-
-    Route::group(['prefix' => 'quality'], function () {
-
-        // ========================Quality Department Start========
-        Route::get('/list-grn', ['as' => 'list-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@index']);
-        Route::get('/add-grn/{purchase_orders_id}', ['as' => 'add-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@add']);
-        Route::post('/store-grn', ['as' => 'store-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@store']);
-    
-        Route::get('/edit-grn', ['as' => 'edit-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@edit']);
-        // Route::post('/store-grn', ['as' => 'store-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@store']);
-        // Route::get('/edit-grn/{id}', ['as' => 'edit-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@edit']);
-        // Route::post('/update-grn', ['as' => 'update-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@update']);
-        // Route::any('/delete-grn/{id}', ['as' => 'delete-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@destroy']);
-        // ========================Quality Department End========
-        //All list
-        Route::get('/list-material-sent-to-quality', ['as' => 'list-material-sent-to-quality', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@getAllListMaterialSentFromQuality']);
-        Route::get('/list-material-sent-to-quality-businesswise/{id}', ['as' => 'list-material-sent-to-quality-businesswise', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@getAllListMaterialSentFromQualityBusinessWise']);
-
-        Route::get('/list-rejected-chalan-po-wise', ['as' => 'list-rejected-chalan-po-wise', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@getAllListMaterialSentFromQuality']);
-
-        
-    });
-    
     Route::group(['prefix' => 'owner'], function () {
+        Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
         Route::get('/organizations-list-employees', ['as' => 'organizations-list-employees', 'uses' => 'App\Http\Controllers\Organizations\Employees\EmployeesController@index']);
     
         Route::get('/list-business', ['as' => 'list-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@index']);
@@ -231,69 +144,8 @@ Route::group(['middleware' => ['admin']], function () {
 
 
     });
-    
-    Route::group(['prefix' => 'purchase'], function () {
-        Route::get('/list-purchase', ['as' => 'list-purchase', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListMaterialReceivedForPurchase']);
-    
-    
-        // Route::get('/submit-bom-to-owner/{id}', ['as' => 'submit-bom-to-owner', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseController@submitBOMToOwner']);
-    
-    
-        Route::get('/list-purchase-order/{requistition_id}', ['as' => 'list-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@index']);
-        // Route::post('/list-purchase-order', ['as' => 'list-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@index']);
-        Route::post('/add-purchase-order', ['as' => 'add-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@create']);
-        Route::post('/store-purchase-order', ['as' => 'store-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@store']);
-        Route::get('/show-purchase-order/{id}', ['as' => 'show-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@show']);
-        Route::get('/edit-purchase-order/{id}', ['as' => 'edit-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@edit']);
-        Route::post('/update-purchase-order', ['as' => 'update-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@update']);
-        Route::any('/delete-purchase-order/{id}', ['as' => 'delete-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@destroy']);
-        Route::post('/delete-addmore', ['as' => 'delete-addmore', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@destroyAddmore']);
-    
-        Route::group(['prefix' => 'vendor'], function () {
-            Route::get('/list-vendor', ['as' => 'list-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@index']);
-            Route::get('/add-vendor', ['as' => 'add-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@add']);
-            Route::post('/store-vendor', ['as' => 'store-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@store']);
-            Route::get('/edit-vendor/{id}', ['as' => 'edit-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@edit']);
-            Route::post('/update-vendor', ['as' => 'update-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@update']);
-            Route::any('/delete-vendor/{id}', ['as' => 'delete-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@destroy']);
-        });
-    
-        // Route::group(['prefix' => 'purchaseorderstatus'], function () {
-        Route::get('/list-approved-purchase-orders', ['as' => 'list-approved-purchase-orders', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListApprovedPurchaseOrder']);
-        Route::get('/check-details-of-po-before-send-vendor/{purchase_order_id}', ['as' => 'check-details-of-po-before-send-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@checkDetailsBeforeSendPOToVendor']);
-        Route::get('/list-check-final-purchase-order/{purchase_order_id}', ['as' => 'list-check-final-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@listAllApprovedPOToBeChecked']);
-        Route::get('/finalize-and-submit-mail-to-vendor/{purchase_order_id}/{business_id}', ['as' => 'finalize-and-submit-mail-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@submitAndSentEmailToTheVendorFinalPurchaseOrder']);
-    
-        Route::post('/submit-purchase-order-to-owner-for-review', ['as' => 'submit-purchase-order-to-owner-for-review', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@submitPurchaseOrderToOwnerForReview']);
-    
-        Route::get('/list-purchase-order-approved-sent-to-vendor', ['as' => 'list-purchase-order-approved-sent-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListPurchaseOrderMailSentToVendor']);
-        Route::get('/list-purchase-order-approved-sent-to-vendor-businesswise/{id}', ['as' => 'list-purchase-order-approved-sent-to-vendor-businesswise', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListPurchaseOrderMailSentToVendorBusinessWise']);
-        Route::get('/list-purchase-orders-sent-to-owner', ['as' => 'list-purchase-orders-sent-to-owner', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListPurchaseOrderTowardsOwner']);
-        Route::get('/list-purchase-orders-sent-to-owner-details/{purchase_order_id}', ['as' => 'list-purchase-orders-sent-to-owner-details', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@getAllListPurchaseOrderTowardsOwnerDetails']);
-        Route::get('/list-purchase-order-sent-to-owner-for-approval-busineswise/{purchase_order_id}', ['as' => 'list-purchase-order-sent-to-owner-for-approval-busineswise', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getPurchaseOrderSentToOwnerForApprovalBusinesWise']);
-        // });
-    
-        Route::get('/list-submited-po-to-vendor', ['as' => 'list-submited-po-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListSubmitedPurchaeOrderByVendor']);
-        Route::get('/list-submited-po-to-vendor-businesswise/{id}', ['as' => 'list-submited-po-to-vendor-businesswise', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListSubmitedPurchaeOrderByVendorBusinessWise']);
-
-        Route::any('/list-tax', ['as' => 'list-tax', 'uses' => 'App\Http\Controllers\Organizations\Purchase\TaxController@index']);
-        Route::any('/add-tax', ['as' => 'add-tax', 'uses' => 'App\Http\Controllers\Organizations\Purchase\TaxController@add']);
-        Route::any('/store-tax', ['as' => 'store-tax', 'uses' => 'App\Http\Controllers\Organizations\Purchase\TaxController@store']);
-        Route::any('/edit-tax/{id}', ['as' => 'edit-tax', 'uses' => 'App\Http\Controllers\Organizations\Purchase\TaxController@edit']);
-        Route::any('/update-tax', ['as' => 'update-tax', 'uses' => 'App\Http\Controllers\Organizations\Purchase\TaxController@update']);
-        Route::any('/delete-tax/{id}', ['as' => 'delete-tax', 'uses' => 'App\Http\Controllers\Organizations\Purchase\TaxController@destroy']);
-    
-        Route::any('/list-part-item', ['as' => 'list-part-item', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ItemController@index']);
-        Route::any('/add-part-item', ['as' => 'add-part-item', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ItemController@add']);
-        Route::any('/store-part-item', ['as' => 'store-part-item', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ItemController@store']);
-        Route::any('/edit-part-item/{id}', ['as' => 'edit-part-item', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ItemController@edit']);
-        Route::any('/update-part-item', ['as' => 'update-part-item', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ItemController@update']);
-        Route::any('/delete-part-item/{id}', ['as' => 'delete-part-item', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ItemController@destroy']);
-    
-
-    });
-    
     Route::group(['prefix' => 'designdept'], function () {
+        Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
         //ALL List
         Route::get('/list-new-requirements-received-for-design', ['as' => 'list-new-requirements-received-for-design', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@getAllNewRequirement']);
         Route::get('/list-new-requirements-received-for-design-businesswise/{id}', ['as' => 'list-new-requirements-received-for-design-businesswise', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@getAllNewRequirementBusinessWise']);
@@ -314,9 +166,8 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-reject-design-from-prod', ['as' => 'list-reject-design-from-prod', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@getAllListDesignRecievedForCorrection']);
         Route::get('/list-accept-design-by-production', ['as' => 'list-accept-design-by-production', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@acceptdesignbyProduct']);
     });
-    
     Route::group(['prefix' => 'proddept'], function () {
-    
+        Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
         Route::get('/accept-design/{id}', ['as' => 'accept-design', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@acceptdesign']);
         Route::get('/reject-design-edit/{id}', ['as' => 'reject-design-edit', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@rejectdesignedit']);
         Route::post('/reject-design', ['as' => 'reject-design', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@rejectdesign']);
@@ -342,24 +193,8 @@ Route::group(['middleware' => ['admin']], function () {
         // Route::get('/list-final-production-completed/{id}', ['as' => 'list-final-production-completed', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllFinalProductionCompleted']);
 
     });
-    
-    Route::group(['prefix' => 'securitydept'], function () {
-        Route::get('/search-by-po-no', ['as' => 'search-by-po-no', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@searchByPONo']);
-        // Route::get('/list-purchase-order-approved-sent-to-vendor-security', ['as' => 'list-purchase-order-approved-sent-to-vendor-security', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@searchByPONo']);
-        Route::get('/list-gatepass', ['as' => 'list-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@index']);
-        Route::get('/list-po-details/{purchase_order_id}', ['as' => 'list-po-details', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@getPurchaseDetails']);
-        Route::get('/add-gatepass', ['as' => 'add-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@add']);
-    
-        Route::get('/edit-gatepass/{id}', ['as' => 'edit-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@edit']);
-        Route::post('/update-gatepass', ['as' => 'update-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@update']);
-
-        Route::get('/add-gatepass-with-po/{id}', ['as' => 'add-gatepass-with-po', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@addGatePassWithPO']);
-        Route::post('/store-gatepass', ['as' => 'store-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@store']);
-    
-        Route::post('/list-all-po-number', ['as' => 'list-all-po-number', 'uses' => 'App\Http\Controllers\Organizations\Security\AllListController@getAllListMaterialRecieved']);
-    });
-    
     Route::group(['prefix' => 'storedept'], function () {
+        Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
     
         Route::get('/list-requistion', ['as' => 'list-requistion', 'uses' => 'App\Http\Controllers\Organizations\Store\RequistionController@index']);
         Route::get('/add-requistion', ['as' => 'add-requistion', 'uses' => 'App\Http\Controllers\Organizations\Store\RequistionController@add']);
@@ -449,9 +284,108 @@ Route::group(['middleware' => ['admin']], function () {
         Route::any('/delete-delivery-chalan/{id}', ['as' => 'delete-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@destroy']);
         Route::post('/delete-addmore', ['as' => 'delete-addmore', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@destroyAddmore']);
     });
-
+    Route::group(['prefix' => 'purchase'], function () {
+        Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
+        Route::get('/list-purchase', ['as' => 'list-purchase', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListMaterialReceivedForPurchase']);
     
+    
+        // Route::get('/submit-bom-to-owner/{id}', ['as' => 'submit-bom-to-owner', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseController@submitBOMToOwner']);
+    
+    
+        Route::get('/list-purchase-order/{requistition_id}', ['as' => 'list-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@index']);
+        // Route::post('/list-purchase-order', ['as' => 'list-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@index']);
+        Route::post('/add-purchase-order', ['as' => 'add-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@create']);
+        Route::post('/store-purchase-order', ['as' => 'store-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@store']);
+        Route::get('/show-purchase-order/{id}', ['as' => 'show-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@show']);
+        Route::get('/edit-purchase-order/{id}', ['as' => 'edit-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@edit']);
+        Route::post('/update-purchase-order', ['as' => 'update-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@update']);
+        Route::any('/delete-purchase-order/{id}', ['as' => 'delete-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@destroy']);
+        Route::post('/delete-addmore', ['as' => 'delete-addmore', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@destroyAddmore']);
+    
+        Route::group(['prefix' => 'vendor'], function () {
+            Route::get('/list-vendor', ['as' => 'list-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@index']);
+            Route::get('/add-vendor', ['as' => 'add-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@add']);
+            Route::post('/store-vendor', ['as' => 'store-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@store']);
+            Route::get('/edit-vendor/{id}', ['as' => 'edit-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@edit']);
+            Route::post('/update-vendor', ['as' => 'update-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@update']);
+            Route::any('/delete-vendor/{id}', ['as' => 'delete-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@destroy']);
+        });
+    
+        // Route::group(['prefix' => 'purchaseorderstatus'], function () {
+        Route::get('/list-approved-purchase-orders', ['as' => 'list-approved-purchase-orders', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListApprovedPurchaseOrder']);
+        Route::get('/check-details-of-po-before-send-vendor/{purchase_order_id}', ['as' => 'check-details-of-po-before-send-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@checkDetailsBeforeSendPOToVendor']);
+        Route::get('/list-check-final-purchase-order/{purchase_order_id}', ['as' => 'list-check-final-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@listAllApprovedPOToBeChecked']);
+        Route::get('/finalize-and-submit-mail-to-vendor/{purchase_order_id}/{business_id}', ['as' => 'finalize-and-submit-mail-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@submitAndSentEmailToTheVendorFinalPurchaseOrder']);
+    
+        Route::post('/submit-purchase-order-to-owner-for-review', ['as' => 'submit-purchase-order-to-owner-for-review', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@submitPurchaseOrderToOwnerForReview']);
+    
+        Route::get('/list-purchase-order-approved-sent-to-vendor', ['as' => 'list-purchase-order-approved-sent-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListPurchaseOrderMailSentToVendor']);
+        Route::get('/list-purchase-order-approved-sent-to-vendor-businesswise/{id}', ['as' => 'list-purchase-order-approved-sent-to-vendor-businesswise', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListPurchaseOrderMailSentToVendorBusinessWise']);
+        Route::get('/list-purchase-orders-sent-to-owner', ['as' => 'list-purchase-orders-sent-to-owner', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListPurchaseOrderTowardsOwner']);
+        Route::get('/list-purchase-orders-sent-to-owner-details/{purchase_order_id}', ['as' => 'list-purchase-orders-sent-to-owner-details', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@getAllListPurchaseOrderTowardsOwnerDetails']);
+        Route::get('/list-purchase-order-sent-to-owner-for-approval-busineswise/{purchase_order_id}', ['as' => 'list-purchase-order-sent-to-owner-for-approval-busineswise', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getPurchaseOrderSentToOwnerForApprovalBusinesWise']);
+        // });
+    
+        Route::get('/list-submited-po-to-vendor', ['as' => 'list-submited-po-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListSubmitedPurchaeOrderByVendor']);
+        Route::get('/list-submited-po-to-vendor-businesswise/{id}', ['as' => 'list-submited-po-to-vendor-businesswise', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListSubmitedPurchaeOrderByVendorBusinessWise']);
+
+        Route::any('/list-tax', ['as' => 'list-tax', 'uses' => 'App\Http\Controllers\Organizations\Purchase\TaxController@index']);
+        Route::any('/add-tax', ['as' => 'add-tax', 'uses' => 'App\Http\Controllers\Organizations\Purchase\TaxController@add']);
+        Route::any('/store-tax', ['as' => 'store-tax', 'uses' => 'App\Http\Controllers\Organizations\Purchase\TaxController@store']);
+        Route::any('/edit-tax/{id}', ['as' => 'edit-tax', 'uses' => 'App\Http\Controllers\Organizations\Purchase\TaxController@edit']);
+        Route::any('/update-tax', ['as' => 'update-tax', 'uses' => 'App\Http\Controllers\Organizations\Purchase\TaxController@update']);
+        Route::any('/delete-tax/{id}', ['as' => 'delete-tax', 'uses' => 'App\Http\Controllers\Organizations\Purchase\TaxController@destroy']);
+    
+        Route::any('/list-part-item', ['as' => 'list-part-item', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ItemController@index']);
+        Route::any('/add-part-item', ['as' => 'add-part-item', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ItemController@add']);
+        Route::any('/store-part-item', ['as' => 'store-part-item', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ItemController@store']);
+        Route::any('/edit-part-item/{id}', ['as' => 'edit-part-item', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ItemController@edit']);
+        Route::any('/update-part-item', ['as' => 'update-part-item', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ItemController@update']);
+        Route::any('/delete-part-item/{id}', ['as' => 'delete-part-item', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ItemController@destroy']);
+    
+
+    });
+    Route::group(['prefix' => 'securitydept'], function () {
+        Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
+        Route::get('/search-by-po-no', ['as' => 'search-by-po-no', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@searchByPONo']);
+        // Route::get('/list-purchase-order-approved-sent-to-vendor-security', ['as' => 'list-purchase-order-approved-sent-to-vendor-security', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@searchByPONo']);
+        Route::get('/list-gatepass', ['as' => 'list-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@index']);
+        Route::get('/list-po-details/{purchase_order_id}', ['as' => 'list-po-details', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@getPurchaseDetails']);
+        Route::get('/add-gatepass', ['as' => 'add-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@add']);
+    
+        Route::get('/edit-gatepass/{id}', ['as' => 'edit-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@edit']);
+        Route::post('/update-gatepass', ['as' => 'update-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@update']);
+
+        Route::get('/add-gatepass-with-po/{id}', ['as' => 'add-gatepass-with-po', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@addGatePassWithPO']);
+        Route::post('/store-gatepass', ['as' => 'store-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@store']);
+    
+        Route::post('/list-all-po-number', ['as' => 'list-all-po-number', 'uses' => 'App\Http\Controllers\Organizations\Security\AllListController@getAllListMaterialRecieved']);
+    });
+    Route::group(['prefix' => 'quality'], function () {
+
+        // ========================Quality Department Start========
+        Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
+
+        Route::get('/list-grn', ['as' => 'list-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@index']);
+        Route::get('/add-grn/{purchase_orders_id}', ['as' => 'add-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@add']);
+        Route::post('/store-grn', ['as' => 'store-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@store']);
+    
+        Route::get('/edit-grn', ['as' => 'edit-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@edit']);
+        // Route::post('/store-grn', ['as' => 'store-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@store']);
+        // Route::get('/edit-grn/{id}', ['as' => 'edit-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@edit']);
+        // Route::post('/update-grn', ['as' => 'update-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@update']);
+        // Route::any('/delete-grn/{id}', ['as' => 'delete-grn', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@destroy']);
+        // ========================Quality Department End========
+        //All list
+        Route::get('/list-material-sent-to-quality', ['as' => 'list-material-sent-to-quality', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@getAllListMaterialSentFromQuality']);
+        Route::get('/list-material-sent-to-quality-businesswise/{id}', ['as' => 'list-material-sent-to-quality-businesswise', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@getAllListMaterialSentFromQualityBusinessWise']);
+
+        Route::get('/list-rejected-chalan-po-wise', ['as' => 'list-rejected-chalan-po-wise', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@getAllListMaterialSentFromQuality']);
+
+        
+    });
     Route::group(['prefix' => 'financedept'], function () {
+        Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
     
         Route::get('/forward-the-purchase-order-to-the-owner-for-sanction/{purchase_orders_id}/{business_id}', ['as' => 'forward-the-purchase-order-to-the-owner-for-sanction', 'uses' => 'App\Http\Controllers\Organizations\Finance\FinanceController@forwardPurchaseOrderToTheOwnerForSanction']);
         Route::get('/list-accepted-grn-srn-finance/{purchase_orders_id}', ['as' => 'list-accepted-grn-srn-finance', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@listAcceptedGrnSrnFinance']);
@@ -467,8 +401,8 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-send-to-dispatch', ['as' => 'list-send-to-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@getAllListBusinessFianaceSendToDispatch']);
         
     });
-
     Route::group(['prefix' => 'logisticsdept'], function () {
+        Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
         Route::get('/list-final-production-completed-recive-to-logistics', ['as' => 'list-final-production-completed-recive-to-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\AllListController@getAllCompletedProduction']);
         Route::get('/add-logistics/{business_id}', ['as' => 'add-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\LogisticsController@addLogistics']);
         Route::post('/store-logistics', ['as' => 'store-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\LogisticsController@storeLogistics']);
@@ -492,6 +426,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::any('/delete-transport-name/{id}', ['as' => 'delete-transport-name', 'uses' => 'App\Http\Controllers\Organizations\Logistics\NameOfTransportController@destroy']);
     });
     Route::group(['prefix' => 'dispatchdept'], function () {
+        Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
         Route::get('/list-final-production-completed-received-from-fianance', ['as' => 'list-final-production-completed-received-from-fianance', 'uses' => 'App\Http\Controllers\Organizations\Dispatch\AllListController@getAllReceivedFromFianance']);
         Route::get('/add-dispatch/{business_id}', ['as' => 'add-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Dispatch\DispatchController@addDispatch']);
         Route::post('/store-dispatch', ['as' => 'store-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Dispatch\DispatchController@storeDispatch']);
@@ -502,78 +437,132 @@ Route::group(['middleware' => ['admin']], function () {
         // Route::get('/list-logistics', ['as' => 'list-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\AllListController@getAllLogistics']);
         // Route::get('/send-to-fianance/{id}', ['as' => 'send-to-fianance', 'uses' => 'App\Http\Controllers\Organizations\Logistics\LogisticsController@sendToFianance']);
     });
-    // vision-mission
-    Route::get('/list-vision-mission', ['as' => 'list-vision-mission', 'uses' => 'App\Http\Controllers\Admin\CMS\VisionMissionController@index']);
-    Route::get('/add-vision-mission', ['as' => 'add-vision-mission', 'uses' => 'App\Http\Controllers\Admin\CMS\VisionMissionController@add']);
-    Route::post('/add-vision-mission', ['as' => 'add-vision-mission', 'uses' => 'App\Http\Controllers\Admin\CMS\VisionMissionController@store']);
-    Route::get('/edit-vision-mission/{edit_id}', ['as' => 'edit-vision-mission', 'uses' => 'App\Http\Controllers\Admin\CMS\VisionMissionController@edit']);
-    Route::post('/update-vision-mission', ['as' => 'update-vision-mission', 'uses' => 'App\Http\Controllers\Admin\CMS\VisionMissionController@update']);
-    Route::post('/show-vision-mission', ['as' => 'show-vision-mission', 'uses' => 'App\Http\Controllers\Admin\CMS\VisionMissionController@show']);
-   
-    // ==============media============
-    Route::get('/list-services', ['as' => 'list-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@index']);
-    Route::get('/add-services', ['as' => 'add-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@add']);
-    Route::post('/add-services', ['as' => 'add-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@store']);
-    Route::get('/edit-services/{edit_id}', ['as' => 'edit-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@edit']);
-    Route::post('/update-services', ['as' => 'update-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@update']);
-    Route::post('/show-services', ['as' => 'show-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@show']);
-    Route::any('/delete-services/{id}', ['as' => 'delete-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@destroy']);
-    Route::post('/update-active-services', ['as' => 'update-active-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@updateOne']);
+    Route::group(['prefix' => 'hr'], function () {
+        Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
+        // Route::get('/hr-dashboard', ['as' => '/hr-dashboard', 'uses' => 'App\Http\Controllers\Organizations\Dashboard\DashboardController@index']);
+        Route::get('/hr-list-employees', ['as' => 'hr-list-employees', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@index']);
+        Route::get('/hr-add-employees', ['as' => 'hr-add-employees', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@add']);
+        Route::post('/hr-store-employees', ['as' => 'hr-store-employees', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@store']);
+        Route::get('/hr-edit-employees/{id}', ['as' => 'hr-edit-employees', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@edit']);
+        Route::post('/hr-update-employees', ['as' => 'hr-update-employees', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@update']);
+        Route::any('/hr-delete-employees/{id}', ['as' => 'hr-delete-employees', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@destroy']);
 
-    // ================
-    Route::get('/list-testimonial', ['as' => 'list-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@index']);
-    Route::get('/add-testimonial', ['as' => 'add-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@add']);
-    Route::post('/add-testimonial', ['as' => 'add-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@store']);
-    Route::get('/edit-testimonial/{edit_id}', ['as' => 'edit-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@edit']);
-    Route::post('/update-testimonial', ['as' => 'update-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@update']);
-    Route::post('/show-testimonial', ['as' => 'show-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@show']);
-    Route::any('/delete-testimonial/{id}', ['as' => 'delete-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@destroy']);
-    Route::post('/update-active-testimonial', ['as' => 'update-active-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@updateOne']);
+        Route::get('/list-users', ['as' => 'list-users', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@index']);
+        Route::get('/add-users', ['as' => 'add-users', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@addUsers']);
+        Route::post('/add-users', ['as' => 'add-users', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@register']);
+        Route::get('/edit-users/{edit_id}', ['as' => 'edit-users', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@editUsers']);
+        Route::post('/update-users', ['as' => 'update-users', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@update']);
+        Route::any('/delete-users/{id}', ['as' => 'delete-users', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@destroy']);
+        Route::any('/show-users/{id}', ['as' => 'show-users', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@show']);
 
+        Route::get('/cities', ['as' => 'cities', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@getCities']);
+        Route::get('/states', ['as' => 'states', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@getState']);
 
+        Route::get('/list-yearly-leave-management', ['as' => 'list-yearly-leave-management', 'uses' => 'App\Http\Controllers\Organizations\HR\LeaveManagment\LeaveManagmentController@index']);
+        Route::get('/add-yearly-leave-management', ['as' => 'add-yearly-leave-management', 'uses' => 'App\Http\Controllers\Organizations\HR\LeaveManagment\LeaveManagmentController@add']);
+        Route::post('/store-yearly-leave-management', ['as' => 'store-yearly-leave-management', 'uses' => 'App\Http\Controllers\Organizations\HR\LeaveManagment\LeaveManagmentController@store']);
+        Route::get('/edit-yearly-leave-management/{id}', ['as' => 'edit-yearly-leave-management', 'uses' => 'App\Http\Controllers\Organizations\HR\LeaveManagment\LeaveManagmentController@edit']);
+        Route::post('/update-yearly-leave-management', ['as' => 'update-yearly-leave-management', 'uses' => 'App\Http\Controllers\Organizations\HR\LeaveManagment\LeaveManagmentController@update']);
+        Route::any('/delete-yearly-leave-management/{id}', ['as' => 'delete-yearly-leave-management', 'uses' => 'App\Http\Controllers\Organizations\HR\LeaveManagment\LeaveManagmentController@destroy']);
 
-    // ===============Our Products By Nandan 
-
-
-    Route::get('/list-product', ['as' => 'list-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@index']);
-    Route::get('/add-product', ['as' => 'add-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@add']);
-    Route::post('/add-product', ['as' => 'add-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@store']);
-    Route::get('/edit-product/{edit_id}', ['as' => 'edit-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@edit']);
-    Route::post('/update-product', ['as' => 'update-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@update']);
-    Route::post('/show-product', ['as' => 'show-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@show']);
-    Route::any('/delete-product/{id}', ['as' => 'delete-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@destroy']);
-    Route::post('/update-active-product', ['as' => 'update-active-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@updateOne']);
+        Route::get('/list-leaves', ['as' => 'list-leaves', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@index']);
+        Route::get('/add-leaves', ['as' => 'add-leaves', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@add']);
+        Route::post('/store-leaves', ['as' => 'store-leaves', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@store']);
+        Route::get('/edit-leaves/{id}', ['as' => 'edit-leaves', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@edit']);
+        Route::post('/update-leaves', ['as' => 'update-leaves', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@update']);
+        Route::any('/delete-leaves/{id}', ['as' => 'delete-leaves', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@destroy']);
 
 
-// ===============Our Products Details By Nandan 
+        Route::get('/list-leaves-acceptedby-hr', ['as' => 'list-leaves-acceptedby-hr', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@getAllLeavesRequest']);
+        Route::any('/show-leaves/{id}', ['as' => 'show-leaves', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@show']);
+        Route::get('/list-leaves-not-approvedby-hr', ['as' => 'list-leaves-not-approvedby-hr', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@getAllNotApprovedRequest']);
+        Route::get('/list-leaves-approvedby-hr', ['as' => 'list-leaves-approvedby-hr', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@getAllApprovedRequest']);
+
+        Route::post('/check-dates', ['as' => 'check-dates', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@checkDates']);
+
+        // Route::post('/update-status-approved', ['as' => 'update-status-approved', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@updateLabourStatusApproved']);
+        Route::post('/update-status', ['as' => 'update-status', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@updateLabourStatus']);
+
+        Route::post('/update-status-not-approved', ['as' => 'update-status-not-approved', 'uses' => 'App\Http\Controllers\Organizations\HR\Leaves\LeavesController@updateLabourStatusNotApproved']);
+
+        Route::get('/list-notice', ['as' => 'list-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@index']);
+        Route::get('/add-notice', ['as' => 'add-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@add']);
+        Route::post('/add-notice', ['as' => 'add-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@store']);
+        Route::get('/edit-notice/{edit_id}', ['as' => 'edit-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@edit']);
+        Route::post('/update-notice', ['as' => 'update-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@update']);
+        Route::any('/show-notice/{id}', ['as' => 'show-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@show']);
+        Route::any('/delete-notice/{id}', ['as' => 'delete-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@destroy']);
+        Route::post('/update-active-notice', ['as' => 'update-active-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@updateOne']);
+        Route::get('/particular-notice-department-wise', ['as' => 'particular-notice-department-wise', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@departmentWiseNotice']);
+
+    });
+    Route::group(['prefix' => 'cms'], function () {
+
+                Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
+                Route::get('/list-vision-mission', ['as' => 'list-vision-mission', 'uses' => 'App\Http\Controllers\Admin\CMS\VisionMissionController@index']);
+                Route::get('/add-vision-mission', ['as' => 'add-vision-mission', 'uses' => 'App\Http\Controllers\Admin\CMS\VisionMissionController@add']);
+                Route::post('/add-vision-mission', ['as' => 'add-vision-mission', 'uses' => 'App\Http\Controllers\Admin\CMS\VisionMissionController@store']);
+                Route::get('/edit-vision-mission/{edit_id}', ['as' => 'edit-vision-mission', 'uses' => 'App\Http\Controllers\Admin\CMS\VisionMissionController@edit']);
+                Route::post('/update-vision-mission', ['as' => 'update-vision-mission', 'uses' => 'App\Http\Controllers\Admin\CMS\VisionMissionController@update']);
+                Route::post('/show-vision-mission', ['as' => 'show-vision-mission', 'uses' => 'App\Http\Controllers\Admin\CMS\VisionMissionController@show']);
+            
+                // ==============media============
+                Route::get('/list-services', ['as' => 'list-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@index']);
+                Route::get('/add-services', ['as' => 'add-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@add']);
+                Route::post('/add-services', ['as' => 'add-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@store']);
+                Route::get('/edit-services/{edit_id}', ['as' => 'edit-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@edit']);
+                Route::post('/update-services', ['as' => 'update-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@update']);
+                Route::post('/show-services', ['as' => 'show-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@show']);
+                Route::any('/delete-services/{id}', ['as' => 'delete-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@destroy']);
+                Route::post('/update-active-services', ['as' => 'update-active-services', 'uses' => 'App\Http\Controllers\Admin\CMS\ServicesController@updateOne']);
+
+                // ================
+                Route::get('/list-testimonial', ['as' => 'list-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@index']);
+                Route::get('/add-testimonial', ['as' => 'add-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@add']);
+                Route::post('/add-testimonial', ['as' => 'add-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@store']);
+                Route::get('/edit-testimonial/{edit_id}', ['as' => 'edit-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@edit']);
+                Route::post('/update-testimonial', ['as' => 'update-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@update']);
+                Route::post('/show-testimonial', ['as' => 'show-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@show']);
+                Route::any('/delete-testimonial/{id}', ['as' => 'delete-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@destroy']);
+                Route::post('/update-active-testimonial', ['as' => 'update-active-testimonial', 'uses' => 'App\Http\Controllers\Admin\CMS\TestimonialController@updateOne']);
+
+                // ===============Our Products By Nandan 
+                Route::get('/list-product', ['as' => 'list-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@index']);
+                Route::get('/add-product', ['as' => 'add-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@add']);
+                Route::post('/add-product', ['as' => 'add-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@store']);
+                Route::get('/edit-product/{edit_id}', ['as' => 'edit-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@edit']);
+                Route::post('/update-product', ['as' => 'update-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@update']);
+                Route::post('/show-product', ['as' => 'show-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@show']);
+                Route::any('/delete-product/{id}', ['as' => 'delete-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@destroy']);
+                Route::post('/update-active-product', ['as' => 'update-active-product', 'uses' => 'App\Http\Controllers\Admin\CMS\ProductController@updateOne']);
+
+            // ===============Our Products Details By Nandan 
+                Route::get('/list-director-desk', ['as' => 'list-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@index']);
+                Route::get('/add-director-desk', ['as' => 'add-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@add']);
+                Route::post('/add-director-desk', ['as' => 'add-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@store']);
+                Route::get('/edit-director-desk/{edit_id}', ['as' => 'edit-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@edit']);
+                Route::post('/update-director-desk', ['as' => 'update-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@update']);
+                Route::post('/show-director-desk', ['as' => 'show-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@show']);
+                Route::post('/delete-director-desk', ['as' => 'delete-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@destroy']);
+                Route::post('/update-active-director-desk', ['as' => 'update-active-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@updateOne']);
 
 
-    Route::get('/list-director-desk', ['as' => 'list-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@index']);
-    Route::get('/add-director-desk', ['as' => 'add-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@add']);
-    Route::post('/add-director-desk', ['as' => 'add-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@store']);
-    Route::get('/edit-director-desk/{edit_id}', ['as' => 'edit-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@edit']);
-    Route::post('/update-director-desk', ['as' => 'update-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@update']);
-    Route::post('/show-director-desk', ['as' => 'show-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@show']);
-    Route::post('/delete-director-desk', ['as' => 'delete-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@destroy']);
-    Route::post('/update-active-director-desk', ['as' => 'update-active-director-desk', 'uses' => 'App\Http\Controllers\Admin\CMS\DirectorDeskController@updateOne']);
+                Route::get('/list-team', ['as' => 'list-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@index']);
+                Route::get('/add-team', ['as' => 'add-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@add']);
+                Route::post('/add-team', ['as' => 'add-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@store']);
+                Route::get('/edit-team/{edit_id}', ['as' => 'edit-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@edit']);
+                Route::post('/update-team', ['as' => 'update-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@update']);
+                Route::post('/show-team', ['as' => 'show-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@show']);
+                Route::any('/delete-team/{id}', ['as' => 'delete-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@destroy']);
+                Route::post('/update-active-team', ['as' => 'update-active-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@updateOne']);
 
+                // ===============Contact 
+                Route::get('/list-contactus-form', ['as' => 'list-contactus-form', 'uses' => 'App\Http\Controllers\Admin\CMS\ContactUsListController@index']);
+                Route::post('/show-contactus-form', ['as' => 'show-contactus-form', 'uses' => 'App\Http\Controllers\Admin\CMS\ContactUsListController@show']);
+                Route::any('/delete-contactus-form/{id}', ['as' => 'delete-contactus-form', 'uses' => 'App\Http\Controllers\Admin\CMS\ContactUsListController@destroy']);
 
-    Route::get('/list-team', ['as' => 'list-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@index']);
-    Route::get('/add-team', ['as' => 'add-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@add']);
-    Route::post('/add-team', ['as' => 'add-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@store']);
-    Route::get('/edit-team/{edit_id}', ['as' => 'edit-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@edit']);
-    Route::post('/update-team', ['as' => 'update-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@update']);
-    Route::post('/show-team', ['as' => 'show-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@show']);
-    Route::any('/delete-team/{id}', ['as' => 'delete-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@destroy']);
-    Route::post('/update-active-team', ['as' => 'update-active-team', 'uses' => 'App\Http\Controllers\Admin\CMS\TeamController@updateOne']);
-
- // ===============Contact 
- Route::get('/list-contactus-form', ['as' => 'list-contactus-form', 'uses' => 'App\Http\Controllers\Admin\CMS\ContactUsListController@index']);
- Route::post('/show-contactus-form', ['as' => 'show-contactus-form', 'uses' => 'App\Http\Controllers\Admin\CMS\ContactUsListController@show']);
- Route::any('/delete-contactus-form/{id}', ['as' => 'delete-contactus-form', 'uses' => 'App\Http\Controllers\Admin\CMS\ContactUsListController@destroy']);
-
-
-});
+        
+    });
 
 
 

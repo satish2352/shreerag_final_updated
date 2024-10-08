@@ -38,10 +38,6 @@ class AboutRepository
         }
     }
 
-
-
-
-
     public function getById($id){
     try {
             $dataOutputByid = DepartmentsModel::find($id);
@@ -57,10 +53,6 @@ class AboutRepository
             ];
         }
     }
-
-
-
-
 
         public function updateAll($request){
         try { 
@@ -91,47 +83,6 @@ class AboutRepository
             ];
         }
     }
-
-
-
-    // public function updateOne($id){
-    //     try {
-    //         $updateOutput = DepartmentsModel::find($id); // Assuming $request directly contains the ID
-
-    //         if ($updateOutput) {
-    //             $active =  $updateOutput->is_active;
-    //             if($active == '1') {
-    //                 DepartmentsModel::where('id',$id)
-    //                 ->update([
-    //                     'is_active' => '0' 
-    //                 ]); 
-    //             } else {
-    //                 DepartmentsModel::where('id',$id)
-    //                 ->update([
-    //                     'is_active' => '1'
-    //                 ]); 
-    //             }
-
-    //             return [
-    //                 'msg' => 'Slide updated successfully.',
-    //                 'status' => 'success'
-    //             ];
-                   
-    //         } else {
-    //             return [
-    //                 'msg' => 'Data not found.',
-    //                 'status' => 'error'
-    //             ];
-    //         }
-
-          
-    //     } catch (\Exception $e) {
-    //         return [
-    //             'msg' => 'Failed to Update Data.',
-    //             'status' => 'error'
-    //         ];
-    //     }
-    // }
     public function deleteById($id){
             try {
                 $deleteDataById = DepartmentsModel::find($id);

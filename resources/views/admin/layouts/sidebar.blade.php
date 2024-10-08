@@ -21,12 +21,12 @@
                 <ul class="metismenu" id="menu1">
                    
 
-                    <li class="nav-item {{ Request::is('dashboard') ? 'active' : '' }}">
-                        <a  href="{{ route('/dashboard') }}"><i
+                
+                    @if (session()->get('role_id') == config('constants.ROLE_ID.SUPER'))
+                    <li class="nav-item {{ request()->is('/dashboard') ? 'active' : '' }}">
+                        <a  href="{{ route('dashboard') }}"><i
                         class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
                         class="mini-click-non">Dashboard</span></a></li>
-
-                    @if (session()->get('role_id') == config('constants.ROLE_ID.SUPER'))
                         <li
                             class="{{ Request::is('list-organizations', 'organizations-list-employees', 'list-departments', 'list-roles') ? 'active' : '' }}">
                             <a class="has-arrow" href="{{ route('list-organizations') }}" aria-expanded="false">
@@ -64,6 +64,12 @@
 
                     @if (session()->get('role_id') == config('constants.ROLE_ID.HIGHER_AUTHORITY'))
                         <ul class="sidebar-menu" id="nav-accordion">
+                            <li class="nav-item {{ request()->is('owner/dashboard') ? 'active' : '' }}">
+                                <a  href="{{ route('dashboard') }}"><i
+                                class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
+                                class="mini-click-non">Dashboard</span></a></li>
+        
+
                             <li>
                                 <a  href="{{ route('list-users') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-users icon-wrap" aria-hidden="true"></i> <span
@@ -218,6 +224,11 @@
                         </ul>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.PURCHASE'))
+                    <li class="nav-item {{ request()->is('purchase/dashboard') ? 'active' : '' }}">
+                        <a  href="{{ route('dashboard') }}"><i
+                        class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
+                        class="mini-click-non">Dashboard</span></a></li>
+
                         <li class="{{ Request::is('list-purchase') ? 'active' : '' }}">
                             <a class="has-arrow" href="{{ route('list-purchase') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-file-invoice icon-wrap"></i> <span
@@ -293,6 +304,10 @@
 
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.DESIGNER'))
+                    <li class="nav-item {{ request()->is('designdept/dashboard') ? 'active' : '' }}">
+                        <a  href="{{ route('dashboard') }}"><i
+                        class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
+                        class="mini-click-non">Dashboard</span></a></li>
                         <li 
                             class="nav-item {{ request()->is('designdept/list-new-requirements-received-for-design') ? 'active' : '' }}">
                             <a class="" href="{{ route('list-new-requirements-received-for-design') }}"
@@ -329,7 +344,13 @@
                         </li> --}}
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.PRODUCTION'))
+
                         <ul class="sidebar-menu">
+                            <li class="nav-item {{ request()->is('proddept/dashboard') ? 'active' : '' }}">
+                                <a  href="{{ route('dashboard') }}"><i
+                                class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
+                                class="mini-click-non">Dashboard</span></a></li>
+
                             <li
                                 class="nav-item {{ request()->is('proddept/list-new-requirements-received-for-production') ? 'active' : '' }}">
                                 <a href="{{ route('list-new-requirements-received-for-production') }}">
@@ -424,6 +445,11 @@
                         </li> --}}
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.QUALITY'))
+                    <li class="nav-item {{ request()->is('quality/dashboard') ? 'active' : '' }}">
+                        <a  href="{{ route('dashboard') }}"><i
+                        class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
+                        class="mini-click-non">Dashboard</span></a></li>
+
                         <li>
                             <a class="has-arrow" href="{{ route('list-grn') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-file-invoice  icon-wrap"></i> <span class="mini-click-non">GRN
@@ -452,6 +478,11 @@
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.STORE'))
                     
+                    <li class="nav-item {{ request()->is('storedept/dashboard') ? 'active' : '' }}">
+                        <a  href="{{ route('dashboard') }}"><i
+                        class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
+                        class="mini-click-non">Dashboard</span></a></li>
+
                         <li class="nav-item {{ request()->is('storedept/list-accepted-design-from-prod') ? 'active' : '' }}">
                             <a href="{{ route('list-accepted-design-from-prod') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-list icon-wrap"></i> <span class="mini-click-non">All
@@ -540,6 +571,7 @@
                             class="mini-click-non">Delivery Chalan</span></a></li>
                      @endif
                      @if (session()->get('role_id') == config('constants.ROLE_ID.INVENTORY'))
+                     
                      <li class="nav-item {{ request()->is('storedept/list-accepted-design-from-prod') ? 'active' : '' }}">
                         <a href="{{ route('list-accepted-design-from-prod') }}" aria-expanded="false"><i
                                 class="fa big-icon fa-list icon-wrap"></i> <span class="mini-click-non">All
@@ -566,6 +598,10 @@
                 </li>
                      @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.HR'))
+                    <li class="nav-item {{ request()->is('hr/dashboard') ? 'active' : '' }}">
+                        <a  href="{{ route('dashboard') }}"><i
+                        class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
+                        class="mini-click-non">Dashboard</span></a></li>
                         <li>
                             <a class="has-arrow" href="{{ route('list-users') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-user icon-wrap"></i> <span
@@ -672,6 +708,11 @@
 
 
                     @if (session()->get('role_id') == config('constants.ROLE_ID.LOGISTICS'))
+                    <li class="nav-item {{ request()->is('logisticsdept/dashboard') ? 'active' : '' }}">
+                        <a  href="{{ route('dashboard') }}"><i
+                        class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
+                        class="mini-click-non">Dashboard</span></a></li>
+
                     <li class="nav-item {{ request()->is('list-final-production-completed-recive-to-logistics') ? 'active' : '' }}">
                         <a href="{{ route('list-final-production-completed-recive-to-logistics') }}">
                             <i class="fa big-icon fa-check-circle icon-wrap"></i>
@@ -707,6 +748,11 @@
                 @endif
 
                 @if (session()->get('role_id') == config('constants.ROLE_ID.DISPATCH'))
+                <li class="nav-item {{ request()->is('dispatchdept/dashboard') ? 'active' : '' }}">
+                    <a  href="{{ route('dashboard') }}"><i
+                    class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
+                    class="mini-click-non">Dashboard</span></a></li>
+
                 <li class="nav-item {{ request()->is('list-final-production-completed-received-from-fianance') ? 'active' : '' }}">
                     <a href="{{ route('list-final-production-completed-received-from-fianance') }}">
                         <i class="fa big-icon fa-receipt  icon-wrap"></i>
@@ -722,6 +768,10 @@
                 </li>
             @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.CMS'))
+                    <li class="nav-item {{ request()->is('cms/dashboard') ? 'active' : '' }}">
+                        <a  href="{{ route('dashboard') }}"><i
+                        class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
+                        class="mini-click-non">Dashboard</span></a></li>
                        <!-- <li>
                         <a class="has-arrow" href="{{ route('list-product') }}"
                             aria-expanded="false"><i class="fa big-icon fa-envelope icon-wrap"></i> <span

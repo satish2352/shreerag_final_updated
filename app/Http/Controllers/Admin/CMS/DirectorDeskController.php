@@ -136,26 +136,6 @@ class DirectorDeskController extends Controller
                 return $e;
             }
         }
-        // public function destroy(Request $request){
-        //     try {
-        //         $delete_record = $this->service->deleteById($request->delete_id);
-             
-        //         if ($delete_record) {
-        //             $msg = $delete_record['msg'];
-        //             $status = $delete_record['status'];
-        //             if ($status == 'success') {
-        //                 return redirect('list-director-desk')->with(compact('msg', 'status'));
-        //             } else {
-        //                 return redirect()->back()
-        //                     ->withInput()
-        //                     ->with(compact('msg', 'status'));
-        //             }
-        //         }
-        //     } catch (\Exception $e) {
-        //         return $e;
-        //     }
-        // } 
-
         public function destroy(Request $request){
             $delete_data_id = base64_decode($request->id);
             try {

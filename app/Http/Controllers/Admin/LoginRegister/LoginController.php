@@ -23,6 +23,7 @@ class LoginController extends Controller
     }
 
     public function submitLogin(Request $request) {
+        $ses_userId = session()->get('user_id');
         $rules = [
             'email' => 'required | email', 
             'password' => 'required',
@@ -44,7 +45,37 @@ class LoginController extends Controller
             } else {
                 $resp  = self::$loginServe->checkLogin($request);
                 if($resp['status']=='success') {
-                    return redirect('dashboard');
+
+                    if ($ses_userId == '1') {
+                        return redirect('dashboard');
+                    } elseif ($ses_userId == '2') {
+                        return redirect('/owner/dashboard');
+                    } elseif ($ses_userId == '3') {
+                        return redirect('/designdept/dashboard');
+                    } elseif ($ses_userId == '4') {
+                        return redirect('/proddept/dashboard');
+                    } elseif ($ses_userId == '5') {
+                        return redirect('/storedept/dashboard');
+                    } elseif ($ses_userId == '6') {
+                        return redirect('/purchase/dashboard');
+                    } elseif ($ses_userId == '7') {
+                        return redirect('/securitydept/dashboard');
+                    } elseif ($ses_userId == '8') {
+                        return redirect('/quality/dashboard');
+                    } elseif ($ses_userId == '9') {
+                        return redirect('/financedept/dashboard');
+                    } elseif ($ses_userId == '10') {
+                        return redirect('/hr/dashboard');
+                    } elseif ($ses_userId == '11') {
+                        return redirect('/logisticsdept/dashboard');
+                    }  elseif ($ses_userId == '12') {
+                        return redirect('/dispatchdept/dashboard');
+                    } elseif ($ses_userId == '13') {
+                        return redirect('/cms/dashboard');
+                    } else {
+                        // return redirect('dashboard'); // Default dashboard
+                    }
+                    // return redirect('dashboard');
                 } else {
                     return redirect('/login')->with('error', $resp['msg']);
                 }
