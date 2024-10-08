@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="footer-copy-right">
-                    <p>Copyright &copy; {{ date('Y') }} <a href="https://www.sumagoinfotech.com"
+                    <p>Copyright &copy; {{ date('Y') }} <a href="https://web.sumagoinfotech.com"
                             target="_blank"> Made with Passion by <img src="../storage/logs/log.png" width="20px" hight="20px"> Sumago Infotech Pvt. Ltd.</a></p>
                 </div>
             </div>
