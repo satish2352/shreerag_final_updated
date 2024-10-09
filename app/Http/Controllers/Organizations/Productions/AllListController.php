@@ -106,23 +106,25 @@ class AllListController extends Controller
     public function getAllListMaterialRecievedToProduction(){
         try {
             $data_output = $this->service->getAllListMaterialRecievedToProduction();
-        //     $data_output = $this->service->getAllreviseddesign();
-        //     if ($data_output->isNotEmpty()) {
-        //        foreach ($data_output as $data) {
-        //            $business_details_id = $data->id; 
-        //            if (!empty($business_details_id)) {
-        //                $update_data['material_received_from_store'] = '1';
-        //                NotificationStatus::where('material_received_from_store', '0')
-        //                    ->where('business_details_id', $business_details_id)
-        //                    ->update($update_data);
-        //            }
-        //        }
-        //    } else {
-        //        return view('organizations.productions.product.list-recived-material', [
-        //            'data_output' => [],
-        //            'message' => 'No data found for designs received for correction'
-        //        ]);
-        //    }
+            // dd( $data_output);
+            // die();
+           
+            if ($data_output->isNotEmpty()) {
+               foreach ($data_output as $data) {
+                   $business_details_id = $data->id; 
+                   if (!empty($business_details_id)) {
+                       $update_data['material_received_from_store'] = '1';
+                       NotificationStatus::where('material_received_from_store', '0')
+                           ->where('business_details_id', $business_details_id)
+                           ->update($update_data);
+                   }
+               }
+           } else {
+               return view('organizations.productions.product.list-recived-material', [
+                   'data_output' => [],
+                   'message' => 'No data found for designs received for correction'
+               ]);
+           }
 
             return view('organizations.productions.product.list-recived-material', compact('data_output'));
         } catch (\Exception $e) {

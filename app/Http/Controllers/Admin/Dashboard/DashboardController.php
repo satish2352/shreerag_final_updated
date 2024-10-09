@@ -513,25 +513,25 @@ class DashboardController extends Controller {
                 'url' => 'list-owner-final-production-completed-recive-to-logistics',
                 ];
 
-                $logistics_send_to_fianance = AdminView::where('off_canvas_status', '19')
+                $logistics_send_to_fianance = AdminView::where('off_canvas_status', '20')
                 ->where('is_view', '0')
                 ->select('id')
                     ->get();
                 $logistics_send_to_fianance_count = $logistics_send_to_fianance->count();
                 $notifications[] = ['admin_count' => $logistics_send_to_fianance_count,
-                'message' => 'Fianance Dept Production Recevied from Logistics Dept',
+                'message' => 'Fianance Dept Product Recevied from Logistics Dept',
                 'url' => 'recive-owner-logistics-list',
                 ];
 
-                $send_fianance_to_dispatch = AdminView::where('off_canvas_status', '19')
-                ->where('is_view', '0')
-                ->select('id')
-                    ->get();
-                $send_fianance_to_dispatch_count = $send_fianance_to_dispatch->count();
-                $notifications[] = ['admin_count' => $send_fianance_to_dispatch_count,
-                'message' => 'Fianance Dept Production Recevied from Logistics Dept',
-                'url' => 'recive-owner-logistics-list',
-                ];
+                // $send_fianance_to_dispatch = AdminView::where('off_canvas_status', '19')
+                // ->where('is_view', '0')
+                // ->select('id')
+                //     ->get();
+                // $send_fianance_to_dispatch_count = $send_fianance_to_dispatch->count();
+                // $notifications[] = ['admin_count' => $send_fianance_to_dispatch_count,
+                // 'message' => 'Fianance Dept Product send to Dispatch dept',
+                // 'url' => 'recive-owner-logistics-list',
+                // ];
 
                 $received_fianance_to_dispatch = AdminView::where('off_canvas_status', '21')
                 ->where('is_view', '0')
@@ -613,7 +613,17 @@ class DashboardController extends Controller {
                         'message' => 'New Design Received ',
                         'url' => 'list-new-requirements-received-for-production'
                     ];
-                    $count = $received_design_in_prod;
+                      $material_received_for_production_by_store = NotificationStatus::where('off_canvas_status',17)
+                    ->where('material_received_from_store','0')
+                    ->select('id')
+                    ->get();
+                    $material_received_for_production_by_store_count = $material_received_for_production_by_store->count();
+
+                    $notifications[] = ['admin_count' => $material_received_for_production_by_store_count,
+                        'message' => 'Material Received For Production',
+                        'url' => 'list-material-recived'
+                    ];
+                    $count = $received_design_in_prod + $material_received_for_production_by_store_count;
         }
         elseif($ses_userId == '5'){
 
@@ -624,7 +634,7 @@ class DashboardController extends Controller {
             $store_view_req_count = $store_view_req->count();
             $notifications[] = ['admin_count' => $store_view_req_count,
                 'message' => 'New Design Received ',
-                'url' => 'list-new-requirements-received-for-production'
+                'url' => 'list-accepted-design-from-prod'
             ];
 
             $material_received_by_quality = NotificationStatus::where('off_canvas_status',27)
@@ -648,7 +658,19 @@ class DashboardController extends Controller {
                 'message' => 'Material Received For Production',
                 'url' => 'list-material-recived'
             ];
-            $count = $store_view_req_count + $material_received_by_quality_count + $material_received_from_store_count;
+
+
+            // $store_view_req = NotificationStatus::where('off_canvas_status','15')
+            // ->where('store_is_view','0')
+            // ->select('id')
+            // ->get();
+            // $store_view_req_form_count = $store_view_req->count();
+            // $notifications[] = ['admin_count' => $store_view_req_form_count,
+            //     'message' => 'New Design Received ',
+            //     'url' => 'list-accepted-design-from-prod'
+            // ];
+
+            $count = $material_received_by_quality_count + $material_received_from_store_count;
            
         }
         elseif($ses_userId == '6'){
@@ -733,7 +755,7 @@ class DashboardController extends Controller {
             $count = $po_material_received_by_quality_count + $visible_grn_count;
         }
         elseif($ses_userId == '9'){
-            $recived_logistics_to_fianance= NotificationStatus::where('off_canvas_status',19)
+            $recived_logistics_to_fianance= NotificationStatus::where('off_canvas_status',20)
             ->where('logistics_to_fianance_visible','0')
             ->select('id')
             ->get();
@@ -746,17 +768,17 @@ class DashboardController extends Controller {
             $count = $recived_logistics_to_fianance_count;
         }
         elseif($ses_userId == '11'){
-            $visible_grn= NotificationStatus::where('off_canvas_status',18)
+            $production_completed_by_product_dept= NotificationStatus::where('off_canvas_status',18)
             ->where('production_completed','0')
             ->select('id')
             ->get();
-            $visible_grn_count = $visible_grn->count();
+            $production_completed_by_product_dept_count = $production_completed_by_product_dept->count();
 
-            $notifications[] = ['admin_count' => $visible_grn_count,
-                'message' => 'Production Completed',
+            $notifications[] = ['admin_count' => $production_completed_by_product_dept_count,
+                'message' => 'Product Completed by Production Dept',
                 'url' => 'list-final-production-completed-recive-to-logistics'
             ];
-            $count = $po_material_received_by_quality_count;
+            $count = $production_completed_by_product_dept_count;
         }
         elseif($ses_userId == '12'){
           
@@ -770,7 +792,7 @@ class DashboardController extends Controller {
                 'message' => 'Received From Finance',
                 'url' => 'list-final-production-completed-received-from-fianance'
             ];
-            $count = $received_fianance_to_dispatch;
+            $count = $received_fianance_to_dispatch_count;
         }
             return response()->json([
                 'notification_count' => $count,
