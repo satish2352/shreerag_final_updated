@@ -82,13 +82,13 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
-                                                <th data-field="customer_po_number" data-editable="true">PO Number</th>
-                                                <th data-field="product_name" data-editable="true">Product Name</th>
-                                                <th data-field="quantity" data-editable="true">Quantity</th>
-                                                <th data-field="title" data-editable="true">customer Name</th>
-                                                <th data-field="truck_no" data-editable="true">Truck Number</th>
-                                                <th data-field="transport_name" data-editable="true">Transport Name</th>
-                                                <th data-field="vehicle_name" data-editable="true">Vehicle Name</th>
+                                                <th data-field="customer_po_number" data-editable="false">PO Number</th>
+                                                <th data-field="product_name" data-editable="false">Product Name</th>
+                                                <th data-field="quantity" data-editable="false">Quantity</th>
+                                                <th data-field="title" data-editable="false">customer Name</th>
+                                                <th data-field="truck_no" data-editable="false">Truck Number</th>
+                                                <th data-field="transport_name" data-editable="false">Transport Name</th>
+                                                <th data-field="vehicle_name" data-editable="false">Vehicle Name</th>
                                                 
                                             </tr>
 

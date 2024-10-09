@@ -77,13 +77,13 @@ padding-left: 20px !important;
                                     <thead>
                                         <tr>
                                             <th data-field="id">Sr.No.</th>
-                                            <th data-field="employee_name" data-editable="true">Employee Name</th>
-                                            <th data-field="company_name" data-editable="true">Company Name</th>
-                                            <th data-field="email" data-editable="true">Email</th>
-                                            <th data-field="mobile_number" data-editable="true">Mobile Number</th>
-                                            <th data-field="address" data-editable="true">Address</th>
+                                            <th data-field="employee_name" data-editable="false">Employee Name</th>
+                                            <th data-field="company_name" data-editable="false">Company Name</th>
+                                            <th data-field="email" data-editable="false">Email</th>
+                                            <th data-field="mobile_number" data-editable="false">Mobile Number</th>
+                                            <th data-field="address" data-editable="false">Address</th>
                                             <th data-field="image" data-editable="false">Image</th>
-                                            <!-- <th data-field="is_active" data-editable="true">Is Active</th> -->
+                                            <!-- <th data-field="is_active" data-editable="false">Is Active</th> -->
                                             <th data-field="action">Action</th>
                                         </tr>
                                     </thead>

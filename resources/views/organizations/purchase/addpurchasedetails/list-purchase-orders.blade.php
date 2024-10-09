@@ -101,17 +101,17 @@
                       
                       <th data-field="#">#</th>
                       <th data-field="po_id">ID</th>
-                      <th data-field="purchase_orders_id" data-editable="true"> PO Number</th>
-                      <th data-field="vendor_name" data-editable="true"> Name</th>
-                      <th data-field="name" data-editable="true">Company Name</th>
-                      <th data-field="email" data-editable="true">Email</th>
-                      <th data-field="contact_no" data-editable="true">Contact No.</th>
-                      <th data-field="gst_number" data-editable="true">GST Number</th>
-                      <th data-field="payment_terms" data-editable="true">Payment Terms</th>
-                      <th data-field="invoice_date" data-editable="true">Invoice terms</th>
-                      {{-- <th data-field="total" data-editable="true">Total Amount</th> --}}
-                      <th data-field="quote_no" data-editable="true">Quote Number</th>
-                      <th data-field="discount" data-editable="true">Discounts</th>
+                      <th data-field="purchase_orders_id" data-editable="false"> PO Number</th>
+                      <th data-field="vendor_name" data-editable="false"> Name</th>
+                      <th data-field="name" data-editable="false">Company Name</th>
+                      <th data-field="email" data-editable="false">Email</th>
+                      <th data-field="contact_no" data-editable="false">Contact No.</th>
+                      <th data-field="gst_number" data-editable="false">GST Number</th>
+                      <th data-field="payment_terms" data-editable="false">Payment Terms</th>
+                      <th data-field="invoice_date" data-editable="false">Invoice terms</th>
+                      {{-- <th data-field="total" data-editable="false">Total Amount</th> --}}
+                      <th data-field="quote_no" data-editable="false">Quote Number</th>
+                      <th data-field="discount" data-editable="false">Discounts</th>
                       <th data-field="action">Action</th>
                     </tr>
 

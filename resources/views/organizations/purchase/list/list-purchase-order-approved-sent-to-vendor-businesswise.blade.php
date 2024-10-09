@@ -62,13 +62,13 @@
                                                
 
 
-                                                <th data-field="purchase_orders_id" data-editable="true">Purchase Order ID</th>
-                                                <th data-field="client_name" data-editable="true">Client Name</th>
-                                                <th data-field="vendor_company_name" data-editable="true">Client Company Name</th>
-                                                <th data-field="email" data-editable="true">Email</th>
-                                                <th data-field="contact_no" data-editable="true">Phone Number</th>
-                                                {{-- <th data-field="vendor_id" data-editable="true">Vendor</th>                                         
-                                            <th data-field="client_name" data-editable="true">Client Name</th>                                          --}}
+                                                <th data-field="purchase_orders_id" data-editable="false">Purchase Order ID</th>
+                                                <th data-field="client_name" data-editable="false">Client Name</th>
+                                                <th data-field="vendor_company_name" data-editable="false">Client Company Name</th>
+                                                <th data-field="email" data-editable="false">Email</th>
+                                                <th data-field="contact_no" data-editable="false">Phone Number</th>
+                                                {{-- <th data-field="vendor_id" data-editable="false">Vendor</th>                                         
+                                            <th data-field="client_name" data-editable="false">Client Name</th>                                          --}}
                                             </tr>
 
                                         </thead>

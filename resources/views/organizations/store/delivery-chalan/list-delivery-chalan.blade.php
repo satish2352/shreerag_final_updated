@@ -99,10 +99,10 @@
                   <thead>
                     <tr>
                       <th data-field="#">#</th>
-                      <th data-field="customer_po_number" data-editable="true"> PO Number</th>
-                      <th data-field="vendor_name" data-editable="true">Vendor Name</th>
-                      <th data-field="transport_name" data-editable="true">Transport Name</th>
-                      <th data-field="vehicle_name" data-editable="true">Vehicle Name</th>
+                      <th data-field="customer_po_number" data-editable="false"> PO Number</th>
+                      <th data-field="vendor_name" data-editable="false">Vendor Name</th>
+                      <th data-field="transport_name" data-editable="false">Transport Name</th>
+                      <th data-field="vehicle_name" data-editable="false">Vehicle Name</th>
                       
                       <th data-field="action">Action</th>
                     </tr>

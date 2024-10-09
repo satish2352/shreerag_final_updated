@@ -82,12 +82,12 @@
                                             <tr>
 
                                                 <th data-field="id">ID</th>
-                                                <th data-field="purchase_order_id" data-editable="true">Purchase Order No</th>
-                                                <th data-field="grn_no" data-editable="true">GRN No</th>
-                                                <th data-field="store_receipt_no" data-editable="true">SR No</th>
-                                                <th data-field="grn_number" data-editable="true">Title</th>
-                                                <th data-field="grn_date" data-editable="true">Description</th>
-                                                <th data-field="purchase_id" data-editable="true">Remark</th>
+                                                <th data-field="purchase_order_id" data-editable="false">Purchase Order No</th>
+                                                <th data-field="grn_no" data-editable="false">GRN No</th>
+                                                <th data-field="store_receipt_no" data-editable="false">SR No</th>
+                                                <th data-field="grn_number" data-editable="false">Title</th>
+                                                <th data-field="grn_date" data-editable="false">Description</th>
+                                                <th data-field="purchase_id" data-editable="false">Remark</th>
                                                 <th data-field="action" data-editable="false">Action</th>
                                             </tr>
                                         </thead>

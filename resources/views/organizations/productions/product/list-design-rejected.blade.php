@@ -80,11 +80,11 @@ padding-left: 20px !important;
                                         <tr>
                                             
                                             <th data-field="id">ID</th>   
-                                            <th data-field="grn_number" data-editable="true">PO Number</th>
-                                            <th data-field="product_name" data-editable="true">Product Name</th>
-                                            <th data-field="description" data-editable="true">Description</th>
-                                            <th data-field="quantity" data-editable="true">Quantity</th>
-                                            <th data-field="reject_reason" data-editable="true">Reject Reason</th>                                         
+                                            <th data-field="grn_number" data-editable="false">PO Number</th>
+                                            <th data-field="product_name" data-editable="false">Product Name</th>
+                                            <th data-field="description" data-editable="false">Description</th>
+                                            <th data-field="quantity" data-editable="false">Quantity</th>
+                                            <th data-field="reject_reason" data-editable="false">Reject Reason</th>                                         
                                             <th data-field="design_image" data-editable="false">Design Layout</th>
                                             <th data-field="bom_image" data-editable="false">BOM</th>                                                                                                                           
                                         </tr>

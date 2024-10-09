@@ -78,7 +78,7 @@ padding-left: 20px !important;
                                     <thead>
                                         <tr>
                                             <th data-field="id">Sr.No.</th>
-                                            <th data-field="employee_name" data-editable="true">Role Name</th>
+                                            <th data-field="employee_name" data-editable="false">Role Name</th>
                                             <th data-field="action">Action</th>
                                         </tr>
                                     </thead>

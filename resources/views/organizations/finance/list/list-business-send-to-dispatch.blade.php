@@ -82,14 +82,14 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
-                                                <th data-field="customer_po_number" data-editable="true">Customer PO Number</th>
-                                                <th data-field="product_name" data-editable="true">Product Name</th>
-                                                <th data-field="description" data-editable="true">Description</th>
-                                                <th data-field="quantity" data-editable="true">Quantity</th>
-                                                <th data-field="truck_no" data-editable="true">Truck Number</th>
-                                                <th data-field="transport_name" data-editable="true">Transport Name</th>
-                                                <th data-field="vehicle_name" data-editable="true">Vehicle Name</th>
-                                                {{-- <th data-field="store_material_sent_date" data-editable="true">Matrial Recieved Date</th> --}}
+                                                <th data-field="customer_po_number" data-editable="false">Customer PO Number</th>
+                                                <th data-field="product_name" data-editable="false">Product Name</th>
+                                                <th data-field="description" data-editable="false">Description</th>
+                                                <th data-field="quantity" data-editable="false">Quantity</th>
+                                                <th data-field="truck_no" data-editable="false">Truck Number</th>
+                                                <th data-field="transport_name" data-editable="false">Transport Name</th>
+                                                <th data-field="vehicle_name" data-editable="false">Vehicle Name</th>
+                                                {{-- <th data-field="store_material_sent_date" data-editable="false">Matrial Recieved Date</th> --}}
                                                 {{-- <th data-field="design_image" data-editable="false">Design Layout</th>
                                                 <th data-field="bom_image" data-editable="false">BOM</th> --}}
                                                 

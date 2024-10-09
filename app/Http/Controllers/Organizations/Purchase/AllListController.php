@@ -48,13 +48,14 @@ class AllListController extends Controller
 
         try {
             $data_output = $this->service->getAllListMaterialReceivedForPurchase();
+            
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
                     $business_details_id = $data->id; 
                     if (!empty($business_details_id)) {
                         $update_data['purchase_is_view'] = '1';
                         NotificationStatus::where('purchase_is_view', '0')
-                            ->where('business_details_id', $business_details_id)
+                            ->where('id', $business_details_id)
                             ->update($update_data);
                     }
                 }
@@ -115,6 +116,7 @@ class AllListController extends Controller
         try {
 
             $data_output = $this->service->getAllListPurchaseOrderMailSentToVendor();
+
             return view('organizations.purchase.list.list-purchase-order-approved-sent-to-vendor', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
@@ -134,13 +136,14 @@ class AllListController extends Controller
         try {
 
             $data_output = $this->service->getAllListSubmitedPurchaeOrderByVendor();
+          
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
                     $business_id = $data->id; 
                     if (!empty($business_id)) {
                         $update_data['po_send_to_vendor'] = '1';
                         NotificationStatus::where('po_send_to_vendor', '0')
-                            ->where('business_id', $business_id)
+                            ->where('id', $business_id)
                             ->update($update_data);
                     }
                 }

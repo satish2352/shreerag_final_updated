@@ -80,10 +80,10 @@ padding-left: 20px !important;
                                         <tr>
                                             <th data-field="id">Sr.No.</th> 
                                             
-                                            <th data-field="product_name" data-editable="true">Product Name</th>
-                                            <th data-field="grn_date" data-editable="true">Description</th>
-                                            {{-- <th data-field="vendor_id" data-editable="true">Vendor</th>                                         
-                                            <th data-field="client_name" data-editable="true">Client Name</th>                                          --}}
+                                            <th data-field="product_name" data-editable="false">Product Name</th>
+                                            <th data-field="grn_date" data-editable="false">Description</th>
+                                            {{-- <th data-field="vendor_id" data-editable="false">Vendor</th>                                         
+                                            <th data-field="client_name" data-editable="false">Client Name</th>                                          --}}
                                         </tr>
 
                                     </thead>

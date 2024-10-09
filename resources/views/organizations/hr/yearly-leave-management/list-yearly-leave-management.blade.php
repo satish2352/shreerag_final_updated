@@ -80,9 +80,9 @@ padding-left: 20px !important;
                                         <tr>
                                             
                                             <th data-field="id">ID</th>
-                                            <th data-field="leave_year" data-editable="true">Year</th>
-                                            <th data-field="name" data-editable="true">Name</th>
-                                            <th data-field="leave_count" data-editable="true">Count</th>
+                                            <th data-field="leave_year" data-editable="false">Year</th>
+                                            <th data-field="name" data-editable="false">Name</th>
+                                            <th data-field="leave_count" data-editable="false">Count</th>
                                             <th data-field="action">Action</th>
                                         </tr>
 

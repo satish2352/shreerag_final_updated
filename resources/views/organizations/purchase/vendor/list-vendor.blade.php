@@ -79,14 +79,14 @@ padding-left: 20px !important;
                                     <thead>
                                         <tr>
                                             <th data-field="id">Sr.No.</th>
-                                            <th data-field="vendor_name" data-editable="true">Vendor Name</th>
-                                            <th data-field="vendor_company_name" data-editable="true">Company Name</th>
-                                            <th data-field="email" data-editable="true">Email</th>
-                                            <th data-field="contact_no" data-editable="true">Conatct No.</th>
-                                            <th data-field="gst_no" data-editable="true">GST No.</th>
-                                            <th data-field="quote_no" data-editable="true">Quote No.</th>
-                                            <th data-field="payment_terms" data-editable="true">Payment terms</th> 
-                                            <th data-field="address" data-editable="true">Address</th>
+                                            <th data-field="vendor_name" data-editable="false">Vendor Name</th>
+                                            <th data-field="vendor_company_name" data-editable="false">Company Name</th>
+                                            <th data-field="email" data-editable="false">Email</th>
+                                            <th data-field="contact_no" data-editable="false">Conatct No.</th>
+                                            <th data-field="gst_no" data-editable="false">GST No.</th>
+                                            <th data-field="quote_no" data-editable="false">Quote No.</th>
+                                            <th data-field="payment_terms" data-editable="false">Payment terms</th> 
+                                            <th data-field="address" data-editable="false">Address</th>
                                             <th data-field="action">Action</th>
                                         </tr>
 

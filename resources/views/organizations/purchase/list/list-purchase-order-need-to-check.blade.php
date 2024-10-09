@@ -79,8 +79,8 @@ padding-left: 20px !important;
                                     <thead>
                                         <tr>
                                             <th data-field="id">Sr.No.</th> 
-                                            <th data-field="product_name" data-editable="true">Product Name</th>
-                                            <th data-field="grn_date" data-editable="true">Description</th>
+                                            <th data-field="product_name" data-editable="false">Product Name</th>
+                                            <th data-field="grn_date" data-editable="false">Description</th>
                                         </tr>
 
                                     </thead>

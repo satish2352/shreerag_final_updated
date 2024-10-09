@@ -82,8 +82,8 @@
                                             <tr>
 
                                                 <th data-field="id">ID</th>
-                                                <th data-field="product_name" data-editable="true">Product Name</th>
-                                                <th data-field="descriptions" data-editable="true">Description</th>
+                                                <th data-field="product_name" data-editable="false">Product Name</th>
+                                                <th data-field="descriptions" data-editable="false">Description</th>
                                                 <th data-field="action" data-editable="false">Action</th>
                                             </tr>
                                         </thead>

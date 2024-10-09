@@ -80,19 +80,19 @@ padding-left: 20px !important;
                                         <tr>
                                             
                                             <th data-field="id">ID</th>
-                                            <th data-field="store_date" data-editable="true">Date</th>
-                                            <!-- <th data-field="receipt_no" data-editable="true">Receipt No.</th> -->
-                                            <th data-field="name" data-editable="true">Name</th>
-                                            <th data-field="contact_number" data-editable="true">Conatct No.</th>
-                                            <!-- <th data-field="address" data-editable="true">Address</th> -->
-                                            <th data-field="quantity" data-editable="true">Quantity</th>
-                                            <!-- <th data-field="description" data-editable="true">Description</th>
-                                            <th data-field="price" data-editable="true">Price</th>
-                                            <th data-field="amount" data-editable="true">Amount</th>
-                                            <th data-field="total" data-editable="true">Total</th> 
-                                            <th data-field="remark" data-editable="true">Remark</th>  -->
-                                            <th data-field="signature" data-editable="true">Signature</th> 
-                                            <th data-field="status" data-editable="true">Status</th> 
+                                            <th data-field="store_date" data-editable="false">Date</th>
+                                            <!-- <th data-field="receipt_no" data-editable="false">Receipt No.</th> -->
+                                            <th data-field="name" data-editable="false">Name</th>
+                                            <th data-field="contact_number" data-editable="false">Conatct No.</th>
+                                            <!-- <th data-field="address" data-editable="false">Address</th> -->
+                                            <th data-field="quantity" data-editable="false">Quantity</th>
+                                            <!-- <th data-field="description" data-editable="false">Description</th>
+                                            <th data-field="price" data-editable="false">Price</th>
+                                            <th data-field="amount" data-editable="false">Amount</th>
+                                            <th data-field="total" data-editable="false">Total</th> 
+                                            <th data-field="remark" data-editable="false">Remark</th>  -->
+                                            <th data-field="signature" data-editable="false">Signature</th> 
+                                            <th data-field="status" data-editable="false">Status</th> 
                                             
                                             <th data-field="action">Action</th>
                                         </tr>

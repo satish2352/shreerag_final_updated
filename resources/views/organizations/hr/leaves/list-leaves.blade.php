@@ -80,13 +80,13 @@ padding-left: 20px !important;
                                         <tr>
                                             
                                             <th data-field="id">ID</th>
-                                            <th data-field="leave_start_date" data-editable="true">Leave start Date</th>
-                                            <th data-field="leave_end_date" data-editable="true">Leave End Date</th>
-                                            <th data-field="leave_day" data-editable="true">Leave Day</th>
-                                            <th data-field="leave_type_id" data-editable="true">Leave Type</th>
-                                            <th data-field="leave_count" data-editable="true">Leave Count</th>
-                                            <th data-field="reason" data-editable="true">Reason</th>
-                                            <th data-field="is_approved" data-editable="true">Status</th>
+                                            <th data-field="leave_start_date" data-editable="false">Leave start Date</th>
+                                            <th data-field="leave_end_date" data-editable="false">Leave End Date</th>
+                                            <th data-field="leave_day" data-editable="false">Leave Day</th>
+                                            <th data-field="leave_type_id" data-editable="false">Leave Type</th>
+                                            <th data-field="leave_count" data-editable="false">Leave Count</th>
+                                            <th data-field="reason" data-editable="false">Reason</th>
+                                            <th data-field="is_approved" data-editable="false">Status</th>
                                             <th data-field="action">Action</th>
                                         </tr>
 

@@ -83,14 +83,14 @@
 
                                                 <th data-field="id">ID</th>
                                                 
-                                                <th data-field="product_name" data-editable="true">Product Name</th>
-                                                <th data-field="purchase_order_id" data-editable="true">Purchase Order No</th>
-                                                <th data-field="grn_no" data-editable="true">GRN No</th>
-                                                <th data-field="store_receipt_no" data-editable="true">SR No</th>
-                                                <th data-field="vendor_name" data-editable="true">Vendor Name</th>
-                                                <th data-field="vendor_company_name" data-editable="true">Vendor Company Name</th>
-                                                <th data-field="vendor_email" data-editable="true">Vendor Email</th>
-                                                <th data-field="contact_no" data-editable="true">Vendor Contact Number</th>
+                                                <th data-field="product_name" data-editable="false">Product Name</th>
+                                                <th data-field="purchase_order_id" data-editable="false">Purchase Order No</th>
+                                                <th data-field="grn_no" data-editable="false">GRN No</th>
+                                                <th data-field="store_receipt_no" data-editable="false">SR No</th>
+                                                <th data-field="vendor_name" data-editable="false">Vendor Name</th>
+                                                <th data-field="vendor_company_name" data-editable="false">Vendor Company Name</th>
+                                                <th data-field="vendor_email" data-editable="false">Vendor Email</th>
+                                                <th data-field="contact_no" data-editable="false">Vendor Contact Number</th>
                                                 <th data-field="action" data-editable="false">Action</th>
                                             </tr>
                                         </thead>

@@ -91,13 +91,13 @@
                                             <tr>
 
                                                 <th data-field="id">ID</th>
-                                                <th data-field="purchase_id" data-editable="true">PO Number</th>
-                                                <th data-field="name" data-editable="true">Name</th>
-                                                <th data-field="date" data-editable="true">Date</th>
-                                                <th data-field="time" data-editable="true">Time</th>
-                                                <th data-field="remark" data-editable="true">Remark</th>
-                                                <th data-field="purchase_order" data-editable="true">Purchase Order</th>
-                                                {{-- <th data-field="status" data-editable="true">Status</th> --}}
+                                                <th data-field="purchase_id" data-editable="false">PO Number</th>
+                                                <th data-field="name" data-editable="false">Name</th>
+                                                <th data-field="date" data-editable="false">Date</th>
+                                                <th data-field="time" data-editable="false">Time</th>
+                                                <th data-field="remark" data-editable="false">Remark</th>
+                                                <th data-field="" data-editable="false">Purchase Order</th>
+                                                {{-- <th data-field="status" data-editable="false">Status</th> --}}
                                                 <th data-field="action">Action</th>
                                             </tr>
 
@@ -112,20 +112,17 @@
                                                     <td>{{ ucwords($data->gatepass_time) }}</td>
                                                     <td>{{ ucwords($data->remark) }}</td>
                                                     <td>
-                                                          
-                                                                <a href="{{ route('list-po-details', base64_encode($data->id)) }}">
-                                                                    {{-- <button data-toggle="tooltip" title="Check Details" class="pd-setting-ed">Check Details</button> --}}
-                                                                </a>
+                                                        <div style="display: flex; align-items: center;">
+                                                               
                                                                 <a href="{{ route('list-po-details', base64_encode($data->id)) }}">
                                                                     <button data-toggle="tooltip"
-                                                                    title="Send Mail" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>Check Details</button></a>
+                                                                    title="View PO" class="pd-setting-ed">Check PO Details</button></a>
                                                             
+                                                        </div>
                                                         </td>
 
                                                     <td>
-
-                                                        
-                                                        <div style="display: flex; align-items: center;">
+                                                                                                              <div style="display: flex; align-items: center;">
                                                             <a href="{{ route('edit-gatepass', base64_encode($data->id)) }}">
                                                                 <button 
                                                                     data-toggle="tooltip" 

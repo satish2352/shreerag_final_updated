@@ -80,8 +80,8 @@ padding-left: 20px !important;
                                         <tr>
                                             
                                             <th data-field="id">ID</th>                                            
-                                            <th data-field="purchase_id" data-editable="true">PO</th>                                    
-                                            <th data-field="remark" data-editable="true">Remark</th>
+                                            <th data-field="purchase_id" data-editable="false">PO</th>                                    
+                                            <th data-field="remark" data-editable="false">Remark</th>
                                             <th data-field="action">Action</th>
                                         </tr>
 

@@ -82,16 +82,16 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
-                                                <th data-field="customer_po_number" data-editable="true">PO Number</th>
-                                                <th data-field="product_name" data-editable="true">Product Name</th>
-                                                <th data-field="quantity" data-editable="true">Quantity</th>
-                                                <th data-field="remark" data-editable="true">Remark</th>
-                                                <th data-field="title" data-editable="true">customer Name</th>
-                                                {{-- <th data-field="vendor_company_name" data-editable="true">Vendor company Name</th>
-                                                <th data-field="vendor_email" data-editable="true">Vendor Email</th>
-                                                <th data-field="contact_no" data-editable="true">Vendor Contact Number</th>
-                                                <th data-field="vendor_address" data-editable="true">Vendor Address</th> --}}
-                                                {{-- <th data-field="store_material_sent_date" data-editable="true">Matrial Recieved Date</th> --}}
+                                                <th data-field="customer_po_number" data-editable="false">PO Number</th>
+                                                <th data-field="product_name" data-editable="false">Product Name</th>
+                                                <th data-field="quantity" data-editable="false">Quantity</th>
+                                                <th data-field="remark" data-editable="false">Remark</th>
+                                                <th data-field="title" data-editable="false">customer Name</th>
+                                                {{-- <th data-field="vendor_company_name" data-editable="false">Vendor company Name</th>
+                                                <th data-field="vendor_email" data-editable="false">Vendor Email</th>
+                                                <th data-field="contact_no" data-editable="false">Vendor Contact Number</th>
+                                                <th data-field="vendor_address" data-editable="false">Vendor Address</th> --}}
+                                                {{-- <th data-field="store_material_sent_date" data-editable="false">Matrial Recieved Date</th> --}}
                                                 {{-- <th data-field="design_image" data-editable="false">Design Layout</th> --}}
                                                 {{-- <th data-field="bom_image" data-editable="false">BOM</th> --}}
                                                 <th data-field="" data-editable="false">Action</th>

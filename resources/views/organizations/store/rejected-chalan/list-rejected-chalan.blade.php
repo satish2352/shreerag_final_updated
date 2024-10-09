@@ -83,11 +83,11 @@
                                             <tr>
 
                                                 <th data-field="id">ID</th>
-                                                <th data-field="purchase_id" data-editable="true">PO Number</th>
-                                                <th data-field="name" data-editable="true">PO Date</th>
-                                                <th data-field="date" data-editable="true">GRN Date</th>
-                                                <th data-field="remark" data-editable="true">Remark</th>
-                                                {{-- <th data-field="status" data-editable="true">Status</th> --}}
+                                                <th data-field="purchase_id" data-editable="false">PO Number</th>
+                                                <th data-field="name" data-editable="false">PO Date</th>
+                                                <th data-field="date" data-editable="false">GRN Date</th>
+                                                <th data-field="remark" data-editable="false">Remark</th>
+                                                {{-- <th data-field="status" data-editable="false">Status</th> --}}
                                                 <th data-field="action">Action</th>
                                             </tr>
 

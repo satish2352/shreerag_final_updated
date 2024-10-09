@@ -82,10 +82,10 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
-                                                <th data-field="grn_number" data-editable="true">Product Name</th>
-                                                <th data-field="grn_date" data-editable="true">Description</th>
-                                                <th data-field="purchase_id" data-editable="true">Remark</th>
-                                                {{-- <th data-field="store_material_sent_date" data-editable="true">Matrial Recieved Date</th> --}}
+                                                <th data-field="grn_number" data-editable="false">Product Name</th>
+                                                <th data-field="grn_date" data-editable="false">Description</th>
+                                                <th data-field="purchase_id" data-editable="false">Remark</th>
+                                                {{-- <th data-field="store_material_sent_date" data-editable="false">Matrial Recieved Date</th> --}}
                                                 <th data-field="design_image" data-editable="false">Purchase order</th>
                                                 <th data-field="bom_image" data-editable="false">Genrate Gate Pass</th>
 

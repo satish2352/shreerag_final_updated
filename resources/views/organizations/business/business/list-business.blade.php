@@ -82,19 +82,19 @@
                                     <thead>
                                         <tr>
                                             <th data-field="id">Sr.No.</th>
-                                            <th data-field="customer_po_number" data-editable="true">PO Number</th>
-                                            {{-- <th data-field="product_name" data-editable="true">Product Name</th> --}}
-                                            <th data-field="title" data-editable="true">Name</th>
-                                            {{-- <th data-field="quantity" data-editable="true">Quantity</th> --}}
-                                            {{-- <th data-field="rate" data-editable="true">Rate</th> --}}
-                                            <th data-field="po_validity" data-editable="true">PO Validity</th>
-                                            {{-- <th data-field="hsn_number" data-editable="true">HSN Number</th> --}}
-                                            <th data-field="customer_payment_terms" data-editable="true">Payment Terms
+                                            <th data-field="customer_po_number" data-editable="false">PO Number</th>
+                                            {{-- <th data-field="product_name" data-editable="false">Product Name</th> --}}
+                                            <th data-field="title" data-editable="false">Name</th>
+                                            {{-- <th data-field="quantity" data-editable="false">Quantity</th> --}}
+                                            {{-- <th data-field="rate" data-editable="false">Rate</th> --}}
+                                            <th data-field="po_validity" data-editable="false">PO Validity</th>
+                                            {{-- <th data-field="hsn_number" data-editable="false">HSN Number</th> --}}
+                                            <th data-field="customer_payment_terms" data-editable="false">Payment Terms
                                             </th>
-                                            <th data-field="customer_terms_condition" data-editable="true">Terms
+                                            <th data-field="customer_terms_condition" data-editable="false">Terms
                                                 Condition</th>
-                                            <th data-field="remarks" data-editable="true">Remark</th>
-                                            {{-- <th data-field="descriptions" data-editable="true">Description</th> --}}
+                                            <th data-field="remarks" data-editable="false">Remark</th>
+                                            {{-- <th data-field="descriptions" data-editable="false">Description</th> --}}
                                             <th data-field="action">Action</th>
                                         </tr>
 

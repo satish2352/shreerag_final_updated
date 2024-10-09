@@ -82,9 +82,9 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
-                                                <th data-field="customer_po_number" data-editable="true">PO Number</th>
-                                                <th data-field="purchase_id" data-editable="true">Name</th>
-                                                {{-- <th data-field="store_material_sent_date" data-editable="true">Matrial Recieved Date</th> --}}
+                                                <th data-field="customer_po_number" data-editable="false">PO Number</th>
+                                                <th data-field="purchase_id" data-editable="false">Name</th>
+                                                {{-- <th data-field="store_material_sent_date" data-editable="false">Matrial Recieved Date</th> --}}
                                                 {{-- <th data-field="design_image" data-editable="false">Design Layout</th>
                                                 <th data-field="bom_image" data-editable="false">BOM</th> --}}
                                                 <th data-field="" data-editable="false">Action</th>

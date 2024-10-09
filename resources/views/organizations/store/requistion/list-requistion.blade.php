@@ -79,12 +79,12 @@ padding-left: 20px !important;
                                     <thead>
                                         <tr>
                                             <th data-field="id">Sr.No.</th>
-                                            <th data-field="description_id" data-editable="true">Description id</th>
-                                            <th data-field="req_name" data-editable="true">Requistion Name</th>
-                                            <th data-field="req_number" data-editable="true">Requistion No.</th>
-                                            <th data-field="req_date" data-editable="true">Requistion Date</th>
-                                            <th data-field="signature" data-editable="true">Signature</th> 
-                                            <th data-field="status" data-editable="true">Status</th> 
+                                            <th data-field="description_id" data-editable="false">Description id</th>
+                                            <th data-field="req_name" data-editable="false">Requistion Name</th>
+                                            <th data-field="req_number" data-editable="false">Requistion No.</th>
+                                            <th data-field="req_date" data-editable="false">Requistion Date</th>
+                                            <th data-field="signature" data-editable="false">Signature</th> 
+                                            <th data-field="status" data-editable="false">Status</th> 
                                             
                                             <th data-field="action">Action</th>
                                         </tr>

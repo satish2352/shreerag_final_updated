@@ -78,15 +78,15 @@ padding-left: 20px !important;
                                     <thead>
                                         <tr>
                                              <th data-field="id">Sr.No.</th>
-                                            <th data-field="part_number" data-editable="true">Part Number</th>
-                                            <th data-field="description" data-editable="true">Description</th>
-                                            <th data-field="extra_description" data-editable="true">Extra Description</th>
-                                            <th data-field="unit_id" data-editable="true">Unit Name</th>
-                                            <th data-field="hsn_id" data-editable="true">HSN Name</th>
-                                            <th data-field="group_type_id" data-editable="true">Group Name</th>
-                                            <th data-field="rack_id" data-editable="true">Rack Number</th>
-                                            <th data-field="basic_rate" data-editable="true">Basic Rate</th>
-                                            <th data-field="opening_stock" data-editable="true">Open Stock</th>
+                                            <th data-field="part_number" data-editable="false">Part Number</th>
+                                            <th data-field="description" data-editable="false">Description</th>
+                                            <th data-field="extra_description" data-editable="false">Extra Description</th>
+                                            <th data-field="unit_id" data-editable="false">Unit Name</th>
+                                            <th data-field="hsn_id" data-editable="false">HSN Name</th>
+                                            <th data-field="group_type_id" data-editable="false">Group Name</th>
+                                            <th data-field="rack_id" data-editable="false">Rack Number</th>
+                                            <th data-field="basic_rate" data-editable="false">Basic Rate</th>
+                                            <th data-field="opening_stock" data-editable="false">Open Stock</th>
                                             <th data-field="action">Action</th>
                                         </tr>
                                     </thead>
