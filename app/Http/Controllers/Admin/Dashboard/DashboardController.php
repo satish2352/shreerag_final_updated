@@ -738,7 +738,7 @@ class DashboardController extends Controller {
             $po_material_received_by_quality_count = $po_material_received_by_quality->count();
 
             $notifications[] = ['admin_count' => $po_material_received_by_quality_count,
-                'message' => 'Search By PO No',
+                'message' => 'Received PO list',
                 'url' => 'list-grn'
             ];
             
