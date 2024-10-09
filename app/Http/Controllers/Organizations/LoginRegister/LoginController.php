@@ -49,6 +49,7 @@ class LoginController extends Controller
                     $userId = $resp['msg']->id;
                     Session::put('user_id', $userId);
                 }
+                
                 if ($resp['role_id'] == 1) 
                 {
                     return redirect('/dashboard');

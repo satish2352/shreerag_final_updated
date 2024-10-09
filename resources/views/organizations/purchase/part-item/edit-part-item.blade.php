@@ -167,6 +167,24 @@
 
 <script>
     $(document).ready(function() {
+    
+    $("#regForm").on('submit', function(event) {
+        // Prevent form submission to allow trimming of inputs first
+        event.preventDefault();
+
+        // Trim the input values
+        var basicRateInput = $('#basic_rate');
+        var openingStockInput = $('#opening_stock');
+        
+        basicRateInput.val($.trim(basicRateInput.val()));
+        openingStockInput.val($.trim(openingStockInput.val()));
+
+        // Submit the form after trimming
+        this.submit();
+    });
+});
+
+
         // Custom validation rule to check if the input does not contain only spaces
         $.validator.addMethod("spcenotallow", function(value, element) {
             return this.optional(element) || value.trim().length > 0;

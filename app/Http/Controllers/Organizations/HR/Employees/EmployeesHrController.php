@@ -127,7 +127,7 @@ class EmployeesHrController extends Controller
         $validation = Validator::make($request->all(),$rules,$messages);
         if($validation->fails() )
         {
-            return redirect('add-users')
+            return redirect('hr/add-users')
             ->withInput()
             ->withErrors($validation);
         }
@@ -140,10 +140,10 @@ class EmployeesHrController extends Controller
                 $msg = $register_user['msg'];
                 $status = $register_user['status'];
                 if($status=='success') {
-                    return redirect('list-users')->with(compact('msg','status'));
+                    return redirect('hr/list-users')->with(compact('msg','status'));
                 }
                 else {
-                    return redirect('add-users')->withInput()->with(compact('msg','status'));
+                    return redirect('hr/add-users')->withInput()->with(compact('msg','status'));
                 }
             }
             

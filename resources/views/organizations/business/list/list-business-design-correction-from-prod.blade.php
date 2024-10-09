@@ -89,6 +89,9 @@
                                                 <th data-field="reject_reason" data-editable="true">Reject Reason</th>
                                                 <th data-field="design_image" data-editable="false">Design Layout</th>
                                                 <th data-field="bom_image" data-editable="false">BOM</th>
+                                                <th data-field="design_image" data-editable="false">Design Layout</th>
+                                                <th data-field="bom_image" data-editable="false">BOM</th>                                                                                                                           
+                                                <th data-field="reject_reason_prod" data-editable="false">Remark By Production Department</th> 
                                             </tr>
                                         </thead>
                                         <tbody>

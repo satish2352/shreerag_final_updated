@@ -106,8 +106,8 @@
                 </div>
                 <div class="hpanel">
                     <div class="panel-body">
-                        <form action="{{ route('submitLogin') }}" method="POST" id="loginForm">
-                            @csrf
+                        <form action="{{ route('login') }}" method="POST" id="loginForm">
+                          @csrf
                             <div class="form-group">
                                 <label class="control-label" for="username">Email Id</label>
                                 <input type="text"  placeholder="Please enter your email Id" value="" name="email" id="email" class="form-control">
