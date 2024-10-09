@@ -103,11 +103,19 @@
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                     {{-- <td>{{ ucwords($data->store_material_sent_date) }}</td> --}}
-                                                    <td> <a class="img-size" target="_blank"
+                                                    {{-- <td> <a class="img-size" target="_blank"
                                                         href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
                                                         alt="Design"> Click to view</a>
-                                                </td>
-
+                                                </td> --}}
+                                                <td>
+                                                    <div style="display: flex; align-items: center;">
+                                                           
+                                                            <a href="{{ route('list-po-details', base64_encode($data->id)) }}">
+                                                                <button data-toggle="tooltip"
+                                                                title="View PO" class="pd-setting-ed">Check PO Details</button></a>
+                                                        
+                                                    </div>
+                                                    </td>
                                                 <td> 
                                                     <a class="btn btn-sm btn-primary login-submit-cs" type="button"
                                                     href="{{route('add-gatepass-with-po', base64_encode($data->purchase_orders_id))}}"
