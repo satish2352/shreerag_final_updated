@@ -112,7 +112,7 @@ class AllListController extends Controller
                     if (!empty($business_id)) {
                         $update_data['received_material_to quality'] = '1';
                         NotificationStatus::where('received_material_to quality', '0')
-                            ->where('business_id', $business_id)
+                            ->where('id', $business_id)
                             ->update($update_data);
                     }
                 }
