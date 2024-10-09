@@ -32,9 +32,9 @@ class LogisticsServices
             $data = $this->repo->storeLogistics($request);
             
             if ($data) {
-                return ['status' => 'success', 'msg' => 'Rejected Chalan Added Successfully.'];
+                return ['status' => 'success', 'msg' => 'Logistics Form Updated Successfully.'];
             } else {
-                return ['status' => 'error', 'msg' => 'Rejected Chalan Not Added.'];
+                return ['status' => 'error', 'msg' => 'Logistics Form Not Updated.'];
             }
         } catch (\Exception $e) {
             return $e;
