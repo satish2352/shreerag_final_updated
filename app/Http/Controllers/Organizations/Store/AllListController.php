@@ -106,6 +106,7 @@ class AllListController extends Controller
 
         try {
             $data_output = $this->service->getAllListMaterialReceivedFromQuality();
+          
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
                     $business_id = $data->id; 

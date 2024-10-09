@@ -656,7 +656,7 @@ class DashboardController extends Controller {
 
             $notifications[] = ['admin_count' => $material_received_from_store_count,
                 'message' => 'Material Received For Production',
-                'url' => 'list-material-recived'
+                'url' => 'list-material-received-from-quality'
             ];
 
 
