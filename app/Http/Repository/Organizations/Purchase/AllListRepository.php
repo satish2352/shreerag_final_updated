@@ -363,7 +363,7 @@ class AllListRepository
             'vendors.contact_no', 
             'vendors.gst_no', 
             'purchase_orders.updated_at',
-            )->orderBy('purchase_orders.updated_at', 'desc')
+            )->distinct()->orderBy('purchase_orders.updated_at', 'desc')
           ->get();
           
         

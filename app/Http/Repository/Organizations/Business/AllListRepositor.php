@@ -372,7 +372,7 @@ class AllListRepositor
   {
     try {
 
-      $array_to_be_check_business = [config('constants.HIGHER_AUTHORITY.APPROVED_PO_FROM_PURCHASE')];
+      $array_to_be_check_business = [config('constants.HIGHER_AUTHORITY.LIST_PO_TO_BE_APPROVE_FROM_PURCHASE')];
       $array_to_be_check_purchase = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')];
 
       $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
@@ -408,10 +408,9 @@ class AllListRepositor
           'designs.bom_image',
           'designs.design_image',
           'businesses_details.updated_at'
-          )->orderBy('businesses_details.updated_at', 'desc')
+          )->distinct()->orderBy('businesses_details.updated_at', 'desc')
+          
         ->get();
-
-        
       return $data_output;
     } catch (\Exception $e) {
 
@@ -730,7 +729,7 @@ public function getAllListSubmitedPurchaeOrderByVendorOwnerside(){
             'vendors.contact_no', 
             'vendors.gst_no', 
             'purchase_orders.updated_at'
-            )->orderBy('purchase_orders.updated_at', 'desc')->get();
+            )->distinct()->orderBy('purchase_orders.updated_at', 'desc')->get();
      
    
     return $data_output;

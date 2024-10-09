@@ -281,10 +281,10 @@
                 // 'addmore[0][description]': {
                 //     required: true,
                 // },
-                // 'addmore[0][due_date]': {
-                //     required: true,
-                //     minDate: true,
-                // },
+                'addmore[0][due_date]': {
+                    required: true,
+                    minDate: true,
+                },
                 'addmore[0][quantity]': {
                     required: true,
                     digits: true,
@@ -304,9 +304,9 @@
                 // 'addmore[0][description]': {
                 //     required: "Please Enter the Description",
                 // },
-                // 'addmore[0][due_date]': {
-                //     required: "Please Enter the Due Date",
-                // },
+                'addmore[0][due_date]': {
+                    required: "Please Enter the Due Date",
+                },
               
                 'addmore[0][quantity]': {
                     required: "Please Enter the Quantity",
@@ -331,7 +331,38 @@
                 }
             }
         });
+// Custom validation method for minimum date
+$.validator.addMethod("minDate", function(value, element) {
+        var today = new Date();
+        var inputDate = new Date(value);
+        return inputDate >= today;
+    }, "The date must be today or later.");
 
+    // Function to initialize date pickers with min date and disable previous dates
+    function setMinDateForDueDates() {
+        var today = new Date().toISOString().split('T')[0];
+        $('.due-date').attr('min', today); // Set min date to today
+        
+        // Disable previously selected dates
+        $('.due-date').each(function() {
+            var selectedDate = $(this).val();
+            if (selectedDate) {
+                $(this).attr('min', selectedDate);
+            }
+        });
+    }
+    setMinDateForDueDates();
+
+    // Date change event for dynamically updating min dates
+    $(document).on('change', '.due-date', function() {
+        var currentRow = $(this).closest("tr");
+        var dueDate = $(this).val();
+        var nextRow = currentRow.next();
+        if (nextRow.length) {
+            nextRow.find('.due-date').attr('min', dueDate);
+        }
+        setMinDateForDueDates();
+    });
         // Function to initialize validation for dynamically added fields
         function initializeValidation(context) {
             $(context).find('.part-no').each(function() {
@@ -350,15 +381,15 @@
             //         }
             //     });
             // });
-            // $(context).find('.due-date').each(function() {
-            //     $(this).rules("add", {
-            //         required: true,
-            //         minDate: true,
-            //         messages: {
-            //             required: "Please Enter the Due Date",
-            //         }
-            //     });
-            // });
+            $(context).find('.due-date').each(function() {
+                $(this).rules("add", {
+                    required: true,
+                    minDate: true,
+                    messages: {
+                        required: "Please Enter the Due Date",
+                    }
+                });
+            });
           
             $(context).find('.quantity').each(function() {
                 $(this).rules("add", {

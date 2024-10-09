@@ -137,7 +137,7 @@ class DashboardController extends Controller {
         $vision_mission_count = VisionMission::where('is_active',1)->count();
         $director_desk_count = DirectorDesk::where('is_active',1)->count();
         $production_completed_prod_dept_logisitics = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
-        ->where('production_status_id', 1121)->where('store_status_id', 1123)->where('off_canvas_status', 18)
+        ->where('production_status_id', 1119)->where('store_status_id', 1123)->where('off_canvas_status', 17)
         ->where('is_active',1)->count();
         $logistics_list_count = BusinessApplicationProcesses::where('logistics_status_id', 1145)->where('off_canvas_status',19)
         ->where('is_active',1)->count();
