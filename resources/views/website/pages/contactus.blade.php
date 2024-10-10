@@ -274,7 +274,7 @@
               @endif
             </div>
           </div>
-          {{-- <div class="col-md-12 py-3 captcha_set" style="text-align: left;">
+          <div class="col-md-12 py-3 captcha_set" style="text-align: left;">
             {!! NoCaptcha::renderJs() !!}
             {!! NoCaptcha::display() !!}
 
@@ -283,7 +283,7 @@
               <span class="red-text">{{ $errors->first('g-recaptcha-response') }}</span>
             </span>
             @endif
-          </div> --}}
+          </div>
         </div>
           <div class="d-flex justify-content-center" style="display: flex; justify-content:center;">
             <button type="submit" id="submitButton" class="btn formSubmit eduact-btn__curve_button" style="background-color: #243772; color:#fff;"><span

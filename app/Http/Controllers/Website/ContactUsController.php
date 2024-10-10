@@ -30,7 +30,7 @@ public function addContactUs(Request $request) {
         'mobile_number' => 'required|regex:/^(\+\d{1,3}[- ]?)?\d{10}$/',
         'subject' => 'required',
         'message' => 'required',
-        // 'g-recaptcha-response' => 'required|captcha',
+        'g-recaptcha-response' => 'required|captcha',
     ];
     $messages = [   
         'full_name.required' => 'Please Enter Full Name.',
@@ -40,8 +40,8 @@ public function addContactUs(Request $request) {
         'mobile_number.regex' => 'Please Enter a Valid Mobile Number.',
         'subject.required' => 'Please Enter Company Name.',
         'message.required' => 'Please Enter Message.',
-        // 'g-recaptcha-response.captcha' => 'Captcha error! try again later or contact site admin.',
-        // 'g-recaptcha-response.required' =>'Please verify that you are not a robot.',
+        'g-recaptcha-response.captcha' => 'Captcha error! try again later or contact site admin.',
+        'g-recaptcha-response.required' =>'Please verify that you are not a robot.',
     ];
 
     try {
