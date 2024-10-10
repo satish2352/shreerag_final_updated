@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Login | Super Admin</title>
+    <title>Shreerag Engineering And Auto Pvt Ltd</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- favicon
@@ -106,6 +106,22 @@
                 </div>
                 <div class="hpanel">
                     <div class="panel-body">
+                      @if (isset($return_data['msg_alert']) && $return_data['msg_alert'] == 'green')
+                      <div class="alert alert-success" role="alert">
+                          {{ $return_data['msg'] }}
+                      </div>
+                      @endif
+
+                      @if (session('error'))
+                          <div class="alert alert-danger" role="alert">
+                              <p>{{ session()->get('error') }} </p>
+                          </div>
+                      @endif
+                      @if (session('success'))
+                          <div class="alert alert-danger" role="alert">
+                              <p> {{ session('success') }} </p>
+                          </div>
+                      @endif
                         <form action="{{ route('login') }}" method="POST" id="loginForm">
                           @csrf
                             <div class="form-group">
@@ -126,6 +142,16 @@
                                   </div>
                               </div>
                           </div>
+                          <div class="form-group">
+                            {!! NoCaptcha::renderJs() !!}
+                            {!! NoCaptcha::display() !!}
+
+                            @if ($errors->has('g-recaptcha-response'))
+                                <span class="help-block">
+                                    <span class="red-text">{{ $errors->first('g-recaptcha-response') }}</span>
+                                </span>
+                            @endif
+                        </div>
                             <button type="submit" class="btn btn-success btn-block loginbtn">Login</button>
                         </form>
 
