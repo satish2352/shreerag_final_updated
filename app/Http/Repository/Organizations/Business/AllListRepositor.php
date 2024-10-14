@@ -21,51 +21,60 @@ class AllListRepositor
 
 
   public function getAllListForwardedToDesign()
-{
-    try {
-        $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN')];
-        $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
-          $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-        })
-          ->leftJoin('designs', function ($join) {
-            $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-          })
+  {
+      try {
+          $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN')];
   
-          ->leftJoin('businesses', function ($join) {
-            $join->on('business_application_processes.business_id', '=', 'businesses.id');
-          })
-          ->leftJoin('businesses_details', function($join) {
-            $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-        })
-        ->distinct('businesses_details.id')
-        ->where('businesses_details.is_active', true)
-        ->distinct('businesses_details.id')
-            ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
-            ->groupBy('businesses.id','businesses.customer_po_number','businesses.title','businesses_details.id','businesses_details.product_name',
-            'businesses.remarks',
-            'businesses_details.description',
-            'businesses_details.quantity',
-            'businesses_details.rate',
-            'businesses.created_at',
-            )
-            ->select(
-                 'businesses.id',
-                'businesses_details.id',
-                'businesses.title',
-                'businesses.customer_po_number',
-                'businesses.remarks',
-                'businesses_details.product_name',
-                'businesses_details.description',
-                'businesses_details.quantity',
-                'businesses_details.rate',
-                'businesses.created_at',
-                )->orderBy('production.updated_at', 'desc')->get();
-
-        return $data_output;
-    } catch (\Exception $e) {
-        return $e;
-    }
-}
+          $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+                  $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+              })
+              ->leftJoin('designs', function ($join) {
+                  $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+              })
+              ->leftJoin('businesses', function ($join) {
+                  $join->on('business_application_processes.business_id', '=', 'businesses.id');
+              })
+              ->leftJoin('businesses_details', function ($join) {
+                  $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+              })
+              ->where('businesses_details.is_active', true)
+              ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
+              ->groupBy(
+                  'businesses.id',
+                  'businesses.customer_po_number',
+                  'businesses.title',
+                  'businesses_details.id',
+                  'businesses_details.product_name',
+                  'businesses.remarks',
+                  'businesses_details.description',
+                  'businesses_details.quantity',
+                  'businesses_details.rate',
+                  'businesses.created_at',
+                  'production.updated_at' // Added here
+              )
+              ->select(
+                  'businesses.id',
+                  'businesses_details.id',
+                  'businesses.title',
+                  'businesses.customer_po_number',
+                  'businesses.remarks',
+                  'businesses_details.product_name',
+                  'businesses_details.description',
+                  'businesses_details.quantity',
+                  'businesses_details.rate',
+                  'businesses.created_at',
+                  DB::raw('MAX(production.updated_at) as latest_updated_at') // Use the latest update time
+              )
+              ->orderBy('latest_updated_at', 'desc') // Order by the latest update time
+              ->distinct()
+              ->get();
+  
+          return $data_output;
+      } catch (\Exception $e) {
+          return $e;
+      }
+  }
+  
 
   public function getAllListCorrectionToDesignFromProduction()
   {
