@@ -564,7 +564,9 @@ Route::group(['middleware' => ['admin']], function () {
 
         
     });
-
+    Route::group(['prefix' => 'inventory'], function () {
+        Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
+    });
 
 
 // frontend website shreerag path 

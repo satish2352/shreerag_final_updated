@@ -571,7 +571,10 @@
                             class="mini-click-non">Delivery Chalan</span></a></li>
                      @endif
                      @if (session()->get('role_id') == config('constants.ROLE_ID.INVENTORY'))
-                     
+                     <li class="nav-item {{ request()->is('inventory/dashboard') ? 'active' : '' }}">
+                        <a  href="{{ route('dashboard') }}"><i
+                        class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
+                        class="mini-click-non">Dashboard</span></a></li>
                      <li class="nav-item {{ request()->is('storedept/list-accepted-design-from-prod') ? 'active' : '' }}">
                         <a href="{{ route('list-accepted-design-from-prod') }}" aria-expanded="false"><i
                                 class="fa big-icon fa-list icon-wrap"></i> <span class="mini-click-non">All
