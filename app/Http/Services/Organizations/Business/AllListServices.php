@@ -23,7 +23,8 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->getAllListForwardedToDesign();
-       
+            // dd($data_output);
+            // die();
             return $data_output;
 
         } catch (\Exception $e) {

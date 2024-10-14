@@ -211,13 +211,17 @@ public function updateAll($request)
 
         // Handle design image upload
         if ($request->hasFile('design_image')) {
-            $designImageName = $dataOutputNew->id . '_'. $productName .'_'. rand(100000, 999999) . '.' . $request->file('design_image')->getClientOriginalExtension();
+            $formattedProductName = str_replace(' ', '_', $productName);
+            // dd($formattedProductName);
+            // die();
+            $designImageName = $dataOutputNew->id . '_'. $formattedProductName .'_'. rand(100000, 999999) . '.' . $request->file('design_image')->getClientOriginalExtension();
             $dataOutputNew->design_image = $designImageName;
         }
 
         // Handle BOM image upload
         if ($request->hasFile('bom_image')) {
-            $bomImageName = $dataOutputNew->id . '_'. $productName .'_'. rand(100000, 999999) . '.' . $request->file('bom_image')->getClientOriginalExtension();
+            $formattedProductName = str_replace(' ', '_', $productName);
+            $bomImageName = $dataOutputNew->id . '_'. $formattedProductName .'_'. rand(100000, 999999) . '.' . $request->file('bom_image')->getClientOriginalExtension();
             $dataOutputNew->bom_image = $bomImageName;
         }
 
@@ -339,11 +343,12 @@ public function updateAll($request)
 
                   // $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
         $update_data_admin['off_canvas_status'] = 14;
-        // $update_data_admin['is_view'] = '0';
+        $update_data_business['off_canvas_status'] = 14;
+        $update_data_admin['is_view'] = '0';
         AdminView::where('business_details_id', $business_application->business_details_id)
                 ->update($update_data_admin);
                 NotificationStatus::where('business_details_id', $business_application->business_details_id)
-                ->update($update_data_admin);
+                ->update($update_data_business);
             }
     
             $return_data['designImageName'] = $designImageName;

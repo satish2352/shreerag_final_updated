@@ -435,7 +435,7 @@ class DashboardController extends Controller {
                     ->get();
                 $received_correction_design_count = $received_correction_design->count();
                 $notifications[] = ['admin_count' => $received_correction_design_count,
-                'message' => 'Production Dept Rejected Design and Received Design Dept',
+                'message' => 'Production Dept Design Rejected and Received Design Dept',
                 'url' => 'list-design-correction',
                 ];
                 $material_ask_prod_to_store = AdminView::where('off_canvas_status', '15')
@@ -576,19 +576,19 @@ class DashboardController extends Controller {
 
                    $notifications[] = ['admin_count' => $design_rejected_prod_dept_count,
                        'message' => 'Product Department Design Accepted',
-                       'url' => 'designdept/list-accept-design-by-production'
+                       'url' => 'list-accept-design-by-production'
                    ];
 
 
                     $design_accepted_prod_dept= NotificationStatus::where('off_canvas_status',15)
-                    ->where('prod_design_accepted','0')
+                    ->where('designer_is_view_accepted_design','0')
                     ->select('id')
                     ->get();
                     $design_accepted_prod_count = $design_accepted_prod_dept->count();
 
                     $notifications[] = ['admin_count' => $design_accepted_prod_count,
                         'message' => 'Product Department Design Accepted',
-                        'url' => 'designdept/list-accept-design-by-production'
+                        'url' => 'list-accept-design-by-production'
                     ];
                     $design_rejected_prod_dept= NotificationStatus::where('off_canvas_status',13)
                     ->where('prod_design_rejected','0')
@@ -613,6 +613,17 @@ class DashboardController extends Controller {
                         'message' => 'New Design Received ',
                         'url' => 'list-new-requirements-received-for-production'
                     ];
+                    $revised_received_design = NotificationStatus::where('off_canvas_status',14)
+                    ->where('prod_is_view_revised','0')
+                    ->select('id')
+                    ->get();
+                    $revised_received_design_count = $revised_received_design->count();
+
+                    $notifications[] = ['admin_count' => $revised_received_design_count,
+                        'message' => 'Revised Design List',
+                        'url' => 'list-revislist-material-reciveded-design'
+                    ];
+
                       $material_received_for_production_by_store = NotificationStatus::where('off_canvas_status',17)
                     ->where('material_received_from_store','0')
                     ->select('id')
@@ -623,11 +634,11 @@ class DashboardController extends Controller {
                         'message' => 'Material Received For Production',
                         'url' => 'list-material-recived'
                     ];
-                    $count = $received_design_in_prod + $material_received_for_production_by_store_count;
+                    $count = $received_design_in_prod + $revised_received_design_count + $material_received_for_production_by_store_count;
         }
         elseif($ses_userId == '5'){
 
-            $store_view_req = NotificationStatus::where('off_canvas_status','15')
+            $store_view_req = NotificationStatus::where('off_canvas_status',15)
             ->where('store_is_view','0')
             ->select('id')
             ->get();
@@ -670,7 +681,7 @@ class DashboardController extends Controller {
             //     'url' => 'list-accepted-design-from-prod'
             // ];
 
-            $count = $material_received_by_quality_count + $material_received_from_store_count;
+            $count = $store_view_req_count + $material_received_by_quality_count + $material_received_from_store_count;
            
         }
         elseif($ses_userId == '6'){

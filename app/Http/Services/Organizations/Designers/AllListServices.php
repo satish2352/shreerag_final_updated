@@ -18,7 +18,7 @@ class AllListServices
     public function acceptdesignbyProduct(){
         try {
             $data_output = $this->repo->acceptdesignbyProduct();
-        
+          
             return $data_output;
         } catch (\Exception $e) {
             return $e;

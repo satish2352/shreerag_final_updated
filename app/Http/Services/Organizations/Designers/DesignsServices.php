@@ -55,6 +55,7 @@ use Config;
             $return_data = $this->repo->updateAll($request);
    
             $productName = $return_data['product_name']; 
+            $formattedProductName = str_replace(' ', '_', $productName);
             $path = Config::get('FileConstant.DESIGNS_ADD');
             if ($request->hasFile('design_image')) {
                 if ($return_data['design_image']) {
@@ -63,7 +64,7 @@ use Config;
                     }
 
                 }
-                $englishImageName = $return_data['last_insert_id'] . '_' . $productName .'_'. rand(100000, 999999) . '.' . $request->design_image->extension();
+                $englishImageName = $return_data['last_insert_id'] . '_' . $formattedProductName .'_'. rand(100000, 999999) . '.' . $request->design_image->extension();
                 uploadImage($request, 'design_image', $path, $englishImageName);
                 $slide_data = DesignModel::find($return_data['last_insert_id']);
                 $slide_data->design_image = $englishImageName;
@@ -76,7 +77,7 @@ use Config;
                         removeImage(Config::get('DocumentConstant.DESIGNS_DELETE') . $return_data['bom_image']);
                     }
                 }
-                $marathiImageName = $return_data['last_insert_id'] . '_' . $productName .'_' . rand(100000, 999999) . '.' . $request->bom_image->extension();
+                $marathiImageName = $return_data['last_insert_id'] . '_' . $formattedProductName .'_' . rand(100000, 999999) . '.' . $request->bom_image->extension();
                 uploadImage($request, 'bom_image', $path, $marathiImageName);
                 $slide_data = DesignModel::find($return_data['last_insert_id']);
                 $slide_data->bom_image = $marathiImageName;

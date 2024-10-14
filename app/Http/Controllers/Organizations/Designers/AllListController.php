@@ -25,15 +25,25 @@ class AllListController extends Controller
            
             $data_output = $this->service->acceptdesignbyProduct();
             
-            $first_business_id = optional($data_output->first())->id;
+            // dd($data_output );
+            // die();
 
-            if ($first_business_id) {
-            $update_data['prod_design_accepted'] = '1';
-            NotificationStatus::where('prod_design_accepted', '0')
-                ->where('business_id', $first_business_id) 
-                ->update($update_data);
+        if ($data_output->isNotEmpty()) {
+            foreach ($data_output as $data) {
+                $business_id = $data->id; 
+                if (!empty($business_id)) {
+                    $update_data['designer_is_view_accepted_design'] = '1';
+                    NotificationStatus::where('designer_is_view_accepted_design', '0')
+                        ->where('id', $business_id)
+                        ->update($update_data);
+                }
+            }
+        } else {
+            return view('organizations.designer.list.list-accept-design-by-production', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
         }
-           
             return view('organizations.designer.list.list-accept-design-by-production', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
@@ -44,13 +54,15 @@ class AllListController extends Controller
         try {
             // Retrieve the list of designs received for correction
             $data_output = $this->service->getAllListDesignRecievedForCorrection();
-    
+    // dd($data_output);
+    // die();
             // Check if $data_output is not empty
             if ($data_output->isNotEmpty()) {
                 // Loop through each item in $data_output to process multiple business_ids
                 foreach ($data_output as $data) {
-                    $business_id = $data->business_id; // Get each business_id from the data
-    
+                    $business_id = $data->id; // Get each business_id from the data
+    // dd($business_id);
+    // die();
                     // Check if business_id is valid (not null or empty)
                     if (!empty($business_id)) {
                         // Prepare the update data
@@ -58,7 +70,7 @@ class AllListController extends Controller
     
                         // Update the NotificationStatus where the prod_design_rejected is '0' and business_id matches
                         NotificationStatus::where('prod_design_rejected', '0')
-                            ->where('business_id', $business_id)
+                            ->where('id', $business_id)
                             ->update($update_data);
                     }
                 }

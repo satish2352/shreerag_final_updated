@@ -72,20 +72,20 @@ class ProductionRepository  {
             }
     
             // Fetch the design revision and design model for the business details ID
-            $designRevisionForProdID = DesignRevisionForProd::where('business_details_id', $business_application->business_details_id)->first();
-            $dataOutput = DesignModel::where('business_details_id', $business_application->business_details_id)->first();
+            // $designRevisionForProdID = DesignRevisionForProd::where('business_details_id', $business_application->business_details_id)->first();
+            // $dataOutput = DesignModel::where('business_details_id', $business_application->business_details_id)->first();
     
-            if (!$dataOutput) {
-                return [
-                    'msg' => 'Design model not found',
-                    'status' => 'error',
-                ];
-            }
+            // if (!$dataOutput) {
+            //     return [
+            //         'msg' => 'Design model not found',
+            //         'status' => 'error',
+            //     ];
+            // }
     
-            // Update design model images
-            $dataOutput->design_image = $designRevisionForProdID->design_image;
-            $dataOutput->bom_image = $designRevisionForProdID->bom_image;
-            $dataOutput->save();
+            // // Update design model images
+            // $dataOutput->design_image = $designRevisionForProdID->design_image;
+            // $dataOutput->bom_image = $designRevisionForProdID->bom_image;
+            // $dataOutput->save();
     
             return [
                 'msg' => 'Design accepted and updated successfully',
@@ -143,13 +143,13 @@ class ProductionRepository  {
 
                  // Update admin view and notification status with the new off canvas status
             $update_data_admin['off_canvas_status'] = 13;
+            $update_data_business['off_canvas_status'] = 13;
+            $update_data_admin['is_view'] = '0';
             AdminView::where('business_details_id', $production_data->business_details_id)
-                // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
                 ->update($update_data_admin);
 
             NotificationStatus::where('business_details_id', $production_data->business_details_id)
-                // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
-                ->update($update_data_admin);
+                ->update($update_data_business);
             }
 
         } catch (\Exception $e) {

@@ -89,9 +89,9 @@
                                                 <th data-field="reject_reason" data-editable="false">Reject Reason</th>
                                                 <th data-field="design_image" data-editable="false">Design Layout</th>
                                                 <th data-field="bom_image" data-editable="false">BOM</th>
-                                                <th data-field="design_image" data-editable="false">Design Layout</th>
+                                                {{-- <th data-field="design_image" data-editable="false">Design Layout</th>
                                                 <th data-field="bom_image" data-editable="false">BOM</th>                                                                                                                           
-                                                <th data-field="reject_reason_prod" data-editable="false">Remark By Production Department</th> 
+                                                <th data-field="reject_reason_prod" data-editable="false">Remark By Production Department</th>  --}}
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -120,14 +120,14 @@
                                                         href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
                                                         alt="bill of material" >Click to download</a>
                                                 </td>
-                                                <td> <a class="img-size" target="_blank"
+                                                {{-- <td> <a class="img-size" target="_blank"
                                                     href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_design_image'] }}"
                                                     alt="Design"> Click to view</a>
                                             </td>
                                             <td> <a class="img-size"
                                                     href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_bom_image'] }}"
                                                     alt="bill of material" >Click to download</a>
-                                            </td>
+                                            </td> --}}
                                                 </tr>
                                             @endforeach
                                         </tbody>

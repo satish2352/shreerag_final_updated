@@ -21,45 +21,51 @@ class AllListRepositor
 
 
   public function getAllListForwardedToDesign()
-  {
+{
     try {
-
-      $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN')];
-      $data_output = DesignModel::leftJoin('businesses', function ($join) {
-        $join->on('designs.business_id', '=', 'businesses.id');
-      })
-        ->leftJoin('business_application_processes', function ($join) {
-          $join->on('designs.business_id', '=', 'business_application_processes.business_id');
+        $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN')];
+        $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+          $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
         })
-        ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
-        ->where('businesses.is_active', true)
-        ->distinct('businesses.id')
-        ->select(
-          'businesses.id',
-          'businesses.customer_po_number',
-          // 'businesses.product_name',
-          'businesses.title',
-          // 'businesses.descriptions',
-          // 'businesses.quantity',
-          'businesses.po_validity',
-          // 'businesses.hsn_number',
-          'businesses.customer_payment_terms',
-          'businesses.customer_terms_condition',
-          'businesses.remarks',
-          'businesses.is_active',
-          'designs.business_id',
-          'designs.created_at',
-          'businesses.updated_at'
-          
-        )->orderBy('businesses.updated_at', 'desc')->get();
+          ->leftJoin('designs', function ($join) {
+            $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+          })
+  
+          ->leftJoin('businesses', function ($join) {
+            $join->on('business_application_processes.business_id', '=', 'businesses.id');
+          })
+          ->leftJoin('businesses_details', function($join) {
+            $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+        })
+        ->distinct('businesses_details.id')
+        ->where('businesses_details.is_active', true)
+        ->distinct('businesses_details.id')
+            ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
+            ->groupBy('businesses.id','businesses.customer_po_number','businesses.title','businesses_details.id','businesses_details.product_name',
+            'businesses.remarks',
+            'businesses_details.description',
+            'businesses_details.quantity',
+            'businesses_details.rate',
+            'businesses.created_at',
+            )
+            ->select(
+                 'businesses.id',
+                'businesses_details.id',
+                'businesses.title',
+                'businesses.customer_po_number',
+                'businesses.remarks',
+                'businesses_details.product_name',
+                'businesses_details.description',
+                'businesses_details.quantity',
+                'businesses_details.rate',
+                'businesses.created_at',
+                )->orderBy('production.updated_at', 'desc')->get();
 
-      return $data_output;
+        return $data_output;
     } catch (\Exception $e) {
-      return $e;
+        return $e;
     }
-  }
-
-
+}
 
   public function getAllListCorrectionToDesignFromProduction()
   {
@@ -94,13 +100,13 @@ class AllListRepositor
           'businesses.remarks',
           'businesses.is_active',
           'production.business_id',
+          // 'design_revision_for_prod.reject_reason_prod',
           'design_revision_for_prod.reject_reason_prod',
-          'design_revision_for_prod.reject_reason_prod',
-          'design_revision_for_prod.id as design_revision_for_prod_id',
-          'design_revision_for_prod.design_image',
-          'design_revision_for_prod.bom_image',
-          // 'designs.bom_image',
-          // 'designs.design_image',
+          // 'design_revision_for_prod.id as design_revision_for_prod_id',
+          // 'design_revision_for_prod.design_image',
+          // 'design_revision_for_prod.bom_image',
+          'designs.bom_image',
+          'designs.design_image',
           'designs.updated_at'
         )->orderBy('designs.updated_at', 'desc')->get();
       return $data_output;
@@ -151,8 +157,8 @@ class AllListRepositor
           'production.id as productionId',
           'design_revision_for_prod.reject_reason_prod',
           'design_revision_for_prod.id as design_revision_for_prod_id',
-          'design_revision_for_prod.design_image',
-          'design_revision_for_prod.bom_image',
+          'design_revision_for_prod.design_image as re_design_image',
+          'design_revision_for_prod.bom_image as re_bom_image',
           'designs.bom_image',
           'designs.design_image',
           'production.updated_at'

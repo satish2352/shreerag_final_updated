@@ -22,6 +22,7 @@ return new class extends Migration
         $table->boolean('prod_is_view')->default(0);
         $table->boolean('prod_design_accepted')->default(0);
         $table->boolean('prod_design_rejected')->default(0);
+        $table->boolean('designer_is_view_accepted_design')->default(0);
         $table->boolean('design_is_view_resended')->default(0);
         $table->boolean('prod_is_view_revised')->default(0);
         $table->boolean('prod_is_view_material_received')->default(0);

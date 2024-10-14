@@ -88,10 +88,11 @@
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
-                                                {{-- <th data-field="product_name" data-editable="false">Product Name</th> --}}
-                                                <th data-field="title" data-editable="false">Name</th>
-                                                {{-- <th data-field="quantity" data-editable="false">Quantity</th> --}}
-                                                {{-- <th data-field="grn_date" data-editable="false">Description</th> --}}
+                                                <th data-field="title" data-editable="false">Customer Name</th>
+                                                <th data-field="product_name" data-editable="false">Product Name</th>
+                                                <th data-field="quantity" data-editable="false">Quantity</th>
+                                                <th data-field="rate" data-editable="false">Rate</th>
+                                                <th data-field="grn_date" data-editable="false">Description</th>
                                                 <th data-field="purchase_id" data-editable="false">Remark</th>
                                                 <th data-field="date" data-editable="false">Sent Date</th>
                                             </tr>
@@ -103,10 +104,11 @@
 
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
-                                                    {{-- <td>{{ucwords($data->product_name)}}</td> --}}
                                                     <td>{{ucwords($data->title)}}</td>
-                                                    {{-- <td>{{ucwords($data->quantity)}}</td> --}}
-                                                    {{-- <td>{{ ucwords($data->descriptions) }}</td> --}}
+                                                    <td>{{ucwords($data->product_name)}}</td>
+                                                    <td>{{ucwords($data->quantity)}}</td>
+                                                    <td>{{ucwords($data->rate)}}</td>
+                                                    <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                     <td>{{ $data->created_at }}</td>
 

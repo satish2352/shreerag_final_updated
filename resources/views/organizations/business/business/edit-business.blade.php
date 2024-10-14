@@ -258,7 +258,7 @@
                                                                 <label for="remarks">Remark:</label> (optional)
                                                                 <textarea class="form-control english_description" name="remarks" id="remarks"
                                                                     placeholder="Enter the Description">
-                                                                    @if(old('remarks')){{old('remarks')}}@else{{$editDataNew->remarks}}@endif
+                                                                   @if(old('remarks')){{trim(old('remarks'))}}@else{{trim($editDataNew->remarks)}} @endif
                                                                     </textarea>
                                                             </div>
                                                         @endif
@@ -307,7 +307,9 @@
 $("#addEmployeeForm").on('submit', function() {
     // Trim the input value before submitting the form
     var poNumberInput = $('#customer_po_number');
+    var remarksInput = $('#remarks');
     poNumberInput.val($.trim(poNumberInput.val()));
+    remarksInput.val($.trim(remarksInput.val()));
 });
 
 
