@@ -223,8 +223,14 @@ class StoreRepository
     }
     public function updateProductMaterialWiseAdd($request) {
         try {
-            // dd($request->business_details_id);
-          $business_details_id = base64_decode($request->business_details_id);
+            $business_details_id = base64_decode($request->business_details_id);
+
+            $dataOutput_Production = ProductionModel::where('business_details_id', $business_details_id)->firstOrFail();
+            $dataOutput_Production->production_status_quantity_tracking = 'incomplete';
+            $dataOutput_Production->save();
+            // dd($dataOutput_Production);
+            // die();
+        
         
             $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $business_details_id)->firstOrFail();
            

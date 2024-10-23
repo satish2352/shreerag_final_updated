@@ -77,9 +77,9 @@ return $data_output;
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
-    public function updateProductMaterial($request, $completed_quantity) {
+    public function updateProductMaterial($request) {
         try {
-            $result = $this->repo->updateProductMaterial($request, $completed_quantity);
+            $result = $this->repo->updateProductMaterial($request);
             // dd($result);
             // die();
             return $result;

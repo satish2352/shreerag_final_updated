@@ -256,10 +256,10 @@ class ProductionRepository  {
                 ->select(
                     'businesses_details.id',
                     'businesses_details.product_name',
-                    'businesses_details.quantity',
+                    // 'businesses_details.quantity',
                     'businesses_details.description',
                     'production_details.part_item_id',
-                    // 'production_details.quantity',
+                    'production_details.quantity',
                     'production_details.unit',
                     'production_details.business_details_id',
                     'production_details.material_send_production',
@@ -347,11 +347,17 @@ class ProductionRepository  {
         }
     }
     
-public function updateProductMaterial($request, $completed_quantity) {
+public function updateProductMaterial($request) {
     try {
         // Fetch existing production details based on the business_details_id
         $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $request->business_details_id)->get();
 
+        $dataOutput_Production = ProductionModel::where('business_details_id', $request->business_details_id)->firstOrFail();
+        $dataOutput_Production->production_status_quantity_tracking = 'incomplete-store';
+        $dataOutput_Production->save();
+
+// dd($dataOutput_Production);
+// die();
         // Loop through the addmore array
         foreach ($request->addmore as $item) {
             // Check if part_item_id is set and not empty
@@ -389,10 +395,10 @@ public function updateProductMaterial($request, $completed_quantity) {
         }
     
  // Update the BusinessApplicationProcesses status
- $ProductQuantityTracking = CustomerProductQuantityTracking::where('business_details_id', $dataOutput_ProductionDetails->first()->business_details_id)
- ->firstOrFail();
-$ProductQuantityTracking->quantity_tracking_status = config('constants.PRODUCTION_DEPARTMENT.INPROCESS_COMPLETED_QUANLTITY_SEND_TO_LOGISTICS');
-$ProductQuantityTracking->save();
+//  $ProductQuantityTracking = CustomerProductQuantityTracking::where('business_details_id', $dataOutput_ProductionDetails->first()->business_details_id)
+//  ->firstOrFail();
+// $ProductQuantityTracking->quantity_tracking_status = config('constants.PRODUCTION_DEPARTMENT.INPROCESS_COMPLETED_QUANLTITY_SEND_TO_LOGISTICS');
+// $ProductQuantityTracking->save();
   // Track the completed quantity
 // Access the first entry of the collection
 // $firstProductionDetail = $dataOutput_ProductionDetails->first();
@@ -414,8 +420,8 @@ $ProductQuantityTracking->save();
 //     ];
 // }
 
-  dd($quantity_tracking);
-  die();
+//   dd($quantity_tracking);
+//   die();
         return [
             'status' => 'success',
             'message' => 'Production materials updated successfully.',

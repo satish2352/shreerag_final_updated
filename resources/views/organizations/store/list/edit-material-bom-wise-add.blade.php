@@ -81,7 +81,7 @@
                                                 @foreach ($items as $index => $item)
                                                     <tr>
                                                         <td>
-                                                            <input type="text" name="addmore[{{ $index }}][id]" class="form-control" readonly value="{{ $item->id }}">
+                                                            <input type="text" name="addmore[{{ $index }}][id]" class="form-control" readonly value="{{ $index + 1 }}">
                                                         </td>
                                                         <td>
                                                             <select class="form-control part-no" name="addmore[{{ $index }}][part_item_id]">

@@ -49,22 +49,22 @@ class AllListController extends Controller
         try {
             $data_output = $this->service->getAllListDesignRecievedForMaterialBusinessWise($business_id);
         //   
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_details_id = $data->business_details_id; 
-                    if (!empty($business_details_id)) {
-                        $update_data['store_is_view'] = '1';
-                        NotificationStatus::where('store_is_view', '0')
-                            ->where('business_details_id', $business_details_id)
-                            ->update($update_data);
-                    }
-                }
-            } else {
-                return view('organizations.store.list.list-accepted-design-business-wise', [
-                    'data_output' => [],
-                    'message' => 'No data found for designs received for correction'
-                ]);
-            }
+            // if ($data_output->isNotEmpty()) {
+            //     foreach ($data_output as $data) {
+            //         $business_details_id = $data->business_details_id; 
+            //         if (!empty($business_details_id)) {
+            //             $update_data['store_is_view'] = '1';
+            //             NotificationStatus::where('store_is_view', '0')
+            //                 ->where('business_details_id', $business_details_id)
+            //                 ->update($update_data);
+            //         }
+            //     }
+            // } else {
+            //     return view('organizations.store.list.list-accepted-design-business-wise', [
+            //         'data_output' => [],
+            //         'message' => 'No data found for designs received for correction'
+            //     ]);
+            // }
            
             return view('organizations.store.list.list-accepted-design-business-wise', compact('data_output'));
         } catch (\Exception $e) {

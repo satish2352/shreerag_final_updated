@@ -15,6 +15,7 @@ use Carbon;
 
 use App\Models\ {
     Gatepass,
+    PurchaseOrdersModel
     };
 
 class GatepassController extends Controller

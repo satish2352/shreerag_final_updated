@@ -166,26 +166,28 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.3/jquery.validate.min.js"></script>
     <script>
         var i = 0;
     </script>
     <script>
         jQuery.noConflict();
-        function setMinDate() {
+        function setCurrentDateOnly() {
             var today = new Date();
             var day = String(today.getDate()).padStart(2, '0');
             var month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
             var year = today.getFullYear();
             var todayDate = year + '-' + month + '-' + day;
 
-            $('#gatepass_date').attr('min', todayDate);
+            // Set min and max to today's date
+            $('#gatepass_date').attr('min', todayDate); // Disable all previous dates
+            $('#gatepass_date').attr('max', todayDate); // Disable all future dates
+            $('#gatepass_date').val(todayDate); // Set today's date as default value
         }
 
-        // Call the function to set the minimum date
-        setMinDate();
-
+        // Call the function to set the minimum and maximum date
+        setCurrentDateOnly();
         jQuery(document).ready(function($) {
             $("#addDesignsForm").validate({
                 rules: {

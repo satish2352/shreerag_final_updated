@@ -479,6 +479,7 @@ public function getAllNewRequirementBusinessWise($business_id) {
         ->leftJoin('purchase_orders', function($join) {
           $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
         })
+        ->where('production.production_status_quantity_tracking', 'incomplete')
         // ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
         ->where('businesses.is_active',true)
         ->distinct('businesses.id')
