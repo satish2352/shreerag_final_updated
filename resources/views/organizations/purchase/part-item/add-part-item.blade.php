@@ -93,7 +93,7 @@
                                             </div>
                                             
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="rack_id">Rack Number<span class="text-danger">*</span></label>
+                                                <label for="rack_id">Rack Number (optional)</label>
                                                 <select class="form-control" name="rack_id" id="rack_id">
                                                     <option value="">Select Rack Number</option>
                                                     @foreach ($dataRackMaster as $rackMaster)
@@ -171,9 +171,9 @@
                 group_type_id: {
                     required: true
                 },
-                rack_id: {
-                    required: true
-                },
+                // rack_id: {
+                //     required: true
+                // },
                 basic_rate: {
                     required: true,
                     number: true
@@ -201,9 +201,9 @@
                 group_type_id: {
                     required: "Please select a group."
                 },
-                rack_id: {
-                    required: "Please select a rack number."
-                },
+                // rack_id: {
+                //     required: "Please select a rack number."
+                // },
                 basic_rate: {
                     required: "Please enter the basic rate.",
                     number: "Please enter a valid number."

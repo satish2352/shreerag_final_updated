@@ -12,7 +12,8 @@ use App\Models\ {
     Logistics,
     Dispatch,
     AdminView,
-    NotificationStatus
+    NotificationStatus,
+    CustomerProductQuantityTracking
     };
 use Config;
 
@@ -46,6 +47,14 @@ if (!$dataOutput) {
                 $business_application->off_canvas_status = 22;
                 $business_application->save();
 
+
+                 // Track the completed quantity for the given business_details_id
+              $quantity_tracking = CustomerProductQuantityTracking::where('business_details_id', $business_application->business_details_id)->first();
+               
+              $quantity_tracking->quantity_tracking_status = config('constants.DISPATCH_DEPARTMENT.SUBMITTED_COMPLETED_QUANLTITY_DISPATCH_DEPT');
+              $quantity_tracking->save();
+              
+
                 $update_data_admin['off_canvas_status'] = 22;
                 $update_data_business['off_canvas_status'] = 22;
                 $update_data_admin['is_view'] = '0';
@@ -53,6 +62,8 @@ if (!$dataOutput) {
                     ->update($update_data_admin);
                     NotificationStatus::where('business_details_id', $business_application->business_details_id)
                     ->update($update_data_business);
+
+
 
                 return response()->json(['status' => 'success', 'message' => 'Production status updated successfully.']);
             } else {

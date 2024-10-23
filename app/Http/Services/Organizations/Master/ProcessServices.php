@@ -1,13 +1,13 @@
 <?php
 namespace App\Http\Services\Organizations\Master;
-use App\Http\Repository\Organizations\Master\HSNRepository;
+use App\Http\Repository\Organizations\Master\ProcessRepository;
 
 use Config;
 class ProcessServices
 {
 	protected $repo;
     public function __construct(){
-        $this->repo = new HSNRepository();
+        $this->repo = new ProcessRepository();
     }
 
 

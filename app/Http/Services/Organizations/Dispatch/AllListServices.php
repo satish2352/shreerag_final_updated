@@ -35,6 +35,15 @@ class AllListServices
             return $e;
         }
     }
+    public function getAllDispatchClosedProduct(){
+        try {
+          $data_output = $this->repo->getAllDispatchClosedProduct();
+     
+          return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     
     
 }

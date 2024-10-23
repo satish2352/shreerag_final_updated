@@ -12,6 +12,9 @@
             /* Adjust font size if needed */
             /* Add any other styling as per your design */
         }
+        .error{
+            color: red !important;
+        }
     </style>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -50,7 +53,7 @@
                                     <div class="all-form-element-inner">
                                         <form action="{{ route('store-logistics', $editData->id
                                        ) }}"
-                                            method="POST" id="editDesignsForm" enctype="multipart/form-data">
+                                            method="POST" id="editLogisticsForm" enctype="multipart/form-data">
                                             @csrf
                                             <input type="hidden" name="business_id" id=""
                                                     class="form-control" value="{{ $editData->id }}"
@@ -132,6 +135,24 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="from_place">From Place :  <span class="text-danger">*</span></label> 
+                                                    <input type="text" class="form-control" id="from_place"
+                                                     value=" "
+                                                        name="from_place" placeholder="Enter Product Name">
+                                                        @if ($errors->has('from_place'))
+                                                        <span class="red-text"><?php echo $errors->first('from_place', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="to_place">To Place :  <span class="text-danger">*</span></label> 
+                                                    <input type="text" class="form-control" id="to_place"
+                                                     value=" "
+                                                        name="to_place" placeholder="Enter Product Name">
+                                                        @if ($errors->has('to_place'))
+                                                        <span class="red-text"><?php echo $errors->first('to_place', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="truck_no">Truck Number :  <span class="text-danger">*</span></label> 
                                                     <input type="text" class="form-control" id="truck_no"
                                                      value=" "
@@ -140,26 +161,9 @@
                                                         <span class="red-text"><?php echo $errors->first('truck_no', ':message'); ?></span>
                                                     @endif
                                                 </div>
-                                               
-                                                {{-- <div class="col-lg-6 col-md-6 col-sm-6">
-                                                    <div class="form-group">
-                                                        <label for="vendor_id">Vendor Company Name <span class="text-danger">*</span></label>
-                                                            <select class="form-control mb-2" name="vendor_id" id="vendor_id">
-                                                            <option value="" default>Vendor Company Name</option>
-                                                            @foreach ($dataOutputVendor as $data)
-                                                                    <option value="{{ $data['id'] }}" >
-                                                                        {{ $data['vendor_company_name'] }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div> --}}
                                             </div>
-
                                             <div class="container-fluid">
-                                                
-                                            
-                                            
-                                                <div class="login-btn-inner">
+                                                 <div class="login-btn-inner">
                                                     <div class="row">
                                                         <div class="col-lg-5"></div>
                                                         <div class="col-lg-7">
@@ -169,7 +173,6 @@
                                                                     style="margin-bottom:50px">Cancel</a>
                                                                 <button class="btn btn-sm btn-primary login-submit-cs"
                                                                     type="submit" style="margin-bottom:50px">Save Data</button>
-                                                               
                                                             </div>
                                                         </div>
                                                     </div>
@@ -186,11 +189,68 @@
         </div>
     </div>
     </div>
- 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
- 
-
+    <script>
+        $(document).ready(function () {
+            // Custom validation method to prevent spaces
+            $.validator.addMethod("spcenotallow", function (value, element) {
+                return value.trim().length > 0;
+            }, "This field cannot be empty or only spaces.");
+    
+            // Initialize form validation
+            $("#editLogisticsForm").validate({
+                rules: {
+                    vehicle_type_id: {
+                        required: true,
+                    },
+                    transport_name_id: {
+                        required: true,
+                    },
+                    from_place: {
+                        required: true,
+                        spcenotallow: true,
+                    },
+                    to_place: {
+                        required: true,
+                        spcenotallow: true,
+                    },
+                    truck_no: {
+                        required: true,
+                        spcenotallow: true,
+                    }
+                },
+                messages: {
+                    vehicle_type_id: {
+                        required: "Please select the vehicle type.",
+                    },
+                    transport_name_id: {
+                        required: "Please select the transport name.",
+                    },
+                    from_place: {
+                        required: "Please enter the origin place.",
+                        spcenotallow: "Origin place cannot be empty or only spaces.",
+                    },
+                    to_place: {
+                        required: "Please enter the destination place.",
+                        spcenotallow: "Destination place cannot be empty or only spaces.",
+                    },
+                    truck_no: {
+                        required: "Please enter the truck number.",
+                        spcenotallow: "Truck number cannot be empty or only spaces.",
+                    }
+                },
+                errorElement: "span",
+                errorClass: "error",
+                highlight: function (element) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function (element) {
+                    $(element).removeClass('is-invalid');
+                }
+            });
+        });
+    </script>
+    
 @endsection

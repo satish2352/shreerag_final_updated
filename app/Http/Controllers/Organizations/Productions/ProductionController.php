@@ -26,7 +26,7 @@ class ProductionController extends Controller
     public function acceptdesign($id){
         try {
             $acceptdesign = base64_decode($id);
-           
+    
             $update_data = $this->service->acceptdesign($acceptdesign);
             return redirect('proddept/list-accept-design');
         } catch (\Exception $e) {
@@ -51,25 +51,61 @@ class ProductionController extends Controller
             return $e;
         }
     } 
-    // public function acceptProductionCompleted($id){
-    //     try {
-    //         // $accepted = base64_decode($id);
-    //         $update_data = $this->service->acceptProductionCompleted($id);
-    //         return redirect('proddept/list-final-production-completed', compact('update_data'));
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // } 
-    public function acceptProductionCompleted($id){
+    public function editProductQuantityTracking($id){
         try {
-            $update_data = $this->service->acceptProductionCompleted($id);
+            $editData = $this->service->editProductQuantityTracking($id);
+            $dataOutputPartItem = PartItem::where('is_active', true)->get();
+            
+            return view('organizations.productions.product.edit-recived-bussinesswise-quantity-tracking', [
+                'productDetails' => $editData['productDetails'],
+                'dataGroupedById' => $editData['dataGroupedById'],
+                'dataOutputPartItem' => $dataOutputPartItem,
+                'id' => $id
+            ]);
     
             // Redirect to the specified URL without passing the array
-            return redirect('proddept/list-final-production-completed')->with('status', $update_data);
+            
+            // return redirect('proddept/list-final-production-completed')->with('status', $update_data);
         } catch (\Exception $e) {
             return $e;
         }
     }
+    // public function acceptProductionCompleted($id, $completed_quantity){
+    //     try {
+    //         // $accepted = base64_decode($id);
+    //         $update_data = $this->service->acceptProductionCompleted($id, $completed_quantity);
+    //         return redirect('proddept/list-final-production-completed')->with('update_data', $update_data);
+
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // } 
+   // Accept completed production
+   public function acceptProductionCompleted(Request $request, $id)
+   {
+       try {
+           // Get the completed quantity from the form request
+           $completed_quantity = $request->input('completed_quantity');
+
+           // Call the service layer with both $id and $completed_quantity
+           $update_data = $this->service->acceptProductionCompleted($id, $completed_quantity);
+
+           return redirect('proddept/list-final-production-completed')->with('update_data', $update_data);
+
+       } catch (\Exception $e) {
+           return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+       }
+   }
+    // public function acceptProductionCompleted($id){
+    //     try {
+    //         $update_data = $this->service->acceptProductionCompleted($id);
+    
+    //         // Redirect to the specified URL without passing the array
+    //         return redirect('proddept/list-final-production-completed')->with('status', $update_data);
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
     public function editProduct($id) {
         try {
             $editData = $this->service->editProduct($id);
@@ -100,7 +136,9 @@ class ProductionController extends Controller
         }
     
         try {
-            $updateData = $this->service->updateProductMaterial($request);
+            $updateData = $this->service->updateProductMaterial($request, $completed_quantity);
+            dd($updateData);
+            die();
             if ($updateData['status'] == 'success') {
                 return redirect('proddept/list-material-recived')->with(['status' => 'success', 'msg' => $updateData['message']]);
             } else {

@@ -52,4 +52,12 @@ class AllListController extends Controller
         }
     }
     
+    public function getAllDispatchClosedProduct(){
+        try {
+            $data_output = $this->service->getAllDispatchClosedProduct();
+            return view('organizations.dispatch.dispatchdept.list-dispatch-closed-productwise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
 }

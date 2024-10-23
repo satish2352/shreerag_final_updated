@@ -72,7 +72,27 @@ class AllListServices
             return $e;
         }
     }
+    public function getAllListMaterialReceivedFromQualityPOTracking(){
+        try {
+            $return_data = $this->repo->getAllListMaterialReceivedFromQualityPOTracking();
+         
+            return $return_data;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getAllListMaterialReceivedFromQualityPOTrackingBusinessWise($purchase_order_id)
+    {
+        try {
+            $data_output = $this->repo->getAllListMaterialReceivedFromQualityPOTrackingBusinessWise($purchase_order_id);
+        // dd($data_output);
+        // die();
+            return $data_output;
 
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     public function getAllInprocessProductProduction()
     {
         try {

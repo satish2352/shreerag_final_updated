@@ -4,6 +4,9 @@
     color: #fff!important;
     border: 1px solid #fff!important;
 }
+.notification-menu{
+    overflow-y: auto !important;
+}
 </style>
 <!-- ============= pratiksha (21/08/24) ============= change for sidebar changes and change icon -->
 
@@ -140,7 +143,7 @@
                                      class="fa big-icon fa-clipboard-list icon-wrap" aria-hidden="true"></i> <span
                                      class="mini-click-non">Generated GRN Material send Quality Dept to Store </span></a>
                          </li>
-           
+                        
                          <li
                          class="nav-item {{ request()->is('owner/list-owner-material-recived-from-store') ? 'active' : '' }}">
                          <a href="{{ route('list-owner-material-recived-from-store') }}"><i
@@ -301,7 +304,13 @@
                                     class="fa big-icon fa-check-circle icon-wrap"></i> <span
                                     class="mini-click-non">Submited PO by Vendor List</span></a>
                         </li>
-
+                        <li
+                        class="nav-item {{ request()->is('storedept/list-material-received-from-quality-po-tracking') ? 'active' : '' }}">
+                        <a href="{{ route('list-material-received-from-quality-po-tracking') }}">
+                            <i class="fa fa-clipboard-list icon-wrap"></i>
+                            <span class="mini-click-non">Material Received PO Tracking</span>
+                        </a>
+                    </li>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.DESIGNER'))
                     <li class="nav-item {{ request()->is('designdept/dashboard') ? 'active' : '' }}">
@@ -511,6 +520,13 @@
                             </a>
                         </li>
                         <li
+                        class="nav-item {{ request()->is('storedept/list-material-received-from-quality-po-tracking') ? 'active' : '' }}">
+                        <a href="{{ route('list-material-received-from-quality-po-tracking') }}">
+                            <i class="fa fa-clipboard-list icon-wrap"></i>
+                            <span class="mini-click-non">Material Received PO Tracking</span>
+                        </a>
+                    </li>
+                        <li
                         class="nav-item {{ request()->is('storedept/list-product-inprocess-received-from-production') ? 'active' : '' }}">
                         <a href="{{ route('list-product-inprocess-received-from-production') }}">
                             <i class="fa big-icon fa-box-open icon-wrap"></i>
@@ -569,6 +585,9 @@
                         <li><a  href="{{ route('list-delivery-chalan') }}"><i
                             class="fa fa-clipboard-list icon-wrap" aria-hidden="true"></i> <span
                             class="mini-click-non">Delivery Chalan</span></a></li>
+                            <li><a  href="{{ route('list-returnable-chalan') }}"><i
+                                class="fa fa-clipboard-list icon-wrap" aria-hidden="true"></i> <span
+                                class="mini-click-non">Returnable Chalan</span></a></li>
                      @endif
                      @if (session()->get('role_id') == config('constants.ROLE_ID.INVENTORY'))
                      <li class="nav-item {{ request()->is('inventory/dashboard') ? 'active' : '' }}">
@@ -766,7 +785,13 @@
                 <li class="nav-item {{ request()->is('list-dispatch') ? 'active' : '' }}">
                     <a href="{{ route('list-dispatch') }}">
                         <i class="fa big-icon fa-truck icon-wrap"></i>
-                        <span class="mini-click-non">Completed Dispatch</span>
+                        <span class="mini-click-non">Product Dispatch Quantity Wise </span>
+                    </a>
+                </li>
+                <li class="nav-item {{ request()->is('list-dispatch-final-product-close') ? 'active' : '' }}">
+                    <a href="{{ route('list-dispatch-final-product-close') }}">
+                        <i class="fa big-icon fa-truck icon-wrap"></i>
+                        <span class="mini-click-non">Product Dispatch Completed (Close Product)</span>
                     </a>
                 </li>
             @endif

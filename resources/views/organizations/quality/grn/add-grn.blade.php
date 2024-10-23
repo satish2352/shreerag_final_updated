@@ -154,7 +154,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div style="margin-top:20px">
+                                                {{-- <div style="margin-top:20px">
                                                     <table class="table table-bordered" id="dynamicTable">
                                                         <tr>
                                                             <th>Description</th>
@@ -162,7 +162,7 @@
                                                             <th>Actual Quantity</th>
                                                             <th>Accepted Quantity</th>
                                                             <th>Rejected Quantity</th>
-                                                            {{-- <th>Action</th> --}}
+                                                            
                                                         </tr>
                                                         @foreach ($purchase_order_details_data as $item)
                                                             <tr>
@@ -195,13 +195,59 @@
                                                                         placeholder="Enter Rejected Qty"
                                                                         class="form-control rejected_quantity" readonly />
                                                                 </td>
+                                                              
+                                                            </tr>
+                                                        @endforeach
+                                                    </table>
+                                                </div> --}}
+                                                <div style="margin-top:20px">
+                                                    <table class="table table-bordered" id="dynamicTable">
+                                                        <tr>
+                                                            <th>Description</th>
+                                                            <th>PO Quantity</th>
+                                                            <th>Actual Quantity</th>
+                                                            <th>Accepted Quantity</th>
+                                                            <th>Rejected Quantity</th>
+                                                            {{-- <th>Action</th> --}}
+                                                        </tr>
+                                                        @foreach ($purchase_order_details_data as $index => $item)
+                                                            <tr>
+                                                                <input type="hidden" name="addmore[{{ $index }}][edit_id]"
+                                                                    placeholder="Enter Description" class="form-control"
+                                                                    value="{{ $item->id }}" readonly />
+                                                                <td><input type="text" name="addmore[{{ $index }}][description]"
+                                                                        placeholder="Enter Description"
+                                                                        class="form-control"
+                                                                        value="{{ $item->description }}" readonly />
+                                                                </td>
+                                                                <td><input type="text"
+                                                                        name="addmore[{{ $index }}][chalan_quantity]"
+                                                                        placeholder="Enter Chalan Qty"
+                                                                        class="form-control"
+                                                                        value="{{ $item->quantity }}" readonly />
+                                                                </td>
+                                                                <td><input type="text"
+                                                                        name="addmore[{{ $index }}][actual_quantity]"
+                                                                        placeholder="Enter Actual Qty"
+                                                                        class="form-control actual_quantity" />
+                                                                </td>
+                                                                <td><input type="text"
+                                                                        name="addmore[{{ $index }}][accepted_quantity]"
+                                                                        placeholder="Enter Accepted Qty"
+                                                                        class="form-control accepted_quantity" />
+                                                                </td>
+                                                                <td><input type="text"
+                                                                        name="addmore[{{ $index }}][rejected_quantity]"
+                                                                        placeholder="Enter Rejected Qty"
+                                                                        class="form-control rejected_quantity" readonly />
+                                                                </td>
                                                                 {{-- <td><button type="button" name="add" id="add"
                                                                         class="btn btn-success">Add More</button></td> --}}
                                                             </tr>
                                                         @endforeach
                                                     </table>
                                                 </div>
-
+                                                
                                                 <div class="row">
                                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                         <label for="remark">Remark:</label>

@@ -86,6 +86,10 @@
                                                 <th data-field="title" data-editable="false">customer Name</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
+                                                <th data-field="completed_quantity" data-editable="false">Completed Production</th>
+                                                {{-- <th data-field="remark" data-editable="false">Remark</th> --}}
+                                                <th data-field="from_place" data-editable="false">From Place</th>
+                                                <th data-field="to_place" data-editable="false">To Place</th>
                                                 <th data-field="truck_no" data-editable="false">Truck Number</th>
                                                 <th data-field="outdoor_no" data-editable="false">Outdoor Number</th>
                                                 <th data-field="gate_entry" data-editable="false">Gate Entry</th>
@@ -103,6 +107,9 @@
                                                     <td>{{ ucwords($data->title) }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
+                                                    <td>{{ ucwords($data->completed_quantity) }}</td>
+                                                    <td>{{ ucwords($data->from_place) }}</td>
+                                                    <td>{{ ucwords($data->to_place) }}</td>
                                                     <td>{{ ucwords($data->truck_no) }}</td>
                                                     <td>{{ ucwords($data->outdoor_no) }}</td>
                                                     <td>{{ ucwords($data->gate_entry) }}</td>

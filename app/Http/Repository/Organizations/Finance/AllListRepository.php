@@ -518,6 +518,8 @@ class AllListRepository
     try {
     
       $array_to_be_check = [config('constants.FINANCE_DEPARTMENT.LIST_LOGISTICS_RECEIVED_FROM_LOGISTICS')];
+      $array_to_be_quantity_tracking = [ config('constants.FINANCE_DEPARTMENT.RECEVIDE_COMPLETED_QUANLTITY_FROM_LOGISTICS_DEPT_TO_FIANANCE_DEPT')];
+
       $array_to_be_check_new = ['0'];
    
         $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
@@ -547,8 +549,12 @@ class AllListRepository
       ->leftJoin('tbl_vehicle_type', function($join) {
           $join->on('tbl_logistics.vehicle_type_id', '=', 'tbl_vehicle_type.id');
       })
-    
-        ->whereNull('business_application_processes.dispatch_status_id')
+      ->leftJoin('tbl_customer_product_quantity_tracking', function($join) {
+        $join->on('business_application_processes.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id');
+      })
+      ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status',$array_to_be_quantity_tracking)
+
+        // ->whereNull('business_application_processes.dispatch_status_id')
         ->whereIn('business_application_processes.logistics_status_id',$array_to_be_check)
 
         // ->whereIn('purchase_orders.store_receipt_no',$array_to_be_check_new)
@@ -565,6 +571,9 @@ class AllListRepository
           'tbl_transport_name.name',
           'tbl_vehicle_type.name',
           'tbl_logistics.truck_no',
+          'tbl_logistics.from_place',
+          'tbl_logistics.to_place',
+          'tbl_customer_product_quantity_tracking.completed_quantity'
       )
         ->select(
           'businesses.customer_po_number',
@@ -576,6 +585,10 @@ class AllListRepository
           'tbl_transport_name.name as transport_name',
             'tbl_vehicle_type.name as vehicle_name',
             'tbl_logistics.truck_no',
+            'tbl_logistics.from_place',
+            'tbl_logistics.to_place',
+            'tbl_customer_product_quantity_tracking.completed_quantity',
+            
             
         )
         ->get();
@@ -592,6 +605,8 @@ class AllListRepository
     try {
     
       $array_to_be_check = [config('constants.FINANCE_DEPARTMENT.LIST_LOGISTICS_SEND_TO_DISPATCH_DEAPRTMENT')];
+      $array_to_be_quantity_tracking = [ config('constants.FINANCE_DEPARTMENT.SUBMITTED_COMPLETED_QUANLTITY_FROM_FIANANCE_DEPT_TO_DISPATCH_DEPT')];
+
       $array_to_be_check_new = ['0'];
    
 
@@ -623,6 +638,11 @@ class AllListRepository
     ->leftJoin('tbl_vehicle_type', function($join) {
         $join->on('tbl_logistics.vehicle_type_id', '=', 'tbl_vehicle_type.id');
     })
+    ->leftJoin('tbl_customer_product_quantity_tracking', function($join) {
+      $join->on('business_application_processes.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id');
+    })
+    ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status',$array_to_be_quantity_tracking)
+
       ->whereIn('business_application_processes.dispatch_status_id',$array_to_be_check)
       // ->whereIn('purchase_orders.store_receipt_no',$array_to_be_check_new)
       ->where('businesses.is_active',true)
@@ -636,8 +656,11 @@ class AllListRepository
         'businesses_details.description',
         'business_application_processes.id',
         'tbl_logistics.truck_no',
+        'tbl_logistics.from_place',
+        'tbl_logistics.to_place',
         'tbl_transport_name.name',
         'tbl_vehicle_type.name',
+        'tbl_customer_product_quantity_tracking.completed_quantity',
     )
       ->select(
         'businesses.customer_po_number',
@@ -647,8 +670,11 @@ class AllListRepository
         'businesses_details.description',
         'businesses_details.quantity',
           'tbl_logistics.truck_no',
+          'tbl_logistics.from_place',
+          'tbl_logistics.to_place',
           'tbl_transport_name.name as transport_name',
           'tbl_vehicle_type.name as vehicle_name',
+          'tbl_customer_product_quantity_tracking.completed_quantity',
       )
       ->get();
       // ->select(

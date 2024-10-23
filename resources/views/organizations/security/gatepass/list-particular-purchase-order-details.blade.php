@@ -132,7 +132,7 @@
                                         @foreach ($purchaseOrderDetails as $index => $detail)
                                             <tr>
                                                 <td>{{ $index + 1 }}</td>
-                                                <td>{{ $detail->part_no_id }}</td>
+                                                <td>{{ $detail->part_name }}</td>
                                                 <td>{{ $detail->description }}</td>
                                                 <td>{{ $detail->due_date }}</td>
                                                 <td>{{ $detail->quantity }} {{ $detail->unit }}</td>

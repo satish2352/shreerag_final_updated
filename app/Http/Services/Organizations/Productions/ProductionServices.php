@@ -36,26 +36,52 @@ use Config;
         }
     } 
 
-    public function acceptProductionCompleted($id){
-        try {
-           $update_data = $this->repo->acceptProductionCompleted($id);
+    // public function acceptProductionCompleted($id, $completed_quantity){
+    //     try {
+    //        $update_data = $this->repo->acceptProductionCompleted($id, $completed_quantity);
        
-           return $update_data;
-        } catch (\Exception $e) {
-            return $e;
-        }
-    } 
+    //        return $update_data;
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // } 
+    public function acceptProductionCompleted($id, $completed_quantity)
+{
+    try {
+        $update_data = $this->repo->acceptProductionCompleted($id, $completed_quantity);
+        // dd($update_data);
+        // die();
+        return $update_data;
+    } catch (\Exception $e) {
+        return $e;
+    }
+}
+
     public function editProduct($id) {
         try {
             $data_output = $this->repo->editProduct($id);
+            // dd($data_output);
+            // die();
 return $data_output;
         } catch (\Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
-    public function updateProductMaterial($request) {
+
+    public function editProductQuantityTracking($id) {
         try {
-            $result = $this->repo->updateProductMaterial($request);
+            $data_output = $this->repo->editProductQuantityTracking($id);
+         
+return $data_output;
+        } catch (\Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
+    }
+    public function updateProductMaterial($request, $completed_quantity) {
+        try {
+            $result = $this->repo->updateProductMaterial($request, $completed_quantity);
+            // dd($result);
+            // die();
             return $result;
         } catch (\Exception $e) {
             return ['status' => 'error', 'message' => $e->getMessage()];

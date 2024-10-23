@@ -40,6 +40,61 @@ class AllListController extends Controller
             $data_output = $this->service->getAllNewRequirementBusinessWise($business_id);
         //    dd($data_output);
         //    die();
+            // if ($data_output->isNotEmpty()) {
+            //     foreach ($data_output as $data) {
+            //         $business_id = $data->business_details_id; 
+            //         if (!empty($business_id)) {
+            //             $update_data['prod_is_view'] = '1';
+            //             NotificationStatus::where('prod_is_view', '0')
+            //                 ->where('id', $business_id)
+            //                 ->update($update_data);
+            //         }
+            //     }
+            // } else {
+            //     return view('organizations.productions.product.list_design_received_for_production_business_wise', [
+            //         'data_output' => [],
+            //         'message' => 'No data found'
+            //     ]);
+            // }
+            return view('organizations.productions.product.list_design_received_for_production_business_wise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function acceptdesignlist(){
+        try {
+            $data_output = $this->service->getAllacceptdesign();
+            if ($data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
+                    $business_details_id = $data->id; 
+                    if (!empty($business_details_id)) {
+                        $update_data['prod_design_accepted'] = '1';
+                        NotificationStatus::where('prod_design_accepted', '0')
+                            ->where('business_details_id', $business_details_id)
+                            ->update($update_data);
+                    }
+                }
+            } else {
+                return view('organizations.designer.list.list_design_received_from_production_for_correction', [
+                    'data_output' => [],
+                    'message' => 'No data found for designs received for correction'
+                ]);
+            }
+        //     $first_business_id = optional($data_output->first())->id;
+        //     if ($first_business_id) {
+        //     $update_data['prod_design_accepted'] = '1';
+        //     NotificationStatus::where('prod_design_accepted', '0')
+        //         ->where('business_id', $first_business_id) 
+        //         ->update($update_data);
+        // }
+            return view('organizations.productions.product.list-design-accepted', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
+    public function acceptdesignlistBusinessWise($business_id){
+        try {
+            $data_output = $this->service->acceptdesignlistBusinessWise($business_id);
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
                     $business_id = $data->business_details_id; 
@@ -51,34 +106,11 @@ class AllListController extends Controller
                     }
                 }
             } else {
-                return view('organizations.productions.product.list_design_received_for_production', [
+                return view('organizations.productions.product.list-design-accepted-business-wise', [
                     'data_output' => [],
                     'message' => 'No data found'
                 ]);
             }
-            return view('organizations.productions.product.list_design_received_for_production_business_wise', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
-    public function acceptdesignlist(){
-        try {
-            $data_output = $this->service->getAllacceptdesign();
-            $first_business_id = optional($data_output->first())->id;
-            if ($first_business_id) {
-            $update_data['prod_design_accepted'] = '1';
-            NotificationStatus::where('prod_design_accepted', '0')
-                ->where('business_id', $first_business_id) 
-                ->update($update_data);
-        }
-            return view('organizations.productions.product.list-design-accepted', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
-        }
-    } 
-    public function acceptdesignlistBusinessWise($business_id){
-        try {
-            $data_output = $this->service->acceptdesignlistBusinessWise($business_id);
             return view('organizations.productions.product.list-design-accepted-business-wise', compact('data_output'));
         } catch (\Exception $e) {
             return $e;

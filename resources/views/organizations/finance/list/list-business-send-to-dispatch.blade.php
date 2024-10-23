@@ -86,6 +86,10 @@
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="description" data-editable="false">Description</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
+                                                <th data-field="completed_quantity" data-editable="false">Completed Production</th>
+                                                {{-- <th data-field="remark" data-editable="false">Remark</th> --}}
+                                                <th data-field="from_place" data-editable="false">From Place</th>
+                                                <th data-field="to_place" data-editable="false">To Place</th>
                                                 <th data-field="truck_no" data-editable="false">Truck Number</th>
                                                 <th data-field="transport_name" data-editable="false">Transport Name</th>
                                                 <th data-field="vehicle_name" data-editable="false">Vehicle Name</th>
@@ -104,6 +108,9 @@
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
+                                                    <td>{{ ucwords($data->completed_quantity) }}</td>
+                                                    <td>{{ ucwords($data->from_place) }}</td>
+                                                    <td>{{ ucwords($data->to_place) }}</td>
                                                     <td>{{ ucwords($data->truck_no) }}</td>
                                                     <td>{{ ucwords($data->transport_name) }}</td>
                                                     <td>{{ ucwords($data->vehicle_name) }}</td>

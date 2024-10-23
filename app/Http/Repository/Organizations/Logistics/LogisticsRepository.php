@@ -12,7 +12,8 @@ use App\Models\ {
     Logistics,
     Dispatch,
     AdminView,
-    NotificationStatus
+    NotificationStatus,
+    CustomerProductQuantityTracking
     };
 use Config;
 
@@ -31,6 +32,8 @@ public function storeLogistics($request)
             $dataOutput->vehicle_type_id = $request->vehicle_type_id;
             $dataOutput->transport_name_id = $request->transport_name_id;
             $dataOutput->truck_no = $request->truck_no;
+            $dataOutput->from_place = $request->from_place;
+            $dataOutput->to_place = $request->to_place;
             $dataOutput->is_approve = '0';
             $dataOutput->is_active = '1';
             $dataOutput->is_deleted = '0';
@@ -43,6 +46,13 @@ public function storeLogistics($request)
                 $business_application->off_canvas_status =19;
                 $business_application->save();
 
+                // Track the completed quantity for the given business_details_id
+                $quantity_tracking = CustomerProductQuantityTracking::where('business_details_id', $business_application->business_details_id)->first();
+               
+                $quantity_tracking->quantity_tracking_status = config('constants.LOGISTICS_DEPARTMENT.UPDATE_INPROCESS_COMPLETED_QUANLTITY_IN_LOGISTICS_DEPT');
+                $quantity_tracking->save();
+                // dd($quantity_tracking);
+                // die();
                   // $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
             $update_data_admin['off_canvas_status'] = 19;
             $update_data_business['off_canvas_status'] = 19;
@@ -73,6 +83,12 @@ public function sendToFianance($id) {
             $business_application->logistics_status_id = config('constants.LOGISTICS_DEPARTMENT.LOGISTICS_SEND_PRODUCTION_REQUEST_TO_FINANCE');
             $business_application->off_canvas_status =20;
             $business_application->save();
+
+              // Track the completed quantity for the given business_details_id
+              $quantity_tracking = CustomerProductQuantityTracking::where('business_details_id', $business_application->business_details_id)->first();
+               
+              $quantity_tracking->quantity_tracking_status = config('constants.LOGISTICS_DEPARTMENT.UPDATED_COMPLETED_QUANLTITY_LOGISTICS_DEPT_SEND_TO_FIANANCE_DEPT');
+              $quantity_tracking->save();
 
              // $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
              $update_data_admin['off_canvas_status'] = 20;

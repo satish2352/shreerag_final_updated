@@ -407,7 +407,7 @@ class DashboardController extends Controller {
         $count = 0;  // Initialize the $count variable
         $notifications = [];  // Initialize the $notifications array
 
-        if ($ses_userId == '2') {
+        if ($ses_userId == '2') {//Owner Department
   
                 $business_data = AdminView::where('off_canvas_status', 11)
                                 ->where('is_view', '0')
@@ -556,7 +556,7 @@ class DashboardController extends Controller {
                  + $po_send_to_vendor_count + $gate_pass_generate_count + $quality_dept_material_received_in_store_count + $production_completed_count + $logistics_send_to_fianance_count
                  + $received_fianance_to_dispatch_count + $dispatch_completed_count;
        
-            }elseif($ses_userId == '3'){
+            }elseif($ses_userId == '3'){//Design Department
                     $sent_to_prod_data = NotificationStatus::where('off_canvas_status',11)
                     ->where('design_is_view','0')
                     ->select('id')
@@ -602,7 +602,7 @@ class DashboardController extends Controller {
                     ];
 
                    $count = $received_for_design + $design_rejected_prod_dept_count+ $design_accepted_prod_count + $design_rejected_prod_count;
-        }elseif($ses_userId == '4'){
+        }elseif($ses_userId == '4'){ //Production Department
                     $received_prod_req = NotificationStatus::where('off_canvas_status',12)
                     ->where('prod_is_view','0')
                     ->select('id')
@@ -636,7 +636,7 @@ class DashboardController extends Controller {
                     ];
                     $count = $received_design_in_prod + $revised_received_design_count + $material_received_for_production_by_store_count;
         }
-        elseif($ses_userId == '5'){
+        elseif($ses_userId == '5'){//Store Department
 
             $store_view_req = NotificationStatus::where('off_canvas_status',15)
             ->where('store_is_view','0')
@@ -684,7 +684,7 @@ class DashboardController extends Controller {
             $count = $store_view_req_count + $material_received_by_quality_count + $material_received_from_store_count;
            
         }
-        elseif($ses_userId == '6'){
+        elseif($ses_userId == '6'){//Purchase Department
             $received_requistion_req = NotificationStatus::where('off_canvas_status',16)
             ->where('purchase_is_view','0')
             ->select('id')
@@ -725,9 +725,21 @@ class DashboardController extends Controller {
                 'message' => 'Submited PO by Vendor List',
                 'url' => 'list-submited-po-to-vendor'
             ];
-            $count = $received_requistion_req_count + $list_purchase_orders_sent_to_owner_count + $list_approved_purchase_orders_owner_count + $po_send_to_vendor_count;
+
+
+            $visible_grn_material_received_store_count= NotificationStatus::where('off_canvas_status',27)
+            ->where('visible_purchase_quality_to_store','0')
+            ->select('id')
+            ->get();
+            $visible_grn_material_received_store_count = $visible_grn_material_received_store_count->count();
+
+            $notifications[] = ['admin_count' => $visible_grn_material_received_store_count,
+                'message' => 'Material Received Quality to Store Department',
+                'url' => 'list-material-received-from-quality-po-tracking'
+            ];
+            $count = $received_requistion_req_count + $list_purchase_orders_sent_to_owner_count + $list_approved_purchase_orders_owner_count + $po_send_to_vendor_count +  $visible_grn_material_received_store_count;
         }
-        elseif($ses_userId == '7'){
+        elseif($ses_userId == '7'){ //Security Department
             $po_send_to_vendor_visible_security= NotificationStatus::where('off_canvas_status',25)
             ->where('po_send_to_vendor_visible_security','0')
             ->select('id')
@@ -740,7 +752,7 @@ class DashboardController extends Controller {
             ];
             $count = $po_send_to_vendor_visible_security_count;
         }
-        elseif($ses_userId == '8'){
+        elseif($ses_userId == '8'){ //Quality Department
           
             $po_material_received_by_quality= NotificationStatus::where('off_canvas_status',25)
             ->where('quality_po_material_visible','0')

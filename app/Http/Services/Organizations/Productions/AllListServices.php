@@ -56,6 +56,7 @@ class AllListServices
     public function getAllacceptdesign(){
         try {
             $data_output = $this->repo->getAllacceptdesign();
+          
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -91,6 +92,8 @@ class AllListServices
     public function getAllListMaterialRecievedToProduction(){
         try {
           $data_output = $this->repo->getAllListMaterialRecievedToProduction();
+        //   dd($data_output);
+        //   die();
           return $data_output;
         } catch (\Exception $e) {
             return $e;

@@ -111,8 +111,7 @@
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                 <div class="form-group">
-                                                    <label for="rack_id">Rack Number:</label> &nbsp;<span
-                                                        class="red-text">*</span>
+                                                    <label for="rack_id">Rack Number:</label> (optional)
                                                     <select class="form-control mb-2"
                                                         name="rack_id" id="rack_id">
                                                         <option value="" default>Select Rack Number</option>
@@ -213,9 +212,9 @@
                 group_type_id: {
                     required: true,
                 },
-                rack_id: {
-                    required: true,
-                },
+                // rack_id: {
+                //     required: true,
+                // },
                 basic_rate: {
                     required: true,
                     number: true, // Ensure it's a valid number
@@ -246,9 +245,9 @@
                 group_type_id: {
                     required: "Please select a group name.",
                 },
-                rack_id: {
-                    required: "Please select a rack number."
-                },
+                // rack_id: {
+                //     required: "Please select a rack number."
+                // },
                 basic_rate: {
                     required: "Please enter the basic rate.",
                     number: "Please enter a valid number for the basic rate.",
@@ -259,7 +258,7 @@
                 }
             }
         });
-    });
+
 </script>
 
 

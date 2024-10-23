@@ -56,7 +56,7 @@ class ItemController extends Controller
             'unit_id' => 'required',
             'hsn_id' => 'required',
             'group_type_id' => 'required',
-            'rack_id' => 'required',
+            // 'rack_id' => 'required',
             'basic_rate' => 'required|numeric|min:0',
             'opening_stock' => 'required|numeric|min:0',
         ];
@@ -69,7 +69,7 @@ class ItemController extends Controller
             'unit_id.required' => 'Please select a unit.',
             'hsn_id.required' => 'Please select an HSN.',
             'group_type_id.required' => 'Please select a group type.',
-            'rack_id.required' => 'Please select a rack number.',
+            // 'rack_id.required' => 'Please select a rack number.',
             'basic_rate.required' => 'Please enter the basic rate.',
             'basic_rate.numeric' => 'The basic rate must be a number.',
             'basic_rate.min' => 'The basic rate cannot be negative.',

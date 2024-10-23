@@ -121,27 +121,27 @@
                                                         </div>
                                                         </td>
 
-                                                    <td>
-                                                                                                              <div style="display: flex; align-items: center;">
-                                                            <a href="{{ route('edit-gatepass', base64_encode($data->id)) }}">
-                                                                <button 
-                                                                    data-toggle="tooltip" 
-                                                                    title="Edit" 
-                                                                    class="pd-setting-ed @if($data->quality_status_id === 1134) disabled @endif" 
-                                                                    @if($data->quality_status_id === 1134) 
-                                                                        disabled 
-                                                                    @endif
-                                                                >
-                                                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                                                </button>
-                                                            </a>
-                                                            {{-- <a
-                                                                href="{{ route('edit-gatepass', base64_encode($data->id)) }}"><button
-                                                                    data-toggle="tooltip" title="Edit"
-                                                                    class="pd-setting-ed"><i class="fa fa-pencil-square-o"
-                                                                        aria-hidden="true"></i></button></a> --}}
-                                                        </div>
-                                                    </td>
+                                                        <td>
+                                                            <div style="display: flex; align-items: center;">
+          <a href="{{ route('edit-gatepass', base64_encode($data->id)) }}">
+              <button 
+                  data-toggle="tooltip" 
+                  title="Edit" 
+                  class="pd-setting-ed @if($data->quality_status_id === 1134) disabled @endif" 
+                  @if($data->quality_status_id === 1134) 
+                      disabled 
+                  @endif
+              >
+                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+              </button>
+          </a>
+          {{-- <a
+              href="{{ route('edit-gatepass', base64_encode($data->id)) }}"><button
+                  data-toggle="tooltip" title="Edit"
+                  class="pd-setting-ed"><i class="fa fa-pencil-square-o"
+                      aria-hidden="true"></i></button></a> --}}
+      </div>
+  </td>
                                                 </tr>
                                             @endforeach
 

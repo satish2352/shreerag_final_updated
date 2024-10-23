@@ -89,7 +89,7 @@
                                                         @endif
                                                     </div>
                                                     <div  class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="bom_image">Upload BOM (Excel, 10KB - 2MB)  <span class="text-danger">*</span></label>
+                                                        <label for="bom_image">Upload BOM (Excel, 10KB - 5MB)  <span class="text-danger">*</span></label>
                                                         {{-- <input type="file" class="form-control" accept=".xls, .xlsx" name="bom_image"> --}}
                                                         <input type="file" class="form-control" accept=".xls,.xlsx" name="bom_image" data-maxsize="2097152"> <!-- 2MB -->
 
@@ -149,7 +149,7 @@
                     bom_image: {
                         required: true,
                         accept: ".xls,.xlsx",
-                        filesize: { min: 10 * 1024, max: 2 * 1024 * 1024 } 
+                        filesize: { min: 10 * 1024, max: 5 * 1024 * 1024 } 
                     }
                 },
                 messages: {

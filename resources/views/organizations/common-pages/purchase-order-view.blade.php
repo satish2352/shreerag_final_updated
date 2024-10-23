@@ -217,6 +217,11 @@
                                             <strong>  {{ 
                                                 ($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * (1 + ($purchaseOrder->tax_id / 100)) 
                                             }} <!-- Total Amount Including GST --></strong>
+                                          <div>
+                                            @php
+                                            echo convertToWords(($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * (1 + ($purchaseOrder->tax_id / 100)));
+                                                                                      @endphp
+                                          </div>
                                         </td>
                                     </tr>
                                    

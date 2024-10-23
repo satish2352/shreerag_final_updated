@@ -81,7 +81,7 @@
                                                         @endif
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="bom_image">Upload BOM (upload excel file min:10KB to max:2MB) :</label>
+                                                        <label for="bom_image">Upload BOM (upload excel file min : 10KB to max : 5MB) :</label>
                                                         <input type="file" class="form-control" accept=".xls, .xlsx"
                                                             id="bom_image" name="bom_image">
                                                         @if ($errors->has('bom_image'))
@@ -171,12 +171,12 @@
                     design_image: {
                         required: "Please select design layout PDF.",
                         fileExtension: "Only PDF files are allowed.",
-                        fileSize: "File size must be between 10 KB and 2 MB.",
+                        fileSize: "File size must be between 10 KB and 5MB.",
                     },
                     bom_image: {
                         required: "Please select BOM Excel file.",
                         fileExtension: "Only Excel files (.xls, .xlsx) are allowed.",
-                        fileSize: "File size must be between 10 KB and 2 MB.",
+                        fileSize: "File size must be between 10 KB and 5MB.",
                     },
                 },
                 submitHandler: function(form) {

@@ -30,7 +30,8 @@ class LogisticsServices
     {
         try {
             $data = $this->repo->storeLogistics($request);
-            
+        //   dd($data);
+        //   die();
             if ($data) {
                 return ['status' => 'success', 'msg' => 'Logistics Form Updated Successfully.'];
             } else {
@@ -43,7 +44,8 @@ class LogisticsServices
     public function sendToFianance($id){
         try {
            $update_data = $this->repo->sendToFianance($id);
-       
+    //    dd($update_data );
+    //    die();
            return $update_data;
         } catch (\Exception $e) {
             return $e;

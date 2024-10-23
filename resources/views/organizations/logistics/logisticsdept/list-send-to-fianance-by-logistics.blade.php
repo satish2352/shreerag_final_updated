@@ -83,10 +83,14 @@
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
+                                                <th data-field="title" data-editable="false">customer Name</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
+                                                <th data-field="completed_quantity" data-editable="false">Completed Production</th>
+                                                <th data-field="from_place" data-editable="false">Form Place</th>
+                                                <th data-field="to_place" data-editable="false">To Place</th>
                                                 {{-- <th data-field="remark" data-editable="false">Remark</th> --}}
-                                                <th data-field="title" data-editable="false">customer Name</th>
+                                            
                                           
                                                
                                             </tr>
@@ -97,10 +101,14 @@
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
+                                                    <td>{{ ucwords($data->title) }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
+                                                    <td>{{ ucwords($data->completed_quantity) }}</td>
+                                                    <td>{{ ucwords($data->from_place) }}</td>
+                                                    <td>{{ ucwords($data->to_place) }}</td>
                                                     {{-- <td>{{ ucwords($data->remarks) }}</td> --}}
-                                                    <td>{{ ucwords($data->title) }}</td>
+                                                   
                                                 
 
                                                    

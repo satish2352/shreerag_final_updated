@@ -186,10 +186,13 @@ Route::group(['middleware' => ['admin']], function () {
     
         Route::get('/list-final-purchase-order-production/{id}', ['as' => 'list-final-purchase-order-production', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllListMaterialRecievedToProductionBusinessWise']);
 
-        Route::get('/update-final-production-completed-status/{id}', ['as' => 'update-final-production-completed-status', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@acceptProductionCompleted']);
+        Route::post('/update-final-production-completed-status/{id}', ['as' => 'update-final-production-completed-status', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@acceptProductionCompleted']);
         Route::get('/edit-recived-bussinesswise/{id}', ['as' => 'edit-recived-bussinesswise', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@editProduct']);
         Route::post('/update-production/{id}', ['as' => 'update-production', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@updateProductMaterial']);
         Route::get('/list-final-production-completed', ['as' => 'list-final-production-completed', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllCompletedProduction']);
+
+
+        Route::get('/edit-recived-bussinesswise-quantity-tracking/{id}', ['as' => 'edit-recived-bussinesswise-quantity-tracking', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@editProductQuantityTracking']);
 
         // Route::get('/list-final-production-completed/{id}', ['as' => 'list-final-production-completed', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllFinalProductionCompleted']);
 
@@ -213,6 +216,10 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-material-received-from-quality', ['as' => 'list-material-received-from-quality', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialReceivedFromQuality']);
         Route::get('/list-material-received-from-quality-bussinesswise/{id}', ['as' => 'list-material-received-from-quality-bussinesswise', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@submitFinalPurchaseOrder']);
         Route::get('/list-grn-details/{purchase_orders_id}/{business_id}', ['as' => 'list-grn-details', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getGRNDetails']);
+        Route::get('/list-grn-details-po-tracking/{purchase_orders_id}/{business_id}', ['as' => 'list-grn-details-po-tracking', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getGRNDetailsPOTracking']);
+
+        Route::get('/list-material-received-from-quality-po-tracking', ['as' => 'list-material-received-from-quality-po-tracking', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialReceivedFromQualityPOTracking']);
+        Route::get('/list-material-received-from-quality-bussinesswise-tracking/{id}', ['as' => 'list-material-received-from-quality-bussinesswise-tracking', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialReceivedFromQualityPOTrackingBusinessWise']);
 
         Route::get('/accepted-store-material-sent-to-production/{purchase_orders_id}/{business_id}', ['as' => 'accepted-store-material-sent-to-production', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@genrateStoreReciptAndForwardMaterialToTheProduction']);
     
@@ -284,6 +291,16 @@ Route::group(['middleware' => ['admin']], function () {
         Route::post('/update-delivery-chalan', ['as' => 'update-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@update']);
         Route::any('/delete-delivery-chalan/{id}', ['as' => 'delete-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@destroy']);
         Route::post('/delete-addmore', ['as' => 'delete-addmore', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@destroyAddmore']);
+  
+        Route::get('/list-returnable-chalan', ['as' => 'list-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@index']);
+        // Route::post('/list-returnable-chalan', ['as' => 'list-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ReturnableChalanController@index']);
+        Route::post('/add-returnable-chalan', ['as' => 'add-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@create']);
+        Route::post('/store-returnable-chalan', ['as' => 'store-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@store']);
+        Route::get('/show-returnable-chalan/{id}', ['as' => 'show-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@show']);
+        Route::get('/edit-returnable-chalan/{id}', ['as' => 'edit-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@edit']);
+        Route::post('/update-returnable-chalan', ['as' => 'update-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@update']);
+        Route::any('/delete-returnable-chalan/{id}', ['as' => 'delete-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@destroy']);
+        Route::post('/delete-addmore', ['as' => 'delete-addmore', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@destroyAddmore']);
     });
     Route::group(['prefix' => 'purchase'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
@@ -433,6 +450,8 @@ Route::group(['middleware' => ['admin']], function () {
         Route::post('/store-dispatch', ['as' => 'store-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Dispatch\DispatchController@storeDispatch']);
         Route::get('/list-dispatch', ['as' => 'list-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Dispatch\AllListController@getAllDispatch']);
         
+        Route::get('/list-dispatch-final-product-close', ['as' => 'list-dispatch-final-product-close', 'uses' => 'App\Http\Controllers\Organizations\Dispatch\AllListController@getAllDispatchClosedProduct']);
+
         // Route::get('/add-logistics/{business_id}', ['as' => 'add-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\LogisticsController@addLogistics']);
         // Route::post('/store-logistics', ['as' => 'store-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\LogisticsController@storeLogistics']);
         // Route::get('/list-logistics', ['as' => 'list-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\AllListController@getAllLogistics']);

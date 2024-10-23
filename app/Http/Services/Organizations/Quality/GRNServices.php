@@ -38,24 +38,47 @@ class GRNServices
     }
 
 
+    // public function storeGRN($request)
+    // {
+    //     try {
+    //         $data = $this->repo->storeGRN($request);
+    //         $path = Config::get('DocumentConstant.GRN_ADD');
+    //         $ImageName = $data['ImageName'];
+    //         uploadImage($request, 'image', $path, $ImageName);
+           
+    //         if ($data) {
+    //             return ['status' => 'success', 'msg' => 'GRN Added Successfully.'];
+    //         } else {
+    //             return ['status' => 'error', 'msg' => 'GRN Not Added.'];
+    //         }
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
     public function storeGRN($request)
     {
         try {
             $data = $this->repo->storeGRN($request);
+            dd($data);
+            die();
             $path = Config::get('DocumentConstant.GRN_ADD');
             $ImageName = $data['ImageName'];
             uploadImage($request, 'image', $path, $ImageName);
-           
+    
             if ($data) {
                 return ['status' => 'success', 'msg' => 'GRN Added Successfully.'];
             } else {
                 return ['status' => 'error', 'msg' => 'GRN Not Added.'];
             }
         } catch (\Exception $e) {
-            return $e;
+            \Log::error('Error in storeGRN: ' . $e->getMessage());
+            return [
+                'status' => 'error',
+                'msg' => 'An error occurred: ' . $e->getMessage()
+            ];
         }
     }
-
+    
     public function getAllListMaterialSentFromQualityBusinessWise($id)
     {
         try {

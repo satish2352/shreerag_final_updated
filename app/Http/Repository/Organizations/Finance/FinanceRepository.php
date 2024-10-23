@@ -13,7 +13,8 @@ use App\Models\{
     Requisition,
     PurchaseOrderModel,
     AdminView,
-    NotificationStatus
+    NotificationStatus,
+    CustomerProductQuantityTracking
 };
 use Config;
 
@@ -97,7 +98,12 @@ class FinanceRepository
                 $business_application->off_canvas_status = 21;
 
                 $business_application->save();
-
+                
+              // Track the completed quantity for the given business_details_id
+              $quantity_tracking = CustomerProductQuantityTracking::where('business_details_id', $business_application->business_details_id)->first();
+               
+              $quantity_tracking->quantity_tracking_status = config('constants.FINANCE_DEPARTMENT.SEND_COMPLETED_QUANLTITY_FROM_FIANANCE_DEPT_TO_DISPATCH_DEPT');
+              $quantity_tracking->save();
             // $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
             $update_data_admin['off_canvas_status'] = 21;
             $update_data_business['off_canvas_status'] = 21;

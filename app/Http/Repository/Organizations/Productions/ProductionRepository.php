@@ -14,7 +14,8 @@ Dispatch,
 BusinessDetails,
 AdminView,
 ProductionDetails,
-NotificationStatus
+NotificationStatus,
+CustomerProductQuantityTracking
 };
 use Config;
 
@@ -156,7 +157,7 @@ class ProductionRepository  {
             return $e;
         }
     }     
-    public function acceptProductionCompleted($id) {
+    public function acceptProductionCompleted($id, $completed_quantity) {
         try {
             // Fetch the business application process record for the given business ID
             $business_application = BusinessApplicationProcesses::where('business_details_id', $id)->first();
@@ -206,8 +207,14 @@ class ProductionRepository  {
                 $dataOutputDispatch->save();
 
 
-             
-             
+             // Track the completed quantity
+             $quantity_tracking = new CustomerProductQuantityTracking();
+             $quantity_tracking->business_id = $business_application->business_id;
+             $quantity_tracking->business_details_id = $id;
+             $quantity_tracking->production_id = $business_application->id;
+             $quantity_tracking->completed_quantity = $completed_quantity; // Save the completed quantity
+             $quantity_tracking->quantity_tracking_status = config('constants.PRODUCTION_DEPARTMENT.INPROCESS_COMPLETED_QUANLTITY_SEND_TO_LOGISTICS');
+             $quantity_tracking->save();
                 return response()->json(['status' => 'success', 'message' => 'Production status updated successfully.']);
             } else {
                 // Return an error response if the record does not exist
@@ -244,7 +251,7 @@ class ProductionRepository  {
                     $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
                 })
                 ->where('businesses_details.id', $id)
-                ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
+                // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
                 ->where('businesses_details.is_active', true)
                 ->select(
                     'businesses_details.id',
@@ -252,7 +259,69 @@ class ProductionRepository  {
                     'businesses_details.quantity',
                     'businesses_details.description',
                     'production_details.part_item_id',
-                    'production_details.quantity',
+                    // 'production_details.quantity',
+                    'production_details.unit',
+                    'production_details.business_details_id',
+                    'production_details.material_send_production',
+                    'designs.bom_image',
+                    'designs.design_image',
+                    'business_application_processes.store_material_sent_date'
+                )
+                ->get(); 
+    
+            // Extract product details and data for table
+            $productDetails = $dataOutputByid->first(); // Assuming the first entry contains the product details
+        //   dd($productDetails);
+        //   die();
+            $dataGroupedById = $dataOutputByid->groupBy('business_details_id');
+    
+            return [
+                'productDetails' => $productDetails,
+                'dataGroupedById' => $dataGroupedById
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status' => 'error',
+                'msg' => $e->getMessage()
+            ];
+        }
+    }
+
+    public function editProductQuantityTracking($id) {
+        try {
+            $array_to_be_check = [
+                config('constants.PRODUCTION_DEPARTMENT.LIST_BOM_PART_MATERIAL_RECIVED_FROM_STORE_DEPT_FOR_PRODUCTION')
+            ];
+    
+            // Fetch all related data
+            $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+                })
+                ->leftJoin('designs', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+                })
+                ->leftJoin('businesses_details', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+                })
+                ->leftJoin('design_revision_for_prod', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+                })
+                ->leftJoin('purchase_orders', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+                })
+                ->leftJoin('production_details', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
+                })
+                ->where('businesses_details.id', $id)
+                // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
+                ->where('businesses_details.is_active', true)
+                ->select(
+                    'businesses_details.id',
+                    'businesses_details.product_name',
+                    'businesses_details.quantity',
+                    'businesses_details.description',
+                    'production_details.part_item_id',
+                    // 'production_details.quantity',
                     'production_details.unit',
                     'production_details.business_details_id',
                     'production_details.material_send_production',
@@ -277,7 +346,8 @@ class ProductionRepository  {
             ];
         }
     }
-public function updateProductMaterial($request) {
+    
+public function updateProductMaterial($request, $completed_quantity) {
     try {
         // Fetch existing production details based on the business_details_id
         $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $request->business_details_id)->get();
@@ -317,13 +387,35 @@ public function updateProductMaterial($request) {
                 // You can log an error or throw an exception
             }
         }
+    
+ // Update the BusinessApplicationProcesses status
+ $ProductQuantityTracking = CustomerProductQuantityTracking::where('business_details_id', $dataOutput_ProductionDetails->first()->business_details_id)
+ ->firstOrFail();
+$ProductQuantityTracking->quantity_tracking_status = config('constants.PRODUCTION_DEPARTMENT.INPROCESS_COMPLETED_QUANLTITY_SEND_TO_LOGISTICS');
+$ProductQuantityTracking->save();
+  // Track the completed quantity
+// Access the first entry of the collection
+// $firstProductionDetail = $dataOutput_ProductionDetails->first();
 
-        // Update the BusinessApplicationProcesses status
-        $businessOutput = BusinessApplicationProcesses::where('business_details_id', $dataOutput_ProductionDetails->first()->business_details_id)
-            ->firstOrFail();
-        $businessOutput->product_production_inprocess_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_INPROCESS_FOR_PRODUCTION');
-        $businessOutput->save();
+// if ($firstProductionDetail) {
+//     $quantity_tracking = new CustomerProductQuantityTracking();
+//     $quantity_tracking->business_id = $firstProductionDetail->business_id;
+//     $quantity_tracking->business_details_id = $firstProductionDetail->business_details_id;
+//     $quantity_tracking->production_id = $firstProductionDetail->production_id;
+//     $quantity_tracking->completed_quantity = $completed_quantity; // Save the completed quantity
+//     $quantity_tracking->quantity_tracking_status = config('constants.PRODUCTION_DEPARTMENT.REQUEST_SEND_PRODUCT_MATERIAL_TO_STORE_DEPT');
+//     $quantity_tracking->save();
+//     dd($quantity_tracking);
+//     die();
+// } else {
+//     return [
+//         'status' => 'error',
+//         'message' => 'No production details found for the given business details ID.'
+//     ];
+// }
 
+  dd($quantity_tracking);
+  die();
         return [
             'status' => 'success',
             'message' => 'Production materials updated successfully.',

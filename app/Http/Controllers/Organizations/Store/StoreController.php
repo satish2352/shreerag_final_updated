@@ -157,6 +157,12 @@ class StoreController extends Controller
         }
     
         try {
+            // $completed_quantity = $request->input('completed_quantity'); // Assuming it is passed from form
+             // Ensure $completed_quantity has a valid value
+        // if (!$completed_quantity) {
+        //     throw new \Exception('Completed quantity is not provided or calculated.');
+        // }
+
             $updateData = $this->service->updateProductMaterialWiseAdd($request);
     
             if ($updateData['status'] == 'success') {

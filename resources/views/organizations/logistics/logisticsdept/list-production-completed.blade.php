@@ -85,6 +85,7 @@
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
+                                                <th data-field="completed_quantity" data-editable="false">Completed Production</th>
                                                 <th data-field="remark" data-editable="false">Remark</th>
                                                 <th data-field="title" data-editable="false">customer Name</th>
                                                 {{-- <th data-field="vendor_company_name" data-editable="false">Vendor company Name</th>
@@ -106,6 +107,7 @@
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
+                                                    <td>{{ ucwords($data->completed_quantity) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                     <td>{{ ucwords($data->title) }}</td>
                                                     {{-- <td>{{ ucwords($data->vendor_company_name) }}</td>

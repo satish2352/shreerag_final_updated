@@ -13,8 +13,8 @@ use App\Models\{
     RejectedChalan,
     PurchaseOrdersModel,
     AdminView,
-    NotificationStatus
-    
+    NotificationStatus,
+    GrnPoQuantityTracking
 };
 use Config;
 
@@ -148,20 +148,25 @@ class GRNRepository
     
             // Fetch purchase orders details
             $purchase_orders_details = PurchaseOrderModel::where('purchase_orders_id', $request->purchase_orders_id)->first();
-            
+        
+        
+           
             if (!$purchase_orders_details) {
                 return [
                     'msg' => 'Purchase order not found.',
                     'status' => 'error'
                 ];
             }
-    
+            $purchase_id = $purchase_orders_details->purchase_orders_id;
+            // dd($purchase_orders_details);
+            // die();
             // Fetch the business details ID from the purchase order
             $business_details_id = $purchase_orders_details->business_details_id;
-    
+       
             // Fetch the business application process using business_details_id
             $business_application = BusinessApplicationProcesses::where('business_details_id', $business_details_id)->first();
-    
+            // dd($business_application);
+            // die();
             if (!$business_application) {
                 return [
                     'msg' => 'Business Application not found.',
@@ -171,7 +176,7 @@ class GRNRepository
     
             // Create a new GRN entry
             $dataOutput = new GRNModel();
-            $dataOutput->purchase_orders_id = $request->purchase_orders_id;
+            $dataOutput->purchase_orders_id =  $purchase_id;
             $dataOutput->po_date = $request->po_date;
             $dataOutput->grn_date = $request->grn_date;
             $dataOutput->remark = $request->remark;
@@ -179,18 +184,49 @@ class GRNRepository
             $dataOutput->is_approve = '0';
             $dataOutput->is_active = '1';
             $dataOutput->is_deleted = '0';
+         
             $dataOutput->save();
     
             $last_insert_id = $dataOutput->id;
-    
+  
             // Update purchase order details with quantities
             foreach ($request->addmore as $item) {
+                // dd($request->addmore);
+                // die();
                 PurchaseOrderDetailsModel::where('id', $item['edit_id'])
                     ->update([
                         'actual_quantity' => $item['actual_quantity'],
                         'accepted_quantity' => $item['accepted_quantity'],
                         'rejected_quantity' => $item['rejected_quantity'],
                     ]);
+
+
+
+                    // Create a new GRN tracking entry
+    $grnPoTracking = new GrnPoQuantityTracking();
+
+    // Assign the necessary fields from the $item array
+    // $grnPoTracking->purchase_id = $last_insert_id; 
+    $grnPoTracking->purchase_order_id = $purchase_orders_details->id;
+
+    $grnPoTracking->grn_id = $last_insert_id; 
+    $grnPoTracking->purchase_order_details_id = $item['edit_id']; 
+    // $grnPoTracking->part_no_id = $item['part_no_id']; 
+    $grnPoTracking->description = $item['description']; 
+    // $grnPoTracking->due_date = $item['due_date']; 
+    $grnPoTracking->quantity = $item['chalan_quantity'];
+    $grnPoTracking->actual_quantity = $item['actual_quantity']; 
+    // $grnPoTracking->unit = $item['unit']; 
+    $grnPoTracking->accepted_quantity = $item['accepted_quantity']; 
+    $grnPoTracking->rejected_quantity = $item['rejected_quantity']; 
+    $grnPoTracking->is_deleted = false;
+    $grnPoTracking->is_active = true; 
+    
+
+    // dd($grnPoTracking);
+    // die();
+    // Save the tracking entry
+    $grnPoTracking->save();
             }
     
             // Handle image upload

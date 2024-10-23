@@ -15,7 +15,8 @@ use App\Models\ {
     PurchaseOrdersModel,
     PurchaseOrderDetailsModel,
     GRNModel,
-    NotificationStatus
+    NotificationStatus,
+    GrnPoQuantityTracking
 
 };
 
@@ -130,7 +131,7 @@ class AllListController extends Controller
                     }
                 }
             } else {
-                return view('organizations.security.list.list-recived-material', [
+                return view('organizations.store.list.list-material-received-from-quality', [
                     'data_output' => [],
                     'message' => 'No data found'
                 ]);
@@ -140,6 +141,8 @@ class AllListController extends Controller
             return $e;
         }
     }
+
+  
     public function submitFinalPurchaseOrder($id){
         try {
             $data_output = $this->service->getPurchaseOrderBusinessWise($id);
@@ -149,7 +152,41 @@ class AllListController extends Controller
             return $e;
         }
     }
+    public function getAllListMaterialReceivedFromQualityPOTracking(){
 
+        try {
+            $data_output = $this->service->getAllListMaterialReceivedFromQualityPOTracking();
+          
+            if ($data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
+                    $business_id = $data->id; 
+                    if (!empty($business_id)) {
+                        $update_data['received_material_to quality'] = '1';
+                        NotificationStatus::where('received_material_to quality', '0')
+                            ->where('id', $business_id)
+                            ->update($update_data);
+                    }
+                }
+            } else {
+                return view('organizations.store.list.list-material-received-from-quality-po-tracking', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
+            return view('organizations.store.list.list-material-received-from-quality-po-tracking', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getAllListMaterialReceivedFromQualityPOTrackingBusinessWise($id){
+        try {
+            $data_output = $this->service->getAllListMaterialReceivedFromQualityPOTrackingBusinessWise($id);
+           
+            return view('organizations.store.list.list-material-received-from-quality-businesswise-po-tracking', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     public function getGRNDetails($purchase_orders_id)
     {
         try {
@@ -160,8 +197,40 @@ class AllListController extends Controller
 
             $purchase_order_details_data = PurchaseOrderDetailsModel::where('purchase_id', $po_id)
                 ->get();
-              
+                // dd( $purchase_order_details_data);
+                // die();
             return view('organizations.store.list.list-grn', compact('purchase_order_data', 'purchase_order_details_data', 'grn_data'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function getGRNDetailsPOTracking($purchase_orders_id, $grn_id)
+    {
+        try {
+            $purchase_number =  base64_decode($purchase_orders_id);
+            $idtoedit = base64_decode($grn_id);
+            // dd($idtoedit);
+            // die();
+            $purchase_order_data = PurchaseOrdersModel::where('purchase_orders_id', '=', $purchase_number)->first();
+        //    dd($purchase_order_data);
+        //    die();
+            $grn_data = GRNModel::where('id', '=', $idtoedit)->first();
+            // dd($grn_data);
+            // die();
+            $po_id = $grn_data->purchase_orders_id;
+            $po_details = $grn_data->id;
+
+            // dd($po_details);
+            // die();
+            $purchase_order_details_data = GrnPoQuantityTracking::where('grn_id', $po_details)
+                ->get();
+
+                // dd($purchase_order_details_data);
+                // die();
+            //            dd($purchase_order_details_data);
+            // die();
+            return view('organizations.store.list.list-grn-po-tracking', compact('purchase_order_data', 'purchase_order_details_data', 'grn_data'));
         } catch (\Exception $e) {
             return $e;
         }

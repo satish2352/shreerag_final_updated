@@ -101,7 +101,7 @@ padding-left: 20px !important;
                                                     <a href="{{route('edit-recived-bussinesswise', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>Edit Product</button></a>
                                                 </div>
                                                 <div style="display: inline-block; align-items: center;">
-                                                <a href="{{route('update-final-production-completed-status', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>Production Completed</button></a>
+                                                <a href="{{route('edit-recived-bussinesswise-quantity-tracking', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>Production Completed</button></a>
                                             </div></td>
                                            </tr>
                                         @endforeach

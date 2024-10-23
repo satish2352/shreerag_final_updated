@@ -144,6 +144,10 @@
                                                     <label for="description">Description:</label>
                                                     <input type="text" class="form-control" id="description" name="description" value="{{ $productDetails->description }}" placeholder="Enter Description" readonly>
                                                 </div>
+                                                {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="completed_quantity">Completed Quantity:</label>
+                                                    <input type="text" class="form-control" id="completed_quantity" name="completed_quantity" value="" placeholder="Enter Completed Quantity" >
+                                                </div> --}}
                                             {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                 <label for="description">Description:</label>
                                                 <input type="text" class="form-control" id="description" name="description" value="{{ $productDetails->description }}" placeholder="Enter Description" readonly>

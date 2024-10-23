@@ -16,7 +16,8 @@ use App\Models\{
     BusinessDetails,
     ProductionDetails,
     ItemStock,
-    NotificationStatus
+    NotificationStatus,
+    CustomerProductQuantityTracking
     
 };
 use Config;
@@ -224,9 +225,11 @@ class StoreRepository
         try {
             // dd($request->business_details_id);
           $business_details_id = base64_decode($request->business_details_id);
+        
             $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $business_details_id)->firstOrFail();
            
-
+            // dd($dataOutput_ProductionDetails);
+            // die();
                // Fetch the business details ID from the purchase order
      $business_details_id = $dataOutput_ProductionDetails->business_details_id;
 
@@ -317,6 +320,10 @@ if ($existingEntry && isset($existingEntry->part_item_id)) {
                 ->firstOrFail();
             $businessOutput->product_production_inprocess_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_INPROCESS_FOR_PRODUCTION');
             $businessOutput->save();
+
+                          
+
+
     
             return [
                 'status' => 'success',
@@ -358,7 +365,7 @@ if ($existingEntry && isset($existingEntry->part_item_id)) {
                     $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
                 })
                 ->where('businesses_details.id', $id)
-                ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
+                // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
                 ->where('businesses_details.is_active', true)
                 ->select(
                     'businesses_details.id',
