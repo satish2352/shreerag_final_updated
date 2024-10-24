@@ -110,9 +110,8 @@
                                                                             <label>Tax Type</label>
                                                                             <select class="form-control mb-2" name="tax_type" id="tax_type">
                                                                                 <option value="" {{ old('tax_type') == '' ? 'selected' : '' }}>Select Tax Type</option>
-                                                                                <option value="CGST" {{ old('tax_type', $editDataNew->tax_type) == 'CGST' ? 'selected' : '' }}>C-GST</option>
-                                                                                <option value="SGST" {{ old('tax_type', $editDataNew->tax_type) == 'SGST' ? 'selected' : '' }}>S-GST</option>
-                                                                                <option value="CGST+SGST" {{ old('tax_type', $editDataNew->tax_type) == 'CGST+SGST' ? 'selected' : '' }}>C-GST + S-GST</option>
+                                                                                <option value="IGST" {{ old('tax_type', $editDataNew->tax_type) == 'IGST' ? 'selected' : '' }}>IGST</option>
+                                                                                <option value="CGST+SGST" {{ old('tax_type', $editDataNew->tax_type) == 'CGST+SGST' ? 'selected' : '' }}>CGST + SGST</option>
                                                                             </select>
                                                                             @if ($errors->has('tax_type'))
                                                                                 <span class="red-text">{{ $errors->first('tax_type') }}</span>

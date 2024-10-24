@@ -116,10 +116,9 @@
                                                               <div class="form-group">
                                                                 <label>Tax Type<span class="text-danger">*</span></label>
                                                                 <select name="tax_type" class="form-control" title="select tax" id="tax_type">
-                                                                  <option value="">Select Tax Type</option>
-                                                                  <option value="CGST">C-GST</option>
-                                                                  <option value="SGST">S-GST</option>
-                                                                  <option value="IGST">I-GST</option>
+                                                                    <option value="">Select Tax Type</option>
+                                                                    <option value="CGST+SGST">CGST + SGST</option>
+                                                                    <option value="IGST">IGST</option>
                                                                 </select>
                                                               </div>
                                                             </div>
@@ -138,7 +137,7 @@
                                                             <div class="col-lg-4 col-md-4 col-sm-4">
                                                                 <label for="plant_id">Plant Name  <span class="text-danger">*</span></label>
                                                                 <input type="text" class="form-control" id="plant_id" value="{{old('plant_id') }}"
-                                                                    name="plant_id" placeholder="Enter Customer PO Number">
+                                                                    name="plant_id" placeholder="Enter Plant Name">
                                                                     @if ($errors->has('plant_id'))
                                                                     <span class="red-text"><?php echo $errors->first('plant_id', ':message'); ?></span>
                                                                 @endif
@@ -146,7 +145,7 @@
                                                             <div class="col-lg-4 col-md-4 col-sm-4">
                                                                 <label for="vehicle_number">Vehicle Number  <span class="text-danger">*</span></label>
                                                                 <input type="text" class="form-control" id="vehicle_number" value="{{old('vehicle_number') }}"
-                                                                    name="vehicle_number" placeholder="Enter Customer PO Number">
+                                                                    name="vehicle_number" placeholder="Enter Vehicle Number">
                                                                     @if ($errors->has('vehicle_number'))
                                                                     <span class="red-text"><?php echo $errors->first('vehicle_number', ':message'); ?></span>
                                                                 @endif
@@ -154,7 +153,7 @@
                                                             <div class="col-lg-4 col-md-4 col-sm-4">
                                                                 <label for="po_date">PO Date  <span class="text-danger">*</span></label>
                                                                 <input type="date" class="form-control" id="po_date" value="{{old('po_date') }}"
-                                                                    name="po_date" placeholder="Enter Customer PO Number">
+                                                                    name="po_date" placeholder="Enter PO Date">
                                                                     @if ($errors->has('po_date'))
                                                                     <span class="red-text"><?php echo $errors->first('po_date', ':message'); ?></span>
                                                                 @endif
@@ -162,7 +161,7 @@
                                                             <div class="col-lg-4 col-md-4 col-sm-4">
                                                                 <label for="dc_date">DC Date  <span class="text-danger">*</span></label>
                                                                 <input type="date" class="form-control" id="dc_date" value="{{old('dc_date') }}"
-                                                                    name="dc_date" placeholder="Enter Customer PO Number">
+                                                                    name="dc_date" placeholder="Enter DC Date">
                                                                     @if ($errors->has('dc_date'))
                                                                     <span class="red-text"><?php echo $errors->first('dc_date', ':message'); ?></span>
                                                                 @endif
@@ -170,7 +169,7 @@
                                                             <div class="col-lg-4 col-md-4 col-sm-4">
                                                                 <label for="dc_number">DC Number  <span class="text-danger">*</span></label>
                                                                 <input type="text" class="form-control" id="dc_number" value="{{old('dc_number') }}"
-                                                                    name="dc_number" placeholder="Enter Customer PO Number">
+                                                                    name="dc_number" placeholder="Enter DC Number ">
                                                                     @if ($errors->has('dc_number'))
                                                                     <span class="red-text"><?php echo $errors->first('dc_number', ':message'); ?></span>
                                                                 @endif
@@ -178,7 +177,7 @@
                                                             <div class="col-lg-4 col-md-4 col-sm-4">
                                                                 <label for="lr_number">LR Number  <span class="text-danger">*</span></label>
                                                                 <input type="text" class="form-control" id="lr_number" value="{{old('lr_number') }}"
-                                                                    name="lr_number" placeholder="Enter Customer PO Number">
+                                                                    name="lr_number" placeholder="Enter LR Number">
                                                                     @if ($errors->has('lr_number'))
                                                                     <span class="red-text"><?php echo $errors->first('lr_number', ':message'); ?></span>
                                                                 @endif
