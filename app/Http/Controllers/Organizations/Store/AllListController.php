@@ -16,7 +16,7 @@ use App\Models\ {
     PurchaseOrderDetailsModel,
     GRNModel,
     NotificationStatus,
-    GrnPoQuantityTracking
+    GrnPOQuantityTracking
 
 };
 
@@ -254,7 +254,7 @@ class AllListController extends Controller
 
             // dd($po_details);
             // die();
-            $purchase_order_details_data = GrnPoQuantityTracking::where('grn_id', $po_details)
+            $purchase_order_details_data = GrnPOQuantityTracking::where('grn_id', $po_details)
                 ->get();
 
                 // dd($purchase_order_details_data);
