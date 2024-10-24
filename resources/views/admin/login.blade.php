@@ -221,7 +221,7 @@
                       passwordField.attr("type", type);
                       
                       // Toggle the eye / eye-slash icon
-                      $(this).toggleClass("fa-eye fa-eye-slash");
+                      $(this).toggleClass("fa fa-eye fa-eye fa-eye-slash");
                   });
               });
           </script>

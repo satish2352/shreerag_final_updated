@@ -119,17 +119,15 @@ label.error {
                                                         value=" @if (old('vendor_address')) {{ old('vendor_address') }}@else{{ $editData->vendor_address }} @endif">
                                                 </div>    
                                                 
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                 <label class="form-check-label">
                                                 <input type="checkbox" class="form-check-input" name="is_active"
                                                     id="is_active" value="y" data-parsley-multiple="is_active"
                                                     {{ old('is_active') ? 'checked' : '' }}>
                                                 Is Active
                                                 <i class="input-helper"></i><i class="input-helper"></i></label>
-                                                   <!-- <label for="status">Status :</label>
-                                                    <input type="text" class="form-control" id="status"
-                                                        name="status" placeholder="Enter status here"> -->
-                                                </div>
+                                                
+                                                </div> --}}
                                                
                                             </div>
                                                 

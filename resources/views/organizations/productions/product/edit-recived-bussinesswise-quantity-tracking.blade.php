@@ -17,6 +17,9 @@
     .disabled-row button {
         pointer-events: none;
     }
+    .marg-top{
+        margin-top: 30px !important;
+    }
 </style>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -79,7 +82,7 @@
                                         </div>
                                   
                                         
-                                        <div class="login-btn-inner">
+                                        <div class="login-btn-inner marg-top">
                                             <button class="btn btn-sm btn-primary" type="submit">Submit Completed Quantity</button>
                                         </div>
                                     </form>

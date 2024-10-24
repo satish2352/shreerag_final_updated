@@ -684,7 +684,7 @@ public function getAllInprocessProductProduction(){
     })
     // ->where('businesses_details.id',$id)
     // ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
-    ->where('production.production_status_quantity_tracking', 'incomplete-store')
+    ->where('production.store_status_quantity_tracking', 'incomplete-store')
     ->where('businesses_details.is_active',true)
     ->distinct('businesses.id')
     ->groupBy('businesses_details.id',

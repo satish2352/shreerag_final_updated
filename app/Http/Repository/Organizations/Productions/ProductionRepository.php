@@ -353,7 +353,7 @@ public function updateProductMaterial($request) {
         $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $request->business_details_id)->get();
 
         $dataOutput_Production = ProductionModel::where('business_details_id', $request->business_details_id)->firstOrFail();
-        $dataOutput_Production->production_status_quantity_tracking = 'incomplete-store';
+        $dataOutput_Production->store_status_quantity_tracking = 'incomplete-store';
         $dataOutput_Production->save();
 
 // dd($dataOutput_Production);

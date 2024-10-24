@@ -8,6 +8,15 @@
     .error {
       color: red !important;
     }
+    .red-text{
+        color: red !important;  
+    }
+    .marg-top{
+        margin-top: 30px;
+    }
+    .form-control  {
+        color: #303030 !important;
+    }
 </style>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -34,21 +43,21 @@
                                         <input type="hidden" class="form-control" value="@if (old('id')) {{ old('id') }}@else{{ $editData->id }} @endif" id="id" name="id">
                                         <div class="row">
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="part_number">Part Number:</label>
+                                                <label for="part_number">Part Number  <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" value="@if (old('part_number')) {{ old('part_number') }}@else{{ $editData->part_number }} @endif" id="part_number" name="part_number" placeholder="Enter part item name">
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="description">Description:</label>
+                                                <label for="description">Description  <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" value="@if (old('description')) {{ old('description') }}@else{{ $editData->description }} @endif" id="description" name="description" placeholder="Enter part item name">
                                             </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="extra_description">Extra Description:</label>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
+                                                <label for="extra_description">Extra Description (optional)</label>
                                                 <input type="text" class="form-control" value="@if (old('extra_description')) {{ old('extra_description') }}@else{{ $editData->extra_description }} @endif" id="extra_description" name="extra_description" placeholder="Enter part extra description">
                                             </div>
                                           
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
                                                 <div class="form-group">
-                                                    <label for="unit_id">Unit Name :</label> &nbsp;<span
+                                                    <label for="unit_id">Unit Name <span class="text-danger">*</span></label> &nbsp;<span
                                                         class="red-text">*</span>
                                                     <select class="form-control mb-2"
                                                         name="unit_id" id="unit_id">
@@ -67,9 +76,9 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
                                                 <div class="form-group">
-                                                    <label for="hsn_id">HSN Name:</label> &nbsp;<span
+                                                    <label for="hsn_id">HSN Name <span class="text-danger">*</span></label> &nbsp;<span
                                                         class="red-text">*</span>
                                                     <select class="form-control mb-2"
                                                         name="hsn_id" id="hsn_id">
@@ -88,9 +97,9 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
                                                 <div class="form-group">
-                                                    <label for="group_type_id">Group Name:</label> &nbsp;<span
+                                                    <label for="group_type_id">Group Name <span class="text-danger">*</span></label> &nbsp;<span
                                                         class="red-text">*</span>
                                                     <select class="form-control mb-2"
                                                         name="group_type_id" id="group_type_id">
@@ -109,9 +118,9 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
                                                 <div class="form-group">
-                                                    <label for="rack_id">Rack Number:</label> (optional)
+                                                    <label for="rack_id">Rack Number </label> (optional)
                                                     <select class="form-control mb-2"
                                                         name="rack_id" id="rack_id">
                                                         <option value="" default>Select Rack Number</option>
@@ -128,12 +137,12 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="basic_rate">Basic Rate:</label>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
+                                                <label for="basic_rate">Basic Rate <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" value="@if (old('basic_rate')) {{ old('basic_rate') }}@else{{ $editData->basic_rate }} @endif" id="basic_rate" name="basic_rate" placeholder="Enter part item name">
                                             </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="opening_stock">Open Stock:</label>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
+                                                <label for="opening_stock">Open Stock <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" value="@if (old('opening_stock')) {{ old('opening_stock') }}@else{{ $editData->opening_stock }} @endif" id="opening_stock" name="opening_stock" placeholder="Enter open stock">
                                             </div>
                                         </div>
@@ -166,99 +175,83 @@
 
 <script>
     $(document).ready(function() {
-    
-    $("#regForm").on('submit', function(event) {
-        // Prevent form submission to allow trimming of inputs first
-        event.preventDefault();
 
-        // Trim the input values
-        var basicRateInput = $('#basic_rate');
-        var openingStockInput = $('#opening_stock');
-        
-        basicRateInput.val($.trim(basicRateInput.val()));
-        openingStockInput.val($.trim(openingStockInput.val()));
 
-        // Submit the form after trimming
-        this.submit();
-    });
+        $("#addEmployeeForm").on('submit', function() {
+    // Trim the input value before submitting the form
+    var basicrateInput = $('#basic_rate');
+    var openingstockInput = $('#opening_stock');
+    basicrateInput.val($.trim(basicrateInput.val()));
+    openingstockInput.val($.trim(openingstockInput.val()));
 });
 
+        // $.validator.addMethod("spcenotallow", function(value, element) {
+        //     return this.optional(element) || value.trim().length > 0;
+        // }, "Field cannot contain only spaces.");
 
-        // Custom validation rule to check if the input does not contain only spaces
-        $.validator.addMethod("spcenotallow", function(value, element) {
-            return this.optional(element) || value.trim().length > 0;
-        }, "Enter some valid text");
-
-        // Initialize the form validation
         $("#regForm").validate({
             rules: {
                 part_number: {
                     required: true,
-                    spcenotallow: true,  // Apply custom space check
+                    spcenotallow: true
                 },
                 description: {
                     required: true,
-                    spcenotallow: true,  // Apply custom space check
+                    spcenotallow: true
                 },
-                // extra_description: {
-                //     spcenotallow: true,  // Extra description is optional but cannot be only spaces
-                // },
                 unit_id: {
-                    required: true,
+                    required: true
                 },
                 hsn_id: {
-                    required: true,
+                    required: true
                 },
                 group_type_id: {
-                    required: true,
+                    required: true
                 },
                 // rack_id: {
-                //     required: true,
+                //     required: true
                 // },
                 basic_rate: {
                     required: true,
-                    number: true, // Ensure it's a valid number
+                    number: true
                 },
                 opening_stock: {
                     required: true,
-                    number: true,  // Ensure it's a valid number
+                    number: true
                 }
             },
             messages: {
                 part_number: {
                     required: "Please enter the part number.",
-                    spcenotallow: "Part number cannot contain only spaces.",
+                    spcenotallow: "Part number cannot contain only spaces."
                 },
                 description: {
-                    required: "Please enter the description.",
-                    spcenotallow: "Description cannot contain only spaces.",
+                    required: "Please enter a description.",
+                    spcenotallow: "Description cannot contain only spaces."
                 },
-                // extra_description: {
-                //     spcenotallow: "Extra description cannot contain only spaces.",
-                // },
                 unit_id: {
-                    required: "Please select a unit name.",
+                    required: "Please select a unit."
                 },
                 hsn_id: {
-                    required: "Please select an HSN name.",
+                    required: "Please select an HSN/SAC number."
                 },
                 group_type_id: {
-                    required: "Please select a group name.",
+                    required: "Please select a group."
                 },
                 // rack_id: {
                 //     required: "Please select a rack number."
                 // },
                 basic_rate: {
                     required: "Please enter the basic rate.",
-                    number: "Please enter a valid number for the basic rate.",
+                    number: "Please enter a valid number."
                 },
                 opening_stock: {
                     required: "Please enter the opening stock.",
-                    number: "Please enter a valid number for the opening stock.",
+                    number: "Please enter a valid number."
                 }
             }
         });
-
+    });
 </script>
 
 

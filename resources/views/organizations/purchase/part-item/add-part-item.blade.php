@@ -11,6 +11,12 @@
     .red-text{
         color: red !important;  
     }
+    .marg-top{
+        margin-top: 30px;
+    }
+    .form-control  {
+        color: #303030 !important;
+    }
 </style>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -30,7 +36,7 @@
                                     <div class="form-group-inner">
                                         <div class="row">
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="part_number">Part No:</label>
+                                                <label for="part_number">Part No <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="part_number" name="part_number" value="{{old('part_number') }}" placeholder="Enter part no">
                                                 @if ($errors->has('part_number'))
                                                 <span class="red-text">{{ $errors->first('part_number') }}</span>
@@ -38,14 +44,14 @@
                                             </div>
 
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="description">Description:</label>
+                                                <label for="description">Description <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="description" name="description" value="{{old('description') }}" placeholder="Enter description">
                                                 @if ($errors->has('description'))
                                                 <span class="red-text">{{ $errors->first('description') }}</span>
                                                 @endif
                                             </div>
 
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
                                                 <label for="extra_description">Extra Description : (optional)</label>
                                                 <input type="text" class="form-control" id="extra_description" name="extra_description" value="{{old('extra_description') }}" placeholder="Enter extra description">
                                                 @if ($errors->has('extra_description'))
@@ -53,7 +59,7 @@
                                                 @endif
                                             </div>
 
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
                                                 <label for="unit_id">Unit <span class="text-danger">*</span></label>
                                                 <select class="form-control" name="unit_id" id="unit_id">
                                                     <option value="">Select Unit</option>
@@ -66,7 +72,7 @@
                                                 @endif
                                             </div>
 
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
                                                 <label for="hsn_id">HSN/SAC No <span class="text-danger">*</span></label>
                                                 <select class="form-control" name="hsn_id" id="hsn_id">
                                                     <option value="">Select HSN/SAC No</option>
@@ -79,7 +85,7 @@
                                                 @endif
                                             </div>
 
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
                                                 <label for="group_type_id">Group Master <span class="text-danger">*</span></label>
                                                 <select class="form-control" name="group_type_id" id="group_type_id">
                                                     <option value="">Select Group</option>
@@ -92,7 +98,7 @@
                                                 @endif
                                             </div>
                                             
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
                                                 <label for="rack_id">Rack Number (optional)</label>
                                                 <select class="form-control" name="rack_id" id="rack_id">
                                                     <option value="">Select Rack Number</option>
@@ -104,16 +110,16 @@
                                                 <span class="red-text">{{ $errors->first('rack_id') }}</span>
                                                 @endif
                                             </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="basic_rate">Basic Rate:</label>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
+                                                <label for="basic_rate">Basic Rate  <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="basic_rate" name="basic_rate"  value="{{old('basic_rate') }}" placeholder="Enter basic rate">
                                                 @if ($errors->has('basic_rate'))
                                                 <span class="red-text">{{ $errors->first('basic_rate') }}</span>
                                                 @endif
                                             </div>
 
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="opening_stock">Opening Stock:</label>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
+                                                <label for="opening_stock">Opening Stock <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="opening_stock" name="opening_stock" value="{{old('opening_stock') }}" placeholder="Enter opening stock">
                                                 @if ($errors->has('opening_stock'))
                                                 <span class="red-text">{{ $errors->first('opening_stock') }}</span>

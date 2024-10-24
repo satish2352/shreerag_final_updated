@@ -31,7 +31,7 @@
                                     <div class="row">
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                             <label for="name">Name:</label>
-                                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter name">
+                                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter Number">
                                             @if ($errors->has('name'))
                                             <span class="red-text"><?php echo $errors->first('name', ':message'); ?></span>
                                         @endif

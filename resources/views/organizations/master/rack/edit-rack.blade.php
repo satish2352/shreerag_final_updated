@@ -32,7 +32,7 @@
                                         <div class="row">
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                 <label for="name">Name:</label>
-                                                <input type="text" class="form-control" value="@if (old('name')) {{ old('name') }}@else{{ $editData->name }} @endif" id="name" name="name" placeholder="Enter part item name">
+                                                <input type="text" class="form-control" value="@if (old('name')) {{ old('name') }}@else{{ $editData->name }} @endif" id="name" name="name" placeholder="Enter Number">
                                             </div>
                                            
                                         </div>
