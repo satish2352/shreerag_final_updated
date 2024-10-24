@@ -474,7 +474,7 @@ public function getAllListMaterialReceivedFromQualityPOTracking()
                 $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
             })
             ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
-            ->whereNull('business_application_processes.store_material_sent_date')
+            // ->whereNull('business_application_processes.store_material_sent_date')
             ->where('businesses.is_active', true)
             ->select(
                 'businesses_details.id',
