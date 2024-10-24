@@ -14,7 +14,7 @@ use App\Models\{
     PurchaseOrdersModel,
     AdminView,
     NotificationStatus,
-    GrnPoQuantityTracking
+    GrnPOQuantityTracking
 };
 use Config;
 
@@ -203,7 +203,7 @@ class GRNRepository
 
 
                     // Create a new GRN tracking entry
-    $grnPoTracking = new GrnPoQuantityTracking();
+    $grnPoTracking = new GrnPOQuantityTracking();
 
     // Assign the necessary fields from the $item array
     // $grnPoTracking->purchase_id = $last_insert_id; 
