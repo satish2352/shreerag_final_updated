@@ -714,7 +714,7 @@ public function getAllInprocessProductProduction(){
         'designs.design_image',
         'business_application_processes.store_material_sent_date'
 
-    )
+    )->orderBy('production.updated_at', 'desc')
     ->get();
 
       return $data_output ;

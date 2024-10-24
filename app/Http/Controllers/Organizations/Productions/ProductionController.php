@@ -12,7 +12,8 @@ use Validator;
 use Config;
 use Carbon;
 use App\Models\{
-    PartItem
+    PartItem,
+    UnitMaster
 };
 class ProductionController extends Controller
 { 
@@ -110,11 +111,12 @@ class ProductionController extends Controller
         try {
             $editData = $this->service->editProduct($id);
             $dataOutputPartItem = PartItem::where('is_active', true)->get();
-            
+            $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
             return view('organizations.productions.product.edit-recived-bussinesswise', [
                 'productDetails' => $editData['productDetails'],
                 'dataGroupedById' => $editData['dataGroupedById'],
                 'dataOutputPartItem' => $dataOutputPartItem,
+                'dataOutputUnitMaster'=>$dataOutputUnitMaster,
                 'id' => $id
             ]);
         } catch (\Exception $e) {

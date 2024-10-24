@@ -11,7 +11,8 @@ use Config;
 use Carbon;
 use App\Models\ {
     PartItem,
-    User
+    User,
+    UnitMaster
 
 };
 
@@ -132,11 +133,12 @@ class StoreController extends Controller
         try {
             $editData = $this->service->editProductMaterialWiseAdd($id);
             $dataOutputPartItem = PartItem::where('is_active', true)->get();
-            
+            $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
             return view('organizations.store.list.edit-material-bom-wise-add', [
                 'productDetails' => $editData['productDetails'],
                 'dataGroupedById' => $editData['dataGroupedById'],
                 'dataOutputPartItem' => $dataOutputPartItem,
+                'dataOutputUnitMaster'=>$dataOutputUnitMaster,
                 'id' => $id
             ]);
         } catch (\Exception $e) {
@@ -179,11 +181,13 @@ class StoreController extends Controller
         try {
             $editData = $this->service->editProduct($id);
             $dataOutputPartItem = PartItem::where('is_active', true)->get();
-            $dataOutputUser = User::where('is_active', true)->get();
+            // $dataOutputUser = User::where('is_active', true)->get();
+            $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
             return view('organizations.store.list.edit-recived-inprocess-production-material', [
                 'productDetails' => $editData['productDetails'],
                 'dataGroupedById' => $editData['dataGroupedById'],
                 'dataOutputPartItem' => $dataOutputPartItem,
+                'dataOutputUnitMaster'=>$dataOutputUnitMaster,
                 // 'dataOutputUser'=>$dataOutputUser,
                 'id' => $id
             ]);

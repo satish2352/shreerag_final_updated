@@ -172,9 +172,27 @@
                                                         </td>
                                                         <td>
                                                             @if($item->material_send_production == 0)
-                                                            <input class="form-control unit" name="addmore[{{ $index }}][unit]" type="text" value="{{ $item->unit }}">
+                                                            
+                                                                <select class="form-control part-no" name="addmore[{{ $index }}][unit]" @if($item->material_send_production) @endif>
+                                                                    <option value="">Select Part Item</option>
+                                                                    @foreach ($dataOutputUnitMaster as $unit_data)
+                                                                        <option value="{{ $unit_data->id }}" {{ $unit_data->id == $item->unit ? 'selected' : '' }}>
+                                                                            {{ $unit_data->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                           
+                                                            {{-- <input class="form-control unit" name="addmore[{{ $index }}][unit]" type="text" value="{{ $item->unit }}"> --}}
                                                             @else
-                                                            <input class="form-control unit disabled-btn" name="addmore[{{ $index }}][unit]" type="text" value="{{ $item->unit }}" disabled>
+                                                            <select class="form-control part-no" name="addmore[{{ $index }}][unit]" @if($item->material_send_production) disabled @endif>
+                                                                <option value="">Select Part Item</option>
+                                                                @foreach ($dataOutputUnitMaster as $unit_data)
+                                                                    <option value="{{ $unit_data->id }}" {{ $unit_data->id == $item->unit ? 'selected' : '' }}>
+                                                                        {{ $unit_data->name }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                            {{-- <input class="form-control unit disabled-btn" name="addmore[{{ $index }}][unit]" type="text" value="{{ $item->unit }}" disabled> --}}
                                                             @endif
                                                         </td>
                                                         <td>
@@ -308,7 +326,7 @@ function updateSerialNumbers() {
         var newRow = `
             <tr>
                 <td>
-                    <input type="text" name="addmore[${i_count}][id]" class="form-control" style="min-width:50px" readonly value="${i_count}">
+                    <input type="text" name="addmore[${i_count}][id]" class="form-control" style="min-width:50px"  value="${i_count}">
                 </td>
                 <td>
                     <select class="form-control part-no mb-2" name="addmore[${i_count}][part_no_id]">

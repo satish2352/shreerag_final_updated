@@ -191,8 +191,22 @@
                                                                 <td>
                                                                     <input class="form-control val-quantity" name="addmore[{{ $index }}][quantity]" type="text" value="{{ $item->quantity }}" @if($item->material_send_production) readonly @endif>
                                                                 </td>
+                                                                {{-- <td>
+                                                                    <input class="form-control val-unit" name="addmore[{{ $index }}][unit]" type="text" value="{{ $item->unit_name }}" @if($item->material_send_production) readonly @endif>
+                                                                </td> --}}
                                                                 <td>
-                                                                    <input class="form-control val-unit" name="addmore[{{ $index }}][unit]" type="text" value="{{ $item->unit }}" @if($item->material_send_production) readonly @endif>
+                                                                    <?php
+                                                                    // dd($dataOutputUnitMaster );
+                                                                    // die();
+                                                                    ?>
+                                                                    <select class="form-control part-no" name="addmore[{{ $index }}][unit]" @if($item->material_send_production) disabled @endif>
+                                                                        <option value="">Select Part Item</option>
+                                                                        @foreach ($dataOutputUnitMaster as $unit_data)
+                                                                            <option value="{{ $unit_data->id }}" {{ $unit_data->id == $item->unit ? 'selected' : '' }}>
+                                                                                {{ $unit_data->name }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    </select>
                                                                 </td>
                                                                 <td>
                                                                     <span class="material-send-production-status">
@@ -372,8 +386,14 @@
                     <input class="form-control val-quantity" name="addmore[${rowCounter}][quantity]" type="text">
                 </td>
                 <td>
-                    <input class="form-control val-unit" name="addmore[${rowCounter}][unit]" type="text">
-                </td>
+                                                                    <select class="form-control mb-2" name="addmore[${rowCounter}][unit]" id="">
+                                                                        <option value="" default>Select Unit</option>
+                                                                        @foreach ($dataOutputUnitMaster as $data)
+                                                                                <option value="{{ $data['id'] }}" >
+                                                                                    {{ $data['name'] }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </td>
                 <td>
                     <span class="material-send-production-status">
                         <i class="fa fa-question" style="color: gray;"></i>

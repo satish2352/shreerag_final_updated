@@ -247,22 +247,25 @@ class ProductionRepository  {
                 ->leftJoin('purchase_orders', function($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
                 })
-                ->leftJoin('production_details', function($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
+                ->leftJoin('production_details as pd', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'pd.business_details_id');
                 })
+                ->leftJoin('tbl_unit', 'pd.unit', '=', 'tbl_unit.id')  // Ensure this join is present
+                
+                // ->join('production_details', 'production_details.unit', '=', 'tbl_unit.id')
                 ->where('businesses_details.id', $id)
                 // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
                 ->where('businesses_details.is_active', true)
                 ->select(
                     'businesses_details.id',
                     'businesses_details.product_name',
-                    // 'businesses_details.quantity',
                     'businesses_details.description',
-                    'production_details.part_item_id',
-                    'production_details.quantity',
-                    'production_details.unit',
-                    'production_details.business_details_id',
-                    'production_details.material_send_production',
+                    'pd.part_item_id',
+                    'pd.quantity',
+                    'pd.unit',
+                    'tbl_unit.name as unit_name',  // Ensure tbl_unit.name exists in the table
+                    'pd.business_details_id',
+                    'pd.material_send_production',
                     'designs.bom_image',
                     'designs.design_image',
                     'business_application_processes.store_material_sent_date'
