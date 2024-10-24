@@ -9,7 +9,8 @@ use App\Models\ {
     BusinessApplicationProcesses,
     ProductionModel,
     DesignRevisionForProd,
-    PurchaseOrdersModel
+    PurchaseOrdersModel,
+    GrnPOQuantityTracking
     };
 use Config;
 
