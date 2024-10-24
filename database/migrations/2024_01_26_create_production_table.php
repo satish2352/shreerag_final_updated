@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('design_id');
             $table->unsignedBigInteger('is_approved_production')->nullable();
             $table->string('production_status_quantity_tracking')->nullable();
+            $table->string('store_status_quantity_tracking')->nullable();
             $table->boolean('is_approve')->default(false);
             $table->boolean('is_active')->default(true);
             $table->boolean('is_deleted')->default(false);
