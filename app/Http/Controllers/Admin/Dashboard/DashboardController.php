@@ -649,7 +649,7 @@ class DashboardController extends Controller {
             ];
 
             $material_received_by_quality = NotificationStatus::where('off_canvas_status',27)
-            ->where('received_material_to quality','0')
+            ->where('received_material_to_quality','0')
             ->select('id')
             ->get();
             $material_received_by_quality_count = $material_received_by_quality->count();

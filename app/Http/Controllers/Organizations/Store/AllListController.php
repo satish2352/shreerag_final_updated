@@ -192,8 +192,8 @@ class AllListController extends Controller
                 foreach ($data_output as $data) {
                     $business_id = $data->id; 
                     if (!empty($business_id)) {
-                        $update_data['received_material_to quality'] = '1';
-                        NotificationStatus::where('received_material_to quality', '0')
+                        $update_data['received_material_to_quality'] = '1';
+                        NotificationStatus::where('received_material_to_quality', '0')
                             ->where('id', $business_id)
                             ->update($update_data);
                     }
