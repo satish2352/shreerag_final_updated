@@ -59,17 +59,27 @@ class FinanceController extends Controller
             return $e;
         }
     }
-    public function sendToDispatch($id){
+    // public function sendToDispatch($id, $business_details_id){
+    //     try {
+    //         $accepted = base64_decode($id);
+    //         $update_data = $this->service->sendToDispatch($accepted);
+    //         return redirect('financedept/list-send-to-dispatch');
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+    
+    public function sendToDispatch($id, $business_details_id) {
         try {
             $accepted = base64_decode($id);
-            $update_data = $this->service->sendToDispatch($accepted);
+            // Pass both `$accepted` and `$business_details_id` to the service method
+            $update_data = $this->service->sendToDispatch($accepted, $business_details_id);
             return redirect('financedept/list-send-to-dispatch');
         } catch (\Exception $e) {
             return $e;
         }
     }
     
-
     // public function createRequesition($createRequesition)
     // {
     //     try {

@@ -82,7 +82,7 @@ padding-left: 20px !important;
                                             <th data-field="product_name" data-editable="false">Product Name</th>
                                             <th data-field="quantity" data-editable="false">Quantity</th>
                                             <th data-field="grn_date" data-editable="false">Description</th>
-                                            {{-- <th data-field="action" data-editable="false">Action</th> --}}
+                                            <th data-field="action" data-editable="false">Action</th>
 
                                         </tr>
 
@@ -98,10 +98,10 @@ padding-left: 20px !important;
                                             <td>{{ ucwords($data->description) }}</td>
                                             <td>
                                                 <div style="display: inline-block; align-items: center;">
-                                                    <a href="{{route('edit-recived-bussinesswise', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>Edit Product</button></a>
+                                                    <a href="{{route('edit-recived-bussinesswise', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed">Edit Product</button></a>
                                                 </div>
-                                                <div style="display: inline-block; align-items: center;">
-                                                <a href="{{route('edit-recived-bussinesswise-quantity-tracking', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>Production Completed</button></a>
+                                                <div style="display: inline-block; align-items: center; margin-top: 10px;">
+                                                <a href="{{route('edit-recived-bussinesswise-quantity-tracking', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed">Production Completed</button></a>
                                             </div></td>
                                            </tr>
                                         @endforeach

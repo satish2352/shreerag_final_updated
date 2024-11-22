@@ -74,9 +74,11 @@ class AllListController extends Controller
     {
         try {
             $data_output = $this->service->getAllListBusinessReceivedFromLogistics();
+            // dd($data_output);
+            // die();
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
-                    $business_details_id = $data->id; 
+                    $business_details_id = $data->business_details_id; 
                     if (!empty($business_details_id)) {
                         $update_data['logistics_to_fianance_visible'] = '1';
                         NotificationStatus::where('logistics_to_fianance_visible', '0')

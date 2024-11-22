@@ -123,12 +123,8 @@
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
                                                 <th data-field="title" data-editable="false">customer Name</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
-                                                <th data-field="quantity" data-editable="false">Quantity</th>
-                                                <th data-field="truck_no" data-editable="false">Truck Number</th>
-                                                <th data-field="outdoor_no" data-editable="false">Outdoor Number</th>
-                                                <th data-field="gate_entry" data-editable="false">Gate Entry</th>
-                                                <th data-field="remark" data-editable="false">Dispatch Remark</th>
-                                                <th data-field="updated_at" data-editable="false">Dispatch Date</th>
+                                                <th data-field="total_quantity" data-editable="false">Total Product Quantity</th>
+                                                <th data-field="total_completed_quantity" data-editable="false">Total Production Done Quantity</th>                                                
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -139,11 +135,7 @@
                                                     <td>{{ ucwords($data->title) }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
-                                                    <td>{{ ucwords($data->truck_no) }}</td>
-                                                    <td>{{ ucwords($data->outdoor_no) }}</td>
-                                                    <td>{{ ucwords($data->gate_entry) }}</td>
-                                                    <td>{{ ucwords($data->remark) }}</td>  
-                                                    <td>{{ ucwords($data->updated_at) }}</td>
+                                                    <td>{{ ucwords($data->total_completed_quantity) }}</td>
                                                       </tr>
                                             @endforeach
                                         </tbody>

@@ -3420,7 +3420,7 @@ input[type=submit].btn-block {
 
 .dropdown-toggle::after {
     display: inline-block;
-    margin-left: .255em;
+    margin-left: 1.255em !important;
     vertical-align: .255em;
     content: "";
     border-top: .3em solid;

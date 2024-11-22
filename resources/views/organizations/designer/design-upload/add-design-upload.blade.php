@@ -88,15 +88,15 @@
                                                             <span class="red-text">{{ $errors->first("design_image") }}</span>
                                                         @endif
                                                     </div>
-                                                    <div  class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="bom_image">Upload BOM (Excel, 10KB - 5MB)  <span class="text-danger">*</span></label>
-                                                        {{-- <input type="file" class="form-control" accept=".xls, .xlsx" name="bom_image"> --}}
-                                                        <input type="file" class="form-control" accept=".xls,.xlsx" name="bom_image" data-maxsize="2097152"> <!-- 2MB -->
-
+                                                        <input type="file" class="form-control" accept=".xls,.xlsx" name="bom_image" data-maxsize="5242880"> <!-- 5MB -->
+                                                    
                                                         @if ($errors->has("bom_image"))
                                                             <span class="red-text">{{ $errors->first("bom_image") }}</span>
                                                         @endif
                                                     </div>
+                                                    
                                                 </div>
                                                 <div class="login-btn-inner">
                                                     <div class="row">
@@ -149,7 +149,7 @@
                     bom_image: {
                         required: true,
                         accept: ".xls,.xlsx",
-                        filesize: { min: 10 * 1024, max: 5 * 1024 * 1024 } 
+                        filesize: { min: 10 * 1024, max: 5 * 1024 * 1024 }
                     }
                 },
                 messages: {
@@ -161,7 +161,7 @@
                     bom_image: {
                         required: "Please select a BOM Excel file.",
                         accept: "Please select a valid BOM Excel file.",
-                        filesize: "The file must be between 10KB and 2MB."
+                        filesize: "The file must be between 10KB and 5MB."
                     }
                 },
                 errorPlacement: function(error, element) {

@@ -119,63 +119,67 @@ class ItemController extends Controller
 }
 
 
-        public function update(Request $request){
-            $id = $request->edit_id;
+public function update(Request $request) {
+    // $id = $request->edit_id;
+    $id = $request->input('id');
+    $rules = [
+        'part_number' => 'required|max:255',
+        'description' => [
+            'required',
+            'max:255',
+            Rule::unique('tbl_part_item')->ignore($id)
+        ],
+        'unit_id' => 'required',
+        'hsn_id' => 'required',
+        'group_type_id' => 'required',
+        'basic_rate' => 'required|numeric|min:0',
+        'opening_stock' => 'required|numeric|min:0',
+    ];
+    $messages = [
+        'part_number.required' => 'Please enter the part number.',
+        'description.required' => 'Please enter a description.',
+        'description.unique' => 'This description already exists.',
+        'description.max' => 'This description max 255.',
+        'unit_id.required' => 'Please select a unit.',
+        'hsn_id.required' => 'Please select an HSN.',
+        'group_type_id.required' => 'Please select a group type.',
+        'basic_rate.required' => 'Please enter the basic rate.',
+        'basic_rate.numeric' => 'The basic rate must be a number.',
+        'basic_rate.min' => 'The basic rate cannot be negative.',
+        'opening_stock.required' => 'Please enter the opening stock.',
+        'opening_stock.numeric' => 'The opening stock must be a number.',
+        'opening_stock.min' => 'The opening stock cannot be negative.',
+    ];
 
-            $rules = [
-                // 'part_number' => 'required|max:255',
-                // 'description' => ['required', 'max:255', Rule::unique('tbl_part_item', 'description')->ignore($id, 'id')],
-                // // 'description' => 'required|unique:tbl_part_item|max:255',
-                // 'unit_id' => 'required',
-                // 'hsn_id' => 'required',
-               // 'rack_id' => 'required',
-                // 'group_type_id' => 'required',
-                // 'basic_rate' => 'required|numeric|min:0',
-                // 'opening_stock' => 'required|numeric|min:0',
-            ];
-        
-            $messages = [
-                // 'part_number.required' => 'Please enter the part number.',
-                // 'description.required' => 'Please enter a description.',
-                // 'description.unique' => 'This description already exists.',
-                // 'description.max' => 'This description  max 255.',
-                // 'unit_id.required' => 'Please select a unit.',
-                // 'hsn_id.required' => 'Please select an HSN.',
-                // 'group_type_id.required' => 'Please select a group type.',
-                // 'rack_id.required' => 'Please select a rack number.',
-                // 'basic_rate.required' => 'Please enter the basic rate.',
-                // 'basic_rate.numeric' => 'The basic rate must be a number.',
-                // 'basic_rate.min' => 'The basic rate cannot be negative.',
-                // 'opening_stock.required' => 'Please enter the opening stock.',
-                // 'opening_stock.numeric' => 'The opening stock must be a number.',
-                // 'opening_stock.min' => 'The opening stock cannot be negative.',
-            ];
-            try {
-                $validation = Validator::make($request->all(),$rules, $messages);
-                if ($validation->fails()) {
+    try {
+        $validation = Validator::make($request->all(), $rules, $messages);
+
+        if ($validation->fails()) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors($validation);
+        } else {
+            $update_data = $this->service->updateAll($request);
+
+            if ($update_data) {
+                $msg = $update_data['msg'];
+                $status = $update_data['status'];
+                if ($status == 'success') {
+                    return redirect('purchase/list-part-item')->with(compact('msg', 'status'));
+                } else {
                     return redirect()->back()
                         ->withInput()
-                        ->withErrors($validation);
-                } else {
-                    $update_data = $this->service->updateAll($request);
-                    if ($update_data) {
-                        $msg = $update_data['msg'];
-                        $status = $update_data['status'];
-                        if ($status == 'success') {
-                            return redirect('purchase/list-part-item')->with(compact('msg', 'status'));
-                        } else {
-                            return redirect()->back()
-                                ->withInput()
-                                ->with(compact('msg', 'status'));
-                        }
-                    }
+                        ->with(compact('msg', 'status'));
                 }
-            } catch (Exception $e) {
-                return redirect()->back()
-                    ->withInput()
-                    ->with(['msg' => $e->getMessage(), 'status' => 'error']);
             }
         }
+    } catch (\Exception $e) {
+        return redirect()->back()
+            ->withInput()
+            ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+    }
+}
+
         public function destroy(Request $request){
             $delete_data_id = base64_decode($request->id);
             try {

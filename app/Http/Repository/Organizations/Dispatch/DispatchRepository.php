@@ -21,12 +21,21 @@ class DispatchRepository  {
 public function storeDispatch($request)
 {
     try {
-    $dataOutput = Dispatch::where('business_details_id', $request->business_details_id)->first();
+       
+        $business_application = BusinessApplicationProcesses::where('business_details_id', $request->business_details_id)->first();
+
+        $business_application->dispatch_status_id = config('constants.DISPATCH_DEPARTMENT.DISPATCH_DEPARTMENT_MARKED_DISPATCH_COMPLETED');
+         $business_application->off_canvas_status = 22;
+        
+         $business_application->save();
+    $dataOutput = Dispatch::where('quantity_tracking_id', $request->id)->first();
 
 if (!$dataOutput) {
     return response()->json(['status' => 'error', 'message' => 'Logistics record for this business does not exist.'], 404);
 }
 
+
+// $quantity_tracking = CustomerProductQuantityTracking::where('id', $id)->first();
 
         if ($dataOutput) {
             // Update the fields
@@ -40,17 +49,15 @@ if (!$dataOutput) {
             } 
             $dataOutput->save();
        
-            $business_application = BusinessApplicationProcesses::where('business_details_id', $dataOutput->business_details_id)->first();
+           
             
-            if ($business_application) {
-                $business_application->dispatch_status_id = config('constants.DISPATCH_DEPARTMENT.DISPATCH_DEPARTMENT_MARKED_DISPATCH_COMPLETED');
-                $business_application->off_canvas_status = 22;
-                $business_application->save();
+            if ($dataOutput) {
+                
 
 
                  // Track the completed quantity for the given business_details_id
-              $quantity_tracking = CustomerProductQuantityTracking::where('business_details_id', $business_application->business_details_id)->first();
-               
+            //   $quantity_tracking = CustomerProductQuantityTracking::where('business_details_id', $business_application->business_details_id)->first();
+            $quantity_tracking = CustomerProductQuantityTracking::where('id', $dataOutput->id)->first();
               $quantity_tracking->quantity_tracking_status = config('constants.DISPATCH_DEPARTMENT.SUBMITTED_COMPLETED_QUANLTITY_DISPATCH_DEPT');
               $quantity_tracking->save();
               
@@ -58,9 +65,10 @@ if (!$dataOutput) {
                 $update_data_admin['off_canvas_status'] = 22;
                 $update_data_business['off_canvas_status'] = 22;
                 $update_data_admin['is_view'] = '0';
-                AdminView::where('business_details_id', $business_application->business_details_id)
+                $update_data_business['dispatch_status_id'] = '0';
+                AdminView::where('business_details_id', $dataOutput->business_details_id)
                     ->update($update_data_admin);
-                    NotificationStatus::where('business_details_id', $business_application->business_details_id)
+                    NotificationStatus::where('business_details_id', $dataOutput->business_details_id)
                     ->update($update_data_business);
 
 

@@ -119,6 +119,12 @@ class CommanController
     
             // Fetch related Purchase Order Details
             $purchaseOrderDetails = PurchaseOrderDetailsModel::join('tbl_part_item', 'tbl_part_item.id', '=', 'purchase_order_details.part_no_id')
+            ->leftJoin('tbl_hsn as pod_hsn', function($join) {
+                $join->on('pod_hsn.id', '=', 'purchase_order_details.hsn_id');
+            })
+            ->leftJoin('tbl_unit as pod_unit', function($join) {
+                $join->on('pod_unit.id', '=', 'purchase_order_details.unit');
+            })
             ->where('purchase_id', $purchaseOrder->id)
                 ->select(
                     'purchase_order_details.purchase_id',
@@ -131,6 +137,8 @@ class CommanController
                     'purchase_order_details.actual_quantity',
                     'purchase_order_details.accepted_quantity',
                     'purchase_order_details.rejected_quantity',
+                    'pod_hsn.name as hsn_name',
+                    'pod_unit.name as unit_name',
                     'purchase_order_details.rate',
                     'purchase_order_details.amount'
                 )

@@ -116,7 +116,7 @@ class AllListRepository
                   $join->on('business_application_processes.business_id', '=', 'businesses.id');
               })
               ->leftJoin('businesses_details', function($join) {
-                  $join->on('production.business_details_id', '=', 'businesses_details.id');
+                  $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
               })
               ->leftJoin('design_revision_for_prod', function ($join) {
                   $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
@@ -130,7 +130,8 @@ class AllListRepository
               ->whereIn('business_application_processes.store_status_id', $array_to_be_check)
               ->where('businesses_details.is_active', true)
               ->groupBy(
-                  'businesses.id',
+                  // 'businesses.id',
+                  'production.business_details_id',
                   'businesses_details.id',
                   'businesses.customer_po_number',
                   'businesses_details.product_name',
@@ -146,7 +147,8 @@ class AllListRepository
                   'req2.updated_at'
               )
               ->select(
-                  'businesses.id',
+                  // 'businesses.id',
+                  'production.business_details_id',
                   'businesses_details.id',
                   'businesses.customer_po_number',
                   'businesses_details.product_name',

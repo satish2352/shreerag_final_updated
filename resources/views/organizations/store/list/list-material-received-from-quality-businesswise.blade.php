@@ -151,7 +151,7 @@
                                                             <button class="pd-setting-ed enabled-btn" title="Requirement forwarded for production">Requirement forwarded For production</button>
                                                         </a>
                                                     @else
-                                                    <button class="pd-setting-ed disabled-btn" title="Requirement forwarded for production" disabled>Requirement forwarded For production</button>  
+                                                    <button class="pd-setting-ed disabled-btn" style="margin-top:10px;" title="Requirement forwarded for production" disabled>Requirement forwarded For production</button>  
                                                     @endif
                                                     </td>
 

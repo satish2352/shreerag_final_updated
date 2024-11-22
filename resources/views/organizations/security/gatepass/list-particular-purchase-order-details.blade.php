@@ -37,20 +37,25 @@
             border-collapse: collapse;
         }
 
-        table,
+        /* table,
         th,
         td {
             border: 1px solid black;
+        } */
+        .custom-datatable-overright table tbody tr td{
+            padding: 0px !important;
+            margin: 0px !important;
         }
-
         th,
         td {
-            padding: 8px;
+            /* padding: 8px; */
+            padding: 0px !important;
+            margin: 0px !important;
             text-align: left;
         }
 
         .totals {
-            margin-top: 20px;
+            /* margin-top: 20px; */
             float: right;
             width: 40%;
         }
@@ -116,26 +121,26 @@
                                     and
                                     schedule mentioned below:</p>
 
-                                <table>
+                                <table style="border-top: 1px solid black; border-right: 1px solid black; ">
                                     <thead>
-                                        <tr>
-                                            <th>Sr. No.</th>
-                                            <th>Part No.</th>
-                                            <th>Description</th>
-                                            <th>Due Date</th>
-                                            <th>Quantity</th>
+                                        <tr  style="border-left: 1px solid black; border-bottom: 1px solid black;">
+                                            <th  style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">Sr. No.</span></th>
+                                            <th  style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">Part No.</span></th>
+                                            <th  style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">Description</span></th>
+                                            <th  style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">Due Date</span></th>
+                                            <th  style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">Quantity</span></th>
                                             {{-- <th>Rate</th>
                                             <th>Amount</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($purchaseOrderDetails as $index => $detail)
-                                            <tr>
-                                                <td>{{ $index + 1 }}</td>
-                                                <td>{{ $detail->part_name }}</td>
-                                                <td>{{ $detail->description }}</td>
-                                                <td>{{ $detail->due_date }}</td>
-                                                <td>{{ $detail->quantity }} {{ $detail->unit }}</td>
+                                            <tr  style="border-left: 1px solid black; ">
+                                                <td  style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">{{ $index + 1 }}</span></td>
+                                                <td  style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">{{ $detail->part_name }}</span></td>
+                                                <td  style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">{{ $detail->description }}</span></td>
+                                                <td  style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">{{ $detail->due_date }}</span></td>
+                                                <td  style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">{{ $detail->quantity }} {{ $detail->unit }}</span></td>
                                                 {{-- <td>{{ $detail->rate }}</td>
                                                 <td>{{ $detail->amount }}</td> --}}
                                             </tr>
@@ -154,15 +159,15 @@
 
 
                     </div>
-                    <a style="padding-bottom: 100px; padding-left:20px;">
-                        <button data-toggle="tooltip" onclick="printInvoice()" title="Accept Purchase Order" style="margin-top: 20px;">Print</button>
-                    </a>
+                    
                 </div>
             </div>
         </div>
     </div>
 
-
+    <a style="padding-bottom: 100px; padding-left:20px;">
+        <button data-toggle="tooltip" onclick="printInvoice()"  style="margin-top: 20px;">Print</button>
+    </a>
 
 
     <!-- Print Button -->

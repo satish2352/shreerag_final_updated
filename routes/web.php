@@ -415,7 +415,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-po-sanction-and-need-to-do-payment-to-vendor', ['as' => 'list-po-sanction-and-need-to-do-payment-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@listPOSanctionAndNeedToDoPaymentToVendor']);
         Route::get('/send-payment-to-vendor/{purchase_orders_id}/{business_id}', ['as' => 'send-payment-to-vendor', 'uses' => 'App\Http\Controllers\Organizations\Finance\FinanceController@forwardedPurchaseOrderPaymentToTheVendor']);
         Route::get('/recive-logistics-list', ['as' => 'recive-logistics-list', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@getAllListBusinessReceivedFromLogistics']);
-        Route::get('/send-to-dispatch/{id}', ['as' => 'send-to-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Finance\FinanceController@sendToDispatch']);
+        Route::get('/send-to-dispatch/{id}/{business_details_id}', ['as' => 'send-to-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Finance\FinanceController@sendToDispatch']);
         Route::get('/list-send-to-dispatch', ['as' => 'list-send-to-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@getAllListBusinessFianaceSendToDispatch']);
         
     });
@@ -425,7 +425,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/add-logistics/{business_id}', ['as' => 'add-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\LogisticsController@addLogistics']);
         Route::post('/store-logistics', ['as' => 'store-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\LogisticsController@storeLogistics']);
         Route::get('/list-logistics', ['as' => 'list-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\AllListController@getAllLogistics']);
-        Route::get('/send-to-fianance/{id}', ['as' => 'send-to-fianance', 'uses' => 'App\Http\Controllers\Organizations\Logistics\LogisticsController@sendToFianance']);
+        Route::get('/send-to-fianance/{id}/{business_details_id}', ['as' => 'send-to-fianance', 'uses' => 'App\Http\Controllers\Organizations\Logistics\LogisticsController@sendToFianance']);
         Route::get('/list-send-to-fianance-by-logistics', ['as' => 'list-send-to-fianance-by-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\AllListController@getAllListSendToFiananceByLogistics']);
 
     
@@ -446,7 +446,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::group(['prefix' => 'dispatchdept'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
         Route::get('/list-final-production-completed-received-from-fianance', ['as' => 'list-final-production-completed-received-from-fianance', 'uses' => 'App\Http\Controllers\Organizations\Dispatch\AllListController@getAllReceivedFromFianance']);
-        Route::get('/add-dispatch/{business_id}', ['as' => 'add-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Dispatch\DispatchController@addDispatch']);
+        Route::get('/add-dispatch/{business_id}/{business_details_id}', ['as' => 'add-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Dispatch\DispatchController@addDispatch']);
         Route::post('/store-dispatch', ['as' => 'store-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Dispatch\DispatchController@storeDispatch']);
         Route::get('/list-dispatch', ['as' => 'list-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Dispatch\AllListController@getAllDispatch']);
         

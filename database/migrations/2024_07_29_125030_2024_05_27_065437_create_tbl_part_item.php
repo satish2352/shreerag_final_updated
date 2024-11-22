@@ -23,7 +23,7 @@ return new class extends Migration
             $table->unsignedBigInteger('group_type_id');
             $table->string('basic_rate');
             $table->string('opening_stock');
-            $table->unsignedBigInteger('rack_id');
+            $table->unsignedBigInteger('rack_id')->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('is_deleted')->default(false);
             $table->timestamps();

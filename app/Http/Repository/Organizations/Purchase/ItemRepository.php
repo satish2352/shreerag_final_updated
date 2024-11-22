@@ -65,10 +65,11 @@ class ItemRepository  {
             $dataOutput->unit_id = $request->unit_id;
             $dataOutput->hsn_id = $request->hsn_id;
             $dataOutput->group_type_id = $request->group_type_id;
-            $dataOutput->rack_id = $request->rack_id;
             $dataOutput->basic_rate = $request->basic_rate;
             $dataOutput->opening_stock = $request->opening_stock;
-            
+            if ($request->has('rack_id')) {
+                $dataOutput->rack_id = $request->rack_id;
+            }
             if ($request->has('extra_description')) {
                 $dataOutput->extra_description = $request->extra_description;
             }
@@ -170,10 +171,12 @@ class ItemRepository  {
             $dataOutput->unit_id = $request->unit_id;
             $dataOutput->hsn_id = $request->hsn_id;
             $dataOutput->group_type_id = $request->group_type_id;
-            $dataOutput->rack_id = $request->rack_id;
+            // $dataOutput->rack_id = $request->rack_id;
             $dataOutput->basic_rate = $request->basic_rate;
             $dataOutput->opening_stock = $request->opening_stock;
-    
+            if ($request->has('rack_id')) {
+                $dataOutput->rack_id = $request->rack_id;
+            }
             if ($request->has('extra_description')) {
                 $dataOutput->extra_description = $request->extra_description;
             }

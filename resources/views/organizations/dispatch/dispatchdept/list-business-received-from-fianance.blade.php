@@ -114,7 +114,7 @@
                                                     <td>{{ ucwords($data->vehicle_name) }}</td>
                                                 <td>
                                                     <div style="display: flex; align-items: center;">
-                                                        <a href="{{route('add-dispatch', $data->id)}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+                                                        <a href="{{route('add-dispatch', [base64_encode($data->id), base64_encode($data->business_details_id)])}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
                                                         {{-- <a href="{{route('delete-products')}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a> --}}
                                                     </div>
                                                 </td>

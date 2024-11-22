@@ -3520,7 +3520,7 @@ tbody.collapse.show {
     display: inline-block;
     width: 0;
     height: 0;
-    margin-left: .255em;
+    margin-left: 1.255em !important;
     vertical-align: .255em;
     content: "";
     border-top: .3em solid;

@@ -22,9 +22,11 @@ class AllListController extends Controller
     public function getAllReceivedFromFianance(){
         try {
             $data_output = $this->service->getAllReceivedFromFianance();
+            // dd($data_output);
+            // die();
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
-                    $business_details_id = $data->id; 
+                    $business_details_id = $data->business_details_id; 
                     if (!empty($business_details_id)) {
                         $update_data['fianance_to_dispatch_visible'] = '1';
                         NotificationStatus::where('fianance_to_dispatch_visible', '0')

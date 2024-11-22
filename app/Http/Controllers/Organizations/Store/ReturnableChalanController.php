@@ -44,7 +44,7 @@ class ReturnableChalanController extends Controller
         ->select('tbl_returnable_chalan.id','tbl_returnable_chalan.vendor_id','tbl_returnable_chalan.transport_id',
         'tbl_returnable_chalan.business_id','tbl_returnable_chalan.vehicle_id','vendors.vendor_name'
         ,'businesses.customer_po_number','tbl_transport_name.name as transport_name','tbl_vehicle_type.name as vehicle_name'
-        )
+        )->orderBy('tbl_returnable_chalan.updated_at', 'desc')
         ->get();
 
         // dd($getOutput);

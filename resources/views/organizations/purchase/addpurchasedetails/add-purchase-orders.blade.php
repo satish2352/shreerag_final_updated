@@ -100,6 +100,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th class="col-sm-2">Part No.</th>
+                                    <th class="col-md-2">HSN No.</th>
                                     <th class="col-md-2">Description</th>
                                     <th class="col-md-2">Due Date</th>
                                     <th class="col-md-2">Quantity</th>
@@ -131,7 +132,16 @@
                                         
                                         {{-- <input class="form-control part-no" name="addmore[0][part_no]" type="text" style="min-width:150px"> --}}
                                     </td>
-
+                                    <td>
+                                        <select class="form-control mb-2" name="addmore[0][hsn_id]" id="">
+                                            <option value="" default>Select HSN</option>
+                                            @foreach ($dataOutputHSNMaster as $data)
+                                                    <option value="{{ $data['id'] }}" >
+                                                        {{ $data['name'] }}</option>
+                                            @endforeach
+                                        </select>
+                                        {{-- <input class="form-control quantity" name="addmore[0][quantity]" type="text"> --}}
+                                    </td>
                                     <td>
                                         <input class="form-control description" name="addmore[0][description]" type="text" style="min-width:150px">
                                     </td>
@@ -142,8 +152,18 @@
                                     <td>
                                         <input class="form-control quantity" name="addmore[0][quantity]" style="width:100px" type="text">
                                     </td>
-                                    <td>
+                                    {{-- <td>
                                         <input class="form-control unit" name="addmore[0][unit]" style="width:80px" type="text">
+                                    </td> --}}
+                                    <td>
+                                        <select class="form-control mb-2 unit" name="addmore[0][unit]" id="">
+                                            <option value="" default>Select Unit</option>
+                                            @foreach ($dataOutputUnitMaster as $data)
+                                                    <option value="{{ $data['id'] }}" >
+                                                        {{ $data['name'] }}</option>
+                                            @endforeach
+                                        </select>
+                                        {{-- <input class="form-control description" name="addmore[0][description]" type="text" style="min-width:150px"> --}}
                                     </td>
                                     <td>
                                         <input class="form-control rate" name="addmore[0][rate]" style="width:80px" type="text">
@@ -288,6 +308,10 @@
                     required: true,
                     digits: true,
                 },
+                'addmore[0][hsn_id]': {
+                    required: true,
+                    number: true,
+                },
                 'addmore[0][rate]': {
                     required: true,
                     number: true,
@@ -314,6 +338,10 @@
                 'addmore[0][rate]': {
                     required: "Please Enter the Rate",
                     number: "Please enter a valid number for Rate",
+                },
+                'addmore[0][hsn_id]': {
+                    required: "Please Enter the hsn id",
+                    number: "Please enter a valid number for hsn id",
                 },
                 'addmore[0][amount]': {
                     required: "Please Enter the Amount",
@@ -408,6 +436,14 @@ $.validator.addMethod("minDate", function(value, element) {
                     }
                 });
             });
+            $(context).find('.hsn_id').each(function() {
+                $(this).rules("add", {
+                    required: true,
+                    messages: {
+                        required: "Please Enter the HSN",
+                    }
+                });
+            });
             $(context).find('.rate').each(function() {
                 $(this).rules("add", {
                     required: true,
@@ -449,19 +485,35 @@ $.validator.addMethod("minDate", function(value, element) {
                                             </select>
                        
                     </td>
+                      <td>
+                             <select class="form-control mb-2 hsn_id" name="addmore[${i}][hsn_id]">
+                                <option value="" default>Select HSN</option>
+                                @foreach ($dataOutputHSNMaster as $data)
+                                    <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                                @endforeach
+                            </select>
+                        </td>
                     <td>
                         <input class="form-control description" name="addmore[${i}][description]" type="text" style="min-width:150px">
                     </td>
-                    <td>
+                      <td>
                         <input class="form-control due-date" placeholder="YYYY-MM-DD" name="addmore[${i}][due_date]" type="date"
                             style="min-width:150px" value="">
                     </td>
                     <td>
                         <input class="form-control quantity" name="addmore[${i}][quantity]" style="width:100px" type="text">
                     </td>
-                    <td>
-                        <input class="form-control unit" name="addmore[${i}][unit]" style="width:100px" type="text">
-                    </td>
+                  
+                   <td>
+                             <select class="form-control mb-2 unit" name="addmore[${i}][unit]">
+                                <option value="" default>Select Unit</option>
+                                @foreach ($dataOutputUnitMaster as $data)
+                                    <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                    
+
                     <td>
                         <input class="form-control rate" name="addmore[${i}][rate]" style="width:80px" type="text">
                     </td>
@@ -603,6 +655,10 @@ $.validator.addMethod("minDate", function(value, element) {
                         'addmore[][unit]': {
                             required: true,
                         },
+                        'addmore[0][hsn_id]': {
+                        required: true,
+                        maxlength: 255
+                    },
                         'addmore[][rate]': {
                             required: true,
                         },
@@ -660,6 +716,10 @@ $.validator.addMethod("minDate", function(value, element) {
                         'addmore[][unit]': {
                             required: "Please Enter the Unit",
                         },
+                        'addmore[0][hsn_id]': {
+                        required: "Please enter the hsn.",
+                        maxlength: "hsn_id must be at most 255 characters long."
+                    },
                         'addmore[][rate]': {
                             required: "Please Enter the Rate", 
                         },

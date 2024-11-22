@@ -7,6 +7,29 @@
 .notification-menu{
     overflow-y: auto !important;
 }
+.nav-link .fa-bell {
+        position: relative;
+    }
+
+    .notification-count {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background-color: red;
+        color: white;
+        border-radius: 50%;
+        padding: 2px 6px;
+        font-size: 12px;
+
+
+        /* .notification-count { */
+        background-color: red;
+        color: white;
+        border-radius: 50%;
+        padding: 2px 6px;
+        font-size: 12px;
+    /* } */
+    }
 </style>
 <!-- ============= pratiksha (21/08/24) ============= change for sidebar changes and change icon -->
 
@@ -336,7 +359,7 @@
                         </li>
                         <li class="nav-item {{ request()->is('designdept/list-accept-design-by-production*') ? 'active' : '' }}">
                             <a href="{{ route('list-accept-design-by-production') }}">
-                                <i class="fa fa-list-check icon-wrap"></i>
+                                <i class="fa fa-check-circle icon-wrap"></i>
                                 <span class="mini-click-non">Accepted Design List</span>
                             </a>
                         </li>
@@ -370,7 +393,7 @@
 
                             <li class="nav-item {{ request()->is('proddept/list-accept-design*') ? 'active' : '' }}">
                                 <a href="{{ route('list-accept-design') }}">
-                                    <i class="fa fa-list-check icon-wrap"></i>
+                                    <i class="fa fa-check-circle icon-wrap"></i>
                                     <span class="mini-click-non">Accepted Design List</span>
                                 </a>
                             </li>
@@ -434,7 +457,7 @@
                         <li><a class="nav-item" href="{{ route('list-gatepass') }}" aria-expanded="false"><i
                                 class="fa big-icon fa-id-badge icon-wrap"></i> <span class="mini-click-non">List Gate
                                 Pass</span></a></li>
-                                <li><a class="nav-item" href="{{ route('list-gatepass') }}" aria-expanded="false"><i
+                                <li><a class="nav-item" href="{{ route('list-dispatch-final-product-close') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-id-badge icon-wrap"></i> <span class="mini-click-non">Closed PO List</span></a></li>
                         {{-- <ul class="submenu-angle" aria-expanded="false">
                             <li><a  href="{{ route('list-gatepass') }}"><i
@@ -947,7 +970,7 @@
                                             <li class="nav-item">
                                                 <a href="#" data-toggle="dropdown" role="button"
                                                     aria-expanded="false" class="nav-link dropdown-toggle"><i class="fa fa-bell"></i></i><span
-                                                        class="" id="notification-count"></span>
+                                                        class="" style="position: fixed; top: 9px;translate: 9%;" id="notification-count"></span>
                                                 </a>
                                                 
                                                 <div role="menu"
@@ -1008,3 +1031,44 @@
         @csrf
         <input type="hidden" name="show_id" id="show_id" value="">
     </form>
+
+    <script>
+        function fetch_new_hold() {
+            var TestVal = '1';
+            if (TestVal !== '') {
+                $.ajax({
+                    url: '{{ route('get-notification') }}',
+                    type: 'GET',
+                    data: { TestVal: TestVal },
+                    success: function(response) {
+                        if (response.notification_count > 0) {
+                            $('#notification-count').text(response.notification_count).show(); // Show when count > 0
+                            
+                            var notificationMessages = '';
+                            $.each(response.notifications, function(index, notification) {
+                                var urlvar = notification.url;
+                                if (notification.admin_count > 0) {        
+                                    notificationMessages += `
+                                        <li>
+                                            <a href="${urlvar}">
+                                                <div class="notification-content">
+                                                    <h2 style="color:#444;">${notification.message}</h2>
+                                                </div>
+                                            </a>
+                                        </li>`;
+                                }
+                            });
+                            $('#notification-messages').html(notificationMessages);
+                        
+                        } else {
+                            $('#notification-count').hide(); // Hide when count is 0
+                        }
+                    }
+                });
+            }
+        }
+    
+        $(document).ready(function(){
+            setInterval(fetch_new_hold, 1000);
+        });
+    </script>

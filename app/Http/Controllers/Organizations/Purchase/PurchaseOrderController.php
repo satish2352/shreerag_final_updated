@@ -13,7 +13,9 @@ use App\Models\{
     BusinessApplicationProcesses,
     Vendors,
     Tax,
-    PartItem
+    PartItem,
+    UnitMaster,
+    HSNMaster
 };
 use App\Http\Controllers\Organizations\CommanController;
 
@@ -56,6 +58,8 @@ class PurchaseOrderController extends Controller
         $dataOutputVendor = Vendors::where('is_active', true)->get();
         $dataOutputTax = Tax::where('is_active', true)->get();
         $dataOutputPartItem = PartItem::where('is_active', true)->get();
+        $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
+        $dataOutputHSNMaster = HSNMaster::where('is_active', true)->get();
         return view(
             'organizations.purchase.addpurchasedetails.add-purchase-orders',
             compact(
@@ -63,7 +67,9 @@ class PurchaseOrderController extends Controller
                 'requistition_id',
                 'dataOutputVendor',
                 'dataOutputTax',
-                'dataOutputPartItem'
+                'dataOutputPartItem',
+                'dataOutputUnitMaster',
+                'dataOutputHSNMaster',
             )
         );
     }
@@ -325,7 +331,10 @@ class PurchaseOrderController extends Controller
         $dataOutputVendor = Vendors::where('is_active', true)->get();
         $dataOutputTax = Tax::where('is_active', true)->get();
         $dataOutputPartItem = PartItem::where('is_active', true)->get();
-        return view('organizations.purchase.addpurchasedetails.edit-purchase-orders', compact('editData', 'dataOutputVendor', 'dataOutputTax', 'dataOutputPartItem'));
+        $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
+        $dataOutputHSNMaster = HSNMaster::where('is_active', true)->get();
+        return view('organizations.purchase.addpurchasedetails.edit-purchase-orders', compact('editData', 'dataOutputVendor', 'dataOutputTax', 'dataOutputPartItem',  'dataOutputUnitMaster',
+        'dataOutputHSNMaster',));
     }
     
     

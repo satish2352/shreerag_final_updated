@@ -2500,17 +2500,21 @@
                                                     <li class="right-side"
                                                         style="color:#{{ str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) . str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) . str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) }};">
                                                         <span><b>{{ $data->product_name }}</b> : -</span>
-                                                        @if($data->off_canvas_status == 22)
-                                                        Dispatch Department Product Dispatch Completed 
-                                                        @elseif($data->off_canvas_status == 21)
-                                                        Finance Department sent to Dispatch Department
-                                                        @elseif($data->off_canvas_status == 20)
-                                                        Finance Department Received from Logistics Department
-                                                        @elseif($data->off_canvas_status == 19)
-                                                         Logistics Department  Submitted Form
-                                                        @elseif($data->off_canvas_status == 18 && $data->business_status_id == 1118 &&
-                                                        $data->design_status_id == 1114)
-                                                        Production Department Completed Production and Received Logistics Department
+                                                        <?php
+
+                                                        // dd($data);
+                                                        // die();
+                                                        ?>
+                                                        @if($data->quantity_tracking_status ==3005)
+                                                        Dispatch Department Product Dispatch Completed Quantity {{$data->completed_quantity}}
+                                                        @elseif($data->quantity_tracking_status ==3004)
+                                                        Finance Department sent to Dispatch Department {{$data->completed_quantity}}
+                                                        @elseif($data->quantity_tracking_status ==3003)
+                                                        Finance Department Received from Logistics Department Quantity {{$data->completed_quantity}}
+                                                        @elseif($data->quantity_tracking_status ==3002)
+                                                         Logistics Department  Submitted Form {{$data->completed_quantity}}
+                                                        @elseif($data->quantity_tracking_status == 3001)
+                                                        Production Department Completed Production and Received Logistics Department Quantity {{$data->completed_quantity}}
                                                         @elseif($data->off_canvas_status == 17)
                                                         Store Department forward to Production Department
                                                         @elseif($data->off_canvas_status == 27)

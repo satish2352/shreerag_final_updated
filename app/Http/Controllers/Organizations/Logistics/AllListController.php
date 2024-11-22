@@ -23,9 +23,11 @@ class AllListController extends Controller
     public function getAllCompletedProduction(){
         try {
             $data_output = $this->service->getAllCompletedProduction();
+           
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
-                    $business_details_id = $data->id; 
+                    $business_details_id = $data->business_details_id; 
+                   
                     if (!empty($business_details_id)) {
                         $update_data['production_completed'] = '1';
                         NotificationStatus::where('production_completed', '0')

@@ -116,6 +116,9 @@ class DashboardController extends Controller {
             ->leftJoin('purchase_orders', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
             })
+            ->leftJoin('tbl_customer_product_quantity_tracking', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id');
+            })
             ->where('businesses.is_active', 1)
             ->select('businesses.customer_po_number','businesses.title','businesses_details.product_name',
             'business_application_processes.business_status_id','businesses.updated_at', 'business_application_processes.design_status_id',
@@ -123,7 +126,7 @@ class DashboardController extends Controller {
              'purchase_orders.finanace_store_receipt_status_id', 'purchase_orders.purchase_status_from_owner',
              'purchase_orders.security_status_id', 'purchase_orders.quality_status_id', 'purchase_orders.finanace_store_receipt_status_id',
              'business_application_processes.logistics_status_id', 'business_application_processes.dispatch_status_id',
-             'design_revision_for_prod.reject_reason_prod','designs.design_image','designs.bom_image','designs.design_image','business_application_processes.off_canvas_status') // Adjust if you need more fields
+             'design_revision_for_prod.reject_reason_prod','designs.design_image','designs.bom_image','designs.design_image','business_application_processes.off_canvas_status', 'tbl_customer_product_quantity_tracking.quantity_tracking_status', 'tbl_customer_product_quantity_tracking.completed_quantity') // Adjust if you need more fields
             ->orderBy('businesses.updated_at', 'desc')
            
             ->get()
@@ -136,9 +139,13 @@ class DashboardController extends Controller {
         $contact_us_count = ContactUs::where('is_active',1)->count();
         $vision_mission_count = VisionMission::where('is_active',1)->count();
         $director_desk_count = DirectorDesk::where('is_active',1)->count();
+
+
         $production_completed_prod_dept_logisitics = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
-        ->where('production_status_id', 1119)->where('store_status_id', 1123)->where('off_canvas_status', 17)
-        ->where('is_active',1)->count();
+        ->where('off_canvas_status', 18)
+        ->leftJoin('tbl_customer_product_quantity_tracking', 'business_application_processes.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id')
+        ->where('tbl_customer_product_quantity_tracking.quantity_tracking_status', 3001)
+        ->count();
         $logistics_list_count = BusinessApplicationProcesses::where('logistics_status_id', 1145)->where('off_canvas_status',19)
         ->where('is_active',1)->count();
         $logistics_send_by_finance_count = BusinessApplicationProcesses::where('logistics_status_id', 1146)->where('off_canvas_status',20)
@@ -195,7 +202,7 @@ class DashboardController extends Controller {
         ->where('is_active',1)->count();
 
         $material_received_for_production = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
-        ->where('production_status_id', 1119)->where('store_status_id', 1123)->where('off_canvas_status', 17)
+        ->where('production_status_id', 1119)->where('off_canvas_status', 17)
         ->where('is_active',1)->count();
         $production_completed_prod_dept = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
         ->where('production_status_id', 1121)->where('store_status_id', 1123)->where('off_canvas_status', 18)
@@ -234,7 +241,8 @@ class DashboardController extends Controller {
       
 
         $GRN_genration= PurchaseOrderModel::where('purchase_status_from_owner',1129)->where('purchase_status_from_purchase',1129)
-        ->where('security_status_id',1132)->where('quality_status_id', null)->where('is_active',1)->count();
+        ->where('quality_status_id', null)->where('is_active',1)->count();
+
         $material_need_to_sent_to_store = PurchaseOrderModel::where('purchase_status_from_owner',1129)->where('purchase_status_from_purchase',1129)
         ->where('security_status_id',1132)->where('quality_status_id', 1134)->where('is_active',1)->count();
         $rejected_chalan_po_wise = RejectedChalan::where('chalan_no', '!=', '')->where('is_active', 1)->count();
@@ -403,7 +411,8 @@ class DashboardController extends Controller {
     {
         
         $ses_userId = session()->get('user_id');
-        $ses_roleId = session()->get('role_id');
+            
+         $ses_roleId = session()->get('role_id');
         $count = 0;  // Initialize the $count variable
         $notifications = [];  // Initialize the $notifications array
 
@@ -659,16 +668,16 @@ class DashboardController extends Controller {
                 'url' => 'list-material-received-from-quality'
             ];
 
-            $material_received_from_store = NotificationStatus::where('off_canvas_status',17)
-            ->where('material_received_from_store','0')
-            ->select('id')
-            ->get();
-            $material_received_from_store_count = $material_received_from_store->count();
+            // $material_received_from_store = NotificationStatus::where('off_canvas_status',17)
+            // ->where('material_received_from_store','0')
+            // ->select('id')
+            // ->get();
+            // $material_received_from_store_count = $material_received_from_store->count();
 
-            $notifications[] = ['admin_count' => $material_received_from_store_count,
-                'message' => 'Material Received For Production',
-                'url' => 'list-material-received-from-quality'
-            ];
+            // $notifications[] = ['admin_count' => $material_received_from_store_count,
+            //     'message' => 'Material Received For Production',
+            //     'url' => 'list-material-received-from-quality'
+            // ];
 
 
             // $store_view_req = NotificationStatus::where('off_canvas_status','15')
@@ -681,14 +690,18 @@ class DashboardController extends Controller {
             //     'url' => 'list-accepted-design-from-prod'
             // ];
 
-            $count = $store_view_req_count + $material_received_by_quality_count + $material_received_from_store_count;
+            $count = $store_view_req_count + $material_received_by_quality_count;
            
         }
         elseif($ses_userId == '6'){//Purchase Department
+            dd($ses_userId == '6');
+            die();
             $received_requistion_req = NotificationStatus::where('off_canvas_status',16)
             ->where('purchase_is_view','0')
             ->select('id')
             ->get();
+            // dd($received_requistion_req);
+            // die();
             $received_requistion_req_count = $received_requistion_req->count();
 
             $notifications[] = ['admin_count' => $received_requistion_req_count,

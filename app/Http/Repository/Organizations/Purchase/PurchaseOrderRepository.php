@@ -104,6 +104,7 @@ class PurchaseOrderRepository
                 $designDetails->due_date = $item['due_date'];
                 $designDetails->quantity = $item['quantity'];
                 $designDetails->unit = $item['unit'];
+                $designDetails->hsn_id = $item['hsn_id'];
                 $designDetails->actual_quantity = '0';
                 $designDetails->accepted_quantity = '0';
                 $designDetails->rejected_quantity = '0';
@@ -192,6 +193,7 @@ class PurchaseOrderRepository
                 $designDetails->due_date = $request->input("due_date_" . $i);
                 $designDetails->quantity = $request->input("quantity_" . $i);
                 $designDetails->unit = $request->input("unit_" . $i);
+                $designDetails->hsn_id = $request->input("hsn_id_" . $i);
                 $designDetails->rate = $request->input("rate_" . $i);
                 $designDetails->amount = $request->input("amount_" . $i);
                 $designDetails->save();
@@ -231,6 +233,7 @@ class PurchaseOrderRepository
                     $designDetails->due_date = $item['due_date'];
                     $designDetails->quantity = $item['quantity'];
                     $designDetails->unit = $item['unit'];
+                    $designDetails->hsn_id = $item['hsn_id'];
                     $designDetails->rate = $item['rate'];
                     $designDetails->amount = $item['amount'];
                     $designDetails->actual_quantity = '0';

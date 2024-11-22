@@ -92,7 +92,10 @@
 
                                         </thead>
                                         <tbody>
-                                            
+                                            <?php
+                                            // dd($data_output);
+                                            // die();
+                                            ?>
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
@@ -103,8 +106,8 @@
                                                     {{-- <td>{{ ucwords($data->remarks) }}</td> --}}
                                                     <td>{{ ucwords($data->title) }}</td>
                                                 <td>
-                                                    <a href="{{ route('send-to-fianance', base64_encode($data->id)) }}"
-                                                        onclick="return confirmAccept('{{ route('send-to-fianance', base64_encode($data->id)) }}')"
+                                                    <a href="{{ route('send-to-fianance', [base64_encode($data->id), base64_encode($data->business_details_id)]) }}"
+                                                        onclick="return confirmAccept('{{ route('send-to-fianance', [base64_encode($data->id), base64_encode($data->business_details_id)]) }}')"
                                                         class="pd-setting-ed"
                                                         data-toggle="tooltip"
                                                         title="Accept">

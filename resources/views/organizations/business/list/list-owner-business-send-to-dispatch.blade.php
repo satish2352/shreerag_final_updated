@@ -85,11 +85,15 @@
                                                 <th data-field="customer_po_number" data-editable="false">Customer PO Number</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="description" data-editable="false">Description</th>
-                                                <th data-field="quantity" data-editable="false">Quantity</th>
+                                                <th data-field="quantity" data-editable="false">Actual Quantity</th>
+                                                <th data-field="completed_quantity" data-editable="false">Production Completed Quantity</th>
                                                 <th data-field="truck_no" data-editable="false">Truck Number</th>
-                                                {{-- <th data-field="store_material_sent_date" data-editable="false">Matrial Recieved Date</th> --}}
-                                                {{-- <th data-field="design_image" data-editable="false">Design Layout</th>
-                                                <th data-field="bom_image" data-editable="false">BOM</th> --}}
+                                                <th data-field="from_place" data-editable="false">From Place</th>
+                                                <th data-field="to_place" data-editable="false">To Place</th>
+                                                <th data-field="title" data-editable="false">customer Name</th>
+                                                <th data-field="truck_no" data-editable="false">Truck Number</th>
+                                                <th data-field="transport_name" data-editable="false">Transport Name</th>
+                                                <th data-field="vehicle_name" data-editable="false">Vehicle Name</th>
                                                 
                                             </tr>
 
@@ -102,18 +106,14 @@
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
+                                                    <td>{{ ucwords($data->completed_quantity) }}</td>
                                                     <td>{{ ucwords($data->truck_no) }}</td>
-                                                    {{-- <td>{{ ucwords($data->remarks) }}</td> --}}
-                                                    {{-- <td>{{ ucwords($data->store_material_sent_date) }}</td> --}}
-                                                    {{-- <td> <a class="img-size" target="_blank"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
-                                                        alt="Design"> Click to view</a>
-                                                </td>
-                                                <td> <a class="img-size"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                        alt="bill of material" >Click to download</a>
-                                                </td> --}}
-                                               
+                                                    <td>{{ ucwords($data->from_place) }}</td>
+                                                    <td>{{ ucwords($data->to_place) }}</td>
+                                                    <td>{{ ucwords($data->title) }}</td>
+                                                    <td>{{ ucwords($data->truck_no) }}</td>
+                                                    <td>{{ ucwords($data->transport_name) }}</td>
+                                                    <td>{{ ucwords($data->vehicle_name) }}</td>
 
                                                    
 

@@ -12,7 +12,8 @@ use App\Models\{
   DesignRevisionForProd,
   PurchaseOrdersModel,
   BusinessDetails,
-  Gatepass
+  Gatepass,
+  CustomerProductQuantityTracking
 };
 use Config;
 
@@ -50,7 +51,7 @@ class AllListRepositor
                   'businesses_details.quantity',
                   'businesses_details.rate',
                   'businesses.created_at',
-                  'production.updated_at' // Added here
+                  'businesses.updated_at' 
               )
               ->select(
                   'businesses.id',
@@ -63,9 +64,9 @@ class AllListRepositor
                   'businesses_details.quantity',
                   'businesses_details.rate',
                   'businesses.created_at',
-                  DB::raw('MAX(production.updated_at) as latest_updated_at') // Use the latest update time
+                  'businesses.updated_at',
               )
-              ->orderBy('latest_updated_at', 'desc') // Order by the latest update time
+              ->orderBy('updated_at', 'desc')
               ->distinct()
               ->get();
   
@@ -914,51 +915,37 @@ public function getOwnerAllCompletedProduction(){
   try {
 
       $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
-      
-      $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+    $data_output = CustomerProductQuantityTracking::leftJoin('tbl_logistics', function($join) {
+      $join->on('tbl_customer_product_quantity_tracking.id', '=', 'tbl_logistics.quantity_tracking_id');
+  })
+    ->leftJoin('businesses', function($join) {
+            $join->on('tbl_customer_product_quantity_tracking.business_id', '=', 'businesses.id');
+        })
+        ->leftJoin('business_application_processes as bap1', function($join) {
+            $join->on('tbl_customer_product_quantity_tracking.business_application_processes_id', '=', 'bap1.id');
+        })
+        ->leftJoin('businesses_details', function($join) {
+          $join->on('tbl_customer_product_quantity_tracking.business_details_id', '=', 'businesses_details.id');
       })
-      ->leftJoin('designs', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-      })
-      ->leftJoin('businesses', function($join) {
-        $join->on('business_application_processes.business_id', '=', 'businesses.id');
-      })
-      ->leftJoin('businesses_details', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-    })
-      ->leftJoin('design_revision_for_prod', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-      })
-      ->leftJoin('purchase_orders', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-      })
-      ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
+      ->whereIn('bap1.production_status_id',$array_to_be_check)
       ->where('businesses.is_active',true)
       ->distinct('businesses.id')
       ->groupBy('businesses.id','businesses.customer_po_number','businesses_details.id','businesses_details.product_name',
       'businesses_details.description',
       'businesses_details.quantity',
       'businesses_details.rate',
-      'purchase_orders.updated_at'
+      'tbl_customer_product_quantity_tracking.completed_quantity',
+      'tbl_customer_product_quantity_tracking.updated_at'
       )
       ->select(
           'businesses.customer_po_number',
-          // 'businesses.title',
-          // 'businesses.remarks',
           'businesses_details.product_name',
           'businesses_details.description',
           'businesses_details.quantity',
-          'purchase_orders.updated_at'
-          // 'production.business_id',
-          // 'production.id as productionId',
-          // 'design_revision_for_prod.reject_reason_prod',
-          // 'design_revision_for_prod.id as design_revision_for_prod_id',
-          // 'designs.bom_image',
-          // 'designs.design_image',
-          // 'business_application_processes.store_material_sent_date'
+          'tbl_customer_product_quantity_tracking.completed_quantity',
+          'tbl_customer_product_quantity_tracking.updated_at'
 
-          )->orderBy('purchase_orders.updated_at', 'desc')->get();
+          )->orderBy('tbl_customer_product_quantity_tracking.updated_at', 'desc')->get();
       
     return $data_output;
   } catch (\Exception $e) {
@@ -969,95 +956,40 @@ public function getOwnerAllCompletedProduction(){
 
 public function getOwnerFinalAllCompletedProductionLogistics(){
   try {
-
-    //   $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
-    //   $array_to_be_check_new = [NULL];
-    //   $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
-    //     $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-    //   })
-    //   ->leftJoin('designs', function($join) {
-    //     $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-    //   })
-    //   ->leftJoin('businesses', function($join) {
-    //     $join->on('business_application_processes.business_id', '=', 'businesses.id');
-    //   })
-    //   ->leftJoin('businesses_details', function($join) {
-    //     $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-    // })
-    //   ->leftJoin('design_revision_for_prod', function($join) {
-    //     $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-    //   })
-    //   ->leftJoin('purchase_orders', function($join) {
-    //     $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-    //   })
-    //   ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
-    //   ->whereNull('business_application_processes.logistics_status_id')
-    //   // ->whereIn('business_application_processes.logistics_status_id',$array_to_be_check_new)
-    //   ->where('businesses.is_active',true)
-    //   ->distinct('businesses_details.id')
-    //   ->select(
-    //       'businesses_details.id',
-    //       'businesses.title',
-    //       'businesses.customer_po_number',
-    //       'businesses_details.product_name',
-    //       'businesses.title',
-    //       'businesses_details.quantity',
-    //       'businesses.remarks',
-    //       'businesses.is_active',
-    //       'production.business_id',
-    //       'production.id as productionId',
-    //       'business_application_processes.store_material_sent_date',
-    //       'purchase_orders.updated_at'
-      
-    //   )->orderBy('purchase_orders.updated_at', 'desc')->get();
-
     $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
-      
-    $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
-      $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+  $data_output = CustomerProductQuantityTracking::leftJoin('tbl_logistics', function($join) {
+    $join->on('tbl_customer_product_quantity_tracking.id', '=', 'tbl_logistics.quantity_tracking_id');
+})
+  ->leftJoin('businesses', function($join) {
+          $join->on('tbl_customer_product_quantity_tracking.business_id', '=', 'businesses.id');
+      })
+      ->leftJoin('business_application_processes as bap1', function($join) {
+          $join->on('tbl_customer_product_quantity_tracking.business_application_processes_id', '=', 'bap1.id');
+      })
+      ->leftJoin('businesses_details', function($join) {
+        $join->on('tbl_customer_product_quantity_tracking.business_details_id', '=', 'businesses_details.id');
     })
-    ->leftJoin('designs', function($join) {
-      $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-    })
-    ->leftJoin('businesses', function($join) {
-      $join->on('business_application_processes.business_id', '=', 'businesses.id');
-    })
-    ->leftJoin('businesses_details', function($join) {
-      $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-  })
-    ->leftJoin('design_revision_for_prod', function($join) {
-      $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-    })
-    ->leftJoin('purchase_orders', function($join) {
-      $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-    })
-    ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
+    ->whereIn('bap1.production_status_id',$array_to_be_check)
     ->where('businesses.is_active',true)
     ->distinct('businesses.id')
-    ->groupBy('businesses.id','businesses.customer_po_number','businesses_details.id','businesses_details.product_name',
+    ->groupBy('tbl_customer_product_quantity_tracking.id','tbl_customer_product_quantity_tracking.business_id','tbl_customer_product_quantity_tracking.business_details_id','businesses.customer_po_number','businesses_details.id','businesses_details.product_name',
     'businesses_details.description',
     'businesses_details.quantity',
     'businesses_details.rate',
-    'purchase_orders.updated_at'
+    'tbl_customer_product_quantity_tracking.completed_quantity',
+    'tbl_customer_product_quantity_tracking.updated_at'
     )
     ->select(
-      'businesses.id',
+      'tbl_customer_product_quantity_tracking.id','tbl_customer_product_quantity_tracking.business_id',
+      'tbl_customer_product_quantity_tracking.business_details_id',
         'businesses.customer_po_number',
-        // 'businesses.title',
-        // 'businesses.remarks',
         'businesses_details.product_name',
         'businesses_details.description',
         'businesses_details.quantity',
-        'purchase_orders.updated_at'
-        // 'production.business_id',
-        // 'production.id as productionId',
-        // 'design_revision_for_prod.reject_reason_prod',
-        // 'design_revision_for_prod.id as design_revision_for_prod_id',
-        // 'designs.bom_image',
-        // 'designs.design_image',
-        // 'business_application_processes.store_material_sent_date'
+        'tbl_customer_product_quantity_tracking.completed_quantity',
+        'tbl_customer_product_quantity_tracking.updated_at'
 
-        )->orderBy('purchase_orders.updated_at', 'desc')->get();
+        )->orderBy('tbl_customer_product_quantity_tracking.updated_at', 'desc')->get();
   
     return $data_output;
   } catch (\Exception $e) {
@@ -1068,78 +1000,72 @@ public function getOwnerFinalAllCompletedProductionLogistics(){
 
 public function getOwnerAllListBusinessReceivedFromLogistics(){
   try {
-  
+    $array_to_be_quantity_tracking = [ config('constants.HIGHER_AUTHORITY.UPDATED_COMPLETED_QUANLTITY_LOGISTICS_DEPT_SEND_TO_FIANANCE_DEPT')];
     $array_to_be_check = [config('constants.FINANCE_DEPARTMENT.LIST_LOGISTICS_RECEIVED_FROM_LOGISTICS')];
     $array_to_be_check_new = ['0'];
- 
-      $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-      })
-      ->leftJoin('designs', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-      })
-      ->leftJoin('businesses', function($join) {
-        $join->on('business_application_processes.business_id', '=', 'businesses.id');
-      })
-      ->leftJoin('businesses_details', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-    })
-      ->leftJoin('design_revision_for_prod', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-      })
-      ->leftJoin('purchase_orders', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-      })
-      ->leftJoin('tbl_logistics', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'tbl_logistics.business_details_id');
-      })
-      ->whereNull('business_application_processes.dispatch_status_id')
-      ->whereIn('business_application_processes.logistics_status_id',$array_to_be_check)
+    $data_output = CustomerProductQuantityTracking::leftJoin('tbl_logistics', function($join) {
+      $join->on('tbl_customer_product_quantity_tracking.id', '=', 'tbl_logistics.quantity_tracking_id');
+  })
+  ->leftJoin('businesses', function($join) {
+      $join->on('tbl_customer_product_quantity_tracking.business_id', '=', 'businesses.id');
+  })
+  ->leftJoin('business_application_processes as bap1', function($join) {
+      $join->on('tbl_customer_product_quantity_tracking.business_application_processes_id', '=', 'bap1.id');
+  })
+  ->leftJoin('businesses_details', function($join) {
+      $join->on('tbl_customer_product_quantity_tracking.business_details_id', '=', 'businesses_details.id');
+  })
+  ->leftJoin('tbl_transport_name', function($join) {
+      $join->on('tbl_logistics.transport_name_id', '=', 'tbl_transport_name.id');
+  })
+  ->leftJoin('tbl_vehicle_type', function($join) {
+      $join->on('tbl_logistics.vehicle_type_id', '=', 'tbl_vehicle_type.id');
+  })
+  ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status', [
+      config('constants.HIGHER_AUTHORITY.UPDATED_COMPLETED_QUANLTITY_LOGISTICS_DEPT_SEND_TO_FIANANCE_DEPT')
+  ])
+  ->whereIn('bap1.logistics_status_id', [
+      config('constants.FINANCE_DEPARTMENT.LIST_LOGISTICS_RECEIVED_FROM_LOGISTICS')
+  ])
+  ->where('businesses.is_active', true)
+  ->groupBy(
+      'tbl_customer_product_quantity_tracking.id',
+      'tbl_customer_product_quantity_tracking.business_id',
+      'tbl_customer_product_quantity_tracking.business_details_id',
+      'businesses.customer_po_number',
+      'businesses.title',
+      'businesses_details.product_name',
+      'businesses_details.description',
+      'businesses_details.quantity',
+      'bap1.id',
+      'tbl_transport_name.name',
+      'tbl_vehicle_type.name',
+      'tbl_logistics.truck_no',
+      'tbl_logistics.from_place',
+      'tbl_logistics.to_place',
+      'tbl_customer_product_quantity_tracking.completed_quantity',
+      'tbl_customer_product_quantity_tracking.updated_at'
+  )
+  ->select(
+      'tbl_customer_product_quantity_tracking.id',
+      'tbl_customer_product_quantity_tracking.business_id',
+      'tbl_customer_product_quantity_tracking.business_details_id',
+      'businesses.customer_po_number',
+      'businesses.title',
+      'businesses_details.product_name',
+      'businesses_details.description',
+      'businesses_details.quantity',
+      'tbl_transport_name.name as transport_name',
+      'tbl_vehicle_type.name as vehicle_name',
+      'tbl_logistics.truck_no',
+      'tbl_logistics.from_place',
+      'tbl_logistics.to_place',
+      'tbl_customer_product_quantity_tracking.completed_quantity',
+      'tbl_customer_product_quantity_tracking.updated_at'
+  )
+  ->orderBy('tbl_customer_product_quantity_tracking.updated_at', 'desc')
+  ->get();
 
-      // ->whereIn('purchase_orders.store_receipt_no',$array_to_be_check_new)
-      ->where('businesses.is_active',true)
-      // ->distinct('businesses_details.id')
-      ->groupBy(
-        'businesses.customer_po_number',
-        'businesses.title',
-        'businesses_details.id',
-        'businesses_details.product_name',
-        'businesses_details.quantity',
-        'businesses_details.description',
-        'business_application_processes.id',
-        'tbl_logistics.truck_no',
-        'purchase_orders.updated_at'
-    )
-      ->select(
-        'businesses.customer_po_number',
-        'businesses.title',
-        'businesses_details.id',
-        'businesses_details.product_name',
-        'businesses_details.description',
-        'businesses_details.quantity',
-          // 'production.id as productionId',
-          // 'business_application_processes.store_material_sent_date',
-          'tbl_logistics.truck_no',
-          'purchase_orders.updated_at'
-          // 'tbl_logistics.vendor_id',
-      )->orderBy('purchase_orders.updated_at', 'desc')->get();
-      // ->select(
-      //     'businesses.id',
-      //     'businesses_details.id',
-      //     'businesses.title',
-      //     'businesses.customer_po_number',
-      //     'businesses_details.product_name',
-      //     'businesses.title',
-      //     'businesses_details.quantity',
-      //     'businesses.remarks',
-      //     'businesses.is_active',
-      //     'production.business_id',
-      //     'production.id as productionId',
-      //     'business_application_processes.store_material_sent_date',
-      //     'tbl_logistics.truck_no',
-      //     // 'tbl_logistics.vendor_id',
-      // );
-     
    
     return $data_output;
   } catch (\Exception $e) {
@@ -1151,56 +1077,70 @@ public function getOwnerAllListBusinessFianaceSendToDispatch(){
   try {
   
     $array_to_be_check = [config('constants.FINANCE_DEPARTMENT.LIST_LOGISTICS_SEND_TO_DISPATCH_DEAPRTMENT')];
+    $array_to_be_quantity_tracking = [ config('constants.DISPATCH_DEPARTMENT.RECEIVED_COMPLETED_QUANLTITY_FROM_FIANANCE_DEPT_TO_DISPATCH_DEPT')];
     $array_to_be_check_new = ['0'];
- 
 
 
-    $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
-      $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-    })
-    ->leftJoin('designs', function($join) {
-      $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-    })
-    ->leftJoin('businesses', function($join) {
-      $join->on('business_application_processes.business_id', '=', 'businesses.id');
-    })
-    ->leftJoin('businesses_details', function($join) {
-      $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+   $data_output = CustomerProductQuantityTracking::leftJoin('tbl_logistics', function($join) {
+      $join->on('tbl_customer_product_quantity_tracking.id', '=', 'tbl_logistics.quantity_tracking_id');
   })
-    ->leftJoin('design_revision_for_prod', function($join) {
-      $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-    })
-    ->leftJoin('purchase_orders', function($join) {
-      $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-    })
-    ->leftJoin('tbl_logistics', function($join) {
-      $join->on('business_application_processes.business_details_id', '=', 'tbl_logistics.business_details_id');
-    })
-    ->whereIn('business_application_processes.dispatch_status_id',$array_to_be_check)
+  ->leftJoin('businesses', function($join) {
+      $join->on('tbl_customer_product_quantity_tracking.business_id', '=', 'businesses.id');
+  })
+  ->leftJoin('business_application_processes as bap1', function($join) {
+      $join->on('tbl_customer_product_quantity_tracking.business_application_processes_id', '=', 'bap1.id');
+  })
+  ->leftJoin('businesses_details', function($join) {
+      $join->on('tbl_customer_product_quantity_tracking.business_details_id', '=', 'businesses_details.id');
+  })
+  ->leftJoin('tbl_transport_name', function($join) {
+      $join->on('tbl_logistics.transport_name_id', '=', 'tbl_transport_name.id');
+  })
+  ->leftJoin('tbl_vehicle_type', function($join) {
+      $join->on('tbl_logistics.vehicle_type_id', '=', 'tbl_vehicle_type.id');
+  })
+
+
+    ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status',$array_to_be_quantity_tracking)
+    ->whereIn('bap1.dispatch_status_id',$array_to_be_check)
     // ->whereIn('purchase_orders.store_receipt_no',$array_to_be_check_new)
     ->where('businesses.is_active',true)
     // ->distinct('businesses_details.id')
     ->groupBy(
+      'tbl_customer_product_quantity_tracking.id',
+      'tbl_customer_product_quantity_tracking.business_id',
+      'tbl_customer_product_quantity_tracking.business_details_id',
       'businesses.customer_po_number',
       'businesses.title',
-      'businesses_details.id',
       'businesses_details.product_name',
-      'businesses_details.quantity',
       'businesses_details.description',
-      'business_application_processes.id',
+      'businesses_details.quantity',
+      'bap1.id',
+      'tbl_transport_name.name',
+      'tbl_vehicle_type.name',
       'tbl_logistics.truck_no',
-        'tbl_logistics.updated_at'
+      'tbl_logistics.from_place',
+      'tbl_logistics.to_place',
+      'tbl_customer_product_quantity_tracking.completed_quantity',
+      'tbl_customer_product_quantity_tracking.updated_at'
   )
-    ->select(
+  ->select(
+      'tbl_customer_product_quantity_tracking.id',
+      'tbl_customer_product_quantity_tracking.business_id',
+      'tbl_customer_product_quantity_tracking.business_details_id',
       'businesses.customer_po_number',
       'businesses.title',
-      'businesses_details.id',
       'businesses_details.product_name',
       'businesses_details.description',
       'businesses_details.quantity',
-        'tbl_logistics.truck_no',
-          'tbl_logistics.updated_at'
-    )->orderBy('tbl_logistics.updated_at', 'desc')->get();
+      'tbl_transport_name.name as transport_name',
+      'tbl_vehicle_type.name as vehicle_name',
+      'tbl_logistics.truck_no',
+      'tbl_logistics.from_place',
+      'tbl_logistics.to_place',
+      'tbl_customer_product_quantity_tracking.completed_quantity',
+      'tbl_customer_product_quantity_tracking.updated_at'
+  )->orderBy('tbl_customer_product_quantity_tracking.updated_at', 'desc')->get();
     return $data_output;
   } catch (\Exception $e) {
       return $e;
@@ -1210,63 +1150,68 @@ public function listProductDispatchCompletedFromDispatch(){
   try {
   
     $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.LIST_DISPATCH_COMPLETED_FROM_DISPATCH_DEPARTMENT')];
+    $array_to_be_quantity_tracking = [ config('constants.DISPATCH_DEPARTMENT.SUBMITTED_COMPLETED_QUANLTITY_DISPATCH_DEPT')];
     $array_to_be_check_new = ['0'];
-  
-    $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
-      $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-    })
-    ->leftJoin('designs', function($join) {
-      $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-    })
-    ->leftJoin('businesses', function($join) {
-      $join->on('business_application_processes.business_id', '=', 'businesses.id');
-    })
-    ->leftJoin('businesses_details', function($join) {
-      $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-  })
-    ->leftJoin('design_revision_for_prod', function($join) {
-      $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-    })
-    ->leftJoin('purchase_orders', function($join) {
-      $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-    })
-    ->leftJoin('tbl_logistics', function($join) {
-      $join->on('business_application_processes.business_details_id', '=', 'tbl_logistics.business_details_id');
+  $data_output = CustomerProductQuantityTracking::leftJoin('tbl_logistics', function($join) {
+    $join->on('tbl_customer_product_quantity_tracking.id', '=', 'tbl_logistics.quantity_tracking_id');
+})
+  ->leftJoin('businesses', function($join) {
+          $join->on('tbl_customer_product_quantity_tracking.business_id', '=', 'businesses.id');
+      })
+      ->leftJoin('business_application_processes as bap1', function($join) {
+          $join->on('tbl_customer_product_quantity_tracking.business_application_processes_id', '=', 'bap1.id');
+      })
+      ->leftJoin('businesses_details', function($join) {
+        $join->on('tbl_customer_product_quantity_tracking.business_details_id', '=', 'businesses_details.id');
     })
       ->leftJoin('tbl_dispatch', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'tbl_dispatch.business_details_id');
+        $join->on('tbl_customer_product_quantity_tracking.id', '=', 'tbl_dispatch.quantity_tracking_id');
       })
-      ->whereIn('business_application_processes.dispatch_status_id',$array_to_be_check)
+      ->leftJoin('tbl_transport_name', function($join) {
+        $join->on('tbl_logistics.transport_name_id', '=', 'tbl_transport_name.id');
+    })
+    ->leftJoin('tbl_vehicle_type', function($join) {
+        $join->on('tbl_logistics.vehicle_type_id', '=', 'tbl_vehicle_type.id');
+    })
+      ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status',$array_to_be_quantity_tracking)
+      ->whereIn('bap1.dispatch_status_id',$array_to_be_check)
       // ->whereIn('purchase_orders.store_receipt_no',$array_to_be_check_new)
       ->where('businesses.is_active',true)
       ->distinct('businesses_details.id')
       ->groupBy(
-        'businesses_details.id',
+        'tbl_customer_product_quantity_tracking.id','tbl_customer_product_quantity_tracking.business_id',
+      'tbl_customer_product_quantity_tracking.business_details_id',
         'businesses.customer_po_number',
         'businesses.title',
         'businesses_details.product_name',
         'businesses_details.quantity',
         'businesses_details.description',
         'tbl_logistics.truck_no',
+        'tbl_transport_name.name',
+        'tbl_vehicle_type.name',
         'tbl_dispatch.outdoor_no',
         'tbl_dispatch.gate_entry',
         'tbl_dispatch.remark',
         'tbl_dispatch.updated_at',
-          'tbl_dispatch.updated_at'
+        'tbl_customer_product_quantity_tracking.completed_quantity',
+        'tbl_dispatch.updated_at'
     )
       ->select(
-        'businesses_details.id',
+       'tbl_customer_product_quantity_tracking.id','tbl_customer_product_quantity_tracking.business_id',
+      'tbl_customer_product_quantity_tracking.business_details_id',
         'businesses.customer_po_number',
         'businesses.title',
         'businesses_details.product_name',
         'businesses_details.description',
         'businesses_details.quantity',
+        'tbl_transport_name.name as transport_name',
+        'tbl_vehicle_type.name as vehicle_name',
           'tbl_logistics.truck_no',
           'tbl_dispatch.outdoor_no',
           'tbl_dispatch.gate_entry',
           'tbl_dispatch.remark',
-          'tbl_dispatch.updated_at',
-            'tbl_dispatch.updated_at'
+          'tbl_customer_product_quantity_tracking.completed_quantity',
+          'tbl_dispatch.updated_at'
       )
       ->orderBy('tbl_dispatch.updated_at', 'desc')
       ->get();

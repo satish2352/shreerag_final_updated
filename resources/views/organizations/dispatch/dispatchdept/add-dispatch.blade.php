@@ -45,16 +45,24 @@
                                         </div>
                                     </div>
                                 @endif
-                              
+                              <?php
+                            //   dd($editData);
+                            //   die();
+                              ?>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="all-form-element-inner">
-                                        <form  action="{{ route('store-dispatch') }}" method="POST"
+                                        <form  action="{{ route('store-dispatch', ['id' => $editData->id, 'business_details_id' => $editData->business_details_id]) }}" method="POST"
                                        
                                           id="editDesignsForm" enctype="multipart/form-data">
                                             @csrf
-                                            <input type="hidden" name="business_details_id" id=""
-                                            class="form-control" value="{{ $editData->business_details_id }}"
+                                            <input type="hidden" name="id" id=""
+                                            class="form-control" value="{{ $editData->id }}"
                                             placeholder="">
+                                            {{-- <input type="hidden" name="id" id=""
+                                            class="form-control" value="{{ $editData->business_details_id }}"
+                                            placeholder=""> --}}
+                                            <input type="hidden" name="business_details_id" value="{{ $editData->business_details_id }}">
+
                                             <div class="row">
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="customer_po_number">PO  Number :  <span class="text-danger">*</span></label>
@@ -72,12 +80,21 @@
                                                     @endif
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="quantity">Quantity :  <span class="text-danger">*</span></label> 
+                                                    <label for="quantity">Total Quantity :  <span class="text-danger">*</span></label> 
                                                     <input type="text" class="form-control" id="quantity"
                                                      value=" @if (old('quantity')) {{ old('quantity') }}@else{{ $editData->quantity }} @endif"
                                                         name="quantity" placeholder="Enter Product Name" readonly>
                                                         @if ($errors->has('quantity'))
                                                         <span class="red-text"><?php echo $errors->first('quantity', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="completed_quantity">Actual Production Quantity :  <span class="text-danger">*</span></label> 
+                                                    <input type="text" class="form-control" id="completed_quantity"
+                                                     value=" @if (old('completed_quantity')) {{ old('completed_quantity') }}@else{{ $editData->completed_quantity }} @endif"
+                                                        name="completed_quantity" placeholder="Enter completed quantity " readonly>
+                                                        @if ($errors->has('completed_quantity'))
+                                                        <span class="red-text"><?php echo $errors->first('completed_quantity', ':message'); ?></span>
                                                     @endif
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">

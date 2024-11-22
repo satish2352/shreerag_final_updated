@@ -131,7 +131,7 @@
                                                                             @foreach ($dataOutputTax as $taxData)
                                                                                 <option value="{{ $taxData['id'] }}"
                                                                                     {{ old('tax_id', $editDataNew->tax_id) == $taxData->id ? 'selected' : '' }}>
-                                                                                    {{ $taxData->description }}
+                                                                                    {{ $taxData->name }}
                                                                                 </option>
                                                                             @endforeach
                                                                         </select>
@@ -188,6 +188,7 @@
                                                             <table class="table table-bordered" id="dynamicTable">
                                                                 <tr>
                                                                     <th>Part No</th>
+                                                                    <th>HSN</th>
                                                                     <th>Description</th>
                                                                     <th>Due Date</th>
                                                                     <th>Quantity</th>
@@ -215,11 +216,22 @@
                                                                                 @foreach ($dataOutputPartItem as $data)
                                                                                 <option value="{{ $data['id'] }}"
                                                                                     {{ old('part_no_id', $editDataNew->part_no_id) == $data->id ? 'selected' : '' }}>
-                                                                                    {{ $data->name }}
+                                                                                    {{ $data->description }}
                                                                                 </option>
                                                                             @endforeach
                                                                             </select>
                                                                         </td>
+                                                                        <td>
+                                                                            <select class="form-control hsn_id mb-2" name="hsn_id_{{ $key }}" id="">
+                                                                                <option value="" default>Select HSN</option>
+                                                                                @foreach ($dataOutputHSNMaster as $data)
+                                                                                <option value="{{ $data['id'] }}"
+                                                                                    {{ old('hsn_id', $editDataNew->hsn_id) == $data->id ? 'selected' : '' }}>
+                                                                                    {{ $data->name }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                            </select>
+                                                                        </td>                                                                        
                                                                         <td>
                                                                             <input type="text"
                                                                                 name="description_{{ $key }}"
@@ -235,6 +247,7 @@
                                                                                 placeholder="Enter Due Date"
                                                                                 class="form-control due_date" />
                                                                         </td>
+
                                                                         <td>
                                                                             <input type="text"
                                                                                 name="quantity_{{ $key }}"
@@ -243,11 +256,15 @@
                                                                                 class="form-control quantity" />
                                                                         </td>
                                                                         <td>
-                                                                            <input type="text"
-                                                                                name="unit_{{ $key }}"
-                                                                                value="{{ $editDataNew->unit }}"
-                                                                                placeholder="Enter Unit"
-                                                                                class="form-control unit" />
+                                                                            <select class="form-control unit mb-2" name="unit_{{ $key }}" id="">
+                                                                                <option value="" default>Select Unit</option>
+                                                                                @foreach ($dataOutputUnitMaster as $data)
+                                                                                <option value="{{ $data['id'] }}"
+                                                                                    {{ old('unit', $editDataNew->unit) == $data->id ? 'selected' : '' }}>
+                                                                                    {{ $data->name }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                            </select>
                                                                         </td>
                                                                         <td>
                                                                             <input type="text"
@@ -389,6 +406,10 @@
                     'unit_0': {
                         required: true,
                     },
+                    'unit_0': {
+                        required: true,
+                        maxlength: 255
+                    },
                     'rate_0': {
                         required: true,
                         number: true,
@@ -439,6 +460,10 @@
                     'unit_0': {
                         required: "Please enter the Unit",
                     },
+                    'hsn_id_0': {
+                        required: "Please enter the hsn_id.",
+                        maxlength: "hsn must be at most 255 characters long."
+                    },
                     'rate_0': {
                         required: "Please enter the Rate",
                         number: "Please enter a valid number for Rate",
@@ -476,7 +501,14 @@
                 '@foreach ($dataOutputPartItem as $data)' +
                     '<option value="{{ $data['id'] }}">{{ $data['description'] }}</option>' +
                 '@endforeach' +
-            '</select>' +
+            '</select>' + 
+            '<td>' +
+            '<select class="form-control hsn_id mb-2" name="addmore[' + i + '][hsn_id]" id="">' +
+                '<option value="" default>Select HSN</option>' +
+                '@foreach ($dataOutputHSNMaster as $data)' +
+                    '<option value="{{ $data['id'] }}">{{ $data['name'] }}</option>' +
+                '@endforeach' +
+            '</select>'+
             '</td>' +
                     '<td><input type="text" class="form-control description" name="addmore[' + i +
                     '][description]" placeholder=" Description" /></td>' +
@@ -484,8 +516,14 @@
                     '][due_date]" placeholder=" Due Date" /></td>' +
                     '<td><input type="text" class="form-control quantity" name="addmore[' + i +
                         '][quantity]" placeholder=" Quantity" /></td>' +
-                    '<td><input type="text" class="form-control unit" name="addmore[' + i +
-                    '][unit]" placeholder="Unit" /></td>' +
+                        '<td>' +
+                        '<select class="form-control unit mb-2" name="addmore[' + i + '][unit]" id="">' +
+                '<option value="" default>Select Unit</option>' +
+                '@foreach ($dataOutputHSNMaster as $data)' +
+                    '<option value="{{ $data['id'] }}">{{ $data['name'] }}</option>' +
+                '@endforeach' +
+            '</select>'+
+            '</td>' +
                     '<td><input type="text" class="form-control rate" name="addmore[' + i +
                     '][rate]" placeholder=" Rate" /></td>' +
                     '<td><input type="text" class="form-control amount" name="addmore[' + i +
@@ -501,6 +539,13 @@
             required: true,
             messages: {
                 required: "Please select the Part Number",
+            }
+        });
+
+        $('select[name="addmore[' + i + '][hsn_id]"]').rules("add", {
+            required: true,
+            messages: {
+                required: "Please select the hsn",
             }
         });
                 // $('input[name="addmore[' + i + '][description]"]').rules("add", {
@@ -523,14 +568,14 @@
                         digits: "Please enter only digits for Quantity",
                     }
                 });
-                $('input[name="addmore[' + i + '][unit]"]').rules("add", {
-                    required: true,
-                    digits: true,
-                    messages: {
-                        required: "Please enter the unit",
-                        
-                    }
-                });
+              
+                $('select[name="addmore[' + i + '][unit]"]').rules("add", {
+            required: true,
+            messages: {
+                required: "Please select the unit",
+            }
+        });
+
                 $('input[name="addmore[' + i + '][rate]"]').rules("add", {
                     required: true,
                     number: true,

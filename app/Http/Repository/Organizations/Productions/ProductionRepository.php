@@ -157,64 +157,152 @@ class ProductionRepository  {
             return $e;
         }
     }     
+    // public function acceptProductionCompleted($id, $completed_quantity) {
+    //     try {
+    //         // Fetch the business application process record for the given business ID
+    //         $business_application = BusinessApplicationProcesses::where('business_details_id', $id)->first();
+    //         if ($business_application) {
+    //             $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN');
+    //             $business_application->off_canvas_status = 18; 
+    //             $business_application->save();
+
+    //             // Update admin view and notification status with the new off canvas status
+    //           $update_data_admin['off_canvas_status'] = 18;
+    //           $update_data_admin['is_view'] = '0';
+    //            $update_data_business['off_canvas_status'] = 18;
+    //           AdminView::where('business_details_id', $business_application->business_details_id)
+    //               // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
+    //               ->update($update_data_admin);
+  
+    //           NotificationStatus::where('business_details_id', $business_application->business_details_id)
+    //               // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
+    //               ->update($update_data_business);
+    
+               
+
+    //          // Track the completed quantity
+    //          $quantity_tracking = new CustomerProductQuantityTracking();
+    //          $quantity_tracking->business_id = $business_application->business_id;
+    //          $quantity_tracking->business_details_id = $id;
+    //          $quantity_tracking->production_id = $business_application->id;
+    //          $quantity_tracking->completed_quantity = $completed_quantity; // Save the completed quantity
+    //          $quantity_tracking->quantity_tracking_status = config('constants.PRODUCTION_DEPARTMENT.INPROCESS_COMPLETED_QUANLTITY_SEND_TO_LOGISTICS');
+            
+    //          $quantity_tracking->save();
+
+    //          $dataOutput = Logistics::where('business_details_id', $id)->first();
+          
+    //          if (!$dataOutput) {
+    //              $dataOutput = new Logistics;
+    //          }
+ 
+    //          $dataOutput->business_details_id = $id;
+    //          $dataOutput->business_id = $business_application->business_id;
+    //          $dataOutput->business_application_processes_id = $business_application->id;
+    //          $dataOutput->quantity_tracking_id =  $quantity_tracking->id;
+    //          // $dataOutput->quantity = $request->input('quantity');
+    //          $dataOutput->is_approve = '0';
+    //          $dataOutput->is_active = '1';
+    //          $dataOutput->is_deleted = '0';
+          
+    //          $dataOutput->save();
+
+    //          $dataOutputDispatch = Dispatch::where('business_details_id', $id)->first();
+    //          if (!$dataOutputDispatch) {
+    //              $dataOutputDispatch = new Dispatch;
+    //          }
+ 
+    //          $dataOutputDispatch->business_details_id = $id;
+    //          $dataOutputDispatch->business_id = $business_application->business_id;
+    //          $dataOutputDispatch->logistics_id =  $dataOutput->id;
+            
+             
+    //          $dataOutputDispatch->business_application_processes_id = $business_application->id;
+    //          $dataOutputDispatch->is_approve = '0';
+    //          $dataOutputDispatch->is_active = '1';
+    //          $dataOutputDispatch->is_deleted = '0';
+    //          $dataOutputDispatch->save();
+
+
+             
+    //             return response()->json(['status' => 'success', 'message' => 'Production status updated successfully.']);
+    //         } else {
+    //             // Return an error response if the record does not exist
+    //             return response()->json(['status' => 'error', 'message' => 'Business application not found.'], 404);
+    //         }
+    //     } catch (\Exception $e) {
+    //         // Return an error response if an exception occurs
+    //         return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
+    //     }
+    // }
     public function acceptProductionCompleted($id, $completed_quantity) {
         try {
             // Fetch the business application process record for the given business ID
             $business_application = BusinessApplicationProcesses::where('business_details_id', $id)->first();
+            
             if ($business_application) {
+                // Update business application process status
                 $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN');
-                $business_application->off_canvas_status = 18; 
+                $business_application->off_canvas_status = 18;
                 $business_application->save();
+    
+                // Update admin view and notification status
+                $update_data_admin = ['off_canvas_status' => 18, 'is_view' => '0'];
+                $update_data_business = ['off_canvas_status' => 18, 'production_completed' => '0'];
+    
+                AdminView::where('business_details_id', $business_application->business_details_id)->update($update_data_admin);
+                NotificationStatus::where('business_details_id', $business_application->business_details_id)->update($update_data_business);
+    
+                // Track the completed quantity
+                $quantity_tracking = new CustomerProductQuantityTracking();
+                $quantity_tracking->business_id = $business_application->business_id;
+                $quantity_tracking->business_details_id = $id;
+                $quantity_tracking->production_id = $business_application->id;
+                $quantity_tracking->business_application_processes_id = $business_application->id;
+                $quantity_tracking->completed_quantity = $completed_quantity;  // Save the completed quantity
+                $quantity_tracking->quantity_tracking_status = config('constants.PRODUCTION_DEPARTMENT.INPROCESS_COMPLETED_QUANLTITY_SEND_TO_LOGISTICS');
+                $quantity_tracking->save();
+    
+                // Debug: Check if quantity_tracking was saved successfully
+                if (!$quantity_tracking->id) {
+                    return response()->json(['status' => 'error', 'message' => 'Failed to save quantity tracking data'], 500);
+                }
+    
+                // Create a new logistics record with tracking ID
+                $logistics = Logistics::create([
+                    'business_details_id' => $id,
+                    'business_id' => $business_application->business_id,
+                    'business_application_processes_id' => $business_application->id,
+                    'quantity_tracking_id' => $quantity_tracking->id,  // Correctly pass the quantity_tracking_id from quantity_tracking
+                    'is_approve' => '0',
+                    'is_active' => '1',
+                    'is_deleted' => '0',
+                ]);
 
-                // Update admin view and notification status with the new off canvas status
-              $update_data_admin['off_canvas_status'] = 18;
-              $update_data_admin['is_view'] = '0';
-               $update_data_business['off_canvas_status'] = 18;
-              AdminView::where('business_details_id', $business_application->business_details_id)
-                  // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
-                  ->update($update_data_admin);
   
-              NotificationStatus::where('business_details_id', $business_application->business_details_id)
-                  // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
-                  ->update($update_data_business);
-    
-                $dataOutput = Logistics::where('business_details_id', $id)->first();
-                if (!$dataOutput) {
-                    $dataOutput = new Logistics;
+                // Debug: Check if logistics data was created successfully
+                if (!$logistics) {
+                    return response()->json(['status' => 'error', 'message' => 'Failed to save logistics data'], 500);
                 }
     
-                $dataOutput->business_details_id = $id;
-                $dataOutput->business_id = $business_application->business_id;
-                $dataOutput->business_application_processes_id = $business_application->id;
-                // $dataOutput->quantity = $request->input('quantity');
-                $dataOutput->is_approve = '0';
-                $dataOutput->is_active = '1';
-                $dataOutput->is_deleted = '0';
-                $dataOutput->save();
-
-                $dataOutputDispatch = Dispatch::where('business_details_id', $id)->first();
-                if (!$dataOutputDispatch) {
-                    $dataOutputDispatch = new Dispatch;
+                // Create a new dispatch record with the logistics ID
+                $dispatch = Dispatch::create([
+                   'logistics_id'=>$logistics->id,
+                    'business_details_id' => $id,
+                    'business_id' => $business_application->business_id,
+                    'business_application_processes_id' => $business_application->id,
+                    'quantity_tracking_id' => $logistics->quantity_tracking_id,  // Correctly pass quantity_tracking_id from logistics
+                    'is_approve' => '0',
+                    'is_active' => '1',
+                    'is_deleted' => '0',
+                ]);
+//    dd($dispatch);
+//    die();
+                // Debug: Check if dispatch data was created successfully
+                if (!$dispatch) {
+                    return response()->json(['status' => 'error', 'message' => 'Failed to save dispatch data'], 500);
                 }
     
-                $dataOutputDispatch->business_details_id = $id;
-                $dataOutputDispatch->business_id = $business_application->business_id;
-                $dataOutputDispatch->logistics_id =  $dataOutput->id;
-                $dataOutputDispatch->business_application_processes_id = $business_application->id;
-                $dataOutputDispatch->is_approve = '0';
-                $dataOutputDispatch->is_active = '1';
-                $dataOutputDispatch->is_deleted = '0';
-                $dataOutputDispatch->save();
-
-
-             // Track the completed quantity
-             $quantity_tracking = new CustomerProductQuantityTracking();
-             $quantity_tracking->business_id = $business_application->business_id;
-             $quantity_tracking->business_details_id = $id;
-             $quantity_tracking->production_id = $business_application->id;
-             $quantity_tracking->completed_quantity = $completed_quantity; // Save the completed quantity
-             $quantity_tracking->quantity_tracking_status = config('constants.PRODUCTION_DEPARTMENT.INPROCESS_COMPLETED_QUANLTITY_SEND_TO_LOGISTICS');
-             $quantity_tracking->save();
                 return response()->json(['status' => 'success', 'message' => 'Production status updated successfully.']);
             } else {
                 // Return an error response if the record does not exist
@@ -225,6 +313,7 @@ class ProductionRepository  {
             return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
+    
     public function editProduct($id) {
         try {
             $array_to_be_check = [
@@ -352,13 +441,14 @@ class ProductionRepository  {
     
 public function updateProductMaterial($request) {
     try {
+      
         // Fetch existing production details based on the business_details_id
         $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $request->business_details_id)->get();
 
         $dataOutput_Production = ProductionModel::where('business_details_id', $request->business_details_id)->firstOrFail();
         $dataOutput_Production->store_status_quantity_tracking = 'incomplete-store';
         $dataOutput_Production->save();
-
+    
 // dd($dataOutput_Production);
 // die();
         // Loop through the addmore array
@@ -390,6 +480,23 @@ public function updateProductMaterial($request) {
                     $dataOutput->business_details_id = $dataOutput_ProductionDetails->first()->business_details_id;
                     $dataOutput->production_id = $dataOutput_ProductionDetails->first()->production_id;
                     $dataOutput->save();
+
+                    // dd($dataOutput);
+                    // die();
+                    $update_data_admin['off_canvas_status'] = 18;
+                    $update_data_admin['is_view'] = '0';
+                    $update_data_business['off_canvas_status'] = 18;
+                    
+                    AdminView::where('business_id', $dataOutput_ProductionDetails->business_id)
+                        ->where('business_details_id', $id)
+                        ->update($update_data_admin);
+                       
+    
+                    NotificationStatus::where('business_id', $dataOutput_ProductionDetails->business_id)
+                        ->where('business_details_id', $id)
+                        ->update($update_data_business);
+                        // dd($update_data_business);
+                        // die();
                 }
             } else {
                 // Optionally handle the case where part_item_id is not set

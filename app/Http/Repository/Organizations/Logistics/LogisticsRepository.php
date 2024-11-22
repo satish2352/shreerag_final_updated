@@ -21,12 +21,16 @@ class LogisticsRepository  {
 public function storeLogistics($request)
 {
     try {
+        // dd($request);
+        // die();
         // $dataOutput = Logistics::get();
         // $dataOutput = new Logistics();
         // $dataOutput = Logistics::find($request->id);
         // $dataOutput = Logistics::where('id', $request->id)->first();
         // $dataOutput = BusinessApplicationProcesses::where('business_id', $request->business_id)->first();
-        $dataOutput = Logistics::where('business_details_id', $request->business_id)->first();
+        $dataOutput = Logistics::where('quantity_tracking_id', $request->business_id)->first();
+        // dd($dataOutput);
+        // die();
         if ($dataOutput) {
             // Update the fields
             $dataOutput->vehicle_type_id = $request->vehicle_type_id;
@@ -47,7 +51,7 @@ public function storeLogistics($request)
                 $business_application->save();
 
                 // Track the completed quantity for the given business_details_id
-                $quantity_tracking = CustomerProductQuantityTracking::where('business_details_id', $business_application->business_details_id)->first();
+                $quantity_tracking = CustomerProductQuantityTracking::where('id', $dataOutput->quantity_tracking_id)->first();
                
                 $quantity_tracking->quantity_tracking_status = config('constants.LOGISTICS_DEPARTMENT.UPDATE_INPROCESS_COMPLETED_QUANLTITY_IN_LOGISTICS_DEPT');
                 $quantity_tracking->save();
@@ -57,6 +61,7 @@ public function storeLogistics($request)
             $update_data_admin['off_canvas_status'] = 19;
             $update_data_business['off_canvas_status'] = 19;
             $update_data_admin['is_view'] = '0';
+            $update_data_business['logistics_to_fianance_visible'] = '0';
             AdminView::where('business_details_id', $business_application->business_details_id)
                 ->update($update_data_admin);
                 NotificationStatus::where('business_details_id', $business_application->business_details_id)
@@ -75,17 +80,21 @@ public function storeLogistics($request)
         ]);
     }
 }
-public function sendToFianance($id) {
+public function sendToFianance($id,  $business_details_id) {
     try {
-       
-        $business_application = BusinessApplicationProcesses::where('business_details_id', $id)->first();
-        if ($business_application) {
-            $business_application->logistics_status_id = config('constants.LOGISTICS_DEPARTMENT.LOGISTICS_SEND_PRODUCTION_REQUEST_TO_FINANCE');
-            $business_application->off_canvas_status =20;
-            $business_application->save();
+        $businessDetailsId = base64_decode($business_details_id);
+        // $business_application = BusinessApplicationProcesses::where('business_details_id', $id)->first();
+        $quantity_tracking = CustomerProductQuantityTracking::where('id', $id)->first();
+        $business_application = BusinessApplicationProcesses::where('business_details_id', $businessDetailsId)->first();
+        $business_application->logistics_status_id = config('constants.LOGISTICS_DEPARTMENT.LOGISTICS_SEND_PRODUCTION_REQUEST_TO_FINANCE');
+        $business_application->off_canvas_status =20;
+        $business_application->save();
+      
+        if ($quantity_tracking) {
+        
 
               // Track the completed quantity for the given business_details_id
-              $quantity_tracking = CustomerProductQuantityTracking::where('business_details_id', $business_application->business_details_id)->first();
+              $quantity_tracking = CustomerProductQuantityTracking::where('id', $quantity_tracking->id)->first();
                
               $quantity_tracking->quantity_tracking_status = config('constants.LOGISTICS_DEPARTMENT.UPDATED_COMPLETED_QUANLTITY_LOGISTICS_DEPT_SEND_TO_FIANANCE_DEPT');
               $quantity_tracking->save();
@@ -94,9 +103,11 @@ public function sendToFianance($id) {
              $update_data_admin['off_canvas_status'] = 20;
              $update_data_business['off_canvas_status'] = 20;
              $update_data_admin['is_view'] = '0';
-             AdminView::where('business_details_id', $business_application->business_details_id)
+             $update_data_business['logistics_to_fianance_visible'] = '0';
+
+             AdminView::where('business_details_id', $quantity_tracking->business_details_id)
                  ->update($update_data_admin);
-                 NotificationStatus::where('business_details_id', $business_application->business_details_id)
+                 NotificationStatus::where('business_details_id', $quantity_tracking->business_details_id)
                  ->update($update_data_business);
 
             return response()->json(['status' => 'success', 'message' => 'Production status updated successfully.']);

@@ -24,8 +24,19 @@ class GRNRepository
     public function getAll()
     {
         try {
-            $data_output = Gatepass::where('is_checked_by_quality',false)->get();
-
+            // $data_output = Gatepass::where('is_checked_by_quality',false)->get();
+            $data_output = Gatepass::leftJoin('purchase_orders', function ($join) {
+                $join->on('gatepass.purchase_orders_id', '=', 'purchase_orders.purchase_orders_id');
+            })
+            ->select(
+                'purchase_orders.id',
+                'gatepass.purchase_orders_id',
+                'gatepass.gatepass_name', 
+                'gatepass.gatepass_date', 
+                'gatepass.gatepass_time', 
+                'gatepass.is_active'
+            )
+            ->get();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -307,8 +318,8 @@ class GRNRepository
             'vendors.gst_no', 
             'purchase_orders.is_active'
         )
-        ->where('purchase_orders.business_details_id', $id)
-        ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
+        // ->where('purchase_orders.business_details_id', $id)
+        // ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
         ->get(); // Added to execute the query and get results
        
         return $data_output;

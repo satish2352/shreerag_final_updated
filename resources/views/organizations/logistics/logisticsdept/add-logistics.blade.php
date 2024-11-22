@@ -48,15 +48,19 @@
                                         </div>
                                     </div>
                                 @endif
-                                
+                                <?php
+
+                                // dd($editData);
+                                // die();
+                                ?>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="all-form-element-inner">
-                                        <form action="{{ route('store-logistics', $editData->id
+                                        <form action="{{ route('store-logistics', $editData->quantity_tracking_id
                                        ) }}"
                                             method="POST" id="editLogisticsForm" enctype="multipart/form-data">
                                             @csrf
                                             <input type="hidden" name="business_id" id=""
-                                                    class="form-control" value="{{ $editData->id }}"
+                                                    class="form-control" value="{{ $editData->quantity_tracking_id }}"
                                                     placeholder="">
                                             <div class="row">
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -75,12 +79,21 @@
                                                     @endif
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="quantity">Quantity :  <span class="text-danger">*</span></label> 
+                                                    <label for="quantity">Total Quantity :  <span class="text-danger">*</span></label> 
                                                     <input type="text" class="form-control" id="quantity"
                                                      value=" @if (old('quantity')) {{ old('quantity') }}@else{{ $editData->quantity }} @endif"
-                                                        name="quantity" placeholder="Enter Product Name" readonly>
+                                                        name="quantity" placeholder="Enter quantity Name" readonly>
                                                         @if ($errors->has('quantity'))
                                                         <span class="red-text"><?php echo $errors->first('quantity', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="completed_quantity">Actual Production Quantity :  <span class="text-danger">*</span></label> 
+                                                    <input type="text" class="form-control" id="completed_quantity"
+                                                     value=" @if (old('completed_quantity')) {{ old('completed_quantity') }}@else{{ $editData->completed_quantity }} @endif"
+                                                        name="completed_quantity" placeholder="Enter completed quantity " readonly>
+                                                        @if ($errors->has('completed_quantity'))
+                                                        <span class="red-text"><?php echo $errors->first('completed_quantity', ':message'); ?></span>
                                                     @endif
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -134,25 +147,7 @@
                                                         @endif
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="from_place">From Place :  <span class="text-danger">*</span></label> 
-                                                    <input type="text" class="form-control" id="from_place"
-                                                     value=" "
-                                                        name="from_place" placeholder="Enter Product Name">
-                                                        @if ($errors->has('from_place'))
-                                                        <span class="red-text"><?php echo $errors->first('from_place', ':message'); ?></span>
-                                                    @endif
-                                                </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="to_place">To Place :  <span class="text-danger">*</span></label> 
-                                                    <input type="text" class="form-control" id="to_place"
-                                                     value=" "
-                                                        name="to_place" placeholder="Enter Product Name">
-                                                        @if ($errors->has('to_place'))
-                                                        <span class="red-text"><?php echo $errors->first('to_place', ':message'); ?></span>
-                                                    @endif
-                                                </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <div class="col-lg-6 col-md-6 col-sm-6">
                                                     <label for="truck_no">Truck Number :  <span class="text-danger">*</span></label> 
                                                     <input type="text" class="form-control" id="truck_no"
                                                      value=" "
@@ -161,6 +156,26 @@
                                                         <span class="red-text"><?php echo $errors->first('truck_no', ':message'); ?></span>
                                                     @endif
                                                 </div>
+                                                <div class="row">
+                                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                                    <label for="from_place">From Place :  <span class="text-danger">*</span></label> 
+                                                    <input type="text" class="form-control" id="from_place"
+                                                     value=" "
+                                                        name="from_place" placeholder="Enter Product Name">
+                                                        @if ($errors->has('from_place'))
+                                                        <span class="red-text"><?php echo $errors->first('from_place', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                                    <label for="to_place">To Place :  <span class="text-danger">*</span></label> 
+                                                    <input type="text" class="form-control" id="to_place"
+                                                     value=" "
+                                                        name="to_place" placeholder="Enter Product Name">
+                                                        @if ($errors->has('to_place'))
+                                                        <span class="red-text"><?php echo $errors->first('to_place', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                            </div>
                                             </div>
                                             <div class="container-fluid">
                                                  <div class="login-btn-inner">

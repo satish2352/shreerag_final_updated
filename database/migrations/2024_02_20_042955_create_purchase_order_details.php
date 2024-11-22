@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('due_date');
             $table->string('quantity');
             $table->string('unit');
+            $table->unsignedBigInteger('hsn_id');
             $table->string('actual_quantity');
             $table->string('accepted_quantity');
             $table->string('rejected_quantity');

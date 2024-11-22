@@ -11,7 +11,8 @@ use App\Models\ {
     Vendors,
     Business,
     VehicleType,
-    TransportName
+    TransportName,
+    Logistics
     };
 use Session;
 use Validator;
@@ -28,20 +29,35 @@ class LogisticsController extends Controller
     public function addLogistics($business_id)
     {
         try {
+            // dd( $business_id);
+            // die();
+            // $purchase_order_data = BusinessApplicationProcesses::where('business_details_id', $business_id)
+            // ->leftJoin('businesses', function ($join) {
+            //     $join->on('business_application_processes.business_id', '=', 'businesses.id');
+            // })
             
-            $purchase_order_data = BusinessApplicationProcesses::where('business_details_id', $business_id)
-            ->leftJoin('businesses', function ($join) {
-                $join->on('business_application_processes.business_id', '=', 'businesses.id');
+            // ->leftJoin('businesses_details', function($join) {
+            //     $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+            // })
+            // ->first();
+            $purchase_order_data = Logistics::where('quantity_tracking_id', $business_id)
+            ->leftJoin('tbl_customer_product_quantity_tracking', function ($join) {
+                $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_customer_product_quantity_tracking.id');
             })
-            
-            ->leftJoin('businesses_details', function($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+            ->leftJoin('businesses', function($join) {
+                $join->on('tbl_logistics.business_id', '=', 'businesses.id');
+            })
+             ->leftJoin('businesses_details', function($join) {
+                $join->on('tbl_logistics.business_details_id', '=', 'businesses_details.id');
             })
             ->first();
+           
             $dataOutputVendor = Vendors::where('is_active', 1)->get();
             $dataOutputVehicleType = VehicleType::where('is_active', 1)->get();
             $dataOutputTransportName = TransportName::where('is_active', 1)->get();
             $editData = $purchase_order_data;
+            // dd($editData);
+            // die();
             return view('organizations.logistics.logisticsdept.add-logistics'
             , compact('dataOutputVendor', 'editData', 'dataOutputVehicleType', 'dataOutputTransportName')
         );
@@ -90,10 +106,10 @@ class LogisticsController extends Controller
     }
     
     
-    public function sendToFianance($id){
+    public function sendToFianance($id,  $business_details_id){
         try {
             $accepted = base64_decode($id);
-            $update_data = $this->service->sendToFianance($accepted);
+            $update_data = $this->service->sendToFianance($accepted,  $business_details_id);
             return redirect('logisticsdept/list-logistics');
         } catch (\Exception $e) {
             return $e;

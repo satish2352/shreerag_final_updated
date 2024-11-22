@@ -46,10 +46,11 @@ class FinanceServices
             return $e;
         }
     }
-    public function sendToDispatch($id){
+    public function sendToDispatch($id,  $business_details_id){
         try {
-           $update_data = $this->repo->sendToDispatch($id);
-       
+           $update_data = $this->repo->sendToDispatch($id,  $business_details_id);
+    //    dd($update_data);
+    //    die();
            return $update_data;
         } catch (\Exception $e) {
             return $e;

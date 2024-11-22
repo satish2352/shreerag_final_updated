@@ -119,6 +119,7 @@
                                     <tr>
                                         <th style="border: 1px solid black; padding: 5px;">Sr. No.</th>
                                         <th style="border: 1px solid black; padding: 5px;">Part No.</th>
+                                        <th style="border: 1px solid black; padding: 5px;">HSN No.</th>
                                         <th style="border: 1px solid black; padding: 5px;">Description</th>
                                         <th style="border: 1px solid black; padding: 5px;">Due Date</th>
                                         <th style="border: 1px solid black; padding: 5px;">Quantity</th>
@@ -131,10 +132,11 @@
                                     <tr>
                                         <td style="border: 1px solid black; padding: 5px; text-align: center;">{{ $index + 1 }}</td>
                                         <td style="border: 1px solid black; padding: 5px;">{{ $item->item_description }}</td>
+                                        <td style="border: 1px solid black; padding: 5px;">{{ $item->hsn_name }}</td>
                                         <td style="border: 1px solid black; padding: 5px; max-width: 150px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-all;">
                                             {{ $item->description }}</td>
                                         <td style="border: 1px solid black; padding: 5px; text-align: center;">{{ $item->due_date }}</td>
-                                        <td style="border: 1px solid black; padding: 5px; text-align: right;">{{ $item->quantity }} {{ $item->unit }}</td>
+                                        <td style="border: 1px solid black; padding: 5px; text-align: right;">{{ $item->quantity }} {{ $item->unit_name }}</td>
                                         <td style="border: 1px solid black; padding: 5px; text-align: left;">{{ $item->rate }}</td>
                                         <td style="border: 1px solid black; padding: 5px; text-align: right;">{{ $item->amount }}</td>
                                     </tr>
@@ -142,7 +144,7 @@
                                 </tbody>
                                 <tfoot style="border: 1px solid black;">
                                     <tr>
-                                        <td class="no-border" colspan="2">
+                                        <td class="no-border" colspan="3">
                                             <strong>Terms & Condition :- {{ $getOrganizationData->terms_condition }}</strong>
                                         </td>
                                         <td class="no-border" colspan="3"></td>
@@ -158,7 +160,7 @@
                                         <td class="text-right">{{ $purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100) }}</td>
                                     </tr> --}}
                                     <tr>
-                                        <td class="no-border" colspan="2"></td>
+                                        <td class="no-border" colspan="3"></td>
                                         <td class="no-border" colspan="3"></td>
                                         <td style="border: 1px solid black;">Discount Amount</td>
                                         <td class="text-right" style="border: 1px solid black;">
@@ -174,7 +176,7 @@
                                         </td>
                                     </tr> --}}
                                     <tr>
-                                        <td class="no-border" colspan="5"></td>
+                                        <td class="no-border" colspan="6"></td>
                                         <td style="border: 1px solid black;">Freight</td>
                                         <td style="border: 1px solid black;" class="text-right">0.00</td>
                                     </tr>
@@ -184,7 +186,7 @@
                                         <td class="text-right">{{ ($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * (1 + ($purchaseOrder->tax_id / 100)) }}</td>
                                     </tr> --}}
                                     <tr>
-                                        <td class="no-border" colspan="5"></td>
+                                        <td class="no-border" colspan="6"></td>
                                         <td style="border: 1px solid black;">{{ $purchaseOrder->tax_type }} {{ $purchaseOrder->tax_id }}%</td>
                                         <td style="border: 1px solid black;" class="text-right">
                                             {{ 
@@ -203,7 +205,7 @@
                                         </td>
                                     </tr> --}}
                                     <tr>
-                                        <td class="no-border" colspan="5"></td>
+                                        <td class="no-border" colspan="6"></td>
                                         <td style="border: 1px solid black;">NIL GST</td>
                                         <td style="border: 1px solid black;" class="text-right">0.00</td>
                                     </tr>
@@ -211,7 +213,7 @@
                                         <td class="no-border" colspan="3">
                                             <strong>Transport/Dispatch :-</strong>
                                         </td>
-                                        <td class="no-border" colspan="2"></td>
+                                        <td class="no-border" colspan="3"></td>
                                         <td style="border: 1px solid black;"><strong>Net Total (Including {{ $purchaseOrder->tax_type }})</strong></td>
                                         <td style="border: 1px solid black;" class="text-right">
                                             <strong>  {{ 
@@ -240,7 +242,7 @@
                                             <strong>Prepared By</strong>
                                         </td>
                                         <td class="no-border" colspan="2">( Finance Signatory )</td>
-                                        <td class="no-border" colspan="2">( Purchase Signatory )</td>
+                                        <td class="no-border" colspan="3">( Purchase Signatory )</td>
                                         <td class="no-border" colspan="1">( Authorized Signatory )</td>
                                     </tr>
                                 </tfoot>

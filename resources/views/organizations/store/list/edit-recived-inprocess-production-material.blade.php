@@ -340,8 +340,13 @@ function updateSerialNumbers() {
                     <input class="form-control quantity" name="addmore[${i_count}][quantity]" type="text">
                 </td>
                 <td>
-                    <input class="form-control unit" name="addmore[${i_count}][unit]" type="text">
-                </td>
+                        <select class="form-control mb-2 unit" name="addmore[${i_count}][unit]">
+                            <option value="">Select Unit</option>
+                            @foreach ($dataOutputUnitMaster as $data)
+                                <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                            @endforeach
+                        </select>
+                    </td>
                 <td>
                     <input type="checkbox" name="addmore[${i_count}][material_send_production]" value="1">
                 </td>

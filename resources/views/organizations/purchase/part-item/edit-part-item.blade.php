@@ -57,8 +57,7 @@
                                           
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
                                                 <div class="form-group">
-                                                    <label for="unit_id">Unit Name <span class="text-danger">*</span></label> &nbsp;<span
-                                                        class="red-text">*</span>
+                                                    <label for="unit_id">Unit Name <span class="text-danger">*</span></label>
                                                     <select class="form-control mb-2"
                                                         name="unit_id" id="unit_id">
                                                         <option value="" default>Select
@@ -78,8 +77,7 @@
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
                                                 <div class="form-group">
-                                                    <label for="hsn_id">HSN Name <span class="text-danger">*</span></label> &nbsp;<span
-                                                        class="red-text">*</span>
+                                                    <label for="hsn_id">HSN Name <span class="text-danger">*</span></label>
                                                     <select class="form-control mb-2"
                                                         name="hsn_id" id="hsn_id">
                                                         <option value="" default>Select
@@ -99,8 +97,7 @@
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
                                                 <div class="form-group">
-                                                    <label for="group_type_id">Group Name <span class="text-danger">*</span></label> &nbsp;<span
-                                                        class="red-text">*</span>
+                                                    <label for="group_type_id">Group Name <span class="text-danger">*</span></label>
                                                     <select class="form-control mb-2"
                                                         name="group_type_id" id="group_type_id">
                                                         <option value="" default>Select

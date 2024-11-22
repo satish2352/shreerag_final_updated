@@ -85,7 +85,8 @@
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="grn_date" data-editable="false">Description</th>
-                                                <th data-field="quantity" data-editable="false">Quantity</th>
+                                                <th data-field="quantity" data-editable="false">Actual Quantity</th>
+                                                <th data-field="completed_quantity" data-editable="false">Production Completed Quantity</th>
                                                 {{-- <th data-field="purchase_id" data-editable="false">Remark</th> --}}
                                                 {{-- <th data-field="store_material_sent_date" data-editable="false">Matrial Recieved Date</th> --}}
                                                 {{-- <th data-field="design_image" data-editable="false">Design Layout</th>
@@ -105,6 +106,7 @@
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
+                                                    <td>{{ ucwords($data->completed_quantity) }}</td>
                                                     {{-- <td>{{ ucwords($data->remarks) }}</td> --}}
                                                     {{-- <td>{{ ucwords($data->store_material_sent_date) }}</td> --}}
                                                     {{-- <td> <a class="img-size" target="_blank"

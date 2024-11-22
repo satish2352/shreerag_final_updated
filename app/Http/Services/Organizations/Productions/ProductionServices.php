@@ -49,8 +49,7 @@ use Config;
 {
     try {
         $update_data = $this->repo->acceptProductionCompleted($id, $completed_quantity);
-        // dd($update_data);
-        // die();
+       
         return $update_data;
     } catch (\Exception $e) {
         return $e;
@@ -71,7 +70,7 @@ return $data_output;
     public function editProductQuantityTracking($id) {
         try {
             $data_output = $this->repo->editProductQuantityTracking($id);
-         
+       
 return $data_output;
         } catch (\Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];

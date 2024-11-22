@@ -89,28 +89,39 @@ class FinanceRepository
             return $e;
         }
     }
-    public function sendToDispatch($id) {
+    public function sendToDispatch($id,  $business_details_id) {
         try {
-          
-            $business_application = BusinessApplicationProcesses::where('business_details_id', $id)->first();
-            if ($business_application) {
-                $business_application->dispatch_status_id = config('constants.FINANCE_DEPARTMENT.LIST_LOGISTICS_SEND_TO_DISPATCH_DEAPRTMENT');
-                $business_application->off_canvas_status = 21;
+            $businessDetailsId = base64_decode($business_details_id);
+        //   dd($businessDetailsId);
+        //   die();
+        //    $businessId = $request;  
+        //    dd($businessId);
+        //    die();
+            $quantity_tracking = CustomerProductQuantityTracking::where('id', $id)->first();
 
-                $business_application->save();
+            $business_application = BusinessApplicationProcesses::where('business_details_id', $businessDetailsId)->first();
+        //  dd($business_application );
+        //  die();
+            $business_application->dispatch_status_id = config('constants.FINANCE_DEPARTMENT.LIST_LOGISTICS_SEND_TO_DISPATCH_DEAPRTMENT');
+            $business_application->off_canvas_status = 21;
+            $business_application->save();
+            if ($quantity_tracking) {
+               
                 
               // Track the completed quantity for the given business_details_id
-              $quantity_tracking = CustomerProductQuantityTracking::where('business_details_id', $business_application->business_details_id)->first();
-               
+            //   $quantity_tracking = CustomerProductQuantityTracking::where('business_details_id', $business_application->business_details_id)->first();
+              $quantity_tracking = CustomerProductQuantityTracking::where('id', $quantity_tracking->id)->first();
+
               $quantity_tracking->quantity_tracking_status = config('constants.FINANCE_DEPARTMENT.SEND_COMPLETED_QUANLTITY_FROM_FIANANCE_DEPT_TO_DISPATCH_DEPT');
               $quantity_tracking->save();
             // $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
             $update_data_admin['off_canvas_status'] = 21;
             $update_data_business['off_canvas_status'] = 21;
             $update_data_admin['is_view'] = '0';
-            AdminView::where('business_details_id', $business_application->business_details_id)
+            $update_data_business['fianance_to_dispatch_visible'] = '0';
+            AdminView::where('business_details_id', $quantity_tracking->business_details_id)
                 ->update($update_data_admin);
-                NotificationStatus::where('business_details_id', $business_application->business_details_id)
+                NotificationStatus::where('business_details_id', $quantity_tracking->business_details_id)
                 ->update($update_data_business);
 
     

@@ -244,10 +244,7 @@
             <button data-toggle="tooltip" onclick="printInvoice()" title="Accept Purchase Order" style="margin-top: 20px;">Print</button>
         </a>
         <script>
-            // function printInvoice() {
-            //     window.print();
-            // }
-            function printInvoice() {
+           function printInvoice() {
     // Get the content you want to print
     var contentToPrint = document.getElementById("printableArea").innerHTML;
 
@@ -257,10 +254,30 @@
     // Write the content to the new window with proper styles
     printWindow.document.write('<html><head><title>Print</title>');
     printWindow.document.write('<style>');
-    printWindow.document.write('body { font-family: Arial, sans-serif; margin: 0; padding: 50px; }'); // Add padding to body
-    printWindow.document.write('#printableArea { width: 100%; overflow: hidden; }'); // Ensure full width of content
-    printWindow.document.write('</style>');
-    printWindow.document.write('</head><body>');
+    printWindow.document.write(`
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        table th, table td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+        table th {
+            background-color: #f2f2f2;
+        }
+        .borders, .bordersBottom {
+            border: 1px solid black;
+        }
+        .no-border {
+            border: none !important;
+        }
+    `); // Include your custom styles
+    printWindow.document.write('</style></head><body>');
     printWindow.document.write(contentToPrint);
     printWindow.document.write('</body></html>');
 
@@ -274,8 +291,6 @@
     // Close the print window after printing
     printWindow.close();
 }
-
-
 
         </script>
 

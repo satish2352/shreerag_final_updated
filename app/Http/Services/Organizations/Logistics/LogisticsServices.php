@@ -41,9 +41,9 @@ class LogisticsServices
             return $e;
         }
     }
-    public function sendToFianance($id){
+    public function sendToFianance($id,  $business_details_id){
         try {
-           $update_data = $this->repo->sendToFianance($id);
+           $update_data = $this->repo->sendToFianance($id,  $business_details_id);
     //    dd($update_data );
     //    die();
            return $update_data;

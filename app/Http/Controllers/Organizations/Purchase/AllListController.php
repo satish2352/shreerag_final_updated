@@ -48,19 +48,22 @@ class AllListController extends Controller
 
         try {
             $data_output = $this->service->getAllListMaterialReceivedForPurchase();
-            
+            // dd($data_output);
+            // die();
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
-                    $business_details_id = $data->id; 
-                    if (!empty($business_details_id)) {
+                    $business_details = $data->business_details_id; 
+                    // dd($business_details);
+                    // die();
+                    if (!empty($business_details)) {
                         $update_data['purchase_is_view'] = '1';
                         NotificationStatus::where('purchase_is_view', '0')
-                            ->where('id', $business_details_id)
+                            ->where('business_details_id', $business_details)
                             ->update($update_data);
                     }
                 }
             } else {
-                return view('organizations.designer.list.list_design_received_from_production_for_correction', [
+                return view('organizations.purchase.list.list-bom-material-recived-for-purchase', [
                     'data_output' => [],
                     'message' => 'No data found for designs received for correction'
                 ]);
