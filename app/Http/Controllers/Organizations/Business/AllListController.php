@@ -125,10 +125,11 @@ class AllListController extends Controller
     public function getAllListApprovedPurchaseOrderOwnerlogin(Request $request){
         try {
             $data_output = $this->service->getAllListApprovedPurchaseOrderOwnerlogin();
-          
+        //   dd($data_output);
+        //   die();
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
-                    $business_id = $data->business_id; 
+                    $business_id = $data->id; 
                     if (!empty($business_id)) {
                         $update_data['is_view'] = '1';
                         AdminView::where('is_view', '0')
@@ -260,13 +261,14 @@ class AllListController extends Controller
     {
         try {
             $data_output = $this->service->getAllListMaterialSentFromQualityToStoreGeneratedGRN();
+           
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
                     $business_id = $data->id; 
                     if (!empty($business_id)) {
                         $update_data['is_view'] = '1';
                         AdminView::where('is_view', '0')
-                            ->where('business_id', $business_id)
+                            ->where('business_details_id', $business_id)
                             ->update($update_data);
                     }
                 }

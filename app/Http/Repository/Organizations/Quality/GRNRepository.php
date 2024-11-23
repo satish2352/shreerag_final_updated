@@ -30,6 +30,7 @@ class GRNRepository
             })
             ->select(
                 'purchase_orders.id',
+                'purchase_orders.business_details_id',
                 'gatepass.purchase_orders_id',
                 'gatepass.gatepass_name', 
                 'gatepass.gatepass_date', 

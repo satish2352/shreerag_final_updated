@@ -132,6 +132,7 @@ class StoreController extends Controller
     public function editProductMaterialWiseAdd($id) {
         try {
             $editData = $this->service->editProductMaterialWiseAdd($id);
+            
             $dataOutputPartItem = PartItem::where('is_active', true)->get();
             $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
             return view('organizations.store.list.edit-material-bom-wise-add', [
@@ -168,7 +169,7 @@ class StoreController extends Controller
             $updateData = $this->service->updateProductMaterialWiseAdd($request);
     
             if ($updateData['status'] == 'success') {
-                return redirect('storedept/list-accepted-design-from-prod')->with(['status' => 'success', 'msg' => $updateData['message']]);
+                return redirect('storedept/list-material-received-from-quality')->with(['status' => 'success', 'msg' => $updateData['message']]);
             } else {
                 return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $updateData['message']]);
             }

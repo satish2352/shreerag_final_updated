@@ -81,6 +81,7 @@ padding-left: 20px !important;
                                             <th data-field="id">Sr.No.</th> 
                                             <th data-field="grn_number" data-editable="false">Product Name</th>
                                             <th data-field="grn_date" data-editable="false">Description</th>
+                                            <th data-field="action" data-editable="false">Action</th>
                                         </tr>
 
                                     </thead>
@@ -99,7 +100,7 @@ padding-left: 20px !important;
                                                 <div style="display: inline-block; align-items: center;">
                                                     <a
                                                         href="{{ route('list-purchase-order-approved-bussinesswise', $data->id) }}"><button
-                                                            data-toggle="tooltip" title="Edit"
+                                                            data-toggle="tooltip" title="View Details"
                                                             class="pd-setting-ed"><i class="fa fa-pencil-square-o"
                                                                 aria-hidden="true"></i> Check Details</button></a>
                                                     &nbsp; &nbsp; &nbsp;

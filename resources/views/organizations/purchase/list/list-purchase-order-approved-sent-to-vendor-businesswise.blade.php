@@ -67,6 +67,7 @@
                                                 <th data-field="vendor_company_name" data-editable="false">Client Company Name</th>
                                                 <th data-field="email" data-editable="false">Email</th>
                                                 <th data-field="contact_no" data-editable="false">Phone Number</th>
+                                                <th data-field="action" data-editable="false">Action</th>
                                                 {{-- <th data-field="vendor_id" data-editable="false">Vendor</th>                                         
                                             <th data-field="client_name" data-editable="false">Client Name</th>                                          --}}
                                             </tr>

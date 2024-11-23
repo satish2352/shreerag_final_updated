@@ -60,6 +60,7 @@
                                                 {{-- <th data-field="po_number" data-editable="false">PO Number</th> --}}
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="grn_date" data-editable="false">Description</th>
+                                                <th data-field="action" data-editable="false">Action</th>
                                                 {{-- <th data-field="vendor_address" data-editable="false">Address</th>                                      --}}
                                             </tr>
 

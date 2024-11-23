@@ -29,11 +29,10 @@ class GRNController extends Controller
     {
         try {
             $all_gatepass = $this->service->getAll();
-// dd($all_gatepass);
-// die();
+
             if ($all_gatepass->isNotEmpty()) {
                 foreach ($all_gatepass as $data) {
-                    $business_details = $data->id; 
+                    $business_details = $data->business_details_id; 
                     if (!empty($business_details)) {
                         $update_data['quality_po_material_visible'] = '1';
                         NotificationStatus::where('quality_po_material_visible', '0')
@@ -196,7 +195,7 @@ class GRNController extends Controller
                     }
                 }
             } else {
-                return view('organizations.purchase.list.list-all-po-sent-to-vendor', [
+                return view('organizations.quality.list.list-checked-material-sent-to-store', [
                     'data_output' => [],
                     'message' => 'No data found'
                 ]);

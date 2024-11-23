@@ -29,6 +29,7 @@ class GatepassController extends Controller
     public function searchByPONo()
     {
         try {
+            
             return view('organizations.security.search-by-pono');
         } catch (\Exception $e) {
             return $e;
@@ -56,6 +57,10 @@ class GatepassController extends Controller
                 ->join('tbl_part_item', function ($join) {
                     $join->on('tbl_part_item.id', '=', 'purchase_order_details.part_no_id')
                          ->orOn('tbl_part_item.id', '=', 'purchase_order_details.part_no_id');
+                })
+                ->join('tbl_unit', function ($join) {
+                    $join->on('tbl_unit.id', '=', 'purchase_order_details.unit')
+                         ->orOn('tbl_unit.id', '=', 'purchase_order_details.unit');
                 })
                 ->select(
                     'purchase_orders.id as purchase_order_id',
@@ -85,6 +90,7 @@ class GatepassController extends Controller
                     'purchase_order_details.*',
                     'tbl_part_item.id',            // Fetch part number from the tbl_part_item table
                     'tbl_part_item.description as part_name' ,
+                    'tbl_unit.name as unit_name' ,
                    
                 )->get();
                 // dd($data);

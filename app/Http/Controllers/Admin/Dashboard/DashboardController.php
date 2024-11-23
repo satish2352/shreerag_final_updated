@@ -694,8 +694,8 @@ class DashboardController extends Controller {
            
         }
         elseif($ses_userId == '6'){//Purchase Department
-            dd($ses_userId == '6');
-            die();
+            // dd($ses_userId == '6');
+            // die();
             $received_requistion_req = NotificationStatus::where('off_canvas_status',16)
             ->where('purchase_is_view','0')
             ->select('id')
@@ -761,7 +761,7 @@ class DashboardController extends Controller {
 
             $notifications[] = ['admin_count' => $po_send_to_vendor_visible_security_count,
                 'message' => 'Search By PO No',
-                'url' => 'list-all-po-number'
+                'url' => 'search-by-po-no'
             ];
             $count = $po_send_to_vendor_visible_security_count;
         }

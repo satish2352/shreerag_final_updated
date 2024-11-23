@@ -84,10 +84,14 @@
                                                             <input type="text" name="addmore[{{ $index }}][id]" class="form-control" readonly value="{{ $index + 1 }}">
                                                         </td>
                                                         <td>
-                                                            <select class="form-control part-no" name="addmore[{{ $index }}][part_item_id]">
+                                                            <select class="form-control part-no" name="addmore[{{ $index }}][unit]">
                                                                 <option value="">Select Part Item</option>
                                                                 @foreach ($dataOutputPartItem as $partItem)
-                                                                    <option value="{{ $partItem->id }}" {{ $partItem->id == $item->part_item_id ? 'selected' : '' }}>
+                                                            <?php
+                                                                // dd($dataOutputPartItem);
+                                                                // die();
+                                                            ?>
+                                                                    <option value="{{ $partItem->id }}" {{ $partItem->id == $item->unit ? 'selected' : '' }}>
                                                                         {{ $partItem->description }}
                                                                     </option>
                                                                 @endforeach
@@ -96,10 +100,20 @@
                                                         <td>
                                                             <input class="form-control quantity" name="addmore[{{ $index }}][quantity]" type="text" value="{{ $item->quantity }}">
                                                         </td>
+                                                        <td>
+                                                            <select class="form-control unit" name="addmore[{{ $index }}][unit]">
+                                                                <option value="">Select Unit</option>
+                                                                @foreach ($dataOutputUnitMaster as $unitName)
+                                                                    <option value="{{ $unitName->id }}" {{ $unitName->id == $item->unit ? 'selected' : '' }}>
+                                                                        {{ $unitName->name }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
                                                         {{-- <td>
                                                             <input class="form-control unit" name="addmore[{{ $index }}][unit]" type="text" value="{{ $item->unit }}">
                                                         </td> --}}
-                                                        <td>
+                                                        {{-- <td>
                                                             <select class="form-control mb-2" name="addmore[0][unit]" id="">
                                                                 <option value="" default>Select Unit</option>
                                                                 @foreach ($dataOutputUnitMaster as $data)
@@ -107,7 +121,8 @@
                                                                             {{ $data['name'] }}</option>
                                                                 @endforeach
                                                             </select>
-                                                        </td>
+                                                        </td> --}}
+                                                        
                                                         <td>
                                                             <input type="checkbox" name="addmore[{{ $index }}][material_send_production]" value="1" {{ $item->material_send_production ? 'checked' : '' }}>
 

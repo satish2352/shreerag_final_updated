@@ -84,6 +84,7 @@
                                                 <th data-field="id">ID</th>
                                                 <th data-field="grn_number" data-editable="false">Product Name</th>
                                                 <th data-field="grn_date" data-editable="false">Description</th>
+                                                <th data-field="action" data-editable="false">Action</th>
                                                 {{-- <th data-field="purchase_id" data-editable="false">Remark</th> --}}
                                                 {{-- <th data-field="design_image" data-editable="false">Design Layout</th>
                                                 <th data-field="bom_image" data-editable="false">BOM</th> --}}

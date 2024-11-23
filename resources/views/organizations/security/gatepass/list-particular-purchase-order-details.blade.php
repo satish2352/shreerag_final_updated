@@ -140,7 +140,7 @@
                                                 <td  style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">{{ $detail->part_name }}</span></td>
                                                 <td  style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">{{ $detail->description }}</span></td>
                                                 <td  style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">{{ $detail->due_date }}</span></td>
-                                                <td  style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">{{ $detail->quantity }} {{ $detail->unit }}</span></td>
+                                                <td  style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">{{ $detail->quantity }} {{ $detail->unit_name }}</span></td>
                                                 {{-- <td>{{ $detail->rate }}</td>
                                                 <td>{{ $detail->amount }}</td> --}}
                                             </tr>

@@ -162,6 +162,8 @@ class AllListServices
     {
         try {
             $data = $this->repo->getAllListMaterialSentFromQualityToStoreGeneratedGRN();
+            // dd($data);
+            // die();
             return $data;
         } catch (\Exception $e) {
             return $e;
