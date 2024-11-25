@@ -94,6 +94,7 @@ class StoreRepository
            $update_data_admin['off_canvas_status'] = 16;
            $update_data_admin['is_view'] = '0';
            $update_data_business['off_canvas_status'] = 16;
+           $update_data_business['purchase_is_view'] = 0;
            AdminView::where('business_details_id', $business_application->business_details_id)
                // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
                ->update($update_data_admin);

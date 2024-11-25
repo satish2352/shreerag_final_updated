@@ -37,6 +37,7 @@ class GRNRepository
                 'gatepass.gatepass_time', 
                 'gatepass.is_active'
             )
+            ->orderBy('gatepass.updated_at', 'desc')
             ->get();
             return $data_output;
         } catch (\Exception $e) {

@@ -80,7 +80,7 @@ class PurchaseOrderRepository
             $businessOutput->off_canvas_status = 23;
 
             $businessOutput->save();
-
+           
               // Update admin view and notification status with the new off canvas status
               $update_data_admin['off_canvas_status'] = 23;
               $update_data_admin['is_view'] = '0';
@@ -92,7 +92,8 @@ class PurchaseOrderRepository
               NotificationStatus::where('business_details_id', $businessOutput->business_details_id)
                   // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
                   ->update($update_data_business);
-               
+                //   dd($update_data_business);
+                //   die();
             // Save data into DesignDetailsModel
             foreach ($request->addmore as $index => $item) {
                 $designDetails = new PurchaseOrderDetailsModel();

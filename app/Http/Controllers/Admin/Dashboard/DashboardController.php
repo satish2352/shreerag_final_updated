@@ -416,6 +416,7 @@ class DashboardController extends Controller {
     {
         
         $ses_userId = session()->get('user_id');
+     
         $ses_roleId = session()->get('role_id');
         $count = 0;  // Initialize the $count variable
         $notifications = [];  // Initialize the $notifications array
@@ -698,6 +699,7 @@ class DashboardController extends Controller {
            
         }
         elseif($ses_userId == '6'){//Purchase Department
+          
             $received_requistion_req = NotificationStatus::where('off_canvas_status',16)
             ->where('purchase_is_view','0')
             ->select('id')

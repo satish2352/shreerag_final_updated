@@ -114,6 +114,24 @@ class AllListController extends Controller
     public function getAllListPurchaseOrder(Request $request){
         try {
             $data_output = $this->service->getAllListPurchaseOrder();
+            // dd($data_output);
+            // die();
+            if ($data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
+                    $business_id = $data->id; 
+                    if (!empty($business_id)) {
+                        $update_data['is_view'] = '1';
+                        AdminView::where('is_view', '0')
+                            ->where('id', $business_id)
+                            ->update($update_data);
+                    }
+                }
+            } else {
+                return view('organizations.business.list.list-material-list-from-store-to-purchase', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
         
             return view('organizations.business.list.list-purchase-order-need-to-check', compact('data_output'));
         } catch (\Exception $e) {
