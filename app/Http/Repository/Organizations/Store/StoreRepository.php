@@ -224,21 +224,22 @@ class StoreRepository
     public function updateProductMaterialWiseAdd($request) {
         try {
             $business_details_id = base64_decode($request->business_details_id);
-
+           
             $dataOutput_Production = ProductionModel::where('business_details_id', $business_details_id)->firstOrFail();
             $dataOutput_Production->production_status_quantity_tracking = 'incomplete';
             $dataOutput_Production->save();
-            // dd($dataOutput_Production);
-            // die();
-        
-        
-            $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $business_details_id)->firstOrFail();
+         
+        //   dd($dataOutput_Production);
+        //   die();
+            
+            $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $dataOutput_Production->business_details_id)->firstOrFail();
            
             // dd($dataOutput_ProductionDetails);
             // die();
                // Fetch the business details ID from the purchase order
      $business_details_id = $dataOutput_ProductionDetails->business_details_id;
-
+    //  dd($business_details_id);
+    //  die();
      // Fetch the business application process using business_details_id
      $business_application = BusinessApplicationProcesses::where('business_details_id', $business_details_id)->first();
 
@@ -250,7 +251,7 @@ class StoreRepository
      }
      
             // Remove existing records related to the business_details_id before saving new ones
-            ProductionDetails::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)->delete();
+            // ProductionDetails::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)->delete();
     
             $errorMessages = []; // Array to hold error messages
     
@@ -269,9 +270,12 @@ class StoreRepository
                  // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
                  ->update($update_data_business);
             // Loop through the addmore array and update or create new ProductionDetails
+            // dd($request);
+            // die();
             foreach ($request->addmore as $item) {
+             
                 $dataOutput = new ProductionDetails();
-                $dataOutput->part_item_id = $item['part_item_id'];
+                $dataOutput->part_item_id = $item['id'];
                 $dataOutput->quantity = $item['quantity'];
                 $dataOutput->unit = $item['unit'];
                 $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
@@ -279,15 +283,18 @@ class StoreRepository
                 $dataOutput->design_id = $dataOutput_ProductionDetails->design_id;
                 $dataOutput->business_details_id = $dataOutput_ProductionDetails->business_details_id;
                 $dataOutput->production_id = $dataOutput_ProductionDetails->production_id;
-
+                // dd($dataOutput);
+                // die();
                 $dataOutput->save();
 
-  
+               
+            
     $partItemId = (int) $item['part_item_id'];
  
     
-
             $existingEntry = ProductionDetails::find($dataOutput->id);
+            // dd($existingEntry);
+            // die();
 // Ensure $existingEntry exists and has a part_item_id
 if ($existingEntry && isset($existingEntry->part_item_id)) {
 

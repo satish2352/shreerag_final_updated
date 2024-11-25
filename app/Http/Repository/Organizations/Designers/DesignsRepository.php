@@ -234,11 +234,16 @@ public function updateAll($request)
         $production_data->design_id = $dataOutputNew->id;
         $production_data->save();
 
+        // dd($dataOutputNew->id);
+        // die();
         // Handle ProductionModel update/creation for each design detail
-        $production_data_details = ProductionDetails::where('design_id', $dataOutputNew->id)->first();
-        if (!$production_data_details) {
-            $production_data_details = new ProductionDetails();
-        }
+        $production_data_details = ProductionDetails::firstOrNew(['design_id' => $dataOutputNew->id]);
+        // where('design_id', $dataOutputNew->id)->first();
+        // dd($production_data_details);
+        // die();
+        // if (!$production_data_details) {
+        //     $production_data_details = new ProductionDetails();
+        // }
 
         $production_data_details->business_id = $dataOutputNew->business_id;
         $production_data_details->design_id = $dataOutputNew->id;
@@ -248,7 +253,7 @@ public function updateAll($request)
         $production_data_details->quantity = NULL;
         $production_data_details->unit = NULL;
         $production_data_details->save();
-
+      
         // Store design and production IDs
         $designIds[] = $dataOutputNew->id;
         $productionIds[] = $production_data->id;
