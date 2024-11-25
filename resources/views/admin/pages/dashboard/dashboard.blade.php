@@ -2518,7 +2518,7 @@
                                                         @elseif($data->off_canvas_status == 17)
                                                         Store Department forward to Production Department
                                                         @elseif($data->off_canvas_status == 27  && $data->po_tracking_status== 4002)
-                                                        Quality Department(Generated GRN) and Store Department Material Received PO {{$data->purchase_orders_id}} {{$data->tracking_id}} time
+                                                        Quality Department(Generated GRN) and Store Department Material Received
                                                         @elseif($data->off_canvas_status == 26 && $data->po_tracking_status== 4001 )
                                                         Security Department Received Material and PO {{$data->purchase_orders_id}} also Generated Gate Pass {{$data->tracking_id}} time
                                                         @elseif($data->off_canvas_status == 25)
