@@ -289,7 +289,7 @@ class StoreRepository
 
                
             
-    $partItemId = (int) $item['id'];
+    // $partItemId = (int) $item['id'];
 
     
             $existingEntry = ProductionDetails::find($dataOutput->id);
@@ -302,20 +302,20 @@ if ($existingEntry && isset($existingEntry->part_item_id)) {
     $itemStock = ItemStock::where('part_item_id', $partItemId)->first();
     // dd($itemStock);
     // die();
-    if ($itemStock) {
-        // Check if enough stock is available
-        if ($itemStock->quantity >= $item['quantity']) {
-            // Decrement the stock quantity
-            $itemStock->quantity -= $item['quantity'];
-            $itemStock->save(); // Save the updated stock
-        } else {
-            // Not enough stock available
-            $errorMessages[] = "Not enough stock for part item ID: " . $partItemId;
-        }
-    } else {
-        // Item stock not found
-        $errorMessages[] = "Item stock not found for part item ID: " . $partItemId;
-    }
+    // if ($itemStock) {
+    //     // Check if enough stock is available
+    //     if ($itemStock->quantity >= $item['quantity']) {
+    //         // Decrement the stock quantity
+    //         $itemStock->quantity -= $item['quantity'];
+    //         $itemStock->save(); // Save the updated stock
+    //     } else {
+    //         // Not enough stock available
+    //         $errorMessages[] = "Not enough stock for part item ID: " . $partItemId;
+    //     }
+    // } else {
+    //     // Item stock not found
+    //     $errorMessages[] = "Item stock not found for part item ID: " . $partItemId;
+    // }
 } else {
     $errorMessages[] = "Production detail not found or part_item_id is missing.";
 }
