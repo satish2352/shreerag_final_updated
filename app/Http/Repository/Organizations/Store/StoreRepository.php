@@ -289,8 +289,8 @@ class StoreRepository
 
                
             
-    $partItemId = (int) $item['part_item_id'];
- 
+    $partItemId = (int) $item['id'];
+
     
             $existingEntry = ProductionDetails::find($dataOutput->id);
             // dd($existingEntry);
@@ -300,7 +300,8 @@ if ($existingEntry && isset($existingEntry->part_item_id)) {
 
     $partItemId = $existingEntry->part_item_id; // Get the part_item_id from the existing entry
     $itemStock = ItemStock::where('part_item_id', $partItemId)->first();
-
+    // dd($itemStock);
+    // die();
     if ($itemStock) {
         // Check if enough stock is available
         if ($itemStock->quantity >= $item['quantity']) {
