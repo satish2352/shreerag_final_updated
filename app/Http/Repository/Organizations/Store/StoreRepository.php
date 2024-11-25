@@ -251,7 +251,7 @@ class StoreRepository
      }
      
             // Remove existing records related to the business_details_id before saving new ones
-            // ProductionDetails::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)->delete();
+            ProductionDetails::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)->delete();
     
             $errorMessages = []; // Array to hold error messages
     
