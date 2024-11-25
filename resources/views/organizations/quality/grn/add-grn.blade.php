@@ -59,6 +59,13 @@
                                         <form action="{{ route('store-grn') }}" method="POST" id="addDesignsForm"
                                             enctype="multipart/form-data">
                                             @csrf
+                                            <?php
+                                            // dd($gatepassId->id);
+                                            // die();
+                                            ?>
+                                            <input type="hidden" name="id" id=""
+                                            class="form-control" value="{{ $gatepassId->id }}"
+                                            placeholder="">
                                             <div class="form-group-inner">
 
                                                 {{-- ========================== --}}

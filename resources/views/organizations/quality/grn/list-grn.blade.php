@@ -95,6 +95,11 @@
                                         </thead>
                                         <tbody>
 
+                                            <?php
+                                            // dd($all_gatepass);
+                                            // die();
+                                            ?>
+
                                             @foreach ($all_gatepass as $data)
                                                 <tr>
 
@@ -108,7 +113,7 @@
 
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
-                                                            <a href="{{ route('add-grn', $data->purchase_orders_id) }}"><button
+                                                            <a href="{{ route('add-grn', [base64_encode($data->purchase_orders_id), base64_encode($data->id)]) }}"><button
                                                                     data-toggle="tooltip" title="Edit"
                                                                     class="pd-setting-ed"><i class="fa fa-pencil-square-o"
                                                                         aria-hidden="true"></i></button></a>

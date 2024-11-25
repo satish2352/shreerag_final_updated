@@ -119,6 +119,9 @@ class DashboardController extends Controller {
             ->leftJoin('tbl_customer_product_quantity_tracking', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id');
             })
+            ->leftJoin('gatepass', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'gatepass.business_details_id');
+            })
             ->where('businesses.is_active', 1)
             ->select('businesses.customer_po_number','businesses.title','businesses_details.product_name',
             'business_application_processes.business_status_id','businesses.updated_at', 'business_application_processes.design_status_id',
@@ -126,7 +129,7 @@ class DashboardController extends Controller {
              'purchase_orders.finanace_store_receipt_status_id', 'purchase_orders.purchase_status_from_owner',
              'purchase_orders.security_status_id', 'purchase_orders.quality_status_id', 'purchase_orders.finanace_store_receipt_status_id',
              'business_application_processes.logistics_status_id', 'business_application_processes.dispatch_status_id',
-             'design_revision_for_prod.reject_reason_prod','designs.design_image','designs.bom_image','designs.design_image','business_application_processes.off_canvas_status', 'tbl_customer_product_quantity_tracking.quantity_tracking_status', 'tbl_customer_product_quantity_tracking.completed_quantity') // Adjust if you need more fields
+             'design_revision_for_prod.reject_reason_prod','designs.design_image','designs.bom_image','designs.design_image','business_application_processes.off_canvas_status', 'tbl_customer_product_quantity_tracking.quantity_tracking_status', 'tbl_customer_product_quantity_tracking.completed_quantity', 'gatepass.po_tracking_status', 'gatepass.tracking_id', 'purchase_orders.purchase_orders_id') // Adjust if you need more fields
             ->orderBy('businesses.updated_at', 'desc')
            
             ->get()
@@ -409,9 +412,10 @@ class DashboardController extends Controller {
 
     public function getNotification(Request $request)
     {
-        
+        dd($request);
+        die();
         $ses_userId = session()->get('user_id');
-            
+         
          $ses_roleId = session()->get('role_id');
         $count = 0;  // Initialize the $count variable
         $notifications = [];  // Initialize the $notifications array
@@ -700,10 +704,10 @@ class DashboardController extends Controller {
             ->where('purchase_is_view','0')
             ->select('id')
             ->get();
-            // dd($received_requistion_req);
-            // die();
+        
             $received_requistion_req_count = $received_requistion_req->count();
-
+    dd($received_requistion_req_count);
+            die();
             $notifications[] = ['admin_count' => $received_requistion_req_count,
                 'message' => 'Received Requistion Request',
                 'url' => 'list-purchase'

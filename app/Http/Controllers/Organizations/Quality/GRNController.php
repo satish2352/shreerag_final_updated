@@ -13,7 +13,8 @@ use App\Models\{
     PurchaseOrdersModel,
     PurchaseOrderDetailsModel,
     BusinessApplicationProcesses,
-    NotificationStatus
+    NotificationStatus,
+    Gatepass
 };
 
 class GRNController extends Controller
@@ -69,16 +70,44 @@ class GRNController extends Controller
         }
     }
 
-    public function add($purchase_orders_id)
+    public function add($purchase_orders_id, $id)
     {
         try {
-            $purchase_order_data = PurchaseOrdersModel::where('purchase_orders_id', '=', $purchase_orders_id)->first();
-            $po_id = $purchase_order_data->id;
+            $purchase_ordersId = base64_decode($purchase_orders_id);
 
+           $gatepass_id = base64_decode($id);
+
+            // dd($gatepass_id);
+            // die();
+            $purchase_order_data = PurchaseOrdersModel::where('purchase_orders_id', '=', $purchase_ordersId)->first();
+            $po_id = $purchase_order_data->id;
+// dd($po_id);
+// die();
             $purchase_order_details_data = PurchaseOrderDetailsModel::where('purchase_id', $po_id)
                 ->get();
               
-            return view('organizations.quality.grn.add-grn', compact('purchase_order_data', 'purchase_order_details_data'));
+                // $gatepassId = Gatepass::join('grn_tbl', 'gatepass.id', '=', 'grn_tbl.gatepass_id')
+                // ->where('id', $gatepass_id)
+                // // ->first();
+                // ->get();
+                // dd($gatepassId);
+                // die();
+                // join('purchase_orders', 'gatepass.purchase_orders_id', '=', 'purchase_orders.purchase_orders_id')
+            //     $gatepassId = Gatepass::
+            //    ->select('gatepass.id')
+                // where('purchase_orders_id', '=', $purchase_ordersId)
+    // ->where('gatepass.id', $gatepass_id) // Specify the table name
+//     ->first();
+//   dd($gatepassId);
+                // die();
+                $gatepassId = Gatepass::select('gatepass.id')
+    // ->join('grn_tbl', 'gatepass.id', '=', 'grn_tbl.gatepass_id')
+    ->where('gatepass.id', $gatepass_id) // Specify the table for clarity
+    ->first();
+
+// dd($gatepassId);
+// die();
+            return view('organizations.quality.grn.add-grn', compact('purchase_order_data', 'purchase_order_details_data', 'gatepassId'));
         } catch (\Exception $e) {
             return $e;
         }

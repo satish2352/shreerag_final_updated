@@ -66,7 +66,17 @@ class GatepassRepository
     }
     public function addAll($request)
     {
+       
         try {
+               // Fetch purchase order details
+                $purchase_orders_details = PurchaseOrderModel::where('purchase_orders_id', $request->purchase_orders_id)->first();
+
+                if (!$purchase_orders_details) {
+                    return [
+                        'msg' => 'Purchase Order not found.',
+                        'status' => 'error'
+                    ];
+                }
 
             $dataOutput = new Gatepass();
             $dataOutput->purchase_orders_id = $request->purchase_orders_id;
@@ -74,12 +84,22 @@ class GatepassRepository
             $dataOutput->gatepass_date = $request->gatepass_date;
             $dataOutput->gatepass_time = $request->gatepass_time;
             $dataOutput->remark = $request->remark;
+            $dataOutput->po_tracking_status = 4001;
+          // Determine the next po_tracking_status
+            $lastTrackingStatus = Gatepass::where('purchase_orders_id', $request->purchase_orders_id)
+            ->max('tracking_id'); // Get the maximum tracking_id
+            $dataOutput->tracking_id = $lastTrackingStatus ? $lastTrackingStatus + 1 : 1; // Increment or start from 1
+
+            $dataOutput->business_details_id = $purchase_orders_details->business_details_id;
+
             $dataOutput->save();
             $last_insert_id = $dataOutput->id;
 
 
             $purchase_orders_details = PurchaseOrderModel::where('purchase_orders_id', $request->purchase_orders_id)->first();
-            $business_application = BusinessApplicationProcesses::where('business_id', $purchase_orders_details->business_id)->first();
+            // dd($purchase_orders_details);
+            // die();
+            $business_application = BusinessApplicationProcesses::where('business_id', $purchase_orders_details->business_details_id)->first();
             if ($business_application) {
                 // $business_application->store_material_recived_for_grn_date = date('Y-m-d');
                 // $business_application->store_status_id = config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION');
@@ -100,7 +120,7 @@ class GatepassRepository
             $update_data_admin['is_view'] = '0';
 
             $update_data_business['off_canvas_status'] = 26;
-
+            $update_data_business['po_send_to_vendor_visible_security'] = '0';
             // Update AdminView table
 
             AdminView::where('business_details_id', $business_application->business_details_id)

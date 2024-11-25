@@ -16,10 +16,12 @@ return new class extends Migration
         Schema::create('gatepass', function (Blueprint $table) {
             $table->id();            
             $table->string('purchase_orders_id');
-            // $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('business_details_id');
             $table->string('gatepass_name');
             $table->string('gatepass_date');
             $table->string('gatepass_time');
+            $table->string('po_tracking_status')->nullable();
+            $table->string('tracking_id')->nullable();
             $table->text('remark');
             $table->boolean('is_checked_by_quality')->default(false);
             $table->string('is_deleted')->default(false);

@@ -29,7 +29,7 @@ class GRNRepository
                 $join->on('gatepass.purchase_orders_id', '=', 'purchase_orders.purchase_orders_id');
             })
             ->select(
-                'purchase_orders.id',
+                'gatepass.id',
                 'purchase_orders.business_details_id',
                 'gatepass.purchase_orders_id',
                 'gatepass.gatepass_name', 
@@ -155,6 +155,18 @@ class GRNRepository
     public function storeGRN($request)
     {
         try {
+            // dd($request);
+            // die();
+            // Retrieve the gatepass entry based on the provided ID or purchase_orders_id
+        $gatepass = Gatepass::where('id', $request->id)->first();
+    //    dd($gatepass);
+    //    die();
+        if (!$gatepass) {
+            return [
+                'msg' => 'Gatepass not found.',
+                'status' => 'error'
+            ];
+        }
             // Generate a unique GRN number
             $grn_no = str_replace(array("-", ":"), "", date('Y-m-d') . time());
     
@@ -189,6 +201,8 @@ class GRNRepository
             // Create a new GRN entry
             $dataOutput = new GRNModel();
             $dataOutput->purchase_orders_id =  $purchase_id;
+            $dataOutput->gatepass_id = $gatepass->id; 
+            // gatepass_id
             $dataOutput->po_date = $request->po_date;
             $dataOutput->grn_date = $request->grn_date;
             $dataOutput->remark = $request->remark;
@@ -196,7 +210,8 @@ class GRNRepository
             $dataOutput->is_approve = '0';
             $dataOutput->is_active = '1';
             $dataOutput->is_deleted = '0';
-         
+        //  dd($dataOutput);
+        //  die();
             $dataOutput->save();
     
             $last_insert_id = $dataOutput->id;
@@ -258,13 +273,24 @@ class GRNRepository
             $business_application->off_canvas_status = 27; // Update the off_canvas_status here
             $business_application->save();
     
-            // Update the gatepass table
-            $updateGatepassTable = Gatepass::where('purchase_orders_id', $request->purchase_orders_id)->first();
-            if ($updateGatepassTable) {
-                $updateGatepassTable->is_checked_by_quality = true;
-                $updateGatepassTable->save();
-            }
+
+
+// dd($gatepass->id);
+// die();
+            
+       // Update gatepass status
+       Gatepass::where('id', $gatepass->id)
+       ->update([
+           'po_tracking_status' => 4002, // Update the tracking status
+           'is_checked_by_quality' => true // Set quality check status
+       ]);
+            // if ($updateGatepassTable) {
+            //     $updateGatepassTable->is_checked_by_quality = true;
+            //     $updateGatepassTable->po_tracking_status = 4002;
+            //     $updateGatepassTable->save();
+            // }
     
+          
             // Save rejected chalan data if necessary
             $rejected_chalan_data = new RejectedChalan();
             $rejected_chalan_data->purchase_orders_id = $request->purchase_orders_id;
