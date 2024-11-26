@@ -132,7 +132,9 @@ class StoreController extends Controller
     public function editProductMaterialWiseAdd($id) {
         try {
             $editData = $this->service->editProductMaterialWiseAdd($id);
-            
+            // dd($editData);
+            // die();
+            $id = base64_decode($id);
             $dataOutputPartItem = PartItem::where('is_active', true)->get();
             $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
             return view('organizations.store.list.edit-material-bom-wise-add', [

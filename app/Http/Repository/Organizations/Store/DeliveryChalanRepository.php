@@ -107,10 +107,16 @@ class DeliveryChalanRepository
     public function getPurchaseOrderDetails($id)
     {
         try {
-            $purchaseOrder = DeliveryChalan::join('vendors', 'vendors.id', '=', 'tbl_delivery_chalan.vendor_id')
-            ->join('tbl_tax', 'tbl_tax.id', '=', 'tbl_delivery_chalan.tax_id')
-                ->select(
-                    'tbl_delivery_chalan.id',
+            $Id = (int)$id;
+           
+            $purchaseOrder = DeliveryChalan::leftJoin('vendors', function($join) {
+                $join->on('tbl_delivery_chalan.vendor_id', '=', 'vendors.id');
+            })
+            ->leftJoin('tbl_tax', function($join) {
+                $join->on('tbl_delivery_chalan.tax_id', '=', 'tbl_tax.id');
+            })    
+            ->where('tbl_delivery_chalan.id', $Id)   
+            ->select('tbl_delivery_chalan.id',
                     'tbl_delivery_chalan.vendor_id',
                     'vendors.vendor_name', 
                     'vendors.vendor_company_name', 
@@ -122,16 +128,22 @@ class DeliveryChalanRepository
                     'tbl_tax.name as tax_number',
                     'tbl_delivery_chalan.vehicle_number'
                 )
-                ->where('tbl_delivery_chalan.id', $id)
                 ->first();
-    
             if (!$purchaseOrder) {
                 throw new \Exception('Purchase order not found.');
             }
-                $purchaseOrderDetails = DeliveryChalanItemDetails::join('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_delivery_chalan_item_details.part_item_id')
-                ->join('tbl_unit', 'tbl_unit.id', '=', 'tbl_delivery_chalan_item_details.unit_id')
-                ->join('tbl_process_master', 'tbl_process_master.id', '=', 'tbl_delivery_chalan_item_details.process_id')
-                ->join('tbl_hsn', 'tbl_hsn.id', '=', 'tbl_delivery_chalan_item_details.hsn_id')
+                $purchaseOrderDetails = DeliveryChalanItemDetails::leftJoin('tbl_part_item', function($join) {
+                $join->on('tbl_delivery_chalan_item_details.part_item_id', '=', 'tbl_part_item.id');
+            })
+            ->leftJoin('tbl_unit', function($join) {
+                $join->on('tbl_delivery_chalan_item_details.unit_id', '=', 'tbl_unit.id');
+            })    
+            ->leftJoin('tbl_process_master', function($join) {
+                $join->on('tbl_delivery_chalan_item_details.process_id', '=', 'tbl_process_master.id');
+            })      
+            ->leftJoin('tbl_hsn', function($join) {
+                $join->on('tbl_delivery_chalan_item_details.hsn_id', '=', 'tbl_hsn.id');
+            })   
                 ->where('delivery_chalan_id', $purchaseOrder->id)
                 ->select(
                     'tbl_delivery_chalan_item_details.part_item_id',

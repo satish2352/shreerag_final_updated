@@ -189,6 +189,7 @@ class DeliveryChalanController extends Controller
         $showData = $this->service->getPurchaseOrderDetails($show_data_id);
         $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
         $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
+
         return view('organizations.store.delivery-chalan.show-delivery-chalan', compact('showData', 'getOrganizationData', 'getAllRulesAndRegulations'));
     }
     

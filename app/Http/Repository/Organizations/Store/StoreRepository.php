@@ -17,7 +17,8 @@ use App\Models\{
     ProductionDetails,
     ItemStock,
     NotificationStatus,
-    CustomerProductQuantityTracking
+    CustomerProductQuantityTracking,
+    Gatepass
     
 };
 use Config;
@@ -183,17 +184,23 @@ class StoreRepository
                 ->leftJoin('design_revision_for_prod', function($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
                 })
-                // ->leftJoin('purchase_orders', function($join) {
-                //     $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-                // })
+                ->leftJoin('purchase_orders', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+                })
                 ->leftJoin('production_details', function($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
+                })
+                ->leftJoin('grn_tbl', function($join) {
+                    $join->on('purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id');
+                })
+                ->leftJoin('gatepass', function($join) {
+                    $join->on('grn_tbl.gatepass_id', '=', 'gatepass.id');
                 })
                 ->where('businesses_details.id', $id)
                 // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
                 ->where('businesses_details.is_active', true)
                 ->select(
-                    'businesses_details.id',
+                    'gatepass.id',
                     'businesses_details.product_name',
                     'businesses_details.quantity',
                     'businesses_details.description',
@@ -224,38 +231,48 @@ class StoreRepository
     }
     public function updateProductMaterialWiseAdd($request) {
         try {
-            $business_details_id = base64_decode($request->business_details_id);
            
+            $gatepassId = $request->id;
+          
+
+
+            $business_details_id = $request->business_details_id;
+            
             $dataOutput_Production = ProductionModel::where('business_details_id', $business_details_id)->firstOrFail();
             $dataOutput_Production->production_status_quantity_tracking = 'incomplete';
             $dataOutput_Production->save();
          
-        //   dd($dataOutput_Production);
-        //   die();
+        
             
             $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $dataOutput_Production->business_details_id)->firstOrFail();
            
-            // dd($dataOutput_ProductionDetails);
-            // die();
+           
                // Fetch the business details ID from the purchase order
      $business_details_id = $dataOutput_ProductionDetails->business_details_id;
-    //  dd($business_details_id);
-    //  die();
+    
      // Fetch the business application process using business_details_id
      $business_application = BusinessApplicationProcesses::where('business_details_id', $business_details_id)->first();
-
+    
      if (!$business_application) {
          return [
              'msg' => 'Business Application not found.',
              'status' => 'error'
          ];
      }
+    
+      // This should be the 'id' of the gatepass you want to update
+
+     // Check if the Gatepass record exists
+   
      
             // Remove existing records related to the business_details_id before saving new ones
             ProductionDetails::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)->delete();
     
             $errorMessages = []; // Array to hold error messages
     
+           
+     
+
             // Update the business application process's off_canvas_status
     $business_application->off_canvas_status = 17;
     $business_application->save();
@@ -270,9 +287,16 @@ class StoreRepository
              NotificationStatus::where('business_details_id', $business_application->business_details_id)
                  // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
                  ->update($update_data_business);
-            // Loop through the addmore array and update or create new ProductionDetails
-            // dd($request);
-            // die();
+           
+
+                         $gatepass = Gatepass::where('id', $request->id)->first();
+          
+              Gatepass::where('id', $gatepass->id)
+              ->update([
+                  'po_tracking_status' => 4003, // Update the tracking status
+               //    'is_checked_by_quality' => true // Set quality check status
+              ]);
+
             foreach ($request->addmore as $item) {
              
                 $dataOutput = new ProductionDetails();
@@ -322,6 +346,8 @@ if ($existingEntry && isset($existingEntry->part_item_id)) {
 }
 
             }
+
+
                 // If there are error messages, return them without a generic error message
             if (!empty($errorMessages)) {
                 return [

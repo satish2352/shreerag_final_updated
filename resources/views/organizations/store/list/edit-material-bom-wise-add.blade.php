@@ -41,11 +41,16 @@
                                     </div>
                                 </div>
                             @endif
-                           
+                           <?php
+                        //    dd($productDetails->id);
+                        //    die();
+                           ?>
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="all-form-element-inner">
                              <form action="{{ route('update-material-list-bom-wise', $id) }}" method="POST" id="addProductForm" enctype="multipart/form-data">
                                 @csrf
+                                <input type="hidden" name="id" id="id" value="{{ $productDetails->id }}">
+
                                 <input type="hidden" name="business_details_id" id="business_details_id" value="{{ $id }}">
                                 <input type="hidden" name="production_id" id="production_id" value="{{ $productDetails->productionId }}"> <!-- Hidden field for productionId -->
                                 <div class="row">

@@ -109,6 +109,8 @@ use Config;
     {
         try {
             $result = $this->repo->getPurchaseOrderDetails($id);
+            // dd($result);
+            // die();
             return $result;
         } catch (\Exception $e) {
             return $e;
