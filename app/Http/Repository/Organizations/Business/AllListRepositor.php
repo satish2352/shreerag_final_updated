@@ -353,24 +353,39 @@ class AllListRepositor
         ->whereNull('purchase_orders.grn_no')
         ->whereNull('purchase_orders.store_receipt_no')
         ->where('businesses.is_active', true)
-        ->groupBy('businesses.id','businesses_details.id','businesses_details.product_name',
-        'businesses_details.description',
-        'businesses_details.quantity',
-        'businesses_details.rate',
-        'purchase_orders.updated_at'
-        )
         ->select(
-          
-          // 'business_application_processes.purchase_order_id',
-          'businesses.id',
+          'business_application_processes.purchase_order_id',
           'businesses_details.id',
-        
           'businesses_details.product_name',
+          'businesses.title',
           'businesses_details.description',
-          'businesses_details.quantity',
-          'businesses_details.rate',
-          'purchase_orders.updated_at'
-        )->distinct()->orderBy('purchase_orders.updated_at', 'desc')->get();
+          'businesses.remarks',
+          'businesses.is_active',
+          'production.business_id',
+          'design_revision_for_prod.reject_reason_prod',
+          'designs.bom_image',
+          'designs.design_image',
+          'businesses_details.updated_at'
+          )
+        // ->groupBy('businesses.id','businesses_details.id','businesses_details.product_name',
+        // 'businesses_details.description',
+        // 'businesses_details.quantity',
+        // 'businesses_details.rate',
+        // 'purchase_orders.updated_at'
+        // )
+        // ->select(
+          
+        //   // 'business_application_processes.purchase_order_id',
+        //   'businesses.id',
+        //   'businesses_details.id',
+        
+        //   'businesses_details.product_name',
+        //   'businesses_details.description',
+        //   'businesses_details.quantity',
+        //   'businesses_details.rate',
+        //   'purchase_orders.updated_at'
+        // )
+        ->distinct()->orderBy('purchase_orders.updated_at', 'desc')->get();
 
       return $data_output;
     } catch (\Exception $e) {

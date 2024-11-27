@@ -203,20 +203,35 @@ class AllListRepository
         // ->where('businesses.is_active', true)
         // ->distinct('businesses.id')
         ->select(
-          // 'business_application_processes.purchase_order_id',
+          'business_application_processes.purchase_order_id',
           'businesses_details.id',
           'businesses_details.product_name',
-          // 'businesses.title',
+          'businesses.title',
           'businesses_details.description',
-          'purchase_orders.updated_at',
-          // 'businesses.remarks',
-          // 'businesses.is_active',
-          // 'production.business_id',
-          // 'design_revision_for_prod.reject_reason_prod',
-          // 'designs.bom_image',
-          // 'designs.design_image'
+          'businesses.remarks',
+          'businesses.is_active',
+          'production.business_id',
+          'design_revision_for_prod.reject_reason_prod',
+          'designs.bom_image',
+          'designs.design_image',
+          'businesses_details.updated_at'
+          )->distinct()
+        // ->select(
+        //   // 'business_application_processes.purchase_order_id',
+        //   'businesses_details.id',
+        //   'businesses_details.product_name',
+        //   // 'businesses.title',
+        //   'businesses_details.description',
+        //   'purchase_orders.updated_at',
+        //   // 'businesses.remarks',
+        //   // 'businesses.is_active',
+        //   // 'production.business_id',
+        //   // 'design_revision_for_prod.reject_reason_prod',
+        //   // 'designs.bom_image',
+        //   // 'designs.design_image'
 
-        )->orderBy('purchase_orders.updated_at', 'desc')->get();
+        // )
+        ->orderBy('purchase_orders.updated_at', 'desc')->get();
 
       return $data_output;
     } catch (\Exception $e) {
