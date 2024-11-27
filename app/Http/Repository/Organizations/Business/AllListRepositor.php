@@ -360,7 +360,7 @@ class AllListRepositor
         'purchase_orders.updated_at'
         )
         ->select(
-          'business_application_processes.purchase_order_id',
+          
           // 'business_application_processes.purchase_order_id',
           'businesses.id',
           'businesses_details.id',
