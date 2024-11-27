@@ -81,6 +81,7 @@ padding-left: 20px !important;
                                             <th data-field="id">Sr.No.</th> 
                                             <th data-field="product_name" data-editable="false">Product Name</th>
                                             <th data-field="grn_date" data-editable="false">Description</th>
+                                            <th data-field="action" data-editable="false">Action</th>
                                         </tr>
 
                                     </thead>

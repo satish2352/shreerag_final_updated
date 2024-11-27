@@ -301,9 +301,8 @@ class AllListRepository
         // ->distinct('businesses.id')
         ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check)
         ->where('businesses.is_active', true)
-        ->distinct('businesses.id')
         ->select(
-          'purchase_orders.purchase_orders_id as purchase_order_id',
+          'business_application_processes.purchase_order_id',
           'businesses_details.id',
           'businesses_details.product_name',
           'businesses.title',
@@ -315,8 +314,24 @@ class AllListRepository
           'designs.bom_image',
           'designs.design_image',
           'purchase_orders.vendor_id',
-          'purchase_orders.updated_at',
-        )->orderBy('purchase_orders.updated_at', 'desc')
+          'businesses_details.updated_at'
+          )->distinct()
+        // ->select(
+        //   'purchase_orders.purchase_orders_id as purchase_order_id',
+        //   'businesses_details.id',
+        //   'businesses_details.product_name',
+        //   'businesses.title',
+        //   'businesses_details.description',
+        //   'businesses.remarks',
+        //   'businesses.is_active',
+        //   'production.business_id',
+        //   'design_revision_for_prod.reject_reason_prod',
+        //   'designs.bom_image',
+        //   'designs.design_image',
+        //   'purchase_orders.vendor_id',
+        //   'purchase_orders.updated_at',
+        // )->distinct()
+        ->orderBy('purchase_orders.updated_at', 'desc')
         ->get();
  
       return $data_output;
@@ -540,24 +555,39 @@ class AllListRepository
           ->whereNull('purchase_orders.purchase_status_from_owner')
           // ->whereIn('business_application_processes.business_status_id',$array_not_to_be_check)
           ->where('businesses.is_active',true)
-          ->distinct('businesses.id')
+          // ->distinct('businesses.id')
           ->select(
-              'business_application_processes.purchase_order_id',
-              'business_application_processes.requisition_id as requistition_id',
+            'business_application_processes.purchase_order_id',
+            'businesses_details.id',
+            'businesses_details.product_name',
+            'businesses.title',
+            'businesses_details.description',
+            'businesses.remarks',
+            'businesses.is_active',
+            'production.business_id',
+            'design_revision_for_prod.reject_reason_prod',
+            'designs.bom_image',
+            'designs.design_image',
+            'businesses_details.updated_at'
+            )->distinct()
+          // ->select(
+          //     'business_application_processes.purchase_order_id',
+          //     'business_application_processes.requisition_id as requistition_id',
               
-              'businesses.id',
-              'businesses_details.id',
-              'businesses_details.product_name',
-              'businesses.title',
-              'businesses_details.description',
-              'businesses.remarks',
-              'businesses.is_active',
-              'production.business_id',
-              'design_revision_for_prod.reject_reason_prod',
-              'designs.bom_image',
-              'designs.design_image',
-              'purchase_orders.updated_at',
-              )->orderBy('purchase_orders.updated_at', 'desc')
+          //     'businesses.id',
+          //     'businesses_details.id',
+          //     'businesses_details.product_name',
+          //     'businesses.title',
+          //     'businesses_details.description',
+          //     'businesses.remarks',
+          //     'businesses.is_active',
+          //     'production.business_id',
+          //     'design_revision_for_prod.reject_reason_prod',
+          //     'designs.bom_image',
+          //     'designs.design_image',
+          //     'purchase_orders.updated_at',
+          //     )
+              ->orderBy('purchase_orders.updated_at', 'desc')
           ->get();
 
         return $data_output;
