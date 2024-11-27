@@ -28,6 +28,8 @@ class PurchaseOrderRepository
     // repository
     public function submitBOMToOwner($request)
     {
+        // dd($request);
+        // die();
         $purchase_orderid = str_replace(array("-", ":"), "", date('Y-m-d') . time());
         try {
 
@@ -73,9 +75,12 @@ class PurchaseOrderRepository
             }
             $dataOutput->save();
             $last_insert_id = $dataOutput->id;
-
+// dd($data_for_requistition->business_id);
+// die();
             // Update related BusinessApplicationProcesses record
-            $businessOutput = BusinessApplicationProcesses::where('business_id', $data_for_requistition->business_id)->firstOrFail();
+            $businessOutput = BusinessApplicationProcesses::where('business_details_id', $data_for_requistition->business_details_id)->firstOrFail();
+//            dd($businessOutput);
+// die();
             $businessOutput->business_status_id = config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL');
             $businessOutput->off_canvas_status = 23;
 
@@ -85,6 +90,8 @@ class PurchaseOrderRepository
               $update_data_admin['off_canvas_status'] = 23;
               $update_data_admin['is_view'] = '0';
                $update_data_business['off_canvas_status'] = 23;
+            //    $update_data_business['purchase_order_is_view_po'] = '0';
+               
               AdminView::where('business_details_id', $businessOutput->business_details_id)
                   // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
                   ->update($update_data_admin);
@@ -146,15 +153,18 @@ class PurchaseOrderRepository
         if ($business_application) {
             $business_application->off_canvas_status = 25;
             $business_application->save();
-            
+
+
             $update_data_admin['off_canvas_status'] = 25;
-           
+            $update_data_admin['is_view'] = '0';
+            $update_data_business['off_canvas_status'] = 25;
+            $update_data_business['po_send_to_vendor'] = '0';           
            AdminView::where('business_details_id', $business_application->business_details_id)
                 ->update($update_data_admin);
             
             // Update the NotificationStatus table for the given business details
             NotificationStatus::where('business_details_id', $business_application->business_details_id)
-                ->update($update_data_admin);
+                ->update($update_data_business);
         }
  
             return $purchaseOrdersModel;

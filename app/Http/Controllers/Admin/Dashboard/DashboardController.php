@@ -414,10 +414,12 @@ class DashboardController extends Controller {
 
     public function getNotification(Request $request)
     {
-        
+      
         $ses_userId = session()->get('user_id');
-     
+ 
         $ses_roleId = session()->get('role_id');
+
+       
         $count = 0;  // Initialize the $count variable
         $notifications = [];  // Initialize the $notifications array
 
@@ -470,7 +472,7 @@ class DashboardController extends Controller {
                 'message' => 'Material ask by Store to Purchase',
                 'url' => 'material-ask-by-store-to-purchase',
                 ];
-                $Purchase_order_need_to_check = AdminView::where('off_canvas_status', '23')
+                $Purchase_order_need_to_check = AdminView::where('off_canvas_status', 23)
                 ->where('is_view', '0')
                 ->select('id')
                     ->get();
@@ -488,10 +490,12 @@ class DashboardController extends Controller {
                 'message' => 'Purchase Order Approved',
                 'url' => 'list-approved-purchase-orders-owner',
                 ];
-                $po_send_to_vendor = AdminView::where('off_canvas_status', '25')
+                $po_send_to_vendor = AdminView::where('off_canvas_status', 25)
                 ->where('is_view', '0')
                 ->select('id')
                     ->get();
+                    // dd($po_send_to_vendor);
+                    // die();
                 $po_send_to_vendor_count = $po_send_to_vendor->count();
                 $notifications[] = ['admin_count' => $po_send_to_vendor_count,
                 'message' => 'Submitted PO by Vendor',
@@ -571,6 +575,7 @@ class DashboardController extends Controller {
                  + $received_fianance_to_dispatch_count + $dispatch_completed_count;
        
             }elseif($ses_userId == '3'){//Design Department
+              
                     $sent_to_prod_data = NotificationStatus::where('off_canvas_status',11)
                     ->where('design_is_view','0')
                     ->select('id')
@@ -699,13 +704,17 @@ class DashboardController extends Controller {
            
         }
         elseif($ses_userId == '6'){//Purchase Department
-          
-            $received_requistion_req = NotificationStatus::where('off_canvas_status',16)
+           
+            $received_requistion_req = NotificationStatus::where('off_canvas_status','16')
             ->where('purchase_is_view','0')
             ->select('id')
             ->get();
+            // dd($received_requistion_req);
             $received_requistion_req_count = $received_requistion_req->count();
 
+            
+// dd($received_requistion_req_count);
+// die();
             $notifications[] = ['admin_count' => $received_requistion_req_count,
                 'message' => 'Received Requistion Request',
                 'url' => 'list-purchase'
@@ -727,7 +736,7 @@ class DashboardController extends Controller {
             $list_approved_purchase_orders_owner_count = $list_approved_purchase_orders_owner->count();
 
             $notifications[] = ['admin_count' => $list_approved_purchase_orders_owner_count,
-                'message' => 'Purchase Orders Sent to Owner',
+                'message' => 'Purchase Orders Approved Owner Side',
                 'url' => 'list-approved-purchase-orders'
             ];
             $po_send_to_vendor= NotificationStatus::where('off_canvas_status',25)

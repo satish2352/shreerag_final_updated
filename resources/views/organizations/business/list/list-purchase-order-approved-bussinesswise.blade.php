@@ -85,6 +85,7 @@ padding-left: 20px !important;
                                             <th data-field="email" data-editable="false">Email</th>
                                             <th data-field="contact_no" data-editable="false">Phone Number</th>
                                             <th data-field="vendor_address" data-editable="false">Address</th>
+                                            <th data-field="action" data-editable="false">Action</th>
                                         </tr>
 
                                     </thead>

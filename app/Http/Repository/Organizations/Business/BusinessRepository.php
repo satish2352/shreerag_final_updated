@@ -306,7 +306,8 @@ class BusinessRepository
     {
         try {
 
-
+// dd($business_id);
+// die();
             $business_application = BusinessApplicationProcesses::where('business_details_id', $business_id)->first();
             $po_count = $this->serviceCommon->getNumberOfPOCount($business_id, $purchase_order_id);
             if ($business_application) {

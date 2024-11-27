@@ -109,7 +109,8 @@ class CommanController
                     'vendors.quote_no', 
                     'purchase_orders.is_active',
                     'purchase_orders.created_at',
-                    'business_application_processes.business_status_id'
+                    'business_application_processes.business_status_id',
+                    'business_application_processes.off_canvas_status'
                 )
                 ->where('purchase_orders.purchase_orders_id', $purchase_order_id)
                 ->first();

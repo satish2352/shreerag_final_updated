@@ -87,6 +87,8 @@ class AllListController extends Controller
     public function getAllStoreDeptSentForPurchaseMaterials(Request $request){
         try {
             $data_output = $this->service->getAllStoreDeptSentForPurchaseMaterials();
+        //    dd($data_output);
+        //    die();
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
                     $business_id = $data->business_id; 

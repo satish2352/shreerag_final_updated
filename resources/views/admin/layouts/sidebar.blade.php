@@ -1041,6 +1041,8 @@
                     type: 'GET',
                     data: { TestVal: TestVal },
                     success: function(response) {
+                        // alert(response);
+
                         if (response.notification_count > 0) {
                             $('#notification-count').text(response.notification_count).show(); // Show when count > 0
                             

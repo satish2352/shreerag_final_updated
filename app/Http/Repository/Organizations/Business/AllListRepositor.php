@@ -352,7 +352,6 @@ class AllListRepositor
         // ->orWhereNotIn('business_application_processes.business_status_id', $array_not_to_be_check)
         ->whereNull('purchase_orders.grn_no')
         ->whereNull('purchase_orders.store_receipt_no')
-        ->distinct('businesses_details.id')
         ->where('businesses.is_active', true)
         ->groupBy('businesses.id','businesses_details.id','businesses_details.product_name',
         'businesses_details.description',
@@ -361,24 +360,17 @@ class AllListRepositor
         'purchase_orders.updated_at'
         )
         ->select(
+          'business_application_processes.purchase_order_id',
           // 'business_application_processes.purchase_order_id',
           'businesses.id',
           'businesses_details.id',
-          // 'businesses.product_name',
-          // 'businesses.title',
-          // 'businesses.descriptions',
-          // 'businesses.remarks',
-          // 'businesses.is_active',
-          // 'production.business_id',
-          // 'design_revision_for_prod.reject_reason_prod',
-          // 'designs.bom_image',
-          // 'designs.design_image',
+        
           'businesses_details.product_name',
           'businesses_details.description',
           'businesses_details.quantity',
           'businesses_details.rate',
           'purchase_orders.updated_at'
-        )->orderBy('purchase_orders.updated_at', 'desc')->get();
+        )->distinct()->orderBy('purchase_orders.updated_at', 'desc')->get();
 
       return $data_output;
     } catch (\Exception $e) {
@@ -767,8 +759,7 @@ public function getAllListSubmitedPurchaeOrderByVendorOwnerside(){
 public function getOwnerReceivedGatePass()
 {
     try {
-        $data_output = Gatepass::get();
-
+        $data_output = Gatepass::where('po_tracking_status',4001)->orderBy('updated_at', 'desc')->get();
         return $data_output;
     } catch (\Exception $e) {
 
@@ -779,7 +770,7 @@ public function getOwnerReceivedGatePass()
 public function getOwnerGRN()
 {
     try {
-        $data_output = Gatepass::where('is_checked_by_quality',false)->get();
+        $data_output = Gatepass::where('po_tracking_status',4001)->where('is_checked_by_quality',false)->orderBy('updated_at', 'desc')->get();
 
         return $data_output;
     } catch (\Exception $e) {

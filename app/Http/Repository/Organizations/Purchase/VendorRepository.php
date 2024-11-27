@@ -58,7 +58,7 @@ public function addAll($request)
         $vendor_data->gst_no = $request->gst_no;
         $vendor_data->quote_no = $request->quote_no;
         $vendor_data->payment_terms = $request->payment_terms;
-        $vendor_data->vendor_address = $request->payment_terms;
+        $vendor_data->vendor_address = $request->vendor_address;
 		// $project_data->is_active = isset($request['is_active']) ? true : false;
         $vendor_data->save();
         // $design_data = new DesignModel();
@@ -125,7 +125,7 @@ public function addAll($request)
             $vendor_data->gst_no = $request->gst_no;
             $vendor_data->quote_no = $request->quote_no;
             $vendor_data->payment_terms = $request->payment_terms;
-            $vendor_data->vendor_address = $request->payment_terms;
+            $vendor_data->vendor_address = $request->vendor_address;
             
 
             $vendor_data->save();

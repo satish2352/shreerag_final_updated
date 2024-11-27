@@ -40,7 +40,8 @@ class PurchaseOrderController extends Controller
         ->where('requisition_id', base64_decode($requistition_id))
         ->get();
        
-
+// dd($getOutput);
+// die();
         return view(
             'organizations.purchase.addpurchasedetails.list-purchase-orders',
             compact(
@@ -52,9 +53,16 @@ class PurchaseOrderController extends Controller
 
     public function create(Request $request)
     {
-        
+        // dd($request->all());
+        // die();
+        // dd($request->business_details_id);
+        // die();
         $requistition_id = $request->requistition_id;
+        $requistitionId = base64_decode($request->requistition_id);
         $title = 'create invoice';
+        $dataPurchaseOrder = PurchaseOrdersModel::where('requisition_id', $requistitionId)->first();
+    //    dd($dataPurchaseOrder);
+    //    die();
         $dataOutputVendor = Vendors::where('is_active', true)->get();
         $dataOutputTax = Tax::where('is_active', true)->get();
         $dataOutputPartItem = PartItem::where('is_active', true)->get();
@@ -70,6 +78,7 @@ class PurchaseOrderController extends Controller
                 'dataOutputPartItem',
                 'dataOutputUnitMaster',
                 'dataOutputHSNMaster',
+                'dataPurchaseOrder'
             )
         );
     }
@@ -270,6 +279,7 @@ class PurchaseOrderController extends Controller
             $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
             $business_id = $data['purchaseOrder']->business_id;
             $purchaseOrder = $data['purchaseOrder'];
+           
             $purchaseOrderDetails = $data['purchaseOrderDetails'];
 
             return view(

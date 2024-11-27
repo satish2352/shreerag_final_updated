@@ -84,11 +84,11 @@ class AllListController extends Controller
             $data_output = $this->service->getAllListApprovedPurchaseOrder();
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
-                    $business_id = $data->business_id; 
+                    $business_id = $data->id; 
                     if (!empty($business_id)) {
                         $update_data['purchase_order_is_view_po'] = '1';
                         NotificationStatus::where('purchase_order_is_view_po', '0')
-                            ->where('business_id', $business_id)
+                            ->where('id', $business_id)
                             ->update($update_data);
                     }
                 }

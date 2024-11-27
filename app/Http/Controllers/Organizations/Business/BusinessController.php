@@ -214,7 +214,7 @@ class BusinessController extends Controller
                 $msg ='Purchase order accepted.';
             }  
 
-            return redirect('owner/list-purchase-orders')->with(compact('msg', 'status'));
+            return redirect('owner/list-approved-purchase-orders-owner')->with(compact('msg', 'status'));
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         } 

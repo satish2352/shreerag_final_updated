@@ -2522,7 +2522,7 @@
                                                         @elseif($data->po_tracking_status== 4001)
                                                         Security Department Received Material and PO {{$data->purchase_orders_id}} also Generated Gate Pass {{$data->tracking_id}} time
                                                         @elseif($data->off_canvas_status == 25 )
-                                                        Purchase Department PO Send to Vendor
+                                                        Purchase Department PO {{$data->purchase_orders_id}} Send to Vendor
                                                         @elseif($data->off_canvas_status == 24 )
                                                         Purchase Department Approved Owner
                                                         @elseif($data->off_canvas_status == 23)

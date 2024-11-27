@@ -28,6 +28,7 @@ return new class extends Migration
         $table->boolean('prod_is_view_material_received')->default(0);
         $table->boolean('store_is_view')->default(0);
         $table->boolean('purchase_is_view')->default(0);
+        $table->boolean('visible_purchase_quality_to_store')->default(0);
         $table->boolean('purchase_order_is_view_po')->default(0);
         $table->boolean('po_is_approved_owner_view')->default(0);
         $table->boolean('po_send_to_vendor')->default(0);
