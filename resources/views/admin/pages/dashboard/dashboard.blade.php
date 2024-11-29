@@ -2493,7 +2493,8 @@
                                     </h2>
                                     <div id="collapse{{ $loop->index }}" class="accordion-collapse collapse"
                                         aria-labelledby="heading{{ $loop->index }}" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
+                                        <div class="accordion-body" style="overflow: scroll;
+    height: 100vh;">
                                             <div>
                                                 <ul style="list-style-type: disc; list-style-position: outside;">
                                                     @foreach($grouped_data as $data)
