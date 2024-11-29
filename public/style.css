@@ -3341,9 +3341,9 @@ div#sparklinehome canvas {
     background-color: #243772;
     color: #fff; 
 }
-/* .img-size{
+.img-size{
     width: 90px;
-} */
+}
 
 @media print {
     .img-size {
