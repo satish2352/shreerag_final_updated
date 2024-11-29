@@ -3347,9 +3347,9 @@ div#sparklinehome canvas {
 
 @media print {
     .img-size {
-      max-width: 100%;
+      max-width: 90px !important;
       height: auto;
-      width: auto;
+      width: 90px !important;
     }
   }
   
