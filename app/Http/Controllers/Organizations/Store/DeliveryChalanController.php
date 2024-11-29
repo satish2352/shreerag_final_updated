@@ -44,7 +44,7 @@ class DeliveryChalanController extends Controller
           ->join('tbl_vehicle_type', 'tbl_vehicle_type.id', '=', 'tbl_delivery_chalan.vehicle_id')
         ->select('tbl_delivery_chalan.id','tbl_delivery_chalan.vendor_id','tbl_delivery_chalan.transport_id',
         'tbl_delivery_chalan.business_id','tbl_delivery_chalan.vehicle_id','vendors.vendor_name'
-        ,'businesses.customer_po_number','tbl_transport_name.name as transport_name','tbl_vehicle_type.name as vehicle_name'
+        ,'businesses.customer_po_number','tbl_transport_name.name as transport_name','tbl_vehicle_type.name as vehicle_name','tbl_delivery_chalan.remark'
         )->orderBy('tbl_delivery_chalan.updated_at', 'desc')->get();
         return view(
             'organizations.store.delivery-chalan.list-delivery-chalan',
