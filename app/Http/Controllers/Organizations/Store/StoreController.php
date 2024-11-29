@@ -171,7 +171,7 @@ class StoreController extends Controller
             $updateData = $this->service->updateProductMaterialWiseAdd($request);
     
             if ($updateData['status'] == 'success') {
-                return redirect('storedept/list-material-received-from-quality')->with(['status' => 'success', 'msg' => $updateData['message']]);
+                return redirect('storedept/list-accepted-design-from-prod')->with(['status' => 'success', 'msg' => $updateData['message']]);
             } else {
                 return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $updateData['message']]);
             }

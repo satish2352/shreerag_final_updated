@@ -252,7 +252,7 @@ class StoreRepository
     
      // Fetch the business application process using business_details_id
      $business_application = BusinessApplicationProcesses::where('business_details_id', $business_details_id)->first();
-    
+   
      if (!$business_application) {
          return [
              'msg' => 'Business Application not found.',
@@ -273,29 +273,7 @@ class StoreRepository
            
      
 
-            // Update the business application process's off_canvas_status
-    $business_application->off_canvas_status = 17;
-    $business_application->save();
-             // Update admin view and notification status with the new off canvas status
-             $update_data_admin['off_canvas_status'] = 17;
-             $update_data_admin['is_view'] = '0';
-              $update_data_business['off_canvas_status'] = 17;
-             AdminView::where('business_details_id', $business_application->business_details_id)
-                 // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
-                 ->update($update_data_admin);
- 
-             NotificationStatus::where('business_details_id', $business_application->business_details_id)
-                 // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
-                 ->update($update_data_business);
-           
-
-                         $gatepass = Gatepass::where('id', $request->id)->first();
-          
-              Gatepass::where('id', $gatepass->id)
-              ->update([
-                  'po_tracking_status' => 4003, // Update the tracking status
-               //    'is_checked_by_quality' => true // Set quality check status
-              ]);
+         
 
             foreach ($request->addmore as $item) {
              
@@ -325,28 +303,35 @@ if ($existingEntry && isset($existingEntry->part_item_id)) {
 
     $partItemId = $existingEntry->part_item_id; // Get the part_item_id from the existing entry
     $itemStock = ItemStock::where('part_item_id', $partItemId)->first();
-    // dd($itemStock);
-    // die();
-    // if ($itemStock) {
-    //     // Check if enough stock is available
-    //     if ($itemStock->quantity >= $item['quantity']) {
-    //         // Decrement the stock quantity
-    //         $itemStock->quantity -= $item['quantity'];
-    //         $itemStock->save(); // Save the updated stock
-    //     } else {
-    //         // Not enough stock available
-    //         $errorMessages[] = "Not enough stock for part item ID: " . $partItemId;
-    //     }
-    // } else {
-    //     // Item stock not found
-    //     $errorMessages[] = "Item stock not found for part item ID: " . $partItemId;
-    // }
 } else {
     $errorMessages[] = "Production detail not found or part_item_id is missing.";
 }
 
             }
 
+
+               // Update the business application process's off_canvas_status
+    $business_application->off_canvas_status = 17;
+    $business_application->save();
+             // Update admin view and notification status with the new off canvas status
+             $update_data_admin['off_canvas_status'] = 17;
+             $update_data_admin['is_view'] = '0';
+              $update_data_business['off_canvas_status'] = 17;
+             AdminView::where('business_details_id', $business_application->business_details_id)
+                 // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
+                 ->update($update_data_admin);
+ 
+             NotificationStatus::where('business_details_id', $business_application->business_details_id)
+                 // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
+                 ->update($update_data_business);
+           
+
+            //              $gatepass = Gatepass::where('id', $request->id)->first();
+          
+            //   Gatepass::where('id', $gatepass->id)
+            //   ->update([
+            //       'po_tracking_status' => 4003, // Update the tracking status
+            //   ]);
 
                 // If there are error messages, return them without a generic error message
             if (!empty($errorMessages)) {
@@ -360,12 +345,10 @@ if ($existingEntry && isset($existingEntry->part_item_id)) {
             $businessOutput = BusinessApplicationProcesses::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)
                 ->firstOrFail();
             $businessOutput->product_production_inprocess_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_INPROCESS_FOR_PRODUCTION');
+        //   dd($businessOutput);
+        //   die();
             $businessOutput->save();
-
-                          
-
-
-    
+                            
             return [
                 'status' => 'success',
                 'message' => 'Production materials updated successfully.',
