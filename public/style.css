@@ -3345,13 +3345,7 @@ div#sparklinehome canvas {
     width: 90px !important;
 }
 
-@media print {
-    .img-size {
-      max-width: 90px !important;
-      height: auto;
-      width: 90px !important;
-    }
-  }
+
   
 .show-btn-position{
     display: flex;

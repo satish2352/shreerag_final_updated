@@ -76,6 +76,13 @@
     img{
         max-width: 90px !important;
     }
+    @media print {
+    img {
+        max-width: 90px !important;
+      height: auto;
+      width: 90px !important;
+    }
+  }
 
     /* table tr td {
                                 border: 1px solid red;
