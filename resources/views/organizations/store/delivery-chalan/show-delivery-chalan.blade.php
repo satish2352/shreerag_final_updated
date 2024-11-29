@@ -77,12 +77,11 @@
         max-width: 90px !important;
     }
     @media print {
-    img {
-        max-width: 90px !important;
-      height: auto;
-      width: 90px !important;
+        img {
+            max-width: 90px !important;
+            height: auto;
+        }
     }
-  }
 
     /* table tr td {
                                 border: 1px solid red;
