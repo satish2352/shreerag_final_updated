@@ -241,7 +241,7 @@
             </div>
         </div>
         <a style="padding-bottom: 100px; padding-left:20px;">
-            <button data-toggle="tooltip" onclick="printInvoice()" title="Accept Purchase Order" style="margin-top: 20px;">Print</button>
+            <button data-toggle="tooltip" onclick="printInvoice()" title="Delivery Chalan" style="margin-top: 20px;">Print</button>
         </a>
         <script>
             // function printInvoice() {
