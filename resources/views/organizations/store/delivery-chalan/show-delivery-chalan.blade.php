@@ -93,7 +93,7 @@
                                         <div style="flex: 1;">
                                             <img class="img-size"
                                                 src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}"
-                                                alt="{{ strip_tags($getOrganizationData['company_name']) }} Image" />
+                                                alt="{{ strip_tags($getOrganizationData['company_name']) }} Image" style="width: :90px;" />
                                         </div>
                                     
                                         <!-- Center: Delivery Chalan Text -->
