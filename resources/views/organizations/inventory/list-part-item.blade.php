@@ -120,7 +120,7 @@ padding-left: 20px !important;
                                             <td>{{ucwords($data->basic_rate)}}</td>
                                             <td>{{ucwords($data->opening_stock)}}</td> --}}
                                           
-                                            <td>
+                                          
                                                 <td>
                                                     <div style="display: flex; align-items: center;">
                                                         @if(is_null($data->quantity))
@@ -138,9 +138,6 @@ padding-left: 20px !important;
                                                         @endif
                                                     </div>
                                                 </td>
-                                                
-                                               
-                                            </td>
                                            </tr>
                                         @endforeach
                                     </tbody>

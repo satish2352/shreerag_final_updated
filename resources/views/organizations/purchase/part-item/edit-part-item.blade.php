@@ -140,7 +140,7 @@
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
                                                 <label for="opening_stock">Open Stock <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" value="@if (old('opening_stock')) {{ old('opening_stock') }}@else{{ $editData->opening_stock }} @endif" id="opening_stock" name="opening_stock" placeholder="Enter open stock">
+                                                <input type="text" class="form-control" value="@if (old('opening_stock')) {{ old('opening_stock') }}@else{{ $editData->opening_stock }} @endif" id="opening_stock" name="opening_stock" placeholder="Enter open stock" disabled>
                                             </div>
                                         </div>
 
