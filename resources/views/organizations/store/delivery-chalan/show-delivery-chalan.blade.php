@@ -99,9 +99,8 @@
                                     <!-- Header Section -->
                                     <div style=" padding-bottom: 10px; display: flex; align-items: center;">
                                         <!-- Left Side: Image -->
-                                        <div style="flex: 1;">
-                                            <img class="img-size" style="width: :90px !important;"
-                                                src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}"
+                                        <div style="flex: 1; width: :90px !important;">
+                                            <img class="img-size"   src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}"
                                                 alt="{{ strip_tags($getOrganizationData['company_name']) }} Image"  />
                                         </div>
                                     
