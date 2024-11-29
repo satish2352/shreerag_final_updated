@@ -73,6 +73,9 @@
         background-color: #f2f2f2;
         /* Optional: add background color for table header */
     }
+    img{
+        max-width: 90px !important;
+    }
 
     /* table tr td {
                                 border: 1px solid red;
