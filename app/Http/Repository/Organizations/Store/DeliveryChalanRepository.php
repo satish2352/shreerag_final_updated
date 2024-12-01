@@ -36,6 +36,10 @@ class DeliveryChalanRepository
             $dataOutput->dc_date = $request->dc_date;
             $dataOutput->dc_number = $request->dc_number;
             $dataOutput->lr_number = $request->lr_number;
+
+            $dataOutput->tax_type = $request->tax_type;
+            $dataOutput->tax_id = $request->tax_id;
+
             $dataOutput->remark = $request->remark;
 
             if ($request->has('business_id')) {
@@ -130,7 +134,8 @@ class DeliveryChalanRepository
                     'vendors.quote_no',
                     'tbl_delivery_chalan.tax_type',
                     'tbl_tax.name as tax_number',
-                    'tbl_delivery_chalan.vehicle_number'
+                    'tbl_delivery_chalan.vehicle_number',
+                      'tbl_delivery_chalan.remark'
                 )
                 ->first();
             if (!$purchaseOrder) {
@@ -165,6 +170,8 @@ class DeliveryChalanRepository
                      'tbl_delivery_chalan_item_details.amount',
                 )
                 ->get();
+                // dd($purchaseOrder);
+                // die();
             return [
                 'purchaseOrder' => $purchaseOrder,
                 'purchaseOrderDetails' => $purchaseOrderDetails,

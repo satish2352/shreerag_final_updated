@@ -190,6 +190,10 @@
                                                 </tr>
                                                 
                                             <tr>
+                                                <?php
+                                                // dd($showData);
+                                                // die();
+                                                ?>
                                                 @php
                                                     // Get the total amount from purchase order details
                                                     $totalAmount = $showData['purchaseOrderDetails']->sum('amount');

@@ -117,6 +117,7 @@
                                                                 <label>Tax Type<span class="text-danger">*</span></label>
                                                                 <select name="tax_type" class="form-control" title="select tax" id="tax_type">
                                                                     <option value="">Select Tax Type</option>
+                                                                    <option value="GST">GST</option>
                                                                     <option value="SGST">SGST</option>
                                                                     <option value="CGST">CGST</option>
                                                                     <option value="IGST">IGST</option>
@@ -176,7 +177,7 @@
                                                                 @endif
                                                             </div>
                                                             <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                <label for="lr_number">LR Number  <span class="text-danger">*</span></label>
+                                                                <label for="lr_number">LR Number  (Optional)</label>
                                                                 <input type="text" class="form-control" id="lr_number" value="{{old('lr_number') }}"
                                                                     name="lr_number" placeholder="Enter LR Number">
                                                                     @if ($errors->has('lr_number'))
@@ -381,9 +382,9 @@
                     dc_number: {
                         required: true,
                     },  
-                    lr_number: {
-                        required: true,
-                    },
+                    // lr_number: {
+                    //     required: true,
+                    // },
                     'addmore[0][part_item_id]': {
                         required: true,
                         maxlength: 100
@@ -409,11 +410,11 @@
                         digits: true,
                         min: 1
                     },
-                    'addmore[0][rate]': {
-                        required: true,
-                        number: true,
-                        min: 0.01
-                    },
+                    // 'addmore[0][rate]': {
+                    //     required: true,
+                    //     number: true,
+                    //     min: 0.01
+                    // },
                     'addmore[0][amount]': {
                         required: true,
                     },
@@ -458,10 +459,10 @@
                         required: "Please enter dc number.",
                         date: "Please enter a valid dc number."
                     },  
-                    lr_number: {
-                        required: "Please enter lr number.",
-                        date: "Please enter a valid lr number."
-                    },
+                    // lr_number: {
+                    //     required: "Please enter lr number.",
+                    //     date: "Please enter a valid lr number."
+                    // },
                     remark: {
                         required: "Please enter remark.",
                         maxlength: "Remark must be at most 255 characters long."
@@ -491,11 +492,11 @@
                         digits: "Please enter only digits for Quantity.",
                         min: "Quantity must be at least 1."
                     },
-                    'addmore[0][rate]': {
-                        required: "Please enter the Rate.",
-                        number: "Please enter a valid number for Rate.",
-                        min: "Rate must be a positive number."
-                    },
+                    // 'addmore[0][rate]': {
+                    //     required: "Please enter the Rate.",
+                    //     number: "Please enter a valid number for Rate.",
+                    //     min: "Rate must be a positive number."
+                    // },
                     'addmore[0][amount]': {
                         required: "Please Enter the Amount",
                     },
@@ -551,34 +552,34 @@
                         min: "Quantity must be at least 1."
                     }
                 });
-                row.find('.rate').rules("add", {
-                    required: true,
-                    number: true,
-                    min: 0.01,
-                    messages: {
-                        required: "Please enter the Rate.",
-                        number: "Please enter a valid number for Rate.",
-                        min: "Rate must be a positive number."
-                    }
-                });
+                // row.find('.rate').rules("add", {
+                //     required: true,
+                //     number: true,
+                //     min: 0.01,
+                //     messages: {
+                //         required: "Please enter the Rate.",
+                //         number: "Please enter a valid number for Rate.",
+                //         min: "Rate must be a positive number."
+                //     }
+                // });
                 row.find('.process_id').rules("add", {
                     required: true,
                     number: true,
                     min: 0.01,
                     messages: {
-                        required: "Please enter the Rate.",
-                        number: "Please enter a valid number for Rate.",
-                        min: "Rate must be a positive number."
+                        required: "Please enter the process.",
+                        number: "Please enter a valid number for process.",
+                        min: "process must be a positive number."
                     }
                 });
                 row.find('.size').rules("add", {
                     required: true,
-                    number: true,
-                    min: 0.01,
+                    // number: true,
+                    // min: 0.01,
                     messages: {
-                        required: "Please enter the Rate.",
-                        number: "Please enter a valid number for Rate.",
-                        min: "Rate must be a positive number."
+                        required: "Please enter the size.",
+                        number: "Please enter a valid number for size.",
+                        min: "size must be a positive number."
                     }
                 });
                 row.find('.total_amount').rules("add", {
