@@ -114,7 +114,12 @@
                     <tr>
                       
                       <td>{{ $loop->iteration }}</td>
-                      <td>{{ucwords($data->customer_po_number)}}</td>
+                      {{-- <td>{{ucwords($data->customer_po_number)}}</td> --}}
+                      <td>
+                        {{ $data->customer_po_number ? ucwords($data->customer_po_number) : 'N/A' }}
+                    </td>
+                    
+
                       <td>{{ucwords($data->vendor_name)}}</td>
                       <td>{{ucwords($data->transport_name)}}</td>
                       <td>{{ucwords($data->vehicle_name)}}</td>

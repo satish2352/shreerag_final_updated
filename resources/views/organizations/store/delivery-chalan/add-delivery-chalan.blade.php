@@ -102,7 +102,7 @@
                                                         </div>
                                                         <div class="col-lg-4 col-md-4 col-sm-4">
                                                             <div class="form-group">
-                                                                <label for="business_id">PO Number<span class="text-danger">*</span></label>
+                                                                <label for="business_id">PO Number (Optional)</label>
                                                                     <select class="form-control mb-2" name="business_id" id="business_id">
                                                                     <option value="" default>Select PO Number</option>
                                                                     @foreach ($dataOutputBusiness as $data)
@@ -350,10 +350,7 @@
                         required: true,
                       
                     },
-                    business_id: {
-                        required: true,
                    
-                    },
                     transport_id: {
                         required: true,
                        
@@ -430,10 +427,7 @@
                         required: "seclect transport name.",
                        
                     },
-                    business_id: {
-                        required: "seclect po number.",
-                        
-                    },
+                  
                     vehicle_id: {
                         required: "seclect vehicle type.",
                         

@@ -27,7 +27,7 @@ class DeliveryChalanRepository
         try {
             $dataOutput = new DeliveryChalan();
            $dataOutput->vendor_id = $request->vendor_id;
-          $dataOutput->business_id = $request->business_id;
+        //   $dataOutput->business_id = $request->business_id;
             $dataOutput->transport_id = $request->transport_id;
             $dataOutput->vehicle_id = $request->vehicle_id;
             $dataOutput->plant_id = $request->plant_id;
@@ -37,6 +37,10 @@ class DeliveryChalanRepository
             $dataOutput->dc_number = $request->dc_number;
             $dataOutput->lr_number = $request->lr_number;
             $dataOutput->remark = $request->remark;
+
+            if ($request->has('business_id')) {
+                $dataOutput->business_id = $request->business_id;
+            }
           
             $dataOutput->save();
             $last_insert_id = $dataOutput->id;

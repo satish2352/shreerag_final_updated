@@ -57,6 +57,8 @@ use Config;
     {
         try {
             $result = $this->repo->submitBOMToOwner($request);
+            // dd($result);
+            // die();
             if ($result['status'] === 'success') {
                 return ['status' => 'success', 'msg' => 'This business send to Design Department Successfully.'];
             } else {

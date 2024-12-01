@@ -38,10 +38,23 @@ class DeliveryChalanController extends Controller
 
     public function index()
     {
-        $getOutput = DeliveryChalan::join('vendors', 'vendors.id', '=', 'tbl_delivery_chalan.vendor_id')
-          ->join('businesses', 'businesses.id', '=', 'tbl_delivery_chalan.business_id')
-          ->join('tbl_transport_name', 'tbl_transport_name.id', '=', 'tbl_delivery_chalan.transport_id')
-          ->join('tbl_vehicle_type', 'tbl_vehicle_type.id', '=', 'tbl_delivery_chalan.vehicle_id')
+        $getOutput = DeliveryChalan::leftJoin('vendors', function ($join) {
+            $join->on('tbl_delivery_chalan.vendor_id', '=', 'vendors.id');
+        })
+        ->leftJoin('businesses', function ($join) {
+            $join->on('tbl_delivery_chalan.business_id', '=', 'businesses.id');
+        })
+        ->leftJoin('tbl_transport_name', function ($join) {
+            $join->on('tbl_delivery_chalan.transport_id', '=', 'tbl_transport_name.id');
+        })
+        ->leftJoin('tbl_vehicle_type', function ($join) {
+            $join->on('tbl_delivery_chalan.vehicle_id', '=', 'tbl_vehicle_type.id');
+        })
+    
+        // join('vendors', 'vendors.id', '=', 'tbl_delivery_chalan.vendor_id')
+        //   ->join('businesses', 'businesses.id', '=', 'tbl_delivery_chalan.business_id')
+        //   ->join('tbl_transport_name', 'tbl_transport_name.id', '=', 'tbl_delivery_chalan.transport_id')
+        //   ->join('tbl_vehicle_type', 'tbl_vehicle_type.id', '=', 'tbl_delivery_chalan.vehicle_id')
         ->select('tbl_delivery_chalan.id','tbl_delivery_chalan.vendor_id','tbl_delivery_chalan.transport_id',
         'tbl_delivery_chalan.business_id','tbl_delivery_chalan.vehicle_id','vendors.vendor_name'
         ,'businesses.customer_po_number','tbl_transport_name.name as transport_name','tbl_vehicle_type.name as vehicle_name','tbl_delivery_chalan.remark'

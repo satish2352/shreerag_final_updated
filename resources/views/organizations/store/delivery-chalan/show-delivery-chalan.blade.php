@@ -107,7 +107,7 @@
                                         <!-- Center: Delivery Chalan Text -->
                                         <div style="flex: 2; ">
                                             <span style="text-align: left; font-size: 20px; font-weight: bold;">
-                                            DELIVERY CHALAN</br>
+                                            DELIVERY CHALLAN</br>
                                             </span>
                                             <span>(In Case of goods sent for the Job Work Under Section 143 of GST Act) </span>
                                         </div>
