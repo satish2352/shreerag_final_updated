@@ -46,14 +46,22 @@ class GatepassController extends Controller
             return $e;
         }
     }
-    public function getPurchaseDetails($purchase_order_id)
+    public function getPurchaseDetails($id, $purchase_order_id)
     {
         try {
+           
+            $businessDetailsId = base64_decode($id);
+            // dd($businessDetailsId);
+            // die();
+            $purchaseOrderId = base64_decode($purchase_order_id);
             // Fetch the purchase order along with vendor and related purchase order details
-            $data = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
-                // ->join('gatepass', 'gatepass.purchase_orders_id', '=', 'purchase_orders.purchase_orders_id')
+            $data = PurchaseOrdersModel::leftJoin('businesses_details', function($join) {
+                $join->on('purchase_orders.business_details_id', '=', 'businesses_details.id');
+              })
+              ->leftJoin('vendors', function($join) {
+                $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
+              })
                 ->join('purchase_order_details', 'purchase_order_details.purchase_id', '=', 'purchase_orders.id')
-                // ->where('purchase_orders.id', $purchase_order_id) // Filter by purchase_order_id
                 ->join('tbl_part_item', function ($join) {
                     $join->on('tbl_part_item.id', '=', 'purchase_order_details.part_no_id')
                          ->orOn('tbl_part_item.id', '=', 'purchase_order_details.part_no_id');
@@ -62,11 +70,14 @@ class GatepassController extends Controller
                     $join->on('tbl_unit.id', '=', 'purchase_order_details.unit')
                          ->orOn('tbl_unit.id', '=', 'purchase_order_details.unit');
                 })
+                ->where('purchase_orders.id', $businessDetailsId)
+                ->where('purchase_orders.purchase_orders_id', $purchaseOrderId)
                 ->select(
                     'purchase_orders.id as purchase_order_id',
+                    // 'purchase_orders.business_id',
                     'purchase_orders.purchase_orders_id',
                     'purchase_orders.requisition_id', 
-                    'purchase_orders.business_id', 
+                    // 'purchase_orders.business_id', 
                     'purchase_orders.business_details_id', 
                     'purchase_orders.production_id', 
                     'purchase_orders.po_date', 
@@ -109,7 +120,8 @@ class GatepassController extends Controller
                 'purchaseOrder',
                 'purchaseOrderDetails',
                 'business_id',
-                'getOrganizationData'
+                'getOrganizationData',
+                'businessDetailsId'
             ));
         } catch (\Exception $e) {
             // Handle exceptions and errors

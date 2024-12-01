@@ -85,8 +85,7 @@
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
                                                                             <label for="Service">Vendor Company
-                                                                                Name:</label> &nbsp;<span
-                                                                                class="red-text">*</span>
+                                                                                Name:  <span class="text-danger">*</span></label> 
                                                                             <select class="form-control mb-2"
                                                                                 name="vendor_id" id="vendor_id">
                                                                                 <option value="" default>Select
@@ -107,12 +106,12 @@
 
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
-                                                                            <label>Tax Type</label>
+                                                                            <label>Tax Type <span class="text-danger">*</span></label>
                                                                             <select class="form-control mb-2" name="tax_type" id="tax_type">
                                                                                 <option value="" {{ old('tax_type') == '' ? 'selected' : '' }}>Select Tax Type</option>
-                                                                                <option value="CGST" {{ old('tax_type', $editDataNew->tax_type) == 'CGST' ? 'selected' : '' }}>C-GST</option>
-                                                                                <option value="SGST" {{ old('tax_type', $editDataNew->tax_type) == 'SGST' ? 'selected' : '' }}>S-GST</option>
-                                                                                <option value="CGST+SGST" {{ old('tax_type', $editDataNew->tax_type) == 'CGST+SGST' ? 'selected' : '' }}>C-GST + S-GST</option>
+                                                                                <option value="SGST" {{ old('tax_type', $editDataNew->tax_type) == 'SGST' ? 'selected' : '' }}>SGST</option>
+                                                                                <option value="CGST" {{ old('tax_type', $editDataNew->tax_type) == 'CGST' ? 'selected' : '' }}>CGST</option>
+                                                                                <option value="IGST" {{ old('tax_type', $editDataNew->tax_type) == 'IGST' ? 'selected' : '' }}>IGST</option>
                                                                             </select>
                                                                             @if ($errors->has('tax_type'))
                                                                                 <span class="red-text">{{ $errors->first('tax_type') }}</span>
@@ -122,8 +121,7 @@
                                                                     
                                                                 <div class="col-lg-4 col-md-4 col-sm-4">
                                                                     <div class="form-group">
-                                                                        <label for="Service">Tax :</label> &nbsp;<span
-                                                                            class="red-text">*</span>
+                                                                        <label for="Service">Tax :  <span class="text-danger">*</span></label> 
                                                                         <select class="form-control mb-2"
                                                                             name="tax_id" id="tax_id">
                                                                             <option value="" default>Select
@@ -144,8 +142,7 @@
                                                                 <div class="row">
                                                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                                                         <div class="form-group">
-                                                                            <label>Invoice date <span
-                                                                                    class="text-danger">*</span></label>
+                                                                            <label>Invoice date <span class="text-danger">*</span></label>
                                                                             <div class="cal-icon">
                                                                                 <input class="form-control datetimepicker"
                                                                                     type="text" name="invoice_date"
@@ -156,7 +153,7 @@
                                                                     </div>
                                                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                                                         <div class="form-group">
-                                                                            <label>Payment Terms</label>
+                                                                            <label>Payment Terms <span class="text-danger">*</span></label>
                                                                             <select name="payment_terms"
                                                                                 class="form-control"
                                                                                 title="select payment terms"
@@ -316,10 +313,13 @@
 
                                                                     <div class="row">
                                                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                            <label for="note">Other Information
-                                                                                :</label>
-                                                                            <textarea class="form-control" name="note">@if (old('note')){{ old('note') }}@else{{ $editDataNew->note }}@endif</textarea>
+                                                                            <label for="transport_dispatch">Transport-Dispatch <span class="text-danger">*</span></label>
+                                                                            <textarea class="form-control" name="transport_dispatch">@if (old('transport_dispatch')){{ old('transport_dispatch') }}@else{{ $editDataNew->transport_dispatch }}@endif</textarea>
+                                                                        </div>
 
+                                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                            <label for="note">Remark <span class="text-danger">*</span></label>
+                                                                            <textarea class="form-control" name="note">@if (old('note')){{ old('note') }}@else{{ $editDataNew->note }}@endif</textarea>
                                                                         </div>
                                                             @endif
                                                         @endforeach
@@ -390,6 +390,9 @@
                     note: {
                         required: true,
                     },
+                    transport_dispatch :{
+                            required :true,
+                        },
                     'part_no_id_0': {
                         required: true,
                     },
@@ -443,6 +446,9 @@
                     note: {
                         required: "Please Enter the Other Information",
                     },
+                    transport_dispatch : {
+                            required: "Please Enter the transport dispatch",
+                        },
                     'part_no_id_0': {
                         required: "Please enter the Part Number",
                     },

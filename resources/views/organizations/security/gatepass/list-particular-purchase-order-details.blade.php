@@ -129,6 +129,7 @@
                                             <th  style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">Description</span></th>
                                             <th  style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">Due Date</span></th>
                                             <th  style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">Quantity</span></th>
+                                            <th style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">Rate</span></th>
                                             {{-- <th>Rate</th>
                                             <th>Amount</th> --}}
                                         </tr>
@@ -141,6 +142,7 @@
                                                 <td  style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">{{ $detail->description }}</span></td>
                                                 <td  style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">{{ $detail->due_date }}</span></td>
                                                 <td  style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">{{ $detail->quantity }} {{ $detail->unit_name }}</span></td>
+                                                <td style="border-left: 1px solid black; border-bottom: 1px solid black;"><span style="padding: 5px;">{{ $detail->rate }}</span></td>
                                                 {{-- <td>{{ $detail->rate }}</td>
                                                 <td>{{ $detail->amount }}</td> --}}
                                             </tr>

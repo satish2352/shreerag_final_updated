@@ -95,12 +95,14 @@ class CommanController
                     'purchase_orders.terms_condition', 
                     'purchase_orders.transport_dispatch', 
                     'purchase_orders.purchase_status_from_purchase',
+                    'purchase_orders.purchase_status_from_owner',
                     'purchase_orders.image', 
                     'purchase_orders.tax_type', 
                     'purchase_orders.tax_id', 
                     'purchase_orders.invoice_date', 
                     'purchase_orders.payment_terms', 
                     'purchase_orders.discount', 
+                    'purchase_orders.note',
                     'vendors.vendor_name', 
                     'vendors.vendor_company_name', 
                     'vendors.vendor_email', 
@@ -114,6 +116,7 @@ class CommanController
                 )
                 ->where('purchase_orders.purchase_orders_id', $purchase_order_id)
                 ->first();
+                
             if (!$purchaseOrder) {
                 throw new \Exception('Purchase order not found.');
             }

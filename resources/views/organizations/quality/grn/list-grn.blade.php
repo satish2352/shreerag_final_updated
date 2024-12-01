@@ -91,15 +91,8 @@
                                                 {{-- <th data-field="status" data-editable="false">Status</th> --}}
                                                 <th data-field="action">Action</th>
                                             </tr>
-
                                         </thead>
                                         <tbody>
-
-                                            <?php
-                                            // dd($all_gatepass);
-                                            // die();
-                                            ?>
-
                                             @foreach ($all_gatepass as $data)
                                                 <tr>
 

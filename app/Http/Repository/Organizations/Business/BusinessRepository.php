@@ -355,7 +355,7 @@ class BusinessRepository
                 'payment_terms', 'client_address', 'discount', 'note','created_at'
             )
             ->first();
-            
+          
         // Fetch related Purchase Order Details
         $purchaseOrderDetails = PurchaseOrderDetailsModel::where('purchase_id', $purchaseOrder->id)
             ->select(
@@ -394,7 +394,7 @@ public function getPurchaseOrderBusinessWise($id)
         // ->where('business_id', $id)
         ->whereNull('purchase_status_from_owner')
         ->orWhere('purchase_status_from_owner', config('constants.HIGHER_AUTHORITY.HALF_APPROVED_PO_FROM_PURCHASE'))
-
+        ->orderBy('purchase_orders.updated_at', 'desc')
         ->get(); // Added to execute the query and get results
        
         return $data_output;

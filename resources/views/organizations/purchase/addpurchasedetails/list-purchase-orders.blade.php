@@ -48,7 +48,7 @@
                   <div class="login-horizental cancel-wp pull-left">
                     <form action="{{ route('add-purchase-order') }}" method="POST">
                     @csrf
-             
+                <input type="hidden" name="business_details_id" id="business_details_id" value="{{$business_details_id}}">
                     <input type="hidden" name="requistition_id" id="requistition_id" value="{{$requistition_id}}">
                     <button class="btn btn-sm btn-primary login-submit-cs"
                     type="submit">Add Purchase</button>

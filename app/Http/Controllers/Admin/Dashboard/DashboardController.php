@@ -418,8 +418,8 @@ class DashboardController extends Controller {
         $ses_userId = session()->get('user_id');
  
         $ses_roleId = session()->get('role_id');
-
-       
+        $baseUrl = url('http://localhost/shreerag_final_updated'); // Get the base URL dynamically
+        // $baseUrl = url('https://shreeragengineering.com'); // Get the base URL dynamically
         $count = 0;  // Initialize the $count variable
         $notifications = [];  // Initialize the $notifications array
 
@@ -433,7 +433,7 @@ class DashboardController extends Controller {
                 $business_count = $business_data->count();            
                   $notifications[] = ['admin_count' => $business_count,
                   'message' => 'Business Sent For Design',
-                  'url' => 'list-forwarded-to-design',
+                  'url' => $baseUrl . '/owner/list-forwarded-to-design',
                    ];
                    
                 $uploaded_design = AdminView::where('off_canvas_status', '12')
@@ -443,7 +443,7 @@ class DashboardController extends Controller {
                 $uploaded_design_count = $uploaded_design->count();
                 $notifications[] = ['admin_count' => $uploaded_design_count,
                 'message' => 'Design Upload and Received Production Department',
-                'url' => 'list-design-uploaded-owner',
+                 'url' => $baseUrl . '/owner/list-design-uploaded-owner',
                 ];
                 $received_correction_design = AdminView::where('off_canvas_status', '13')
                 ->where('is_view', '0')
@@ -452,7 +452,7 @@ class DashboardController extends Controller {
                 $received_correction_design_count = $received_correction_design->count();
                 $notifications[] = ['admin_count' => $received_correction_design_count,
                 'message' => 'Production Dept Design Rejected and Received Design Dept',
-                'url' => 'list-design-correction',
+                 'url' => $baseUrl . '/owner/list-design-correction',
                 ];
                 $material_ask_prod_to_store = AdminView::where('off_canvas_status', '15')
                                 ->where('is_view', '0')
@@ -461,7 +461,7 @@ class DashboardController extends Controller {
                 $material_ask_prod_to_store_count = $material_ask_prod_to_store->count();
                 $notifications[] = ['admin_count' => $material_ask_prod_to_store_count,
                 'message' => 'Material Ask By Production To Store',
-                'url' => 'material-ask-by-prod-to-store',
+                'url' => $baseUrl . '/owner/material-ask-by-prod-to-store',
                 ];
                 $material_ask_by_store_to_purchase = AdminView::where('off_canvas_status', '16')
                 ->where('is_view', '0')
@@ -470,7 +470,7 @@ class DashboardController extends Controller {
                 $material_ask_by_store_to_purchase_count = $material_ask_by_store_to_purchase->count();
                 $notifications[] = ['admin_count' => $material_ask_by_store_to_purchase_count,
                 'message' => 'Material ask by Store to Purchase',
-                'url' => 'material-ask-by-store-to-purchase',
+                'url' => $baseUrl . '/owner/material-ask-by-store-to-purchase',
                 ];
                 $Purchase_order_need_to_check = AdminView::where('off_canvas_status', 23)
                 ->where('is_view', '0')
@@ -479,7 +479,7 @@ class DashboardController extends Controller {
                 $Purchase_order_need_to_check_count = $Purchase_order_need_to_check->count();
                 $notifications[] = ['admin_count' => $Purchase_order_need_to_check_count,
                 'message' => 'Purchase order need to check',
-                'url' => 'list-purchase-orders',
+                 'url' => $baseUrl . '/owner/list-purchase-orders',
                 ];
                 $purchase_order_approved = AdminView::where('off_canvas_status', '24')
                 ->where('is_view', '0')
@@ -488,7 +488,7 @@ class DashboardController extends Controller {
                 $purchase_order_approved_count = $purchase_order_approved->count();
                 $notifications[] = ['admin_count' => $purchase_order_approved_count,
                 'message' => 'Purchase Order Approved',
-                'url' => 'list-approved-purchase-orders-owner',
+                 'url' => $baseUrl . '/owner/list-approved-purchase-orders-owner',
                 ];
                 $po_send_to_vendor = AdminView::where('off_canvas_status', 25)
                 ->where('is_view', '0')
@@ -499,7 +499,7 @@ class DashboardController extends Controller {
                 $po_send_to_vendor_count = $po_send_to_vendor->count();
                 $notifications[] = ['admin_count' => $po_send_to_vendor_count,
                 'message' => 'Submitted PO by Vendor',
-                'url' => 'list-owner-submited-po-to-vendor',
+                'url' => $baseUrl . '/owner/list-owner-submited-po-to-vendor',
                 ];
                 $gate_pass_generate = AdminView::where('off_canvas_status', 26)
                 ->where('is_view', '0')
@@ -508,7 +508,7 @@ class DashboardController extends Controller {
                 $gate_pass_generate_count = $gate_pass_generate->count();
                 $notifications[] = ['admin_count' => $gate_pass_generate_count,
                 'message' => 'Security Created Gate Pass',
-                'url' => 'list-owner-gatepass',
+                'url' => $baseUrl . '/owner/list-owner-gatepass',
                 ];
 
                 $quality_dept_material_received_in_store = AdminView::where('off_canvas_status', '27')
@@ -518,7 +518,7 @@ class DashboardController extends Controller {
                 $quality_dept_material_received_in_store_count = $quality_dept_material_received_in_store->count();
                 $notifications[] = ['admin_count' => $quality_dept_material_received_in_store_count,
                 'message' => 'Generated GRN Material send Quality Dept to Store ',
-                'url' => 'list-material-sent-to-store-generated-grn',
+                'url' => $baseUrl . '/owner/list-material-sent-to-store-generated-grn',
                 ];
 
                 $production_completed = AdminView::where('off_canvas_status', '18')
@@ -528,7 +528,7 @@ class DashboardController extends Controller {
                 $production_completed_count = $production_completed->count();
                 $notifications[] = ['admin_count' => $production_completed_count,
                 'message' => 'Logistics Dept Received Product completed list',
-                'url' => 'list-owner-final-production-completed-recive-to-logistics',
+                 'url' => $baseUrl . '/owner/list-owner-final-production-completed-recive-to-logistics',
                 ];
 
                 $logistics_send_to_fianance = AdminView::where('off_canvas_status', '20')
@@ -538,7 +538,7 @@ class DashboardController extends Controller {
                 $logistics_send_to_fianance_count = $logistics_send_to_fianance->count();
                 $notifications[] = ['admin_count' => $logistics_send_to_fianance_count,
                 'message' => 'Fianance Dept Product Recevied from Logistics Dept',
-                'url' => 'recive-owner-logistics-list',
+              'url' => $baseUrl . '/owner/recive-owner-logistics-list',
                 ];
 
                 // $send_fianance_to_dispatch = AdminView::where('off_canvas_status', '19')
@@ -558,7 +558,7 @@ class DashboardController extends Controller {
                 $received_fianance_to_dispatch_count = $received_fianance_to_dispatch->count();
                 $notifications[] = ['admin_count' => $received_fianance_to_dispatch_count,
                 'message' => 'Fianance Dept Production Request Send to Dispatch Dept',
-                'url' => 'list-owner-send-to-dispatch',
+               'url' => $baseUrl . '/owner/list-owner-send-to-dispatch',
                 ];
 
                 $dispatch_completed = AdminView::where('off_canvas_status', '22')
@@ -568,7 +568,7 @@ class DashboardController extends Controller {
                 $dispatch_completed_count = $dispatch_completed->count();
                 $notifications[] = ['admin_count' => $dispatch_completed_count,
                 'message' => 'Dispatch Dept Production Dispatch Completed',
-                'url' => 'list-product-dispatch-completed',
+               'url' => $baseUrl . '/owner/list-product-dispatch-completed',
                 ];
                 $count = $business_count + $uploaded_design_count + $material_ask_prod_to_store_count + $received_correction_design_count + $material_ask_by_store_to_purchase_count + $Purchase_order_need_to_check_count + $purchase_order_approved_count
                  + $po_send_to_vendor_count + $gate_pass_generate_count + $quality_dept_material_received_in_store_count + $production_completed_count + $logistics_send_to_fianance_count
@@ -576,6 +576,8 @@ class DashboardController extends Controller {
        
             }elseif($ses_userId == '3'){//Design Department
               
+               
+
                     $sent_to_prod_data = NotificationStatus::where('off_canvas_status',11)
                     ->where('design_is_view','0')
                     ->select('id')
@@ -584,7 +586,8 @@ class DashboardController extends Controller {
 
                     $notifications[] = ['admin_count' => $received_for_design,
                     'message' => 'Business Received For Design',
-                    'url' => 'list-new-requirements-received-for-design'
+                     'url' => $baseUrl . '/designdept/list-new-requirements-received-for-design'
+                    // 'url' => 'list-new-requirements-received-for-design'
                    ];
 
                    $design_rejected_prod_dept= NotificationStatus::where('off_canvas_status',15)
@@ -595,7 +598,7 @@ class DashboardController extends Controller {
 
                    $notifications[] = ['admin_count' => $design_rejected_prod_dept_count,
                        'message' => 'Product Department Design Accepted',
-                       'url' => 'list-accept-design-by-production'
+                      'url' => $baseUrl . '/designdept/list-accept-design-by-production'
                    ];
 
 
@@ -607,7 +610,7 @@ class DashboardController extends Controller {
 
                     $notifications[] = ['admin_count' => $design_accepted_prod_count,
                         'message' => 'Product Department Design Accepted',
-                        'url' => 'list-accept-design-by-production'
+                     'url' => $baseUrl . '/designdept/list-accept-design-by-production'
                     ];
                     $design_rejected_prod_dept= NotificationStatus::where('off_canvas_status',13)
                     ->where('prod_design_rejected','0')
@@ -617,7 +620,7 @@ class DashboardController extends Controller {
 
                     $notifications[] = ['admin_count' => $design_rejected_prod_count,
                         'message' => 'Product Department Design Rejected',
-                        'url' => 'list-reject-design-from-prod'
+                       'url' => $baseUrl . '/designdept/list-reject-design-from-prod'
                     ];
 
                    $count = $received_for_design + $design_rejected_prod_dept_count+ $design_accepted_prod_count + $design_rejected_prod_count;
@@ -630,7 +633,7 @@ class DashboardController extends Controller {
 
                     $notifications[] = ['admin_count' => $received_design_in_prod,
                         'message' => 'New Design Received ',
-                        'url' => 'list-new-requirements-received-for-production'
+                        'url' => $baseUrl . '/proddept/list-new-requirements-received-for-production'
                     ];
                     $revised_received_design = NotificationStatus::where('off_canvas_status',14)
                     ->where('prod_is_view_revised','0')
@@ -640,7 +643,7 @@ class DashboardController extends Controller {
 
                     $notifications[] = ['admin_count' => $revised_received_design_count,
                         'message' => 'Revised Design List',
-                        'url' => 'list-revislist-material-reciveded-design'
+                        'url' => $baseUrl . '/proddept/list-revislist-material-reciveded-design'
                     ];
 
                       $material_received_for_production_by_store = NotificationStatus::where('off_canvas_status',17)
@@ -651,7 +654,7 @@ class DashboardController extends Controller {
 
                     $notifications[] = ['admin_count' => $material_received_for_production_by_store_count,
                         'message' => 'Material Received For Production',
-                        'url' => 'list-material-recived'
+                        'url' => $baseUrl . '/proddept/list-material-recived'
                     ];
                     $count = $received_design_in_prod + $revised_received_design_count + $material_received_for_production_by_store_count;
         }
@@ -664,7 +667,7 @@ class DashboardController extends Controller {
             $store_view_req_count = $store_view_req->count();
             $notifications[] = ['admin_count' => $store_view_req_count,
                 'message' => 'New Design Received ',
-                'url' => 'list-accepted-design-from-prod'
+               'url' => $baseUrl . '/storedept/list-accepted-design-from-prod'
             ];
 
             $material_received_by_quality = NotificationStatus::where('off_canvas_status',27)
@@ -675,7 +678,7 @@ class DashboardController extends Controller {
 
             $notifications[] = ['admin_count' => $material_received_by_quality_count,
                 'message' => 'Material Received From Quality',
-                'url' => 'list-material-received-from-quality'
+                 'url' => $baseUrl . '/storedept/list-material-received-from-quality'
             ];
 
             $material_received_from_store = NotificationStatus::where('off_canvas_status',17)
@@ -686,7 +689,7 @@ class DashboardController extends Controller {
 
             $notifications[] = ['admin_count' => $material_received_from_store_count,
                 'message' => 'Material Received For Production',
-                'url' => 'list-material-received-from-quality'
+                 'url' => $baseUrl . '/storedept/list-material-received-from-quality'
             ];
 
 
@@ -717,7 +720,7 @@ class DashboardController extends Controller {
 // die();
             $notifications[] = ['admin_count' => $received_requistion_req_count,
                 'message' => 'Received Requistion Request',
-                'url' => 'list-purchase'
+                'url' => $baseUrl . '/purchase/list-purchase'
             ];
             $list_purchase_orders_sent_to_owner = NotificationStatus::where('off_canvas_status',23)
             ->where('purchase_order_is_view_po','0')
@@ -727,7 +730,7 @@ class DashboardController extends Controller {
 
             $notifications[] = ['admin_count' => $list_purchase_orders_sent_to_owner_count,
                 'message' => 'Purchase Orders Sent to Owner',
-                'url' => 'list-purchase-orders-sent-to-owner'
+               'url' => $baseUrl . '/purchase/list-purchase-orders-sent-to-owner'
             ];
             $list_approved_purchase_orders_owner= NotificationStatus::where('off_canvas_status',24)
             ->where('purchase_order_is_view_po','0')
@@ -737,7 +740,7 @@ class DashboardController extends Controller {
 
             $notifications[] = ['admin_count' => $list_approved_purchase_orders_owner_count,
                 'message' => 'Purchase Orders Approved Owner Side',
-                'url' => 'list-approved-purchase-orders'
+                'url' => $baseUrl . '/purchase/list-approved-purchase-orders'
             ];
             $po_send_to_vendor= NotificationStatus::where('off_canvas_status',25)
             ->where('po_send_to_vendor','0')
@@ -747,7 +750,7 @@ class DashboardController extends Controller {
 
             $notifications[] = ['admin_count' => $po_send_to_vendor_count,
                 'message' => 'Submited PO by Vendor List',
-                'url' => 'list-submited-po-to-vendor'
+                'url' => $baseUrl . '/purchase/list-submited-po-to-vendor'
             ];
 
 
@@ -759,7 +762,7 @@ class DashboardController extends Controller {
 
             $notifications[] = ['admin_count' => $visible_grn_material_received_store_count,
                 'message' => 'Material Received Quality to Store Department',
-                'url' => 'list-material-received-from-quality-po-tracking'
+                'url' => $baseUrl . '/purchase/list-material-received-from-quality-po-tracking'
             ];
             $count = $received_requistion_req_count + $list_purchase_orders_sent_to_owner_count + $list_approved_purchase_orders_owner_count + $po_send_to_vendor_count +  $visible_grn_material_received_store_count;
         }
@@ -772,7 +775,7 @@ class DashboardController extends Controller {
 
             $notifications[] = ['admin_count' => $po_send_to_vendor_visible_security_count,
                 'message' => 'Search By PO No',
-                'url' => 'list-all-po-number'
+                'url' => $baseUrl . '/securitydept/list-all-po-number'
             ];
             $count = $po_send_to_vendor_visible_security_count;
         }
@@ -786,7 +789,7 @@ class DashboardController extends Controller {
 
             $notifications[] = ['admin_count' => $po_material_received_by_quality_count,
                 'message' => 'Received Purchase Order with Material',
-                'url' => 'list-grn'
+                'url' => $baseUrl . '/quality/list-grn'
             ];
             
             $visible_grn= NotificationStatus::where('off_canvas_status',27)
@@ -797,11 +800,11 @@ class DashboardController extends Controller {
 
             $notifications[] = ['admin_count' => $visible_grn_count,
                 'message' => 'Material Sent to Store',
-                'url' => 'list-material-sent-to-quality'
+               'url' => $baseUrl . '/quality/list-material-sent-to-quality'
             ];
             $count = $po_material_received_by_quality_count + $visible_grn_count;
         }
-        elseif($ses_userId == '9'){
+        elseif($ses_userId == '9'){ //finance
             $recived_logistics_to_fianance= NotificationStatus::where('off_canvas_status',20)
             ->where('logistics_to_fianance_visible','0')
             ->select('id')
@@ -810,11 +813,11 @@ class DashboardController extends Controller {
 
             $notifications[] = ['admin_count' => $recived_logistics_to_fianance_count,
                 'message' => 'Received Logistics List',
-                'url' => 'recive-logistics-list'
+                'url' => $baseUrl . '/financedept/recive-logistics-list'
             ];
             $count = $recived_logistics_to_fianance_count;
         }
-        elseif($ses_userId == '11'){
+        elseif($ses_userId == '11'){ //logistics
             $production_completed_by_product_dept= NotificationStatus::where('off_canvas_status',18)
             ->where('production_completed','0')
             ->select('id')
@@ -823,11 +826,11 @@ class DashboardController extends Controller {
 
             $notifications[] = ['admin_count' => $production_completed_by_product_dept_count,
                 'message' => 'Product Completed by Production Dept',
-                'url' => 'list-final-production-completed-recive-to-logistics'
+                'url' => $baseUrl . '/logisticsdept/list-final-production-completed-recive-to-logistics'
             ];
             $count = $production_completed_by_product_dept_count;
         }
-        elseif($ses_userId == '12'){
+        elseif($ses_userId == '12'){ //dispatch
           
             $received_fianance_to_dispatch= NotificationStatus::where('off_canvas_status',21)
             ->where('fianance_to_dispatch_visible','0')
@@ -837,7 +840,7 @@ class DashboardController extends Controller {
 
             $notifications[] = ['admin_count' => $received_fianance_to_dispatch_count,
                 'message' => 'Received From Finance',
-                'url' => 'list-final-production-completed-received-from-fianance'
+                'url' => $baseUrl . '/dispatchdept/list-final-production-completed-received-from-fianance'
             ];
             $count = $received_fianance_to_dispatch_count;
         }

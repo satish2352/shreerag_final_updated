@@ -105,9 +105,9 @@
                                                                 <label for="business_id">PO Number<span class="text-danger">*</span></label>
                                                                     <select class="form-control mb-2" name="business_id" id="business_id">
                                                                     <option value="" default>Select PO Number</option>
-                                                                    @foreach ($dataOutputBusiness as $data)
+                                                                    @foreach ($dataOutputPurchaseOrdersModel as $data)
                                                                             <option value="{{ $data['id'] }}" >
-                                                                                {{ $data['customer_po_number'] }}</option>
+                                                                                {{ $data['purchase_orders_id'] }}</option>
                                                                     @endforeach
                                                                 </select>
                                                             </div>
@@ -117,7 +117,8 @@
                                                                 <label>Tax Type<span class="text-danger">*</span></label>
                                                                 <select name="tax_type" class="form-control" title="select tax" id="tax_type">
                                                                     <option value="">Select Tax Type</option>
-                                                                    <option value="CGST+SGST">CGST + SGST</option>
+                                                                    <option value="SGST">SGST</option>
+                                                                    <option value="CGST">CGST</option>
                                                                     <option value="IGST">IGST</option>
                                                                 </select>
                                                               </div>

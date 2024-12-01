@@ -36,6 +36,7 @@ class GRNRepository
                 'gatepass.gatepass_name', 
                 'gatepass.gatepass_date', 
                 'gatepass.gatepass_time', 
+                'gatepass.remark',
                 'gatepass.is_active'
             )
             ->orderBy('gatepass.updated_at', 'desc')

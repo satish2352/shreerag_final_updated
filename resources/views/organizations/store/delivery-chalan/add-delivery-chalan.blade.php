@@ -117,7 +117,8 @@
                                                                 <label>Tax Type<span class="text-danger">*</span></label>
                                                                 <select name="tax_type" class="form-control" title="select tax" id="tax_type">
                                                                     <option value="">Select Tax Type</option>
-                                                                    <option value="CGST+SGST">CGST + SGST</option>
+                                                                    <option value="SGST">SGST</option>
+                                                                    <option value="CGST">CGST</option>
                                                                     <option value="IGST">IGST</option>
                                                                 </select>
                                                               </div>

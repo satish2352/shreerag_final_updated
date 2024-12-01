@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Organizations\Store;
 
-use App\Models\PurchaseOrdersModel;
+
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
@@ -22,6 +22,7 @@ use App\Models\{
     ProcessMaster,
     ReturnableChalan,
     ReturnableChalanItemDetails,
+    PurchaseOrdersModel
 };
 use App\Http\Controllers\Organizations\CommanController;
 
@@ -65,6 +66,7 @@ class ReturnableChalanController extends Controller
         $dataOutputTax = Tax::where('is_active', true)->get();
         $dataOutputPartItem = PartItem::where('is_active', true)->get();
         $dataOutputBusiness = Business::where('is_active', true)->get();
+        $dataOutputPurchaseOrdersModel = PurchaseOrdersModel::where('is_active', true)->get();
         $dataOutputVehicleType = VehicleType::where('is_active', true)->get();
         $dataOutputTransportName = TransportName::where('is_active', true)->get();
         $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
@@ -83,7 +85,8 @@ class ReturnableChalanController extends Controller
                 'dataOutputTransportName',
                 'dataOutputUnitMaster',
                 'dataOutputHSNMaster',
-                'dataOutputProcessMaster'
+                'dataOutputProcessMaster',
+                'dataOutputPurchaseOrdersModel'
             )
         );
     }

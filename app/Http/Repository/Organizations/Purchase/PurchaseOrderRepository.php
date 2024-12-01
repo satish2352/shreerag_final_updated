@@ -47,7 +47,7 @@ class PurchaseOrderRepository
             $dataOutput->po_date = date('m-d-Y');
             $dataOutput->terms_condition = '';
             $dataOutput->remark = '';
-            $dataOutput->transport_dispatch = '';
+            // $dataOutput->transport_dispatch = '';
             $dataOutput->image = 'null';
             $dataOutput->quote_no = $request->quote_no;
             // $dataOutput->status = $request->status;
@@ -62,6 +62,7 @@ class PurchaseOrderRepository
             // $dataOutput->client_address = $request->client_address;
             // $dataOutput->discount = $request->discount;
             $dataOutput->note = $request->note;
+            $dataOutput->transport_dispatch = $request->transport_dispatch;
             $dataOutput->purchase_status_from_purchase = config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL');
             $dataOutput->is_approve = '0';
             $dataOutput->is_active = '1';
@@ -176,7 +177,7 @@ class PurchaseOrderRepository
     public function getById($id) {
         try {
             $designData = PurchaseOrdersModel::leftJoin('purchase_order_details', 'purchase_orders.id', '=', 'purchase_order_details.purchase_id')
-                ->select('purchase_order_details.*', 'purchase_order_details.id as purchase_order_details_id', 'purchase_orders.id as purchase_main_id', 'purchase_orders.vendor_id', 'purchase_orders.quote_no', 'purchase_orders.tax_type', 'purchase_orders.tax_id','purchase_orders.invoice_date','purchase_orders.quote_no','purchase_orders.note',  'purchase_orders.payment_terms','purchase_orders.discount')
+                ->select('purchase_order_details.*', 'purchase_order_details.id as purchase_order_details_id', 'purchase_orders.id as purchase_main_id', 'purchase_orders.vendor_id', 'purchase_orders.quote_no', 'purchase_orders.tax_type', 'purchase_orders.tax_id','purchase_orders.invoice_date','purchase_orders.quote_no','purchase_orders.note',  'purchase_orders.payment_terms','purchase_orders.discount', 'purchase_orders.transport_dispatch')
                 ->where('purchase_orders.purchase_orders_id', $id)
                 ->get();
                
@@ -220,7 +221,7 @@ class PurchaseOrderRepository
             $dataOutput->payment_terms = $request->payment_terms;
             // $dataOutput->discount = $request->discount;
             $dataOutput->note = $request->note;
-
+            $dataOutput->transport_dispatch = $request->transport_dispatch;
             if ($request->has('quote_no')) {
                 $dataOutput->quote_no = $request->quote_no;
             }

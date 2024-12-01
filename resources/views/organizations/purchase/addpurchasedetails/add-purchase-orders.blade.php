@@ -22,12 +22,12 @@
               <h1>Purchase Order <span class="table-project-n">Form</span> </h1>
             </div><br>
            <?php
-// dd($dataPurchaseOrder);
+// dd($business_details_id);
 // die();
            ?>
-            <form action="{{route('store-purchase-order')}} " id="forms" method="post" enctype="multipart/form-data">
+            <form action="{{route('store-purchase-order')}} " id="forms" method="post" enctype="multipart/form-data" id="purchase_order_table">
               @csrf
-              {{-- <input class="form-control" type="hidden" name="business_details_id" id="business_details_id" value="{{$dataPurchaseOrder->business_details_id}}"> --}}
+              <input class="form-control" type="hidden" name="business_details_id" id="business_details_id" value="{{$business_detailsId}}">
               <input class="form-control" type="hidden" name="requistition_id" id="requistition_id" value="{{$requistition_id}}">
               <input class="form-control" type="hidden" name="vendor_id" id="vendor_id">
               <div class="row">
@@ -52,7 +52,8 @@
                     <label>Tax Type<span class="text-danger">*</span></label>
                     <select name="tax_type" class="form-control" title="select tax" id="tax_type">
                       <option value="">Select Tax Type</option>
-                      <option value="CGST+SGST">CGST + SGST</option>
+                      <option value="SGST">SGST</option>
+                      <option value="CGST">CGST</option>
                       <option value="IGST">IGST</option>
                     </select>
                   </div>
@@ -263,12 +264,22 @@
                     </select>
                   </div>
                 </div> --}}
-                <div class="col-md-12">
+              
+                    <div class="col-md-6">
+                        <div class="form-group">
+                          <label>Transport-Dispatch <span class="text-danger">*</span></label>
+                          <input class="form-control text-right" type="text" name="transport_dispatch" value="" placeholder="">
+                        </div>
+                      </div>
+
+                    <div class="col-md-6">
                   <div class="form-group">
-                    <label>Other Information <span class="text-danger">*</span></label>
+                    <label>Remark <span class="text-danger">*</span></label>
                     <textarea class="form-control" name="note"></textarea>
                   </div>
                 </div>
+                 
+             
               </div>
               <div class="login-btn-inner">
                 <div class="row">
@@ -644,29 +655,32 @@ $.validator.addMethod("minDate", function(value, element) {
                         note: {
                             required: true,
                         },
-                        'addmore[][part_no_id]': {
+                        transport_dispatch :{
+                            required :true,
+                        },
+                        'addmore[0][part_no_id]': {
                             required: true,
                         },
-                        'addmore[][description]': {
+                        // 'addmore[0][description]': {
+                        //     required: true,
+                        // },
+                        'addmore[0][due_date]': {
                             required: true,
                         },
-                        'addmore[][due_date]': {
+                        'addmore[0][quantity]': {
                             required: true,
                         },
-                        'addmore[][quantity]': {
-                            required: true,
-                        },
-                        'addmore[][unit]': {
+                        'addmore[0][unit]': {
                             required: true,
                         },
                         'addmore[0][hsn_id]': {
                         required: true,
                         maxlength: 255
                     },
-                        'addmore[][rate]': {
+                        'addmore[0][rate]': {
                             required: true,
                         },
-                        'addmore[][amount]': {
+                        'addmore[0][amount]': {
                             required: true,
                         },
 
@@ -705,29 +719,32 @@ $.validator.addMethod("minDate", function(value, element) {
                         note: {
                             required: "Please Enter the Other Information",
                         },
-                        'addmore[][part_no_id]': {
+                        transport_dispatch : {
+                            required: "Please Enter the transport dispatch",
+                        },
+                        'addmore[0][part_no_id]': {
                             required: "Please Enter the Part Number",
                         },
-                        'addmore[][description]': {
-                            required: "Please Enter the Description",
-                        },
-                        'addmore[][due_date]': {
+                        // 'addmore[0][description]': {
+                        //     required: "Please Enter the Description",
+                        // },
+                        'addmore[0][due_date]': {
                             required: "Please Enter the Due Date",
                         },
-                        'addmore[][quantity]': {
+                        'addmore[0][quantity]': {
                             required: "Please Enter the Quantity",
                         },
-                        'addmore[][unit]': {
+                        'addmore[0][unit]': {
                             required: "Please Enter the Unit",
                         },
                         'addmore[0][hsn_id]': {
                         required: "Please enter the hsn.",
                         maxlength: "hsn_id must be at most 255 characters long."
                     },
-                        'addmore[][rate]': {
+                        'addmore[0][rate]': {
                             required: "Please Enter the Rate", 
                         },
-                        'addmore[][amount]': {
+                        'addmore[0][amount]': {
                             required: "Please Enter the Amount",
                         },
                         

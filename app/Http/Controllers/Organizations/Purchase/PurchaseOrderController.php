@@ -29,8 +29,10 @@ class PurchaseOrderController extends Controller
 
     }
 
-    public function index($requistition_id)
+    public function index($requistition_id, $business_details_id)
     {
+        // dd($business_details_id);
+        // die();
         // $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL')];
         // $getOutput = PurchaseOrdersModel::where('requisition_id', base64_decode($requistition_id))->get();
         $getOutput = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
@@ -38,6 +40,8 @@ class PurchaseOrderController extends Controller
         ->whereNull('purchase_status_from_owner')
         // ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
         ->where('requisition_id', base64_decode($requistition_id))
+        ->where('business_details_id', base64_decode($business_details_id))
+        ->orderBy('purchase_orders.updated_at', 'desc')
         ->get();
        
 // dd($getOutput);
@@ -46,20 +50,24 @@ class PurchaseOrderController extends Controller
             'organizations.purchase.addpurchasedetails.list-purchase-orders',
             compact(
                 'getOutput',
-                'requistition_id'
+                'requistition_id',
+                'business_details_id'
             )
         );
     }
 
     public function create(Request $request)
     {
+        // $business_details_id = $request->input('business_details_id');
         // dd($request->all());
         // die();
         // dd($request->business_details_id);
         // die();
         $requistition_id = $request->requistition_id;
+        $business_detailsId = $request->business_details_id;
         $requistitionId = base64_decode($request->requistition_id);
         $title = 'create invoice';
+        
         $dataPurchaseOrder = PurchaseOrdersModel::where('requisition_id', $requistitionId)->first();
     //    dd($dataPurchaseOrder);
     //    die();
@@ -78,7 +86,8 @@ class PurchaseOrderController extends Controller
                 'dataOutputPartItem',
                 'dataOutputUnitMaster',
                 'dataOutputHSNMaster',
-                'dataPurchaseOrder'
+                'dataPurchaseOrder',
+                'business_detailsId'
             )
         );
     }
@@ -100,7 +109,8 @@ class PurchaseOrderController extends Controller
             // 'discount' => 'required',
             // 'quote_no' => 'required',
             // 'status' => 'required',
-            'note' => 'nullable',
+            'note' => 'required',
+            'transport_dispatch' => 'required',
         ];
 
         $messages = [
@@ -112,6 +122,7 @@ class PurchaseOrderController extends Controller
             'quote_no.required' => 'The quote number is required.',
             // 'status.required' => 'The Status is required.',
             'note.required' => 'The Note is required.',
+            'transport_dispatch.required' => 'The transport dispatch is required.',
         ];
 
         try {
@@ -123,12 +134,15 @@ class PurchaseOrderController extends Controller
                     ->withErrors($validation);
             } else {
                 $requi_id = $request->requistition_id;
+                $businessId = $request->business_details_id;
                 $add_record = $this->service->submitBOMToOwner($request);
                 if ($add_record) {
                     $msg = $add_record['msg'];
                     $status = $add_record['status'];
                     if ($status == 'success') {
-                        return redirect('purchase/list-purchase-order/' . $requi_id)->with(compact('msg', 'status'));
+                        return redirect('purchase/list-purchase-order/' . $requi_id . '/' . $businessId)
+                        ->with(['msg' => $msg, 'status' => $status]);
+                    
                     } else {
                         return redirect('purchase/add-purchase-order')->withInput()->with(compact('msg', 'status'));
                     }
@@ -139,61 +153,61 @@ class PurchaseOrderController extends Controller
         }
     }
 
-    public function store_old(Request $request)
-    {
-        $rules = [
-            // 'client_name' => 'required',
-            // 'phone_number' => 'required',
-            // 'email' => 'required',
-            'tax_id' => 'required',
-            'invoice_date' => 'required',
-            // 'gst_number' => 'required',
-            'payment_terms' => 'required',
-            // 'client_address' => 'required',
-            'discount' => 'required',
-            'quote_no' => 'required',
-            // 'status' => 'required',
-            'note' => 'nullable',
-        ];
+    // public function store_old(Request $request)
+    // {
+    //     $rules = [
+    //         // 'client_name' => 'required',
+    //         // 'phone_number' => 'required',
+    //         // 'email' => 'required',
+    //         'tax_id' => 'required',
+    //         'invoice_date' => 'required',
+    //         // 'gst_number' => 'required',
+    //         'payment_terms' => 'required',
+    //         // 'client_address' => 'required',
+    //         'discount' => 'required',
+    //         'quote_no' => 'required',
+    //         // 'status' => 'required',
+    //         'note' => 'nullable',
+    //     ];
 
 
-        $amount = 0;
-        foreach ($request->items as $item) {
-            $amount += $item['amount'];
-        }
+    //     $amount = 0;
+    //     foreach ($request->items as $item) {
+    //         $amount += $item['amount'];
+    //     }
 
-        $itemsJson = json_encode($request->items);
+    //     $itemsJson = json_encode($request->items);
 
 
-        $invoice = new PurchaseOrdersModel([
-            // 'client_name' => $request->client_name,
-            // 'phone_number' => $request->phone_number,
-            'tax_id' => $request->tax_id,
-            // 'email' => $request->email,
-            // 'client_address' => $request->client_address,
-            // 'gst_number' => $request->gst_number,
-            'invoice_date' => $request->invoice_date,
-            'payment_terms' => $request->payment_terms,
-            'items' => $itemsJson,
-            'discount' => $request->discount,
-            'total' => $amount,
-            'note' => $request->note,
-            'quote_no' => $request->quote_no,
-            // 'status' => $request->status,
-        ]);
+    //     $invoice = new PurchaseOrdersModel([
+    //         // 'client_name' => $request->client_name,
+    //         // 'phone_number' => $request->phone_number,
+    //         'tax_id' => $request->tax_id,
+    //         // 'email' => $request->email,
+    //         // 'client_address' => $request->client_address,
+    //         // 'gst_number' => $request->gst_number,
+    //         'invoice_date' => $request->invoice_date,
+    //         'payment_terms' => $request->payment_terms,
+    //         'items' => $itemsJson,
+    //         'discount' => $request->discount,
+    //         'total' => $amount,
+    //         'note' => $request->note,
+    //         'quote_no' => $request->quote_no,
+    //         // 'status' => $request->status,
+    //     ]);
 
-        if ($invoice->save()) {
-            $msg = 'Invoice has been created';
-            $status = 'success';
+    //     if ($invoice->save()) {
+    //         $msg = 'Invoice has been created';
+    //         $status = 'success';
 
-            return redirect('purchase/list-purchase-order')->with(compact('msg', 'status'));
-        } else {
-            $msg = 'Failed to create invoice';
-            $status = 'error';
+    //         return redirect('purchase/list-purchase-order')->with(compact('msg', 'status'));
+    //     } else {
+    //         $msg = 'Failed to create invoice';
+    //         $status = 'error';
 
-            return redirect('purchase/add-purchase-order')->withInput()->with(compact('msg', 'status'));
-        }
-    }
+    //         return redirect('purchase/add-purchase-order')->withInput()->with(compact('msg', 'status'));
+    //     }
+    // }
 
 
 
@@ -279,7 +293,8 @@ class PurchaseOrderController extends Controller
             $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
             $business_id = $data['purchaseOrder']->business_id;
             $purchaseOrder = $data['purchaseOrder'];
-           
+        //    dd($purchaseOrder);
+        //    die();
             $purchaseOrderDetails = $data['purchaseOrderDetails'];
 
             return view(
@@ -460,6 +475,7 @@ class PurchaseOrderController extends Controller
                 'getOrganizationData' => $getOrganizationData,
                 'getAllRulesAndRegulations' => $getAllRulesAndRegulations,
                 'business_id' => $business_id,
+                // 'staticContent' => $this->getStaticContent(),
             ])
             ->setPaper('a4', 'portrait') // You can change to 'landscape' if needed
             ->setWarnings(false) // Disable warnings (optional)
@@ -474,22 +490,25 @@ class PurchaseOrderController extends Controller
             $pdfPath = storage_path('app/public/purchase_order_' . $purchase_order_id . '.pdf');
     
             // Send email with PDF attachment
-            Mail::send([], [], function ($message) use ($purchaseOrder, $pdfPath) {
-                $message->to($purchaseOrder->vendor_email)
-                    ->subject('Purchase Order Notification')
-                    ->attach($pdfPath);
-                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-            });
-            // $vendorName = $purchaseOrder->vendor_name;
-            // Mail::send([], [], function ($message) use ($purchaseOrder, $pdfPath, $vendorName) {
+            // Mail::send([], [], function ($message) use ($purchaseOrder, $pdfPath) {
             //     $message->to($purchaseOrder->vendor_email)
             //         ->subject('Purchase Order Notification')
-            //         ->attach($pdfPath)
-            //         ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-            
-            //     // Set plain text body
-            //     $message->text("Respected $vendorName, \n\n I hope this message finds you well.\n\nWe would like to place a purchase order with your company for the following items. Please find the details of the purchase order below:\n\nThank you!");
+            //         ->attach($pdfPath);
+            //     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
             // });
+            $vendorName = $purchaseOrder->vendor_name;
+            Mail::send([], [], function ($message) use ($purchaseOrder, $pdfPath, $vendorName) {
+                $message->to($purchaseOrder->vendor_email)
+                    ->subject('Purchase Order Notification')
+                    ->attach($pdfPath)
+                    ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+            
+                // Set plain text body
+                $message->text("Respected $vendorName, \n\n I hope this message finds you well.\n\nWe would like to place a purchase order with your company for the following items. Please find the details of the purchase order below:\n\nThank you!");
+        
+                // \Log::info($this->getStaticContent());
+
+            });
             
             return redirect('purchase/list-purchase-order-approved-sent-to-vendor')->with('status', 'success')->with('msg', 'Purchase order mail sent to vendor.');
     
@@ -498,5 +517,23 @@ class PurchaseOrderController extends Controller
             return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
+
+//     private function getStaticContent()
+// {
+//     return '
+//         <div class="container mt-3">
+//           <h2>Contextual Badges</h2>
+//           <span class="badge bg-primary">Primary</span>
+//           <span class="badge bg-secondary">Secondary</span>
+//           <span class="badge bg-success">Success</span>
+//           <span class="badge bg-danger">Danger</span>
+//           <span class="badge bg-warning">Warning</span>
+//           <span class="badge bg-info">Info</span>
+//           <span class="badge bg-light">Light</span>
+//           <span class="badge bg-dark">Dark</span>
+//         </div>
+//     ';
+// }
+
     
 }

@@ -103,6 +103,10 @@
 
                                         </thead>
                                         <tbody>
+                                            <?php
+                                            // dd($all_gatepass);
+                                            // die();
+                                            ?>
                                             @foreach ($all_gatepass as $data)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
@@ -114,7 +118,7 @@
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
                                                                
-                                                                <a href="{{ route('list-po-details', base64_encode($data->id)) }}">
+                                                                <a href="{{ route('list-po-details', [base64_encode($data->id), base64_encode($data->purchase_orders_id)]) }}">
                                                                     <button data-toggle="tooltip"
                                                                     title="View PO" class="pd-setting-ed">Check PO Details</button></a>
                                                             
