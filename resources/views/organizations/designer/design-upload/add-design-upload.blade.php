@@ -55,10 +55,7 @@
                                         </div>
                                     </div>
                                 @endif
-                                <?php
-// dd($business_details_data);
-// die();
-                                ?>
+                               
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="all-form-element-inner">
                                         <form action="{{ route('update-design-upload') }}" method="POST" id="addDesignsForm" enctype="multipart/form-data">

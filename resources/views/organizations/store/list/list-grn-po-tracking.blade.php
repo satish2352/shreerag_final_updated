@@ -87,13 +87,8 @@
                                                         <input type="date" class="form-control" id="grn_date"
                                                             name="grn_date" placeholder="Enter GRN Date"
                                                             value="{{ date('Y-m-d') }}" readonly>
-
                                                     </div>
-
-                     <?php
-                    //  dd( $purchase_order_data);
-                    //  die();
-                     ?>                               <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                               <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="purchase_orders_id">PO No.:</label>
                                                         <input type="text" class="form-control" id="purchase_orders_id"
                                                             name="purchase_orders_id" placeholder="Enter Purchase No."
@@ -119,10 +114,6 @@
                                                             <th>Rejected Quantity</th>
                                                             {{-- <th>Action</th> --}}
                                                         </tr>
-                                                        <?php
-// dd($purchase_order_details_data);
-// die();
-                                                        ?>
                                                         @foreach ($purchase_order_details_data as $item)
                                                             <tr>
                                                                 <input type="hidden" name="addmore[0][edit_id]"

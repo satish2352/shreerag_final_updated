@@ -46,10 +46,7 @@ class ReturnableChalanController extends Controller
         'tbl_returnable_chalan.business_id','tbl_returnable_chalan.vehicle_id','vendors.vendor_name'
         ,'businesses.customer_po_number','tbl_transport_name.name as transport_name','tbl_vehicle_type.name as vehicle_name'
         )->orderBy('tbl_returnable_chalan.updated_at', 'desc')
-        ->get();
-
-        // dd($getOutput);
-        // die();
+        ->get();        
         return view(
             'organizations.store.returnable-chalan.list-returnable-chalan',
             compact(
@@ -195,9 +192,6 @@ class ReturnableChalanController extends Controller
         $showData = $this->service->getPurchaseOrderDetails($show_data_id);
         $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
         $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
-// dd($showData);
-// die();
-
         return view('organizations.store.returnable-chalan.show-returnable-chalan', compact('showData', 'getOrganizationData', 'getAllRulesAndRegulations'));
     }
     

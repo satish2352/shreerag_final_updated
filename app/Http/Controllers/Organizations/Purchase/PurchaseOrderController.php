@@ -31,22 +31,13 @@ class PurchaseOrderController extends Controller
 
     public function index($requistition_id, $business_details_id)
     {
-        // dd($business_details_id);
-        // die();
-        // $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL')];
-        // $getOutput = PurchaseOrdersModel::where('requisition_id', base64_decode($requistition_id))->get();
         $getOutput = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
-        // ->where('purchase_orders.business_id')
         ->whereNull('purchase_status_from_owner')
-        // ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
         ->where('requisition_id', base64_decode($requistition_id))
         ->where('business_details_id', base64_decode($business_details_id))
         ->orderBy('purchase_orders.updated_at', 'desc')
         ->get();
-       
-// dd($getOutput);
-// die();
-        return view(
+               return view(
             'organizations.purchase.addpurchasedetails.list-purchase-orders',
             compact(
                 'getOutput',
@@ -58,19 +49,12 @@ class PurchaseOrderController extends Controller
 
     public function create(Request $request)
     {
-        // $business_details_id = $request->input('business_details_id');
-        // dd($request->all());
-        // die();
-        // dd($request->business_details_id);
-        // die();
         $requistition_id = $request->requistition_id;
         $business_detailsId = $request->business_details_id;
         $requistitionId = base64_decode($request->requistition_id);
         $title = 'create invoice';
         
         $dataPurchaseOrder = PurchaseOrdersModel::where('requisition_id', $requistitionId)->first();
-    //    dd($dataPurchaseOrder);
-    //    die();
         $dataOutputVendor = Vendors::where('is_active', true)->get();
         $dataOutputTax = Tax::where('is_active', true)->get();
         $dataOutputPartItem = PartItem::where('is_active', true)->get();
@@ -293,8 +277,6 @@ class PurchaseOrderController extends Controller
             $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
             $business_id = $data['purchaseOrder']->business_id;
             $purchaseOrder = $data['purchaseOrder'];
-        //    dd($purchaseOrder);
-        //    die();
             $purchaseOrderDetails = $data['purchaseOrderDetails'];
 
             return view(
@@ -351,6 +333,7 @@ class PurchaseOrderController extends Controller
 
     public function edit(Request $request){
         $edit_data_id = $request->id;
+      
         // $edit_data_id = base64_decode($request->id);
         $editData = $this->service->getById($edit_data_id);
         $dataOutputVendor = Vendors::where('is_active', true)->get();

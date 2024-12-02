@@ -21,13 +21,7 @@ class AllListController extends Controller
     }
     public function acceptdesignbyProduct(){
         try {
-            // $acceptdesign = base64_decode($id);
-           
             $data_output = $this->service->acceptdesignbyProduct();
-            
-            // dd($data_output );
-            // die();
-
         if ($data_output->isNotEmpty()) {
             foreach ($data_output as $data) {
                 $business_id = $data->id; 
@@ -54,15 +48,11 @@ class AllListController extends Controller
         try {
             // Retrieve the list of designs received for correction
             $data_output = $this->service->getAllListDesignRecievedForCorrection();
-    // dd($data_output);
-    // die();
             // Check if $data_output is not empty
             if ($data_output->isNotEmpty()) {
                 // Loop through each item in $data_output to process multiple business_ids
                 foreach ($data_output as $data) {
                     $business_id = $data->id; // Get each business_id from the data
-    // dd($business_id);
-    // die();
                     // Check if business_id is valid (not null or empty)
                     if (!empty($business_id)) {
                         // Prepare the update data

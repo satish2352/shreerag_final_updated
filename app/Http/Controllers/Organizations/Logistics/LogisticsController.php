@@ -29,17 +29,6 @@ class LogisticsController extends Controller
     public function addLogistics($business_id)
     {
         try {
-            // dd( $business_id);
-            // die();
-            // $purchase_order_data = BusinessApplicationProcesses::where('business_details_id', $business_id)
-            // ->leftJoin('businesses', function ($join) {
-            //     $join->on('business_application_processes.business_id', '=', 'businesses.id');
-            // })
-            
-            // ->leftJoin('businesses_details', function($join) {
-            //     $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-            // })
-            // ->first();
             $purchase_order_data = Logistics::where('quantity_tracking_id', $business_id)
             ->leftJoin('tbl_customer_product_quantity_tracking', function ($join) {
                 $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_customer_product_quantity_tracking.id');
@@ -56,8 +45,6 @@ class LogisticsController extends Controller
             $dataOutputVehicleType = VehicleType::where('is_active', 1)->get();
             $dataOutputTransportName = TransportName::where('is_active', 1)->get();
             $editData = $purchase_order_data;
-            // dd($editData);
-            // die();
             return view('organizations.logistics.logisticsdept.add-logistics'
             , compact('dataOutputVendor', 'editData', 'dataOutputVehicleType', 'dataOutputTransportName')
         );

@@ -2501,11 +2501,7 @@
                                                     <li class="right-side"
                                                         style="color:#{{ str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) . str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) . str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) }};">
                                                         <span><b>{{ $data->product_name }}</b> : -</span>
-                                                        <?php
-
-                                                        // dd($data);
-                                                        // die();
-                                                        ?>
+                                                        
                                                         @if($data->quantity_tracking_status ==3005)
                                                         Dispatch Department Product Dispatch Completed Quantity {{$data->completed_quantity}}
                                                         @elseif($data->quantity_tracking_status ==3004)

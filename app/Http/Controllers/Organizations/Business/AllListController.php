@@ -34,8 +34,6 @@ class AllListController extends Controller
     public function getAllListCorrectionToDesignFromProduction(Request $request){
         try {
             $data_output = $this->service->getAllListCorrectionToDesignFromProduction();
-            // dd($data_output);
-            // die();
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
                     $business_id = $data->business_id; 
@@ -87,8 +85,6 @@ class AllListController extends Controller
     public function getAllStoreDeptSentForPurchaseMaterials(Request $request){
         try {
             $data_output = $this->service->getAllStoreDeptSentForPurchaseMaterials();
-        //    dd($data_output);
-        //    die();
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
                     $business_id = $data->business_id; 
@@ -116,8 +112,6 @@ class AllListController extends Controller
     public function getAllListPurchaseOrder(Request $request){
         try {
             $data_output = $this->service->getAllListPurchaseOrder();
-            // dd($data_output);
-            // die();
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
                     $business_id = $data->id; 
@@ -145,8 +139,6 @@ class AllListController extends Controller
     public function getAllListApprovedPurchaseOrderOwnerlogin(Request $request){
         try {
             $data_output = $this->service->getAllListApprovedPurchaseOrderOwnerlogin();
-        //   dd($data_output);
-        //   die();
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
                     $business_id = $data->id; 

@@ -69,8 +69,6 @@ class AllListServices
     public function getAllListBusinessReceivedFromLogistics(){
         try {
             $data_output = $this->repo->getAllListBusinessReceivedFromLogistics();
-        //  dd($data_output);
-        //  die();
             return $data_output;
 
         } catch (\Exception $e) {
@@ -80,8 +78,6 @@ class AllListServices
     public function getAllListBusinessFianaceSendToDispatch(){
         try {
             $data_output = $this->repo->getAllListBusinessFianaceSendToDispatch();
-        //  dd($data_output);
-        //  die();
             return $data_output;
 
         } catch (\Exception $e) {

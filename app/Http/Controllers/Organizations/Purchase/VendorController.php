@@ -173,11 +173,4 @@ class VendorController extends Controller
         }
     } 
     
-
-    // public function add(){
-    //     return view('organizations.purchase.products.add-products');
-    // }
-
-
-
 }

@@ -91,27 +91,27 @@ class DeliveryChalanRepository
             return $e;
         }
     }
-    // public function getById($id) {
-    //     try {
-    //         $designData = DeliveryChalan::leftJoin('purchase_order_details', 'purchase_orders.id', '=', 'purchase_order_details.purchase_id')
-    //             ->select('purchase_order_details.*', 'purchase_order_details.id as purchase_order_details_id', 'purchase_orders.id as purchase_main_id', 'purchase_orders.vendor_id', 'purchase_orders.quote_no', 'purchase_orders.tax_type', 'purchase_orders.tax_id','purchase_orders.invoice_date','purchase_orders.quote_no','purchase_orders.note',  'purchase_orders.payment_terms','purchase_orders.discount')
-    //             ->where('purchase_orders.purchase_orders_id', $id)
-    //             ->get();
-               
-    //         if ($designData->isEmpty()) {
-    //             return null;
-    //         } else {
-    //             return $designData;
-    //         }
-    //     } catch (\Exception $e) {
-    //         return [
-    //             'msg' => 'Failed to get by id Citizen Volunteer.',
-    //             'status' => 'error',
-    //             'error' => $e->getMessage(), 
-    //         ];
-    //     }
-    // }
 
+    public function getById($id) {
+        try {
+            $designData = DeliveryChalan::leftJoin('tbl_delivery_chalan_item_details', 'tbl_delivery_chalan.id', '=', 'tbl_delivery_chalan_item_details.delivery_chalan_id')
+                ->select('tbl_delivery_chalan_item_details.*', 'tbl_delivery_chalan_item_details.id as tbl_delivery_chalan_item_details_id', 'tbl_delivery_chalan.id as purchase_main_id', 'tbl_delivery_chalan.vendor_id',  'tbl_delivery_chalan.tax_type', 'tbl_delivery_chalan.tax_id')
+                ->where('tbl_delivery_chalan.id', $id)
+                ->get();
+               
+            if ($designData->isEmpty()) {
+                return null;
+            } else {
+                return $designData;
+            }
+        } catch (\Exception $e) {
+            return [
+                'msg' => 'Failed to get by id Citizen Volunteer.',
+                'status' => 'error',
+                'error' => $e->getMessage(), 
+            ];
+        }
+    }
     public function getPurchaseOrderDetails($id)
     {
         try {
@@ -170,8 +170,6 @@ class DeliveryChalanRepository
                      'tbl_delivery_chalan_item_details.amount',
                 )
                 ->get();
-                // dd($purchaseOrder);
-                // die();
             return [
                 'purchaseOrder' => $purchaseOrder,
                 'purchaseOrderDetails' => $purchaseOrderDetails,

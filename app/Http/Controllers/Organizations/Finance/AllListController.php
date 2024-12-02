@@ -74,8 +74,6 @@ class AllListController extends Controller
     {
         try {
             $data_output = $this->service->getAllListBusinessReceivedFromLogistics();
-            // dd($data_output);
-            // die();
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
                     $business_details_id = $data->business_details_id; 

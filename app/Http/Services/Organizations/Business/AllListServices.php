@@ -23,8 +23,6 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->getAllListForwardedToDesign();
-            // dd($data_output);
-            // die();
             return $data_output;
 
         } catch (\Exception $e) {
@@ -162,8 +160,6 @@ class AllListServices
     {
         try {
             $data = $this->repo->getAllListMaterialSentFromQualityToStoreGeneratedGRN();
-            // dd($data);
-            // die();
             return $data;
         } catch (\Exception $e) {
             return $e;
@@ -200,8 +196,6 @@ class AllListServices
     public function getOwnerFinalAllCompletedProductionLogistics(){
         try {
           $data_output = $this->repo->getOwnerFinalAllCompletedProductionLogistics();
-    //    dd($data_output);
-    //    die();
           return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -210,8 +204,6 @@ class AllListServices
     public function getOwnerAllListBusinessReceivedFromLogistics(){
         try {
             $data_output = $this->repo->getOwnerAllListBusinessReceivedFromLogistics();
-        //  dd($data_output);
-        //  die();
             return $data_output;
 
         } catch (\Exception $e) {
@@ -221,8 +213,6 @@ class AllListServices
     public function getOwnerAllListBusinessFianaceSendToDispatch(){
         try {
             $data_output = $this->repo->getOwnerAllListBusinessFianaceSendToDispatch();
-        //  dd($data_output);
-        //  die();
             return $data_output;
 
         } catch (\Exception $e) {

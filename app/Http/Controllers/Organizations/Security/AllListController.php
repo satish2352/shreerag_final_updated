@@ -48,15 +48,8 @@ class AllListController extends Controller
                   'production.business_id',
                   'production.id as productionId',
                   'purchase_orders.purchase_orders_id'
-                //   'design_revision_for_prod.reject_reason_prod',
-                //   'design_revision_for_prod.id as design_revision_for_prod_id',
-                //   'designs.bom_image',
-                //   'designs.design_image'
-      
-              )
+                            )
               ->get();
-// dd($data_output);
-// die();
               if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
                     $business_id = $data->id; 

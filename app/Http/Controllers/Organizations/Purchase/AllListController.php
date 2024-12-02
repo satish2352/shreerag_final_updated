@@ -48,13 +48,9 @@ class AllListController extends Controller
 
         try {
             $data_output = $this->service->getAllListMaterialReceivedForPurchase();
-            // dd($data_output);
-            // die();
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
                     $business_details = $data->business_details_id; 
-                    // dd($business_details);
-                    // die();
                     if (!empty($business_details)) {
                         $update_data['purchase_is_view'] = '1';
                         NotificationStatus::where('purchase_is_view', '0')

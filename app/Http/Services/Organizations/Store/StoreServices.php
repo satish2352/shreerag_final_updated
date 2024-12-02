@@ -57,8 +57,6 @@ class StoreServices
     public function editProductMaterialWiseAdd($id) {
         try {
             $data_output = $this->repo->editProductMaterialWiseAdd($id);
-            // dd($data_output);
-            // die();
 return $data_output;
         } catch (\Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
@@ -67,8 +65,6 @@ return $data_output;
     public function updateProductMaterialWiseAdd($request) {
         try {
             $result = $this->repo->updateProductMaterialWiseAdd($request);
-            // dd( $result);
-            // die();
             return $result;
         } catch (\Exception $e) {
             return ['status' => 'error', 'message' => $e->getMessage()];

@@ -21,18 +21,9 @@ class LogisticsRepository  {
 public function storeLogistics($request)
 {
     try {
-        // dd($request);
-        // die();
-        // $dataOutput = Logistics::get();
-        // $dataOutput = new Logistics();
-        // $dataOutput = Logistics::find($request->id);
-        // $dataOutput = Logistics::where('id', $request->id)->first();
-        // $dataOutput = BusinessApplicationProcesses::where('business_id', $request->business_id)->first();
+      
         $dataOutput = Logistics::where('quantity_tracking_id', $request->business_id)->first();
-        // dd($dataOutput);
-        // die();
         if ($dataOutput) {
-            // Update the fields
             $dataOutput->vehicle_type_id = $request->vehicle_type_id;
             $dataOutput->transport_name_id = $request->transport_name_id;
             $dataOutput->truck_no = $request->truck_no;
@@ -55,9 +46,6 @@ public function storeLogistics($request)
                
                 $quantity_tracking->quantity_tracking_status = config('constants.LOGISTICS_DEPARTMENT.UPDATE_INPROCESS_COMPLETED_QUANLTITY_IN_LOGISTICS_DEPT');
                 $quantity_tracking->save();
-                // dd($quantity_tracking);
-                // die();
-                  // $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
             $update_data_admin['off_canvas_status'] = 19;
             $update_data_business['off_canvas_status'] = 19;
             $update_data_admin['is_view'] = '0';

@@ -30,8 +30,6 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->getAllListDesignRecievedForMaterialBusinessWise($business_id);
-        //   dd($data_output );
-        //   die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -86,10 +84,7 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->getAllListMaterialReceivedFromQualityPOTrackingBusinessWise($purchase_order_id);
-        // dd($data_output);
-        // die();
             return $data_output;
-
         } catch (\Exception $e) {
             return $e;
         }

@@ -29,15 +29,10 @@ class StoreRepository
     public function orderAcceptedAndMaterialForwareded($id)
     {
         try {
-            // $business_details_id = $id;
             $id = base64_decode($id); // Assuming $encodedId is base64 encoded
-            // dd($id); // Dump and die
             
             $business_application = BusinessApplicationProcesses::where('business_details_id', $id)->first();
-        
             if ($business_application) {
-                //  $business_application->business_details_id = $id;
-
                 $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION');
                 $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.ACCEPTED_DESIGN_BY_PRODUCTION');
                 $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.LIST_BOM_PART_MATERIAL_RECIVED_FROM_STORE_DEPT_FOR_PRODUCTION');
@@ -116,7 +111,6 @@ class StoreRepository
                 'status' => 'success'
             ];
         } catch (\Exception $e) {
-            dd($e->getMessage());
             return [
                 'msg' => $e->getMessage(),
                 'status' => 'error'
@@ -163,14 +157,7 @@ class StoreRepository
     }
         public function editProductMaterialWiseAdd($id) {
         try {
-            // dd($id);
             $id = base64_decode($id); 
-           
-
-            // $array_to_be_check = [
-            //     config('constants.PRODUCTION_DEPARTMENT.LIST_BOM_PART_MATERIAL_RECIVED_FROM_STORE_DEPT_FOR_PRODUCTION')
-            // ];
-    
             // Fetch all related data
             $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
@@ -286,18 +273,8 @@ class StoreRepository
                 $dataOutput->design_id = $dataOutput_ProductionDetails->design_id;
                 $dataOutput->business_details_id = $dataOutput_ProductionDetails->business_details_id;
                 $dataOutput->production_id = $dataOutput_ProductionDetails->production_id;
-                // dd($dataOutput);
-                // die();
                 $dataOutput->save();
-
-               
-            
-    // $partItemId = (int) $item['id'];
-
-    
             $existingEntry = ProductionDetails::find($dataOutput->id);
-            // dd($existingEntry);
-            // die();
 // Ensure $existingEntry exists and has a part_item_id
 if ($existingEntry && isset($existingEntry->part_item_id)) {
 
@@ -345,8 +322,6 @@ if ($existingEntry && isset($existingEntry->part_item_id)) {
             $businessOutput = BusinessApplicationProcesses::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)
                 ->firstOrFail();
             $businessOutput->product_production_inprocess_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_INPROCESS_FOR_PRODUCTION');
-        //   dd($businessOutput);
-        //   die();
             $businessOutput->save();
                             
             return [

@@ -48,11 +48,6 @@
                                         </div>
                                     </div>
                                 @endif
-                                <?php
-
-                                // dd($editData);
-                                // die();
-                                ?>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="all-form-element-inner">
                                         <form action="{{ route('store-logistics', $editData->quantity_tracking_id

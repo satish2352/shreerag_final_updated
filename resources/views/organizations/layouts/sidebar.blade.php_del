@@ -4,7 +4,7 @@
         <a href="index.html"><img class="main-logo" src="{{asset('img/logo/logo_updated.png')}}" alt=""></a>
         <strong><img src="{{asset('img/logo/logosn.png')}}" alt=""></strong>
       </div>
-{{ dd(config('App.AllConstant.ROLE_ID.SUPER')) }}
+
       <div class="left-custom-menu-adp-wrap comment-scrollbar no-print">
         <nav class="sidebar-nav left-sidebar-menu-pro">
           <ul class="metismenu" id="menu1">

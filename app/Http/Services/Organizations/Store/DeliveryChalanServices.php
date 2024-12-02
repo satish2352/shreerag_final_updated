@@ -57,8 +57,6 @@ use Config;
     {
         try {
             $result = $this->repo->submitBOMToOwner($request);
-            // dd($result);
-            // die();
             if ($result['status'] === 'success') {
                 return ['status' => 'success', 'msg' => 'This business send to Design Department Successfully.'];
             } else {
@@ -68,7 +66,16 @@ use Config;
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
+    public function getById($id){
+        try {
+           $data_output = $this->repo->getById($id);
+         
+           return $data_output;
 
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     // public function addAll($request)
     // {
     //     try {
@@ -111,8 +118,6 @@ use Config;
     {
         try {
             $result = $this->repo->getPurchaseOrderDetails($id);
-            // dd($result);
-            // die();
             return $result;
         } catch (\Exception $e) {
             return $e;

@@ -41,10 +41,6 @@
                                     </div>
                                 </div>
                             @endif
-                           <?php
-                        //    dd($productDetails->id);
-                        //    die();
-                           ?>
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="all-form-element-inner">
                              <form action="{{ route('update-material-list-bom-wise', $id) }}" method="POST" id="addProductForm" enctype="multipart/form-data">
@@ -92,10 +88,6 @@
                                                             <select class="form-control part-no" name="addmore[{{ $index }}][unit]">
                                                                 <option value="">Select Part Item</option>
                                                                 @foreach ($dataOutputPartItem as $partItem)
-                                                            <?php
-                                                                // dd($dataOutputPartItem);
-                                                                // die();
-                                                            ?>
                                                                     <option value="{{ $partItem->id }}" {{ $partItem->id == $item->unit ? 'selected' : '' }}>
                                                                         {{ $partItem->description }}
                                                                     </option>
@@ -114,20 +106,7 @@
                                                                     </option>
                                                                 @endforeach
                                                             </select>
-                                                        </td>
-                                                        {{-- <td>
-                                                            <input class="form-control unit" name="addmore[{{ $index }}][unit]" type="text" value="{{ $item->unit }}">
-                                                        </td> --}}
-                                                        {{-- <td>
-                                                            <select class="form-control mb-2" name="addmore[0][unit]" id="">
-                                                                <option value="" default>Select Unit</option>
-                                                                @foreach ($dataOutputUnitMaster as $data)
-                                                                        <option value="{{ $data['id'] }}" >
-                                                                            {{ $data['name'] }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </td> --}}
-                                                        
+                                                        </td>                                                        
                                                         <td>
                                                             <input type="checkbox" name="addmore[{{ $index }}][material_send_production]" value="1" {{ $item->material_send_production ? 'checked' : '' }}>
 
@@ -146,14 +125,6 @@
                                 <div class="login-btn-inner">
                                     <button class="btn btn-sm btn-primary" type="submit" id="saveBtn">Save Data</button>
                                 </div>
-                                {{-- <a href="{{ route('accepted-and-material-sent', base64_encode($productDetails->id)) }}">
-                                    <button data-toggle="tooltip" title="Requirement forwarded for production" class="pd-setting-ed">
-                                        Requirement forwarded for production
-                                    </button>
-                                </a> --}}
-                                {{-- <div class="login-btn-inner">
-                                    <button class="btn btn-sm btn-primary" type="submit">Save Data</button>
-                                </div> --}}
                             </form>
                             
                                 
@@ -171,72 +142,7 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
-{{-- <script>
 
-$(document).ready(function() {
-
-    var rowCount = $("#purchase_order_table tbody tr").length;
-    var i_count = rowCount > 0 ? rowCount : 0;
-      // Set the initial value of the hidden input to the current count
-      $('#i_id').val(i_count);
-
-$("#add_more_btn").click(function() {
-      i_count++; // Increment the count
-
-        $('#i_id').val(i_count); // Update the hidden input with the new count
-    var newRow = `
-        <tr>
-           <td>
-                    <input type="text" name="addmore[${i_count}][id]" class="form-control" style="min-width:50px" readonly value="${i_count}">
-                </td>
-            <td>
-                <select class="form-control part-no mb-2" name="addmore[${i_count}][part_item_id]">
-                    <option value="">Select Part Item</option>
-                    @foreach ($dataOutputPartItem as $data)
-                        <option value="{{ $data['id'] }}">{{ $data['description'] }}</option>
-                    @endforeach
-                </select>
-            </td>
-            <td>
-                <input class="form-control quantity" name="addmore[${i_count}][quantity]" type="text">
-            </td>
-                <td>
-                    <select class="form-control mb-2" name="addmore[0][unit]" id="">
-                        <option value="" default>Select Unit</option>
-                        @foreach ($dataOutputUnitMaster as $data)
-                                <option value="{{ $data['id'] }}" >
-                                    {{ $data['name'] }}</option>
-                        @endforeach
-                    </select>
-                </td>
-           
-            <td>
-                <input type="checkbox" name="addmore[${i_count}][material_send_production]" value="1">
-            </td>
-            <td>
-                <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete" data-repeater-delete>
-                    <i class="fa fa-trash"></i>
-                </button>
-            </td>
-        </tr>
-    `;
-
-    var row = $(newRow).appendTo("#purchase_order_table tbody");
-
-    // Attach validation to the new row
-    initializeValidation(row);
-    validator.resetForm(); // Reset validation state after adding a new row
-});
-  // Delegate the click event for dynamically added delete buttons
-  $("#purchase_order_table").on("click", ".remove-row", function() {
-        // Remove the closest <tr> element (the row containing the clicked delete button)
-        $(this).closest('tr').remove();
-
-        // Optionally, you can reindex the rows here if needed
-        reindexRows();
-    });
-});
-</script> --}}
 <script>
     $(document).ready(function() {
         // Initialize jQuery Validation

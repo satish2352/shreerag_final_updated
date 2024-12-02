@@ -305,9 +305,6 @@ class BusinessRepository
     public function acceptPurchaseOrder($purchase_order_id, $business_id)
     {
         try {
-
-// dd($business_id);
-// die();
             $business_application = BusinessApplicationProcesses::where('business_details_id', $business_id)->first();
             $po_count = $this->serviceCommon->getNumberOfPOCount($business_id, $purchase_order_id);
             if ($business_application) {
@@ -324,8 +321,6 @@ class BusinessRepository
             $PurchaseOrdersData->owner_po_action_date= date('Y-m-d');
             $PurchaseOrdersData->finanace_store_receipt_status_id = config('constants.FINANCE_DEPARTMENT.INVOICE_APPROVED_FROM_HIGHER_AUTHORITY');
             $PurchaseOrdersData->save();
-           
-             // $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
             $update_data_admin['off_canvas_status'] = 24;
             $update_data_business['off_canvas_status'] = 24;
             $update_data_admin['is_view'] = '0';

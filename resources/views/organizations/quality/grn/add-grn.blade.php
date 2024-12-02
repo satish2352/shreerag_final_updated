@@ -59,10 +59,6 @@
                                         <form action="{{ route('store-grn') }}" method="POST" id="addDesignsForm"
                                             enctype="multipart/form-data">
                                             @csrf
-                                            <?php
-                                            // dd($gatepassId->id);
-                                            // die();
-                                            ?>
                                             <input type="hidden" name="id" id=""
                                             class="form-control" value="{{ $gatepassId->id }}"
                                             placeholder="">
@@ -110,13 +106,7 @@
                                                 {{-- =================== --}}
 
                                                 <div class="row">
-                                                    {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="grn_number">GRN No:</label>
-                                                    <input type="text" class="form-control" id="grn_number"
-                                                        name="grn_number" placeholder="Enter GRN Number">
-                                                </div> --}}
-
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                                                       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="grn_date">GRN Date:</label>
                                                         <input type="date" class="form-control" id="grn_date"
                                                             name="grn_date" placeholder="Enter GRN Date"
@@ -133,80 +123,18 @@
 
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="po_date">PO Date :</label>
-                                                        <!-- <input type="date" class="form-control" id="po_date"
-                                                                name="po_date" placeholder="Enter PO Date"> -->
-
                                                         <input type="date" class="form-control" id="po_date"
                                                             name="po_date" placeholder="Enter PO Date"
                                                             value="{{ $purchase_order_data->created_at->format('Y-m-d') }}"
                                                             readonly>
 
                                                     </div>
-
-                                                    <!-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                            <label for="invoice_no">Invoice No.:</label>
-                                                            <input type="text" class="form-control" id="invoice_no"
-                                                                name="invoice_no" placeholder="Enter Invoice No">
-                                                        </div>
-
-                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                            <label for="invoice_date">Invoice Date:</label>
-                                                            <input type="date" class="form-control" id="invoice_date"
-                                                                name="invoice_date" placeholder="Enter Invoice Date">
-                                                        </div> -->
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="image">Signature:</label>
                                                         <input type="file" class="form-control" accept="image/*"
                                                             id="image" name="image">
                                                     </div>
                                                 </div>
-
-                                                {{-- <div style="margin-top:20px">
-                                                    <table class="table table-bordered" id="dynamicTable">
-                                                        <tr>
-                                                            <th>Description</th>
-                                                            <th>PO Quantity</th>
-                                                            <th>Actual Quantity</th>
-                                                            <th>Accepted Quantity</th>
-                                                            <th>Rejected Quantity</th>
-                                                            
-                                                        </tr>
-                                                        @foreach ($purchase_order_details_data as $item)
-                                                            <tr>
-                                                                <input type="hidden" name="addmore[0][edit_id]"
-                                                                    placeholder="Enter Description" class="form-control"
-                                                                    value="{{ $item->id }}" readonly />
-                                                                <td><input type="text" name="addmore[0][description]"
-                                                                        placeholder="Enter Description"
-                                                                        class="form-control"
-                                                                        value="{{ $item->description }}" readonly />
-                                                                </td>
-                                                                <td><input type="text"
-                                                                        name="addmore[0][chalan_quantity]"
-                                                                        placeholder="Enter Chalan Qty"
-                                                                        class="form-control"
-                                                                        value="{{ $item->quantity }}" readonly />
-                                                                </td>
-                                                                <td><input type="text"
-                                                                        name="addmore[0][actual_quantity]"
-                                                                        placeholder="Enter Actual Qty"
-                                                                        class="form-control actual_quantity" />
-                                                                </td>
-                                                                <td><input type="text"
-                                                                        name="addmore[0][accepted_quantity]"
-                                                                        placeholder="Enter Accepted Qty"
-                                                                        class="form-control accepted_quantity" />
-                                                                </td>
-                                                                <td><input type="text"
-                                                                        name="addmore[0][rejected_quantity]"
-                                                                        placeholder="Enter Rejected Qty"
-                                                                        class="form-control rejected_quantity" readonly />
-                                                                </td>
-                                                              
-                                                            </tr>
-                                                        @endforeach
-                                                    </table>
-                                                </div> --}}
                                                 <div style="margin-top:20px">
                                                     <table class="table table-bordered" id="dynamicTable">
                                                         <tr>
@@ -261,14 +189,7 @@
                                                         <textarea class="form-control" rows="3" type="text" class="form-control" id="remark" name="remark"
                                                             placeholder="Enter Remark"></textarea>
                                                     </div>
-
-
-
-                                                    {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="status">Status:</label>
-                                                    <input type="text" class="form-control" id="status"
-                                                        name="status" placeholder="Enter Status">
-                                               </div>                                             --}}
+                                      
                                                 </div>
 
                                                 <div class="login-btn-inner">

@@ -1,10 +1,7 @@
 @extends('admin.layouts.master')
 @section('content')
     @include('organizations.common-pages.purchase-order-view')
-    <?php
-// dd($purchaseOrder->purchase_status_from_owner);
-// die();
-    ?>
+   
     @if($purchaseOrder->purchase_status_from_owner == 1127)
 
    

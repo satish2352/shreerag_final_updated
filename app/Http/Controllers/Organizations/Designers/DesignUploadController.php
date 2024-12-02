@@ -128,8 +128,6 @@ class DesignUploadController extends Controller
                 ->withErrors($validation);
         } else {
             $update_data = $this->service->updateAll($request);
-            // dd($update_data);
-            // die();
             if ($update_data['status'] == 'success') {
                 return redirect('designdept/list-design-upload')->with($update_data);
             } else {

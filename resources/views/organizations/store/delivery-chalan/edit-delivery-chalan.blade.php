@@ -36,26 +36,10 @@
                     <div class="sparkline12-graph">
                         <div class="basic-login-form-ad">
                             <div class="row">
-                                @if (session('msg'))
-                                    <div class="alert alert-{{ session('status') }}">
-                                        {{ session('msg') }}
-                                    </div>
-                                @endif
+                              
 
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    @if (Session::has('status'))
-                                        <div class="col-md-12">
-                                            <div class="alert alert-{{ Session::get('status') }} alert-dismissible"
-                                                role="alert">
-                                                <button type="button" class="close" data-dismiss="alert"
-                                                    aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                                <strong>{{ ucfirst(Session::get('status')) }}!</strong>
-                                                {{ Session::get('msg') }}
-                                            </div>
-                                        </div>
-                                    @endif
+                                   
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <div class="all-form-element-inner">
                                             <form

@@ -45,10 +45,6 @@
                                         </div>
                                     </div>
                                 @endif
-                              <?php
-                            //   dd($editData);
-                            //   die();
-                              ?>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="all-form-element-inner">
                                         <form  action="{{ route('store-dispatch', ['id' => $editData->id, 'business_details_id' => $editData->business_details_id]) }}" method="POST"
@@ -165,20 +161,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                               
-                                                {{-- <div class="col-lg-6 col-md-6 col-sm-6">
-                                                    <div class="form-group">
-                                                        <label for="vendor_id">Vendor Company Name <span class="text-danger">*</span></label>
-                                                            <select class="form-control mb-2" name="vendor_id" id="vendor_id">
-                                                            <option value="" default>Vendor Company Name</option>
-                                                            @foreach ($dataOutputVendor as $data)
-                                                                    <option value="{{ $data['id'] }}" >
-                                                                        {{ $data['vendor_company_name'] }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div> --}}
-                                            </div>
+                                                                                           </div>
 
                                             <div class="container-fluid">
                                                 

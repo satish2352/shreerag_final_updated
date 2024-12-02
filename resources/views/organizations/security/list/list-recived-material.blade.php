@@ -93,10 +93,6 @@
 
                                         </thead>
 
-<?php
-// dd($data_output);
-// die();
-?>
 
                                         <tbody>
                                             @foreach ($data_output as $data)
@@ -105,11 +101,7 @@
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
-                                                    {{-- <td>{{ ucwords($data->store_material_sent_date) }}</td> --}}
-                                                    {{-- <td> <a class="img-size" target="_blank"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
-                                                        alt="Design"> Click to view</a>
-                                                </td> --}}
+                                                   
                                                 <td>
                                                     <div style="display: flex; align-items: center;">
                                                            

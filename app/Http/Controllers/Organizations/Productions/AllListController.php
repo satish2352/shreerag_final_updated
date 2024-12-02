@@ -38,24 +38,6 @@ class AllListController extends Controller
     public function getAllNewRequirementBusinessWise($business_id){
         try {
             $data_output = $this->service->getAllNewRequirementBusinessWise($business_id);
-        //    dd($data_output);
-        //    die();
-            // if ($data_output->isNotEmpty()) {
-            //     foreach ($data_output as $data) {
-            //         $business_id = $data->business_details_id; 
-            //         if (!empty($business_id)) {
-            //             $update_data['prod_is_view'] = '1';
-            //             NotificationStatus::where('prod_is_view', '0')
-            //                 ->where('id', $business_id)
-            //                 ->update($update_data);
-            //         }
-            //     }
-            // } else {
-            //     return view('organizations.productions.product.list_design_received_for_production_business_wise', [
-            //         'data_output' => [],
-            //         'message' => 'No data found'
-            //     ]);
-            // }
             return view('organizations.productions.product.list_design_received_for_production_business_wise', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
@@ -156,10 +138,7 @@ class AllListController extends Controller
     
     public function getAllListMaterialRecievedToProduction(){
         try {
-            $data_output = $this->service->getAllListMaterialRecievedToProduction();
-            // dd( $data_output);
-            // die();
-           
+            $data_output = $this->service->getAllListMaterialRecievedToProduction();           
             if ($data_output->isNotEmpty()) {
                foreach ($data_output as $data) {
                    $business_details_id = $data->id; 

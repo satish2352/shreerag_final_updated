@@ -51,10 +51,7 @@ class GatepassController extends Controller
         try {
            
             $businessDetailsId = base64_decode($id);
-            // dd($businessDetailsId);
-            // die();
             $purchaseOrderId = base64_decode($purchase_order_id);
-            // Fetch the purchase order along with vendor and related purchase order details
             $data = PurchaseOrdersModel::leftJoin('businesses_details', function($join) {
                 $join->on('purchase_orders.business_details_id', '=', 'businesses_details.id');
               })
@@ -104,17 +101,12 @@ class GatepassController extends Controller
                     'tbl_unit.name as unit_name' ,
                    
                 )->get();
-                // dd($data);
-                // die();
-            // Separate the purchase order data and details
             $purchaseOrder = $data->first();
             $purchaseOrderDetails = $data;
  
-            // Extract business_id from the fetched purchase order
             $business_id = $purchaseOrder->business_id;
             $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
          
-            // Pass all necessary data to the view
             return view('organizations.security.gatepass.list-particular-purchase-order-details', compact(
                 'purchase_order_id',
                 'purchaseOrder',
@@ -124,7 +116,6 @@ class GatepassController extends Controller
                 'businessDetailsId'
             ));
         } catch (\Exception $e) {
-            // Handle exceptions and errors
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -244,10 +235,7 @@ class GatepassController extends Controller
                     ->withInput()
                     ->withErrors($validation);
             } else {
-                $update_data = $this->service->updateAll($request);
-
-                // dd($update_data);
-                // die();
+                $update_data = $this->service->updateAll($request);               
                 if ($update_data) {
                     $msg = $update_data['msg'];
                     $status = $update_data['status'];

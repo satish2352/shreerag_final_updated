@@ -21,10 +21,7 @@
             <div class="main-sparkline13-hd">
               <h1>Purchase Order <span class="table-project-n">Form</span> </h1>
             </div><br>
-           <?php
-// dd($business_details_id);
-// die();
-           ?>
+          
             <form action="{{route('store-purchase-order')}} " id="forms" method="post" enctype="multipart/form-data" id="purchase_order_table">
               @csrf
               <input class="form-control" type="hidden" name="business_details_id" id="business_details_id" value="{{$business_detailsId}}">

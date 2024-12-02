@@ -112,8 +112,6 @@ class ReturnableChalanRepository
         try {
 
             $return_id = $id;
-            // dd($return_id);
-            // die();
             $purchaseOrder = ReturnableChalan::join('vendors', 'vendors.id', '=', 'tbl_returnable_chalan.vendor_id')
             ->join('tbl_tax', 'tbl_tax.id', '=', 'tbl_returnable_chalan.tax_id')
                 ->select(
@@ -131,8 +129,6 @@ class ReturnableChalanRepository
                 )
                 ->where('tbl_returnable_chalan.id', $return_id)
                 ->first();
-    // dd($purchaseOrder);
-    // die();
             if (!$purchaseOrder) {
                 throw new \Exception('Purchase order not found.');
             }
