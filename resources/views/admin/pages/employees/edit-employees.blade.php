@@ -136,7 +136,7 @@
         </div>
     </div>
 </div>
-  <script src="{{asset('js/vendor/jquery-1.11.3.min.js')}}"></script>
+  {{-- <script src="{{asset('js/vendor/jquery-1.11.3.min.js')}}"></script> --}}
     <script src="{{asset('js/password-meter/pwstrength-bootstrap.min.js')}}"></script>
     <script src="{{asset('js/password-meter/zxcvbn.js')}}"></script>
     <script src="{{asset('js/password-meter/password-meter-active.js')}}"></script>

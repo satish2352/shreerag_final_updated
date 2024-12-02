@@ -105,7 +105,7 @@
         </div>
     </div>
 </div>
-    <script src="js/vendor/jquery-1.11.3.min.js"></script>
+    {{-- <script src="js/vendor/jquery-1.11.3.min.js"></script> --}}
     <script src="js/password-meter/pwstrength-bootstrap.min.js"></script>
     <script src="js/password-meter/zxcvbn.js"></script>
     <script src="js/password-meter/password-meter-active.js"></script>

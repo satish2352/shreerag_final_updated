@@ -77,11 +77,21 @@
         max-width: 90px !important;
     }
     @media print {
-        img {
-            max-width: 90px !important;
-            height: auto;
-        }
+    img {
+        width: 10px !important;
+        height: auto !important;
     }
+    /* Center text for print */
+    .img-size {
+        width: 100px;
+    }
+    .delivery-challan {
+        text-align: center !important;
+        font-size: 20px;
+        font-weight: bold;
+    }
+}
+
 
     /* table tr td {
                                 border: 1px solid red;
@@ -99,24 +109,25 @@
                                     <!-- Header Section -->
                                     <div style=" padding-bottom: 10px; display: flex; align-items: center;">
                                         <!-- Left Side: Image -->
-                                        <div style="flex: 1; width: :90px !important;">
-                                            <img class="img-size"   src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}"
-                                                alt="{{ strip_tags($getOrganizationData['company_name']) }} Image"  />
+                                        <div style="width:20%;">
+                                        <img class="img-size"
+                                        src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}"
+                                        alt="{{ strip_tags($getOrganizationData['company_name']) }} Image"
+                                        style="width: 100px; padding:10px;" /> <!-- Inline style here may override print styles -->
                                         </div>
-                                    
+                                    <div style="width:80%; justify-content: center; align-items: center; text-align: center;">
                                         <!-- Center: Delivery Chalan Text -->
                                         <div style="flex: 2; ">
-                                            <span style="text-align: left; font-size: 20px; font-weight: bold;">
+                                       <div class="text-align:center;">
+                                        <span style="text-align: center; font-size: 20px; font-weight: bold;">
                                             DELIVERY CHALLAN</br>
                                             </span>
+                                       </div>
                                             <span>(In Case of goods sent for the Job Work Under Section 143 of GST Act) </span>
                                         </div>
-                                     
                                     </div>
-                                    
+                                    </div>
                                 <table style="width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px;">
-                                    {{-- <table style="width: 100%; border-collapse: collapse;"> --}}
-                                        <!-- Organization Details -->
                                         <tr>
                                             <td style="width: 50%; padding: 10px; border: 1px solid black; padding: 5px">
                                                 <strong><p style="font-size: 20px; margin-bottom:0px;">{{ $getOrganizationData->company_name }}</p></strong><br>
