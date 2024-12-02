@@ -196,7 +196,10 @@
         <div class="row ">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="sparkline14-list">
-                    @if (session()->get('role_id') == config('constants.ROLE_ID.HR'))
+                    @php
+                        $role = session()->get('role_id');
+                    @endphp
+                   @if ($role == config('constants.ROLE_ID.HR'))
                     <div class="product-sales-area mg-tb-30">
                         <!-- <div class="container-fluid"> -->
                         <div class="row">
@@ -388,8 +391,8 @@
                                 </div>
                             </div>
                     </div>
-                    @endif
-                    @if (session()->get('role_id') == config('constants.ROLE_ID.DESIGNER'))
+                    @elseif ($role == config('constants.ROLE_ID.DESIGNER'))
+                  
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
                             <div class="col-xl-4 col-sm-6 col-12">
@@ -514,9 +517,7 @@
                             </div>
                         </div>
                     </div>
-                    @endif
-                    @if (session()->get('role_id') == config('constants.ROLE_ID.PRODUCTION'))
-                  
+                    @elseif ($role == config('constants.ROLE_ID.PRODUCTION'))                  
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
                             <div class="col-xl-4 col-sm-6 col-12">
@@ -706,9 +707,7 @@
                             </div>
                         </div>
                     </div>
-                    @endif
-                    @if (session()->get('role_id') == config('constants.ROLE_ID.STORE'))
-                    
+                    @elseif ($role == config('constants.ROLE_ID.STORE')) 
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
                             <div class="col-xl-4 col-sm-6 col-12">
@@ -865,8 +864,7 @@
                             </div>
                         </div>
                     </div> 
-                    @endif
-                    @if (session()->get('role_id') == config('constants.ROLE_ID.PURCHASE'))
+                    @elseif ($role == config('constants.ROLE_ID.PURCHASE')) 
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
                             <div class="col-xl-4 col-sm-6 col-12">
@@ -1053,8 +1051,7 @@
                             </div>
                         </div>
                     </div>
-                    @endif
-                    @if (session()->get('role_id') == config('constants.ROLE_ID.SECURITY'))
+                    @elseif ($role == config('constants.ROLE_ID.SECURITY')) 
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
                             <div class="col-xl-4 col-sm-6 col-12">
@@ -1089,9 +1086,7 @@
                             </div>
                         </div>
                     </div> 
-                    @endif
-
-                    @if (session()->get('role_id') == config('constants.ROLE_ID.QUALITY'))
+                    @elseif ($role == config('constants.ROLE_ID.QUALITY')) 
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
                             <div class="col-xl-4 col-sm-6 col-12">
@@ -1192,9 +1187,8 @@
                           
                         </div>
                     </div> 
-                    @endif
-                    @if (session()->get('role_id') == config('constants.ROLE_ID.LOGISTICS'))
-                    <div class="analysis-progrebar-area mg-b-15">
+                    @elseif ($role == config('constants.ROLE_ID.LOGISTICS')) 
+                   <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
                             <div class="col-xl-4 col-sm-6 col-12">
                                 <div class="card shadow border-0">
@@ -1350,8 +1344,7 @@
                             </div>
                         </div>
                     </div> 
-                    @endif
-                    @if (session()->get('role_id') == config('constants.ROLE_ID.FINANCE'))
+                    @elseif ($role == config('constants.ROLE_ID.FINANCE')) 
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
                             <div class="col-xl-4 col-sm-6 col-12">
@@ -1508,9 +1501,8 @@
                            
                         </div>
                     </div> 
-                    @endif
-
-                    @if (session()->get('role_id') == config('constants.ROLE_ID.INVENTORY'))
+                  
+                    @elseif ($role == config('constants.ROLE_ID.INVENTORY')) 
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
                                     <div class="col-xl-4 col-sm-6 col-12">
@@ -1606,31 +1598,7 @@
                             </div>
                         </div>
                     </div>
-                    @endif  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    @if (session()->get('role_id') == config('constants.ROLE_ID.DISPATCH'))
+                    @elseif ($role == config('constants.ROLE_ID.DISPATCH')) 
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
                     <div class="col-xl-4 col-sm-6 col-12">
@@ -1695,8 +1663,7 @@
                     </div>
                         </div>
                     </div> 
-                    @endif
-                    @if (session()->get('role_id') == config('constants.ROLE_ID.EMPOLYEE'))
+                    @elseif ($role == config('constants.ROLE_ID.EMPOLYEE')) 
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
                             <div class="col-xl-6 col-sm-6 col-12">
@@ -1814,72 +1781,7 @@
                               </div> --}}
                         </div>
                     </div> 
-                    @endif
-                    @if (session()->get('role_id') == config('constants.ROLE_ID.PRODUCTION'))
-                     {{-- <h6>DISPATCH</h6> --}}
-                    {{-- <div class="analysis-progrebar-area mg-b-15">
-                        <div class="row">
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>PO Submited For Sanction</h5>
-                                        <h2><span class="counter">90</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 68%;" class="progress-bar"></div>
-                                        </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 1:32 pm.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>PO Pyament Need To Release</h5>
-                                        <h2><span class="counter">70</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 78%;" class="progress-bar"></div>
-                                        </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 12:32 pm.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>Recive Logistics</h5>
-                                        <h2><span class="counter">70</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 78%;" class="progress-bar"></div>
-                                        </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 12:32 pm.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <div class="analysis-progrebar reso-mg-b-30">
-                                    <div class="analysis-progrebar-content">
-                                        <h5>Submited to Dispatch</h5>
-                                        <h2><span class="counter">70</span>%</h2>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 78%;" class="progress-bar"></div>
-                                        </div>
-                                        <div class="m-t-sm small">
-                                            <p>Server down since 12:32 pm.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
-                    @endif
-                    @if (session()->get('role_id') == config('constants.ROLE_ID.CMS'))
-                    
+                     @elseif ($role == config('constants.ROLE_ID.CMS')) 
                     <div class="analysis-progrebar-area mg-b-15">
                         <div class="row">
                             <div class="col-xl-4 col-sm-6 col-12">
@@ -2097,6 +1999,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     // Step 2: Create Pie Chart using JavaScript

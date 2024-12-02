@@ -104,7 +104,7 @@
                       <th data-field="transport_name" data-editable="false">Transport Name</th>
                       <th data-field="vehicle_name" data-editable="false">Vehicle Name</th>
                       
-                      {{-- <th data-field="status">Status</th> --}}
+                      <th data-field="status">Status</th>
                       <th data-field="action">Action</th>
                     </tr>
 
@@ -138,9 +138,9 @@
                             </a>
                         </div>
                     </td>
-                    {{-- <td>
+                    <td>
                       <a href="{{route('edit-delivery-chalan', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                    </td> --}}
+                    </td>
                     
                     </tr>
                     @endforeach
