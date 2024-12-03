@@ -215,7 +215,8 @@ class AllListRepository
           'designs.bom_image',
           'designs.design_image',
           'purchase_orders.vendor_id',
-          'businesses_details.updated_at'
+          // 'businesses_details.updated_at',
+          'purchase_orders.updated_at'
           )->distinct()
         ->orderBy('purchase_orders.updated_at', 'desc')
         ->get();
