@@ -234,39 +234,34 @@ class AllListController extends Controller
             return $e;
         }
     }  
-    public function getOwnerReceivedGatePass() {
-        try {
-            $all_gatepass = $this->service->getOwnerReceivedGatePass(); // Fetch data from service layer
-            
-            // Check if data exists
-            if ($all_gatepass->isNotEmpty()) {
-                foreach ($all_gatepass as $data) {
-                    $business_id = $data->id;
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('business_id', $business_id)
-                            ->update($update_data);
-                    }
+    public function getOwnerReceivedGatePass()
+{
+    try {
+        // Fetch data from the service layer
+        $all_gatepass = $this->service->getOwnerReceivedGatePass() ?? collect(); // Ensure it's at least an empty collection
+
+        // If data exists, update the `is_view` status
+        if ($all_gatepass->isNotEmpty()) {
+            foreach ($all_gatepass as $data) {
+                $business_id = $data->id;
+                if (!empty($business_id)) {
+                    $update_data['is_view'] = '1';
+                    AdminView::where('is_view', '0')
+                        ->where('business_id', $business_id)
+                        ->update($update_data);
                 }
-            } else {
-                // Set $all_gatepass as empty collection if no data found
-                $all_gatepass = collect();
-                return view('organizations.business.list.list-owner-gatepass', [
-                    'data_output' => $all_gatepass,
-                    'message' => 'No data found',
-                ]);
             }
-    
-            // Return view with data
-            return view('organizations.business.list.list-owner-gatepass', compact('all_gatepass'));
-        } catch (\Exception $e) {
-            // Log the exception and return a friendly message
-            \Log::error($e->getMessage());
-            return back()->withErrors('Something went wrong! Please try again.');
         }
+
+        // Return the view with gate pass data (empty or not)
+        return view('organizations.business.list.list-owner-gatepass', compact('all_gatepass'));
+    } catch (\Exception $e) {
+        // Log the exception and handle it gracefully
+        \Log::error($e->getMessage());
+        return back()->withErrors('Something went wrong! Please try again.');
     }
-    
+}
+
 
     public function getOwnerGRN()
     {
