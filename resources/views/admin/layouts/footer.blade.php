@@ -193,7 +193,7 @@ alert('ID: ' + id);
                                         $('#notification-messages').html(notificationMessages);
                                     
                                 }else{
-                                        $('#notification-count').text('0');
+                                        $('#notification-count').text('');
                                     }
                             }
                         });
@@ -202,7 +202,7 @@ alert('ID: ' + id);
 
 
                 $(document).ready(function(){
-                    setInterval(fetch_new_hold,1000);
+                    setInterval(fetch_new_hold,60000);
                 });
         </script>
 

@@ -95,10 +95,13 @@ class DeliveryChalanRepository
     public function getById($id) {
         try {
             $designData = DeliveryChalan::leftJoin('tbl_delivery_chalan_item_details', 'tbl_delivery_chalan.id', '=', 'tbl_delivery_chalan_item_details.delivery_chalan_id')
-                ->select('tbl_delivery_chalan_item_details.*', 'tbl_delivery_chalan_item_details.id as tbl_delivery_chalan_item_details_id', 'tbl_delivery_chalan.id as purchase_main_id', 'tbl_delivery_chalan.vendor_id',  'tbl_delivery_chalan.tax_type', 'tbl_delivery_chalan.tax_id')
+                ->select('tbl_delivery_chalan_item_details.*', 'tbl_delivery_chalan_item_details.id as tbl_delivery_chalan_item_details_id', 
+                'tbl_delivery_chalan.id as purchase_main_id', 'tbl_delivery_chalan.vendor_id','tbl_delivery_chalan.transport_id', 'tbl_delivery_chalan.vehicle_id', 'tbl_delivery_chalan.business_id','tbl_delivery_chalan.tax_type', 'tbl_delivery_chalan.tax_id','tbl_delivery_chalan.po_date', 
+                'tbl_delivery_chalan.vehicle_number','tbl_delivery_chalan.plant_id', 'tbl_delivery_chalan.vehicle_number')
                 ->where('tbl_delivery_chalan.id', $id)
                 ->get();
-               
+            //    dd($designData);
+            //    die();
             if ($designData->isEmpty()) {
                 return null;
             } else {

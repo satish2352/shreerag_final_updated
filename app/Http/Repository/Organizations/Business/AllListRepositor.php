@@ -367,25 +367,7 @@ class AllListRepositor
           'designs.design_image',
           'businesses_details.updated_at'
           )
-        // ->groupBy('businesses.id','businesses_details.id','businesses_details.product_name',
-        // 'businesses_details.description',
-        // 'businesses_details.quantity',
-        // 'businesses_details.rate',
-        // 'purchase_orders.updated_at'
-        // )
-        // ->select(
-          
-        //   // 'business_application_processes.purchase_order_id',
-        //   'businesses.id',
-        //   'businesses_details.id',
-        
-        //   'businesses_details.product_name',
-        //   'businesses_details.description',
-        //   'businesses_details.quantity',
-        //   'businesses_details.rate',
-        //   'purchase_orders.updated_at'
-        // )
-        ->distinct()->orderBy('purchase_orders.updated_at', 'desc')->get();
+        ->distinct()->orderBy('businesses_details.updated_at', 'desc')->get();
 
       return $data_output;
     } catch (\Exception $e) {

@@ -64,6 +64,10 @@
   
 
                                                         @foreach ($editData as $key => $editDataNew)
+                                                        <?php
+// dd($editDataNew);
+// die();
+                                                        ?>
                                                             @if ($key == 0)
                                                                 <div class="row">
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
@@ -88,12 +92,62 @@
                                                                             @endif
                                                                         </div>
                                                                     </div>
-
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
+                                                                            <label for="transport_name_id">Transport Name</label>&nbsp<span class="red-text">*</span>
+                                                                            <select class="form-control" id="transport_name_id" name="transport_name_id"
+                                                                                onchange="myFunction(this.value)">
+                                                                                <option value="">Select Transport Name</option>
+                                                                                @foreach ($dataOutputTransportName as $role)
+                                                                                <option value="{{ $role['id'] }}"
+                                                                                    {{ old('transport_id', $editDataNew->transport_id) == $role->id ? 'selected' : '' }}>
+                                                                                    {{ $role->name }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                            </select>
+                                                                            @if ($errors->has('transport_name_id'))
+                                                                                <span class="red-text"><?php echo $errors->first('transport_name_id', ':message'); ?></span>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
+                                                                            <label for="vehicle_id">Vehicle Type</label>&nbsp<span class="red-text">*</span>
+                                                                            <select class="form-control" id="vehicle_id" name="vehicle_id"
+                                                                                onchange="myFunction(this.value)">
+                                                                                <option value="">Select Vehicle Type</option>
+                                                                                @foreach ($dataOutputVehicleType as $vehicleType)
+                                                                                <option value="{{ $vehicleType['id'] }}"
+                                                                                    {{ old('vehicle_id', $editDataNew->vehicle_id) == $vehicleType->id ? 'selected' : '' }}>
+                                                                                    {{ $vehicleType->name }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                            </select>
+                                                                            @if ($errors->has('vehicle_id'))
+                                                                                <span class="red-text"><?php echo $errors->first('vehicle_id', ':message'); ?></span>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
+                                                                            <label for="business_id">PO Number (Optional)</label>
+                                                                                <select class="form-control mb-2" name="business_id" id="business_id">
+                                                                                <option value="" default>Select PO Number</option>
+                                                                                @foreach ($dataOutputBusiness as $OutputBusiness)
+                                                                                <option value="{{ $OutputBusiness['id'] }}"
+                                                                                    {{ old('business_id', $editDataNew->business_id) == $OutputBusiness->id ? 'selected' : '' }}>
+                                                                                    {{ $OutputBusiness->customer_po_number }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
                                                                             <label>Tax Type</label>
                                                                             <select class="form-control mb-2" name="tax_type" id="tax_type">
                                                                                 <option value="" {{ old('tax_type') == '' ? 'selected' : '' }}>Select Tax Type</option>
+                                                                                <option value="GST" {{ old('tax_type', $editDataNew->tax_type) == 'GST' ? 'selected' : '' }}>GST</option>
                                                                                 <option value="SGST" {{ old('tax_type', $editDataNew->tax_type) == 'SGST' ? 'selected' : '' }}>SGST</option>
                                                                                 <option value="CGST" {{ old('tax_type', $editDataNew->tax_type) == 'CGST' ? 'selected' : '' }}>CGST</option>
                                                                                 <option value="IGST" {{ old('tax_type', $editDataNew->tax_type) == 'IGST' ? 'selected' : '' }}>IGST</option>
@@ -103,66 +157,102 @@
                                                                             @endif
                                                                         </div>
                                                                     </div>
-                                                                    
-                                                                <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                    <div class="form-group">
-                                                                        <label for="Service">Tax :</label> &nbsp;<span
-                                                                            class="red-text">*</span>
-                                                                        <select class="form-control mb-2"
-                                                                            name="tax_id" id="tax_id">
-                                                                            <option value="" default>Select
-                                                                                Item Part</option>
-                                                                            @foreach ($dataOutputTax as $taxData)
-                                                                                <option value="{{ $taxData['id'] }}"
-                                                                                    {{ old('tax_id', $editDataNew->tax_id) == $taxData->id ? 'selected' : '' }}>
-                                                                                    {{ $taxData->description }}
-                                                                                </option>
-                                                                            @endforeach
-                                                                        </select>
-                                                                        @if ($errors->has('tax_id'))
-                                                                            <span
-                                                                                class="red-text">{{ $errors->first('tax_id') }}</span>
-                                                                        @endif
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
-                                                                            <label>Invoice date <span
-                                                                                    class="text-danger">*</span></label>
-                                                                            <div class="cal-icon">
-                                                                                <input class="form-control datetimepicker"
-                                                                                    type="text" name="invoice_date"
-                                                                                    id="invoice_date"
-                                                                                    value="{{ $editDataNew->invoice_date }}">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                                                        <div class="form-group">
-                                                                            <label>Payment Terms</label>
-                                                                            <select name="payment_terms"
-                                                                                class="form-control"
-                                                                                title="select payment terms"
-                                                                                id="payment_terms">
-                                                                                <option value="">Select Payment Terms
-                                                                                </option>
-                                                                                <option value="30"
-                                                                                    {{ $editDataNew->payment_terms == 30 ? 'selected' : '' }}>
-                                                                                    30 Days</option>
-                                                                                <option value="60"
-                                                                                    {{ $editDataNew->payment_terms == 60 ? 'selected' : '' }}>
-                                                                                    60 Days</option>
-                                                                                <option value="90"
-                                                                                    {{ $editDataNew->payment_terms == 90 ? 'selected' : '' }}>
-                                                                                    90 Days</option>
+                                                                            <label for="Service">Tax :</label> &nbsp;<span
+                                                                                class="red-text">*</span>
+                                                                            <select class="form-control mb-2"
+                                                                                name="tax_id" id="tax_id">
+                                                                                <option value="" default>Select
+                                                                                    Item Part</option>
+                                                                                @foreach ($dataOutputTax as $taxData)
+                                                                                    <option value="{{ $taxData['id'] }}"
+                                                                                        {{ old('tax_id', $editDataNew->tax_id) == $taxData->id ? 'selected' : '' }}>
+                                                                                        {{ $taxData->name }}
+                                                                                    </option>
+                                                                                @endforeach
                                                                             </select>
-                                                                            @if ($errors->has('payment_terms'))
+                                                                            @if ($errors->has('tax_id'))
                                                                                 <span
-                                                                                    class="red-text">{{ $errors->first('payment_terms') }}</span>
+                                                                                    class="red-text">{{ $errors->first('tax_id') }}</span>
                                                                             @endif
                                                                         </div>
                                                                     </div>
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
+                                                                            <label>Plant Name  <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <div class="cal-icon">
+                                                                                <input class="form-control datetimepicker"
+                                                                                    type="text" name="plant_id"
+                                                                                    id="plant_id"
+                                                                                    value="{{ $editDataNew->plant_id }}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
+                                                                            <label>Vehicle Number <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <div class="cal-icon">
+                                                                                <input class="form-control datetimepicker"
+                                                                                    type="text" name="vehicle_number"
+                                                                                    id="vehicle_number"
+                                                                                    value="{{ $editDataNew->vehicle_number }}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
+                                                                            <label>PO Date <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <div class="cal-icon">
+                                                                                <input class="form-control datetimepicker"
+                                                                                    type="text" name="po_date"
+                                                                                    id="po_date"
+                                                                                    value="{{ $editDataNew->po_date }}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
+                                                                            <label> DC Date <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <div class="cal-icon">
+                                                                                <input class="form-control datetimepicker"
+                                                                                    type="text" name="vehicle_number"
+                                                                                    id="vehicle_number"
+                                                                                    value="{{ $editDataNew->vehicle_number }}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
+                                                                            <label> DC Number<span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <div class="cal-icon">
+                                                                                <input class="form-control datetimepicker"
+                                                                                    type="text" name="vehicle_number"
+                                                                                    id="vehicle_number"
+                                                                                    value="{{ $editDataNew->vehicle_number }}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
+                                                                            <label> LR Number (Optional)<span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <div class="cal-icon">
+                                                                                <input class="form-control datetimepicker"
+                                                                                    type="text" name="vehicle_number"
+                                                                                    id="vehicle_number"
+                                                                                    value="{{ $editDataNew->vehicle_number }}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                   
                                                                 </div>
                                                             @endif
                                                         @endforeach
@@ -264,26 +354,10 @@
                                                             @if ($key == 0)
                                                                 <div class="form-group-inner">
                                                                     <div class="row">
-                                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                            <label for="quote_no">Quote No:  (optional)</label>
-                                                                            <input type="text" class="form-control"
-                                                                                id="quote_no" name="quote_no"
-                                                                                value="{{ $editDataNew->quote_no }}"
-                                                                                placeholder="Enter Terms & Condition">
-                                                                        </div>
-
-                                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                            <label for="discount">Discount:  (optional)</label>
-                                                                            <input type="text" class="form-control"
-                                                                                id="discount" name="discount"
-                                                                                value="{{ $editDataNew->discount }}"
-                                                                                placeholder="Enter discount">
-                                                                        </div>
-                                                                    </div>
 
                                                                     <div class="row">
                                                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                            <label for="note">Other Information
+                                                                            <label for="note">Remark
                                                                                 :</label>
                                                                             <textarea class="form-control" name="note">@if (old('note')){{ old('note') }}@else{{ $editDataNew->note }}@endif</textarea>
 

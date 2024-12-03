@@ -335,14 +335,26 @@ class DeliveryChalanController extends Controller
     public function edit(Request $request){
 
         $edit_data_id = base64_decode($request->id);
-        
         $editData = $this->service->getById($edit_data_id);
-        // dd($editData);
-        // die();
         $dataOutputVendor = Vendors::where('is_active', true)->get();
         $dataOutputTax = Tax::where('is_active', true)->get();
         $dataOutputPartItem = PartItem::where('is_active', true)->get();
-        return view('organizations.store.delivery-chalan.edit-delivery-chalan', compact('editData', 'dataOutputVendor', 'dataOutputTax', 'dataOutputPartItem'));
+        $dataOutputBusiness = Business::where('is_active', true)->get();
+        $dataOutputVehicleType = VehicleType::where('is_active', true)->get();
+        $dataOutputTransportName = TransportName::where('is_active', true)->get();
+        $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
+        $dataOutputHSNMaster = HSNMaster::where('is_active', true)->get();
+        $dataOutputProcessMaster = ProcessMaster::where('is_active', true)->get();
+        return view('organizations.store.delivery-chalan.edit-delivery-chalan', compact('editData', 
+       'dataOutputVendor',
+        'dataOutputTax',
+        'dataOutputPartItem',
+        'dataOutputBusiness',
+        'dataOutputVehicleType',
+        'dataOutputTransportName',
+        'dataOutputUnitMaster',
+        'dataOutputHSNMaster',
+        'dataOutputProcessMaster'));
     }
     
     

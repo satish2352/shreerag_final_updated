@@ -123,7 +123,7 @@ class AllListController extends Controller
                     }
                 }
             } else {
-                return view('organizations.business.list.list-material-list-from-store-to-purchase', [
+                return view('organizations.business.list.list-purchase-order-need-to-check', [
                     'data_output' => [],
                     'message' => 'No data found'
                 ]);

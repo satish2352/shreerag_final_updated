@@ -970,7 +970,7 @@
                                             <li class="nav-item">
                                                 <a href="#" data-toggle="dropdown" role="button"
                                                     aria-expanded="false" class="nav-link dropdown-toggle"><i class="fa fa-bell"></i></i><span
-                                                        class="" style="position: fixed; top: 9px;translate: 9%;" id="notification-count"></span>
+                                                        class="satish" style="position: fixed; top: 9px;translate: 9%;" id="notification-count"></span>
                                                 </a>
                                                 
                                                 <div role="menu"
@@ -980,16 +980,10 @@
                                                     </div>
                                                     <ul class="notification-menu" id="notification-messages" style="background-color:#fff;">
                                                         <li>
-                                                            <!-- <a href="#">
-                                                             
-                                                                <div class="notification-content" >
-                                                                    <h2 style="color:#444;">Business Sent For Design</h2>
-                                                                </div>
-                                                            </a> -->
                                                         </li>
                                                     </ul>
                                                     <div class="notification-view">
-                                                        {{-- <a href="#">View All Notification</a> --}}
+                                                        
 
                                                     </div>
                                                 </div>
@@ -1032,7 +1026,7 @@
         <input type="hidden" name="show_id" id="show_id" value="">
     </form>
 
-    <script>
+    {{-- <script>
         function fetch_new_hold() {
             var TestVal = '1';
             if (TestVal !== '') {
@@ -1041,7 +1035,8 @@
                     type: 'GET',
                     data: { TestVal: TestVal },
                     success: function(response) {
-                        // alert(response);
+                        console.log("response");
+                        console.log(response);
 
                         if (response.notification_count > 0) {
                             $('#notification-count').text(response.notification_count).show(); // Show when count > 0
@@ -1063,7 +1058,7 @@
                             $('#notification-messages').html(notificationMessages);
                         
                         } else {
-                            $('#notification-count').hide(); // Hide when count is 0
+                            $('#satish').hide(); // Hide when count is 0
                         }
                     }
                 });
@@ -1073,4 +1068,4 @@
         $(document).ready(function(){
             setInterval(fetch_new_hold, 1000);
         });
-    </script>
+    </script> --}}
