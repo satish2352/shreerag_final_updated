@@ -106,24 +106,12 @@
                                                     <td>{{ ucwords($data->gatepass_date) }}</td>
                                                     <td>{{ ucwords($data->gatepass_time) }}</td>
                                                     <td>{{ ucwords($data->remark) }}</td>
-
-
-                                                    {{-- <td>
-                                                        
-                                                        <div style="display: flex; align-items: center;">
-                                                            <a href="{{route('edit-gatepass', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                                          
-                                                        </div>
-                                                    </td> --}}
                                                 </tr>
                                                 @empty
                                                 <tr>
                                                     <td colspan="6" class="text-center">No Gate Pass Data Found</td>
                                                 </tr>
                                             @endforelse
-                                            @endforeach
-
-
                                         </tbody>
                                     </table>
                                 </div>
