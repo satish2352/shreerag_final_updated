@@ -234,13 +234,14 @@ class AllListController extends Controller
             return $e;
         }
     }  
-    public function getOwnerReceivedGatePass(){
+    public function getOwnerReceivedGatePass() {
         try {
-            $all_gatepass = $this->service->getOwnerReceivedGatePass();
-          
+            $all_gatepass = $this->service->getOwnerReceivedGatePass(); // Fetch data from service layer
+            
+            // Check if data exists
             if ($all_gatepass->isNotEmpty()) {
                 foreach ($all_gatepass as $data) {
-                    $business_id = $data->id; 
+                    $business_id = $data->id;
                     if (!empty($business_id)) {
                         $update_data['is_view'] = '1';
                         AdminView::where('is_view', '0')
@@ -249,16 +250,23 @@ class AllListController extends Controller
                     }
                 }
             } else {
+                // Set $all_gatepass as empty collection if no data found
+                $all_gatepass = collect();
                 return view('organizations.business.list.list-owner-gatepass', [
-                    'data_output' => [],
-                    'message' => 'No data found'
+                    'data_output' => $all_gatepass,
+                    'message' => 'No data found',
                 ]);
             }
+    
+            // Return view with data
             return view('organizations.business.list.list-owner-gatepass', compact('all_gatepass'));
         } catch (\Exception $e) {
-            return $e;
+            // Log the exception and return a friendly message
+            \Log::error($e->getMessage());
+            return back()->withErrors('Something went wrong! Please try again.');
         }
-    } 
+    }
+    
 
     public function getOwnerGRN()
     {
