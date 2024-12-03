@@ -97,7 +97,7 @@
                                         </thead>
                                         <tbody>
 
-                                            @foreach ($all_gatepass as $data)
+                                            @forelse ($all_gatepass as $data)
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
@@ -116,6 +116,11 @@
                                                         </div>
                                                     </td> --}}
                                                 </tr>
+                                                @empty
+                                                <tr>
+                                                    <td colspan="6" class="text-center">No Gate Pass Data Found</td>
+                                                </tr>
+                                            @endforelse
                                             @endforeach
 
 
