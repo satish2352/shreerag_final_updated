@@ -168,13 +168,14 @@ class AllListController extends Controller
         }
     }
     
-    public function getAllListPurchaseOrderTowardsOwner(Request $request){
+    public function getAllListPurchaseOrderTowardsOwner(Request $request)
+    {
         try {
-
             $data_output = $this->service->getAllListPurchaseOrderTowardsOwner();
-            if ($data_output->isNotEmpty()) {
+    
+            if ($data_output instanceof \Illuminate\Support\Collection && $data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
-                    $business_details_id = $data->id; 
+                    $business_details_id = $data->id;
                     if (!empty($business_details_id)) {
                         $update_data['purchase_is_view'] = '1';
                         NotificationStatus::where('purchase_is_view', '0')
@@ -185,16 +186,21 @@ class AllListController extends Controller
             } else {
                 return view('organizations.purchase.list.list-purchase-order-need-to-check', [
                     'data_output' => [],
-                    'message' => 'No data found for designs received for correction'
+                    'message' => 'No data found for designs received for correction',
                 ]);
             }
-
+    
             return view('organizations.purchase.list.list-purchase-order-need-to-check', compact('data_output'));
         } catch (\Exception $e) {
-            return $e;
+            // Log the error for debugging
+            \Log::error('Error fetching purchase orders: ' . $e->getMessage());
+            return view('organizations.purchase.list.list-purchase-order-need-to-check', [
+                'data_output' => [],
+                'message' => 'An error occurred while fetching purchase orders.',
+            ]);
         }
     }
-
+    
     
 
 }
