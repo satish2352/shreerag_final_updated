@@ -78,7 +78,7 @@ class AllListController extends Controller
     public function getAllListApprovedPurchaseOrder(Request $request){
         try {
             $data_output = $this->service->getAllListApprovedPurchaseOrder();
-            if ($data_output->isNotEmpty()) {
+            if ($data_output instanceof \Illuminate\Support\Collection && $data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
                     $business_id = $data->id; 
                     if (!empty($business_id)) {
@@ -136,7 +136,7 @@ class AllListController extends Controller
 
             $data_output = $this->service->getAllListSubmitedPurchaeOrderByVendor();
           
-            if ($data_output->isNotEmpty()) {
+            if ($data_output instanceof \Illuminate\Support\Collection && $data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
                     $business_id = $data->id; 
                     if (!empty($business_id)) {

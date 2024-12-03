@@ -113,7 +113,7 @@ padding-left: 20px !important;
                                            </tr>
                                            @empty
                                            <tr>
-                                               <td colspan="6" class="text-center">Data Found</td>
+                                               <td colspan="6" class="text-center">Data not Found</td>
                                            </tr>
                                        @endforelse
                                     </tbody>
