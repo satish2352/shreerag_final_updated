@@ -406,7 +406,7 @@ class DeliveryChalanController extends Controller
                             $msg = $update_data['msg'];
                             $status = $update_data['status'];
                             if ($status == 'success') {
-                                return redirect('purchase/list-purchase')->with(compact('msg', 'status'));
+                                return redirect('storedept/list-delivery-chalan')->with(compact('msg', 'status'));
                             } else {
                                 return redirect()->back()
                                     ->withInput()
@@ -431,7 +431,7 @@ class DeliveryChalanController extends Controller
 
                 $id = base64_encode($request->delete_id);
                 if ($status == 'success') {
-                    return redirect('purchase/edit-delivery-chalan/{id}')->with(compact('msg', 'status'));
+                    return redirect('storedept/edit-delivery-chalan/{id}')->with(compact('msg', 'status'));
                     // return redirect()->route('purchase.edit-delivery-chalan', ['id' => $id])
                     // ->with(compact('msg', 'status'));
                 } else {

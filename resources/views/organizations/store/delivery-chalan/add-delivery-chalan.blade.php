@@ -160,22 +160,22 @@
                                                                     <span class="red-text"><?php echo $errors->first('po_date', ':message'); ?></span>
                                                                 @endif
                                                             </div>
-                                                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                                            {{-- <div class="col-lg-4 col-md-4 col-sm-4">
                                                                 <label for="dc_date">DC Date  <span class="text-danger">*</span></label>
                                                                 <input type="date" class="form-control" id="dc_date" value="{{old('dc_date') }}"
                                                                     name="dc_date" placeholder="Enter DC Date">
                                                                     @if ($errors->has('dc_date'))
-                                                                    <span class="red-text"><?php echo $errors->first('dc_date', ':message'); ?></span>
+                                                                    <span class="red-text"><?php //echo $errors->first('dc_date', ':message'); ?></span>
                                                                 @endif
-                                                            </div>
-                                                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                                            </div> --}}
+                                                            {{-- <div class="col-lg-4 col-md-4 col-sm-4">
                                                                 <label for="dc_number">DC Number  <span class="text-danger">*</span></label>
                                                                 <input type="text" class="form-control" id="dc_number" value="{{old('dc_number') }}"
                                                                     name="dc_number" placeholder="Enter DC Number">
                                                                     @if ($errors->has('dc_number'))
-                                                                    <span class="red-text"><?php echo $errors->first('dc_number', ':message'); ?></span>
+                                                                    <span class="red-text"><?php //echo $errors->first('dc_number', ':message'); ?></span>
                                                                 @endif
-                                                            </div>
+                                                            </div> --}}
                                                             <div class="col-lg-4 col-md-4 col-sm-4">
                                                                 <label for="lr_number">LR Number  (Optional)</label>
                                                                 <input type="text" class="form-control" id="lr_number" value="{{old('lr_number') }}"
@@ -376,12 +376,12 @@
                     po_date: {
                         required: true,
                     },
-                    dc_date: {
-                        required: true,
-                    },
-                    dc_number: {
-                        required: true,
-                    },  
+                    // dc_date: {
+                    //     required: true,
+                    // },
+                    // dc_number: {
+                    //     required: true,
+                    // },  
                     // lr_number: {
                     //     required: true,
                     // },
@@ -451,14 +451,14 @@
                         required: "Please select PO date.",
                         date: "Please select a valid date."
                     },
-                    dc_date: {
-                        required: "Please select dc date.",
-                        date: "Please select a valid date."
-                    },
-                    dc_number: {
-                        required: "Please enter dc number.",
-                        date: "Please enter a valid dc number."
-                    },  
+                    // dc_date: {
+                    //     required: "Please select dc date.",
+                    //     date: "Please select a valid date."
+                    // },
+                    // dc_number: {
+                    //     required: "Please enter dc number.",
+                    //     date: "Please enter a valid dc number."
+                    // },  
                     // lr_number: {
                     //     required: "Please enter lr number.",
                     //     date: "Please enter a valid lr number."

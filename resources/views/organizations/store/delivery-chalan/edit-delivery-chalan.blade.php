@@ -94,8 +94,8 @@
                                                                     </div>
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
-                                                                            <label for="transport_name_id">Transport Name</label>&nbsp<span class="red-text">*</span>
-                                                                            <select class="form-control" id="transport_name_id" name="transport_name_id"
+                                                                            <label for="transport_id">Transport Name</label>&nbsp<span class="red-text">*</span>
+                                                                            <select class="form-control" id="transport_id" name="transport_id"
                                                                                 onchange="myFunction(this.value)">
                                                                                 <option value="">Select Transport Name</option>
                                                                                 @foreach ($dataOutputTransportName as $role)
@@ -214,7 +214,7 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                    {{-- <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
                                                                             <label> DC Date <span
                                                                                     class="text-danger">*</span></label>
@@ -238,7 +238,7 @@
                                                                                     value="{{ $editDataNew->vehicle_number }}">
                                                                             </div>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
 
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
@@ -262,10 +262,11 @@
                                                             <table class="table table-bordered" id="dynamicTable">
                                                                 <tr>
                                                                     <th>Part No</th>
-                                                                    <th>Description</th>
-                                                                    <th>Due Date</th>
+                                                                    <th>HSN</th>
+                                                                    <th>Process</th>
                                                                     <th>Quantity</th>
                                                                     <th>Unit</th>
+                                                                    <th>Size</th>
                                                                     <th>Rate</th>
                                                                     <th>Amount</th>
                                                                     <th>Action</th>
@@ -281,34 +282,41 @@
                                                                             name="design_id_{{ $key }}"
                                                                             id="design_id_{{ $key }}"
                                                                             class="form-control"
-                                                                            value="{{ $editDataNew->purchase_order_details_id }}"
+                                                                            value="{{ $editDataNew->tbl_delivery_chalan_item_details_id }}"
                                                                             placeholder="">
                                                                         <td>
-                                                                            <select class="form-control part-no mb-2" name="part_no_id_{{ $key }}" id="">
+                                                                            <select class="form-control part-no mb-2" name="part_item_id_{{ $key }}" id="">
                                                                                 <option value="" default>Select Item</option>
                                                                                 @foreach ($dataOutputPartItem as $data)
                                                                                 <option value="{{ $data['id'] }}"
-                                                                                    {{ old('part_no_id', $editDataNew->part_no_id) == $data->id ? 'selected' : '' }}>
+                                                                                    {{ old('part_item_id', $editDataNew->part_item_id) == $data->id ? 'selected' : '' }}>
+                                                                                    {{ $data->description }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                            </select>
+                                                                        </td> 
+                                                                        <td>
+                                                                            <select class="form-control hsn_id mb-2" name="hsn_id_{{ $key }}" id="">
+                                                                                <option value="" default>Select HSN</option>
+                                                                                @foreach ($dataOutputHSNMaster as $data)
+                                                                                <option value="{{ $data['id'] }}"
+                                                                                    {{ old('hsn_id', $editDataNew->hsn_id) == $data->id ? 'selected' : '' }}>
                                                                                     {{ $data->name }}
                                                                                 </option>
                                                                             @endforeach
                                                                             </select>
-                                                                        </td>
+                                                                        </td>    
                                                                         <td>
-                                                                            <input type="text"
-                                                                                name="description_{{ $key }}"
-                                                                                value="{{ $editDataNew->description }}"
-                                                                                placeholder="Enter Description"
-                                                                                class="form-control description" />
-                                                                        </td>
-
-                                                                        <td>
-                                                                            <input type="date"
-                                                                                name="due_date_{{ $key }}"
-                                                                                value="{{ $editDataNew->due_date }}"
-                                                                                placeholder="Enter Due Date"
-                                                                                class="form-control due_date" />
-                                                                        </td>
+                                                                            <select class="form-control process_id mb-2" name="process_id_{{ $key }}" id="">
+                                                                                <option value="" default>Select Process</option>
+                                                                                @foreach ($dataOutputHSNMaster as $data)
+                                                                                <option value="{{ $data['id'] }}"
+                                                                                    {{ old('process_id', $editDataNew->process_id) == $data->id ? 'selected' : '' }}>
+                                                                                    {{ $data->name }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                            </select>
+                                                                        </td>                                                                     
                                                                         <td>
                                                                             <input type="text"
                                                                                 name="quantity_{{ $key }}"
@@ -317,11 +325,15 @@
                                                                                 class="form-control quantity" />
                                                                         </td>
                                                                         <td>
-                                                                            <input type="text"
-                                                                                name="unit_{{ $key }}"
-                                                                                value="{{ $editDataNew->unit }}"
-                                                                                placeholder="Enter Unit"
-                                                                                class="form-control unit" />
+                                                                            <select class="form-control unit_id mb-2" name="unit_id_{{ $key }}" id="">
+                                                                                <option value="" default>Select Unit</option>
+                                                                                @foreach ($dataOutputUnitMaster as $data)
+                                                                                <option value="{{ $data['id'] }}"
+                                                                                    {{ old('unit_id', $editDataNew->unit_id) == $data->id ? 'selected' : '' }}>
+                                                                                    {{ $data->name }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                            </select>
                                                                         </td>
                                                                         <td>
                                                                             <input type="text"
@@ -330,7 +342,14 @@
                                                                                 placeholder="Enter Rate"
                                                                                 class="form-control rate" />
                                                                         </td>
-
+                                                                        <td>
+                                                                            <input type="text"
+                                                                                name="size_{{ $key }}"
+                                                                                value="{{ $editDataNew->size }}"
+                                                                                placeholder="Enter size"
+                                                                                class="form-control size" />
+                                                                        </td>
+                                                                       
                                                                         <td>
                                                                             <input type="text"
                                                                                 name="amount_{{ $key }}"
@@ -359,7 +378,7 @@
                                                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                                             <label for="note">Remark
                                                                                 :</label>
-                                                                            <textarea class="form-control" name="note">@if (old('note')){{ old('note') }}@else{{ $editDataNew->note }}@endif</textarea>
+                                                                            <textarea class="form-control" name="remark">@if (old('remark')){{ old('remark') }}@else{{ $editDataNew->remark }}@endif</textarea>
 
                                                                         </div>
                                                             @endif
@@ -431,22 +450,29 @@
                     note: {
                         required: true,
                     },
-                    'part_no_id_0': {
+                    'part_item_id_0': {
                         required: true,
                     },
                     // 'description_0': {
                     //     required: true,
                     // },
-                    'due_date_0': {
-                        required: true,
-                    },
+                    
                     'quantity_0': {
                         required: true,
                         digits: true,
                     },
-                    'unit_0': {
+                    'unit_id_0': {
                         required: true,
                     },
+                    'hsn_id_0': {
+                        required: true,
+                        maxlength: 255
+                    },
+                    'process_id_0': {
+                        required: true,
+                        maxlength: 255
+                    },
+                    
                     'rate_0': {
                         required: true,
                         number: true,
@@ -480,22 +506,27 @@
                     note: {
                         required: "Please Enter the Other Information",
                     },
-                    'part_no_id_0': {
+                    'part_item_id_0': {
                         required: "Please enter the Part Number",
                     },
                     // 'description_0': {
                     //     required: "Please enter the Description",
                     // },
-                    'due_date_0': {
-                        required: "Please enter the Due Date",
-                    },
-                   
+                    
                     'quantity_0': {
                         required: "Please enter the Quantity",
                         digits: "Please enter only digits for Quantity",
                     },
-                    'unit_0': {
-                        required: "Please enter the Unit",
+                    'unit_id_0': {
+                        required: "Please enter the unit_id",
+                    },
+                    'hsn_id_0': {
+                        required: "Please enter the hsn_id.",
+                        maxlength: "hsn must be at most 255 characters long."
+                    },
+                    'process_id_0': {
+                        required: "Please enter the process.",
+                        maxlength: "process must be at most 255 characters long."
                     },
                     'rate_0': {
                         required: "Please enter the Rate",
@@ -506,9 +537,8 @@
                     },
                 },
                 errorPlacement: function(error, element) {
-                    if (element.hasClass("part_no_id") ||
-                        element.hasClass("due_date") || 
-                        element.hasClass("quantity") || element.hasClass("unit") || element.hasClass("rate") ||
+                    if (element.hasClass("part_item_id") || element.hasClass("hsn_id") || element.hasClass("process_id") ||
+                        element.hasClass("quantity") || element.hasClass("unit_id") || element.hasClass("rate") ||
                         element.hasClass("amount")) {
                         error.insertAfter(element);
                     } else {
@@ -529,23 +559,46 @@
                     '" placeholder=""> <input type="hidden" name="addmore[' + i +
                     '][purchase_id]" class="form-control" value="' + i + '" placeholder="">' +
                     '<td>' +
-            '<select class="form-control part_no_id mb-2" name="addmore[' + i + '][part_no_id]" id="">' +
+            '<select class="form-control part_item_id mb-2" name="addmore[' + i + '][part_item_id]" id="">' +
                 '<option value="" default>Select Part Item</option>' +
                 '@foreach ($dataOutputPartItem as $data)' +
                     '<option value="{{ $data['id'] }}">{{ $data['description'] }}</option>' +
                 '@endforeach' +
             '</select>' +
             '</td>' +
-                    '<td><input type="text" class="form-control description" name="addmore[' + i +
-                    '][description]" placeholder=" Description" /></td>' +
-                    '<td><input type="date" class="form-control due_date" name="addmore[' + i +
-                    '][due_date]" placeholder=" Due Date" /></td>' +
+                  '<td>' +
+'<select class="form-control hsn_id mb-2" name="addmore[' + i + '][hsn_id]" id="">' +
+                '<option value="" default>Select HSN</option>' +
+                '@foreach ($dataOutputHSNMaster as $data)' +
+                    '<option value="{{ $data['id'] }}">{{ $data['name'] }}</option>' +
+                '@endforeach' +
+            '</select>'+
+            '</td>' + 
+            '<td>' +
+'<select class="form-control process_id mb-2" name="addmore[' + i + '][process_id]" id="">' +
+                '<option value="" default>Select Process</option>' +
+                '@foreach ($dataOutputHSNMaster as $data)' +
+                    '<option value="{{ $data['id'] }}">{{ $data['name'] }}</option>' +
+                '@endforeach' +
+            '</select>'+
+            '</td>' +
                     '<td><input type="text" class="form-control quantity" name="addmore[' + i +
-                        '][quantity]" placeholder=" Quantity" /></td>' +
-                    '<td><input type="text" class="form-control unit" name="addmore[' + i +
-                    '][unit]" placeholder="Unit" /></td>' +
+                        '][quantity]" placeholder=" Quantity" /></td>' +                   
+
+                    '<td>' +
+                    '<select class="form-control unit_id mb-2" name="addmore[' + i + '][unit_id]" id="">' +
+                '<option value="" default>Select Unit</option>' +
+                '@foreach ($dataOutputUnitMaster as $data)' +
+                    '<option value="{{ $data['id'] }}">{{ $data['name'] }}</option>' +
+                '@endforeach' +
+            '</select>' +
+            '</td>' +
+            
+            
                     '<td><input type="text" class="form-control rate" name="addmore[' + i +
                     '][rate]" placeholder=" Rate" /></td>' +
+                    '<td><input type="text" class="form-control size" name="addmore[' + i +
+                        '][size]" placeholder="size" /></td>' +
                     '<td><input type="text" class="form-control amount" name="addmore[' + i +
                     '][amount]" placeholder=" Amount" readonly /></td>' +
                     '<td><a class="remove-tr delete-btn btn btn-danger m-1" title="Delete Tender"><i class="fas fa-archive"></i></a></td>' +
@@ -555,7 +608,7 @@
                 $("#dynamicTable").append(newRow);
 
                 // Reinitialize validation for the new row
-                $('select[name="addmore[' + i + '][part_no_id]"]').rules("add", {
+                $('select[name="addmore[' + i + '][part_item_id]"]').rules("add", {
             required: true,
             messages: {
                 required: "Please select the Part Number",
@@ -567,12 +620,7 @@
                 //         required: "Please enter the Description",
                 //     }
                 // });
-                $('input[name="addmore[' + i + '][due_date]"]').rules("add", {
-                    required: true,
-                    messages: {
-                        required: "Please enter the Due Date",
-                    }
-                });
+             
                 $('input[name="addmore[' + i + '][quantity]"]').rules("add", {
                     required: true,
                     digits: true,
@@ -581,11 +629,11 @@
                         digits: "Please enter only digits for Quantity",
                     }
                 });
-                $('input[name="addmore[' + i + '][unit]"]').rules("add", {
+                $('input[name="addmore[' + i + '][unit_id]"]').rules("add", {
                     required: true,
                     digits: true,
                     messages: {
-                        required: "Please enter the unit",
+                        required: "Please enter the unit_id",
                         
                     }
                 });
@@ -616,16 +664,7 @@
                 return inputDate >= today;
             }, "The date must be today or later.");
 
-            // Initialize date pickers with min date set to today
-            function setMinDateForDueDates() {
-                var today = new Date().toISOString().split('T')[0];
-                $('.due_date').attr('min', today);
-            }
-            setMinDateForDueDates();
-
-            $(document).on('focus', '.due_date', function() {
-                setMinDateForDueDates();
-            });
+           
 
             $(document).on('keyup', '.quantity, .rate', function(e) {
                 var currentRow = $(this).closest("tr");

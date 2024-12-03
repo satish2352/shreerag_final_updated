@@ -86,7 +86,7 @@ padding-left: 20px !important;
 
                                     </thead>
                                     <tbody>
-                                        @foreach($data_output as $data)
+                                        @forelse ($data_output as $data)
                                         <tr>
                                             
                                             <td>{{ $loop->iteration }}</td>
@@ -111,7 +111,11 @@ padding-left: 20px !important;
                                             
                                           
                                            </tr>
-                                        @endforeach
+                                           @empty
+                                           <tr>
+                                               <td colspan="6" class="text-center">Data Found</td>
+                                           </tr>
+                                       @endforelse
                                     </tbody>
                                 </table>
                             </div>

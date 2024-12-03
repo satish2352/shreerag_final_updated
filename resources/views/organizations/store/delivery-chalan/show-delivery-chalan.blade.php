@@ -142,7 +142,7 @@
                                                     <span><strong>Date: </strong></span>
                                                 </div> --}}
                                                 <div style="border-bottom: 1px solid black; padding: 10px; width: 100%; display: flex; justify-content: space-between;">
-                                                    <span><strong>Sr. No.: </strong> {{ $showData['purchaseOrder']->id }}</span>
+                                                    <span><strong>Sr. No.: </strong> {{ $showData['purchaseOrder']->dc_number }}</span>
                                                     <span style="padding-right: 20px;"><strong>Date: </strong> {{ now()->format('d-m-Y') }}</span>
                                                 </div>
                                                 
@@ -219,10 +219,10 @@
                                                     // Calculate the final amount including tax
                                                     $finalAmount = $totalAmount + $taxAmount;
                                                 @endphp
-                                                <td class="no-border" colspan="2">
+                                                {{-- <td class="no-border" colspan="2">
                                                    <div><p style="font-size: 15px;"> <strong>Vehicle No.:-{{ $showData['purchaseOrder']->vehicle_number }}</strong> </p></div>
-                                                </td>
-                                                <td class="no-border" colspan="4"></td>
+                                                </td> --}}
+                                                <td class="no-border" colspan="6"></td>
                                                 <td colspan="2"  style="border: 1px solid black;" class="text-left">
                                                  {{ $taxType }} {{ $showData['purchaseOrder']->tax_number }}% 
                                                 </td>
@@ -231,7 +231,9 @@
                                                 </td>
                                             </tr>
                                             <tr style="border-bottom: 1px solid black;">
-                                                <td class="no-border" colspan="6"></td>
+                                                <td class="no-border" colspan="6">
+                                                    <div><p style="font-size: 15px;"> <strong>Vehicle No.:-{{ $showData['purchaseOrder']->vehicle_number }}</strong> </p></div>
+                                                 </td>
                                                
                                                 <td colspan="2"  style="border: 1px solid black;"><strong>Grand Total</strong></td>
                                                 <td class="text-right"  style="border: 1px solid black;" colspan="2">

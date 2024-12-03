@@ -288,7 +288,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::post('/store-delivery-chalan', ['as' => 'store-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@store']);
         Route::get('/show-delivery-chalan/{id}', ['as' => 'show-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@show']);
         Route::get('/edit-delivery-chalan/{id}', ['as' => 'edit-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@edit']);
-        Route::post('/update-delivery-chalan', ['as' => 'update-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@update']);
+        Route::any('/update-delivery-chalan', ['as' => 'update-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@update']);
         Route::any('/delete-delivery-chalan/{id}', ['as' => 'delete-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@destroy']);
         Route::post('/delete-addmore', ['as' => 'delete-addmore', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@destroyAddmore']);
   

@@ -33,8 +33,14 @@ class DeliveryChalanRepository
             $dataOutput->plant_id = $request->plant_id;
             $dataOutput->vehicle_number = $request->vehicle_number;
             $dataOutput->po_date = $request->po_date;
-            $dataOutput->dc_date = $request->dc_date;
-            $dataOutput->dc_number = $request->dc_number;
+            // $dataOutput->dc_date = $request->dc_date;
+            // $dataOutput->dc_number = $request->dc_number;
+             // Automatically set the current date for dc_date
+        $dataOutput->dc_date = now();
+
+        // Retrieve the last dc_number and increment it
+        $lastChalan = DeliveryChalan::orderBy('dc_number', 'desc')->first();
+        $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
             $dataOutput->lr_number = $request->lr_number;
 
             $dataOutput->tax_type = $request->tax_type;
@@ -97,11 +103,9 @@ class DeliveryChalanRepository
             $designData = DeliveryChalan::leftJoin('tbl_delivery_chalan_item_details', 'tbl_delivery_chalan.id', '=', 'tbl_delivery_chalan_item_details.delivery_chalan_id')
                 ->select('tbl_delivery_chalan_item_details.*', 'tbl_delivery_chalan_item_details.id as tbl_delivery_chalan_item_details_id', 
                 'tbl_delivery_chalan.id as purchase_main_id', 'tbl_delivery_chalan.vendor_id','tbl_delivery_chalan.transport_id', 'tbl_delivery_chalan.vehicle_id', 'tbl_delivery_chalan.business_id','tbl_delivery_chalan.tax_type', 'tbl_delivery_chalan.tax_id','tbl_delivery_chalan.po_date', 
-                'tbl_delivery_chalan.vehicle_number','tbl_delivery_chalan.plant_id', 'tbl_delivery_chalan.vehicle_number')
+                'tbl_delivery_chalan.vehicle_number','tbl_delivery_chalan.plant_id', 'tbl_delivery_chalan.vehicle_number','tbl_delivery_chalan.remark')
                 ->where('tbl_delivery_chalan.id', $id)
                 ->get();
-            //    dd($designData);
-            //    die();
             if ($designData->isEmpty()) {
                 return null;
             } else {
@@ -138,7 +142,8 @@ class DeliveryChalanRepository
                     'tbl_delivery_chalan.tax_type',
                     'tbl_tax.name as tax_number',
                     'tbl_delivery_chalan.vehicle_number',
-                      'tbl_delivery_chalan.remark'
+                      'tbl_delivery_chalan.remark',
+                      'tbl_delivery_chalan.dc_number'
                 )
                 ->first();
             if (!$purchaseOrder) {
@@ -171,6 +176,7 @@ class DeliveryChalanRepository
                      'tbl_delivery_chalan_item_details.rate',
                      'tbl_delivery_chalan_item_details.size',
                      'tbl_delivery_chalan_item_details.amount',
+                     
                 )
                 ->get();
             return [
@@ -186,35 +192,40 @@ class DeliveryChalanRepository
        
         try {
             // Update existing design details
+// dd($request);
+// die();
+          
             for ($i = 0; $i <= $request->design_count; $i++) {
                 $designDetails = DeliveryChalanItemDetails::findOrFail($request->input("design_id_" . $i));
-                $designDetails->part_no_id = $request->input("part_no_id_" . $i);
-                $designDetails->description = $request->input("description_" . $i);
-                $designDetails->due_date = $request->input("due_date_" . $i);
+                $designDetails->part_item_id = $request->input("part_item_id_" . $i);
+                $designDetails->hsn_id = $request->input("hsn_id_" . $i);
+                $designDetails->process_id = $request->input("process_id_" . $i);
                 $designDetails->quantity = $request->input("quantity_" . $i);
-                $designDetails->unit = $request->input("unit_" . $i);
+                $designDetails->unit_id = $request->input("unit_id_" . $i);
+                $designDetails->size = $request->input("size_" . $i);
                 $designDetails->rate = $request->input("rate_" . $i);
                 $designDetails->amount = $request->input("amount_" . $i);
+
+            // dd($designDetails);
+            // die();
                 $designDetails->save();
             }
-    
+           
             // Update main design data
             $dataOutput = DeliveryChalan::findOrFail($request->purchase_main_id);
             $dataOutput->vendor_id = $request->vendor_id;
-            // $dataOutput->quote_no = $request->quote_no;
             $dataOutput->tax_type = $request->tax_type;
             $dataOutput->tax_id = $request->tax_id;
-            $dataOutput->invoice_date = $request->invoice_date;
-            $dataOutput->payment_terms = $request->payment_terms;
-            // $dataOutput->discount = $request->discount;
-            $dataOutput->note = $request->note;
+            $dataOutput->business_id = $request->business_id;
+            $dataOutput->transport_id = $request->transport_id;
+            $dataOutput->vehicle_id = $request->vehicle_id;
+            $dataOutput->plant_id = $request->plant_id;
+            $dataOutput->vehicle_number = $request->vehicle_number;
+            $dataOutput->po_date = $request->po_date;
+            $dataOutput->lr_number = $request->lr_number;
+            $dataOutput->remark = $request->remark;
 
-            if ($request->has('quote_no')) {
-                $dataOutput->quote_no = $request->quote_no;
-            }
-            if ($request->has('discount')) {
-                $dataOutput->discount = $request->discount;
-            }
+          
             $dataOutput->save();
 
            
@@ -225,18 +236,19 @@ class DeliveryChalanRepository
                 foreach ($request->addmore as $key => $item) {
                     $designDetails = new DeliveryChalanItemDetails();
               
-                    // Assuming 'purchase_id' is a foreign key related to 'PurchaseOrderModel'
-                    $designDetails->purchase_id = $request->purchase_main_id; // Set the parent design ID
-                    $designDetails->part_no_id = $item['part_no_id'];
-                    $designDetails->description = $item['description'];
-                    $designDetails->due_date = $item['due_date'];
+                    // Assuming 'delivery_chalan_id' is a foreign key related to 'PurchaseOrderModel'
+                    $designDetails->delivery_chalan_id = $request->purchase_main_id; // Set the parent design ID
+                    $designDetails->part_item_id = $item['part_item_id'];
+                    $designDetails->hsn_id = $item['hsn_id'];
+                    $designDetails->process_id = $item['process_id'];
                     $designDetails->quantity = $item['quantity'];
-                    $designDetails->unit = $item['unit'];
+                    $designDetails->unit_id = $item['unit_id'];
+                    $designDetails->size = $item['size'];
                     $designDetails->rate = $item['rate'];
                     $designDetails->amount = $item['amount'];
-                    $designDetails->actual_quantity = '0';
-                    $designDetails->accepted_quantity = '0';
-                    $designDetails->rejected_quantity = '0';
+                    // $designDetails->actual_quantity = '0';
+                    // $designDetails->accepted_quantity = '0';
+                    // $designDetails->rejected_quantity = '0';
                   
                     $designDetails->save();
                     
