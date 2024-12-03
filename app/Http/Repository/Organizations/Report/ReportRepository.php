@@ -74,10 +74,11 @@ public function getCompletedProductList($request)
             'businesses_details.product_name',
             'businesses_details.description',
              'businesses_details.quantity',
+             'businesses_details.updated_at',
              DB::raw('COUNT(DISTINCT businesses_details.id) as total_business_details_count'), // Count distinct business_details_id
             DB::raw('SUM(tcqt1.completed_quantity) as total_completed_quantity')
         )
-            ->orderBy('tbl_dispatch.updated_at', 'desc')
+            ->orderBy('businesses_details.updated_at', 'desc')
             ->get();
 $totalCount = $query->distinct('businesses_details.id')->count('businesses_details.id');
         return [
