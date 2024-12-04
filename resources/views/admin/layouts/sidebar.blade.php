@@ -969,8 +969,8 @@
                                              
                                             <li class="nav-item">
                                                 <a href="#" data-toggle="dropdown" role="button"
-                                                    aria-expanded="false" class="nav-link dropdown-toggle"><i class="fa fa-bell"></i></i><span
-                                                        class="satish" style="position: fixed; top: 9px;translate: 9%;" id="notification-count"></span>
+                                                    aria-expanded="false" class="nav-link dropdown-toggle"><i class="fa fa-bell" style="padding-right: 32px;"></i></i><span
+                                                        class="satish" style="position: fixed; top: 9px;translate: -149%;" id="notification-count"></span>
                                                 </a>
                                                 
                                                 <div role="menu"
