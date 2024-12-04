@@ -39,19 +39,19 @@ class ReturnableChalanController extends Controller
     public function index()
     {
         $getOutput = ReturnableChalan::leftJoin('vendors', function($join) {
-            $join->on('tbl_returnable_chalan.business_details_id', '=', 'vendors.business_details_id');
+            $join->on('tbl_returnable_chalan.vendor_id', '=', 'vendors.id');
           })
           ->leftJoin('businesses', function($join) {
-            $join->on('tbl_returnable_chalan.business_details_id', '=', 'businesses.id');
+            $join->on('tbl_returnable_chalan.business_id', '=', 'businesses.id');
           })
-          ->leftJoin('production', function($join) {
-            $join->on('tbl_returnable_chalan.business_id', '=', 'production.business_details_id');
-          })
+        //   ->leftJoin('production', function($join) {
+        //     $join->on('tbl_returnable_chalan.business_id', '=', 'production.business_details_id');
+        //   })
           ->leftJoin('tbl_transport_name', function($join) {
-            $join->on('tbl_returnable_chalan.business_details_id', '=', 'tbl_transport_name.business_details_id');
+            $join->on('tbl_returnable_chalan.transport_id', '=', 'tbl_transport_name.id');
           })
           ->leftJoin('tbl_vehicle_type', function($join) {
-            $join->on('tbl_returnable_chalan.business_details_id', '=', 'tbl_vehicle_type.business_details_id');
+            $join->on('tbl_returnable_chalan.vehicle_id', '=', 'tbl_vehicle_type.id');
           })
         ->select('tbl_returnable_chalan.id','tbl_returnable_chalan.vendor_id','tbl_returnable_chalan.transport_id',
         'tbl_returnable_chalan.business_id','tbl_returnable_chalan.vehicle_id','vendors.vendor_name'
