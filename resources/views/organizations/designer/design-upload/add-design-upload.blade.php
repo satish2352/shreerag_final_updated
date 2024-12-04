@@ -79,7 +79,7 @@
                                                     <div  class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
                                                         <label for="design_image">Upload Design Layout (PDF, 10KB - 5MB)   <span class="text-danger">*</span></label>  
                                                         {{-- <input type="file" class="form-control" accept="application/pdf" name="design_image"> --}}
-                                                        <input type="file" class="form-control" accept="application/pdf" name="design_image" > <!-- 5MB -->
+                                                        <input type="file" class="form-control" accept="application/pdf" name="design_image" data-maxsize="5242880"> <!-- 5MB -->
                                                         
                                                         @if ($errors->has("design_image"))
                                                             <span class="red-text">{{ $errors->first("design_image") }}</span>
@@ -87,7 +87,7 @@
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="bom_image">Upload BOM (Excel, 10KB - 5MB)  <span class="text-danger">*</span></label>
-                                                        <input type="file" class="form-control" accept=".xls,.xlsx" name="bom_image" > <!-- 5MB -->
+                                                        <input type="file" class="form-control" accept=".xls,.xlsx" name="bom_image" data-maxsize="5242880"> <!-- 5MB -->
                                                     
                                                         @if ($errors->has("bom_image"))
                                                             <span class="red-text">{{ $errors->first("bom_image") }}</span>
