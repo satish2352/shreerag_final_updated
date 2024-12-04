@@ -41,7 +41,7 @@ class AllListRepository  {
           $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
         })
         
-          // ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
+          ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
           ->distinct('businesses.id')
           ->where('businesses.is_active',true)
           ->groupBy(
@@ -196,7 +196,7 @@ class AllListRepository  {
         ->where('businesses_details.business_id', $decoded_business_id)
         ->distinct('businesses.id')
         ->where('production.is_approved_production', 1)
-        ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
+        // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
         ->groupBy(
             'production.business_details_id',
             'businesses_details.product_name',
