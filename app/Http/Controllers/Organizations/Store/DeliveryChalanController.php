@@ -459,51 +459,6 @@ class DeliveryChalanController extends Controller
                     return $e;
                 }
             } 
-    // public function destroyAddmore(Request $request){
-    //     try {
-    //         dd($request);
-    //         die();
-    //         $delete_rti = $this->service->deleteByIdAddmore($request->delete_id);
-     
-    //         if ($delete_rti) {
-    //             $msg = $delete_rti['msg'];
-    //             $status = $delete_rti['status'];
-
-    //             $id = base64_encode($request->delete_id);
-    //             if ($status == 'success') {
-    //                 return redirect('storedept/edit-delivery-chalan/{id}')->with(compact('msg', 'status'));
-    //                 // return redirect()->route('purchase.edit-delivery-chalan', ['id' => $id])
-    //                 // ->with(compact('msg', 'status'));
-    //             } else {
-    //                 return redirect()->back()
-    //                     ->withInput()
-    //                     ->with(compact('msg', 'status'));
-    //             }
-    //         }
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // } 
-
-    // public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id)
-    // {
-    //     try {
-    //         $delete = $this->service->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id);
-    //         if ($delete) {
-    //             $status = 'success';
-    //             $msg = 'Purchase order mail sent to vendor.';
-    //         } else {
-    //             $status = 'success';
-    //             $msg = 'Purchase order mail sent to vendor.';
-    //         }
-
-    //         return redirect('purchase/list-delivery-chalan-approved-sent-to-vendor')->with(compact('msg', 'status'));
-
-    //     } catch (Exception $e) {
-    //         return ['status' => 'error', 'msg' => $e->getMessage()];
-    //     }
-    // }
-
     public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id)
     {
         try {

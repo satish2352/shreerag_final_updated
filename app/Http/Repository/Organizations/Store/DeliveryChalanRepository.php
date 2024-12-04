@@ -191,10 +191,6 @@ class DeliveryChalanRepository
     public function updateAll($request){
        
         try {
-            // Update existing design details
-// dd($request);
-// die();
-          
             for ($i = 0; $i <= $request->design_count; $i++) {
                 $designDetails = DeliveryChalanItemDetails::findOrFail($request->input("design_id_" . $i));
                 $designDetails->part_item_id = $request->input("part_item_id_" . $i);
@@ -204,10 +200,7 @@ class DeliveryChalanRepository
                 $designDetails->unit_id = $request->input("unit_id_" . $i);
                 $designDetails->size = $request->input("size_" . $i);
                 $designDetails->rate = $request->input("rate_" . $i);
-                $designDetails->amount = $request->input("amount_" . $i);
-
-            // dd($designDetails);
-            // die();
+                $designDetails->amount = $request->input("amount_" . $i);           
                 $designDetails->save();
             }
            
@@ -298,24 +291,7 @@ class DeliveryChalanRepository
             } catch (\Exception $e) {
                 return $e;
             }    }
-    // public function deleteByIdAddmore($id){
-    //     try {
-    //         dd($id);
-    //         die();
-    //         $rti = DeliveryChalanItemDetails::find($id);
-    //         if ($rti) {
-    //             $rti->delete();           
-    //             return $rti;
-    //         } else {
-    //             return null;
-    //         }
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
-
-
-    // New Functions for the application list PO need to be check 
+       // New Functions for the application list PO need to be check 
     public function listAllApprovedPOToBeChecked($id)
     {
       try {
