@@ -41,12 +41,9 @@ class ReturnableChalanController extends Controller
         $getOutput = ReturnableChalan::leftJoin('vendors', function($join) {
             $join->on('tbl_returnable_chalan.vendor_id', '=', 'vendors.id');
           })
-          ->leftJoin('businesses', function($join) {
-            $join->on('tbl_returnable_chalan.business_id', '=', 'businesses.id');
+          ->leftJoin('purchase_orders', function($join) {
+            $join->on('tbl_returnable_chalan.business_id', '=', 'purchase_orders.id');
           })
-        //   ->leftJoin('production', function($join) {
-        //     $join->on('tbl_returnable_chalan.business_id', '=', 'production.business_details_id');
-        //   })
           ->leftJoin('tbl_transport_name', function($join) {
             $join->on('tbl_returnable_chalan.transport_id', '=', 'tbl_transport_name.id');
           })
