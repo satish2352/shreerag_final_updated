@@ -53,7 +53,6 @@ class ReturnableChalanController extends Controller
           ->leftJoin('tbl_vehicle_type', function($join) {
             $join->on('tbl_returnable_chalan.business_details_id', '=', 'tbl_vehicle_type.business_details_id');
           })
-          ->join('tbl_vehicle_type', 'tbl_vehicle_type.id', '=', 'tbl_returnable_chalan.vehicle_id')
         ->select('tbl_returnable_chalan.id','tbl_returnable_chalan.vendor_id','tbl_returnable_chalan.transport_id',
         'tbl_returnable_chalan.business_id','tbl_returnable_chalan.vehicle_id','vendors.vendor_name'
         ,'businesses.customer_po_number','tbl_transport_name.name as transport_name','tbl_vehicle_type.name as vehicle_name'
