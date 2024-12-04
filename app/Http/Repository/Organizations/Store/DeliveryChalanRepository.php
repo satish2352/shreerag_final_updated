@@ -280,20 +280,39 @@ class DeliveryChalanRepository
             ];
         }
     }
-
-    public function deleteByIdAddmore($id){
+    public function deleteById($id){
         try {
-            $rti = DeliveryChalanItemDetails::find($id);
-            if ($rti) {
-                $rti->delete();           
-                return $rti;
-            } else {
-                return null;
-            }
+            $deleteDataById = DeliveryChalan::find($id);
+            $deleteDataById->delete();
+            return $deleteDataById;
+        
         } catch (\Exception $e) {
             return $e;
-        }
-    }
+        }    }
+        public function deleteByIdAddmore($id){
+            try {
+                $deleteDataById = DeliveryChalanItemDetails::find($id);
+                $deleteDataById->delete();
+                return $deleteDataById;
+            
+            } catch (\Exception $e) {
+                return $e;
+            }    }
+    // public function deleteByIdAddmore($id){
+    //     try {
+    //         dd($id);
+    //         die();
+    //         $rti = DeliveryChalanItemDetails::find($id);
+    //         if ($rti) {
+    //             $rti->delete();           
+    //             return $rti;
+    //         } else {
+    //             return null;
+    //         }
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
 
 
     // New Functions for the application list PO need to be check 

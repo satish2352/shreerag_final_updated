@@ -29,7 +29,7 @@
                     <div class="sparkline12-hd">
                         <div class="main-sparkline12-hd">
                             <center>
-                                <h1>Edit Purchase Order Data</h1>
+                                <h1>Edit Delivery Challan Data</h1>
                             </center>
                         </div>
                     </div>
@@ -73,8 +73,8 @@
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
                                                                             <label for="Service">Vendor Company
-                                                                                Name:</label> &nbsp;<span
-                                                                                class="red-text">*</span>
+                                                                                Name:  <span
+                                                                                class="text-danger">*</span></label> 
                                                                             <select class="form-control mb-2"
                                                                                 name="vendor_id" id="vendor_id">
                                                                                 <option value="" default>Select
@@ -94,7 +94,8 @@
                                                                     </div>
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
-                                                                            <label for="transport_id">Transport Name</label>&nbsp<span class="red-text">*</span>
+                                                                            <label for="transport_id">Transport Name  <span
+                                                                                class="text-danger">*</span></label>
                                                                             <select class="form-control" id="transport_id" name="transport_id"
                                                                                 onchange="myFunction(this.value)">
                                                                                 <option value="">Select Transport Name</option>
@@ -105,14 +106,15 @@
                                                                                 </option>
                                                                             @endforeach
                                                                             </select>
-                                                                            @if ($errors->has('transport_name_id'))
-                                                                                <span class="red-text"><?php echo $errors->first('transport_name_id', ':message'); ?></span>
+                                                                            @if ($errors->has('transport_id'))
+                                                                                <span class="red-text"><?php echo $errors->first('transport_id', ':message'); ?></span>
                                                                             @endif
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
-                                                                            <label for="vehicle_id">Vehicle Type</label>&nbsp<span class="red-text">*</span>
+                                                                            <label for="vehicle_id">Vehicle Type <span
+                                                                                class="text-danger">*</span></label>
                                                                             <select class="form-control" id="vehicle_id" name="vehicle_id"
                                                                                 onchange="myFunction(this.value)">
                                                                                 <option value="">Select Vehicle Type</option>
@@ -144,7 +146,8 @@
                                                                     </div>
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
-                                                                            <label>Tax Type</label>
+                                                                            <label>Tax Type   <span
+                                                                                class="text-danger">*</span></label>
                                                                             <select class="form-control mb-2" name="tax_type" id="tax_type">
                                                                                 <option value="" {{ old('tax_type') == '' ? 'selected' : '' }}>Select Tax Type</option>
                                                                                 <option value="GST" {{ old('tax_type', $editDataNew->tax_type) == 'GST' ? 'selected' : '' }}>GST</option>
@@ -159,8 +162,8 @@
                                                                     </div>
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
-                                                                            <label for="Service">Tax :</label> &nbsp;<span
-                                                                                class="red-text">*</span>
+                                                                            <label for="Service">Tax :  <span
+                                                                                class="text-danger">*</span></label> 
                                                                             <select class="form-control mb-2"
                                                                                 name="tax_id" id="tax_id">
                                                                                 <option value="" default>Select
@@ -377,7 +380,8 @@
                                                                     <div class="row">
                                                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                                             <label for="note">Remark
-                                                                                :</label>
+                                                                                : <span
+                                                                                class="text-danger">*</span></label>
                                                                             <textarea class="form-control" name="remark">@if (old('remark')){{ old('remark') }}@else{{ $editDataNew->remark }}@endif</textarea>
 
                                                                         </div>
@@ -389,7 +393,7 @@
                                                             <div class="col-lg-5"></div>
                                                             <div class="col-lg-7">
                                                                 <div class="login-horizental cancel-wp pull-left">
-                                                                    <a href="{{ route('list-purchase') }}"
+                                                                    <a href="{{ route('list-delivery-chalan') }}"
                                                                         class="btn btn-white"
                                                                         style="margin-bottom:50px">Cancel</a>
                                                                     <button class="btn btn-sm btn-primary login-submit-cs"
@@ -430,15 +434,25 @@
                     vendor_id: {
                         required: true,
                     },
-                    tax: {
+                    transport_id :{
                         required: true,
                     },
-                    invoice_date: {
+                    vehicle_id:{
                         required: true,
                     },
-                    payment_terms: {
+                    plant_id:{
                         required: true,
                     },
+                    vehicle_number : {
+                        required: true,
+                    },
+                    tax_type :{
+                        required: true, 
+                    },
+                    tax_id: {
+                        required: true,
+                    },
+                   
                     // discount: {
                     //     required: true,
                     //     number: true,
@@ -447,7 +461,7 @@
                     //     required: true,
                     //     number: true,
                     // },
-                    note: {
+                    remark: {
                         required: true,
                     },
                     'part_item_id_0': {
@@ -482,18 +496,28 @@
                     },
                 },
                 messages: {
-                    vendor: {
+                    vendor_id: {
                         required: "Please Select the Vendor Company Name",
                     },
+                    transport_id :{
+                        required: "Please Select the transport Name",
+                    },
+                    vehicle_id:{
+                        required: "Please Select the vehicle Name",
+                    },
+                    plant_id:{
+                        required: "Please Enter the plant name",
+                    },
+                    vehicle_number : {
+                        required:"Please Enter the  vehicle number",
+                    },
+                    tax_type :{
+                        required: "Please Select the tax type", 
+                    },
                     tax_id: {
-                        required: "Please Enter the Tax",
+                        required: "Please  Select the Tax",
                     },
-                    invoice_date: {
-                        required: "Please Enter the Invoice Date",
-                    },
-                    payment_terms: {
-                        required: "Please Enter the Payment Terms",
-                    },
+                  
                     // discount: {
                     //     required: "Please Enter the Discount",
                     //     number: "Please enter a valid number.",
@@ -503,8 +527,8 @@
                     //     number: "Please enter a valid number.",
 
                     // },
-                    note: {
-                        required: "Please Enter the Other Information",
+                    remark: {
+                        required: "Please Enter the remark",
                     },
                     'part_item_id_0': {
                         required: "Please enter the Part Number",

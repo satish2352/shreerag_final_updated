@@ -42,7 +42,7 @@
         <div class="sparkline13-list">
           <div class="sparkline13-hd">
             <div class="main-sparkline13-hd">
-              <h1>Delivery Chalan <span class="table-project-n">Data</span> Table</h1>
+              <h1>Delivery Challan <span class="table-project-n">Data</span> Table</h1>
               <div class="form-group-inner login-btn-inner row">
                 <div class="col-lg-2">
                   <div class="login-horizental cancel-wp pull-left">
@@ -51,7 +51,7 @@
              
                     {{-- <input type="hidden" name="requistition_id" id="requistition_id" value="{{$requistition_id}}"> --}}
                     <button class="btn btn-sm btn-primary login-submit-cs"
-                    type="submit">Add Delivery Chalan</button>
+                    type="submit">Add Delivery Challan</button>
 
                     </form>
                   </div>
@@ -140,8 +140,9 @@
                     </td>
                     <td>
                       <a href="{{route('edit-delivery-chalan', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                    </td>
                     
+                      <a href="{{route('delete-delivery-chalan', base64_encode($data->id))}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash" aria-hidden="true"></i></button></a>
+                    </td>
                     </tr>
                     @endforeach
                   </tbody>

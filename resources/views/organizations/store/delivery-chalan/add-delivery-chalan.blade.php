@@ -24,7 +24,7 @@
                 <div class="sparkline12-hd">
                     <div class="main-sparkline12-hd">
                         <center>
-                            <h1>Add Delivery Chalan</h1>
+                            <h1>Add Delivery Challan</h1>
                         </center>
                     </div>
                 </div>

@@ -225,14 +225,32 @@ class DeliveryChalanController extends Controller
         return view('organizations.store.delivery-chalan.show-delivery-chalan1', compact('invoice', 'title'));
     }
 
-    public function destroy(Request $request)
-    {
-        Invoice::findOrFail($request->id)->delete();
-        $notification = notify('Invoice has been deleted successfully');
-        return back()->with($notification);
-    }
+    // public function destroy(Request $request)
+    // {
+    //     Invoice::findOrFail($request->id)->delete();
+    //     $notification = notify('Invoice has been deleted successfully');
+    //     return back()->with($notification);
+    // }
 
-
+    public function destroy(Request $request){
+        $delete_data_id = base64_decode($request->id);
+        try {
+            $delete_record = $this->service->deleteById($delete_data_id);
+            if ($delete_record) {
+                $msg = $delete_record['msg'];
+                $status = $delete_record['status'];
+                if ($status == 'success') {
+                    return redirect('storedept/list-delivery-chalan')->with(compact('msg', 'status'));
+                } else {
+                    return redirect()->back()
+                        ->withInput()
+                        ->with(compact('msg', 'status'));
+                }
+            }
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
     public function submitPurchaseOrderToOwnerForReview(Request $request)
     {
         try {
@@ -421,29 +439,51 @@ class DeliveryChalanController extends Controller
                 }
             }
 
-    public function destroyAddmore(Request $request){
-        try {
-            $delete_rti = $this->service->deleteByIdAddmore($request->delete_id);
-         
-            if ($delete_rti) {
-                $msg = $delete_rti['msg'];
-                $status = $delete_rti['status'];
 
-                $id = base64_encode($request->delete_id);
-                if ($status == 'success') {
-                    return redirect('storedept/edit-delivery-chalan/{id}')->with(compact('msg', 'status'));
-                    // return redirect()->route('purchase.edit-delivery-chalan', ['id' => $id])
-                    // ->with(compact('msg', 'status'));
-                } else {
-                    return redirect()->back()
-                        ->withInput()
-                        ->with(compact('msg', 'status'));
+            public function destroyAddmore(Request $request){
+                $delete_data_id = base64_decode($request->id);
+                try {
+                    $delete_record = $this->service->deleteById($delete_data_id);
+                    if ($delete_record) {
+                        $msg = $delete_record['msg'];
+                        $status = $delete_record['status'];
+                        if ($status == 'success') {
+                            return redirect('storedept/list-delivery-chalan')->with(compact('msg', 'status'));
+                        } else {
+                            return redirect()->back()
+                                ->withInput()
+                                ->with(compact('msg', 'status'));
+                        }
+                    }
+                } catch (\Exception $e) {
+                    return $e;
                 }
-            }
-        } catch (\Exception $e) {
-            return $e;
-        }
-    } 
+            } 
+    // public function destroyAddmore(Request $request){
+    //     try {
+    //         dd($request);
+    //         die();
+    //         $delete_rti = $this->service->deleteByIdAddmore($request->delete_id);
+     
+    //         if ($delete_rti) {
+    //             $msg = $delete_rti['msg'];
+    //             $status = $delete_rti['status'];
+
+    //             $id = base64_encode($request->delete_id);
+    //             if ($status == 'success') {
+    //                 return redirect('storedept/edit-delivery-chalan/{id}')->with(compact('msg', 'status'));
+    //                 // return redirect()->route('purchase.edit-delivery-chalan', ['id' => $id])
+    //                 // ->with(compact('msg', 'status'));
+    //             } else {
+    //                 return redirect()->back()
+    //                     ->withInput()
+    //                     ->with(compact('msg', 'status'));
+    //             }
+    //         }
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // } 
 
     // public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id)
     // {

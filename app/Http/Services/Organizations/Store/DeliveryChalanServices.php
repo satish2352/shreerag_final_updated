@@ -138,7 +138,21 @@ use Config;
         }      
     }
 
-    public function deleteByIdAddmore($id){
+    public function deleteById($id)
+    {
+        try {
+            $delete = $this->repo->deleteById($id);
+            if ($delete) {
+                return ['status' => 'success', 'msg' => 'Deleted Successfully.'];
+            } else {
+                return ['status' => 'error', 'msg' => ' Not Deleted.'];
+            }  
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        } 
+    }
+    public function deleteByIdAddmore($id)
+    {
         try {
             $delete = $this->repo->deleteByIdAddmore($id);
             if ($delete) {
@@ -150,4 +164,5 @@ use Config;
             return ['status' => 'error', 'msg' => $e->getMessage()];
         } 
     }
+    
 }
