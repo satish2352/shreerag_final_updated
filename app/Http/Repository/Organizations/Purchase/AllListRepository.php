@@ -401,59 +401,105 @@ class AllListRepository
       }
   }
   
-  public function getAllListPurchaseOrderTowardsOwner(){
-    try {
+//   public function getAllListPurchaseOrderTowardsOwner(){
+//     try {
 
-        $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL')];
-        $array_not_to_be_check = [config('constants.HIGHER_AUTHORITY.LIST_PO_TO_BE_APPROVE_FROM_PURCHASE')];
+//         $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL')];
+//         $array_not_to_be_check = [config('constants.HIGHER_AUTHORITY.LIST_PO_TO_BE_APPROVE_FROM_PURCHASE')];
 
-        $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
-            $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-          })
-          ->leftJoin('designs', function($join) {
-            $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-          })
-          ->leftJoin('businesses', function($join) {
-            $join->on('business_application_processes.business_id', '=', 'businesses.id');
-          })
-          ->leftJoin('design_revision_for_prod', function($join) {
-            $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-          })
-          ->leftJoin('purchase_orders', function($join) {
-            $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-          })
-          ->leftJoin('businesses_details', function($join) {
-            $join->on('purchase_orders.business_details_id', '=', 'businesses_details.id');
-          })
-          ->whereIn('purchase_orders.purchase_status_from_purchase',$array_to_be_check)
-          ->whereNull('purchase_orders.purchase_status_from_owner')
-          // ->whereIn('business_application_processes.business_status_id',$array_not_to_be_check)
-          ->where('businesses.is_active',true)
-          // ->distinct('businesses.id')
-          ->select(
-            'business_application_processes.purchase_order_id',
-            'businesses_details.id',
-            'businesses_details.product_name',
-            'businesses.title',
-            'businesses_details.description',
-            'businesses.remarks',
-            'businesses.is_active',
-            'production.business_id',
-            'design_revision_for_prod.reject_reason_prod',
-            'designs.bom_image',
-            'designs.design_image',
-            'businesses_details.updated_at',
-            'purchase_orders.updated_at'
-            )->distinct()
-              ->orderBy('purchase_orders.updated_at', 'desc')
-          ->get();
+//         $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
+//             $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+//           })
+//           ->leftJoin('designs', function($join) {
+//             $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+//           })
+//           ->leftJoin('businesses', function($join) {
+//             $join->on('business_application_processes.business_id', '=', 'businesses.id');
+//           })
+//           ->leftJoin('design_revision_for_prod', function($join) {
+//             $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+//           })
+//           ->leftJoin('purchase_orders', function($join) {
+//             $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+//           })
+//           ->leftJoin('businesses_details', function($join) {
+//             $join->on('purchase_orders.business_details_id', '=', 'businesses_details.id');
+//           })
+//           ->whereIn('purchase_orders.purchase_status_from_purchase',$array_to_be_check)
+//           ->whereNull('purchase_orders.purchase_status_from_owner')
+//           // ->whereIn('business_application_processes.business_status_id',$array_not_to_be_check)
+//           ->where('businesses.is_active',true)
+//           // ->distinct('businesses.id')
+//           ->select(
+//             'business_application_processes.purchase_order_id',
+//             'businesses_details.id',
+//             'businesses_details.product_name',
+//             'businesses.title',
+//             'businesses_details.description',
+//             'businesses.remarks',
+//             'businesses.is_active',
+//             'production.business_id',
+//             'design_revision_for_prod.reject_reason_prod',
+//             'designs.bom_image',
+//             'designs.design_image',
+//             'businesses_details.updated_at',
+//             'purchase_orders.updated_at'
+//             )->distinct()
+//               ->orderBy('purchase_orders.updated_at', 'desc')
+//           ->get();
 
-        return $data_output;
-    } catch (\Exception $e) {
+//         return $data_output;
+//     } catch (\Exception $e) {
         
-        return $e;
-    }
-} 
+//         return $e;
+//     }
+// } 
+
+public function getAllListPurchaseOrderTowardsOwner(){
+  try {
+      $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL')];
+
+  $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+      $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+  })
+  ->leftJoin('designs', function ($join) {
+      $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+  })
+  ->leftJoin('businesses', function ($join) {
+      $join->on('business_application_processes.business_id', '=', 'businesses.id');
+  })
+  ->leftJoin('design_revision_for_prod', function ($join) {
+      $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+  })
+  ->leftJoin('purchase_orders', function ($join) {
+      $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+  })
+  ->leftJoin('businesses_details', function ($join) {
+      $join->on('purchase_orders.business_details_id', '=', 'businesses_details.id');
+  })
+  ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
+  ->whereNull('purchase_orders.purchase_status_from_owner')
+  ->where('businesses.is_active', true)
+  ->groupBy(
+      'businesses_details.id',            // Unique identifier
+      'businesses_details.product_name', // Relevant for grouping
+      'businesses_details.description',  // Relevant for grouping
+      'businesses.title'                 // Relevant for grouping
+  )
+  ->select(
+      'businesses_details.id',
+      'businesses_details.product_name',
+      'businesses_details.description',
+      'businesses.title',
+      DB::raw('MAX(purchase_orders.updated_at) as latest_update') // Aggregate function
+  )
+  ->orderBy('latest_update', 'desc')
+  ->get();
 
 
+      return $data_output;
+  } catch (\Exception $e) {
+      return $e;
+  }
+}
 }
