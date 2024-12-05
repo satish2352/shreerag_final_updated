@@ -29,33 +29,17 @@
                     <div class="sparkline12-hd">
                         <div class="main-sparkline12-hd">
                             <center>
-                                <h1>Edit Returnable Data</h1>
+                                <h1>Edit Delivery Challan Data</h1>
                             </center>
                         </div>
                     </div>
                     <div class="sparkline12-graph">
                         <div class="basic-login-form-ad">
                             <div class="row">
-                                @if (session('msg'))
-                                    <div class="alert alert-{{ session('status') }}">
-                                        {{ session('msg') }}
-                                    </div>
-                                @endif
+                              
 
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    @if (Session::has('status'))
-                                        <div class="col-md-12">
-                                            <div class="alert alert-{{ Session::get('status') }} alert-dismissible"
-                                                role="alert">
-                                                <button type="button" class="close" data-dismiss="alert"
-                                                    aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                                <strong>{{ ucfirst(Session::get('status')) }}!</strong>
-                                                {{ Session::get('msg') }}
-                                            </div>
-                                        </div>
-                                    @endif
+                                   
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <div class="all-form-element-inner">
                                             <form
@@ -80,13 +64,17 @@
   
 
                                                         @foreach ($editData as $key => $editDataNew)
+                                                        <?php
+// dd($editDataNew);
+// die();
+                                                        ?>
                                                             @if ($key == 0)
                                                                 <div class="row">
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
                                                                             <label for="Service">Vendor Company
-                                                                                Name:</label> &nbsp;<span
-                                                                                class="red-text">*</span>
+                                                                                Name:  <span
+                                                                                class="text-danger">*</span></label> 
                                                                             <select class="form-control mb-2"
                                                                                 name="vendor_id" id="vendor_id">
                                                                                 <option value="" default>Select
@@ -104,82 +92,144 @@
                                                                             @endif
                                                                         </div>
                                                                     </div>
-
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
-                                                                            <label>Tax Type</label>
+                                                                            <label for="transport_id">Transport Name  <span
+                                                                                class="text-danger">*</span></label>
+                                                                            <select class="form-control" id="transport_id" name="transport_id"
+                                                                                onchange="myFunction(this.value)">
+                                                                                <option value="">Select Transport Name</option>
+                                                                                @foreach ($dataOutputTransportName as $role)
+                                                                                <option value="{{ $role['id'] }}"
+                                                                                    {{ old('transport_id', $editDataNew->transport_id) == $role->id ? 'selected' : '' }}>
+                                                                                    {{ $role->name }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                            </select>
+                                                                            @if ($errors->has('transport_id'))
+                                                                                <span class="red-text"><?php echo $errors->first('transport_id', ':message'); ?></span>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
+                                                                            <label for="vehicle_id">Vehicle Type <span
+                                                                                class="text-danger">*</span></label>
+                                                                            <select class="form-control" id="vehicle_id" name="vehicle_id"
+                                                                                onchange="myFunction(this.value)">
+                                                                                <option value="">Select Vehicle Type</option>
+                                                                                @foreach ($dataOutputVehicleType as $vehicleType)
+                                                                                <option value="{{ $vehicleType['id'] }}"
+                                                                                    {{ old('vehicle_id', $editDataNew->vehicle_id) == $vehicleType->id ? 'selected' : '' }}>
+                                                                                    {{ $vehicleType->name }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                            </select>
+                                                                            @if ($errors->has('vehicle_id'))
+                                                                                <span class="red-text"><?php echo $errors->first('vehicle_id', ':message'); ?></span>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
+                                                                            <label for="business_id">PO Number (Optional)</label>
+                                                                                <select class="form-control mb-2" name="business_id" id="business_id">
+                                                                                <option value="" default>Select PO Number</option>
+                                                                                @foreach ($dataOutputBusiness as $OutputBusiness)
+                                                                                <option value="{{ $OutputBusiness['id'] }}"
+                                                                                    {{ old('business_id', $editDataNew->business_id) == $OutputBusiness->id ? 'selected' : '' }}>
+                                                                                    {{ $OutputBusiness->customer_po_number }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
+                                                                            <label>Tax Type   <span
+                                                                                class="text-danger">*</span></label>
                                                                             <select class="form-control mb-2" name="tax_type" id="tax_type">
                                                                                 <option value="" {{ old('tax_type') == '' ? 'selected' : '' }}>Select Tax Type</option>
+                                                                                <option value="GST" {{ old('tax_type', $editDataNew->tax_type) == 'GST' ? 'selected' : '' }}>GST</option>
                                                                                 <option value="SGST" {{ old('tax_type', $editDataNew->tax_type) == 'SGST' ? 'selected' : '' }}>SGST</option>
                                                                                 <option value="CGST" {{ old('tax_type', $editDataNew->tax_type) == 'CGST' ? 'selected' : '' }}>CGST</option>
                                                                                 <option value="IGST" {{ old('tax_type', $editDataNew->tax_type) == 'IGST' ? 'selected' : '' }}>IGST</option>
-                                                                               
                                                                             </select>
                                                                             @if ($errors->has('tax_type'))
                                                                                 <span class="red-text">{{ $errors->first('tax_type') }}</span>
                                                                             @endif
                                                                         </div>
                                                                     </div>
-                                                                    
-                                                                <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                    <div class="form-group">
-                                                                        <label for="Service">Tax :</label> &nbsp;<span
-                                                                            class="red-text">*</span>
-                                                                        <select class="form-control mb-2"
-                                                                            name="tax_id" id="tax_id">
-                                                                            <option value="" default>Select
-                                                                                Item Part</option>
-                                                                            @foreach ($dataOutputTax as $taxData)
-                                                                                <option value="{{ $taxData['id'] }}"
-                                                                                    {{ old('tax_id', $editDataNew->tax_id) == $taxData->id ? 'selected' : '' }}>
-                                                                                    {{ $taxData->description }}
-                                                                                </option>
-                                                                            @endforeach
-                                                                        </select>
-                                                                        @if ($errors->has('tax_id'))
-                                                                            <span
-                                                                                class="red-text">{{ $errors->first('tax_id') }}</span>
-                                                                        @endif
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
-                                                                            <label>Invoice date <span
-                                                                                    class="text-danger">*</span></label>
-                                                                            <div class="cal-icon">
-                                                                                <input class="form-control datetimepicker"
-                                                                                    type="text" name="invoice_date"
-                                                                                    id="invoice_date"
-                                                                                    value="{{ $editDataNew->invoice_date }}">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                                                        <div class="form-group">
-                                                                            <label>Payment Terms</label>
-                                                                            <select name="payment_terms"
-                                                                                class="form-control"
-                                                                                title="select payment terms"
-                                                                                id="payment_terms">
-                                                                                <option value="">Select Payment Terms
-                                                                                </option>
-                                                                                <option value="30"
-                                                                                    {{ $editDataNew->payment_terms == 30 ? 'selected' : '' }}>
-                                                                                    30 Days</option>
-                                                                                <option value="60"
-                                                                                    {{ $editDataNew->payment_terms == 60 ? 'selected' : '' }}>
-                                                                                    60 Days</option>
-                                                                                <option value="90"
-                                                                                    {{ $editDataNew->payment_terms == 90 ? 'selected' : '' }}>
-                                                                                    90 Days</option>
+                                                                            <label for="Service">Tax :  <span
+                                                                                class="text-danger">*</span></label> 
+                                                                            <select class="form-control mb-2"
+                                                                                name="tax_id" id="tax_id">
+                                                                                <option value="" default>Select
+                                                                                    Item Part</option>
+                                                                                @foreach ($dataOutputTax as $taxData)
+                                                                                    <option value="{{ $taxData['id'] }}"
+                                                                                        {{ old('tax_id', $editDataNew->tax_id) == $taxData->id ? 'selected' : '' }}>
+                                                                                        {{ $taxData->name }}
+                                                                                    </option>
+                                                                                @endforeach
                                                                             </select>
-                                                                            @if ($errors->has('payment_terms'))
+                                                                            @if ($errors->has('tax_id'))
                                                                                 <span
-                                                                                    class="red-text">{{ $errors->first('payment_terms') }}</span>
+                                                                                    class="red-text">{{ $errors->first('tax_id') }}</span>
                                                                             @endif
                                                                         </div>
                                                                     </div>
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
+                                                                            <label>Plant Name  <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <div class="cal-icon">
+                                                                                <input class="form-control datetimepicker"
+                                                                                    type="text" name="plant_id"
+                                                                                    id="plant_id"
+                                                                                    value="{{ $editDataNew->plant_id }}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
+                                                                            <label>Vehicle Number <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <div class="cal-icon">
+                                                                                <input class="form-control datetimepicker"
+                                                                                    type="text" name="vehicle_number"
+                                                                                    id="vehicle_number"
+                                                                                    value="{{ $editDataNew->vehicle_number }}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
+                                                                            <label>PO Date <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <div class="cal-icon">
+                                                                                <input class="form-control datetimepicker"
+                                                                                    type="text" name="po_date"
+                                                                                    id="po_date"
+                                                                                    value="{{ $editDataNew->po_date }}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
+                                                                            <label> LR Number (Optional)<span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <div class="cal-icon">
+                                                                                <input class="form-control datetimepicker"
+                                                                                    type="text" name="vehicle_number"
+                                                                                    id="vehicle_number"
+                                                                                    value="{{ $editDataNew->vehicle_number }}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                   
                                                                 </div>
                                                             @endif
                                                         @endforeach
@@ -189,10 +239,11 @@
                                                             <table class="table table-bordered" id="dynamicTable">
                                                                 <tr>
                                                                     <th>Part No</th>
-                                                                    <th>Description</th>
-                                                                    <th>Due Date</th>
+                                                                    <th>HSN</th>
+                                                                    <th>Process</th>
                                                                     <th>Quantity</th>
                                                                     <th>Unit</th>
+                                                                    <th>Size</th>
                                                                     <th>Rate</th>
                                                                     <th>Amount</th>
                                                                     <th>Action</th>
@@ -208,34 +259,41 @@
                                                                             name="design_id_{{ $key }}"
                                                                             id="design_id_{{ $key }}"
                                                                             class="form-control"
-                                                                            value="{{ $editDataNew->purchase_order_details_id }}"
+                                                                            value="{{ $editDataNew->tbl_returnable_chalan_item_details_id }}"
                                                                             placeholder="">
                                                                         <td>
-                                                                            <select class="form-control part-no mb-2" name="part_no_id_{{ $key }}" id="">
+                                                                            <select class="form-control part-no mb-2" name="part_item_id_{{ $key }}" id="">
                                                                                 <option value="" default>Select Item</option>
                                                                                 @foreach ($dataOutputPartItem as $data)
                                                                                 <option value="{{ $data['id'] }}"
-                                                                                    {{ old('part_no_id', $editDataNew->part_no_id) == $data->id ? 'selected' : '' }}>
+                                                                                    {{ old('part_item_id', $editDataNew->part_item_id) == $data->id ? 'selected' : '' }}>
+                                                                                    {{ $data->description }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                            </select>
+                                                                        </td> 
+                                                                        <td>
+                                                                            <select class="form-control hsn_id mb-2" name="hsn_id_{{ $key }}" id="">
+                                                                                <option value="" default>Select HSN</option>
+                                                                                @foreach ($dataOutputHSNMaster as $data)
+                                                                                <option value="{{ $data['id'] }}"
+                                                                                    {{ old('hsn_id', $editDataNew->hsn_id) == $data->id ? 'selected' : '' }}>
                                                                                     {{ $data->name }}
                                                                                 </option>
                                                                             @endforeach
                                                                             </select>
-                                                                        </td>
+                                                                        </td>    
                                                                         <td>
-                                                                            <input type="text"
-                                                                                name="description_{{ $key }}"
-                                                                                value="{{ $editDataNew->description }}"
-                                                                                placeholder="Enter Description"
-                                                                                class="form-control description" />
-                                                                        </td>
-
-                                                                        <td>
-                                                                            <input type="date"
-                                                                                name="due_date_{{ $key }}"
-                                                                                value="{{ $editDataNew->due_date }}"
-                                                                                placeholder="Enter Due Date"
-                                                                                class="form-control due_date" />
-                                                                        </td>
+                                                                            <select class="form-control process_id mb-2" name="process_id_{{ $key }}" id="">
+                                                                                <option value="" default>Select Process</option>
+                                                                                @foreach ($dataOutputHSNMaster as $data)
+                                                                                <option value="{{ $data['id'] }}"
+                                                                                    {{ old('process_id', $editDataNew->process_id) == $data->id ? 'selected' : '' }}>
+                                                                                    {{ $data->name }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                            </select>
+                                                                        </td>                                                                     
                                                                         <td>
                                                                             <input type="text"
                                                                                 name="quantity_{{ $key }}"
@@ -244,11 +302,15 @@
                                                                                 class="form-control quantity" />
                                                                         </td>
                                                                         <td>
-                                                                            <input type="text"
-                                                                                name="unit_{{ $key }}"
-                                                                                value="{{ $editDataNew->unit }}"
-                                                                                placeholder="Enter Unit"
-                                                                                class="form-control unit" />
+                                                                            <select class="form-control unit_id mb-2" name="unit_id_{{ $key }}" id="">
+                                                                                <option value="" default>Select Unit</option>
+                                                                                @foreach ($dataOutputUnitMaster as $data)
+                                                                                <option value="{{ $data['id'] }}"
+                                                                                    {{ old('unit_id', $editDataNew->unit_id) == $data->id ? 'selected' : '' }}>
+                                                                                    {{ $data->name }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                            </select>
                                                                         </td>
                                                                         <td>
                                                                             <input type="text"
@@ -257,7 +319,14 @@
                                                                                 placeholder="Enter Rate"
                                                                                 class="form-control rate" />
                                                                         </td>
-
+                                                                        <td>
+                                                                            <input type="text"
+                                                                                name="size_{{ $key }}"
+                                                                                value="{{ $editDataNew->size }}"
+                                                                                placeholder="Enter size"
+                                                                                class="form-control size" />
+                                                                        </td>
+                                                                       
                                                                         <td>
                                                                             <input type="text"
                                                                                 name="amount_{{ $key }}"
@@ -265,11 +334,10 @@
                                                                                 placeholder="Enter Amount"
                                                                                 class="form-control total_amount" />
                                                                         </td>
-
                                                                         <td>
                                                                             <a data-id="{{ $editDataNew->id }}"
                                                                                 class="delete-btn btn btn-danger m-1"
-                                                                                title="Delete Tender"><i
+                                                                                title="Delete"><i
                                                                                     class="fas fa-archive"></i></a>
                                                                         </td>
                                                                     </tr>
@@ -281,28 +349,13 @@
                                                             @if ($key == 0)
                                                                 <div class="form-group-inner">
                                                                     <div class="row">
-                                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                            <label for="quote_no">Quote No:  (optional)</label>
-                                                                            <input type="text" class="form-control"
-                                                                                id="quote_no" name="quote_no"
-                                                                                value="{{ $editDataNew->quote_no }}"
-                                                                                placeholder="Enter Terms & Condition">
-                                                                        </div>
-
-                                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                            <label for="discount">Discount:  (optional)</label>
-                                                                            <input type="text" class="form-control"
-                                                                                id="discount" name="discount"
-                                                                                value="{{ $editDataNew->discount }}"
-                                                                                placeholder="Enter discount">
-                                                                        </div>
-                                                                    </div>
 
                                                                     <div class="row">
                                                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                            <label for="note">Other Information
-                                                                                :</label>
-                                                                            <textarea class="form-control" name="note">@if (old('note')){{ old('note') }}@else{{ $editDataNew->note }}@endif</textarea>
+                                                                            <label for="note">Remark
+                                                                                : <span
+                                                                                class="text-danger">*</span></label>
+                                                                            <textarea class="form-control" name="remark">@if (old('remark')){{ old('remark') }}@else{{ $editDataNew->remark }}@endif</textarea>
 
                                                                         </div>
                                                             @endif
@@ -313,7 +366,7 @@
                                                             <div class="col-lg-5"></div>
                                                             <div class="col-lg-7">
                                                                 <div class="login-horizental cancel-wp pull-left">
-                                                                    <a href="{{ route('list-purchase') }}"
+                                                                    <a href="{{ route('list-delivery-chalan') }}"
                                                                         class="btn btn-white"
                                                                         style="margin-bottom:50px">Cancel</a>
                                                                     <button class="btn btn-sm btn-primary login-submit-cs"
@@ -337,7 +390,7 @@
     </div>
 
 
-    <form method="POST" action="{{ route('delete-addmore') }}" id="deleteform">
+    <form method="POST" action="{{ route('delete-addmore-delivery') }}" id="deleteform">
         @csrf
         <input type="hidden" name="delete_id" id="delete_id" value="">
     </form>
@@ -354,42 +407,46 @@
                     vendor_id: {
                         required: true,
                     },
-                    tax: {
+                    transport_id :{
                         required: true,
                     },
-                    invoice_date: {
+                    vehicle_id:{
                         required: true,
                     },
-                    payment_terms: {
+                    plant_id:{
                         required: true,
                     },
-                    // discount: {
-                    //     required: true,
-                    //     number: true,
-                    // },
-                    // quote_no: {
-                    //     required: true,
-                    //     number: true,
-                    // },
-                    note: {
+                    vehicle_number : {
                         required: true,
                     },
-                    'part_no_id_0': {
+                    tax_type :{
+                        required: true, 
+                    },
+                    tax_id: {
+                        required: true,
+                    },                   
+                    remark: {
                         required: true,
                     },
-                    // 'description_0': {
-                    //     required: true,
-                    // },
-                    'due_date_0': {
+                    'part_item_id_0': {
                         required: true,
                     },
                     'quantity_0': {
                         required: true,
                         digits: true,
                     },
-                    'unit_0': {
+                    'unit_id_0': {
                         required: true,
                     },
+                    'hsn_id_0': {
+                        required: true,
+                        maxlength: 255
+                    },
+                    'process_id_0': {
+                        required: true,
+                        maxlength: 255
+                    },
+                    
                     'rate_0': {
                         required: true,
                         number: true,
@@ -399,46 +456,47 @@
                     },
                 },
                 messages: {
-                    vendor: {
+                    vendor_id: {
                         required: "Please Select the Vendor Company Name",
                     },
+                    transport_id :{
+                        required: "Please Select the transport Name",
+                    },
+                    vehicle_id:{
+                        required: "Please Select the vehicle Name",
+                    },
+                    plant_id:{
+                        required: "Please Enter the plant name",
+                    },
+                    vehicle_number : {
+                        required:"Please Enter the  vehicle number",
+                    },
+                    tax_type :{
+                        required: "Please Select the tax type", 
+                    },
                     tax_id: {
-                        required: "Please Enter the Tax",
+                        required: "Please  Select the Tax",
                     },
-                    invoice_date: {
-                        required: "Please Enter the Invoice Date",
+                    remark: {
+                        required: "Please Enter the remark",
                     },
-                    payment_terms: {
-                        required: "Please Enter the Payment Terms",
-                    },
-                    // discount: {
-                    //     required: "Please Enter the Discount",
-                    //     number: "Please enter a valid number.",
-                    // },
-                    // quote_no: {
-                    //     required: "Please Enter the quote number",
-                    //     number: "Please enter a valid number.",
-
-                    // },
-                    note: {
-                        required: "Please Enter the Other Information",
-                    },
-                    'part_no_id_0': {
+                    'part_item_id_0': {
                         required: "Please enter the Part Number",
-                    },
-                    // 'description_0': {
-                    //     required: "Please enter the Description",
-                    // },
-                    'due_date_0': {
-                        required: "Please enter the Due Date",
-                    },
-                   
+                    },                    
                     'quantity_0': {
                         required: "Please enter the Quantity",
                         digits: "Please enter only digits for Quantity",
                     },
-                    'unit_0': {
-                        required: "Please enter the Unit",
+                    'unit_id_0': {
+                        required: "Please enter the unit_id",
+                    },
+                    'hsn_id_0': {
+                        required: "Please enter the hsn_id.",
+                        maxlength: "hsn must be at most 255 characters long."
+                    },
+                    'process_id_0': {
+                        required: "Please enter the process.",
+                        maxlength: "process must be at most 255 characters long."
                     },
                     'rate_0': {
                         required: "Please enter the Rate",
@@ -449,9 +507,8 @@
                     },
                 },
                 errorPlacement: function(error, element) {
-                    if (element.hasClass("part_no_id") ||
-                        element.hasClass("due_date") || 
-                        element.hasClass("quantity") || element.hasClass("unit") || element.hasClass("rate") ||
+                    if (element.hasClass("part_item_id") || element.hasClass("hsn_id") || element.hasClass("process_id") ||
+                        element.hasClass("quantity") || element.hasClass("unit_id") || element.hasClass("rate") ||
                         element.hasClass("amount")) {
                         error.insertAfter(element);
                     } else {
@@ -472,50 +529,61 @@
                     '" placeholder=""> <input type="hidden" name="addmore[' + i +
                     '][purchase_id]" class="form-control" value="' + i + '" placeholder="">' +
                     '<td>' +
-            '<select class="form-control part_no_id mb-2" name="addmore[' + i + '][part_no_id]" id="">' +
+            '<select class="form-control part_item_id mb-2" name="addmore[' + i + '][part_item_id]" id="">' +
                 '<option value="" default>Select Part Item</option>' +
                 '@foreach ($dataOutputPartItem as $data)' +
                     '<option value="{{ $data['id'] }}">{{ $data['description'] }}</option>' +
                 '@endforeach' +
             '</select>' +
             '</td>' +
-                    '<td><input type="text" class="form-control description" name="addmore[' + i +
-                    '][description]" placeholder=" Description" /></td>' +
-                    '<td><input type="date" class="form-control due_date" name="addmore[' + i +
-                    '][due_date]" placeholder=" Due Date" /></td>' +
+                  '<td>' +
+'<select class="form-control hsn_id mb-2" name="addmore[' + i + '][hsn_id]" id="">' +
+                '<option value="" default>Select HSN</option>' +
+                '@foreach ($dataOutputHSNMaster as $data)' +
+                    '<option value="{{ $data['id'] }}">{{ $data['name'] }}</option>' +
+                '@endforeach' +
+            '</select>'+
+            '</td>' + 
+            '<td>' +
+'<select class="form-control process_id mb-2" name="addmore[' + i + '][process_id]" id="">' +
+                '<option value="" default>Select Process</option>' +
+                '@foreach ($dataOutputHSNMaster as $data)' +
+                    '<option value="{{ $data['id'] }}">{{ $data['name'] }}</option>' +
+                '@endforeach' +
+            '</select>'+
+            '</td>' +
                     '<td><input type="text" class="form-control quantity" name="addmore[' + i +
-                        '][quantity]" placeholder=" Quantity" /></td>' +
-                    '<td><input type="text" class="form-control unit" name="addmore[' + i +
-                    '][unit]" placeholder="Unit" /></td>' +
+                        '][quantity]" placeholder=" Quantity" /></td>' +                   
+
+                    '<td>' +
+                    '<select class="form-control unit_id mb-2" name="addmore[' + i + '][unit_id]" id="">' +
+                '<option value="" default>Select Unit</option>' +
+                '@foreach ($dataOutputUnitMaster as $data)' +
+                    '<option value="{{ $data['id'] }}">{{ $data['name'] }}</option>' +
+                '@endforeach' +
+            '</select>' +
+            '</td>' +
+            
+            
                     '<td><input type="text" class="form-control rate" name="addmore[' + i +
                     '][rate]" placeholder=" Rate" /></td>' +
+                    '<td><input type="text" class="form-control size" name="addmore[' + i +
+                        '][size]" placeholder="size" /></td>' +
                     '<td><input type="text" class="form-control amount" name="addmore[' + i +
                     '][amount]" placeholder=" Amount" readonly /></td>' +
-                    '<td><a class="remove-tr delete-btn btn btn-danger m-1" title="Delete Tender"><i class="fas fa-archive"></i></a></td>' +
-                    '</tr>'
+                   '<td><a class="remove-tr delete-btn btn btn-danger m-1" title="Delete Tender" data-id="{{ $editDataNew->id }}"><i class="fas fa-archive"></i></a></td>' +
+        '</tr>'
                 );
 
                 $("#dynamicTable").append(newRow);
 
                 // Reinitialize validation for the new row
-                $('select[name="addmore[' + i + '][part_no_id]"]').rules("add", {
+                $('select[name="addmore[' + i + '][part_item_id]"]').rules("add", {
             required: true,
             messages: {
                 required: "Please select the Part Number",
             }
         });
-                // $('input[name="addmore[' + i + '][description]"]').rules("add", {
-                //     required: true,
-                //     messages: {
-                //         required: "Please enter the Description",
-                //     }
-                // });
-                $('input[name="addmore[' + i + '][due_date]"]').rules("add", {
-                    required: true,
-                    messages: {
-                        required: "Please enter the Due Date",
-                    }
-                });
                 $('input[name="addmore[' + i + '][quantity]"]').rules("add", {
                     required: true,
                     digits: true,
@@ -524,11 +592,11 @@
                         digits: "Please enter only digits for Quantity",
                     }
                 });
-                $('input[name="addmore[' + i + '][unit]"]').rules("add", {
+                $('input[name="addmore[' + i + '][unit_id]"]').rules("add", {
                     required: true,
                     digits: true,
                     messages: {
-                        required: "Please enter the unit",
+                        required: "Please enter the unit_id",
                         
                     }
                 });
@@ -559,16 +627,7 @@
                 return inputDate >= today;
             }, "The date must be today or later.");
 
-            // Initialize date pickers with min date set to today
-            function setMinDateForDueDates() {
-                var today = new Date().toISOString().split('T')[0];
-                $('.due_date').attr('min', today);
-            }
-            setMinDateForDueDates();
-
-            $(document).on('focus', '.due_date', function() {
-                setMinDateForDueDates();
-            });
+           
 
             $(document).on('keyup', '.quantity, .rate', function(e) {
                 var currentRow = $(this).closest("tr");
@@ -579,21 +638,24 @@
             });
 
             $('.delete-btn').click(function(e) {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $("#delete_id").val($(this).attr("data-id"));
-                        $("#deleteform").submit();
-                    }
-                });
-            });
+    e.preventDefault(); // Prevent the default action of the link
+    var deleteId = $(this).data("id");  // Get the ID from the data-id attribute
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $("#delete_id").val(deleteId); // Set the delete_id field in the form
+            $("#deleteform").submit();  // Submit the form
+        }
+    });
+});
+
         });
     </script>
 

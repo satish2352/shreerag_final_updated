@@ -67,34 +67,6 @@ use Config;
         }
     }
 
-    // public function addAll($request)
-    // {
-    //     try {
-    //         $result = $this->repo->addAll($request);
-    //         if ($result['status'] === 'success') {
-    //             return ['status' => 'success', 'msg' => 'This business send to Design Department Successfully.'];
-    //         } else {
-    //             return ['status' => 'error', 'msg' => 'Failed to Add Data.'];
-    //         }  
-    //     } catch (Exception $e) {
-    //         return ['status' => 'error', 'msg' => $e->getMessage()];
-    //     }      
-    // }
-    
-
-    
-    // public function getPurchaseOrderDetails($id)
-    // {
-    //     try {
-    //         $listAllApprovedPOToBeChecked = $this->repo->listAllApprovedPOToBeChecked($id);
-    //         return $listAllApprovedPOToBeChecked;
-    //     } catch (Exception $e) {
-    //         return ['status' => 'error', 'msg' => $e->getMessage()];
-    //     }
-    // }
-
-
-        
     public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id)
     {
         try {
@@ -128,8 +100,31 @@ use Config;
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }      
     }
+    public function getById($id){
+        try {
+           $data_output = $this->repo->getById($id);
+         
+           return $data_output;
 
-    public function deleteByIdAddmore($id){
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function deleteById($id)
+    {
+        try {
+            $delete = $this->repo->deleteById($id);
+            if ($delete) {
+                return ['status' => 'success', 'msg' => 'Deleted Successfully.'];
+            } else {
+                return ['status' => 'error', 'msg' => ' Not Deleted.'];
+            }  
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        } 
+    }
+    public function deleteByIdAddmore($id)
+    {
         try {
             $delete = $this->repo->deleteByIdAddmore($id);
             if ($delete) {

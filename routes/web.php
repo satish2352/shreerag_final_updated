@@ -299,7 +299,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::post('/store-returnable-chalan', ['as' => 'store-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@store']);
         Route::get('/show-returnable-chalan/{id}', ['as' => 'show-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@show']);
         Route::get('/edit-returnable-chalan/{id}', ['as' => 'edit-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@edit']);
-        Route::post('/update-returnable-chalan', ['as' => 'update-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@update']);
+        Route::any('/update-returnable-chalan', ['as' => 'update-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@update']);
         Route::any('/delete-returnable-chalan/{id}', ['as' => 'delete-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@destroy']);
         Route::post('/delete-addmore', ['as' => 'delete-addmore', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@destroyAddmore']);
     });
