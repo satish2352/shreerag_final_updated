@@ -173,7 +173,7 @@ class AllListController extends Controller
         try {
             $data_output = $this->service->getAllListPurchaseOrderTowardsOwner();
     
-            if ($data_output instanceof \Illuminate\Support\Collection && $data_output->isNotEmpty()) {
+            if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
                     $business_details_id = $data->id;
                     if (!empty($business_details_id)) {
