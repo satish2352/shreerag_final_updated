@@ -217,32 +217,6 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    {{-- <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                        <div class="form-group">
-                                                                            <label> DC Date <span
-                                                                                    class="text-danger">*</span></label>
-                                                                            <div class="cal-icon">
-                                                                                <input class="form-control datetimepicker"
-                                                                                    type="text" name="vehicle_number"
-                                                                                    id="vehicle_number"
-                                                                                    value="{{ $editDataNew->vehicle_number }}">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                        <div class="form-group">
-                                                                            <label> DC Number<span
-                                                                                    class="text-danger">*</span></label>
-                                                                            <div class="cal-icon">
-                                                                                <input class="form-control datetimepicker"
-                                                                                    type="text" name="vehicle_number"
-                                                                                    id="vehicle_number"
-                                                                                    value="{{ $editDataNew->vehicle_number }}">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div> --}}
-
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
                                                                             <label> LR Number (Optional)<span
@@ -360,11 +334,10 @@
                                                                                 placeholder="Enter Amount"
                                                                                 class="form-control total_amount" />
                                                                         </td>
-
                                                                         <td>
                                                                             <a data-id="{{ $editDataNew->id }}"
                                                                                 class="delete-btn btn btn-danger m-1"
-                                                                                title="Delete Tender"><i
+                                                                                title="Delete"><i
                                                                                     class="fas fa-archive"></i></a>
                                                                         </td>
                                                                     </tr>
@@ -417,7 +390,7 @@
     </div>
 
 
-    <form method="POST" action="{{ route('delete-addmore') }}" id="deleteform">
+    <form method="POST" action="{{ route('delete-addmore-delivery') }}" id="deleteform">
         @csrf
         <input type="hidden" name="delete_id" id="delete_id" value="">
     </form>
@@ -451,26 +424,13 @@
                     },
                     tax_id: {
                         required: true,
-                    },
-                   
-                    // discount: {
-                    //     required: true,
-                    //     number: true,
-                    // },
-                    // quote_no: {
-                    //     required: true,
-                    //     number: true,
-                    // },
+                    },                   
                     remark: {
                         required: true,
                     },
                     'part_item_id_0': {
                         required: true,
                     },
-                    // 'description_0': {
-                    //     required: true,
-                    // },
-                    
                     'quantity_0': {
                         required: true,
                         digits: true,
@@ -517,26 +477,12 @@
                     tax_id: {
                         required: "Please  Select the Tax",
                     },
-                  
-                    // discount: {
-                    //     required: "Please Enter the Discount",
-                    //     number: "Please enter a valid number.",
-                    // },
-                    // quote_no: {
-                    //     required: "Please Enter the quote number",
-                    //     number: "Please enter a valid number.",
-
-                    // },
                     remark: {
                         required: "Please Enter the remark",
                     },
                     'part_item_id_0': {
                         required: "Please enter the Part Number",
-                    },
-                    // 'description_0': {
-                    //     required: "Please enter the Description",
-                    // },
-                    
+                    },                    
                     'quantity_0': {
                         required: "Please enter the Quantity",
                         digits: "Please enter only digits for Quantity",
@@ -625,8 +571,8 @@
                         '][size]" placeholder="size" /></td>' +
                     '<td><input type="text" class="form-control amount" name="addmore[' + i +
                     '][amount]" placeholder=" Amount" readonly /></td>' +
-                    '<td><a class="remove-tr delete-btn btn btn-danger m-1" title="Delete Tender"><i class="fas fa-archive"></i></a></td>' +
-                    '</tr>'
+                   '<td><a class="remove-tr delete-btn btn btn-danger m-1" title="Delete Tender" data-id="{{ $editDataNew->id }}"><i class="fas fa-archive"></i></a></td>' +
+        '</tr>'
                 );
 
                 $("#dynamicTable").append(newRow);
@@ -638,13 +584,6 @@
                 required: "Please select the Part Number",
             }
         });
-                // $('input[name="addmore[' + i + '][description]"]').rules("add", {
-                //     required: true,
-                //     messages: {
-                //         required: "Please enter the Description",
-                //     }
-                // });
-             
                 $('input[name="addmore[' + i + '][quantity]"]').rules("add", {
                     required: true,
                     digits: true,
@@ -699,21 +638,24 @@
             });
 
             $('.delete-btn').click(function(e) {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $("#delete_id").val($(this).attr("data-id"));
-                        $("#deleteform").submit();
-                    }
-                });
-            });
+    e.preventDefault(); // Prevent the default action of the link
+    var deleteId = $(this).data("id");  // Get the ID from the data-id attribute
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $("#delete_id").val(deleteId); // Set the delete_id field in the form
+            $("#deleteform").submit();  // Submit the form
+        }
+    });
+});
+
         });
     </script>
 

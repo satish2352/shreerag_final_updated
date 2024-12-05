@@ -43,6 +43,16 @@ class AllListController extends Controller
             return $e;
         }
     } 
+    public function listDesignReport(Request $request){
+        try {
+            $data_output = $this->service->listDesignReport();
+        
+            return view('organizations.designer.list.list-accept-design-by-production', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
+    
     public function getAllListDesignRecievedForCorrection(Request $request)
     {
         try {

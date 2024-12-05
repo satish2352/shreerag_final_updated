@@ -166,6 +166,7 @@ Route::group(['middleware' => ['admin']], function () {
         //ALL List
         Route::get('/list-reject-design-from-prod', ['as' => 'list-reject-design-from-prod', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@getAllListDesignRecievedForCorrection']);
         Route::get('/list-accept-design-by-production', ['as' => 'list-accept-design-by-production', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@acceptdesignbyProduct']);
+        Route::get('/list-design-report', ['as' => 'list-design-report', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@listDesignReport']);
     });
     Route::group(['prefix' => 'proddept'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
@@ -290,7 +291,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/edit-delivery-chalan/{id}', ['as' => 'edit-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@edit']);
         Route::any('/update-delivery-chalan', ['as' => 'update-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@update']);
         Route::any('/delete-delivery-chalan/{id}', ['as' => 'delete-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@destroy']);
-        Route::post('/delete-addmore', ['as' => 'delete-addmore', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@destroyAddmore']);
+        Route::post('/delete-addmore-delivery', ['as' => 'delete-addmore-delivery', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@destroyAddmore']);
   
         Route::get('/list-returnable-chalan', ['as' => 'list-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@index']);
         // Route::post('/list-returnable-chalan', ['as' => 'list-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ReturnableChalanController@index']);

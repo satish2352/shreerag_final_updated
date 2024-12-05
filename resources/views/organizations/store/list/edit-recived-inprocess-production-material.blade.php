@@ -18,7 +18,7 @@
 </style>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div class="sparkline12-list">
+        <div class="sparkline12-list" style="margin-bottom: 100px;">
             <div class="sparkline12-hd">
                 <div class="main-sparkline12-hd">
                     <center><h1>Issue Material for Product</h1></center>

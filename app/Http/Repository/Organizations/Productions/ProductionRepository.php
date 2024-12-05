@@ -467,6 +467,10 @@ public function updateProductMaterial($request) {
                     $dataOutput->design_id = $dataOutput_ProductionDetails->first()->design_id;
                     $dataOutput->business_details_id = $dataOutput_ProductionDetails->first()->business_details_id;
                     $dataOutput->production_id = $dataOutput_ProductionDetails->first()->production_id;
+                    dd($dataOutput);
+                    die();
+                    
+                    
                     $dataOutput->save();
                     $update_data_admin['off_canvas_status'] = 18;
                     $update_data_admin['is_view'] = '0';

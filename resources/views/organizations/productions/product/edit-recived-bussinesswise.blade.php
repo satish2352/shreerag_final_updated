@@ -19,8 +19,8 @@
     }
 </style>
 <div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div class="sparkline12-list">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 200px;">
+        <div class="sparkline12-list" >
             <div class="sparkline12-hd">
                 <div class="main-sparkline12-hd">
                     <center><h1>Received Product Production Material Data</h1></center>
@@ -82,7 +82,7 @@
                                                         </th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
+                                                <tbody style="overflow: scroll;">
                                                     @foreach ($dataGroupedById as $key => $items)
                                                         @foreach ($items as $index => $item)
                                                             <tr @if($item->material_send_production) class="disabled-row" @endif>

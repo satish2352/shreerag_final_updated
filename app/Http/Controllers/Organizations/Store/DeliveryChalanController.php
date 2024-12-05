@@ -440,25 +440,47 @@ class DeliveryChalanController extends Controller
             }
 
 
-            public function destroyAddmore(Request $request){
-                $delete_data_id = base64_decode($request->id);
-                try {
-                    $delete_record = $this->service->deleteById($delete_data_id);
-                    if ($delete_record) {
-                        $msg = $delete_record['msg'];
-                        $status = $delete_record['status'];
-                        if ($status == 'success') {
-                            return redirect('storedept/list-delivery-chalan')->with(compact('msg', 'status'));
-                        } else {
-                            return redirect()->back()
-                                ->withInput()
-                                ->with(compact('msg', 'status'));
-                        }
-                    }
-                } catch (\Exception $e) {
-                    return $e;
-                }
-            } 
+            // public function destroyAddmore(Request $request){
+            //     dd($request);
+            //     die();
+            //     $delete_data_id = base64_decode($request->id);
+            //     try {
+            //         $delete_record = $this->service->deleteByIdAddmore($delete_data_id);
+            //         if ($delete_record) {
+            //             $msg = $delete_record['msg'];
+            //             $status = $delete_record['status'];
+            //             if ($status == 'success') {
+            //                 return redirect('storedept/list-delivery-chalan')->with(compact('msg', 'status'));
+            //             } else {
+            //                 return redirect()->back()
+            //                     ->withInput()
+            //                     ->with(compact('msg', 'status'));
+            //             }
+            //         }
+            //     } catch (\Exception $e) {
+            //         return $e;
+            //     }
+            // } 
+            public function destroyAddmore(Request $request)
+{
+    // dd($request); // Inspect the request data to see if delete_id is being passed
+    $delete_data_id = $request->delete_id; // Get the delete ID from the request
+    try {
+        $delete_record = $this->service->deleteByIdAddmore($delete_data_id);
+        if ($delete_record) {
+            $msg = $delete_record['msg'];
+            $status = $delete_record['status'];
+            if ($status == 'success') {
+                return redirect('storedept/list-delivery-chalan')->with(compact('msg', 'status'));
+            } else {
+                return redirect()->back()->withInput()->with(compact('msg', 'status'));
+            }
+        }
+    } catch (\Exception $e) {
+        return $e;
+    }
+}
+
     public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id)
     {
         try {

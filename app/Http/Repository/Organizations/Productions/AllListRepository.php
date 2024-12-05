@@ -184,7 +184,6 @@ public function getAllNewRequirementBusinessWise($business_id) {
   
   public function getAllacceptdesign(){
       try {
-
           $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION')];
           $array_to_be_check_store = [
             config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE'),
@@ -237,26 +236,37 @@ public function getAllNewRequirementBusinessWise($business_id) {
             ->leftJoin('purchase_orders', function($join) {
               $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
             })
-
-            ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
-            ->orWhereIn('business_application_processes.store_status_id',$array_to_be_check_store)
-            ->orWhereIn('purchase_orders.purchase_status_from_purchase',$array_to_be_check_purchase)
-            ->orWhereIn('business_application_processes.business_status_id',$array_to_be_check_owner)
-            ->orWhereIn('purchase_orders.quality_status_id',$array_to_be_check_quality)
+            ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
+            // ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
+            // ->orWhereIn('business_application_processes.store_status_id',$array_to_be_check_store)
+            // ->orWhereIn('purchase_orders.purchase_status_from_purchase',$array_to_be_check_purchase)
+            // ->orWhereIn('business_application_processes.business_status_id',$array_to_be_check_owner)
+            // ->orWhereIn('purchase_orders.quality_status_id',$array_to_be_check_quality)
             // ->where('businesses_details.is_approved_production', 1)
-            ->distinct('businesses.id')
+            // ->distinct('businesses.id')
             ->where('businesses.is_active',true)
-            ->groupBy('businesses_details.id',   'businesses_details.product_name','businesses.customer_po_number', 'businesses.remarks', 'businesses.is_active', 'production.business_id', 'businesses.updated_at', 'businesses_details.id')
-            ->select(
-                'businesses_details.id',
-                'businesses_details.product_name',
-                // 'businesses.id',
-                'businesses.customer_po_number',
-                'businesses.remarks',
-                'businesses.is_active',
-                'production.business_id',
-                'businesses.updated_at'
-            )->orderBy('businesses.updated_at', 'desc')->get();
+            ->groupBy([
+              'businesses.id', 
+              'businesses_details.product_name',
+              'businesses.customer_po_number', 
+              'businesses.remarks', 
+              'businesses.is_active', 
+              'production.business_id', 
+              'businesses.updated_at'
+          ])
+          ->select(
+              'businesses.id',
+              'businesses_details.product_name',
+              'businesses.customer_po_number',
+              'businesses.remarks',
+              'businesses.is_active',
+              'production.business_id',
+              'businesses.updated_at'
+          )
+          
+        ->orderBy('businesses.updated_at', 'desc')->get();
+            // dd($data_output);
+            // die();
           return $data_output;
        
       } catch (\Exception $e) {

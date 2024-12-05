@@ -363,6 +363,12 @@
                                 <span class="mini-click-non">Accepted Design List</span>
                             </a>
                         </li>
+                        <li class="nav-item {{ request()->is('designdept/list-design-report*') ? 'active' : '' }}">
+                            <a href="{{ route('list-design-report') }}">
+                                <i class="fa fa-check-circle icon-wrap"></i>
+                                <span class="mini-click-non">Design Report List</span>
+                            </a>
+                        </li>
 
                         {{-- <li>
                             <a class="has-arrow" href="{{ route('list-design-upload') }}" aria-expanded="false"><i
@@ -607,10 +613,10 @@
                             class="mini-click-non">Inventory Material List</span></a></li>
                         <li><a  href="{{ route('list-delivery-chalan') }}"><i
                             class="fa fa-clipboard-list icon-wrap" aria-hidden="true"></i> <span
-                            class="mini-click-non">Delivery Chalan</span></a></li>
+                            class="mini-click-non">Delivery Challan</span></a></li>
                             <li><a  href="{{ route('list-returnable-chalan') }}"><i
                                 class="fa fa-clipboard-list icon-wrap" aria-hidden="true"></i> <span
-                                class="mini-click-non">Returnable Chalan</span></a></li>
+                                class="mini-click-non">Returnable Challan</span></a></li>
                      @endif
                      @if (session()->get('role_id') == config('constants.ROLE_ID.INVENTORY'))
                      <li class="nav-item {{ request()->is('inventory/dashboard') ? 'active' : '' }}">
@@ -740,7 +746,7 @@
                         <li class="nav-item {{ request()->is('recive-logistics-list') ? 'active' : '' }}">
                             <a href="{{ route('recive-logistics-list') }}">
                                 <i class="fa big-icon fa-list-check icon-wrap"></i>
-                                <span class="mini-click-non">Recive Logistics List</span>
+                                <span class="mini-click-non">Receive Logistics List</span>
                             </a>
                         </li>
                         <li class="nav-item {{ request()->is('list-send-to-dispatch') ? 'active' : '' }}">
