@@ -91,7 +91,7 @@ class ReturnableChalanRepository
     }
     public function getById($id) {
         try {
-            $designData = ReturnableChalan::leftJoin('tbl_returnable_chalan_item_details', 'tbl_returnable_chalan.id', '=', 'tbl_returnable_chalan_item_details.delivery_chalan_id')
+            $designData = ReturnableChalan::leftJoin('tbl_returnable_chalan_item_details', 'tbl_returnable_chalan.id', '=', 'tbl_returnable_chalan_item_details.returnable_chalan_id')
                 ->select('tbl_returnable_chalan_item_details.*', 'tbl_returnable_chalan_item_details.id as tbl_returnable_chalan_item_details_id', 
                 'tbl_returnable_chalan.id as purchase_main_id', 'tbl_returnable_chalan.vendor_id','tbl_returnable_chalan.transport_id', 'tbl_returnable_chalan.vehicle_id', 'tbl_returnable_chalan.business_id','tbl_returnable_chalan.tax_type', 'tbl_returnable_chalan.tax_id','tbl_returnable_chalan.po_date', 
                 'tbl_returnable_chalan.vehicle_number','tbl_returnable_chalan.plant_id', 'tbl_returnable_chalan.vehicle_number','tbl_returnable_chalan.remark')
@@ -129,10 +129,13 @@ class ReturnableChalanRepository
                     'vendors.quote_no',
                     'tbl_returnable_chalan.tax_type',
                     'tbl_tax.name as tax_number',
-                    'tbl_returnable_chalan.vehicle_number'
+                    'tbl_returnable_chalan.vehicle_number',
+                    'tbl_returnable_chalan.dc_number'
                 )
                 ->where('tbl_returnable_chalan.id', $return_id)
                 ->first();
+                // dd($purchaseOrder);
+                // die();
             if (!$purchaseOrder) {
                 throw new \Exception('Purchase order not found.');
             }
@@ -207,8 +210,8 @@ class ReturnableChalanRepository
                 foreach ($request->addmore as $key => $item) {
                     $designDetails = new ReturnableChalanItemDetails();
               
-                    // Assuming 'delivery_chalan_id' is a foreign key related to 'PurchaseOrderModel'
-                    $designDetails->delivery_chalan_id = $request->purchase_main_id; // Set the parent design ID
+                    // Assuming 'returnable_chalan_id' is a foreign key related to 'PurchaseOrderModel'
+                    $designDetails->returnable_chalan_id = $request->purchase_main_id; // Set the parent design ID
                     $designDetails->part_item_id = $item['part_item_id'];
                     $designDetails->hsn_id = $item['hsn_id'];
                     $designDetails->process_id = $item['process_id'];

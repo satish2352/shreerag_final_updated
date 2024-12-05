@@ -29,7 +29,7 @@
                     <div class="sparkline12-hd">
                         <div class="main-sparkline12-hd">
                             <center>
-                                <h1>Edit Delivery Challan Data</h1>
+                                <h1>Edit Returnable Challan Data</h1>
                             </center>
                         </div>
                     </div>
@@ -366,7 +366,7 @@
                                                             <div class="col-lg-5"></div>
                                                             <div class="col-lg-7">
                                                                 <div class="login-horizental cancel-wp pull-left">
-                                                                    <a href="{{ route('list-delivery-chalan') }}"
+                                                                    <a href="{{ route('list-returnable-chalan') }}"
                                                                         class="btn btn-white"
                                                                         style="margin-bottom:50px">Cancel</a>
                                                                     <button class="btn btn-sm btn-primary login-submit-cs"
@@ -390,7 +390,7 @@
     </div>
 
 
-    <form method="POST" action="{{ route('delete-addmore-delivery') }}" id="deleteform">
+    <form method="POST" action="{{ route('delete-addmore-returnable') }}" id="deleteform">
         @csrf
         <input type="hidden" name="delete_id" id="delete_id" value="">
     </form>

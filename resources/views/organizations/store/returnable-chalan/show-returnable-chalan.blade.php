@@ -123,7 +123,7 @@
                                                     <span><strong>Date: </strong></span>
                                                 </div> --}}
                                                 <div style="border-bottom: 1px solid black; padding: 10px; width: 100%; display: flex; justify-content: space-between;">
-                                                    <span><strong>Sr. No.: </strong> {{ $showData['purchaseOrder']->id }}</span>
+                                                    <span><strong>Sr. No.: </strong> {{ $showData['purchaseOrder']->dc_number }}</span>
                                                     <span style="padding-right: 20px;"><strong>Date: </strong> {{ now()->format('d-m-Y') }}</span>
                                                 </div>
                                                 
