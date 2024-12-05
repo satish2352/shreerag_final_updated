@@ -402,6 +402,7 @@ class ReturnableChalanController extends Controller
         $dataOutputTax = Tax::where('is_active', true)->get();
         $dataOutputPartItem = PartItem::where('is_active', true)->get();
         $dataOutputBusiness = Business::where('is_active', true)->get();
+        $dataOutputPurchaseOrdersModel = PurchaseOrdersModel::where('is_active', true)->get();
         $dataOutputVehicleType = VehicleType::where('is_active', true)->get();
         $dataOutputTransportName = TransportName::where('is_active', true)->get();
         $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
@@ -412,6 +413,7 @@ class ReturnableChalanController extends Controller
         'dataOutputTax',
         'dataOutputPartItem',
         'dataOutputBusiness',
+        'dataOutputPurchaseOrdersModel',
         'dataOutputVehicleType',
         'dataOutputTransportName',
         'dataOutputUnitMaster',

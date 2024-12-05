@@ -135,10 +135,10 @@
                                                                             <label for="business_id">PO Number (Optional)</label>
                                                                                 <select class="form-control mb-2" name="business_id" id="business_id">
                                                                                 <option value="" default>Select PO Number</option>
-                                                                                @foreach ($dataOutputBusiness as $OutputBusiness)
+                                                                                @foreach ($dataOutputPurchaseOrdersModel as $OutputBusiness)
                                                                                 <option value="{{ $OutputBusiness['id'] }}"
                                                                                     {{ old('business_id', $editDataNew->business_id) == $OutputBusiness->id ? 'selected' : '' }}>
-                                                                                    {{ $OutputBusiness->customer_po_number }}
+                                                                                    {{ $OutputBusiness->purchase_orders_id }}
                                                                                 </option>
                                                                             @endforeach
                                                                             </select>
