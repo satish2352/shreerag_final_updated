@@ -67,6 +67,7 @@
                                                 <th data-field="vendor_company_name" data-editable="false">Client Company Name</th>
                                                 <th data-field="email" data-editable="false">Email</th>
                                                 <th data-field="contact_no" data-editable="false">Phone Number</th>
+                                                <th data-field="action" data-editable="false">Action</th>
                                                 {{-- <th data-field="vendor_id" data-editable="false">Vendor</th>                                         
                                             <th data-field="client_name" data-editable="false">Client Name</th>                                          --}}
                                             </tr>
@@ -90,7 +91,15 @@
                                                    <td>{{ $data->vendor_company_name }}</td>
                                                    <td>{{ $data->vendor_email }}</td> 
                                                    <td>{{ $data->contact_no }}</td> 
-                                                   
+                                                   <td>
+                                                    <div style="display: inline-block; align-items: center;">
+                                                        <a
+                                                        href="{{ route('check-details-of-po-before-send-vendor', $data->purchase_order_id) }}"><button
+                                                                data-toggle="tooltip" title="View Details"
+                                                                class="pd-setting-ed"> View Details</button></a> &nbsp;
+                                                        &nbsp; &nbsp;
+                                                    </div>
+                                                </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

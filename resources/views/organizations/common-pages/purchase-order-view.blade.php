@@ -87,7 +87,7 @@
                         <div style="border: 1px solid black; padding: 10px; width: 100%; margin-bottom:70px;">
                             <!-- Header Section -->
                             <div style="border-bottom: 1px solid black; padding-bottom: 10px;">
-                                <div style="text-align: center; font-size: 20px; font-weight: bold;">Share</div>
+                                <div style="text-align: center; font-size: 20px; font-weight: bold;">{{ $getOrganizationData->company_name }}</div>
                                 <div style="text-align: center;">
                                     {{ $getOrganizationData->name }}: {{ $getOrganizationData->mobile_number }}, {{ $getOrganizationData->email }}
                                 </div>
