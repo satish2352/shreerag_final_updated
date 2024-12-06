@@ -136,7 +136,7 @@
                                                 <strong><p style="font-size: 20px; margin-bottom:0px;">{{ $getOrganizationData->company_name }}</p></strong><br>
                                                 {{ $getOrganizationData->address }}</br>
                                                 {{ $getOrganizationData->email }},<br/>
-                                                 {{ $getOrganizationData->mobile_number }},</br>
+                                                 {{-- {{ $getOrganizationData->mobile_number }},</br> --}}
                                                 <strong>GST No.:   {{ $getOrganizationData->mobile_number }},</strong>
                                             </td>
                                             <td style="width: 50%; vertical-align: top; padding-top:0px; padding-left:0px; padding-right:0px; border: 1px solid black; ">
@@ -146,7 +146,13 @@
                                                 </div> --}}
                                                 <div style="border-bottom: 1px solid black; padding: 10px; width: 100%; display: flex; justify-content: space-between;">
                                                     <span><strong>DC No. : </strong> {{ $showData['purchaseOrder']->dc_number }}</span>
-                                                    <span style="padding-right: 20px;"><strong>Date: </strong> {{ $showData['purchaseOrder']->dc_date }}</span>
+                                                    {{-- <span style="padding-right: 20px;"><strong>Date: </strong> {{ $showData['purchaseOrder']->dc_date }}</span> --}}
+                                                    <span style="padding-right: 20px;">
+                                                        <strong>Date: </strong>  
+                                                        {{ $showData['purchaseOrder']->dc_date ? \Carbon\Carbon::parse($showData['purchaseOrder']->dc_date)->format('Y-m-d') : 'N/A' }}
+                                                    </span>
+                                                    
+
                                                 </div>
                                                 
                                                 <p style="font-size: 20px; margin-bottom:0px; padding-left:10px;"><strong>To : {{ $showData['purchaseOrder']->vendor_company_name }}</strong></p>
@@ -250,7 +256,7 @@
                                                     <div style="text-align: center; font-size:18px;"><strong>For: {{ $getOrganizationData->company_name }}</strong></div>
                                                 </td>
                                             </tr>
-                                            <tr style="padding-bottom:10px">
+                                            <tr style="height:80px;">
                                              
                                                 <td class="no-border" colspan="5"><strong>Signature of Processor/Job Worker</strong></td>
                                                 <td class="no-border" style="padding-left:24px;" colspan="4">

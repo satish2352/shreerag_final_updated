@@ -100,7 +100,7 @@
                                             </div>
                                             <!-- Title Section (Centered) -->
                                             <div style="width: 60%; text-align: center; ">
-                                                <span style="font-size: 20px; font-weight: bold;">RETURNABLE CHALAN</span>
+                                                <span style="font-size: 20px; font-weight: bold;">RETURNABLE DELIVERY CHALLAN</span>
                                                 <div style="text-align: center; margin-top: 5px;">
                                                     <span style="font-size: 11px;"> (In Case of goods sent for the Job Work Under Section 143 of GST Act)</span>
                                                 </div>
@@ -119,7 +119,7 @@
                                                 <strong><p style="font-size: 20px; margin-bottom:0px;">{{ $getOrganizationData->company_name }}</p></strong><br>
                                                 {{ $getOrganizationData->address }}</br>
                                                 {{ $getOrganizationData->email }},<br/>
-                                                 {{ $getOrganizationData->mobile_number }},</br>
+                                                 {{-- {{ $getOrganizationData->mobile_number }},</br> --}}
                                                 <strong>GST No.:   {{ $getOrganizationData->mobile_number }},</strong>
                                             </td>
                                             <td style="width: 50%; vertical-align: top; padding-top:0px; padding-left:0px; padding-right:0px; border: 1px solid black; ">
@@ -129,7 +129,12 @@
                                                 </div> --}}
                                                 <div style="border-bottom: 1px solid black; padding: 10px; width: 100%; display: flex; justify-content: space-between;">
                                                     <span><strong>DC No. :</strong> {{ $showData['purchaseOrder']->dc_number }}</span>
-                                                    <span style="padding-right: 20px;"><strong>Date: </strong> {{ $showData['purchaseOrder']->dc_date }}</span>
+                                                    {{-- <span style="padding-right: 20px;"><strong>Date: </strong> {{ $showData['purchaseOrder']->dc_date }}</span> --}}
+                                                    <span style="padding-right: 20px;">
+                                                        <strong>Date: </strong>  
+                                                        {{ $showData['purchaseOrder']->dc_date ? \Carbon\Carbon::parse($showData['purchaseOrder']->dc_date)->format('Y-m-d') : 'N/A' }}
+                                                    </span>
+                                                    
                                                 </div>
                                                 
                                                 <p style="font-size: 20px; margin-bottom:0px; padding-left:10px;"><strong>To : {{ $showData['purchaseOrder']->vendor_company_name }}</strong></p>
@@ -201,10 +206,10 @@
                                                     // Calculate the final amount including tax
                                                     $finalAmount = $totalAmount + $taxAmount;
                                                 @endphp
-                                                <td class="no-border" colspan="2">
+                                                {{-- <td class="no-border" colspan="2">
                                                    <div><p style="font-size: 15px;"> <strong>Vehicle No.:-{{ $showData['purchaseOrder']->vehicle_number }}</strong> </p></div>
-                                                </td>
-                                                <td class="no-border" colspan="4"></td>
+                                                </td> --}}
+                                                <td class="no-border" colspan="6"></td>
                                                 <td colspan="2"  style="border: 1px solid black;" class="text-left">
                                                  {{ $taxType }} {{ $showData['purchaseOrder']->tax_number }}% 
                                                 </td>
@@ -213,7 +218,10 @@
                                                 </td>
                                             </tr>
                                             <tr style="border-bottom: 1px solid black;">
-                                                <td class="no-border" colspan="6"></td>
+                                                <td class="no-border" colspan="6">
+                                                    <div><p style="font-size: 15px;"> <strong>Vehicle No.:-{{ $showData['purchaseOrder']->vehicle_number }}</strong> </p></div>
+                                                 </td>
+                                                
                                                
                                                 <td colspan="2"  style="border: 1px solid black;"><strong>Grand Total</strong></td>
                                                 <td class="text-right"  style="border: 1px solid black;" colspan="2">
@@ -227,7 +235,7 @@
                                                     <div style="text-align: center; font-size:18px;"><strong>For: {{ $getOrganizationData->company_name }}</strong></div>
                                                 </td>
                                             </tr>
-                                            <tr style="padding-bottom:10px">
+                                            <tr style="height:80px;">
                                              
                                                 <td class="no-border" colspan="5"><strong>Signature of Processor/Job Worker</strong></td>
                                                 <td class="no-border" style="padding-left:24px;" colspan="4">

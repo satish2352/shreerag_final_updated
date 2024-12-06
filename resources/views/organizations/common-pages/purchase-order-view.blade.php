@@ -70,10 +70,9 @@
         background-color: #f2f2f2;
         /* Optional: add background color for table header */
     }
-
-    /* table tr td {
-                                border: 1px solid red;
-                            } */
+    p{
+    font-size:16px !important;
+    }
 </style>
 
 
@@ -132,8 +131,10 @@
                                 <div>
                                     <div style="font-weight: bold;">{{ $purchaseOrder->vendor_company_name }}</div>
                                     <div>{{ $purchaseOrder->vendor_address }}</div>
-                                    <div style="margin-top: 10px;">PO Number: {{ $purchaseOrder->purchase_orders_id }}</div>
-                                    <div>Date: {{ $purchaseOrder->created_at }}</div>
+                                    {{-- <div style="margin-top: 10px;">PO Number: {{ $purchaseOrder->purchase_orders_id }}</div> --}}
+                                    {{-- <div>Date: {{ $purchaseOrder->created_at }}</div> --}}
+                                    <div>Date: {{ $purchaseOrder->created_at ? $purchaseOrder->created_at->format('Y-m-d') : 'N/A' }}</div>
+
                                 </div>
                                 <div>
                                     <div>P.O. No.: {{ $purchaseOrder->purchase_orders_id }}</div>
@@ -261,13 +262,13 @@
                                         </td>
                                     </tr>
                                    
-                                    <tr>
+                                    <tr style="padding-bottom: 20px;">
                                         <td colspan="8" class="no-border">
                                             Delivery AS PER ATTACHED DELIVERY SCHEDULE
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="8" class="no-border">
+                                        <td colspan="8" class="no-border" style="height: 20vh;">
                                             <div style="float: right;"><strong>For: {{ $getOrganizationData->company_name }}</strong></div>
                                         </td>
                                     </tr>
@@ -292,17 +293,18 @@
                     
                             <!-- Print Button -->
 
-                            <div>
+                            <div class="terms-condition" style="padding-top: 140px;">
                                
-                                <p>Purchase Order<br></br>
-                                    Standard Terms & Conditions<br></br>
-                                    General:<br></br>
+                                <p class=""><b><h5>Standard Terms & Conditions<br></br>
+                                    General:</h5></b>
+                                  <p>
                                     Acceptance of this Purchase/ Work Order including revision (hereinafter referred to as “PO/Order”)
                                     includes the acceptance of the following terms & conditions and is made expressly conditional on
                                     Seller’s (hereinafter also referred to as “Vendor(s)” or “Supplier(s)”) assent to the exact terms contained
                                     herein. None of the terms in the Order may be modified, added to, or superseded, except with the written
                                     consent of Shreerag Engineering and Auto Pvt Ltd<br></br>
                                     (hereinafter also referred to as “ SREAPL” or “Buyer”). It is understood by the Seller that this document goes through various changes periodically and hence they will ensure that they keep checking for the latest copy regularly and keep themselves abreast about the same.
+                                 
                                     1. Placing order:<br></br>
                                     Only orders in traceable form (in writing, by email only from the email ID purchase@shreeragengg.com) are
                                     binding. Verbal orders or orders by phone as well as changes and additions to our order shall be binding
@@ -418,6 +420,7 @@
                                     approval for these costs or their close estimates as practically possible. In case the Vendor/ Supplier
                                     fails to provide supporting documents towards the said expense(s) then the same shall be at discretion
                                     of the Vessel superintendent of the company and which shall be final and binding on the parties.
+                                </p>
                                     </p>
                             </div>
                             <a>
