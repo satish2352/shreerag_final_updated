@@ -480,45 +480,46 @@
                     var contentToPrint = document.getElementById("printableArea").innerHTML;
             
                     // Open a new window
-                    var printWindow = window.open('', '', 'height=auto,width=800');
+                    var printWindow = window.open('', '', 'height=auto,width=auto');
             
                     // Write the content to the new window with proper styles
                     printWindow.document.write('<html><head><title>Print Invoice</title>');
                     printWindow.document.write('<style>');
                     printWindow.document.write(`
-                       @media print {
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-    }
-    #printableArea {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box; /* Ensure padding and borders are included in width */
-    }
-    table {
-        width: 100%; /* Ensure table takes full width */
-        border-collapse: collapse; /* Merge table borders */
-        border: 1px solid #000; /* Add a solid border around the table */
-    }
-    th, td {
-        border: 1px solid #000; /* Add borders to all cells */
-        padding: 5px;
-        text-align: left;
-        word-wrap: break-word; /* Ensure long text wraps */
-    }
-    th {
-        background-color: #f2f2f2;
-    }
-    /* Prevent content from being cut off */
-    html, body {
-        width: 100%;
-        overflow-x: visible;
-    }
-}
-
+                        @media print {
+                            body {
+                                font-family: Arial, sans-serif;
+                                margin: 0;
+                                padding: 0;
+                            }
+                            #printableArea {
+                                width: 100%;
+                                margin: 0;
+                                padding: 0;
+                                border-right: 2px solid #ddd; /* Add a thick right border */
+                            }
+                            table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                margin: 0;
+                                border: none; /* Remove table borders */
+                            }
+                            th, td {
+                                padding: 5px;
+                                text-align: left;
+                                word-wrap: break-word;
+                                border: none; /* Remove border from cells */
+                            }
+                            th {
+                                background-color: #f2f2f2;
+                            }
+                            .page-break {
+                                page-break-before: always;
+                            }
+                            html, body {
+                                height: auto;
+                            }
+                        }
                     `);
                     printWindow.document.write('</style>');
                     printWindow.document.write('</head><body>');
@@ -536,4 +537,6 @@
                     printWindow.close();
                 }
             </script>
+            
+            
             
