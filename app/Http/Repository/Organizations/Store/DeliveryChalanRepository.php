@@ -106,6 +106,7 @@ class DeliveryChalanRepository
                 'tbl_delivery_chalan.vehicle_number','tbl_delivery_chalan.plant_id', 'tbl_delivery_chalan.vehicle_number','tbl_delivery_chalan.remark')
                 ->where('tbl_delivery_chalan.id', $id)
                 ->get();
+
             if ($designData->isEmpty()) {
                 return null;
             } else {
@@ -142,8 +143,9 @@ class DeliveryChalanRepository
                     'tbl_delivery_chalan.tax_type',
                     'tbl_tax.name as tax_number',
                     'tbl_delivery_chalan.vehicle_number',
-                      'tbl_delivery_chalan.remark',
-                      'tbl_delivery_chalan.dc_number'
+                    'tbl_delivery_chalan.remark',
+                    'tbl_delivery_chalan.dc_number',
+                    'tbl_delivery_chalan.dc_date'
                 )
                 ->first();
             if (!$purchaseOrder) {

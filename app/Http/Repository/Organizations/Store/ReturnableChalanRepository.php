@@ -130,7 +130,8 @@ class ReturnableChalanRepository
                     'tbl_returnable_chalan.tax_type',
                     'tbl_tax.name as tax_number',
                     'tbl_returnable_chalan.vehicle_number',
-                    'tbl_returnable_chalan.dc_number'
+                    'tbl_returnable_chalan.dc_number',
+                    'tbl_returnable_chalan.dc_date'
                 )
                 ->where('tbl_returnable_chalan.id', $return_id)
                 ->first();

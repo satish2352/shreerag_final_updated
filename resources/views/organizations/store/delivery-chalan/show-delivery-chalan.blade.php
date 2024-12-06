@@ -107,7 +107,26 @@
                           
                                 <div style="border: 1px solid black; padding: 10px; width: 100%;">
                                     <!-- Header Section -->
-                                    <div style=" padding-bottom: 10px; display: flex; align-items: center;">
+                                    <div style="display: flex; align-items: center; padding-bottom: 10px; border: 1px solid black;">
+                                        <!-- Left Side: Logo -->
+                                        <div style="width: 20%; text-align: left; padding-left: 10px;">
+                                            <img src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}" 
+                                                 alt="{{ strip_tags($getOrganizationData['company_name']) }} Image" 
+                                                 style="width: 100px;" />
+                                        </div>
+                                    
+                                        <!-- Center: Delivery Challan Title -->
+                                        <div style="width: 80%; text-align: center;">
+                                            <div style="font-size: 20px; font-weight: bold; text-align: center;">
+                                                DELIVERY CHALLAN
+                                            </div>
+                                            <div style="font-size: 14px;">
+                                                (In Case of goods sent for the Job Work Under Section 143 of GST Act)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    {{-- <div style=" padding-bottom: 10px; display: flex; align-items: center;">
                                         <!-- Left Side: Image -->
                                         <div style="width:20%;">
                                         <img class="img-size"
@@ -126,7 +145,7 @@
                                             <span>(In Case of goods sent for the Job Work Under Section 143 of GST Act) </span>
                                         </div>
                                     </div>
-                                    </div>
+                                    </div> --}}
                                 <table style="width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px;">
                                         <tr>
                                             <td style="width: 50%; padding: 10px; border: 1px solid black; padding: 5px">
