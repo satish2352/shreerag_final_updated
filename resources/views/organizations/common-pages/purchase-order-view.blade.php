@@ -102,7 +102,7 @@
                             </div>
                     
                             <!-- Company and PO Details -->
-                            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid black; padding-top: 10px; padding-bottom: 10px; width:80%;">
+                            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid black; padding-top: 10px; padding-bottom: 10px; ">
                                 <div>
                                     <div style="font-weight: bold;">{{ $purchaseOrder->vendor_company_name }}</div>
                                     <div>{{ $purchaseOrder->vendor_address }}</div>
