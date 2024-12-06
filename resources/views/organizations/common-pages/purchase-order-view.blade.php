@@ -86,7 +86,7 @@
                   
                         <div style="border: 1px solid black; padding: 10px; width: 100%; margin-bottom:70px;">
                             <!-- Header Section -->
-                            <div class="d-flex;">
+                            <div style="display: flex;">
                                 <div style="width:20%;">
                                     <img class="img-size"
                                     src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}"
