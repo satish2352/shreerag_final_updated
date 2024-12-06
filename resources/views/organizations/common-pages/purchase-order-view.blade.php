@@ -85,20 +85,6 @@
                   
                         <div style="border: 1px solid black; padding: 10px; width: 100%; margin-bottom:70px;">
                             <!-- Header Section -->
-                            {{-- <div style="display: flex; border-bottom: 1px solid black; padding-bottom: 10px;">
-                                <div style="width:20%;">
-                                    <img class="img-size"
-                                    src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}"
-                                    alt="No Image"
-                                    style="width: 100px; padding:10px;" /> <!-- Inline style here may override print styles -->
-                                    </div>
-                                <div style="width:80%;">
-                                    <div style="text-align: center; font-size: 20px; font-weight: bold;">{{ $getOrganizationData->company_name }}</div>
-                                    <div style="text-align: center;">
-                                        {{ $getOrganizationData->name }}: {{ $getOrganizationData->mobile_number }}, {{ $getOrganizationData->email }}
-                                    </div>
-                                </div>
-                            </div> --}}
                             <div style="border-bottom: 1px solid black; padding-bottom: 10px;">
                                 <!-- Flex Container for Logo and Title -->
                                 <div style="display: flex; align-items: center; justify-content: space-between;">

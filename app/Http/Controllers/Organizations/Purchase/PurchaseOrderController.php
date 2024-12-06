@@ -386,8 +386,7 @@ class PurchaseOrderController extends Controller
                             ->withInput()
                             ->withErrors($validation);
                     } else {
-                        $requi_id = $request->requistition_id;
-                        $businessId = $request->business_details_id;
+                        
                         $update_data = $this->service->updateAll($request);
                         // $requisition_id = $request->input('requisition_id');
                        
@@ -395,8 +394,7 @@ class PurchaseOrderController extends Controller
                             $msg = $update_data['msg'];
                             $status = $update_data['status'];
                             if ($status == 'success') {
-                                return redirect('purchase/list-purchase-order/' . $requi_id . '/' . $businessId)
-                                ->with(['msg' => $msg, 'status' => $status]);
+                                return redirect('purchase/list-purchase')->with(compact('msg', 'status'));
                             } else {
                                 return redirect()->back()
                                     ->withInput()

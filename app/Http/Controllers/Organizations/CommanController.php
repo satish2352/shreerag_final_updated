@@ -105,6 +105,7 @@ class CommanController
                     'purchase_orders.note',
                     'vendors.vendor_name', 
                     'vendors.vendor_company_name', 
+                    'vendors.mobile_number', 
                     'vendors.vendor_email', 
                     'vendors.vendor_address', 
                     'vendors.gst_no', 
