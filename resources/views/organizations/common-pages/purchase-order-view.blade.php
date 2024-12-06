@@ -114,14 +114,15 @@
                                     <!-- Title Section (Centered) -->
                                     <div style="width: 60%; text-align: center; font-size: 20px; font-weight: bold;">
                                         {{ $getOrganizationData->company_name }}
+                                        <div style="text-align: center; margin-top: 5px;">
+                                            {{ $getOrganizationData->name }}: {{ $getOrganizationData->mobile_number }}, {{ $getOrganizationData->email }}
+                                        </div>
                                     </div>
                                     <!-- Empty Space to Maintain Flexbox Alignment -->
                                     <div style="width: 20%;"></div>
                                 </div>
                                 <!-- Details Section (Centered) -->
-                                <div style="text-align: center; margin-top: 5px;">
-                                    {{ $getOrganizationData->name }}: {{ $getOrganizationData->mobile_number }}, {{ $getOrganizationData->email }}
-                                </div>
+                                
                             </div>
                             
                             
