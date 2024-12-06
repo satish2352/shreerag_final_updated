@@ -101,27 +101,29 @@
                                 </div>
                             </div> --}}
                             <div style="border-bottom: 1px solid black; padding-bottom: 10px;">
-                                <div style="display: flex; align-items: center;">
-                                    <!-- Image Section -->
-                                    <div style="width: 20%; text-align: center;">
+                                <!-- Flex Container for Logo and Title -->
+                                <div style="display: flex; align-items: center; justify-content: space-between;">
+                                    <!-- Logo Section (Left Aligned) -->
+                                    <div style="width: 20%; text-align: left;">
                                         <img 
                                             src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}" 
                                             alt="No Image" 
                                             style="width: 100px; padding: 10px;" 
                                         />
                                     </div>
-                                    <!-- Spacer for Alignment -->
-                                    <div style="width: 80%;"></div>
+                                    <!-- Title Section (Centered) -->
+                                    <div style="width: 60%; text-align: center; font-size: 20px; font-weight: bold;">
+                                        {{ $getOrganizationData->company_name }}
+                                    </div>
+                                    <!-- Empty Space to Maintain Flexbox Alignment -->
+                                    <div style="width: 20%;"></div>
                                 </div>
-                                <!-- Title Section (Full Width, Centered) -->
-                                <div style="text-align: center; font-size: 20px; font-weight: bold; margin-top: 10px;">
-                                    {{ $getOrganizationData->company_name }}
-                                </div>
-                                <!-- Details Section (Full Width, Centered) -->
+                                <!-- Details Section (Centered) -->
                                 <div style="text-align: center; margin-top: 5px;">
                                     {{ $getOrganizationData->name }}: {{ $getOrganizationData->mobile_number }}, {{ $getOrganizationData->email }}
                                 </div>
                             </div>
+                            
                             
                             <!-- Company and PO Details -->
                             <div style="display: flex; justify-content: space-between; border-bottom: 1px solid black; padding-top: 10px; padding-bottom: 10px; ">
