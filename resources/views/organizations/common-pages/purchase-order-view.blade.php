@@ -93,7 +93,7 @@
                                     alt="No Image"
                                     style="width: 100px; padding:10px;" /> <!-- Inline style here may override print styles -->
                                     </div>
-                                <div style="border-bottom: 1px solid black; padding-bottom: 10px;">
+                                <div style="border-bottom: 1px solid black; padding-bottom: 10px; width:80%;">
                                     <div style="text-align: center; font-size: 20px; font-weight: bold;">{{ $getOrganizationData->company_name }}</div>
                                     <div style="text-align: center;">
                                         {{ $getOrganizationData->name }}: {{ $getOrganizationData->mobile_number }}, {{ $getOrganizationData->email }}
