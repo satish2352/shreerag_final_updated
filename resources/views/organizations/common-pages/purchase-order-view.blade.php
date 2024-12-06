@@ -130,18 +130,20 @@
                             <!-- Company and PO Details -->
                             <div style="display: flex; justify-content: space-between; border-bottom: 1px solid black; padding-top: 10px; padding-bottom: 10px; ">
                                 <div>
-                                    <div style="font-weight: bold;">To. {{ $purchaseOrder->vendor_company_name }}</div>
+                                    <div style="font-weight: bold;">To, {{ $purchaseOrder->vendor_company_name }}</div>
                                     <div>{{ $purchaseOrder->vendor_address }}</div>
-                                    <div>{{ $purchaseOrder->gst_no }}</div>
-                                    <div>{{ $purchaseOrder->contact_no }}</div>
+                                    <div>GST No. : {{ $purchaseOrder->gst_no }}</div>
+                                    <div>Mo. No. :{{ $purchaseOrder->contact_no }}</div>
+                                    <div>Email Id :{{ $purchaseOrder->vendor_email }}</div>
                                     {{-- <div style="margin-top: 10px;">PO Number: {{ $purchaseOrder->purchase_orders_id }}</div> --}}
                                     {{-- <div>Date: {{ $purchaseOrder->created_at }}</div> --}}
-                                    <div>Date: {{ $purchaseOrder->created_at ? $purchaseOrder->created_at->format('Y-m-d') : 'N/A' }}</div>
+                                   
 
                                 </div>
                                 <div>
                                     <div>P.O. No.: {{ $purchaseOrder->purchase_orders_id }}</div>
-                                    <div>Date Ref No.: {{ $purchaseOrder->quote_no }}</div>
+                                    <div>Date: {{ $purchaseOrder->created_at ? $purchaseOrder->created_at->format('Y-m-d') : 'N/A' }}</div>
+                                    <div>Quote Ref No.: {{ $purchaseOrder->quote_no }}</div>
                                     <div>Payment Terms: {{ $purchaseOrder->payment_terms }} DAYS</div>
                                 </div>
                             </div>
