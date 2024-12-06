@@ -86,21 +86,23 @@
                   
                         <div style="border: 1px solid black; padding: 10px; width: 100%; margin-bottom:70px;">
                             <!-- Header Section -->
-                            <div style="width:20%;">
-                                <img class="img-size"
-                                src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}"
-                                alt="No Image"
-                                style="width: 100px; padding:10px;" /> <!-- Inline style here may override print styles -->
-                                </div>
-                            <div style="border-bottom: 1px solid black; padding-bottom: 10px;">
-                                <div style="text-align: center; font-size: 20px; font-weight: bold;">{{ $getOrganizationData->company_name }}</div>
-                                <div style="text-align: center;">
-                                    {{ $getOrganizationData->name }}: {{ $getOrganizationData->mobile_number }}, {{ $getOrganizationData->email }}
+                            <div class="d-flex;">
+                                <div style="width:20%;">
+                                    <img class="img-size"
+                                    src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}"
+                                    alt="No Image"
+                                    style="width: 100px; padding:10px;" /> <!-- Inline style here may override print styles -->
+                                    </div>
+                                <div style="border-bottom: 1px solid black; padding-bottom: 10px;">
+                                    <div style="text-align: center; font-size: 20px; font-weight: bold;">{{ $getOrganizationData->company_name }}</div>
+                                    <div style="text-align: center;">
+                                        {{ $getOrganizationData->name }}: {{ $getOrganizationData->mobile_number }}, {{ $getOrganizationData->email }}
+                                    </div>
                                 </div>
                             </div>
                     
                             <!-- Company and PO Details -->
-                            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid black; padding-top: 10px; padding-bottom: 10px;">
+                            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid black; padding-top: 10px; padding-bottom: 10px; width:80%;">
                                 <div>
                                     <div style="font-weight: bold;">{{ $purchaseOrder->vendor_company_name }}</div>
                                     <div>{{ $purchaseOrder->vendor_address }}</div>
