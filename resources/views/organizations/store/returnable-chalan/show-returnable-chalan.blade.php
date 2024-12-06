@@ -87,25 +87,30 @@
                         <div class="sparkline13-list" >
                           
                                 <div style="border: 1px solid black; padding: 10px; width: 100%;">
-                                    <!-- Header Section -->
-                                    <div style=" padding-bottom: 10px; display: flex; align-items: center;">
-                                        <!-- Left Side: Image -->
-                                        <div style="flex: 1;">
-                                            <img class="img-size"
-                                                src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}"
-                                                alt="{{ strip_tags($getOrganizationData['company_name']) }} Image" />
+                                     <div style="border-bottom: 1px solid black; padding-bottom: 10px;">
+                                        <!-- Flex Container for Logo and Title -->
+                                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                                            <!-- Logo Section (Left Aligned) -->
+                                            <div style="width: 20%; text-align: left;">
+                                                <img 
+                                                    src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}" 
+                                                    alt="No Image" 
+                                                    style="width: 100px; padding: 10px;" 
+                                                />
+                                            </div>
+                                            <!-- Title Section (Centered) -->
+                                            <div style="width: 60%; text-align: center; ">
+                                                <span style="font-size: 20px; font-weight: bold;">RETURNABLE CHALAN</span>
+                                                <div style="text-align: center; margin-top: 5px;">
+                                                    <span style="font-size: 15px;"> (In Case of goods sent for the Job Work Under Section 143 of GST Act)</span>
+                                                </div>
+                                            </div>
+                                            <!-- Empty Space to Maintain Flexbox Alignment -->
+                                            <div style="width: 20%;"></div>
                                         </div>
-                                    
-                                        <!-- Center: Delivery Chalan Text -->
-                                        <div style="flex: 2; ">
-                                            <span style="text-align: left; font-size: 20px; font-weight: bold;">
-                                                RETURNABLE CHALAN</br>
-                                            </span>
-                                            <span>(In Case of goods sent for the Job Work Under Section 143 of GST Act) </span>
-                                        </div>
-                                     
+                                        <!-- Details Section (Centered) -->
                                     </div>
-                                    
+
                                 <table style="width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px;">
                                     {{-- <table style="width: 100%; border-collapse: collapse;"> --}}
                                         <!-- Organization Details -->

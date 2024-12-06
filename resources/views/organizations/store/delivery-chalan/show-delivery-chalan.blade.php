@@ -107,45 +107,29 @@
                           
                                 <div style="border: 1px solid black; padding: 10px; width: 100%;">
                                     <!-- Header Section -->
-                                    <div style="display: flex; align-items: center; padding-bottom: 10px; border: 1px solid black;">
-                                        <!-- Left Side: Logo -->
-                                        <div style="width: 20%; text-align: left; padding-left: 10px;">
-                                            <img src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}" 
-                                                 alt="{{ strip_tags($getOrganizationData['company_name']) }} Image" 
-                                                 style="width: 100px;" />
-                                        </div>
-                                    
-                                        <!-- Center: Delivery Challan Title -->
-                                        <div style="width: 80%; text-align: center;">
-                                            <div style="font-size: 20px; font-weight: bold; text-align: center;">
-                                                DELIVERY CHALLAN
+                                    <div style="border-bottom: 1px solid black; padding-bottom: 10px;">
+                                        <!-- Flex Container for Logo and Title -->
+                                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                                            <!-- Logo Section (Left Aligned) -->
+                                            <div style="width: 20%; text-align: left;">
+                                                <img 
+                                                    src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}" 
+                                                    alt="No Image" 
+                                                    style="width: 100px; padding: 10px;" 
+                                                />
                                             </div>
-                                            <div style="font-size: 14px;">
-                                                (In Case of goods sent for the Job Work Under Section 143 of GST Act)
+                                            <!-- Title Section (Centered) -->
+                                            <div style="width: 60%; text-align: center; ">
+                                                <span style="font-size: 20px; font-weight: bold;">DELIVERY CHALLAN</span>
+                                                <div style="text-align: center; margin-top: 5px;">
+                                                    <span style="font-size: 15px;"> (In Case of goods sent for the Job Work Under Section 143 of GST Act)</span>
+                                                </div>
                                             </div>
+                                            <!-- Empty Space to Maintain Flexbox Alignment -->
+                                            <div style="width: 20%;"></div>
                                         </div>
+                                        <!-- Details Section (Centered) -->
                                     </div>
-                                    
-                                    {{-- <div style=" padding-bottom: 10px; display: flex; align-items: center;">
-                                        <!-- Left Side: Image -->
-                                        <div style="width:20%;">
-                                        <img class="img-size"
-                                        src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}"
-                                        alt="{{ strip_tags($getOrganizationData['company_name']) }} Image"
-                                        style="width: 100px; padding:10px;" /> <!-- Inline style here may override print styles -->
-                                        </div>
-                                    <div style="width:80%; justify-content: center; align-items: center; text-align: center;">
-                                        <!-- Center: Delivery Chalan Text -->
-                                        <div style="flex: 2; ">
-                                       <div class="text-align:center;">
-                                        <span style="text-align: center; font-size: 20px; font-weight: bold;">
-                                            DELIVERY CHALLAN</br>
-                                            </span>
-                                       </div>
-                                            <span>(In Case of goods sent for the Job Work Under Section 143 of GST Act) </span>
-                                        </div>
-                                    </div>
-                                    </div> --}}
                                 <table style="width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px;">
                                         <tr>
                                             <td style="width: 50%; padding: 10px; border: 1px solid black; padding: 5px">
