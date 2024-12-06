@@ -82,7 +82,12 @@ class CommanController
     public function getPurchaseOrderDetails($purchase_order_id)
     {
         try {
-            $purchaseOrder = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
+            $purchaseOrder = PurchaseOrdersModel::leftJoin('vendors', function($join) {
+                $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
+            })
+            ->leftJoin('tbl_tax', function($join) {
+                $join->on('purchase_orders.tax_id', '=', 'tbl_tax.id');
+            })
               ->join('business_application_processes', 'business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id')
             ->select(
                     'purchase_orders.id',
@@ -98,7 +103,8 @@ class CommanController
                     'purchase_orders.purchase_status_from_owner',
                     'purchase_orders.image', 
                     'purchase_orders.tax_type', 
-                    'purchase_orders.tax_id', 
+                    'purchase_orders.tax_id',
+                    'tbl_tax.name',
                     'purchase_orders.invoice_date', 
                     'purchase_orders.payment_terms', 
                     'purchase_orders.discount', 

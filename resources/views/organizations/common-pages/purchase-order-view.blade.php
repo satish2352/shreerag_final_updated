@@ -218,7 +218,7 @@
                                     </tr> --}}
                                     <tr>
                                         <td class="no-border" colspan="6"></td>
-                                        <td style="border: 1px solid black;">{{ $purchaseOrder->tax_type }} {{ $purchaseOrder->tax_id }}%</td>
+                                        <td style="border: 1px solid black;">{{ $purchaseOrder->tax_type }} {{ $purchaseOrder->name }}%</td>
                                         <td style="border: 1px solid black;" class="text-right">
                                             {{ 
                                                 ($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * ($purchaseOrder->tax_id / 100) 
