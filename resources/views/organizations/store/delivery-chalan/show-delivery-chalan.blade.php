@@ -122,7 +122,7 @@
                                             <div style="width: 60%; text-align: center; ">
                                                 <span style="font-size: 20px; font-weight: bold;">DELIVERY CHALLAN</span>
                                                 <div style="text-align: center; margin-top: 5px;">
-                                                    <span style="font-size: 15px;"> (In Case of goods sent for the Job Work Under Section 143 of GST Act)</span>
+                                                    <span style="font-size: 11px;"> (In Case of goods sent for the Job Work Under Section 143 of GST Act)</span>
                                                 </div>
                                             </div>
                                             <!-- Empty Space to Maintain Flexbox Alignment -->
