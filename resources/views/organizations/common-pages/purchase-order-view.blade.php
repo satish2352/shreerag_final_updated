@@ -124,7 +124,8 @@
                                 <!-- Details Section (Centered) -->
                                 
                             </div>
-                            
+                            <div class="d-flex justify-content-center align-items-center" style="font-size: 20px; font-weight: bold; text-align:center;border-bottom: 1px solid black; padding: 10px;">PURCHASE ORDER</div>
+
                             
                             <!-- Company and PO Details -->
                             <div style="display: flex; justify-content: space-between; border-bottom: 1px solid black; padding-top: 10px; padding-bottom: 10px; ">
