@@ -73,6 +73,11 @@
     p{
     font-size:16px !important;
     }
+    .sparkline13-list-new{
+    background-color: #fff;
+    padding: 22px;
+    margin-top: 72px
+    }
 </style>
 
 
@@ -81,9 +86,9 @@
         <div class="row" >
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="sparkline13-list" id="printableArea">
+                <div class="sparkline13-list-new" id="printableArea">
                   
-                        <div style="border: 1px solid black; padding: 10px; width: 100%; margin-bottom:70px;">
+                        <div style="border: 1px solid black; padding: 10px; width: 100%;">
                             <!-- Header Section -->
                             <div style="border-bottom: 1px solid black; padding-bottom: 10px;">
                                 <!-- Flex Container for Logo and Title -->
