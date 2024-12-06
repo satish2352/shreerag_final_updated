@@ -73,11 +73,12 @@
     p{
     font-size:16px !important;
     }
-    .sparkline13-list-new{
+    /* .sparkline13-list-new{
     background-color: #fff;
     padding: 22px;
-    margin-top: 72px
-    }
+    margin-top: 72px;
+    margin-bottom: 80px;
+    } */
 </style>
 
 
@@ -86,7 +87,7 @@
         <div class="row" >
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="sparkline13-list-new" id="printableArea">
+                <div class="sparkline13-list" id="printableArea">
                   
                         <div style="border: 1px solid black; padding: 10px; width: 100%;">
                             <!-- Header Section -->
@@ -437,7 +438,7 @@
             </div>
           
         </div>
-  <script>
+  {{-- <script>
                 // function printInvoice() {
                 //     window.print();
                 // }
@@ -446,7 +447,7 @@
         var contentToPrint = document.getElementById("printableArea").innerHTML;
     
         // Open a new window
-        var printWindow = window.open('', '', 'height=600,width=800');
+        var printWindow = window.open('', '', 'height=auto,width=800');
     
         // Write the content to the new window with proper styles
         printWindow.document.write('<html><head><title>Print</title>');
@@ -471,4 +472,68 @@
     
     
     
+            </script> --}}
+
+            <script>
+                function printInvoice() {
+                    // Get the content you want to print
+                    var contentToPrint = document.getElementById("printableArea").innerHTML;
+            
+                    // Open a new window
+                    var printWindow = window.open('', '', 'height=auto,width=800');
+            
+                    // Write the content to the new window with proper styles
+                    printWindow.document.write('<html><head><title>Print Invoice</title>');
+                    printWindow.document.write('<style>');
+                    printWindow.document.write(`
+                       @media print {
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    #printableArea {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box; /* Ensure padding and borders are included in width */
+    }
+    table {
+        width: 100%; /* Ensure table takes full width */
+        border-collapse: collapse; /* Merge table borders */
+        border: 1px solid #000; /* Add a solid border around the table */
+    }
+    th, td {
+        border: 1px solid #000; /* Add borders to all cells */
+        padding: 5px;
+        text-align: left;
+        word-wrap: break-word; /* Ensure long text wraps */
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    /* Prevent content from being cut off */
+    html, body {
+        width: 100%;
+        overflow-x: visible;
+    }
+}
+
+                    `);
+                    printWindow.document.write('</style>');
+                    printWindow.document.write('</head><body>');
+                    printWindow.document.write(contentToPrint);
+                    printWindow.document.write('</body></html>');
+            
+                    // Close the document to render
+                    printWindow.document.close();
+                    printWindow.focus();
+            
+                    // Trigger the print dialog
+                    printWindow.print();
+            
+                    // Close the print window after printing
+                    printWindow.close();
+                }
             </script>
+            
