@@ -274,7 +274,7 @@
                                     </tr>
                                     <tr>
                                         <td colspan="8" class="no-border" style="height: 20vh;">
-                                            <div style="float: right;"><strong>For: {{ $getOrganizationData->company_name }}</strong></div>
+                                            <div style="float: right; font-size:18px;"><strong>For: {{ $getOrganizationData->company_name }}</strong></div>
                                         </td>
                                     </tr>
                                     <tr>
@@ -283,7 +283,7 @@
                                         </td>
                                         <td class="no-border" colspan="2">( Finance Signatory )</td>
                                         <td class="no-border" colspan="3">( Purchase Signatory )</td>
-                                        <td class="no-border" colspan="1">( Authorized Signatory )</td>
+                                        <td class="no-border" colspan="1" style="display: flex; justify-content: center;">( Authorized Signatory )</td>
                                     </tr>
                                 </tfoot>
                             </table>
