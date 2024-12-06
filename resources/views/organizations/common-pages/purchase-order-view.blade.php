@@ -112,7 +112,8 @@
                                     </div>
                                     <!-- Title Section (Centered) -->
                                     <div style="width: 60%; text-align: center; ">
-                                        <span style="font-size: 20px; font-weight: bold;">{{ $getOrganizationData->company_name }}</span>
+                                        <span style="font-size: 20px; font-weight: bold; text-transform: uppercase;">{{ $getOrganizationData->company_name }}</span>
+
                                         <div style="text-align: center; margin-top: 5px;">
                                             <span style="font-size: 15px;">{{ $getOrganizationData->address }} {{ $getOrganizationData->mobile_number }}, {{ $getOrganizationData->email }}</span>
                                         </div>
