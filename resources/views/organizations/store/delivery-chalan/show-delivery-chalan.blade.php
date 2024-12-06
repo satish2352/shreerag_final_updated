@@ -142,8 +142,8 @@
                                                     <span><strong>Date: </strong></span>
                                                 </div> --}}
                                                 <div style="border-bottom: 1px solid black; padding: 10px; width: 100%; display: flex; justify-content: space-between;">
-                                                    <span><strong>Sr. No.: </strong> {{ $showData['purchaseOrder']->dc_number }}</span>
-                                                    <span style="padding-right: 20px;"><strong>Date: </strong> {{ now()->format('d-m-Y') }}</span>
+                                                    <span><strong>DC No. : </strong> {{ $showData['purchaseOrder']->dc_number }}</span>
+                                                    <span style="padding-right: 20px;"><strong>Date: </strong> {{ $showData['purchaseOrder']->dc_date }}</span>
                                                 </div>
                                                 
                                                 <p style="font-size: 20px; margin-bottom:0px; padding-left:10px;"><strong>To : {{ $showData['purchaseOrder']->vendor_company_name }}</strong></p>
