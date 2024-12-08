@@ -115,14 +115,14 @@
                                     <div style="font-weight: bold;">To, {{ $purchaseOrder->vendor_company_name }}</div>
                                     <div>{{ $purchaseOrder->vendor_address }}</div>
                                     <div>GST No. : {{ $purchaseOrder->gst_no }}</div>
-                                    <div>Mo. No. :{{ $purchaseOrder->contact_no }}</div>
-                                    <div>Email Id :{{ $purchaseOrder->vendor_email }}</div>                                   
+                                    <div>Mo. No. : {{ $purchaseOrder->contact_no }}</div>
+                                    <div>Email Id : {{ $purchaseOrder->vendor_email }}</div>                                   
                                 </div>
                                 <div style="width:40%;display: grid;justify-content: end;">
                                     <div>P.O. No.: {{ $purchaseOrder->purchase_orders_id }}</div>
                                     <div>Date: {{ $purchaseOrder->created_at ? $purchaseOrder->created_at->format('Y-m-d') : 'N/A' }}</div>
-                                    <div>Quote Ref No.: {{ $purchaseOrder->quote_no }}</div>
-                                    <div>Payment Terms: {{ $purchaseOrder->payment_terms }} DAYS</div>
+                                    <div>Quote Ref No. : {{ $purchaseOrder->quote_no }}</div>
+                                    <div>Payment Terms : {{ $purchaseOrder->payment_terms }} DAYS</div>
                                 </div>
                             </div>
                             <div style="border-bottom: 1px solid black; padding: 10px;">
@@ -158,10 +158,10 @@
                                 </tbody>
                                 <tfoot style="border: 1px solid black;">
                                     <tr>
-                                        <td class="no-border" colspan="3">
+                                        <td class="no-border" colspan="5">
                                             <strong>Remark:- {{ $purchaseOrder->note }}</strong>
                                         </td>
-                                        <td class="no-border" colspan="3"></td>
+                                        <td class="no-border" colspan="1"></td>
                                         <td style="border: 1px solid black;">Sub Total</td>
                                         <td style="border-top: 1px solid black;border-bottom: 1px solid black;border-left: 1px solid black; border-right: none;  padding: 5px; text-align: right;" class="text-right">{{ $purchaseOrderDetails->sum('amount') }}</td>
                                     </tr>
@@ -169,14 +169,14 @@
                                         <td class="no-border" colspan="3"></td>
                                         <td class="no-border" colspan="3"></td>
                                         <td style="border: 1px solid black;">Discount Amount</td>
-                                        <td class="text-right" style="border: 1px solid black;">
+                                        <td class="text-right" style="border: 1px solid black; text-align:right;">
                                             {{ $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100) }} <!-- Discount Amount -->
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="no-border" colspan="6"></td>
                                         <td style="border: 1px solid black;">Freight</td>
-                                        <td style="border: 1px solid black;" class="text-right">0.00</td>
+                                        <td style="border: 1px solid black; text-align:right;" class="text-right">0.00</td>
                                     </tr>
                                     <tr>
                                         <td class="no-border" colspan="6"></td>
@@ -193,10 +193,10 @@
                                         <td style="border-top: 1px solid black;border-bottom:1px solid black;border-left:1px solid black; border-right:none;padding:5px; text-align:right;" class="text-right">0.00</td>
                                     </tr>
                                     <tr style="border-bottom: 1px solid black;">
-                                        <td class="no-border" colspan="3">
+                                        <td class="no-border" colspan="5">
                                             <strong>Transport/Dispatch :- {{ $purchaseOrder->transport_dispatch }}</strong>
                                         </td>
-                                        <td class="no-border" colspan="3"></td>
+                                        <td class="no-border" colspan="1"></td>
                                         <td style="border: 1px solid black;"><strong>Net Total (Including {{ $purchaseOrder->tax_type }})</strong></td>
                                         <td style="border-top: 1px solid black;border-bottom:1px solid black;border-left:1px solid black; border-right:none;padding:5px; text-align:right;" class="text-right">
                                             <strong>  {{ 
@@ -210,12 +210,12 @@
                                         </td>
                                     </tr>
                                     <tr style="padding-bottom: 20px;">
-                                        <td colspan="8" class="no-border">
+                                        <td colspan="8" class="no-border" style="padding-top: 10px;">
                                             Delivery AS PER ATTACHED DELIVERY SCHEDULE
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="8" class="no-border" style="height: auto; padding: 5px;">
+                                        <td colspan="8" class="no-border" style="height: 100px; padding: 5px;">
                                             <div style="float: right; font-size:18px;"><strong>For: {{ $getOrganizationData->company_name }}</strong></div>
                                          </td>
                                          
@@ -224,12 +224,12 @@
                                         </td> --}}
                                     </tr>
                                     <tr>
-                                        <td class="no-border" colspan="2">
+                                        <td class="no-border" colspan="3">
                                             <strong>Prepared By</strong>
                                         </td>
                                         <td class="no-border" colspan="2">( Finance Signatory )</td>
-                                        <td class="no-border" colspan="3">( Purchase Signatory )</td>
-                                        <td class="no-border" colspan="5" style="display:inline-block;">(Authorized Signatory)</td>
+                                        <td class="no-border" colspan="2">( Purchase Signatory )</td>
+                                        <td class="no-border" colspan="3" style="display:inline-block;">(Authorized Signatory)</td>
                                     </tr>
                                 </tfoot>
                             </table>
