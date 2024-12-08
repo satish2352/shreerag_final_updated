@@ -228,8 +228,8 @@
                                             <strong>Prepared By</strong>
                                         </td>
                                         <td class="no-border" colspan="2" style="padding-bottom: 10px; text-align:center;">( Finance Signatory )</td>
-                                        <td class="no-border" colspan="3" style="padding-bottom: 10px;">( Purchase Signatory )</td>
-                                        <td class="no-border" colspan="2" style="display:inline-block; text-align:center; padding-bottom: 10px;">(Authorized Signatory)</td>
+                                        <td class="no-border" colspan="3" style="padding-bottom: 10px; text-align:center;">( Purchase Signatory )</td>
+                                        <td class="no-border" colspan="2" style="display:inline-block; text-align:right; padding-bottom: 10px;">(Authorized Signatory)</td>
                                     </tr>
                                 </tfoot>
                             </table>
