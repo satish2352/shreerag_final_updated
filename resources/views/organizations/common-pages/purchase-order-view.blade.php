@@ -73,12 +73,17 @@
     p{
     font-size:16px !important;
     }
-    /* .sparkline13-list-new{
+     .sparkline13-list-new{
     background-color: #fff;
     padding: 22px;
     margin-top: 72px;
-    margin-bottom: 80px;
-    } */
+    /* margin-bottom: 80px; */
+    } 
+    @media screen {
+        .print-button {
+            display: inline-block; /* Ensure it's visible in the browser */
+        }
+    }
 </style>
 
 
@@ -87,7 +92,7 @@
         <div class="row" >
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="sparkline13-list border-page"  id="printableArea" style="padding: 10px; box-sizing: border-box;">
+                <div class="sparkline13-list-new border-page"  id="printableArea" style="padding: 10px; box-sizing: border-box;">
                   
                         <div style="border: 1px solid black; width: 100%;">
                             <div style="border-bottom: 1px solid black; padding-bottom: 10px;">
@@ -233,15 +238,15 @@
                                     </tr>
                                 </tfoot>
                             </table>
-                            {{-- <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="border:1px solid black; background-color: #fff; ">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="border:1px solid black; background-color: #fff; ">
                                 <div style="padding: 20px 10px 20px 10px;">
                                     <h3>{{ $getAllRulesAndRegulations->title }}</h3>
                                     <p>{{ $getAllRulesAndRegulations->description }}</p>
                                 </div>
-                            </div> --}}
+                            </div>
                            
                             <a>
-                                <button data-toggle="tooltip" onclick="printInvoice()" style="margin: 20px;"   type="button" class="btn btn-primary print-btn m-4" >Print</button>
+                                <button data-toggle="tooltip" onclick="printInvoice()" style="margin: 20px;"   type="button" class="btn btn-primary print-btn m-4 print-button" >Print</button>
                             </a>
                             </div>
                         </div>
@@ -305,6 +310,9 @@
                             margin: 0;
                             padding: 0;
                         }
+                            .print-button {
+            display: none;
+        }
                     }
                 `);
                 printWindow.document.write('</style>');

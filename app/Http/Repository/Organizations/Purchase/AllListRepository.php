@@ -217,23 +217,37 @@ class AllListRepository
         // ->distinct('businesses.id')
         ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check)
         ->where('businesses.is_active', true)
-        ->select(
-          'business_application_processes.purchase_order_id',
+        ->groupBy(
+          'businesses_details.id',            // Unique identifier
+          'businesses_details.product_name', // Relevant for grouping
+          'businesses_details.description',  // Relevant for grouping
+          'businesses.title'                 // Relevant for grouping
+      )
+      ->select(
           'businesses_details.id',
           'businesses_details.product_name',
-          'businesses.title',
           'businesses_details.description',
-          'businesses.remarks',
-          'businesses.is_active',
-          'production.business_id',
-          'design_revision_for_prod.reject_reason_prod',
-          'designs.bom_image',
-          'designs.design_image',
-          'purchase_orders.vendor_id',
-          // 'businesses_details.updated_at',
-          'purchase_orders.updated_at'
-          )->distinct()
-        ->orderBy('purchase_orders.updated_at', 'desc')
+          'businesses.title',
+          DB::raw('MAX(purchase_orders.updated_at) as latest_update') // Aggregate function
+      )
+      ->orderBy('latest_update', 'desc')
+        // ->select(
+        //   'business_application_processes.purchase_order_id',
+        //   'businesses_details.id',
+        //   'businesses_details.product_name',
+        //   'businesses.title',
+        //   'businesses_details.description',
+        //   'businesses.remarks',
+        //   'businesses.is_active',
+        //   'production.business_id',
+        //   'design_revision_for_prod.reject_reason_prod',
+        //   'designs.bom_image',
+        //   'designs.design_image',
+        //   'purchase_orders.vendor_id',
+        //   // 'businesses_details.updated_at',
+        //   'purchase_orders.updated_at'
+        //   )->distinct()
+        // ->orderBy('purchase_orders.updated_at', 'desc')
         ->get();
  
       return $data_output;
