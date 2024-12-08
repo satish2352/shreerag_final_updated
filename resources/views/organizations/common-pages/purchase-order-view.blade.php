@@ -158,7 +158,7 @@
                                 </tbody>
                                 <tfoot style="border: 1px solid black;">
                                     <tr>
-                                        <td class="no-border" colspan="5">
+                                        <td class="no-border" colspan="5" style="padding-top:10px;">
                                             <strong>Remark:- {{ $purchaseOrder->note }}</strong>
                                         </td>
                                         <td class="no-border" colspan="1"></td>
@@ -224,12 +224,12 @@
                                         </td> --}}
                                     </tr>
                                     <tr>
-                                        <td class="no-border" colspan="3">
+                                        <td class="no-border" colspan="3" style="padding-bottom: 10px;">
                                             <strong>Prepared By</strong>
                                         </td>
-                                        <td class="no-border" colspan="2">( Finance Signatory )</td>
-                                        <td class="no-border" colspan="2">( Purchase Signatory )</td>
-                                        <td class="no-border" colspan="3" style="display:inline-block;">(Authorized Signatory)</td>
+                                        <td class="no-border" colspan="2" style="padding-bottom: 10px;">( Finance Signatory )</td>
+                                        <td class="no-border" colspan="2" style="padding-bottom: 10px;">( Purchase Signatory )</td>
+                                        <td class="no-border" colspan="2" style="display:inline-block; text-align:center; padding-bottom: 10px;">(Authorized Signatory)</td>
                                     </tr>
                                 </tfoot>
                             </table>
