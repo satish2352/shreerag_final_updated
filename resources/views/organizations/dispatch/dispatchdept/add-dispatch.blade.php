@@ -19,7 +19,7 @@
                 <div class="sparkline12-hd">
                     <div class="main-sparkline12-hd">
                         <center>
-                            <h1>Add Logistics Data</h1>
+                            <h1>Add Dispatch Data</h1>
                         </center>
                     </div>
                 </div>
