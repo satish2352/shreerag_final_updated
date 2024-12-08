@@ -233,12 +233,12 @@
                                     </tr>
                                 </tfoot>
                             </table>
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="border:1px solid black; background-color: #fff; ">
+                            {{-- <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="border:1px solid black; background-color: #fff; ">
                                 <div style="padding: 20px 10px 20px 10px;">
                                     <h3>{{ $getAllRulesAndRegulations->title }}</h3>
                                     <p>{{ $getAllRulesAndRegulations->description }}</p>
                                 </div>
-                            </div>
+                            </div> --}}
                            
                             <a>
                                 <button data-toggle="tooltip" onclick="printInvoice()" style="margin: 20px;"   type="button" class="btn btn-primary print-btn m-4" >Print</button>
