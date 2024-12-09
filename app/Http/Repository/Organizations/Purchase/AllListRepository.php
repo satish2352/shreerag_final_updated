@@ -341,30 +341,30 @@ class AllListRepository
           $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
         })
 
-        ->distinct('businesses_details.id')
-        ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check)
-        ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check_owner)
-        // ->distinct('businesses.id')
-        ->where('businesses.is_active', true)
-        // ->groupBy( 'businesses_details.id',
-        // 'businesses_details.product_name','businesses_details.description',
-        // 'purchase_orders.updated_at')
-
-        ->select(
-          // 'business_application_processes.id',
-          'businesses_details.id',
-          'businesses_details.product_name',
-          'businesses.title',
-          'businesses_details.description',
-          'businesses.remarks',
-          'businesses.is_active',
-          'production.business_id',
-          'purchase_orders.vendor_id',
-          'businesses_details.updated_at'
-          )->distinct( 'businesses_details.id')
-        // ->groupBy('businesses.id')
-        ->orderBy('purchase_orders.updated_at', 'desc')
-        ->get();
+         // ->distinct('businesses_details.id')
+         ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check_owner)
+         ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
+         // ->distinct('businesses.id')
+         ->where('businesses.is_active', true)
+         // ->groupBy( 'businesses_details.id',
+         // 'businesses_details.product_name','businesses_details.description',
+         // 'purchase_orders.updated_at')
+ 
+         ->select(
+           // 'business_application_processes.id',
+           'businesses_details.id',
+           'businesses_details.product_name',
+           'businesses.title',
+           'businesses_details.description',
+           'businesses.remarks',
+           'businesses.is_active',
+           'production.business_id',
+           'purchase_orders.vendor_id',
+           'businesses_details.updated_at',
+           'purchase_orders.updated_at'
+           )->distinct( 'businesses_details.id')
+         ->orderBy('purchase_orders.updated_at', 'desc')
+         ->get();
 
       return $data_output;
     } catch (\Exception $e) {
