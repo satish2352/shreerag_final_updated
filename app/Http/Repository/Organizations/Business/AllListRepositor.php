@@ -482,7 +482,7 @@ class AllListRepositor
           ->leftJoin('vendors', function($join) {
             $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
           })
-  
+          ->where('businesses_details.id', $id)
           ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check)
           ->where('businesses.is_active', true)
           ->distinct('business_application_processes.id')

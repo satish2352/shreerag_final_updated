@@ -86,7 +86,7 @@
                                                 <th data-field="grn_date" data-editable="false">Description</th>
                                                 <th data-field="purchase_id" data-editable="false">Remark</th>
                                                 {{-- <th data-field="store_material_sent_date" data-editable="false">Matrial Recieved Date</th> --}}
-                                                <th data-field="design_image" data-editable="false">Purchase order</th>
+                                                {{-- <th data-field="design_image" data-editable="false">Purchase order</th> --}}
                                                 <th data-field="bom_image" data-editable="false">Genrate Gate Pass</th>
 
                                             </tr>
@@ -101,7 +101,7 @@
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
-                                                   
+{{--                                                    
                                                 <td>
                                                     <div style="display: flex; align-items: center;">
                                                            
@@ -110,7 +110,7 @@
                                                                 title="View PO" class="pd-setting-ed">Check PO Details</button></a>
                                                         
                                                     </div>
-                                                    </td>
+                                                    </td> --}}
                                                 <td> 
                                                     <a class="btn btn-sm btn-primary login-submit-cs" type="button"
                                                     href="{{route('add-gatepass-with-po', base64_encode($data->purchase_orders_id))}}"
