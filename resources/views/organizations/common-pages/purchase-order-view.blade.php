@@ -100,7 +100,7 @@
                                     <div style="width: 20%; text-align: left;">
                                         <img 
                                             src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}" 
-                                            alt="No Image" 
+                                            alt="" 
                                             style="width: 100px; padding: 10px;" 
                                         />
                                     </div>
