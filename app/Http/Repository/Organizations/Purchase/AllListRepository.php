@@ -349,21 +349,34 @@ class AllListRepository
          // ->groupBy( 'businesses_details.id',
          // 'businesses_details.product_name','businesses_details.description',
          // 'purchase_orders.updated_at')
- 
-         ->select(
-           // 'business_application_processes.id',
-           'businesses_details.id',
-           'businesses_details.product_name',
-           'businesses.title',
-           'businesses_details.description',
-           'businesses.remarks',
-           'businesses.is_active',
-           'production.business_id',
-           'purchase_orders.vendor_id',
-           'businesses_details.updated_at',
-           'purchase_orders.updated_at'
-           )->distinct( 'businesses_details.id')
-         ->orderBy('purchase_orders.updated_at', 'desc')
+         ->groupBy(
+          'businesses_details.id',            // Unique identifier
+          'businesses_details.product_name', // Relevant for grouping
+          'businesses_details.description',  // Relevant for grouping
+          'businesses.title'                 // Relevant for grouping
+      )
+      ->select(
+          'businesses_details.id',
+          'businesses_details.product_name',
+          'businesses_details.description',
+          'businesses.title',
+          DB::raw('MAX(purchase_orders.updated_at) as latest_update') // Aggregate function
+      )
+      ->orderBy('latest_update', 'desc')
+        //  ->select(
+        //    // 'business_application_processes.id',
+        //    'businesses_details.id',
+        //    'businesses_details.product_name',
+        //    'businesses.title',
+        //    'businesses_details.description',
+        //    'businesses.remarks',
+        //    'businesses.is_active',
+        //    'production.business_id',
+        //    'purchase_orders.vendor_id',
+        //    'businesses_details.updated_at',
+        //    'purchase_orders.updated_at'
+        //    )->distinct( 'businesses_details.id')
+        //  ->orderBy('purchase_orders.updated_at', 'desc')
          ->get();
 
       return $data_output;
