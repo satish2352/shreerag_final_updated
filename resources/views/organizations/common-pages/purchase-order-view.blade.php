@@ -77,7 +77,7 @@
     background-color: #fff;
     padding: 22px;
     margin-top: 72px;
-    /* margin-bottom: 80px; */
+    margin-bottom: 80px;
     } 
     @media screen {
         .print-button {
