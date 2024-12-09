@@ -342,8 +342,8 @@ class AllListRepository
         })
 
         ->distinct('businesses_details.id')
-        ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check_owner)
-        ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
+        ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check)
+        ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check_owner)
         // ->distinct('businesses.id')
         ->where('businesses.is_active', true)
         // ->groupBy( 'businesses_details.id',
