@@ -84,10 +84,17 @@ class StoreController extends Controller
         }
     }
    
-    public function editProductMaterialWiseAdd($id) {
+    public function editProductMaterialWiseAdd($purchase_orders_id, $business_id) {
         try {
-            $editData = $this->service->editProductMaterialWiseAdd($id);
-            $id = base64_decode($id);
+            $purchase_orders_id = base64_decode($purchase_orders_id);
+            
+            $business_id = base64_decode($business_id);
+            // dd($business_id);
+            // die();
+            $editData = $this->service->editProductMaterialWiseAdd($purchase_orders_id, $business_id);
+           
+            // dd($editData);
+            // die();
             $dataOutputPartItem = PartItem::where('is_active', true)->get();
             $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
             return view('organizations.store.list.edit-material-bom-wise-add', [
@@ -95,7 +102,8 @@ class StoreController extends Controller
                 'dataGroupedById' => $editData['dataGroupedById'],
                 'dataOutputPartItem' => $dataOutputPartItem,
                 'dataOutputUnitMaster'=>$dataOutputUnitMaster,
-                'id' => $id
+                'purchase_orders_id' => $purchase_orders_id,
+                'business_id' => $business_id
             ]);
         } catch (\Exception $e) {
             return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);

@@ -228,7 +228,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/add-rejected-chalan/{purchase_orders_id}', ['as' => 'add-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\RejectedChalanController@add']);
         Route::post('/store-rejected-chalan', ['as' => 'store-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\RejectedChalanController@store']);
    
-        Route::get('/edit-material-list-bom-wise/{id}', ['as' => 'edit-material-list-bom-wise', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@editProductMaterialWiseAdd']);
+        Route::get('/edit-material-list-bom-wise/{purchase_orders_id}/{business_id}', ['as' => 'edit-material-list-bom-wise', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@editProductMaterialWiseAdd']);
         Route::post('/update-material-list-bom-wise/{id}', ['as' => 'update-material-list-bom-wise', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@updateProductMaterialWiseAdd']);
 
         Route::get('/list-product-inprocess-received-from-production', ['as' => 'list-product-inprocess-received-from-production', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllInprocessProductProduction']);

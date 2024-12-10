@@ -155,9 +155,13 @@ class StoreRepository
             return $e->getMessage();
         }
     }
-        public function editProductMaterialWiseAdd($id) {
+        public function editProductMaterialWiseAdd($purchase_orders_id, $business_id) {
         try {
-            $id = base64_decode($id); 
+            // $id = base64_decode($id); 
+            // $purchase_orders_id = $purchase_orders_id;
+            // dd($purchase_orders_id);
+            // die();
+            // $business_id = $business_id;
             // Fetch all related data
             $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
@@ -183,7 +187,8 @@ class StoreRepository
                 ->leftJoin('gatepass', function($join) {
                     $join->on('grn_tbl.gatepass_id', '=', 'gatepass.id');
                 })
-                ->where('businesses_details.id', $id)
+                // ->where('businesses_details.id', $business_id)
+                ->where('purchase_orders.purchase_orders_id', $purchase_orders_id)
                 // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
                 ->where('businesses_details.is_active', true)
                 ->select(
@@ -200,6 +205,8 @@ class StoreRepository
                     'business_application_processes.store_material_sent_date'
                 )
                 ->get(); 
+                // dd($dataOutputByid);
+                // die();
             // Extract product details and data for table
             $productDetails = $dataOutputByid->first(); // Assuming the first entry contains the product details
             $dataGroupedById = $dataOutputByid->groupBy('business_details_id');

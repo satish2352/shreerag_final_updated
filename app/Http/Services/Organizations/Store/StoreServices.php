@@ -54,9 +54,10 @@ class StoreServices
             return $e;
         }
     }
-    public function editProductMaterialWiseAdd($id) {
+    public function editProductMaterialWiseAdd($purchase_orders_id, $business_id) {
         try {
-            $data_output = $this->repo->editProductMaterialWiseAdd($id);
+            $data_output = $this->repo->editProductMaterialWiseAdd($purchase_orders_id, $business_id);
+           
 return $data_output;
         } catch (\Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
