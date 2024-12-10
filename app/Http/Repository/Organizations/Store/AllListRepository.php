@@ -643,7 +643,8 @@ public function getAllInprocessProductProduction(){
         // 'design_revision_for_prod.id as design_revision_for_prod_id',
         'designs.bom_image',
         'designs.design_image',
-        'business_application_processes.store_material_sent_date'
+        'business_application_processes.store_material_sent_date',
+        'production.updated_at',
 
     )->orderBy('production.updated_at', 'desc')
     ->get();
