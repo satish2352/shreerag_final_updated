@@ -114,7 +114,7 @@
                                                 <td> 
                                                     <a class="btn btn-sm btn-primary login-submit-cs" type="button"
                                                     href="{{route('add-gatepass-with-po', base64_encode($data->purchase_orders_id))}}"
-                                                    alt="Design">Ganerate Gate Pass</a>
+                                                    alt="Design">Generate Gate Pass</a>
 {{-- 
                                                     <a class="btn btn-sm btn-primary login-submit-cs" type="button"
                                                     href="{{ route('add-gatepass-with-po', ['id' => base64_encode($data->purchase_orders_id), 'productionId' => base64_encode($data->productionId)]) }}"

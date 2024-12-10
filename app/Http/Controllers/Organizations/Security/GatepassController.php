@@ -67,7 +67,10 @@ class GatepassController extends Controller
                     $join->on('tbl_unit.id', '=', 'purchase_order_details.unit')
                          ->orOn('tbl_unit.id', '=', 'purchase_order_details.unit');
                 })
-                ->where('purchase_orders.id', $businessDetailsId)
+                ->leftJoin('gatepass', function($join) {
+                    $join->on('purchase_orders.business_details_id', '=', 'gatepass.business_details_id');
+                  })
+                 ->where('gatepass.id', $businessDetailsId)
                 ->where('purchase_orders.purchase_orders_id', $purchaseOrderId)
                 ->select(
                     'purchase_orders.id as purchase_order_id',
