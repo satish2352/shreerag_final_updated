@@ -66,8 +66,8 @@ return $data_output;
     public function updateProductMaterialWiseAddNewReq($request) {
         try {
             $result = $this->repo->updateProductMaterialWiseAddNewReq($request);
-            dd($result);
-            die();
+            // dd($result);
+            // die();
             return $result;
         } catch (\Exception $e) {
             return ['status' => 'error', 'message' => $e->getMessage()];
