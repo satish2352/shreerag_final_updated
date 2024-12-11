@@ -107,6 +107,10 @@
                                             </tr>
                                         </thead>
                                       
+                                        <?php
+                                        // dd($data_output);
+                                        // die();
+                                        ?>
                                         <tbody>
                                             @foreach ($data_output as $data)
                                                 <tr>
@@ -139,7 +143,7 @@
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
                                                             <div style="display: inline-block; align-items: center;">
-                                                                <a href="{{route('edit-material-list-bom-wise',base64_encode($data->business_details_id))}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>Edit Product Material</button></a>
+                                                                <a href="{{route('edit-material-list-bom-wise-new-req',base64_encode($data->business_details_id))}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>Edit Product Material</button></a>
                                                             </div>
                                                             @if($data->material_send_production == 1)
                                                             <a href="{{ route('accepted-and-material-sent', base64_encode($data->business_details_id)) }}">

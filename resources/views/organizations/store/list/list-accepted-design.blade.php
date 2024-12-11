@@ -91,6 +91,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <?php
+// dd($data_output);
+// die();
+                                            ?>
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     
@@ -108,7 +112,7 @@
                                                         alt="bill of material" >Click to download</a>
                                                 </td> --}}
                                                     <td>
-                                                        <a href="{{ route('list-accepted-design-from-prod-business-wise', base64_encode($data->business_id)) }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >View Details</button></a>
+                                                        <a href="{{ route('list-accepted-design-from-prod-business-wise', base64_encode($data->id)) }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >View Details</button></a>
                                                         {{-- <div style="display: flex; align-items: center;">
                                                             <a
                                                                 href="{{ route('accepted-and-material-sent', base64_encode($data->productionId)) }} "><button

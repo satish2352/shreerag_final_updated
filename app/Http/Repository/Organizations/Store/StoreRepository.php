@@ -155,6 +155,190 @@ class StoreRepository
             return $e->getMessage();
         }
     }
+    public function editProductMaterialWiseAddNewReq($id) {
+        try {
+            $id = base64_decode($id); 
+            // $purchase_orders_id = $purchase_orders_id;
+            // dd($purchase_orders_id);
+            // die();
+            // $business_id = $business_id;
+            // Fetch all related data
+            $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+                })
+                ->leftJoin('designs', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+                })
+                ->leftJoin('businesses_details', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+                })
+                ->leftJoin('design_revision_for_prod', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+                })
+                ->leftJoin('purchase_orders', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+                })
+                ->leftJoin('production_details', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
+                })
+                ->leftJoin('grn_tbl', function($join) {
+                    $join->on('purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id');
+                })
+                ->leftJoin('gatepass', function($join) {
+                    $join->on('grn_tbl.gatepass_id', '=', 'gatepass.id');
+                })
+                // ->where('businesses_details.id', $business_id)
+                // ->where('purchase_orders.purchase_orders_id', $purchase_orders_id)
+                // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
+                ->where('businesses_details.is_active', true)
+                ->select(
+                    'gatepass.id',
+                    'businesses_details.product_name',
+                    'businesses_details.quantity',
+                    'businesses_details.description',
+                    'production_details.part_item_id',
+                    'production_details.quantity',
+                    'production_details.unit',
+                    'production_details.material_send_production',
+                    'designs.bom_image',
+                    'designs.design_image',
+                    'business_application_processes.store_material_sent_date'
+                )
+                ->get(); 
+                // dd($dataOutputByid);
+                // die();
+            // Extract product details and data for table
+            $productDetails = $dataOutputByid->first(); // Assuming the first entry contains the product details
+            $dataGroupedById = $dataOutputByid->groupBy('business_details_id');
+    
+            return [
+                'productDetails' => $productDetails,
+                'dataGroupedById' => $dataGroupedById
+            ]; 
+            // return  $dataOutputByid;
+        } catch (\Exception $e) {
+            return [
+                'status' => 'error',
+                'msg' => $e->getMessage()
+            ];
+        }
+    }
+    public function updateProductMaterialWiseAddNewReq($request) {
+        try {
+           
+            $gatepassId = $request->id;
+          
+
+
+            $business_details_id = $request->business_details_id;
+            
+            $dataOutput_Production = ProductionModel::where('business_details_id', $business_details_id)->firstOrFail();
+            $dataOutput_Production->production_status_quantity_tracking = 'incomplete';
+            $dataOutput_Production->save();
+         
+        
+            
+            $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $dataOutput_Production->business_details_id)->firstOrFail();
+           
+           
+               // Fetch the business details ID from the purchase order
+     $business_details_id = $dataOutput_ProductionDetails->business_details_id;
+    
+     // Fetch the business application process using business_details_id
+     $business_application = BusinessApplicationProcesses::where('business_details_id', $business_details_id)->first();
+   
+     if (!$business_application) {
+         return [
+             'msg' => 'Business Application not found.',
+             'status' => 'error'
+         ];
+     }
+    
+      // This should be the 'id' of the gatepass you want to update
+
+     // Check if the Gatepass record exists
+   
+     
+            // Remove existing records related to the business_details_id before saving new ones
+            ProductionDetails::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)->delete();
+    
+            $errorMessages = []; // Array to hold error messages
+            foreach ($request->addmore as $item) {
+             
+                $dataOutput = new ProductionDetails();
+                $dataOutput->part_item_id = $item['id'];
+                $dataOutput->quantity = $item['quantity'];
+                $dataOutput->unit = $item['unit'];
+                $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
+                $dataOutput->business_id = $dataOutput_ProductionDetails->business_id;
+                $dataOutput->design_id = $dataOutput_ProductionDetails->design_id;
+                $dataOutput->business_details_id = $dataOutput_ProductionDetails->business_details_id;
+                $dataOutput->production_id = $dataOutput_ProductionDetails->production_id;
+                $dataOutput->save();
+            $existingEntry = ProductionDetails::find($dataOutput->id);
+// Ensure $existingEntry exists and has a part_item_id
+if ($existingEntry && isset($existingEntry->part_item_id)) {
+
+    $partItemId = $existingEntry->part_item_id; // Get the part_item_id from the existing entry
+    $itemStock = ItemStock::where('part_item_id', $partItemId)->first();
+} else {
+    $errorMessages[] = "Production detail not found or part_item_id is missing.";
+}
+
+            }
+
+
+               // Update the business application process's off_canvas_status
+    $business_application->off_canvas_status = 17;
+    $business_application->save();
+             // Update admin view and notification status with the new off canvas status
+             $update_data_admin['off_canvas_status'] = 17;
+             $update_data_admin['is_view'] = '0';
+              $update_data_business['off_canvas_status'] = 17;
+             AdminView::where('business_details_id', $business_application->business_details_id)
+                 // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
+                 ->update($update_data_admin);
+ 
+             NotificationStatus::where('business_details_id', $business_application->business_details_id)
+                 // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
+                 ->update($update_data_business);
+           
+
+            //              $gatepass = Gatepass::where('id', $request->id)->first();
+          
+            //   Gatepass::where('id', $gatepass->id)
+            //   ->update([
+            //       'po_tracking_status' => 4003, // Update the tracking status
+            //   ]);
+
+                // If there are error messages, return them without a generic error message
+            if (!empty($errorMessages)) {
+                return [
+                    'status' => 'error',
+                    'errors' => $errorMessages // Only return specific error messages
+                ];
+            }
+    
+            // Update the BusinessApplicationProcesses status
+            $businessOutput = BusinessApplicationProcesses::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)
+                ->firstOrFail();
+            $businessOutput->product_production_inprocess_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_INPROCESS_FOR_PRODUCTION');
+            $businessOutput->save();
+                            
+            return [
+                'status' => 'success',
+                'message' => 'Production materials updated successfully.',
+                'updated_details' => $request->all()
+            ];
+    
+        } catch (\Exception $e) {
+            // Optionally, you can log the exception message if needed
+            return [
+                'status' => 'error',
+                'error' => $e->getMessage() // Return the exception message only if necessary
+            ];
+        }
+    }
         public function editProductMaterialWiseAdd($purchase_orders_id, $business_id) {
         try {
             // $id = base64_decode($id); 
@@ -263,12 +447,6 @@ class StoreRepository
             ProductionDetails::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)->delete();
     
             $errorMessages = []; // Array to hold error messages
-    
-           
-     
-
-         
-
             foreach ($request->addmore as $item) {
              
                 $dataOutput = new ProductionDetails();

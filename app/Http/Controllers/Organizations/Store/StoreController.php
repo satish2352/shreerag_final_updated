@@ -83,6 +83,57 @@ class StoreController extends Controller
             return $e;
         }
     }
+    public function editProductMaterialWiseAddNewReq($id) {
+        try {
+            // $purchase_orders_id = base64_decode($purchase_orders_id);
+            
+            // $business_id = base64_decode($business_id);
+            $id = base64_decode($id);
+            // dd($business_id);
+            // die();
+            $editData = $this->service->editProductMaterialWiseAddNewReq($id);
+           
+            // dd($editData);
+            // die();
+            $dataOutputPartItem = PartItem::where('is_active', true)->get();
+            $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
+            return view('organizations.store.list.edit-material-bom-wise-add-new-req', [
+                'productDetails' => $editData['productDetails'],
+                'dataGroupedById' => $editData['dataGroupedById'],
+                'dataOutputPartItem' => $dataOutputPartItem,
+                'dataOutputUnitMaster'=>$dataOutputUnitMaster,
+              
+                'id' => $id
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+        }
+    }
+    public function updateProductMaterialWiseAddNewReq(Request $request) {
+        $rules = [
+        ];
+        
+        $messages = [
+        ];
+        
+        $validation = Validator::make($request->all(), $rules, $messages);
+        
+        if ($validation->fails()) {
+            return redirect()->back()->withInput()->withErrors($validation);
+        }
+    
+        try {
+                       $updateData = $this->service->updateProductMaterialWiseAddNewReq($request);
+    
+            if ($updateData['status'] == 'success') {
+                return redirect('storedept/list-accepted-design-from-prod')->with(['status' => 'success', 'msg' => $updateData['message']]);
+            } else {
+                return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $updateData['message']]);
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+        }
+    }
    
     public function editProductMaterialWiseAdd($purchase_orders_id, $business_id) {
         try {
