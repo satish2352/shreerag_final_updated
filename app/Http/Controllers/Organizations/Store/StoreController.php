@@ -88,8 +88,8 @@ class StoreController extends Controller
             // $purchase_orders_id = base64_decode($purchase_orders_id);
             
             // $business_id = base64_decode($business_id);
-            $id = base64_decode($id);
-            // dd($business_id);
+            $id = $id;
+            // dd($id);
             // die();
             $editData = $this->service->editProductMaterialWiseAddNewReq($id);
            

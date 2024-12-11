@@ -48,10 +48,10 @@
                                 <div class="all-form-element-inner">
                                     <form action="{{ route('update-material-list-bom-wise-new-req', $id) }}" method="POST" id="addProductForm" enctype="multipart/form-data">
                                         @csrf
-                                        <input type="hidden" name="id" id="id" value="{{ $productDetails->id }}">
+                                        {{-- <input type="hidden" name="id" id="id" value="{{ $productDetails->id }}"> --}}
                                         <input type="hidden" name="business_details_id" id="business_details_id" value="{{ $id }}">
                                         {{-- <input type="hidden" name="business_details_id" id="business_details_id" value="{{ $business_id }}"> --}}
-                                        <input type="hidden" name="production_id" id="production_id" value="{{ $productDetails->productionId }}">
+                                        {{-- <input type="hidden" name="production_id" id="production_id" value="{{ $productDetails->productionId }}"> --}}
                                     
                                         <div class="row">
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">

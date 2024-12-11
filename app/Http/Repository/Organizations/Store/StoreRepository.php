@@ -187,7 +187,7 @@ class StoreRepository
                 ->leftJoin('gatepass', function($join) {
                     $join->on('grn_tbl.gatepass_id', '=', 'gatepass.id');
                 })
-                // ->where('businesses_details.id', $business_id)
+                ->where('businesses_details.id', $id)
                 // ->where('purchase_orders.purchase_orders_id', $purchase_orders_id)
                 // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
                 ->where('businesses_details.is_active', true)
