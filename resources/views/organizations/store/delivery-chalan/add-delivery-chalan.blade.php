@@ -120,6 +120,7 @@
                                                                     <option value="GST">GST</option>
                                                                     <option value="SGST">SGST</option>
                                                                     <option value="CGST">CGST</option>
+                                                                    <option value="SGST+CGST">SGST+CGST</option>
                                                                     <option value="IGST">IGST</option>
                                                                 </select>
                                                               </div>
