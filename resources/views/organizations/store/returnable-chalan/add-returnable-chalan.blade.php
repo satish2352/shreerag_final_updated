@@ -414,11 +414,11 @@
                         digits: true,
                         min: 1
                     },
-                    'addmore[0][rate]': {
-                        required: true,
-                        number: true,
-                        min: 0.01
-                    },
+                    // 'addmore[0][rate]': {
+                    //     required: true,
+                    //     number: true,
+                    //     min: 0.01
+                    // },
                     'addmore[0][amount]': {
                         required: true,
                     },
@@ -499,11 +499,11 @@
                         digits: "Please enter only digits for Quantity.",
                         min: "Quantity must be at least 1."
                     },
-                    'addmore[0][rate]': {
-                        required: "Please enter the Rate.",
-                        number: "Please enter a valid number for Rate.",
-                        min: "Rate must be a positive number."
-                    },
+                    // 'addmore[0][rate]': {
+                    //     required: "Please enter the Rate.",
+                    //     number: "Please enter a valid number for Rate.",
+                    //     min: "Rate must be a positive number."
+                    // },
                     'addmore[0][amount]': {
                         required: "Please Enter the Amount",
                     },
@@ -559,24 +559,24 @@
                         min: "Quantity must be at least 1."
                     }
                 });
-                row.find('.rate').rules("add", {
-                    required: true,
-                    number: true,
-                    min: 0.01,
-                    messages: {
-                        required: "Please enter the Rate.",
-                        number: "Please enter a valid number for Rate.",
-                        min: "Rate must be a positive number."
-                    }
-                });
+                // row.find('.rate').rules("add", {
+                //     required: true,
+                //     number: true,
+                //     min: 0.01,
+                //     messages: {
+                //         required: "Please enter the Rate.",
+                //         number: "Please enter a valid number for Rate.",
+                //         min: "Rate must be a positive number."
+                //     }
+                // });
                 row.find('.process_id').rules("add", {
                     required: true,
                     number: true,
                     min: 0.01,
                     messages: {
-                        required: "Please enter the Rate.",
-                        number: "Please enter a valid number for Rate.",
-                        min: "Rate must be a positive number."
+                        required: "Please enter the process.",
+                        number: "Please enter a valid number for process.",
+                        min: "process must be a positive number."
                     }
                 });
                 row.find('.size').rules("add", {
@@ -584,9 +584,9 @@
                     number: true,
                     min: 0.01,
                     messages: {
-                        required: "Please enter the Rate.",
-                        number: "Please enter a valid number for Rate.",
-                        min: "Rate must be a positive number."
+                        required: "Please enter the size.",
+                        number: "Please enter a valid number for size.",
+                        min: "size must be a positive number."
                     }
                 });
                 row.find('.total_amount').rules("add", {
