@@ -244,7 +244,7 @@
                                                                             placeholder="">
                                                                         <td>
                                                                             <select class="form-control part-no mb-2" name="part_no_id_{{ $key }}" id="">
-                                                                                <option value="" default>Select Item</option>
+                                                                                <option value="" default>Select Description</option>
                                                                                 @foreach ($dataOutputPartItem as $data)
                                                                                 <option value="{{ $data['id'] }}"
                                                                                     {{ old('part_no_id', $editDataNew->part_no_id) == $data->id ? 'selected' : '' }}>
@@ -576,7 +576,7 @@
                     '][purchase_id]" class="form-control" value="' + i + '" placeholder="">' +
                     '<td>' +
             '<select class="form-control part_no_id mb-2" name="addmore[' + i + '][part_no_id]" id="">' +
-                '<option value="" default>Select Part Item</option>' +
+                '<option value="" default>Select Description</option>' +
                 '@foreach ($dataOutputPartItem as $data)' +
                     '<option value="{{ $data['id'] }}">{{ $data['description'] }}</option>' +
                 '@endforeach' +

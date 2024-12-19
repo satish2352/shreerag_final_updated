@@ -8,7 +8,7 @@
     @else
     <div class="" style="padding-bottom: 100px; padding-left: 20px; ">
         <a href="{{ route('accept-purchase-order', ['purchase_order_id' => $purchase_order_id, 'business_id' => $purchaseOrder->business_details_id]) }}"><button data-toggle="tooltip"
-                title="Accept Purchase Order" class="pd-setting-ed">Accept</button></a> &nbsp;
+                title="Accept Purchase Order" class="accept-btn">Accept</button></a> &nbsp;
         &nbsp; &nbsp;
     </div>
     @endif

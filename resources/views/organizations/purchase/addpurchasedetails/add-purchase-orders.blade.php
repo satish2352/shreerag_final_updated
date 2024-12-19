@@ -173,7 +173,7 @@
                                                             <select class="form-control part-no mb-2"
                                                                 name="addmore[0][part_no_id]" id=""
                                                                 style="min-width:200px">
-                                                                <option value="" default>Select Part Item</option>
+                                                                <option value="" default>Select Description</option>
                                                                 @foreach ($dataOutputPartItem as $data)
                                                                     <option value="{{ $data['id'] }}">
                                                                         {{ $data['description'] }}</option>
@@ -497,7 +497,7 @@
                     </td>
                     <td>
                          <select class="form-control part-no mb-2" name="addmore[${i}][part_no_id]" id="">
-                                                <option value="" default>Select Part Item</option>
+                                                <option value="" default>Select Description</option>
                                                 @foreach ($dataOutputPartItem as $data)
                                                         <option value="{{ $data['id'] }}" >
                                                             {{ $data['description'] }}</option>

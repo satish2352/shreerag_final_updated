@@ -1125,6 +1125,14 @@ ul.two-part-sp li{
     background: #eb4b4b;
     border-radius: 3px;
 }
+.accept-btn{
+    padding: 8px 15px;
+    font-size: 16px;
+    border-radius: 3px;
+    border: 1px solid rgba(0,0,0,.12);
+    background: #243772;
+    color: #fff;
+}
 .sales-report-stn-his button.product-btn-history, button.pd-setting-ed {
     padding: 5px 10px;
     font-size: 14px;

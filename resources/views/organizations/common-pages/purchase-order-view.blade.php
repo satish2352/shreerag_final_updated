@@ -295,14 +295,14 @@
                             <table  style="width: 100%; border-collapse: collapse; margin-top: 10px;">
                                 <thead>
                                     <tr style="bold; font-family: 'Font Awesome 5 Free'!important;font-size:14px;">
-                                        <th style="border: 1px solid black; padding: 5px; font-size:12px;">No.</th>
-                                        <th style="border: 1px solid black; padding: 5px; font-size:12px;">Description</th>
-                                        <th style="border: 1px solid black; padding: 5px; font-size:12px;">HSN No.</th>
-                                        <th style="border: 1px solid black; padding: 5px; font-size:11px;">Part No.</th>
-                                        <th style="border: 1px solid black; padding: 5px; font-size:12px;">Quantity</th>
-                                        <th style="border: 1px solid black; padding: 5px font-size:12px;;">Rate</th>
-                                        <th style="border: 1px solid black; padding: 5px font-size:12px;;">Discount</th>
-                                        <th style="border-top: 1px solid black;border-bottom: 1px solid black;border-left: 1px solid black; border-right: 1px solid black;  padding: 5px; text-align: right; font-size:12px;">Amount</th>
+                                        <th class="pdf-font-size" style="border: 1px solid black; padding: 5px; font-size:12px;">No.</th>
+                                        <th class="pdf-font-size" style="border: 1px solid black; padding: 5px; font-size:12px;">Description</th>
+                                        <th class="pdf-font-size" style="border: 1px solid black; padding: 5px; font-size:12px;">HSN No.</th>
+                                        <th class="pdf-font-size" style="border: 1px solid black; padding: 5px; font-size:11px;">Part No.</th>
+                                        <th class="pdf-font-size" style="border: 1px solid black; padding: 5px; font-size:12px;">Quantity</th>
+                                        <th class="pdf-font-size" style="border: 1px solid black; padding: 5px font-size:12px;;">Rate</th>
+                                        <th class="pdf-font-size" style="border: 1px solid black; padding: 5px font-size:12px;;">Discount</th>
+                                        <th class="pdf-font-size" style="border-top: 1px solid black;border-bottom: 1px solid black;border-left: 1px solid black; border-right: 1px solid black;  padding: 5px; text-align: right; font-size:12px;">Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -404,10 +404,14 @@
                                 </tfoot>
                             </table>
                           <div><span style="padding: 10px 10px 10px 8px;font-family: 'Font Awesome 5 Free'!important; font-size:13px;">This is a computer-generated document No signature is required</span></div>
-                           
-                            <a>
+                          @if(empty($is_pdf))
+                          <a>
+                              <button onclick="printInvoice()" style="margin: 20px;" type="button" class="btn btn-primary print-btn m-4 print-button">Print</button>
+                          </a>
+                      @endif
+                            {{-- <a>
                                 <button data-toggle="tooltip" onclick="printInvoice()" style="margin: 20px;"   type="button" class="btn btn-primary print-btn m-4 print-button" >Print</button>
-                            </a>
+                            </a> --}}
                             </div>
                         </div>
                     </div>
@@ -433,8 +437,10 @@
                 printWindow.document.write('<style>');
                 printWindow.document.write(`
                     @media print {
-                        body {
-                            font-family: Arial, sans-serif;
+                        html, body {
+                            width: 100%;
+                            height: 100%;
+                            font-family: Font Awesome 5 Free;
                             margin: 0;
                             padding: 0;
                         }
@@ -450,6 +456,7 @@
                         .header-size {
                             font-size: 13px;
                         }
+                            
                         #printableArea {
                             width: 100%;
                             margin: 0px;
@@ -457,6 +464,9 @@
                             border-right: 1px solid black;
                             box-sizing: border-box;
                         }
+                            .pdf-font-size{
+                            font-size:9px !important;
+                            }
                         table {
                             width: 100%;
                             border-collapse: collapse;
@@ -473,12 +483,7 @@
                         @page {
                             size: A4;
                             margin: 0;
-                        }
-                        html, body {
-                            width: 100%;
-                            height: 100%;
-                            margin: 0;
-                            padding: 0;
+                            padding:0;
                         }
                         .print-button {
                             display: none;

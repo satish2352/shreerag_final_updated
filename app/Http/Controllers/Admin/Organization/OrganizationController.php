@@ -102,14 +102,32 @@ class OrganizationController extends Controller
         }
     }
 
-    public function edit( Request $request ) {
-        $edit_data_id = base64_decode( $request->id );
-        $editData = $this->service->getById( $edit_data_id );
-        $editData->founding_date = Carbon\Carbon::parse( $editData->founding_date )->format( 'd/m/Y' );
+    // public function edit( Request $request ) {
+    //     $edit_data_id = base64_decode( $request->id );
+    //     $editData = $this->service->getById( $edit_data_id );
+    //     // dd($editData);
+    //     // die();
+    //     $editData->founding_date = Carbon\Carbon::parse( $editData->founding_date )->format( 'd/m/Y' );
 
-        return view( 'admin.pages.organizations.edit-organizations', compact( 'editData' ) );
+    //     return view( 'admin.pages.organizations.edit-organizations', compact( 'editData' ) );
+    // }
+    public function edit(Request $request) {
+        // Decode the ID from the request
+        $edit_data_id = base64_decode($request->id);
+        
+        // Retrieve the data using the service
+        $editData = $this->service->getById($edit_data_id);
+        
+        // Ensure founding_date exists before trying to format it
+        if ($editData->founding_date) {
+            // Format the founding_date to 'd/m/Y' for display in the edit form
+            $editData->founding_date = \Carbon\Carbon::parse($editData->founding_date)->format('Y-m-d');
+        }
+    
+        // Return the view with the formatted data
+        return view('admin.pages.organizations.edit-organizations', compact('editData'));
     }
-
+    
     public function update( Request $request ) {
         $rules = [
             // 'company_name' => 'required|string|max:255',

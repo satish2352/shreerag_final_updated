@@ -60,13 +60,21 @@
                                                     <span class="red-text"><?php echo $errors->first('cin_number', ':message'); ?></span>
                                                 @endif
                                                 </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="mobile_number">Contact No. :</label>
+                                                    <input type="text" class="form-control" id="mobile_number"
+                                                           name="mobile_number" placeholder="Enter your contact No."
+                                                           value="@if(old('mobile_number')){{ old('mobile_number') }}@else{{$editData->mobile_number}}@endif">
+                                                           @if ($errors->has('mobile_number'))
+                                                           <span class="red-text"><?php echo $errors->first('mobile_number', ':message'); ?></span>
+                                                       @endif
+                                                        </div>
+
+                                            {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                 <label for="mobile_number">Mobile Number:</label>
                                                 <input type="text" class="form-control" id="mobile_number" value="@if (old('mobile_number')) {{ old('mobile_number') }}@else{{ $editData->mobile_number }} @endif" name="mobile_number" placeholder="Enter mobile number"  maxlength="10" pattern="\d{10}" >
-                                                @if ($errors->has('mobile_number'))
-                                                <span class="red-text"><?php echo $errors->first('mobile_number', ':message'); ?></span>
-                                            @endif
-                                            </div>
+                                               
+                                            </div> --}}
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                 <label for="address">Company Address:</label>
                                                 <input type="text" class="form-control" id="address" value="@if (old('address')) {{ old('address') }}@else{{ $editData->address }} @endif" name="address" placeholder="Enter company address">
@@ -77,18 +85,43 @@
                                       
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                 <label for="employee_count">Employee Count:</label>
-                                                <input type="text" class="form-control" id="employee_count" value="@if (old('employee_count')) {{ old('employee_count') }}@else{{ $editData->employee_count }} @endif" name="employee_count" placeholder="Enter employee count">
+                                                <input type="text" class="form-control" id="employee_count"
+                                                name="employee_count" placeholder="Enter your contact No."
+                                                value="@if(old('employee_count')){{ old('employee_count') }}@else{{$editData->employee_count}}@endif">
                                                 @if ($errors->has('employee_count'))
                                                 <span class="red-text"><?php echo $errors->first('employee_count', ':message'); ?></span>
                                             @endif
                                             </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="founding_date">Foundation Date:</label>
-                                                <input type="date" class="form-control " id="founding_date" 
-           
 
-                                                       name="founding_date" placeholder="Enter foundation date">
+
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <label for="address">Company Address:</label>
+                                                <input type="text" class="form-control" id="address" value="@if (old('address')) {{ old('address') }}@else{{ $editData->address }} @endif" name="address" placeholder="Enter company address">
+                                                @if ($errors->has('address'))
+                                                <span class="red-text"><?php echo $errors->first('address', ':message'); ?></span>
+                                            @endif
                                             </div>
+
+                                            {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <label for="founding_date">Founding Date:</label>
+                                                <input type="date" class="form-control" id="founding_date" value="@if (old('founding_date')) {{ old('founding_date') }}@else{{ $editData->founding_date }} @endif" name="founding_date" placeholder="Enter company founding_date">
+                                                @if ($errors->has('founding_date'))
+                                                <span class="red-text"><?php //echo $errors->first('founding_date', ':message'); ?></span>
+                                            @endif
+                                            </div> --}}
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <label for="founding_date">Founding Date:</label>
+                                                <input type="date" 
+                                                       class="form-control" 
+                                                       id="founding_date" 
+                                                       name="founding_date" 
+                                                       value="{{ old('founding_date', $editData->founding_date) }}" 
+                                                       placeholder="Enter company founding date">
+                                                @if ($errors->has('founding_date'))
+                                                    <span class="red-text">{{ $errors->first('founding_date') }}</span>
+                                                @endif
+                                            </div>
+                                            
                                             
                                             
                                     
@@ -147,15 +180,34 @@
         </div>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/additional-methods/1.19.3/additional-methods.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
 <script>
-$(document).ready(function() {
+ jQuery.noConflict();
+ jQuery(document).ready(function($) {
     // Validate the form
-    $('#mobile_number').on('input', function() {
-        this.value = this.value.replace(/\s+/g, ''); // Removes all spaces
+    $.validator.addMethod("regex", function(value, element, regexp) {
+            if (regexp.constructor != RegExp)
+                regexp = new RegExp(regexp);
+            else if (regexp.global)
+                regexp.lastIndex = 0;
+            return this.optional(element) || regexp.test(value);
+        }, "Please check your input.");
+
+        $(document).ready(function() {
+    $('.datetimepicker').datetimepicker({
+        format: 'YYYY-MM-DD', // Ensure format matches your date value
     });
+
+    // Prepopulate the datepicker with the value if it exists
+    const foundingDate = $('#founding_date').val();
+    if (foundingDate) {
+        $('#founding_date').data("DateTimePicker").date(foundingDate);
+    }
+});
+
+
     $("#addOrgForm").validate({
         rules: {
             company_name: {
@@ -183,7 +235,7 @@ $(document).ready(function() {
                 required: true,
               
             },
-            employee_count: {
+            founding_date: {
                 required: true,
                 digits: true
             },
@@ -193,9 +245,9 @@ $(document).ready(function() {
             website_link: {
                 required: true,
             },
-            image: {
-                required: true,
-            }
+            // image: {
+            //     required: true,
+            // }
         },
         messages: {
             company_name: {
@@ -233,10 +285,10 @@ $(document).ready(function() {
             website_link: {
                 required: "Please enter a valid website link"
             },
-            image: {
-                required: "Please upload an image",
+            // image: {
+            //     required: "Please upload an image",
                
-            }
+            // }
         },
         errorPlacement: function(error, element) {
             error.appendTo(element.parent());

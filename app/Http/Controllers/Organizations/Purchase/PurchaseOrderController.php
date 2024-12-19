@@ -541,6 +541,7 @@ class PurchaseOrderController extends Controller
                 'getOrganizationData' => $getOrganizationData,
                 'getAllRulesAndRegulations' => $getAllRulesAndRegulations,
                 'business_id' => $business_id,
+                'is_pdf' => true, // Pass this flag
             ])
             ->setPaper('a4', 'portrait')
             ->setWarnings(false)
@@ -551,6 +552,7 @@ class PurchaseOrderController extends Controller
                 'margin-left' => 5,
                 'isRemoteEnabled' => true,
                 'enable-local-file-access' => true,
+                
                 
             ]);
     

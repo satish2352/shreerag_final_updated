@@ -32,7 +32,7 @@ class organizationRepository  {
             $dataOutput->company_name = $request->company_name;
             $dataOutput->email = $request->email;
             $dataOutput->gst_no = $request->gst_no;
-            $dataOutput->cin_number = $request->cin_number;
+                $dataOutput->cin_number = $request->cin_number;
             $dataOutput->mobile_number = $request->mobile_number;
             $dataOutput->address = $request->address;
             $dataOutput->role_id= config('constants.ROLE_ID.HIGHER_AUTHORITY');
