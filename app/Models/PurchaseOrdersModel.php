@@ -13,6 +13,6 @@ class PurchaseOrdersModel extends Model
     protected $fillable = [
         'client_name','phone_number','tax','client_address',
         'email','gst_number','payment_terms',
-        'invoice_date','items','note','discount','total','status'
+        'invoice_date','items','note','total','status'
     ];
 }

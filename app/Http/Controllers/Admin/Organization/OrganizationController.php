@@ -10,158 +10,144 @@ use Validator;
 use Config;
 use Carbon;
 use App\Models\
-{
-    OrganizationModel,DepartmentsModel,RolesModel,EmployeesModel,HREmployee
-};    
+ {
+    OrganizationModel, DepartmentsModel, RolesModel, EmployeesModel, HREmployee
+}
+;
+
 class OrganizationController extends Controller
-{ 
-    public function __construct(){
+ {
+
+    public function __construct() {
         $this->service = new OrganizationServices();
-        }
-
-
-    public function index(){
-        try {
-            $getOutput = $this->service->getAll();
-            return view('admin.pages.organizations.list-organizations', compact('getOutput'));
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }    
-
-
-    public function add(){
-        return view('admin.pages.organizations.add-organizations');
     }
 
+    public function index() {
+        try {
+            $getOutput = $this->service->getAll();
+            return view( 'admin.pages.organizations.list-organizations', compact( 'getOutput' ) );
+        } catch ( \Exception $e ) {
+            return $e;
+        }
+    }
 
+    public function add() {
+        return view( 'admin.pages.organizations.add-organizations' );
+    }
 
+    public function store( Request $request ) {
+        $rules = [
+            'company_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:tbl_organizations,email',
+            'mobile_number' => 'required|string|max:20|unique:tbl_organizations,mobile_number',
+            'gst_no' => 'required|',
+            'cin_number' => 'required|',
+            'address' => 'required|string|max:255',
+            'employee_count' => 'nullable',
+            'founding_date' => 'nullable|date',
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:10240|min:5',
+        ];
 
-      public function store(Request $request){
-         $rules = [
-                    'company_name' => 'required|string|max:255',
-                    'email' => 'required|email|max:255',
-                    'mobile_number' => 'required|string|max:20',
-                    'address' => 'required|string|max:255',
-                    'employee_count' => 'nullable',
-                    'founding_date' => 'nullable|date',
-                    'image' => 'required|image|mimes:jpeg,png,jpg|max:10240|min:5',
-                ];
+        $messages = [
+            'company_name.required' => 'Please enter the company name.',
+            'company_name.string' => 'The company name must be a valid string.',
+            'company_name.max' => 'The company name must not exceed 255 characters.',
+            'email.required' => 'Please enter the email.',
+            'email.email' => 'Please enter a valid email address.',
+            'email.max' => 'The email must not exceed 255 characters.',
+            'email.unique' => 'The email has already been taken.',
+            'mobile_number.required' => 'Please enter the mobile number.',
+            'mobile_number.string' => 'The mobile number must be a valid string.',
+            'mobile_number.max' => 'The mobile number must not exceed 20 characters.',
+            'mobile_number.unique' => 'The mobile number has already been taken.', // Custom message for uniqu
+            'gst_no.required' => 'The gst number is required.',
+            'cin_number.required' => 'The cin number is required.',
+            'address.required' => 'Please enter the address.',
+            'address.string' => 'The address must be a valid string.',
+            'address.max' => 'The address must not exceed 255 characters.',
+            'employee_count.integer' => 'The employee count must be an integer.',
+            'founding_date.date' => 'Please enter a valid founding date.',
+            'website_link.url' => 'Please enter a valid website URL.',
+            'website_link.max' => 'The website must not exceed 255 characters.',
+            'is_active.boolean' => 'The active status must be a boolean value.',
+            'image.required' => 'The image is required.',
+            'image.image' => 'The image must be a valid image file.',
+            'image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
+            'image.max' => 'The image size must not exceed 10MB.',
+            'image.min' => 'The image size must not be less than 5KB.',
+        ];
 
-                $messages = [
-                    'company_name.required' => 'Please enter the company name.',
-                    'company_name.string' => 'The company name must be a valid string.',
-                    'company_name.max' => 'The company name must not exceed 255 characters.',
-                    
-                    'email.required' => 'Please enter the email.',
-                    'email.email' => 'Please enter a valid email address.',
-                    'email.max' => 'The email must not exceed 255 characters.',
-                    
-                    'mobile_number.required' => 'Please enter the mobile number.',
-                    'mobile_number.string' => 'The mobile number must be a valid string.',
-                    'mobile_number.max' => 'The mobile number must not exceed 20 characters.',
-                    
-                    'address.required' => 'Please enter the address.',
-                    'address.string' => 'The address must be a valid string.',
-                    'address.max' => 'The address must not exceed 255 characters.',
-                    
-                    'employee_count.integer' => 'The employee count must be an integer.',
-                    
-                    'founding_date.date' => 'Please enter a valid founding date.',
-                    
-                    'website_link.url' => 'Please enter a valid website URL.',
-                    'website_link.max' => 'The website must not exceed 255 characters.',
-                    
-                    'is_active.boolean' => 'The active status must be a boolean value.',
-                    
-                    'image.required' => 'The image is required.',
-                    'image.image' => 'The image must be a valid image file.',
-                    'image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
-                    'image.max' => 'The image size must not exceed 10MB.',
-                    'image.min' => 'The image size must not be less than 5KB.',
-                ];
-  
-          try {
-              $validation = Validator::make($request->all(), $rules, $messages);
+        try {
+            $validation = Validator::make( $request->all(), $rules, $messages );
 
-              if ($validation->fails()) {
-                  return redirect('add-organizations')
-                      ->withInput()
-                      ->withErrors($validation);
-              } else {
-                  $add_record = $this->service->addAll($request);
-                  if ($add_record) {
-                      $msg = $add_record['msg'];
-                      $status = $add_record['status'];
-  
-                      if ($status == 'success') {
-                          return redirect('list-organizations')->with(compact('msg', 'status'));
-                      } else {
-                          return redirect('add-organizations')->withInput()->with(compact('msg', 'status'));
-                      }
-                  }
-              }
-          } catch (Exception $e) {
-              return redirect('add-organizations')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
-          }
-      }
+            if ( $validation->fails() ) {
+                return redirect( 'add-organizations' )
+                ->withInput()
+                ->withErrors( $validation );
+            } else {
+                $add_record = $this->service->addAll( $request );
+                if ( $add_record ) {
+                    $msg = $add_record[ 'msg' ];
+                    $status = $add_record[ 'status' ];
 
-
-
-
-  public function edit(Request $request){
-    $edit_data_id = base64_decode($request->id);
-    $editData = $this->service->getById($edit_data_id);
-    $editData->founding_date = Carbon\Carbon::parse($editData->founding_date)->format('d/m/Y');
-
-    return view('admin.pages.organizations.edit-organizations', compact('editData'));
-}
-
-
-        public function update(Request $request){
-            $rules = [
-                    'company_name' => 'required|string|max:255',
-                    'email' => 'required|email|max:255',
-                    'mobile_number' => 'required|string|max:20',
-                    'address' => 'required|string|max:255',
-                    'employee_count' => 'nullable',
-                ];
-    
-            if($request->has('image')) {
-                $rules['image'] = 'required|image|mimes:jpeg,png,jpg|max:10240|min:5';//|dimensions:min_width=100,min_height=100,max_width=5000,max_height=5000';
+                    if ( $status == 'success' ) {
+                        return redirect( 'list-organizations' )->with( compact( 'msg', 'status' ) );
+                    } else {
+                        return redirect( 'add-organizations' )->withInput()->with( compact( 'msg', 'status' ) );
+                    }
+                }
             }
+        } catch ( Exception $e ) {
+            return redirect( 'add-organizations' )->withInput()->with( [ 'msg' => $e->getMessage(), 'status' => 'error' ] );
+        }
+    }
+
+    public function edit( Request $request ) {
+        $edit_data_id = base64_decode( $request->id );
+        $editData = $this->service->getById( $edit_data_id );
+        $editData->founding_date = Carbon\Carbon::parse( $editData->founding_date )->format( 'd/m/Y' );
+
+        return view( 'admin.pages.organizations.edit-organizations', compact( 'editData' ) );
+    }
+
+    public function update( Request $request ) {
+        $rules = [
+            // 'company_name' => 'required|string|max:255',
+            // 'email' => 'required|email|max:255',
+            // 'gst_no' => 'required',
+            // 'mobile_number' => 'required|string|max:20',
+            // 'address' => 'required|string|max:255',
+            // 'employee_count' => 'nullable',
+        ];
+
+        // if ( $request->has( 'image' ) ) {
+        //     $rules[ 'image' ] = 'required|image|mimes:jpeg,png,jpg|max:10240|min:5';
+        //     //|dimensions:min_width = 100, min_height = 100, max_width = 5000, max_height = 5000';
+        //     }
            
             $messages = [
-                    'company_name.required' => 'Please enter the company name.',
-                    'company_name.string' => 'The company name must be a valid string.',
-                    'company_name.max' => 'The company name must not exceed 255 characters.',
-                    
-                    'email.required' => 'Please enter the email.',
-                    'email.email' => 'Please enter a valid email address.',
-                    'email.max' => 'The email must not exceed 255 characters.',
-                    
-                    'mobile_number.required' => 'Please enter the mobile number.',
-                    'mobile_number.string' => 'The mobile number must be a valid string.',
-                    'mobile_number.max' => 'The mobile number must not exceed 20 characters.',
-                    
-                    'address.required' => 'Please enter the address.',
-                    'address.string' => 'The address must be a valid string.',
-                    'address.max' => 'The address must not exceed 255 characters.',
-                    
-                    'employee_count.integer' => 'The employee count must be an integer.',
-                    
-                    'founding_date.date' => 'Please enter a valid founding date.',
-                    
-                    'website_link.url' => 'Please enter a valid website URL.',
-                    'website_link.max' => 'The website must not exceed 255 characters.',
-                    
-                    'is_active.boolean' => 'The active status must be a boolean value.',
-                    
-                    'image.required' => 'The image is required.',
-                    'image.image' => 'The image must be a valid image file.',
-                    'image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
-                    'image.max' => 'The image size must not exceed 10MB.',
-                    'image.min' => 'The image size must not be less than 5KB.',
+                    // 'company_name.required' => 'Please enter the company name.',
+                    // 'company_name.string' => 'The company name must be a valid string.',
+                    // 'company_name.max' => 'The company name must not exceed 255 characters.',
+                    // 'email.required' => 'Please enter the email.',
+                    // 'email.email' => 'Please enter a valid email address.',
+                    // 'email.max' => 'The email must not exceed 255 characters.',
+                    // 'gst_no.required' => 'The gst number is required.',
+                    // 'mobile_number.required' => 'Please enter the mobile number.',
+                    // 'mobile_number.string' => 'The mobile number must be a valid string.',
+                    // 'mobile_number.max' => 'The mobile number must not exceed 20 characters.',
+                    // 'address.required' => 'Please enter the address.',
+                    // 'address.string' => 'The address must be a valid string.',
+                    // 'address.max' => 'The address must not exceed 255 characters.',
+                    // 'employee_count.integer' => 'The employee count must be an integer.',
+                    // // 'founding_date.date' => 'Please enter a valid founding date.',
+                    // 'website_link.url' => 'Please enter a valid website URL.',
+                    // 'website_link.max' => 'The website must not exceed 255 characters.',
+                    // 'image.required' => 'The image is required.',
+                    // 'image.image' => 'The image must be a valid image file.',
+                    // 'image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
+                    // 'image.max' => 'The image size must not exceed 10MB.',
+                    // 'image.min' => 'The image size must not be less than 5KB.',
                 ];
     
             try {
@@ -230,8 +216,8 @@ class OrganizationController extends Controller
         $data = EmployeesModel::where('department_id', $roleId)->get();
         return response()->json($data);
     } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
-    }
+        return response()->json(['error' => $e->getMessage() ], 500 );
+        }
 
-}
+    }
 }

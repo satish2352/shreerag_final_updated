@@ -103,7 +103,25 @@
                                                                             @endif
                                                                         </div>
                                                                     </div>
-
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
+                                                                            <label>Contact Person Name<span class="text-danger">*</span></label>
+                                                                            <input type="text" class="form-control" id="contact_person_name" value="@if (old('contact_person_name')) {{ old('contact_person_name') }}@else{{ $editDataNew->contact_person_name }} @endif" name="contact_person_name" placeholder="Contact Person Name">
+                                                                            @if ($errors->has('contact_person_name'))
+                                                                            <span class="red-text"><?php echo $errors->first('contact_person_name', ':message'); ?></span>
+                                                                        @endif
+                                                                          
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
+                                                                            <label>Contact Person Number<span class="text-danger">*</span></label>
+                                                                            <input type="text" class="form-control" id="contact_person_number" value="@if (old('contact_person_number')) {{ old('contact_person_number') }}@else{{ $editDataNew->contact_person_number }} @endif" name="contact_person_number" placeholder="Contact Person Number">
+                                                                            @if ($errors->has('contact_person_number'))
+                                                                            <span class="red-text"><?php echo $errors->first('contact_person_number', ':message'); ?></span>
+                                                                        @endif
+                                                                        </div>
+                                                                    </div>
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
                                                                             <label>Tax Type <span class="text-danger">*</span></label>
@@ -141,22 +159,28 @@
                                                                         @endif
                                                                     </div>
                                                                 </div>
-                                                                <div class="row">
-                                                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                                                        <div class="form-group">
-                                                                            <label>Invoice date <span class="text-danger">*</span></label>
-                                                                            <div class="cal-icon">
-                                                                                <input class="form-control datetimepicker"
-                                                                                    type="text" name="invoice_date"
-                                                                                    id="invoice_date"
-                                                                                    value="{{ $editDataNew->invoice_date }}">
-                                                                            </div>
+                                                                <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label>Purchase Order Date <span class="text-danger">*</span></label>
+                                                                        <div class="cal-icon">
+                                                                            <input class="form-control datetimepicker"
+                                                                                type="text" name="invoice_date"
+                                                                                id="invoice_date"
+                                                                                value="{{ $editDataNew->invoice_date }}">
                                                                         </div>
                                                                     </div>
+                                                                </div>
+                                                              
+                                                                 
+                                                                    
                                                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                                                         <div class="form-group">
                                                                             <label>Payment Terms <span class="text-danger">*</span></label>
-                                                                            <select name="payment_terms"
+                                                                            <input type="text" class="form-control" id="payment_terms" value="@if (old('payment_terms')) {{ old('payment_terms') }}@else{{ $editDataNew->payment_terms }} @endif" name="payment_terms" placeholder="Enter payment terms">
+                                                                            @if ($errors->has('payment_terms'))
+                                                                            <span class="red-text"><?php echo $errors->first('payment_terms', ':message'); ?></span>
+                                                                        @endif
+                                                                            {{-- <select name="payment_terms"
                                                                                 class="form-control"
                                                                                 title="select payment terms"
                                                                                 id="payment_terms">
@@ -171,12 +195,19 @@
                                                                                 <option value="90"
                                                                                     {{ $editDataNew->payment_terms == 90 ? 'selected' : '' }}>
                                                                                     90 Days</option>
-                                                                            </select>
+                                                                            </select> --}}
                                                                             @if ($errors->has('payment_terms'))
                                                                                 <span
                                                                                     class="red-text">{{ $errors->first('payment_terms') }}</span>
                                                                             @endif
                                                                         </div>
+                                                                    </div>
+                                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                        <label for="quote_no">Quote No:  (optional)</label>
+                                                                        <input type="text" class="form-control"
+                                                                            id="quote_no" name="quote_no"
+                                                                            value="{{ $editDataNew->quote_no }}"
+                                                                            placeholder="Enter Terms & Condition">
                                                                     </div>
                                                                 </div>
                                                             @endif
@@ -186,16 +217,18 @@
                                                         <div style="margin-top:10px;">
                                                             <table class="table table-bordered" id="dynamicTable">
                                                                 <tr>
-                                                                    <th>Part No</th>
+                                                                    <th>Description </th>
                                                                     <th>HSN</th>
-                                                                    <th>Description</th>
-                                                                    <th>Due Date</th>
+                                                                    <th>Part No</th>
+                                                                    {{-- <th>Due Date</th> --}}
                                                                     <th>Quantity</th>
                                                                     <th>Unit</th>
                                                                     <th>Rate</th>
+                                                                    <th>Discount</th>
                                                                     <th>Amount</th>
                                                                     <th>Action</th>
                                                                 </tr>
+                                                              
                                                                 @foreach ($editData as $key => $editDataNew)
                                                                     <tr>
                                                                         <input type="hidden" name="design_count"
@@ -239,13 +272,13 @@
                                                                                 class="form-control description" />
                                                                         </td>
 
-                                                                        <td>
+                                                                        {{-- <td>
                                                                             <input type="date"
-                                                                                name="due_date_{{ $key }}"
-                                                                                value="{{ $editDataNew->due_date }}"
+                                                                                name="discount_{{ $key }}"
+                                                                                value="{{ $editDataNew->discount }}"
                                                                                 placeholder="Enter Due Date"
-                                                                                class="form-control due_date" />
-                                                                        </td>
+                                                                                class="form-control discount" />
+                                                                        </td> --}}
 
                                                                         <td>
                                                                             <input type="text"
@@ -272,13 +305,69 @@
                                                                                 placeholder="Enter Rate"
                                                                                 class="form-control rate" />
                                                                         </td>
+                                                                        <td>
+                                                                            <select class="form-control discount" name="discount_{{ $key }}" id="discount_{{ $key }}">
+                                                                                <option value="0" {{ $editDataNew->discount == 0 ? 'selected' : '' }}>0 %</option>
+                                                                                <option value="1" {{ $editDataNew->discount == 1 ? 'selected' : '' }}>1 %</option>
+                                                                                <option value="2" {{ $editDataNew->discount == 2 ? 'selected' : '' }}>2 %</option>
+                                                                                <option value="3" {{ $editDataNew->discount == 3 ? 'selected' : '' }}>3 %</option>
+                                                                                <option value="4" {{ $editDataNew->discount == 4 ? 'selected' : '' }}>4 %</option>
+                                                                                <option value="5" {{ $editDataNew->discount == 5 ? 'selected' : '' }}>5 %</option>
+                                                                                <option value="6" {{ $editDataNew->discount == 6 ? 'selected' : '' }}>6 %</option>
+                                                                                <option value="7" {{ $editDataNew->discount == 7 ? 'selected' : '' }}>7 %</option>
+                                                                                <option value="8" {{ $editDataNew->discount == 8 ? 'selected' : '' }}>8 %</option>
+                                                                                <option value="9" {{ $editDataNew->discount == 9 ? 'selected' : '' }}>9 %</option>
+                                                                                <option value="10" {{ $editDataNew->discount == 10 ? 'selected' : '' }}>10 %</option>
+                                                                                <option value="11" {{ $editDataNew->discount == 11 ? 'selected' : '' }}>11 %</option>
+                                                                                <option value="12" {{ $editDataNew->discount == 12 ? 'selected' : '' }}>12 %</option>
+                                                                                <option value="13" {{ $editDataNew->discount == 13 ? 'selected' : '' }}>13 %</option>
+                                                                                <option value="14" {{ $editDataNew->discount == 14 ? 'selected' : '' }}>14 %</option>
+                                                                                <option value="15" {{ $editDataNew->discount == 15 ? 'selected' : '' }}>15 %</option>
+                                                                                <option value="16" {{ $editDataNew->discount == 16 ? 'selected' : '' }}>16 %</option>
+                                                                                <option value="17" {{ $editDataNew->discount == 17 ? 'selected' : '' }}>17 %</option>
+                                                                                <option value="18" {{ $editDataNew->discount == 18 ? 'selected' : '' }}>18 %</option>
+                                                                                <option value="19" {{ $editDataNew->discount == 19 ? 'selected' : '' }}>19 %</option>
+                                                                                <option value="20" {{ $editDataNew->discount == 20 ? 'selected' : '' }}>20 %</option>
+                                                                                <option value="21" {{ $editDataNew->discount == 21 ? 'selected' : '' }}>21 %</option>
+                                                                                <option value="22" {{ $editDataNew->discount == 22 ? 'selected' : '' }}>22 %</option>
+                                                                                <option value="23" {{ $editDataNew->discount == 23 ? 'selected' : '' }}>23 %</option>
+                                                                                <option value="24" {{ $editDataNew->discount == 24 ? 'selected' : '' }}>24 %</option>
+                                                                                <option value="25" {{ $editDataNew->discount == 25 ? 'selected' : '' }}>25 %</option>
+                                                                                <option value="26" {{ $editDataNew->discount == 26 ? 'selected' : '' }}>26 %</option>
+                                                                                <option value="27" {{ $editDataNew->discount == 27 ? 'selected' : '' }}>27 %</option>
+                                                                                <option value="28" {{ $editDataNew->discount == 28 ? 'selected' : '' }}>28 %</option>
+                                                                                <option value="29" {{ $editDataNew->discount == 29 ? 'selected' : '' }}>29 %</option>
+                                                                                <option value="30" {{ $editDataNew->discount == 30 ? 'selected' : '' }}>30 %</option>
+                                                                                <option value="31" {{ $editDataNew->discount == 31 ? 'selected' : '' }}>31 %</option>
+                                                                                <option value="32" {{ $editDataNew->discount == 32 ? 'selected' : '' }}>32 %</option>
+                                                                                <option value="33" {{ $editDataNew->discount == 33 ? 'selected' : '' }}>33 %</option>
+                                                                                <option value="34" {{ $editDataNew->discount == 34 ? 'selected' : '' }}>34 %</option>
+                                                                                <option value="35" {{ $editDataNew->discount == 35 ? 'selected' : '' }}>35 %</option>
+                                                                                <option value="36" {{ $editDataNew->discount == 36 ? 'selected' : '' }}>36 %</option>
+                                                                                <option value="37" {{ $editDataNew->discount == 37 ? 'selected' : '' }}>37 %</option>
+                                                                                <option value="38" {{ $editDataNew->discount == 38 ? 'selected' : '' }}>38 %</option>
+                                                                                <option value="39" {{ $editDataNew->discount == 39 ? 'selected' : '' }}>39 %</option>
+                                                                                <option value="40" {{ $editDataNew->discount == 40 ? 'selected' : '' }}>40 %</option>
+                                                                                <option value="41" {{ $editDataNew->discount == 41 ? 'selected' : '' }}>41 %</option>
+                                                                                <option value="42" {{ $editDataNew->discount == 42 ? 'selected' : '' }}>42 %</option>
+                                                                                <option value="43" {{ $editDataNew->discount == 43 ? 'selected' : '' }}>43 %</option>
+                                                                                <option value="44" {{ $editDataNew->discount == 44 ? 'selected' : '' }}>44 %</option>
+                                                                                <option value="45" {{ $editDataNew->discount == 45 ? 'selected' : '' }}>45 %</option>
+                                                                                <option value="46" {{ $editDataNew->discount == 46 ? 'selected' : '' }}>46 %</option>
+                                                                                <option value="47" {{ $editDataNew->discount == 47 ? 'selected' : '' }}>47 %</option>
+                                                                                <option value="48" {{ $editDataNew->discount == 48 ? 'selected' : '' }}>48 %</option>
+                                                                                <option value="49" {{ $editDataNew->discount == 49 ? 'selected' : '' }}>49 %</option>
+                                                                                <option value="50" {{ $editDataNew->discount == 50 ? 'selected' : '' }}>50 %</option>
+                                                                            </select>
+                                                                        </td>
+                                                                        
 
                                                                         <td>
                                                                             <input type="text"
                                                                                 name="amount_{{ $key }}"
                                                                                 value="{{ $editDataNew->amount }}"
                                                                                 placeholder="Enter Amount"
-                                                                                class="form-control total_amount" />
+                                                                                class="form-control amount" />
                                                                         </td>
 
                                                                         <td>
@@ -295,24 +384,6 @@
                                                         @foreach ($editData as $key => $editDataNew)
                                                             @if ($key == 0)
                                                                 <div class="form-group-inner">
-                                                                    <div class="row">
-                                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                            <label for="quote_no">Quote No:  (optional)</label>
-                                                                            <input type="text" class="form-control"
-                                                                                id="quote_no" name="quote_no"
-                                                                                value="{{ $editDataNew->quote_no }}"
-                                                                                placeholder="Enter Terms & Condition">
-                                                                        </div>
-
-                                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                            <label for="discount">Discount:  (optional)</label>
-                                                                            <input type="text" class="form-control"
-                                                                                id="discount" name="discount"
-                                                                                value="{{ $editDataNew->discount }}"
-                                                                                placeholder="Enter discount">
-                                                                        </div>
-                                                                    </div>
-
                                                                     <div class="row">
                                                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                                             <label for="transport_dispatch">Transport-Dispatch <span class="text-danger">*</span></label>
@@ -401,7 +472,7 @@
                     // 'description_0': {
                     //     required: true,
                     // },
-                    'due_date_0': {
+                    'discount_0': {
                         required: true,
                     },
                     'quantity_0': {
@@ -457,7 +528,7 @@
                     // 'description_0': {
                     //     required: "Please enter the Description",
                     // },
-                    'due_date_0': {
+                    'discount_0': {
                         required: "Please enter the Due Date",
                     },
                    
@@ -482,7 +553,7 @@
                 },
                 errorPlacement: function(error, element) {
                     if (element.hasClass("part_no_id") ||
-                        element.hasClass("due_date") || 
+                        element.hasClass("discount") || 
                         element.hasClass("quantity") || element.hasClass("unit") || element.hasClass("rate") ||
                         element.hasClass("amount")) {
                         error.insertAfter(element);
@@ -520,20 +591,22 @@
             '</td>' +
                     '<td><input type="text" class="form-control description" name="addmore[' + i +
                     '][description]" placeholder=" Description" /></td>' +
-                    '<td><input type="date" class="form-control due_date" name="addmore[' + i +
-                    '][due_date]" placeholder=" Due Date" /></td>' +
+                    
                     '<td><input type="text" class="form-control quantity" name="addmore[' + i +
                         '][quantity]" placeholder=" Quantity" /></td>' +
                         '<td>' +
                         '<select class="form-control unit mb-2" name="addmore[' + i + '][unit]" id="">' +
                 '<option value="" default>Select Unit</option>' +
-                '@foreach ($dataOutputHSNMaster as $data)' +
+                '@foreach ($dataOutputUnitMaster as $data)' +
                     '<option value="{{ $data['id'] }}">{{ $data['name'] }}</option>' +
                 '@endforeach' +
             '</select>'+
             '</td>' +
-                    '<td><input type="text" class="form-control rate" name="addmore[' + i +
-                    '][rate]" placeholder=" Rate" /></td>' +
+             '<td><input type="text" class="form-control rate" name="addmore[' + i +
+                        '][rate]" placeholder=" rate" /></td>'
+                  +
+                    ' <td><select class="form-control discount" name="addmore[' + i +'][discount] " ><option value="0" {{ $editDataNew->discount == 0 ? 'selected' : '' }}>0 %</option><option value="1" {{ $editDataNew->discount == 1 ? 'selected' : '' }}>1 %</option><option value="2" {{ $editDataNew->discount == 2 ? 'selected' : '' }}>2 %</option><option value="3" {{ $editDataNew->discount == 3 ? 'selected' : '' }}>3 %</option><option value="4" {{ $editDataNew->discount == 4 ? 'selected' : '' }}>4 %</option><option value="5" {{ $editDataNew->discount == 5 ? 'selected' : '' }}>5 %</option><option value="6" {{ $editDataNew->discount == 6 ? 'selected' : '' }}>6 %</option><option value="7" {{ $editDataNew->discount == 7 ? 'selected' : '' }}>7 %</option><option value="8" {{ $editDataNew->discount == 8 ? 'selected' : '' }}>8 %</option><option value="9" {{ $editDataNew->discount == 9 ? 'selected' : '' }}>9 %</option><option value="10" {{ $editDataNew->discount == 10 ? 'selected' : '' }}>10 %</option><option value="11" {{ $editDataNew->discount == 11 ? 'selected' : '' }}>11 %</option><option value="12" {{ $editDataNew->discount == 12 ? 'selected' : '' }}>12 %</option><option value="13" {{ $editDataNew->discount == 13 ? 'selected' : '' }}>13 %</option><option value="14" {{ $editDataNew->discount == 14 ? 'selected' : '' }}>14 %</option><option value="15" {{ $editDataNew->discount == 15 ? 'selected' : '' }}>15 %</option><option value="16" {{ $editDataNew->discount == 16 ? 'selected' : '' }}>16 %</option><option value="17" {{ $editDataNew->discount == 17 ? 'selected' : '' }}>17 %</option><option value="18" {{ $editDataNew->discount == 18 ? 'selected' : '' }}>18 %</option><option value="19" {{ $editDataNew->discount == 19 ? 'selected' : '' }}>19 %</option><option value="20" {{ $editDataNew->discount == 20 ? 'selected' : '' }}>20 %</option><option value="21" {{ $editDataNew->discount == 21 ? 'selected' : '' }}>21 %</option><option value="22" {{ $editDataNew->discount == 22 ? 'selected' : '' }}>22 %</option><option value="23" {{ $editDataNew->discount == 23 ? 'selected' : '' }}>23 %</option><option value="24" {{ $editDataNew->discount == 24 ? 'selected' : '' }}>24 %</option><option value="25" {{ $editDataNew->discount == 25 ? 'selected' : '' }}>25 %</option><option value="26" {{ $editDataNew->discount == 26 ? 'selected' : '' }}>26 %</option><option value="27" {{ $editDataNew->discount == 27 ? 'selected' : '' }}>27 %</option><option value="28" {{ $editDataNew->discount == 28 ? 'selected' : '' }}>28 %</option><option value="29" {{ $editDataNew->discount == 29 ? 'selected' : '' }}>29 %</option><option value="30" {{ $editDataNew->discount == 30 ? 'selected' : '' }}>30 %</option><option value="31" {{ $editDataNew->discount == 31 ? 'selected' : '' }}>31 %</option><option value="32" {{ $editDataNew->discount == 32 ? 'selected' : '' }}>32 %</option><option value="33" {{ $editDataNew->discount == 33 ? 'selected' : '' }}>33 %</option><option value="34" {{ $editDataNew->discount == 34 ? 'selected' : '' }}>34 %</option><option value="35" {{ $editDataNew->discount == 35 ? 'selected' : '' }}>35 %</option><option value="36" {{ $editDataNew->discount == 36 ? 'selected' : '' }}>36 %</option><option value="37" {{ $editDataNew->discount == 37 ? 'selected' : '' }}>37 %</option><option value="38" {{ $editDataNew->discount == 38 ? 'selected' : '' }}>38 %</option><option value="39" {{ $editDataNew->discount == 39 ? 'selected' : '' }}>39 %</option><option value="40" {{ $editDataNew->discount == 40 ? 'selected' : '' }}>40 %</option><option value="41" {{ $editDataNew->discount == 41 ? 'selected' : '' }}>41 %</option><option value="42" {{ $editDataNew->discount == 42 ? 'selected' : '' }}>42 %</option><option value="43" {{ $editDataNew->discount == 43 ? 'selected' : '' }}>43 %</option><option value="44" {{ $editDataNew->discount == 44 ? 'selected' : '' }}>44 %</option><option value="45" {{ $editDataNew->discount == 45 ? 'selected' : '' }}>45 %</option><option value="46" {{ $editDataNew->discount == 46 ? 'selected' : '' }}>46 %</option><option value="47" {{ $editDataNew->discount == 47 ? 'selected' : '' }}>47 %</option><option value="48" {{ $editDataNew->discount == 48 ? 'selected' : '' }}>48 %</option><option value="49" {{ $editDataNew->discount == 49 ? 'selected' : '' }}>49 %</option><option value="50" {{ $editDataNew->discount == 50 ? 'selected' : '' }}>50 %</option></select></td>'
+                      +
                     '<td><input type="text" class="form-control amount" name="addmore[' + i +
                     '][amount]" placeholder=" Amount" readonly /></td>' +
                     '<td><a class="remove-tr delete-btn btn btn-danger m-1" title="Delete Tender"><i class="fas fa-archive"></i></a></td>' +
@@ -562,7 +635,7 @@
                 //         required: "Please enter the Description",
                 //     }
                 // });
-                $('input[name="addmore[' + i + '][due_date]"]').rules("add", {
+                $('input[name="addmore[' + i + '][discount]"]').rules("add", {
                     required: true,
                     messages: {
                         required: "Please enter the Due Date",
@@ -614,22 +687,41 @@
             // Initialize date pickers with min date set to today
             function setMinDateForDueDates() {
                 var today = new Date().toISOString().split('T')[0];
-                $('.due_date').attr('min', today);
+                $('.discount').attr('min', today);
             }
             setMinDateForDueDates();
 
-            $(document).on('focus', '.due_date', function() {
+            $(document).on('focus', '.discount', function() {
                 setMinDateForDueDates();
             });
 
-            $(document).on('keyup', '.quantity, .rate', function(e) {
-                var currentRow = $(this).closest("tr");
-                var quantity = currentRow.find('.quantity').val();
-                var rate = currentRow.find('.rate').val();
-                var amount = quantity * rate;
-                currentRow.find('.amount').val(amount);
-            });
+            // $(document).on('keyup', '.quantity, .rate', function(e) {
+            //     var currentRow = $(this).closest("tr");
+            //     var quantity = currentRow.find('.quantity').val();
+            //     var rate = currentRow.find('.rate').val();
+            //     var amount = quantity * rate;
+            //     currentRow.find('.amount').val(amount);
+            // });
+            $(document).on('keyup change', '.quantity, .rate, .discount', function() {
+                                    var currentRow = $(this).closest("tr");
 
+                                    // Fetch input values (convert to numbers and default to 0 if empty)
+                                    var current_row_quantity = parseFloat(currentRow.find('.quantity').val()) || 0;
+                                    var current_row_rate = parseFloat(currentRow.find('.rate').val()) || 0;
+                                    var current_row_discount = parseFloat(currentRow.find('.discount').val()) || 0;
+
+                                    // Calculate total price before discount
+                                    var new_total_price = current_row_quantity * current_row_rate;
+
+                                    // Calculate the discount amount
+                                    var discount_amount = (new_total_price * current_row_discount) / 100;
+
+                                    // Calculate final total amount after applying discount
+                                    var final_total_amount = new_total_price - discount_amount;
+
+                                    // Update the total_amount field (formatted to 2 decimal places)
+                                    currentRow.find('.amount').val(final_total_amount);
+                                });
             $('.delete-btn').click(function(e) {
                 Swal.fire({
                     title: 'Are you sure?',

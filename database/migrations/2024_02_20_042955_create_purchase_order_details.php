@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('part_no_id');
             $table->string('description');
             // $table->string('qc_check_remark');
-            $table->string('due_date');
+            $table->string('discount');
             $table->string('quantity');
             $table->string('unit');
             $table->unsignedBigInteger('hsn_id');

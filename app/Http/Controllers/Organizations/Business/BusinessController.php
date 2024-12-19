@@ -186,7 +186,10 @@ class BusinessController extends Controller
         try {
             $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
             $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
+           
             $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
+            // dd($data);
+            // die();
             // $business_id = $data['purchaseOrder']->business_id;
             $business_id = $data['purchaseOrder']->business_id;
           

@@ -16,6 +16,7 @@ class organizationRepository  {
     public function getAll(){
         try {
             $data_output = OrganizationModel::orderBy('updated_at', 'desc')->get();
+          
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -30,17 +31,27 @@ class organizationRepository  {
             $dataOutput = new OrganizationModel();
             $dataOutput->company_name = $request->company_name;
             $dataOutput->email = $request->email;
+            $dataOutput->gst_no = $request->gst_no;
+            $dataOutput->cin_number = $request->cin_number;
             $dataOutput->mobile_number = $request->mobile_number;
             $dataOutput->address = $request->address;
             $dataOutput->role_id= config('constants.ROLE_ID.HIGHER_AUTHORITY');
             $dataOutput->image = 'null';
             $dataOutput->founding_date = $request->founding_date;
             $dataOutput->employee_count = $request->employee_count;
-            $dataOutput->instagram_link = $request->instagram_link;
-            $dataOutput->facebook_link = $request->facebook_link;
-            $dataOutput->twitter_link = $request->twitter_link;
+            // $dataOutput->instagram_link = $request->instagram_link;
+            // $dataOutput->facebook_link = $request->facebook_link;
+            // $dataOutput->twitter_link = $request->twitter_link;
             $dataOutput->website = $request->website_link;
-
+            if ($request->has('instagram_link')) {
+                $dataOutput->instagram_link = $request->instagram_link;
+            }
+            if ($request->has('facebook_link')) {
+                $dataOutput->facebook_link = $request->facebook_link;
+            }
+            if ($request->has('twitter_link')) {
+                $dataOutput->twitter_link = $request->twitter_link;
+            }
             $dataOutput->save();
             $last_insert_id = $dataOutput->id;
             $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
@@ -88,6 +99,8 @@ class organizationRepository  {
 
         public function updateAll($request){
             try { 
+                // dd($request);
+                // die();
                 $return_data = array();
 
 
@@ -102,21 +115,30 @@ class organizationRepository  {
                 $previousEnglishImage = $dataOutput->image;
                 $dataOutput->company_name = $request->company_name;
                 $dataOutput->email = $request->email;
+                $dataOutput->gst_no = $request->gst_no;
+                $dataOutput->cin_number = $request->cin_number;
                 $dataOutput->mobile_number = $request->mobile_number;
                 $dataOutput->address = $request->address;
-                $foundingDate = Carbon::createFromFormat('d/m/Y', $request->input('founding_date'))->format('Y-m-d');
-                $dataOutput->founding_date = $foundingDate;
+                // $foundingDate = Carbon::createFromFormat('d/m/Y', $request->input('founding_date'))->format('Y-m-d');
+                $dataOutput->founding_date = $request->founding_date;
                 $dataOutput->employee_count = $request->employee_count;
-                $dataOutput->instagram_link = $request->instagram_link;
-                $dataOutput->facebook_link = $request->facebook_link;
-                $dataOutput->twitter_link = $request->twitter_link;
                 $dataOutput->website = $request->website_link;
-
+                if ($request->has('instagram_link')) {
+                    $dataOutput->instagram_link = $request->instagram_link;
+                }
+                if ($request->has('facebook_link')) {
+                    $dataOutput->facebook_link = $request->facebook_link;
+                }
+                if ($request->has('twitter_link')) {
+                    $dataOutput->twitter_link = $request->twitter_link;
+                }
+                
                 $dataOutput->save();
                 $last_insert_id = $dataOutput->id;
-
+            
                 $return_data['last_insert_id'] = $last_insert_id;
                 $return_data['image'] = $previousEnglishImage;
+
                 return  $return_data;
             
             } catch (\Exception $e) {

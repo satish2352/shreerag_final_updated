@@ -26,18 +26,14 @@ return new class extends Migration
                 $table->string('remark')->nullable();
                 $table->string('transport_dispatch')->nullable();
                 $table->string('image');
-                // $table->string('status')->nullable();
                 $table->string('quote_no');
-                // $table->string('client_name');
-                // $table->string('phone_number');
-                // $table->string('email');
+                $table->string('contact_person_name');
+                $table->string('contact_person_number');
                 $table->string('tax_type');
                 $table->string('tax_id');
                 $table->string('invoice_date');
-                // $table->string('gst_number');
                 $table->string('payment_terms');
-                // $table->string('client_address');
-                $table->string('discount');
+                // $table->string('discount');
                 $table->string('note');
 
                 $table->date('owner_po_action_date')->nullable();

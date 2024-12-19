@@ -90,8 +90,8 @@ class PurchaseOrderController extends Controller
             'tax_id' => 'required',
             'invoice_date' => 'required',
             'payment_terms' => 'required',
-            // 'discount' => 'required',
-            // 'quote_no' => 'required',
+            'contact_person_name' => 'required',
+            'contact_person_number' => 'required',
             // 'status' => 'required',
             'note' => 'required',
             'transport_dispatch' => 'required',
@@ -102,8 +102,8 @@ class PurchaseOrderController extends Controller
             'tax_id.required' => 'The Tax is required.',
             'invoice_date.required' => 'The Invoice Date is required.',
             'payment_terms.required' => 'The Payment Terms is required.',
-            'discount.required' => 'The Discount is required.',
-            'quote_no.required' => 'The quote number is required.',
+            'contact_person_name.required' => 'Enter the contact person name is required.',
+            'contact_person_number.required' => 'Enter the contact person number is required.',
             // 'status.required' => 'The Status is required.',
             'note.required' => 'The Note is required.',
             'transport_dispatch.required' => 'The transport dispatch is required.',
@@ -136,6 +136,22 @@ class PurchaseOrderController extends Controller
             return redirect('purchase/add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
+    // public function getHsnForPart(Request $request)
+    // {
+    //     dd($request);
+    //     die();
+    //     // $partNoId = $request->input('part-no'); // Get the part_no from the request
+    //     $partNoId = $request->id;
+    //     // Fetch HSN details based on the part_no_id
+    //     $part = PartItem::where('description', $partNoId)->first(['hsn_id', 'hsn_id']);
+    
+    //     if ($part) {
+    //         return response()->json(['hsn_id' => $part->hsn_id, 'hsn_id' => $part->hsn_id]);
+    //     }
+    
+    //     return response()->json(['error' => 'HSN not found'], 404);
+    // }
+    
 
     // public function store_old(Request $request)
     // {
@@ -529,11 +545,13 @@ class PurchaseOrderController extends Controller
             ->setPaper('a4', 'portrait')
             ->setWarnings(false)
             ->setOptions([
-                'margin-top' => 10,
-                'margin-right' => 10,
+                'margin-top' => 0,
+                'margin-right' => 5,
                 'margin-bottom' => 10,
-                'margin-left' => 10,
+                'margin-left' => 5,
+                'isRemoteEnabled' => true,
                 'enable-local-file-access' => true,
+                
             ]);
     
             // Generate PDF for static terms and conditions page

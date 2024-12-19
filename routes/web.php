@@ -323,7 +323,13 @@ Route::group(['middleware' => ['admin']], function () {
         Route::post('/update-purchase-order', ['as' => 'update-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@update']);
         Route::any('/delete-purchase-order/{id}', ['as' => 'delete-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@destroy']);
         Route::post('/delete-addmore', ['as' => 'delete-addmore', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@destroyAddmore']);
-    
+        // Route::get('/get-hsn-for-part', ['as' => 'get-hsn-for-part', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@getHsnForPart']);
+
+        Route::get('/get-hsn-for-part', [
+            'as' => 'get-hsn-for-part',
+            'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@getHsnForPart'
+        ]);
+        
         Route::group(['prefix' => 'vendor'], function () {
             Route::get('/list-vendor', ['as' => 'list-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@index']);
             Route::get('/add-vendor', ['as' => 'add-vendor', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorController@add']);

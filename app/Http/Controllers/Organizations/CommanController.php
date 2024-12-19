@@ -88,7 +88,10 @@ class CommanController
             ->leftJoin('tbl_tax', function($join) {
                 $join->on('purchase_orders.tax_id', '=', 'tbl_tax.id');
             })
-              ->join('business_application_processes', 'business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id')
+
+            ->leftJoin('business_application_processes', function ($join) {
+                $join->on('purchase_orders.business_details_id', '=', 'business_application_processes.business_details_id');
+              })
             ->select(
                     'purchase_orders.id',
                     'purchase_orders.purchase_orders_id',
@@ -101,13 +104,15 @@ class CommanController
                     'purchase_orders.transport_dispatch', 
                     'purchase_orders.purchase_status_from_purchase',
                     'purchase_orders.purchase_status_from_owner',
+                    'purchase_orders.contact_person_name',
+                    'purchase_orders.contact_person_number',
                     'purchase_orders.image', 
                     'purchase_orders.tax_type', 
                     'purchase_orders.tax_id',
                     'tbl_tax.name',
                     'purchase_orders.invoice_date', 
                     'purchase_orders.payment_terms', 
-                    'purchase_orders.discount', 
+                    // 'purchase_orders.discount', 
                     'purchase_orders.note',
                     'vendors.vendor_name', 
                     'vendors.vendor_company_name', 
@@ -142,7 +147,7 @@ class CommanController
                     'purchase_order_details.part_no_id',
                     'tbl_part_item.description as item_description',
                     'purchase_order_details.description',
-                    'purchase_order_details.due_date',
+                    'purchase_order_details.discount',
                     'purchase_order_details.quantity',
                     'purchase_order_details.unit',
                     'purchase_order_details.actual_quantity',
@@ -176,6 +181,8 @@ class CommanController
                     'tbl_organizations.mobile_number',
                     'tbl_organizations.address',
                     'tbl_organizations.image',
+                    'tbl_organizations.gst_no',
+                    'tbl_organizations.cin_number',
                 )
                 ->first();
 

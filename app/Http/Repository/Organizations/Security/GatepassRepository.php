@@ -49,7 +49,7 @@ class GatepassRepository
 
             )
 
-            ->orderBy('gatepass.updated_at', 'desc') // Sorting by gatepass table's updated_at
+            ->orderBy('gatepass.updated_at', 'asc') // Sorting by gatepass table's updated_at
 
             ->get();
 

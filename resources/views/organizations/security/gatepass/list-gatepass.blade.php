@@ -114,7 +114,9 @@
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
                                                                
-                                                                <a href="{{ route('list-po-details', [base64_encode($data->id), base64_encode($data->purchase_orders_id)]) }}">
+                                                                <a href="{{ route('check-details-of-po-before-send-vendor', $data->purchase_orders_id) }}"
+                                                                {{-- {{ route('list-po-details', [base64_encode($data->id), base64_encode($data->purchase_orders_id)]) }}" --}}
+                                                                 >
                                                                     <button data-toggle="tooltip"
                                                                     title="View PO" class="pd-setting-ed">Check PO Details</button></a>
                                                             

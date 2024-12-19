@@ -33,6 +33,7 @@ use Config;
     public function submitBOMToOwner($request){
         try {
             $data = $this->repo->submitBOMToOwner($request);
+         
             if ($data) {
                 return ['status' => 'success', 'msg' => 'Purchase Order Added Successfully.'];
             } else {
@@ -83,7 +84,8 @@ use Config;
     public function getById($id){
         try {
             $result = $this->repo->getById($id);
-         
+            // dd($result);
+            // die();
             return $result;
         } catch (\Exception $e) {
             return $e;
@@ -92,11 +94,11 @@ use Config;
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
-          
+        
             if ($return_data) {
-                return ['status' => 'success', 'msg' => 'Slide Updated Successfully.'];
+                return ['status' => 'success', 'msg' => 'Purchase Order Updated Successfully.'];
             } else {
-                return ['status' => 'error', 'msg' => 'Slide Not Updated.'];
+                return ['status' => 'error', 'msg' => 'Purchase Order Not Updated.'];
             }  
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];

@@ -89,7 +89,7 @@ class GatepassController extends Controller
                     'purchase_orders.tax_id', 
                     'purchase_orders.invoice_date', 
                     'purchase_orders.payment_terms', 
-                    'purchase_orders.discount', 
+                    // 'purchase_orders.discount', 
                     'vendors.vendor_name', 
                     'vendors.vendor_company_name', 
                     'vendors.vendor_email', 

@@ -27,6 +27,8 @@ class OrganizationServices
     public function addAll($request){
         try {
             $last_id = $this->repo->addAll($request);
+            // dd($last_id);
+            // die();
             $path = Config::get('DocumentConstant.ORGANIZATION_ADD');
             $ImageName = $last_id['ImageName'];
             uploadImage($request, 'image', $path, $ImageName);
@@ -51,6 +53,8 @@ class OrganizationServices
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
+            // dd($return_data);
+            // die();
             $path = Config::get('DocumentConstant.ORGANIZATION_ADD');
             if ($request->hasFile('image')) {
                 if ($return_data['image']) {

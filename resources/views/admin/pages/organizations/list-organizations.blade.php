@@ -92,6 +92,8 @@ padding-left: 20px !important;
                                             <th data-field="email" data-editable="false">Email</th>
                                             <!-- <th data-field="password" data-editable="false">Password</th> -->
                                             <th data-field="mobile_number" data-editable="false">Mobile Number</th>
+                                            <th data-field="gst_no" data-editable="false">GST Number</th>
+                                            <th data-field="cin_number" data-editable="false">CIN Number</th>
                                             <th data-field="address" data-editable="false">Address</th>
                                             <th data-field="employee_count" data-editable="false">Employee Count</th>
                                             <th data-field="founding_date" data-editable="false">Founding Date</th>
@@ -114,14 +116,18 @@ padding-left: 20px !important;
                                             <td>{{ucwords($data->email)}}</td>
                                             <!-- <td style="width:299px !important;">{{ucwords($data->password)}}</td> -->
                                             <td>{{ucwords($data->mobile_number)}}</td>
+                                            <td>{{ucwords($data->gst_no)}}</td>
+                                            <td>{{ucwords($data->cin_number)}}</td>
                                             <td>{{ucwords($data->address)}}</td>
                                             <td>{{ucwords($data->employee_count)}}</td>
                                             <td>{{ucwords($data->founding_date)}}</td>
                                             <td>{{ucwords($data->website)}}</td>
-                                            <td>{{ucwords($data->instagram_link)}}</td>
-                                            <td>{{ucwords($data->facebook_link)}}</td>
-                                            <td>{{ucwords($data->twitter_link)}}</td>
-                                            <td><img style="max-width:250px; max-height:150px;" src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') . $data->image }}" alt="{{ strip_tags($data['company_name']) }} Image" /></td>
+                                            
+                                            <td>{{ ucwords($data->instagram_link ?? 'NA') }}</td>
+                                            <td>{{ ucwords($data->facebook_link ?? 'NA') }}</td>
+                                            <td>{{ ucwords($data->twitter_link ?? 'NA') }}</td>
+                                            
+                                            <td><img style="max-width:100px; max-height:100px;" src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') . $data->image }}" alt="{{ strip_tags($data['company_name']) }} Image" /></td>
                                             <td>
                                                 <div style="display: flex; align-items: center;">
                                                     <a href="{{route('edit-organizations', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>

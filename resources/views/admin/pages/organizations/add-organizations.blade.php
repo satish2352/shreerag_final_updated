@@ -4,6 +4,12 @@
     label {
         margin-top: 20px;
     }
+    .error{
+        color: red !important;
+    }
+    .red-text{
+        color: red !important;
+    }
 </style>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -18,74 +24,93 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="all-form-element-inner">
-                                @if ($errors->any())
-                                    <div class="alert alert-danger">
-                                        <ul>
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
-                                <form action="{{ route('store-organizations') }}" method="POST" enctype="multipart/form-data">
+                                <form action="{{ route('store-organizations') }}" method="POST" enctype="multipart/form-data" id="addOrgForm">
                                     @csrf
                                     <div class="form-group-inner">
                                         <div class="row">
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="company_name">Company Name:</label>
-                                                <input type="text" class="form-control" id="company_name" name="company_name" placeholder="Enter company name">
+                                                <label for="company_name">Company Name: <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="company_name" value="{{ old('company_name') }}" name="company_name" placeholder="Enter company name">
+                                                @if ($errors->has('company_name'))
+                                                <span class="red-text"><?php echo $errors->first('company_name', ':message'); ?></span>
+                                            @endif
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="email">Email:</label>
-                                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+                                                <label for="email">Email: <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="email" value="{{ old('email') }}" name="email" placeholder="Enter email">
+                                                @if ($errors->has('email'))
+                                                <span class="red-text"><?php echo $errors->first('email', ':message'); ?></span>
+                                            @endif
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="gst_no"> GST No:</label>
-                                                <input type="text" class="form-control" id="gst_no"
+                                                <label for="gst_no"> GST No: <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="gst_no" value="{{ old('gst_no') }}"
                                                     name="gst_no" placeholder="Enter GST number">
+                                                    @if ($errors->has('gst_no'))
+                                                    <span class="red-text"><?php echo $errors->first('gst_no', ':message'); ?></span>
+                                                @endif
+                                                </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <label for="mobile_number">Mobile Number: <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="mobile_number" value="{{ old('mobile_number') }}" name="mobile_number" placeholder="Enter mobile number" maxlength="10" pattern="\d{10}" title="Please enter a 10-digit mobile number" required>
+                                                @if ($errors->has('mobile_number'))
+                                                <span class="red-text"><?php echo $errors->first('mobile_number', ':message'); ?></span>
+                                            @endif
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="mobile_number">Mobile Number:</label>
-                                                <input type="text" class="form-control" id="mobile_number" name="mobile_number" placeholder="Enter mobile number">
+                                                <label for="cin_number">CIN No. : <span class="text-danger">*</span></label>
+                                                <input type="cin_number" class="form-control" id="cin_number" value="{{ old('cin_number') }}" name="cin_number" placeholder="Enter cin number">
+                                                @if ($errors->has('cin_number'))
+                                                <span class="red-text"><?php echo $errors->first('cin_number', ':message'); ?></span>
+                                            @endif
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="address">Company Address:</label>
-                                                <input type="text" class="form-control" id="address" name="address" placeholder="Enter company address">
+                                                <label for="address">Company Address: <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="address" value="{{ old('address') }}" name="address" placeholder="Enter company address">
+                                                @if ($errors->has('address'))
+                                                <span class="red-text"><?php echo $errors->first('address', ':message'); ?></span>
+                                            @endif
                                             </div>
                                        
 
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="employee_count">Employee Count:</label>
-                                                <input type="text" class="form-control" id="employee_count" name="employee_count" placeholder="Enter employee count">
+                                                <label for="employee_count">Employee Count: <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="address" value="{{ old('employee_count') }}" name="employee_count" placeholder="Enter employee count">
+                                                @if ($errors->has('employee_count'))
+                                                <span class="red-text"><?php echo $errors->first('employee_count', ':message'); ?></span>
+                                            @endif
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="founding_date">Foundation Date:</label>
-                                                <input type="date" class="form-control" id="founding_date" name="founding_date" placeholder="Enter foundation date">
+                                                <label for="founding_date">Foundation Date: <span class="text-danger">*</span></label>
+                                                <input type="date" class="form-control" id="founding_date" value="{{ old('founding_date') }}" name="founding_date" placeholder="Enter foundation date">
+                                                @if ($errors->has('founding_date'))
+                                                <span class="red-text"><?php echo $errors->first('founding_date', ':message'); ?></span>
+                                            @endif
                                             </div>
                                         
                                        
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="facebook_link">Facebook Link:</label>
-                                                <input type="text" class="form-control" id="facebook_link" name="facebook_link" placeholder="Enter Facebook link">
+                                                <label for="facebook_link">Facebook Link (optional):</label>
+                                                <input type="text" class="form-control" id="facebook_link" value="{{ old('facebook_link') }}" name="facebook_link" placeholder="Enter Facebook link">
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="instagram_link">Instagram Link:</label>
-                                                <input type="text" class="form-control" id="instagram_link" name="instagram_link" placeholder="Enter Instagram link">
+                                                <label for="instagram_link">Instagram Link (optional):</label>
+                                                <input type="text" class="form-control" id="instagram_link" value="{{ old('instagram_link') }}" name="instagram_link" placeholder="Enter Instagram link">
                                             </div>
                                       
                                        
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="twitter_link">Twitter Link:</label>
-                                                <input type="text" class="form-control" id="twitter_link" name="twitter_link" placeholder="Enter Twitter link">
+                                                <label for="twitter_link">Twitter Link (optional):</label>
+                                                <input type="text" class="form-control" id="twitter_link" name="twitter_link" value="{{ old('twitter_link') }}" placeholder="Enter Twitter link">
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="website_link">Website Link:</label>
-                                                <input type="text" class="form-control" id="website_link" name="website_link" placeholder="Enter website link">
+                                                <label for="website_link">Website Link: <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="website_link"  value="{{ old('website_link') }}" name="website_link" placeholder="Enter website link">
                                             </div>
                                       
                                         
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="image">Image:</label>
+                                                <label for="image">Image: <span class="text-danger">*</span></label>
                                                 <input type="file" class="form-control" accept="image*" id="image" name="image">
                                             </div>
                                             
@@ -137,6 +162,9 @@
                     required: true,
                     minlength: 15
                 },
+                cin_number: {
+                    required: true,
+                },
                 mobile_number: {
                     required: true,
                     digits: true,
@@ -154,21 +182,21 @@
                 founding_date: {
                     required: true
                 },
-                facebook_link: {
-                    url: true
-                },
-                instagram_link: {
-                    url: true
-                },
-                twitter_link: {
-                    url: true
-                },
+                // facebook_link: {
+                //     url: true
+                // },
+                // instagram_link: {
+                //     url: true
+                // },
+                // twitter_link: {
+                //     url: true
+                // },
                 website_link: {
-                    url: true
+                    required: true,
                 },
                 image: {
                     required: true,
-                    extension: "jpg|jpeg|png|gif"
+                    // extension: "jpg|jpeg|png|gif"
                 }
             },
             messages: {
@@ -183,6 +211,9 @@
                 gst_no: {
                     required: "Please enter the GST number",
                     minlength: "GST number should be at least 15 characters"
+                },
+                cin_number: {
+                    required: "Please enter the CIN number",
                 },
                 mobile_number: {
                     required: "Please enter a mobile number",
@@ -201,21 +232,21 @@
                 founding_date: {
                     required: "Please enter the foundation date"
                 },
-                facebook_link: {
-                    url: "Please enter a valid Facebook link"
-                },
-                instagram_link: {
-                    url: "Please enter a valid Instagram link"
-                },
-                twitter_link: {
-                    url: "Please enter a valid Twitter link"
-                },
+                // facebook_link: {
+                //     url: "Please enter a valid Facebook link"
+                // },
+                // instagram_link: {
+                //     url: "Please enter a valid Instagram link"
+                // },
+                // twitter_link: {
+                //     url: "Please enter a valid Twitter link"
+                // },
                 website_link: {
-                    url: "Please enter a valid website link"
+                    required: "Please enter a valid website link"
                 },
                 image: {
                     required: "Please upload an image",
-                    extension: "Only image files (jpg, jpeg, png, gif) are allowed"
+                    // extension: "Only image files (jpg, jpeg, png, gif) are allowed"
                 }
             },
             errorPlacement: function(error, element) {

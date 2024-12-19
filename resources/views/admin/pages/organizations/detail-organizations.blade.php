@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('content')
-<style>
+{{-- <style>
 
 .fixed-table-loading {
     display: none;
@@ -21,12 +21,15 @@ padding-left: 20px !important;
 }
  
 
-</style>
+</style> --}}
 <head>
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+{{-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script> --}}
 </head>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="sparkline12-list">
 <div class="admintab-area mg-tb-15">
     <div class="container-fluid">
         <div class="row">
@@ -227,7 +230,10 @@ padding-left: 20px !important;
                 </div>
             </div>
         </div>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        </div>
+    </div>
+</div>
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     $(document).ready(function () {
         $('#roleSelect').change(function () {

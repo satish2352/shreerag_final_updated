@@ -102,16 +102,17 @@
                       <th data-field="#">#</th>
                       <th data-field="po_id">ID</th>
                       <th data-field="purchase_orders_id" data-editable="false"> PO Number</th>
-                      <th data-field="vendor_name" data-editable="false"> Name</th>
-                      <th data-field="name" data-editable="false">Company Name</th>
-                      <th data-field="email" data-editable="false">Email</th>
-                      <th data-field="contact_no" data-editable="false">Contact No.</th>
-                      <th data-field="gst_number" data-editable="false">GST Number</th>
+                      <th data-field="vendor_name" data-editable="false">Vendor Name</th>
+                      <th data-field="name" data-editable="false">Vendor Company Name</th>
+                      <th data-field="email" data-editable="false">Vendor Email</th>
+                      <th data-field="contact_no" data-editable="false">Vendor Contact No.</th>
+                      <th data-field="gst_number" data-editable="false">Vendor GST Number</th>
                       <th data-field="payment_terms" data-editable="false">Payment Terms</th>
-                      <th data-field="invoice_date" data-editable="false">Invoice terms</th>
+                      <th data-field="invoice_date" data-editable="false">Purchase Order Date</th>
                       {{-- <th data-field="total" data-editable="false">Total Amount</th> --}}
                       <th data-field="quote_no" data-editable="false">Quote Number</th>
-                      <th data-field="discount" data-editable="false">Discounts</th>
+                      <th data-field="contact_person_name" data-editable="false">Contact Person Name</th>
+                      <th data-field="contact_person_number" data-editable="false">Contact Person Number</th>
                       <th data-field="action">Action</th>
                     </tr>
 
@@ -133,7 +134,8 @@
                       <td>{{ucwords($data->invoice_date)}}</td>
                       {{-- <td>{{ucwords($data->total)}}.00 Rs</td> --}}
                       <td>{{ucwords($data->quote_no)}}</td>
-                      <td>{{ucwords($data->discount)}}</td>
+                      <td>{{ucwords($data->contact_person_name)}}</td>
+                      <td>{{ucwords($data->contact_person_number)}}</td>
                       {{-- <td>{{ucwords($data->status)}}</td> --}}
 
                       <td>
