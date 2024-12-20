@@ -600,10 +600,10 @@
                         required: "Please enter the process.",
                         maxlength: "process must be at most 255 characters long."
                     },
-                    'rate_0': {
-                        required: "Please enter the Rate",
-                        number: "Please enter a valid number for Rate",
-                    },
+                    // 'rate_0': {
+                    //     required: "Please enter the Rate",
+                    //     number: "Please enter a valid number for Rate",
+                    // },
                     'amount_0': {
                         required: "Please enter the Amount",
                     },
@@ -611,8 +611,7 @@
                 errorPlacement: function(error, element) {
                     if (element.hasClass("part_item_id") || element.hasClass("hsn_id") || element
                         .hasClass("process_id") ||
-                        element.hasClass("quantity") || element.hasClass("unit_id") || element.hasClass(
-                            "rate") ||
+                        element.hasClass("quantity") || element.hasClass("unit_id") ||
                         element.hasClass("amount")) {
                         error.insertAfter(element);
                     } else {
@@ -687,11 +686,24 @@
 
                 // Reinitialize validation for the new row
                 $('select[name="addmore[' + i + '][part_item_id]"]').rules("add", {
-                    required: true,
-                    messages: {
-                        required: "Please select the Part Number",
-                    }
-                });
+            required: true,
+            messages: {
+                required: "Please select the Part Number",
+            }
+        });
+
+        $('select[name="addmore[' + i + '][hsn_id]"]').rules("add", {
+            required: true,
+            messages: {
+                required: "Please select the HSN",
+            }
+        });
+        $('select[name="addmore[' + i + '][process_id]"]').rules("add", {
+            required: true,
+            messages: {
+                required: "Please select the process",
+            }
+        });
                 $('input[name="addmore[' + i + '][quantity]"]').rules("add", {
                     required: true,
                     digits: true,
@@ -700,22 +712,29 @@
                         digits: "Please enter only digits for Quantity",
                     }
                 });
+              
                 $('input[name="addmore[' + i + '][unit_id]"]').rules("add", {
                     required: true,
                     digits: true,
                     messages: {
-                        required: "Please enter the unit_id",
-
+                        required: "Please enter the unit",
+                        
                     }
                 });
-                $('input[name="addmore[' + i + '][rate]"]').rules("add", {
-                    required: true,
-                    number: true,
-                    messages: {
-                        required: "Please enter the Rate",
-                        number: "Please enter a valid number for Rate",
-                    }
-                });
+                $('select[name="addmore[' + i + '][size]"]').rules("add", {
+            required: true,
+            messages: {
+                required: "Please enter the size",
+            }
+        });
+                // $('input[name="addmore[' + i + '][rate]"]').rules("add", {
+                //     required: true,
+                //     number: true,
+                //     messages: {
+                //         required: "Please enter the Rate",
+                //         number: "Please enter a valid number for Rate",
+                //     }
+                // });
                 $('input[name="addmore[' + i + '][amount]"]').rules("add", {
                     required: true,
                     messages: {
