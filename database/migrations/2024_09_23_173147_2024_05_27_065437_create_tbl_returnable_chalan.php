@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('business_id')->nullable();
             $table->unsignedBigInteger('transport_id')->nullable();
             $table->unsignedBigInteger('vehicle_id')->nullable();
+            $table->unsignedBigInteger('customer_po_no')->nullable();
             $table->string('plant_id')->nullable();
             $table->unsignedBigInteger('tax_id')->nullable();
             $table->string('tax_type')->nullable();
@@ -28,6 +29,7 @@ return new class extends Migration
             $table->string('dc_number')->nullable();
             $table->string('lr_number')->nullable();
             $table->string('remark')->nullable();
+            $table->string('image')->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('is_deleted')->default(false);
             $table->timestamps();

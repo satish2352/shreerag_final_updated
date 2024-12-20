@@ -20,6 +20,9 @@
             /* Adjust font size if needed */
             /* Add any other styling as per your design */
         }
+        .red-text{
+            color: red;
+        }
     </style>
 
     <div class="container-fluid">
@@ -36,16 +39,17 @@
                     <div class="sparkline12-graph">
                         <div class="basic-login-form-ad">
                             <div class="row">
-                              
+
 
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                   
+
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <div class="all-form-element-inner">
                                             <form
                                                 action="{{ route('update-delivery-chalan', $editData[0]->purchase_main_id) }}"
                                                 method="POST" id="editDesignsForm" enctype="multipart/form-data">
                                                 @csrf
+                                                <input type="hidden" name="id" id="id" value="{{ $editData[0]->id }}">
                                                 <input type="hidden" name="purchase_main_id" id=""
                                                     class="form-control" value="{{ $editData[0]->purchase_main_id }}"
                                                     placeholder="">
@@ -53,28 +57,27 @@
                                                     <div class="container-fluid">
                                                         <!-- @if ($errors->any())
     <div class="alert alert-danger">
-                                                                <ul>
-                                                                    @foreach ($errors->all() as $error)
+                                                                    <ul>
+                                                                        @foreach ($errors->all() as $error)
     <li>{{ $error }}</li>
     @endforeach
-                                                                </ul>
-                                                            </div>
+                                                                    </ul>
+                                                                </div>
     @endif -->
 
-  
+<?php
+// dd($editData);
+// die();
+?>
 
                                                         @foreach ($editData as $key => $editDataNew)
-                                                        <?php
-// dd($editDataNew);
-// die();
-                                                        ?>
                                                             @if ($key == 0)
                                                                 <div class="row">
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
                                                                             <label for="Service">Vendor Company
-                                                                                Name:  <span
-                                                                                class="text-danger">*</span></label> 
+                                                                                Name: <span
+                                                                                    class="text-danger">*</span></label>
                                                                             <select class="form-control mb-2"
                                                                                 name="vendor_id" id="vendor_id">
                                                                                 <option value="" default>Select
@@ -94,77 +97,126 @@
                                                                     </div>
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
-                                                                            <label for="transport_id">Transport Name  <span
-                                                                                class="text-danger">*</span></label>
-                                                                            <select class="form-control" id="transport_id" name="transport_id"
+                                                                            <label for="transport_id">Transport Name <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <select class="form-control" id="transport_id"
+                                                                                name="transport_id"
                                                                                 onchange="myFunction(this.value)">
-                                                                                <option value="">Select Transport Name</option>
-                                                                                @foreach ($dataOutputTransportName as $role)
-                                                                                <option value="{{ $role['id'] }}"
-                                                                                    {{ old('transport_id', $editDataNew->transport_id) == $role->id ? 'selected' : '' }}>
-                                                                                    {{ $role->name }}
+                                                                                <option value="">Select Transport Name
                                                                                 </option>
-                                                                            @endforeach
+                                                                                @foreach ($dataOutputTransportName as $role)
+                                                                                    <option value="{{ $role['id'] }}"
+                                                                                        {{ old('transport_id', $editDataNew->transport_id) == $role->id ? 'selected' : '' }}>
+                                                                                        {{ $role->name }}
+                                                                                    </option>
+                                                                                @endforeach
                                                                             </select>
                                                                             @if ($errors->has('transport_id'))
-                                                                                <span class="red-text"><?php echo $errors->first('transport_id', ':message'); ?></span>
+                                                                                <span
+                                                                                    class="red-text"><?php echo $errors->first('transport_id', ':message'); ?></span>
                                                                             @endif
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
                                                                             <label for="vehicle_id">Vehicle Type <span
-                                                                                class="text-danger">*</span></label>
-                                                                            <select class="form-control" id="vehicle_id" name="vehicle_id"
+                                                                                    class="text-danger">*</span></label>
+                                                                            <select class="form-control" id="vehicle_id"
+                                                                                name="vehicle_id"
                                                                                 onchange="myFunction(this.value)">
-                                                                                <option value="">Select Vehicle Type</option>
-                                                                                @foreach ($dataOutputVehicleType as $vehicleType)
-                                                                                <option value="{{ $vehicleType['id'] }}"
-                                                                                    {{ old('vehicle_id', $editDataNew->vehicle_id) == $vehicleType->id ? 'selected' : '' }}>
-                                                                                    {{ $vehicleType->name }}
+                                                                                <option value="">Select Vehicle Type
                                                                                 </option>
-                                                                            @endforeach
+                                                                                @foreach ($dataOutputVehicleType as $vehicleType)
+                                                                                    <option
+                                                                                        value="{{ $vehicleType['id'] }}"
+                                                                                        {{ old('vehicle_id', $editDataNew->vehicle_id) == $vehicleType->id ? 'selected' : '' }}>
+                                                                                        {{ $vehicleType->name }}
+                                                                                    </option>
+                                                                                @endforeach
                                                                             </select>
                                                                             @if ($errors->has('vehicle_id'))
-                                                                                <span class="red-text"><?php echo $errors->first('vehicle_id', ':message'); ?></span>
+                                                                                <span
+                                                                                    class="red-text"><?php echo $errors->first('vehicle_id', ':message'); ?></span>
                                                                             @endif
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
-                                                                            <label for="business_id">PO Number (Optional)</label>
-                                                                                <select class="form-control mb-2" name="business_id" id="business_id">
-                                                                                <option value="" default>Select PO Number</option>
+                                                                            <label for="business_id">PO Number
+                                                                                (Optional)</label>
+                                                                            <select class="form-control mb-2"
+                                                                                name="business_id" id="business_id">
+                                                                                <option value="" default>Select PO
+                                                                                    Number</option>
                                                                                 @foreach ($dataOutputBusiness as $OutputBusiness)
-                                                                                <option value="{{ $OutputBusiness['id'] }}"
-                                                                                    {{ old('business_id', $editDataNew->business_id) == $OutputBusiness->id ? 'selected' : '' }}>
-                                                                                    {{ $OutputBusiness->customer_po_number }}
-                                                                                </option>
-                                                                            @endforeach
+                                                                                    <option
+                                                                                        value="{{ $OutputBusiness['id'] }}"
+                                                                                        {{ old('business_id', $editDataNew->business_id) == $OutputBusiness->id ? 'selected' : '' }}>
+                                                                                        {{ $OutputBusiness->customer_po_number }}
+                                                                                    </option>
+                                                                                @endforeach
                                                                             </select>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
-                                                                            <label>Tax Type   <span
-                                                                                class="text-danger">*</span></label>
-                                                                            <select class="form-control mb-2" name="tax_type" id="tax_type">
-                                                                                <option value="" {{ old('tax_type') == '' ? 'selected' : '' }}>Select Tax Type</option>
-                                                                                <option value="GST" {{ old('tax_type', $editDataNew->tax_type) == 'GST' ? 'selected' : '' }}>GST</option>
-                                                                                <option value="SGST" {{ old('tax_type', $editDataNew->tax_type) == 'SGST' ? 'selected' : '' }}>SGST</option>
-                                                                                <option value="CGST" {{ old('tax_type', $editDataNew->tax_type) == 'CGST' ? 'selected' : '' }}>CGST</option>
-                                                                                <option value="SGST+CGST" {{ old('tax_type', $editDataNew->tax_type) == 'SGST+CGST' ? 'selected' : '' }}>SGST+CGST</option>
-                                                                                <option value="IGST" {{ old('tax_type', $editDataNew->tax_type) == 'IGST' ? 'selected' : '' }}>IGST</option>
+                                                                            <label>Customer PO Number (optional) <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <div class="cal-icon">
+                                                                                <input class="form-control datetimepicker"
+                                                                                    type="text" name="customer_po_no"
+                                                                                    id="customer_po_no"
+                                                                                    value="{{ $editDataNew->customer_po_no }}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
+                                                                            <label>Plant Name <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <div class="cal-icon">
+                                                                                <input class="form-control datetimepicker"
+                                                                                    type="text" name="plant_id"
+                                                                                    id="plant_id"
+                                                                                    value="{{ $editDataNew->plant_id }}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
+                                                                            <label>Tax Type <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <select class="form-control mb-2"
+                                                                                name="tax_type" id="tax_type">
+                                                                                <option value=""
+                                                                                    {{ old('tax_type') == '' ? 'selected' : '' }}>
+                                                                                    Select Tax Type</option>
+                                                                                <option value="GST"
+                                                                                    {{ old('tax_type', $editDataNew->tax_type) == 'GST' ? 'selected' : '' }}>
+                                                                                    GST</option>
+                                                                                <option value="SGST"
+                                                                                    {{ old('tax_type', $editDataNew->tax_type) == 'SGST' ? 'selected' : '' }}>
+                                                                                    SGST</option>
+                                                                                <option value="CGST"
+                                                                                    {{ old('tax_type', $editDataNew->tax_type) == 'CGST' ? 'selected' : '' }}>
+                                                                                    CGST</option>
+                                                                                <option value="SGST+CGST"
+                                                                                    {{ old('tax_type', $editDataNew->tax_type) == 'SGST+CGST' ? 'selected' : '' }}>
+                                                                                    SGST+CGST</option>
+                                                                                <option value="IGST"
+                                                                                    {{ old('tax_type', $editDataNew->tax_type) == 'IGST' ? 'selected' : '' }}>
+                                                                                    IGST</option>
                                                                             </select>
                                                                             @if ($errors->has('tax_type'))
-                                                                                <span class="red-text">{{ $errors->first('tax_type') }}</span>
+                                                                                <span
+                                                                                    class="red-text">{{ $errors->first('tax_type') }}</span>
                                                                             @endif
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
-                                                                            <label for="Service">Tax :  <span
-                                                                                class="text-danger">*</span></label> 
+                                                                            <label for="Service">Tax : <span
+                                                                                    class="text-danger">*</span></label>
                                                                             <select class="form-control mb-2"
                                                                                 name="tax_id" id="tax_id">
                                                                                 <option value="" default>Select
@@ -182,18 +234,7 @@
                                                                             @endif
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                        <div class="form-group">
-                                                                            <label>Plant Name  <span
-                                                                                    class="text-danger">*</span></label>
-                                                                            <div class="cal-icon">
-                                                                                <input class="form-control datetimepicker"
-                                                                                    type="text" name="plant_id"
-                                                                                    id="plant_id"
-                                                                                    value="{{ $editDataNew->plant_id }}">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
                                                                             <label>Vehicle Number <span
@@ -230,24 +271,33 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                   
+
                                                                 </div>
                                                             @endif
                                                         @endforeach
-                                                        <button type="button" name="add" id="add"
-                                                            class="btn btn-success">Add More</button>
+                                                        {{-- <button type="button" name="add" id="add"
+                                                            class="btn btn-success">Add More</button> --}}
                                                         <div style="margin-top:10px;">
                                                             <table class="table table-bordered" id="dynamicTable">
                                                                 <tr>
-                                                                    <th>Part No</th>
-                                                                    <th>HSN</th>
-                                                                    <th>Process</th>
-                                                                    <th>Quantity</th>
-                                                                    <th>Unit</th>
-                                                                    <th>Size</th>
+                                                                    <th style="width:200px">Part No</th>
+                                                                    <th style="width:100px">HSN</th>
+                                                                    <th style="width:100px">Process</th>
+                                                                    <th style="width:100px">Quantity</th>
+                                                                    <th style="width:100px">Unit</th>
                                                                     <th>Rate</th>
+                                                                    <th>Size</th>
                                                                     <th>Amount</th>
-                                                                    <th>Action</th>
+                                                                    <th>
+                                                                        <button type="button"
+                                                                            class="btn btn-sm btn-success font-18 mr-1"
+                                                                            id="add"
+                                                                            title="Add"
+                                                                            name="add"
+                                                                            data-repeater-create>
+                                                                            <i class="fa fa-plus"></i>
+                                                                        </button>
+                                                                    </th>
                                                                 </tr>
                                                                 @foreach ($editData as $key => $editDataNew)
                                                                     <tr>
@@ -263,38 +313,47 @@
                                                                             value="{{ $editDataNew->tbl_delivery_chalan_item_details_id }}"
                                                                             placeholder="">
                                                                         <td>
-                                                                            <select class="form-control part-no mb-2" name="part_item_id_{{ $key }}" id="">
-                                                                                <option value="" default>Select Item</option>
+                                                                            <select class="form-control part-no mb-2"
+                                                                                name="part_item_id_{{ $key }}"
+                                                                                id="">
+                                                                                <option value="" default>Select Item
+                                                                                </option>
                                                                                 @foreach ($dataOutputPartItem as $data)
-                                                                                <option value="{{ $data['id'] }}"
-                                                                                    {{ old('part_item_id', $editDataNew->part_item_id) == $data->id ? 'selected' : '' }}>
-                                                                                    {{ $data->description }}
-                                                                                </option>
-                                                                            @endforeach
+                                                                                    <option value="{{ $data['id'] }}"
+                                                                                        {{ old('part_item_id', $editDataNew->part_item_id) == $data->id ? 'selected' : '' }}>
+                                                                                        {{ $data->description }}
+                                                                                    </option>
+                                                                                @endforeach
                                                                             </select>
-                                                                        </td> 
+                                                                        </td>
                                                                         <td>
-                                                                            <select class="form-control hsn_id mb-2" name="hsn_id_{{ $key }}" id="">
-                                                                                <option value="" default>Select HSN</option>
-                                                                                @foreach ($dataOutputHSNMaster as $data)
-                                                                                <option value="{{ $data['id'] }}"
-                                                                                    {{ old('hsn_id', $editDataNew->hsn_id) == $data->id ? 'selected' : '' }}>
-                                                                                    {{ $data->name }}
+                                                                            <select class="form-control hsn_id mb-2"
+                                                                                name="hsn_id_{{ $key }}"
+                                                                                id="">
+                                                                                <option value="" default>Select HSN
                                                                                 </option>
-                                                                            @endforeach
+                                                                                @foreach ($dataOutputHSNMaster as $data)
+                                                                                    <option value="{{ $data['id'] }}"
+                                                                                        {{ old('hsn_id', $editDataNew->hsn_id) == $data->id ? 'selected' : '' }}>
+                                                                                        {{ $data->name }}
+                                                                                    </option>
+                                                                                @endforeach
                                                                             </select>
-                                                                        </td>    
+                                                                        </td>
                                                                         <td>
-                                                                            <select class="form-control process_id mb-2" name="process_id_{{ $key }}" id="">
-                                                                                <option value="" default>Select Process</option>
-                                                                                @foreach ($dataOutputHSNMaster as $data)
-                                                                                <option value="{{ $data['id'] }}"
-                                                                                    {{ old('process_id', $editDataNew->process_id) == $data->id ? 'selected' : '' }}>
-                                                                                    {{ $data->name }}
-                                                                                </option>
-                                                                            @endforeach
+                                                                            <select class="form-control process_id mb-2"
+                                                                                name="process_id_{{ $key }}"
+                                                                                id="">
+                                                                                <option value="" default>Select
+                                                                                    Process</option>
+                                                                                @foreach ($dataOutputProcessMaster as $data)
+                                                                                    <option value="{{ $data['id'] }}"
+                                                                                        {{ old('process_id', $editDataNew->process_id) == $data->id ? 'selected' : '' }}>
+                                                                                        {{ $data->name }}
+                                                                                    </option>
+                                                                                @endforeach
                                                                             </select>
-                                                                        </td>                                                                     
+                                                                        </td>
                                                                         <td>
                                                                             <input type="text"
                                                                                 name="quantity_{{ $key }}"
@@ -303,14 +362,17 @@
                                                                                 class="form-control quantity" />
                                                                         </td>
                                                                         <td>
-                                                                            <select class="form-control unit_id mb-2" name="unit_id_{{ $key }}" id="">
-                                                                                <option value="" default>Select Unit</option>
-                                                                                @foreach ($dataOutputUnitMaster as $data)
-                                                                                <option value="{{ $data['id'] }}"
-                                                                                    {{ old('unit_id', $editDataNew->unit_id) == $data->id ? 'selected' : '' }}>
-                                                                                    {{ $data->name }}
+                                                                            <select class="form-control unit_id mb-2"
+                                                                                name="unit_id_{{ $key }}"
+                                                                                id="">
+                                                                                <option value="" default>Select Unit
                                                                                 </option>
-                                                                            @endforeach
+                                                                                @foreach ($dataOutputUnitMaster as $data)
+                                                                                    <option value="{{ $data['id'] }}"
+                                                                                        {{ old('unit_id', $editDataNew->unit_id) == $data->id ? 'selected' : '' }}>
+                                                                                        {{ $data->name }}
+                                                                                    </option>
+                                                                                @endforeach
                                                                             </select>
                                                                         </td>
                                                                         <td>
@@ -327,16 +389,16 @@
                                                                                 placeholder="Enter size"
                                                                                 class="form-control size" />
                                                                         </td>
-                                                                       
+
                                                                         <td>
                                                                             <input type="text"
                                                                                 name="amount_{{ $key }}"
                                                                                 value="{{ $editDataNew->amount }}"
                                                                                 placeholder="Enter Amount"
-                                                                                class="form-control total_amount" />
+                                                                                class="form-control amount" />
                                                                         </td>
                                                                         <td>
-                                                                            <a data-id="{{ $editDataNew->id }}"
+                                                                            <a data-id="{{ $editDataNew->tbl_delivery_chalan_item_details_id }}"
                                                                                 class="delete-btn btn btn-danger m-1"
                                                                                 title="Delete"><i
                                                                                     class="fas fa-archive"></i></a>
@@ -350,15 +412,36 @@
                                                             @if ($key == 0)
                                                                 <div class="form-group-inner">
                                                                     <div class="row">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                                <div class="form-group">
+                                                                                    <label for="image">Update Signature : <span class="text-danger">*</span></label>
+                                                                                    <input type="file" name="image" class="form-control mb-2"
+                                                                                        id="english_image" accept="image/*" placeholder="image">
+                                                                                    @if ($errors->has('image'))
+                                                                                        <span class="red-text"><?php echo $errors->first('image', ':message'); ?></span>
+                                                                                    @endif
+                                                                                </div>
+                                                                                <img id="english"
+                                                                                    src="{{ Config::get('DocumentConstant.DELIVERY_CHALAN_VIEW') }}{{ $editDataNew->image }}"
+                                                                                    class="img-fluid img-thumbnail" width="150" style="background-color: aliceblue;">
+                                                                                <img id="english_imgPreview" src="#"
+                                                                                    alt="Vision Image"
+                                                                                    class="img-fluid img-thumbnail" width="150" style="display:none">
+                                                                            </div>
 
-                                                                    <div class="row">
-                                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                            <label for="note">Remark
-                                                                                : <span
-                                                                                class="text-danger">*</span></label>
-                                                                            <textarea class="form-control" name="remark">@if (old('remark')){{ old('remark') }}@else{{ $editDataNew->remark }}@endif</textarea>
 
-                                                                        </div>
+                                                                            <div
+                                                                                class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                                <label for="note">Remark
+                                                                                    : <span class="text-danger">*</span></label>
+                                                                                <textarea class="form-control" name="remark">
+@if (old('remark'))
+{{ old('remark') }}@else{{ $editDataNew->remark }}
+@endif
+</textarea>
+
+                                                                            </div>
                                                             @endif
                                                         @endforeach
                                                     </div>
@@ -401,6 +484,24 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script>
+        $(document).ready(() => {
+            $("#english_image").change(function() {
+                $('#english').css('display', 'none');
+                $("#english_imgPreview").show();
+    
+                const file = this.files[0];
+                if (file) {
+                    let reader = new FileReader();
+                    reader.onload = function(event) {
+                        $("#english_imgPreview")
+                            .attr("src", event.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
+   <script>
         $(document).ready(function() {
             var validator = $("#editDesignsForm").validate({
                 ignore: [],
@@ -408,24 +509,24 @@
                     vendor_id: {
                         required: true,
                     },
-                    transport_id :{
+                    transport_id: {
                         required: true,
                     },
-                    vehicle_id:{
+                    vehicle_id: {
                         required: true,
                     },
-                    plant_id:{
+                    plant_id: {
                         required: true,
                     },
-                    vehicle_number : {
+                    vehicle_number: {
                         required: true,
                     },
-                    tax_type :{
-                        required: true, 
+                    tax_type: {
+                        required: true,
                     },
                     tax_id: {
                         required: true,
-                    },                   
+                    },
                     remark: {
                         required: true,
                     },
@@ -447,7 +548,7 @@
                         required: true,
                         maxlength: 255
                     },
-                    
+
                     'rate_0': {
                         required: true,
                         number: true,
@@ -460,20 +561,20 @@
                     vendor_id: {
                         required: "Please Select the Vendor Company Name",
                     },
-                    transport_id :{
+                    transport_id: {
                         required: "Please Select the transport Name",
                     },
-                    vehicle_id:{
+                    vehicle_id: {
                         required: "Please Select the vehicle Name",
                     },
-                    plant_id:{
+                    plant_id: {
                         required: "Please Enter the plant name",
                     },
-                    vehicle_number : {
-                        required:"Please Enter the  vehicle number",
+                    vehicle_number: {
+                        required: "Please Enter the  vehicle number",
                     },
-                    tax_type :{
-                        required: "Please Select the tax type", 
+                    tax_type: {
+                        required: "Please Select the tax type",
                     },
                     tax_id: {
                         required: "Please  Select the Tax",
@@ -483,7 +584,7 @@
                     },
                     'part_item_id_0': {
                         required: "Please enter the Part Number",
-                    },                    
+                    },
                     'quantity_0': {
                         required: "Please enter the Quantity",
                         digits: "Please enter only digits for Quantity",
@@ -508,8 +609,10 @@
                     },
                 },
                 errorPlacement: function(error, element) {
-                    if (element.hasClass("part_item_id") || element.hasClass("hsn_id") || element.hasClass("process_id") ||
-                        element.hasClass("quantity") || element.hasClass("unit_id") || element.hasClass("rate") ||
+                    if (element.hasClass("part_item_id") || element.hasClass("hsn_id") || element
+                        .hasClass("process_id") ||
+                        element.hasClass("quantity") || element.hasClass("unit_id") || element.hasClass(
+                            "rate") ||
                         element.hasClass("amount")) {
                         error.insertAfter(element);
                     } else {
@@ -530,61 +633,65 @@
                     '" placeholder=""> <input type="hidden" name="addmore[' + i +
                     '][purchase_id]" class="form-control" value="' + i + '" placeholder="">' +
                     '<td>' +
-            '<select class="form-control part_item_id mb-2" name="addmore[' + i + '][part_item_id]" id="">' +
-                '<option value="" default>Select Part Item</option>' +
-                '@foreach ($dataOutputPartItem as $data)' +
+                    '<select class="form-control part_item_id mb-2" name="addmore[' + i +
+                    '][part_item_id]" id="">' +
+                    '<option value="" default>Select Part Item</option>' +
+                    '@foreach ($dataOutputPartItem as $data)' +
                     '<option value="{{ $data['id'] }}">{{ $data['description'] }}</option>' +
-                '@endforeach' +
-            '</select>' +
-            '</td>' +
-                  '<td>' +
-'<select class="form-control hsn_id mb-2" name="addmore[' + i + '][hsn_id]" id="">' +
-                '<option value="" default>Select HSN</option>' +
-                '@foreach ($dataOutputHSNMaster as $data)' +
+                    '@endforeach' +
+                    '</select>' +
+                    '</td>' +
+                    '<td>' +
+                    '<select class="form-control hsn_id mb-2" name="addmore[' + i +
+                    '][hsn_id]" id="">' +
+                    '<option value="" default>Select HSN</option>' +
+                    '@foreach ($dataOutputHSNMaster as $data)' +
                     '<option value="{{ $data['id'] }}">{{ $data['name'] }}</option>' +
-                '@endforeach' +
-            '</select>'+
-            '</td>' + 
-            '<td>' +
-'<select class="form-control process_id mb-2" name="addmore[' + i + '][process_id]" id="">' +
-                '<option value="" default>Select Process</option>' +
-                '@foreach ($dataOutputHSNMaster as $data)' +
+                    '@endforeach' +
+                    '</select>' +
+                    '</td>' +
+                    '<td>' +
+                    '<select class="form-control process_id mb-2" name="addmore[' + i +
+                    '][process_id]" id="">' +
+                    '<option value="" default>Select Process</option>' +
+                    '@foreach ($dataOutputProcessMaster as $data)' +
                     '<option value="{{ $data['id'] }}">{{ $data['name'] }}</option>' +
-                '@endforeach' +
-            '</select>'+
-            '</td>' +
+                    '@endforeach' +
+                    '</select>' +
+                    '</td>' +
                     '<td><input type="text" class="form-control quantity" name="addmore[' + i +
-                        '][quantity]" placeholder=" Quantity" /></td>' +                   
+                    '][quantity]" placeholder=" Quantity" /></td>' +
 
                     '<td>' +
-                    '<select class="form-control unit_id mb-2" name="addmore[' + i + '][unit_id]" id="">' +
-                '<option value="" default>Select Unit</option>' +
-                '@foreach ($dataOutputUnitMaster as $data)' +
+                    '<select class="form-control unit_id mb-2" name="addmore[' + i +
+                    '][unit_id]" id="">' +
+                    '<option value="" default>Select Unit</option>' +
+                    '@foreach ($dataOutputUnitMaster as $data)' +
                     '<option value="{{ $data['id'] }}">{{ $data['name'] }}</option>' +
-                '@endforeach' +
-            '</select>' +
-            '</td>' +
-            
-            
+                    '@endforeach' +
+                    '</select>' +
+                    '</td>' +
+
+
                     '<td><input type="text" class="form-control rate" name="addmore[' + i +
                     '][rate]" placeholder=" Rate" /></td>' +
                     '<td><input type="text" class="form-control size" name="addmore[' + i +
-                        '][size]" placeholder="size" /></td>' +
+                    '][size]" placeholder="size" /></td>' +
                     '<td><input type="text" class="form-control amount" name="addmore[' + i +
                     '][amount]" placeholder=" Amount" readonly /></td>' +
-                   '<td><a class="remove-tr delete-btn btn btn-danger m-1" title="Delete Tender" data-id="{{ $editDataNew->id }}"><i class="fas fa-archive"></i></a></td>' +
-        '</tr>'
+                    '<td><a class="remove-tr delete-btn btn btn-danger m-1" title="Delete Tender" data-id="{{ $editDataNew->id }}"><i class="fas fa-archive"></i></a></td>' +
+                    '</tr>'
                 );
 
                 $("#dynamicTable").append(newRow);
 
                 // Reinitialize validation for the new row
                 $('select[name="addmore[' + i + '][part_item_id]"]').rules("add", {
-            required: true,
-            messages: {
-                required: "Please select the Part Number",
-            }
-        });
+                    required: true,
+                    messages: {
+                        required: "Please select the Part Number",
+                    }
+                });
                 $('input[name="addmore[' + i + '][quantity]"]').rules("add", {
                     required: true,
                     digits: true,
@@ -598,7 +705,7 @@
                     digits: true,
                     messages: {
                         required: "Please enter the unit_id",
-                        
+
                     }
                 });
                 $('input[name="addmore[' + i + '][rate]"]').rules("add", {
@@ -628,7 +735,7 @@
                 return inputDate >= today;
             }, "The date must be today or later.");
 
-           
+
 
             $(document).on('keyup', '.quantity, .rate', function(e) {
                 var currentRow = $(this).closest("tr");
@@ -639,23 +746,23 @@
             });
 
             $('.delete-btn').click(function(e) {
-    e.preventDefault(); // Prevent the default action of the link
-    var deleteId = $(this).data("id");  // Get the ID from the data-id attribute
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $("#delete_id").val(deleteId); // Set the delete_id field in the form
-            $("#deleteform").submit();  // Submit the form
-        }
-    });
-});
+                e.preventDefault(); // Prevent the default action of the link
+                var deleteId = $(this).data("id"); // Get the ID from the data-id attribute
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $("#delete_id").val(deleteId); // Set the delete_id field in the form
+                        $("#deleteform").submit(); // Submit the form
+                    }
+                });
+            });
 
         });
     </script>

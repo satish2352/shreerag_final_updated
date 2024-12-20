@@ -68,8 +68,15 @@ return [
     'NOTICE_VIEW'=> env("FILE_VIEW").'/all_web_data/hr/document/notice/',
     'NOTICE_DELETE'=>"/all_web_data/hr/document/notice/",
     'NOTICE_ADD'=>'/all_web_data/hr/document/notice/',
+    
 
-    // 'DB_BACKUP'	 => "/all_web_data/DBBackup//",
+    'DELIVERY_CHALAN_VIEW'=> env("FILE_VIEW").'/all_web_data/images/delivery_chalan/',
+    'DELIVERY_CHALAN_DELETE'=>"/all_web_data/images/delivery_chalan/",
+    'DELIVERY_CHALAN_ADD'=>'/all_web_data/images/delivery_chalan/',
+    
+    'RETURNABLE_CHALAN_VIEW'=> env("FILE_VIEW").'/all_web_data/images/returnable_chalan/',
+    'RETURNABLE_CHALAN_DELETE'=>"/all_web_data/images/returnable_chalan/",
+    'RETURNABLE_CHALAN_ADD'=>'/all_web_data/images/returnable_chalan/',
 
     'ROLE_ID' => [
         'SUPER'             => 111,

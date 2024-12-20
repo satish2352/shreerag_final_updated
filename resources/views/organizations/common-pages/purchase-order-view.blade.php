@@ -380,8 +380,8 @@
                                         </td>
                                     </tr>
                                     <tr style="padding-bottom: 20px; bold; font-family: 'Font Awesome 5 Free'!important; font-size:12px;">
-                                        <td colspan="8" class="no-border" style="padding-top: 10px;">
-                                            Delivery AS PER ATTACHED DELIVERY SCHEDULE
+                                        <td colspan="8" class="no-border" style="padding: 0px;">
+                                            {{-- Delivery AS PER ATTACHED DELIVERY SCHEDULE --}}
                                         </td>
                                     </tr>
                                     <tr style="bold; font-family: 'Font Awesome 5 Free'!important; font-size:12px;">

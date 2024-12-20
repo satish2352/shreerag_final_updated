@@ -2,9 +2,10 @@
 namespace App\Http\Services\Organizations\Store;
 use App\Http\Repository\Organizations\Store\DeliveryChalanRepository;
 use Carbon\Carbon;
-use App\Models\ {
-    DesignModel
-    };
+use App\Models\{
+    DeliveryChalan
+   
+};
 
 use Config;
     class DeliveryChalanServices
@@ -29,34 +30,15 @@ use Config;
             return $e;
         }
     }
-   
-    // public function submitBOMToOwner($request){
-    //     try {
-    //         $data = $this->repo->submitBOMToOwner($request);
-    //         if ($data) {
-    //             return ['status' => 'success', 'msg' => 'Purchase Order Added Successfully.'];
-    //         } else {
-    //             return ['status' => 'error', 'msg' => 'Purchase Order Not Added.'];
-    //         }
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
-    // public function submitBOMToOwner($request)
-    // {
-    //     try {
-    //         $data = $this->repo->submitBOMToOwner($request);
-    //     } catch (\Exception $e) {
-    //         return [
-    //             'status' => 'error',
-    //             'msg' => 'An error occurred while submitting: ' . $e->getMessage(),
-    //         ];
-    //     }
-    // }
     public function submitBOMToOwner($request)
     {
         try {
             $result = $this->repo->submitBOMToOwner($request);
+
+            $path = Config::get('DocumentConstant.DELIVERY_CHALAN_ADD');
+            $ImageName = $result['ImageName'];
+            uploadImage($request, 'image', $path, $ImageName);
+
             if ($result['status'] === 'success') {
                 return ['status' => 'success', 'msg' => 'This business send to Design Department Successfully.'];
             } else {
@@ -76,34 +58,6 @@ use Config;
             return $e;
         }
     }
-    // public function addAll($request)
-    // {
-    //     try {
-    //         $result = $this->repo->addAll($request);
-    //         if ($result['status'] === 'success') {
-    //             return ['status' => 'success', 'msg' => 'This business send to Design Department Successfully.'];
-    //         } else {
-    //             return ['status' => 'error', 'msg' => 'Failed to Add Data.'];
-    //         }  
-    //     } catch (Exception $e) {
-    //         return ['status' => 'error', 'msg' => $e->getMessage()];
-    //     }      
-    // }
-    
-
-    
-    // public function getPurchaseOrderDetails($id)
-    // {
-    //     try {
-    //         $listAllApprovedPOToBeChecked = $this->repo->listAllApprovedPOToBeChecked($id);
-    //         return $listAllApprovedPOToBeChecked;
-    //     } catch (Exception $e) {
-    //         return ['status' => 'error', 'msg' => $e->getMessage()];
-    //     }
-    // }
-
-
-        
     public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id)
     {
         try {
@@ -127,11 +81,31 @@ use Config;
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
-          
+        //  dd($return_data);
+        //  die();
+            $path = Config::get('DocumentConstant.DELIVERY_CHALAN_ADD');
+            if ($request->hasFile('image')) {
+                if ($return_data['image']) {
+                    if (file_exists_view(Config::get('DocumentConstant.DELIVERY_CHALAN_DELETE') . $return_data['image'])) {
+                        removeImage(Config::get('DocumentConstant.DELIVERY_CHALAN_DELETE') . $return_data['image']);
+                    }
+
+                }
+                if ($request->hasFile('image')) {
+                    $englishImageName = $return_data['last_insert_id'] . '_' . rand(100000, 999999) . '_image.' . $request->file('image')->getClientOriginalExtension();
+                    
+                } else {
+                    
+                }                
+                uploadImage($request, 'image', $path, $englishImageName);
+                $delivery_data = DeliveryChalan::find($return_data['last_insert_id']);
+                $delivery_data->image = $englishImageName;
+                $delivery_data->save();
+            }          
             if ($return_data) {
-                return ['status' => 'success', 'msg' => 'Slide Updated Successfully.'];
+                return ['status' => 'success', 'msg' => 'Delivery chalan Updated Successfully.'];
             } else {
-                return ['status' => 'error', 'msg' => 'Slide Not Updated.'];
+                return ['status' => 'error', 'msg' => 'Delivery chalan Not Updated.'];
             }  
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];

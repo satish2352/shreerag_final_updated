@@ -175,14 +175,14 @@
                     english_image: {
                         required: true,
                         fileExtension: ["jpg", "jpeg", "png"],
-                        fileSize: [150, 1048], // Min 10KB and Max 2MB (2 * 1024 KB)
+                        fileSize: [150, 1048], // Min 1KB and Max 2MB (2 * 1024 KB)
                         imageDimensions: [300, 300, 1000,
                         1000], // Min width x height and Max width x height
                     },
                     english_image_new: {
                         required: true,
                         fileExtension: ["jpg", "jpeg", "png"],
-                        fileSize: [150, 1048], // Min 10KB and Max 2MB (2 * 1024 KB)
+                        fileSize: [150, 1048], // Min 1KB and Max 2MB (2 * 1024 KB)
                         imageDimensions: [300, 300, 1000,
                         1000], // Min width x height and Max width x height
                     },

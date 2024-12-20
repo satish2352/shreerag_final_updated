@@ -193,7 +193,7 @@
                         image: {
                             required: true,
                             fileExtension: ["jpg", "jpeg", "png"],
-                            fileSize: [5, 200], // Min 10KB and Max 2MB (2 * 1024 KB)
+                            fileSize: [5, 200], // Min 1KB and Max 2MB (2 * 1024 KB)
                             imageDimensions: [50, 50, 800, 800], // Min width x height and Max width x height
                         },
                     },

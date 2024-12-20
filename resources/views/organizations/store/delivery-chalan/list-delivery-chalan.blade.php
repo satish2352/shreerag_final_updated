@@ -82,13 +82,13 @@
 
           <div class="sparkline13-graph">
             <div class="datatable-dashv1-list custom-datatable-overright">
-              <div id="toolbar">
+              {{-- <div id="toolbar">
                 <select class="form-control">
                   <option value="">Export Basic</option>
                   <option value="all">Export All</option>
                   <option value="selected">Export Selected</option>
                 </select>
-              </div>
+              </div> --}}
 
 
               <div class="table-responsive">
@@ -100,6 +100,7 @@
                     <tr>
                       <th data-field="#">#</th>
                       <th data-field="customer_po_number" data-editable="false"> PO Number</th>
+                      <th data-field="customer_po_no" data-editable="false">Customer PO Number</th>
                       <th data-field="vendor_name" data-editable="false">Vendor Name</th>
                       <th data-field="transport_name" data-editable="false">Transport Name</th>
                       <th data-field="vehicle_name" data-editable="false">Vehicle Name</th>
@@ -119,7 +120,9 @@
                       <td>
                         {{ $data->customer_po_number ? ucwords($data->customer_po_number) : 'N/A' }}
                     </td>
-                    
+                    <td>
+                      {{ $data->customer_po_no ? ucwords($data->customer_po_no) : 'N/A' }}
+                  </td>
 
                       <td>{{ucwords($data->vendor_name)}}</td>
                       <td>{{ucwords($data->transport_name)}}</td>
@@ -134,7 +137,8 @@
                       <td>
                         <div style="display: flex; align-items: center;">
                             <a href="{{ route('show-delivery-chalan', base64_encode($data->id)) }}">
-                                <button data-toggle="tooltip" title="View Details" class="pd-setting-ed">View Details</button>
+                                <button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-eye" aria-hidden="true"></i>
+                                  </button>
                             </a>
                         </div>
                     </td>

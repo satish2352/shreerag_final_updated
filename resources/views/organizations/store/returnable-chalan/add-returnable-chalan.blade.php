@@ -102,7 +102,7 @@
                                                         </div>
                                                         <div class="col-lg-4 col-md-4 col-sm-4">
                                                             <div class="form-group">
-                                                                <label for="business_id">PO Number<span class="text-danger">*</span></label>
+                                                                <label for="business_id">PO Number (Optional)</label>
                                                                     <select class="form-control mb-2" name="business_id" id="business_id">
                                                                     <option value="" default>Select PO Number</option>
                                                                     @foreach ($dataOutputPurchaseOrdersModel as $data)
@@ -111,6 +111,14 @@
                                                                     @endforeach
                                                                 </select>
                                                             </div>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                                            <label for="customer_po_no">Customer PO Number (optional)</label>
+                                                            <input type="text" class="form-control" id="customer_po_no" value="{{old('customer_po_no') }}"
+                                                                name="customer_po_no" placeholder="Enter Customer PO Number">
+                                                                @if ($errors->has('customer_po_no'))
+                                                                <span class="red-text"><?php echo $errors->first('customer_po_no', ':message'); ?></span>
+                                                            @endif
                                                         </div>
                                                             <div class="col-lg-4 col-md-4 col-sm-4">
                                                               <div class="form-group">
@@ -293,6 +301,12 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                        <label for="image">Upload Signature: <span
+                                                                class="text-danger">*</span></label>
+                                                        <input type="file" class="form-control"
+                                                            accept="image*" id="image" name="image">
+                                                    </div>
                                                     </div>
                                                 </div>
                                                 <div class="login-btn-inner">
@@ -352,10 +366,10 @@
                         required: true,
                       
                     },
-                    business_id: {
-                        required: true,
+                    // business_id: {
+                    //     required: true,
                    
-                    },
+                    // },
                     transport_id: {
                         required: true,
                        
@@ -380,6 +394,10 @@
                     po_date: {
                         required: true,
                     },
+                    image: {
+                            required: true,
+                            extension: "jpg|jpeg|png"
+                        },
                     // dc_date: {
                     //     required: true,
                     // },
@@ -432,10 +450,10 @@
                         required: "seclect transport name.",
                        
                     },
-                    business_id: {
-                        required: "seclect po number.",
+                    // business_id: {
+                    //     required: "seclect po number.",
                         
-                    },
+                    // },
                     vehicle_id: {
                         required: "seclect vehicle type.",
                         
@@ -458,6 +476,10 @@
                         required: "Please select PO date.",
                         date: "Please select a valid date."
                     },
+                    image: {
+                            required: "Please upload an signature",
+                            extension: "Only image files (jpg, jpeg, png) are allowed"
+                        },
                     // dc_date: {
                     //     required: "Please select dc date.",
                     //     date: "Please select a valid date."
@@ -683,7 +705,373 @@
             });
         });
     </script>
-    
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+        <script>
+            $(document).ready(function() {
+                function setMinDate() {
+                    var today = new Date();
+                    var day = String(today.getDate()).padStart(2, '0');
+                    var month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+                    var year = today.getFullYear();
+                    var todayDate = year + '-' + month + '-' + day;
+                    $('#po_date').attr('min', todayDate);
+                }
+                setMinDate();
+
+                function setMinDate11() {
+                    var today = new Date();
+                    var day = String(today.getDate()).padStart(2, '0');
+                    var month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+                    var year = today.getFullYear();
+                    var todayDate = year + '-' + month + '-' + day;
+                    $('#dc_date').attr('min', todayDate);
+                }
+                // Call the function to set the minimum date
+                setMinDate11();
+
+                // Initialize jQuery Validation
+                var validator = $("#addEmployeeForm").validate({
+                    ignore: [], // Validate hidden inputs as well
+                    rules: {
+                        vendor_id: {
+                            required: true,
+
+                        },
+
+                        transport_id: {
+                            required: true,
+
+                        },
+                        vehicle_id: {
+                            required: true,
+                        },
+                        tax_type: {
+                            required: true,
+                        },
+                        tax_id: {
+                            required: true,
+                        },
+                        plant_id: {
+                            required: true,
+
+                        },
+                        vehicle_number: {
+                            required: true,
+
+                        },
+                        po_date: {
+                            required: true,
+                        },
+                        image: {
+                            required: true,
+                            extension: "jpg|jpeg|png"
+                        },
+                        // dc_date: {
+                        //     required: true,
+                        // },
+                        // dc_number: {
+                        //     required: true,
+                        // },  
+                        // lr_number: {
+                        //     required: true,
+                        // },
+                        'addmore[0][part_item_id]': {
+                            required: true,
+                            maxlength: 100
+                        },
+                        'addmore[0][unit_id]': {
+                            required: true,
+                            maxlength: 255
+                        },
+                        'addmore[0][hsn_id]': {
+                            required: true,
+                            maxlength: 255
+                        },
+                        'addmore[0][process_id]': {
+                            required: true,
+                            maxlength: 255
+                        },
+                        'addmore[0][size]': {
+                            required: true,
+                            maxlength: 255
+                        },
+                        'addmore[0][quantity]': {
+                            required: true,
+                            digits: true,
+                            min: 1
+                        },
+                        // 'addmore[0][rate]': {
+                        //     required: true,
+                        //     number: true,
+                        //     min: 0.01
+                        // },
+                        'addmore[0][amount]': {
+                            required: true,
+                        },
+                    },
+                    messages: {
+                        vendor_id: {
+                            required: "seclect vendor name.",
+
+                        },
+                        transport_id: {
+                            required: "seclect transport name.",
+
+                        },
+
+                        vehicle_id: {
+                            required: "seclect vehicle type.",
+
+                        },
+                        tax_type: {
+                            required: "seclect tax type",
+                        },
+                        tax_id: {
+                            required: "seclect tax name.",
+                        },
+                        vehicle_number: {
+                            required: "enter vehicle number.",
+
+                        },
+                        plant_id: {
+                            required: "enter plant name.",
+
+                        },
+                        po_date: {
+                            required: "Please select PO date.",
+                            date: "Please select a valid date."
+                        },
+                        image: {
+                            required: "Please upload an signature",
+                            extension: "Only image files (jpg, jpeg, png) are allowed"
+                        },
+                        // dc_date: {
+                        //     required: "Please select dc date.",
+                        //     date: "Please select a valid date."
+                        // },
+                        // dc_number: {
+                        //     required: "Please enter dc number.",
+                        //     date: "Please enter a valid dc number."
+                        // },  
+                        // lr_number: {
+                        //     required: "Please enter lr number.",
+                        //     date: "Please enter a valid lr number."
+                        // },
+                        remark: {
+                            required: "Please enter remark.",
+                            maxlength: "Remark must be at most 255 characters long."
+                        },
+                        'addmore[0][part_item_id]': {
+                            required: "Please enter the Product Name.",
+                            maxlength: "Product Name must be at most 100 characters long."
+                        },
+                        'addmore[0][unit_id]': {
+                            required: "Please enter the unit_id.",
+                            maxlength: "unit_id must be at most 255 characters long."
+                        },
+                        'addmore[0][hsn_id]': {
+                            required: "Please enter the hsn_id.",
+                            maxlength: "hsn_id must be at most 255 characters long."
+                        },
+                        'addmore[0][process_id]': {
+                            required: "Please select the process.",
+
+                        },
+                        'addmore[0][size]': {
+                            required: "Please enter the size.",
+
+                        },
+                        'addmore[0][quantity]': {
+                            required: "Please enter the Quantity.",
+                            digits: "Please enter only digits for Quantity.",
+                            min: "Quantity must be at least 1."
+                        },
+                        // 'addmore[0][rate]': {
+                        //     required: "Please enter the Rate.",
+                        //     number: "Please enter a valid number for Rate.",
+                        //     min: "Rate must be a positive number."
+                        // },
+                        'addmore[0][amount]': {
+                            required: "Please Enter the Amount",
+                        },
+                    },
+                    errorPlacement: function(error, element) {
+                        error.addClass('text-danger'); // Add Bootstrap text-danger class for styling
+                        if (element.closest('.form-group').length) {
+                            element.closest('.form-group').append(error);
+                        } else if (element.closest('td').length) {
+                            element.closest('td').append(error);
+                        } else {
+                            error.insertAfter(element);
+                        }
+                    }
+                });
+
+                // Attach validation to the default row
+                initializeValidation($("#purchase_order_table tbody tr"));
+
+                // Function to attach validation rules to dynamic fields
+                function initializeValidation(row) {
+                    row.find('.part_item_id').rules("add", {
+                        required: true,
+                        maxlength: 100,
+                        messages: {
+                            required: "Please enter the Product Name.",
+                            maxlength: "Product Name must be at most 100 characters long."
+                        }
+                    });
+                    row.find('.unit_id').rules("add", {
+                        required: true,
+                        maxlength: 255,
+                        messages: {
+                            required: "Please enter the unit name.",
+                            maxlength: "unit_id must be at most 255 characters long."
+                        }
+                    });
+                    row.find('.hsn_id').rules("add", {
+                        required: true,
+                        maxlength: 255,
+                        messages: {
+                            required: "Please enter the hsn .",
+                            maxlength: "hsn_id must be at most 255 characters long."
+                        }
+                    });
+                    row.find('.quantity').rules("add", {
+                        required: true,
+                        digits: true,
+                        min: 1,
+                        messages: {
+                            required: "Please enter the Quantity.",
+                            digits: "Please enter only digits for Quantity.",
+                            min: "Quantity must be at least 1."
+                        }
+                    });
+                    // row.find('.rate').rules("add", {
+                    //     required: true,
+                    //     number: true,
+                    //     min: 0.01,
+                    //     messages: {
+                    //         required: "Please enter the Rate.",
+                    //         number: "Please enter a valid number for Rate.",
+                    //         min: "Rate must be a positive number."
+                    //     }
+                    // });
+                    row.find('.process_id').rules("add", {
+                        required: true,
+                        number: true,
+                        min: 0.01,
+                        messages: {
+                            required: "Please enter the process.",
+                            number: "Please enter a valid number for process.",
+                            min: "process must be a positive number."
+                        }
+                    });
+                    row.find('.size').rules("add", {
+                        required: true,
+                        // number: true,
+                        // min: 0.01,
+                        messages: {
+                            required: "Please enter the size.",
+                            number: "Please enter a valid number for size.",
+                            min: "size must be a positive number."
+                        }
+                    });
+                    row.find('.total_amount').rules("add", {
+                        required: true,
+                        messages: {
+                            required: "Please Enter the Amount",
+                        }
+                    });
+                }
+
+                // Add more rows when the "Add More" button is clicked
+                $("#add_more_btn").click(function() {
+                    var i_count = $('#i_id').val();
+                    var i = parseInt(i_count) + 1;
+                    $('#i_id').val(i);
+
+                    if (i_count === "0") {
+                        i = 2;
+                    }
+
+                    $('#i_id').val(i);
+                    var newRow = `
+                    <tr>
+                        <td>
+                            <input type="text" name="id" class="form-control" style="min-width:50px" readonly value="${i}">
+                        </td>
+                        <td>
+                         <select class="form-control part_item_id mb-2" name="addmore[${i}][part_item_id]">
+                            <option value="" default>Select Part Item</option>
+                            @foreach ($dataOutputPartItem as $data)
+                                <option value="{{ $data['id'] }}">{{ $data['description'] }}</option>
+                            @endforeach
+                        </select>
+                        </td>
+                        <td>
+                             <select class="form-control mb-2 unit_id" name="addmore[${i}][unit_id]">
+                                <option value="" default>Select Unit</option>
+                                @foreach ($dataOutputUnitMaster as $data)
+                                    <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                         <td>
+                             <select class="form-control mb-2 hsn_id" name="addmore[${i}][hsn_id]">
+                                <option value="" default>Select HSN</option>
+                                @foreach ($dataOutputHSNMaster as $data)
+                                    <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                          <td>
+                            <select class="form-control mb-2 process_id" name="addmore[${i}][process_id]">
+                                <option value="" default>Select Process</option>
+                                @foreach ($dataOutputProcessMaster as $data)
+                                    <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            <input class="form-control quantity" name="addmore[${i}][quantity]" type="text">
+                        </td>
+                        <td>
+                            <input class="form-control rate" name="addmore[${i}][rate]" type="text">
+                        </td>
+                        <td>
+                            <input class="form-control size" name="addmore[${i}][size]" type="text">
+                        </td>
+                        <td>
+                            <input class="form-control total_amount" name="addmore[${i}][amount]" readonly style="width:120px" type="text">
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove_row"><i class="fa fa-trash"></i></button>
+                        </td>
+                    </tr>`;
+
+                    $('#purchase_order_table tbody').append(newRow);
+                    initializeValidation($('#purchase_order_table tbody tr:last-child'));
+                    validator.resetForm(); // Reset the validation errors
+                });
+
+                // Remove a row when the "Remove" button is clicked
+                $(document).on('click', '.remove_row', function() {
+                    $(this).closest('tr').remove();
+                    validator.resetForm(); // Reset the validation errors
+                });
+
+                // Recalculate total amount on change in quantity or rate
+                $(document).on('input', '.quantity, .rate', function() {
+                    var $row = $(this).closest('tr');
+                    var quantity = parseFloat($row.find('.quantity').val()) || 0;
+                    var rate = parseFloat($row.find('.rate').val()) || 0;
+                    var total = (quantity * rate).toFixed(2);
+                    $row.find('.total_amount').val(total);
+                });
+            });
+        </script>
  
      
 @endsection

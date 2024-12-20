@@ -52,7 +52,7 @@ class ReturnableChalanController extends Controller
           })
         ->select('tbl_returnable_chalan.id','tbl_returnable_chalan.vendor_id','tbl_returnable_chalan.transport_id',
         'tbl_returnable_chalan.business_id','tbl_returnable_chalan.vehicle_id','vendors.vendor_name'
-        ,'purchase_orders.purchase_orders_id','tbl_transport_name.name as transport_name','tbl_vehicle_type.name as vehicle_name'
+        ,'purchase_orders.purchase_orders_id','tbl_transport_name.name as transport_name','tbl_vehicle_type.name as vehicle_name','tbl_returnable_chalan.customer_po_no'
         )->orderBy('tbl_returnable_chalan.updated_at', 'desc')
         ->get();        
         return view(
@@ -106,8 +106,56 @@ class ReturnableChalanController extends Controller
     public function store(Request $request)
     {
         $rules = [
+            'vendor_id' => 'required|exists:vendors,id',
+            'transport_id' => 'required|exists:tbl_transport_name,id',
+            'vehicle_id' => 'required|exists:tbl_vehicle_type,id',
+            // 'business_id' => 'nullable|exists:purchase_orders,id',
+            'customer_po_no' => 'nullable|string|max:255',
+            'plant_id' => 'required|string|max:255',
+            'tax_type' => 'required|string|in:GST',
+            'tax_id' => 'required|exists:tbl_tax,id',
+            'vehicle_number' => 'required|string|max:50',
+            'po_date' => 'required|date',
+            'lr_number' => 'nullable|string|max:255',
+            'remark' => 'required|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:1024',
+            'addmore.*.part_item_id' => 'required|exists:tbl_part_item,id',
+            'addmore.*.unit_id' => 'required|exists:tbl_unit,id',
+            'addmore.*.hsn_id' => 'required|exists:tbl_hsn,id',
+            'addmore.*.process_id' => 'required|exists:tbl_process_master,id',
+            'addmore.*.quantity' => 'required|numeric|min:1',
+            'addmore.*.rate' => 'required|numeric|min:0',
+            'addmore.*.size' => 'required|string|max:255',
+            'addmore.*.amount' => 'required|numeric|min:0',
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:1024|min:1',
         ];
         $messages = [
+            'vendor_id.required' => 'The vendor company name is required.',
+            'transport_id.required' => 'The transport name is required.',
+            'vehicle_id.required' => 'The vehicle type is required.',
+            // 'business_id.exists' => 'The selected PO number is invalid.',
+            'plant_id.required' => 'The plant name is required.',
+            'tax_type.required' => 'The tax type is required.',
+            'tax_id.required' => 'The tax field is required.',
+            'vehicle_number.required' => 'The vehicle number is required.',
+            'po_date.required' => 'The PO date is required.',
+            'remark.required' => 'The remark field is required.',
+            'image.required' => 'The signature upload is required.',
+            'image.image' => 'The uploaded file must be an image.',
+            'image.mimes' => 'The uploaded file must be a JPEG, PNG, or JPG.',
+            'addmore.*.part_item_id.required' => 'The part item is required.',
+            'addmore.*.unit_id.required' => 'The unit field is required.',
+            'addmore.*.hsn_id.required' => 'The HSN code is required.',
+            'addmore.*.process_id.required' => 'The process is required.',
+            'addmore.*.quantity.required' => 'The quantity is required.',
+            'addmore.*.rate.required' => 'The rate is required.',
+            'addmore.*.size.required' => 'The size is required.',
+            'addmore.*.amount.required' => 'The amount is required.',
+            'image.required' => 'The logo is required.',
+            'image.image' => 'The logo must be a valid logo file.',
+            'image.mimes' => 'The logo must be in JPEG, PNG, JPG format.',
+            'image.max' => 'The logo size must not exceed 1MB.',
+            'image.min' => 'The logo size must not be less than 1KB.',
         ];
         try {
             $validation = Validator::make($request->all(), $rules, $messages);
@@ -424,36 +472,49 @@ class ReturnableChalanController extends Controller
     
             public function update(Request $request){
                 
-               $rules = [
-                    // 'design_name' => 'required|string|max:255',
-                    // 'design_page' => 'required|max:255',
-                    // 'project_name' => 'required|string|max:20',
-                    // 'time_allocation' => 'required|string|max:255',
-                    // 'image' => 'image|mimes:jpeg,png,jpg|max:10240|min:5',
+                $rules = [
+                    'vendor_id' => 'required|exists:vendors,id',
+                    'transport_id' => 'required|exists:tbl_transport_name,id',
+                    'vehicle_id' => 'required|exists:tbl_vehicle_type,id',
+                    // 'business_id' => 'nullable|exists:purchase_orders,id',
+                    'customer_po_no' => 'nullable|string|max:255',
+                    'plant_id' => 'required|string|max:255',
+                    'tax_type' => 'required|string|in:GST',
+                    'tax_id' => 'required|exists:tbl_tax,id',
+                    'vehicle_number' => 'required|string|max:50',
+                    'po_date' => 'required|date',
+                    'lr_number' => 'nullable|string|max:255',
+                    'remark' => 'required|string',
+                    'addmore.*.part_item_id' => 'required|exists:tbl_part_item,id',
+                    'addmore.*.unit_id' => 'required|exists:tbl_unit,id',
+                    'addmore.*.hsn_id' => 'required|exists:tbl_hsn,id',
+                    'addmore.*.process_id' => 'required|exists:tbl_process_master,id',
+                    'addmore.*.quantity' => 'required|numeric|min:1',
+                    'addmore.*.rate' => 'required|numeric|min:0',
+                    'addmore.*.size' => 'required|string|max:255',
+                    'addmore.*.amount' => 'required|numeric|min:0',
+
                 ];
-    
                 $messages = [
-                            // 'design_name.required' => 'The design name is required.',
-                            // 'design_name.string' => 'The design name must be a valid string.',
-                            // 'design_name.max' => 'The design name must not exceed 255 characters.',
-                            
-                            // 'design_page.required' => 'The design page is required.',
-                            // 'design_page.max' => 'The design page must not exceed 255 characters.',
-                            
-                            // 'project_name.required' => 'The project name is required.',
-                            // 'project_name.string' => 'The project name must be a valid string.',
-                            // 'project_name.max' => 'The project name must not exceed 20 characters.',
-                            
-                            // 'time_allocation.required' => 'The time allocation is required.',
-                            // 'time_allocation.string' => 'The time allocation must be a valid string.',
-                            // 'time_allocation.max' => 'The time allocation must not exceed 255 characters.',
-                            
-                            // 'image.required' => 'The image is required.',
-                            // 'image.image' => 'The image must be a valid image file.',
-                            // 'image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
-                            // 'image.max' => 'The image size must not exceed 10MB.',
-                            // 'image.min' => 'The image size must not be less than 5KB.',
-                        ];
+                    'vendor_id.required' => 'The vendor company name is required.',
+                    'transport_id.required' => 'The transport name is required.',
+                    'vehicle_id.required' => 'The vehicle type is required.',
+                    // 'business_id.exists' => 'The selected PO number is invalid.',
+                    'plant_id.required' => 'The plant name is required.',
+                    'tax_type.required' => 'The tax type is required.',
+                    'tax_id.required' => 'The tax field is required.',
+                    'vehicle_number.required' => 'The vehicle number is required.',
+                    'po_date.required' => 'The PO date is required.',
+                    'remark.required' => 'The remark field is required.',
+                    'addmore.*.part_item_id.required' => 'The part item is required.',
+                    'addmore.*.unit_id.required' => 'The unit field is required.',
+                    'addmore.*.hsn_id.required' => 'The HSN code is required.',
+                    'addmore.*.process_id.required' => 'The process is required.',
+                    'addmore.*.quantity.required' => 'The quantity is required.',
+                    'addmore.*.rate.required' => 'The rate is required.',
+                    'addmore.*.size.required' => 'The size is required.',
+                    'addmore.*.amount.required' => 'The amount is required.',
+                ];
         
                 try {
                     $validation = Validator::make($request->all(),$rules, $messages);

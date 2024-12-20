@@ -50,17 +50,10 @@ class DeliveryChalanController extends Controller
         ->leftJoin('tbl_vehicle_type', function ($join) {
             $join->on('tbl_delivery_chalan.vehicle_id', '=', 'tbl_vehicle_type.id');
         })
-    
-        // join('vendors', 'vendors.id', '=', 'tbl_delivery_chalan.vendor_id')
-        //   ->join('businesses', 'businesses.id', '=', 'tbl_delivery_chalan.business_id')
-        //   ->join('tbl_transport_name', 'tbl_transport_name.id', '=', 'tbl_delivery_chalan.transport_id')
-        //   ->join('tbl_vehicle_type', 'tbl_vehicle_type.id', '=', 'tbl_delivery_chalan.vehicle_id')
         ->select('tbl_delivery_chalan.id','tbl_delivery_chalan.vendor_id','tbl_delivery_chalan.transport_id',
-        'tbl_delivery_chalan.business_id','tbl_delivery_chalan.vehicle_id','vendors.vendor_name'
+        'tbl_delivery_chalan.business_id','tbl_delivery_chalan.vehicle_id','vendors.vendor_name', 'tbl_delivery_chalan.customer_po_no'
         ,'businesses.customer_po_number','tbl_transport_name.name as transport_name','tbl_vehicle_type.name as vehicle_name','tbl_delivery_chalan.remark'
         )->orderBy('tbl_delivery_chalan.updated_at', 'desc')->get();
-
- 
         return view(
             'organizations.store.delivery-chalan.list-delivery-chalan',
             compact(
@@ -68,7 +61,6 @@ class DeliveryChalanController extends Controller
             )
         );
     }
-
     public function create(Request $request)
     {
         $requistition_id = $request->requistition_id;
@@ -110,8 +102,56 @@ class DeliveryChalanController extends Controller
     public function store(Request $request)
     {
         $rules = [
+            'vendor_id' => 'required|exists:vendors,id',
+            'transport_id' => 'required|exists:tbl_transport_name,id',
+            'vehicle_id' => 'required|exists:tbl_vehicle_type,id',
+            // 'business_id' => 'nullable|exists:businesses,id',
+            'customer_po_no' => 'nullable|string|max:255',
+            'plant_id' => 'required|string|max:255',
+            'tax_type' => 'required|string|in:GST',
+            'tax_id' => 'required|exists:tbl_tax,id',
+            'vehicle_number' => 'required|string|max:50',
+            'po_date' => 'required|date',
+            'lr_number' => 'nullable|string|max:255',
+            'remark' => 'required|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:1024',
+            'addmore.*.part_item_id' => 'required|exists:tbl_part_item,id',
+            'addmore.*.unit_id' => 'required|exists:tbl_unit,id',
+            'addmore.*.hsn_id' => 'required|exists:tbl_hsn,id',
+            'addmore.*.process_id' => 'required|exists:tbl_process_master,id',
+            'addmore.*.quantity' => 'required|numeric|min:1',
+            'addmore.*.rate' => 'required|numeric|min:0',
+            'addmore.*.size' => 'required|string|max:255',
+            'addmore.*.amount' => 'required|numeric|min:0',
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:1024|min:1',
         ];
         $messages = [
+            'vendor_id.required' => 'The vendor company name is required.',
+            'transport_id.required' => 'The transport name is required.',
+            'vehicle_id.required' => 'The vehicle type is required.',
+            // 'business_id.exists' => 'The selected PO number is invalid.',
+            'plant_id.required' => 'The plant name is required.',
+            'tax_type.required' => 'The tax type is required.',
+            'tax_id.required' => 'The tax field is required.',
+            'vehicle_number.required' => 'The vehicle number is required.',
+            'po_date.required' => 'The PO date is required.',
+            'remark.required' => 'The remark field is required.',
+            'image.required' => 'The signature upload is required.',
+            'image.image' => 'The uploaded file must be an image.',
+            'image.mimes' => 'The uploaded file must be a JPEG, PNG, or JPG.',
+            'addmore.*.part_item_id.required' => 'The part item is required.',
+            'addmore.*.unit_id.required' => 'The unit field is required.',
+            'addmore.*.hsn_id.required' => 'The HSN code is required.',
+            'addmore.*.process_id.required' => 'The process is required.',
+            'addmore.*.quantity.required' => 'The quantity is required.',
+            'addmore.*.rate.required' => 'The rate is required.',
+            'addmore.*.size.required' => 'The size is required.',
+            'addmore.*.amount.required' => 'The amount is required.',
+            'image.required' => 'The logo is required.',
+            'image.image' => 'The logo must be a valid logo file.',
+            'image.mimes' => 'The logo must be in JPEG, PNG, JPG format.',
+            'image.max' => 'The logo size must not exceed 1MB.',
+            'image.min' => 'The logo size must not be less than 1KB.',
         ];
         try {
             $validation = Validator::make($request->all(), $rules, $messages);
@@ -136,64 +176,6 @@ class DeliveryChalanController extends Controller
             return redirect('storedept/add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
-
-    public function store_old(Request $request)
-    {
-        $rules = [
-            // 'client_name' => 'required',
-            // 'phone_number' => 'required',
-            // 'email' => 'required',
-            'tax_id' => 'required',
-            'invoice_date' => 'required',
-            // 'gst_number' => 'required',
-            'payment_terms' => 'required',
-            // 'client_address' => 'required',
-            'discount' => 'required',
-            'quote_no' => 'required',
-            // 'status' => 'required',
-            'note' => 'nullable',
-        ];
-
-
-        $amount = 0;
-        foreach ($request->items as $item) {
-            $amount += $item['amount'];
-        }
-
-        $itemsJson = json_encode($request->items);
-
-
-        $invoice = new PurchaseOrdersModel([
-            // 'client_name' => $request->client_name,
-            // 'phone_number' => $request->phone_number,
-            'tax_id' => $request->tax_id,
-            // 'email' => $request->email,
-            // 'client_address' => $request->client_address,
-            // 'gst_number' => $request->gst_number,
-            'invoice_date' => $request->invoice_date,
-            'payment_terms' => $request->payment_terms,
-            'items' => $itemsJson,
-            'discount' => $request->discount,
-            'total' => $amount,
-            'note' => $request->note,
-            'quote_no' => $request->quote_no,
-            // 'status' => $request->status,
-        ]);
-
-        if ($invoice->save()) {
-            $msg = 'Invoice has been created';
-            $status = 'success';
-
-            return redirect('storedept/list-delivery-chalan')->with(compact('msg', 'status'));
-        } else {
-            $msg = 'Failed to create invoice';
-            $status = 'error';
-
-            return redirect('storedept/add-delivery-chalan')->withInput()->with(compact('msg', 'status'));
-        }
-    }
-
-
 
     public function show(Request $request)
     {
@@ -224,14 +206,6 @@ class DeliveryChalanController extends Controller
         $title = 'view invoice';
         return view('organizations.store.delivery-chalan.show-delivery-chalan1', compact('invoice', 'title'));
     }
-
-    // public function destroy(Request $request)
-    // {
-    //     Invoice::findOrFail($request->id)->delete();
-    //     $notification = notify('Invoice has been deleted successfully');
-    //     return back()->with($notification);
-    // }
-
     public function destroy(Request $request){
         $delete_data_id = base64_decode($request->id);
         try {
@@ -378,36 +352,49 @@ class DeliveryChalanController extends Controller
     
             public function update(Request $request){
                 
-               $rules = [
-                    // 'design_name' => 'required|string|max:255',
-                    // 'design_page' => 'required|max:255',
-                    // 'project_name' => 'required|string|max:20',
-                    // 'time_allocation' => 'required|string|max:255',
-                    // 'image' => 'image|mimes:jpeg,png,jpg|max:10240|min:5',
+                $rules = [
+                    'vendor_id' => 'required|exists:vendors,id',
+                    'transport_id' => 'required|exists:tbl_transport_name,id',
+                    'vehicle_id' => 'required|exists:tbl_vehicle_type,id',
+                    // 'business_id' => 'nullable|exists:businesses,id',
+                    'customer_po_no' => 'nullable|string|max:255',
+                    'plant_id' => 'required|string|max:255',
+                    'tax_type' => 'required|string|in:GST',
+                    'tax_id' => 'required|exists:tbl_tax,id',
+                    'vehicle_number' => 'required|string|max:50',
+                    'po_date' => 'required|date',
+                    'lr_number' => 'nullable|string|max:255',
+                    'remark' => 'required|string',
+                    'addmore.*.part_item_id' => 'required|exists:tbl_part_item,id',
+                    'addmore.*.unit_id' => 'required|exists:tbl_unit,id',
+                    'addmore.*.hsn_id' => 'required|exists:tbl_hsn,id',
+                    'addmore.*.process_id' => 'required|exists:tbl_process_master,id',
+                    'addmore.*.quantity' => 'required|numeric|min:1',
+                    'addmore.*.rate' => 'required|numeric|min:0',
+                    'addmore.*.size' => 'required|string|max:255',
+                    'addmore.*.amount' => 'required|numeric|min:0',
+
                 ];
-    
                 $messages = [
-                            // 'design_name.required' => 'The design name is required.',
-                            // 'design_name.string' => 'The design name must be a valid string.',
-                            // 'design_name.max' => 'The design name must not exceed 255 characters.',
-                            
-                            // 'design_page.required' => 'The design page is required.',
-                            // 'design_page.max' => 'The design page must not exceed 255 characters.',
-                            
-                            // 'project_name.required' => 'The project name is required.',
-                            // 'project_name.string' => 'The project name must be a valid string.',
-                            // 'project_name.max' => 'The project name must not exceed 20 characters.',
-                            
-                            // 'time_allocation.required' => 'The time allocation is required.',
-                            // 'time_allocation.string' => 'The time allocation must be a valid string.',
-                            // 'time_allocation.max' => 'The time allocation must not exceed 255 characters.',
-                            
-                            // 'image.required' => 'The image is required.',
-                            // 'image.image' => 'The image must be a valid image file.',
-                            // 'image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
-                            // 'image.max' => 'The image size must not exceed 10MB.',
-                            // 'image.min' => 'The image size must not be less than 5KB.',
-                        ];
+                    'vendor_id.required' => 'The vendor company name is required.',
+                    'transport_id.required' => 'The transport name is required.',
+                    'vehicle_id.required' => 'The vehicle type is required.',
+                    // 'business_id.exists' => 'The selected PO number is invalid.',
+                    'plant_id.required' => 'The plant name is required.',
+                    'tax_type.required' => 'The tax type is required.',
+                    'tax_id.required' => 'The tax field is required.',
+                    'vehicle_number.required' => 'The vehicle number is required.',
+                    'po_date.required' => 'The PO date is required.',
+                    'remark.required' => 'The remark field is required.',
+                    'addmore.*.part_item_id.required' => 'The part item is required.',
+                    'addmore.*.unit_id.required' => 'The unit field is required.',
+                    'addmore.*.hsn_id.required' => 'The HSN code is required.',
+                    'addmore.*.process_id.required' => 'The process is required.',
+                    'addmore.*.quantity.required' => 'The quantity is required.',
+                    'addmore.*.rate.required' => 'The rate is required.',
+                    'addmore.*.size.required' => 'The size is required.',
+                    'addmore.*.amount.required' => 'The amount is required.',
+                ];
         
                 try {
                     $validation = Validator::make($request->all(),$rules, $messages);
@@ -438,33 +425,11 @@ class DeliveryChalanController extends Controller
                         ->with(['msg' => $e->getMessage(), 'status' => 'error']);
                 }
             }
-
-
-            // public function destroyAddmore(Request $request){
-            //     dd($request);
-            //     die();
-            //     $delete_data_id = base64_decode($request->id);
-            //     try {
-            //         $delete_record = $this->service->deleteByIdAddmore($delete_data_id);
-            //         if ($delete_record) {
-            //             $msg = $delete_record['msg'];
-            //             $status = $delete_record['status'];
-            //             if ($status == 'success') {
-            //                 return redirect('storedept/list-delivery-chalan')->with(compact('msg', 'status'));
-            //             } else {
-            //                 return redirect()->back()
-            //                     ->withInput()
-            //                     ->with(compact('msg', 'status'));
-            //             }
-            //         }
-            //     } catch (\Exception $e) {
-            //         return $e;
-            //     }
-            // } 
             public function destroyAddmore(Request $request)
 {
-    // dd($request); // Inspect the request data to see if delete_id is being passed
     $delete_data_id = $request->delete_id; // Get the delete ID from the request
+    // dd($delete_data_id);
+    // die();
     try {
         $delete_record = $this->service->deleteByIdAddmore($delete_data_id);
         if ($delete_record) {
@@ -484,21 +449,16 @@ class DeliveryChalanController extends Controller
     public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id)
     {
         try {
-            // Fetch purchase order details
             $purchaseOrder = $this->service->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id);
-    
             $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
-    
             $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
             $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
             $business_id = $data['purchaseOrder']->business_id;
             $purchaseOrder = $data['purchaseOrder'];
             $purchaseOrderDetails = $data['purchaseOrderDetails'];
-    
             if (!$purchaseOrder) {
                 return response()->json(['status' => 'error', 'message' => 'Purchase order not found'], 404);
             }
-    
             // Generate PDF with specific settings
             $pdf = Pdf::loadView('organizations.common-pages.delivery-chalan-view', [
                 'purchase_order_id' => $purchase_order_id,

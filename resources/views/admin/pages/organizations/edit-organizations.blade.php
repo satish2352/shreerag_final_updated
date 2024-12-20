@@ -94,13 +94,13 @@
                                             </div>
 
 
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                            {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                 <label for="address">Company Address:</label>
                                                 <input type="text" class="form-control" id="address" value="@if (old('address')) {{ old('address') }}@else{{ $editData->address }} @endif" name="address" placeholder="Enter company address">
                                                 @if ($errors->has('address'))
-                                                <span class="red-text"><?php echo $errors->first('address', ':message'); ?></span>
+                                                <span class="red-text"><?php //echo $errors->first('address', ':message'); ?></span>
                                             @endif
-                                            </div>
+                                            </div> --}}
 
                                             {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                 <label for="founding_date">Founding Date:</label>

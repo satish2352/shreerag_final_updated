@@ -39,13 +39,13 @@
                               
 
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                   
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <div class="all-form-element-inner">
                                             <form
                                                 action="{{ route('update-returnable-chalan', $editData[0]->purchase_main_id) }}"
                                                 method="POST" id="editDesignsForm" enctype="multipart/form-data">
                                                 @csrf
+                                                <input type="hidden" name="id" id="id" value="{{ $editData[0]->id }}">
                                                 <input type="hidden" name="purchase_main_id" id=""
                                                     class="form-control" value="{{ $editData[0]->purchase_main_id }}"
                                                     placeholder="">
@@ -146,6 +146,18 @@
                                                                     </div>
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
+                                                                            <label>Customer PO Number (optional) <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <div class="cal-icon">
+                                                                                <input class="form-control datetimepicker"
+                                                                                    type="text" name="customer_po_no"
+                                                                                    id="customer_po_no"
+                                                                                    value="{{ $editDataNew->customer_po_no }}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
                                                                             <label>Tax Type   <span
                                                                                 class="text-danger">*</span></label>
                                                                             <select class="form-control mb-2" name="tax_type" id="tax_type">
@@ -234,8 +246,8 @@
                                                                 </div>
                                                             @endif
                                                         @endforeach
-                                                        <button type="button" name="add" id="add"
-                                                            class="btn btn-success">Add More</button>
+                                                        {{-- <button type="button" name="add" id="add"
+                                                            class="btn btn-success">Add More</button> --}}
                                                         <div style="margin-top:10px;">
                                                             <table class="table table-bordered" id="dynamicTable">
                                                                 <tr>
@@ -244,10 +256,18 @@
                                                                     <th>Process</th>
                                                                     <th>Quantity</th>
                                                                     <th>Unit</th>
-                                                                    <th>Size</th>
                                                                     <th>Rate</th>
+                                                                    <th>Size</th>
                                                                     <th>Amount</th>
-                                                                    <th>Action</th>
+                                                                  <th>
+                                                                                            <button type="button"
+                                                                                                class="btn btn-sm btn-success font-18 mr-1"
+                                                                                                id="add"
+                                                                                                title="Add"
+                                                                                                data-repeater-create>
+                                                                                                <i class="fa fa-plus"></i>
+                                                                                            </button>
+                                                                                        </th>
                                                                 </tr>
                                                                 @foreach ($editData as $key => $editDataNew)
                                                                     <tr>
@@ -333,10 +353,10 @@
                                                                                 name="amount_{{ $key }}"
                                                                                 value="{{ $editDataNew->amount }}"
                                                                                 placeholder="Enter Amount"
-                                                                                class="form-control total_amount" />
+                                                                                class="form-control amount" />
                                                                         </td>
                                                                         <td>
-                                                                            <a data-id="{{ $editDataNew->id }}"
+                                                                            <a data-id="{{ $editDataNew->tbl_returnable_chalan_item_details_id }}"
                                                                                 class="delete-btn btn btn-danger m-1"
                                                                                 title="Delete"><i
                                                                                     class="fas fa-archive"></i></a>
@@ -359,6 +379,23 @@
                                                                             <textarea class="form-control" name="remark">@if (old('remark')){{ old('remark') }}@else{{ $editDataNew->remark }}@endif</textarea>
 
                                                                         </div>
+                                                           
+                                                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label for="image">Update Signature : <span class="text-danger">*</span></label>
+                                                                    <input type="file" name="image" class="form-control mb-2"
+                                                                        id="english_image" accept="image/*" placeholder="image">
+                                                                    @if ($errors->has('image'))
+                                                                        <span class="red-text"><?php echo $errors->first('image', ':message'); ?></span>
+                                                                    @endif
+                                                                </div>
+                                                                <img id="english"
+                                                                    src="{{ Config::get('DocumentConstant.RETURNABLE_CHALAN_VIEW') }}{{ $editDataNew->image }}"
+                                                                    class="img-fluid img-thumbnail" width="150" style="background-color: aliceblue;">
+                                                                <img id="english_imgPreview" src="#"
+                                                                    alt="Vision Image"
+                                                                    class="img-fluid img-thumbnail" width="150" style="display:none">
+                                                            </div>
                                                             @endif
                                                         @endforeach
                                                     </div>

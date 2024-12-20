@@ -77,7 +77,7 @@
                                                         <input type="text" class="form-control" id="description" name="description" value="{{ old('description', $business_details_data->description) }}" readonly>
                                                     </div>
                                                     <div  class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
-                                                        <label for="design_image">Upload Design Layout (PDF, 10KB - 5MB)   <span class="text-danger">*</span></label>  
+                                                        <label for="design_image">Upload Design Layout (PDF, 1KB - 5MB)   <span class="text-danger">*</span></label>  
                                                         {{-- <input type="file" class="form-control" accept="application/pdf" name="design_image"> --}}
                                                         <input type="file" class="form-control" accept="application/pdf" name="design_image" > <!-- 5MB -->
                                                         
@@ -86,7 +86,7 @@
                                                         @endif
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="bom_image">Upload BOM (Excel, 10KB - 5MB)  <span class="text-danger">*</span></label>
+                                                        <label for="bom_image">Upload BOM (Excel, 1KB - 5MB)  <span class="text-danger">*</span></label>
                                                         <input type="file" class="form-control" accept=".xls,.xlsx" name="bom_image" > <!-- 5MB -->
                                                     
                                                         @if ($errors->has("bom_image"))
@@ -153,12 +153,12 @@
                     design_image: {
                         required: "Please select a design layout PDF.",
                         accept: "Please select a valid design layout PDF file.",
-                        filesize: "The file must be between 10KB and 5MB."
+                        filesize: "The file must be between 1KB and 5MB."
                     },
                     bom_image: {
                         required: "Please select a BOM Excel file.",
                         accept: "Please select a valid BOM Excel file.",
-                        filesize: "The file must be between 10KB and 5MB."
+                        filesize: "The file must be between 1KB and 5MB."
                     }
                 },
                 errorPlacement: function(error, element) {

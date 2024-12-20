@@ -92,7 +92,7 @@ label.error {
                                             <div class="row">
                                                
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="bom_file_req">Bill Of Material (upload excel file min:10KB to 5MB) :</label>
+                                                    <label for="bom_file_req">Bill Of Material (upload excel file min:1KB to 5MB) :</label>
                                                      <input type="file" class="form-control" accept=".xls, .xlsx" id="bom_file_req"
                                                          name="bom_file_req" placeholder="Enter bom_file_req">
                                                          <input type="hidden" class="form-control" id="production_id"
@@ -155,7 +155,7 @@ label.error {
             bom_file_req: {
                 required: true,
                 fileExtension: ["xlsx", "xls"],
-                fileSize: [10, 5120], // Min 10KB and Max 2MB (2 * 1024 KB)
+                fileSize: [10, 5120], // Min 1KB and Max 2MB (2 * 1024 KB)
             },
         },
         messages: {

@@ -27,25 +27,30 @@ class ReturnableChalanRepository
         try {
             $dataOutput = new ReturnableChalan();
            $dataOutput->vendor_id = $request->vendor_id;
-          $dataOutput->business_id = $request->business_id;
+        //   $dataOutput->business_id = $request->business_id;
             $dataOutput->transport_id = $request->transport_id;
             $dataOutput->vehicle_id = $request->vehicle_id;
+            $dataOutput->customer_po_no = $request->customer_po_no;
             $dataOutput->plant_id = $request->plant_id;
             $dataOutput->tax_id = $request->tax_id;
             $dataOutput->tax_type = $request->tax_type;
             $dataOutput->vehicle_number = $request->vehicle_number;
             $dataOutput->po_date = $request->po_date;
-            // $dataOutput->dc_date = $request->dc_date;
-            // $dataOutput->dc_number = $request->dc_number;
+            $dataOutput->image = 'null';
             $dataOutput->dc_date = now();
-               // Retrieve the last dc_number and increment it
-        $lastChalan = ReturnableChalan::orderBy('dc_number', 'desc')->first();
-        $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
+            $lastChalan = ReturnableChalan::orderBy('dc_number', 'desc')->first();
+            $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
             $dataOutput->lr_number = $request->lr_number;
             $dataOutput->remark = $request->remark;
-          
+            if ($request->has('business_id')) {
+                $dataOutput->business_id = $request->business_id;
+            }
             $dataOutput->save();
             $last_insert_id = $dataOutput->id;
+            $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
+            $finalOutput = ReturnableChalan::find($last_insert_id);
+            $finalOutput->image = $imageName;
+            $finalOutput->save();
 
             foreach ($request->addmore as $index => $item) {
                 $designDetails = new ReturnableChalanItemDetails();
@@ -61,6 +66,7 @@ class ReturnableChalanRepository
                 $designDetails->save();
             }
             return [
+                'ImageName' => $imageName,
                 'status' => 'success'
             ];
         } catch (\Exception $e) {
@@ -93,8 +99,8 @@ class ReturnableChalanRepository
         try {
             $designData = ReturnableChalan::leftJoin('tbl_returnable_chalan_item_details', 'tbl_returnable_chalan.id', '=', 'tbl_returnable_chalan_item_details.returnable_chalan_id')
                 ->select('tbl_returnable_chalan_item_details.*', 'tbl_returnable_chalan_item_details.id as tbl_returnable_chalan_item_details_id', 
-                'tbl_returnable_chalan.id as purchase_main_id', 'tbl_returnable_chalan.vendor_id','tbl_returnable_chalan.transport_id', 'tbl_returnable_chalan.vehicle_id', 'tbl_returnable_chalan.business_id','tbl_returnable_chalan.tax_type', 'tbl_returnable_chalan.tax_id','tbl_returnable_chalan.po_date', 
-                'tbl_returnable_chalan.vehicle_number','tbl_returnable_chalan.plant_id', 'tbl_returnable_chalan.vehicle_number','tbl_returnable_chalan.remark')
+                'tbl_returnable_chalan.id as purchase_main_id', 'tbl_returnable_chalan.vendor_id','tbl_returnable_chalan.transport_id', 'tbl_returnable_chalan.vehicle_id', 'tbl_returnable_chalan.business_id','tbl_returnable_chalan.tax_type', 'tbl_returnable_chalan.tax_id','tbl_returnable_chalan.po_date','tbl_returnable_chalan.customer_po_no', 
+                'tbl_returnable_chalan.vehicle_number','tbl_returnable_chalan.plant_id', 'tbl_returnable_chalan.vehicle_number','tbl_returnable_chalan.remark','tbl_returnable_chalan.image','tbl_returnable_chalan.id')
                 ->where('tbl_returnable_chalan.id', $id)
                 ->get();
             if ($designData->isEmpty()) {
@@ -131,6 +137,7 @@ class ReturnableChalanRepository
                     'tbl_tax.name as tax_number',
                     'tbl_returnable_chalan.vehicle_number',
                     'tbl_returnable_chalan.dc_number',
+                    'tbl_returnable_chalan.image',
                     'tbl_returnable_chalan.dc_date'
                 )
                 ->where('tbl_returnable_chalan.id', $return_id)
@@ -173,6 +180,27 @@ class ReturnableChalanRepository
     public function updateAll($request){
        
         try {
+            $return_data = array();
+            $edit_id = $request->id;
+    // dd($request);
+    // die();
+            $dataOutputNew = ReturnableChalan::where('id', $edit_id)->first();
+
+            if (!$dataOutputNew) {
+                return [
+                    'msg' => 'Returnable Chalan not found.',
+                    'status' => 'error',
+                ];
+            }
+       
+          $imageName = $dataOutputNew->image; 
+
+        if ($request->hasFile('image')) {
+            $imageName = $dataOutputNew->id . '_' . rand(100000, 999999) . '.' . $request->file('image')->getClientOriginalExtension();
+            $dataOutputNew->image = $imageName;  
+        }
+        $dataOutputNew->save();
+
             for ($i = 0; $i <= $request->design_count; $i++) {
                 $designDetails = ReturnableChalanItemDetails::findOrFail($request->input("design_id_" . $i));
                 $designDetails->part_item_id = $request->input("part_item_id_" . $i);
@@ -191,21 +219,20 @@ class ReturnableChalanRepository
             $dataOutput->vendor_id = $request->vendor_id;
             $dataOutput->tax_type = $request->tax_type;
             $dataOutput->tax_id = $request->tax_id;
-            $dataOutput->business_id = $request->business_id;
+            // $dataOutput->business_id = $request->business_id;
             $dataOutput->transport_id = $request->transport_id;
             $dataOutput->vehicle_id = $request->vehicle_id;
+            $dataOutput->customer_po_no = $request->customer_po_no;
             $dataOutput->plant_id = $request->plant_id;
             $dataOutput->vehicle_number = $request->vehicle_number;
             $dataOutput->po_date = $request->po_date;
             $dataOutput->lr_number = $request->lr_number;
             $dataOutput->remark = $request->remark;
-
-          
+            $dataOutput->image = $imageName;
+            if ($request->has('business_id')) {
+                $dataOutput->business_id = $request->business_id;
+            }
             $dataOutput->save();
-
-           
-            
-           
             // Add new design details
             if ($request->has('addmore')) {
                 foreach ($request->addmore as $key => $item) {
@@ -238,7 +265,7 @@ class ReturnableChalanRepository
             $last_insert_id = $dataOutput->id;
 
             $return_data['last_insert_id'] = $last_insert_id;
-            // $return_data['image'] = $previousImage;
+            $return_data['image'] = $imageName;
             return  $return_data;
     
             // Returning success message
@@ -255,15 +282,24 @@ class ReturnableChalanRepository
             ];
         }
     }
-    public function deleteById($id){
-        try {
-            $deleteDataById = ReturnableChalan::find($id);
-            $deleteDataById->delete();
-            return $deleteDataById;
-        
-        } catch (\Exception $e) {
-            return $e;
-        }    }
+        public function deleteById($id){
+            try {
+                $deleteDataById = ReturnableChalan::find($id);
+                if ($deleteDataById) {
+                    if (file_exists_view(Config::get('DocumentConstant.RETURNABLE_CHALAN_ADD') . $deleteDataById->image)){
+                        removeImage(Config::get('DocumentConstant.RETURNABLE_CHALAN_ADD') . $deleteDataById->image);
+                    }
+                    $deleteDataById->delete();
+                    
+                    return $deleteDataById;
+                    
+                } else {
+                    return null;
+                }
+            } catch (\Exception $e) {
+                return $e;
+            }
+    }
         public function deleteByIdAddmore($id){
             try {
                 $deleteDataById = ReturnableChalanItemDetails::find($id);

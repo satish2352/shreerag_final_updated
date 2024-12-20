@@ -151,7 +151,7 @@
                     // image: {
                     //     required: true,
                     //     fileExtension: ["jpg", "jpeg", "png"],
-                    //     fileSize: [50, 1048], // Min 10KB and Max 2MB (2 * 1024 KB)
+                    //     fileSize: [50, 1048], // Min 1KB and Max 2MB (2 * 1024 KB)
                     //     imageDimensions: [200, 200, 1000, 1000], // Min width x height and Max width x height
                     // },
                 },

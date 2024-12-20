@@ -13,6 +13,87 @@
         .form-control {
             color: black;
         }
+
+        .table-responsive {
+            min-height: .01%;
+            overflow-x: visible !important;
+        }
+
+        /* The container of the dropdown button */
+        .dropdown-container {
+            position: relative;
+            /* Set position to relative to position the dropdown correctly */
+            display: inline-block;
+            width: 200px;
+            /* Ensure the container is wide enough for the button */
+        }
+
+        #dropdown-button {
+            text-align: left;
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* The dropdown options container */
+        .dropdown-options {
+            display: none;
+            /* Hidden by default */
+            position: absolute;
+            top: 100%;
+            /* Position the dropdown below the button */
+            left: 0;
+            right: 0;
+            /* Align to the container's width */
+            background-color: white;
+            border: 1px solid #ccc;
+            width: 100%;
+            /* Match button width */
+            max-height: 300px;
+            /* Limit height */
+            overflow-y: auto;
+            /* Allow scrolling if options exceed max height */
+            z-index: 1000;
+            /* Ensure the dropdown appears above other content */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 2px;
+            /* Small space between button and dropdown */
+        }
+
+        /* Show the dropdown when the 'active' class is added */
+        .dropdown-options.active {
+            display: block;
+        }
+
+        #search-input {
+            width: calc(100% - 8px);
+            /* Adjust width inside the input box */
+            margin: 5px;
+            padding: 5px;
+            border: 1px solid #ccc;
+        }
+
+        /* Dropdown list styles */
+        .dropdown-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .dropdown-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .dropdown-item[selected] {
+            font-weight: bold;
+        }
     </style>
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
@@ -170,6 +251,27 @@
                                                                 style="min-width:50px" readonly value="0">
                                                         </td>
                                                         <td>
+                                                            <div class="dropdown-container">
+                                                                <!-- Dropdown Button -->
+                                                                <button type="button" id="dropdown-button" class="btn btn-secondary form-control mb-2" style="min-width: 200px;">
+                                                                    Select Description
+                                                                </button>
+                                                                
+                                                                <!-- Dropdown Options with Search Input -->
+                                                                <div class="dropdown-options">
+                                                                    <input type="text" id="search-input" placeholder="Search..." class="form-control mb-2">
+                                                                    <ul class="dropdown-list">
+                                                                        {{-- <li class="dropdown-item" data-value="" selected>Select Description</li> --}}
+                                                                        @foreach ($dataOutputPartItem as $data)
+                                                                            <li class="dropdown-item" data-value="{{ $data['id'] }}">{{ $data['description'] }}</li>
+                                                                        @endforeach
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        
+
+                                                        {{-- <td>
                                                             <select class="form-control part-no mb-2"
                                                                 name="addmore[0][part_no_id]" id=""
                                                                 style="min-width:200px">
@@ -180,8 +282,7 @@
                                                                 @endforeach
                                                             </select>
 
-                                                            {{-- <input class="form-control part-no" name="addmore[0][part_no]" type="text" style="min-width:150px"> --}}
-                                                        </td>
+                                                        </td> --}}
                                                         <td>
                                                             <select class="form-control mb-2" name="addmore[0][hsn_id]"
                                                                 id="" style="min-width:100px">
@@ -483,6 +584,67 @@
                                     });
                                 });
                             }
+                            const dropdownButton = document.getElementById("dropdown-button");
+const dropdownOptions = document.querySelector(".dropdown-options");
+const searchInput = document.getElementById("search-input");
+const dropdownList = dropdownOptions.querySelector(".dropdown-list");
+let selectedItem = null;  // To track the selected item
+
+// Show/hide dropdown options
+dropdownButton.addEventListener("click", () => {
+    dropdownOptions.classList.toggle("active");
+    searchInput.value = ""; // Clear search input when dropdown is opened
+    filterOptions(""); // Reset options to show all
+});
+
+// Close dropdown when clicking outside
+document.addEventListener("click", (e) => {
+    if (!dropdownButton.contains(e.target) && !dropdownOptions.contains(e.target)) {
+        dropdownOptions.classList.remove("active");
+    }
+});
+
+// Filter options based on search input
+searchInput.addEventListener("input", () => {
+    const filter = searchInput.value.toLowerCase();
+    filterOptions(filter);
+});
+
+function filterOptions(filter) {
+    const items = dropdownList.querySelectorAll(".dropdown-item");
+    items.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(filter) || item.dataset.value === "" ? "" : "none";
+    });
+}
+
+// Handle item click
+dropdownList.addEventListener("click", (e) => {
+    if (e.target.classList.contains("dropdown-item")) {
+        selectedItem = e.target;
+        // Get the selected text
+        let selectedText = selectedItem.textContent;
+
+        // Limit the selected text to the first 3 words
+        const wordLimit = 3;
+        const words = selectedText.split(' ');
+        if (words.length > wordLimit) {
+            selectedText = words.slice(0, wordLimit).join(' ') + '...'; // Add ellipsis if more than 3 words
+        }
+
+        // Update button text with truncated selected item
+        dropdownButton.textContent = selectedText;
+
+        // Adjust button width based on selected text length
+        dropdownButton.style.width = `${selectedText.length + 5}ch`; // Add some padding for appearance
+        
+        dropdownOptions.classList.remove("active");  // Close the dropdown
+        // Optionally, you can store the selected value in a hidden input or elsewhere
+        // Example: document.querySelector('[name="addmore[0][part_no_id]"]').value = selectedItem.dataset.value;
+    }
+});
+
+
 
                             // Add more rows when the "Add More" button is clicked
                             $("#add_more_btn").click(function() {
