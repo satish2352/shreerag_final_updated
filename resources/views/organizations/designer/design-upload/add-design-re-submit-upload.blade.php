@@ -159,24 +159,24 @@
                     design_image: {
                         required: true,
                         fileExtension: ["pdf"], // Validate for PDF extension
-                        fileSize: [10, 6144], // Min 1KB and Max 2MB
+                        fileSize: [1, 6144], // Min 1KB and Max 2MB
                     },
                     bom_image: {
                         required: true,
                         fileExtension: ["xls", "xlsx"], // Validate for Excel files
-                        fileSize: [10, 6144], // Min 1KB and Max 2MB
+                        fileSize: [1, 6144], // Min 1KB and Max 2MB
                     },
                 },
                 messages: {
                     design_image: {
                         required: "Please select design layout PDF.",
                         fileExtension: "Only PDF files are allowed.",
-                        fileSize: "File size must be between 10 KB and 5MB.",
+                        fileSize: "File size must be between 1 KB and 5MB.",
                     },
                     bom_image: {
                         required: "Please select BOM Excel file.",
                         fileExtension: "Only Excel files (.xls, .xlsx) are allowed.",
-                        fileSize: "File size must be between 10 KB and 5MB.",
+                        fileSize: "File size must be between 1 KB and 5MB.",
                     },
                 },
                 submitHandler: function(form) {

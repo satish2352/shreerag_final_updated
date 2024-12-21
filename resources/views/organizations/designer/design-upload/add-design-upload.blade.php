@@ -128,7 +128,6 @@
         jQuery(document).ready(function($) {
             // Custom validation method for file size
             $.validator.addMethod('filesize', function(value, element, param) {
-                // Check if a file is selected
                 if (element.files.length === 0) return true; // Allow if no file selected
                 var fileSize = element.files[0].size; // Get file size in bytes
                 return this.optional(element) || (fileSize >= param.min && fileSize <= param.max);
@@ -141,12 +140,12 @@
                     design_image: {
                         required: true,
                         accept: "application/pdf",
-                        filesize:filesize: { min: 10240, max: 5242880 }
+                        filesize: { min: 1024, max: 5242880 } // 1KB to 5MB
                     },
                     bom_image: {
                         required: true,
                         accept: ".xls,.xlsx",
-                        filesize: filesize: { min: 10240, max: 5242880 }
+                        filesize: { min: 1024, max: 5242880 } // 1KB to 5MB
                     }
                 },
                 messages: {
@@ -185,11 +184,12 @@
             $(document).on('change', 'input[type="file"]', function() {
                 $(this).rules("remove"); // Remove existing rules
                 $(this).rules("add", { // Re-add rules for validation
-                    filesize: { min: 10 * 1024, max: $(this).data('maxsize') },
+                    filesize: { min: 1024, max: 5242880 }, // 1KB to 5MB
                 });
                 $(this).valid(); // Trigger validation immediately
             });
         });
     </script>
+    
     
 @endsection
