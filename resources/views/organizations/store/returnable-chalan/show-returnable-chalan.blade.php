@@ -77,6 +77,11 @@
         background-color: #f2f2f2;
         /* Optional: add background color for table header */
     }
+   .signImage{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 10px;
+   }
 
     /* table tr td {
                                 border: 1px solid red;
@@ -248,7 +253,7 @@
                                         </tr>
                                         <tr style="padding-top:10px font-family: 'Font Awesome 5 Free">
                                             <td colspan="2" class="no-border">
-                                                <img style="max-width:70px; max-height:70px; margin:50px 0px 0px 20px;" src="{{ Config::get('DocumentConstant.RETURNABLE_CHALAN_VIEW') . $showData['purchaseOrder']->image}}" alt="{{ strip_tags($showData['purchaseOrder']->image) }} Image" />
+                                                
                                             </td>
                                             <td colspan="8" class="no-border" style="padding-bottom: 40px;">
                                                 <div class="company-name-size" style="display: flex; justify-content: end; font-size:18px; text-transform: uppercase; font-family: 'Font Awesome 5 Free'; padding-top:20px;"><strong>For:
@@ -259,7 +264,10 @@
     
                                             <td class="no-border" colspan="3"><strong>Signature of Processor/Job
                                                     Worker</strong></td>
-                                            <td class="no-border" style="padding-left:24px;" colspan="5">
+                                            <td class="no-border " style="padding-left:24px;" colspan="5">
+                                               <div class="signImage">
+                                                <img style="max-width:70px; max-height:70px; text-align: center;" src="{{ Config::get('DocumentConstant.RETURNABLE_CHALAN_VIEW') . $showData['purchaseOrder']->image}}" alt="{{ strip_tags($showData['purchaseOrder']->image) }} Image" />
+                                               </div>
                                                 <div style="text-align: center; "> <strong>(Authorized Signatory)</strong></div>
                                             </td>
                                         </tr>

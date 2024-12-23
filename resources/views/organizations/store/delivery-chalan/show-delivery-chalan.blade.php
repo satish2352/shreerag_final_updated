@@ -87,6 +87,11 @@
                 font-weight: bold;
             }
         }
+        .signImage{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 10px;
+   }
     </style>
 
     <div class="data-table-area mg-tb-15" id="printableArea">
@@ -252,7 +257,6 @@
                                     </tr>
                                     <tr style="padding-top:10px font-family: 'Font Awesome 5 Free">
                                         <td colspan="2" class="no-border">
-                                            <img style="max-width:70px; max-height:70px; margin:50px 0px 0px 20px;" src="{{ Config::get('DocumentConstant.DELIVERY_CHALAN_VIEW') . $showData['purchaseOrder']->image}}" alt="{{ strip_tags($showData['purchaseOrder']->image) }} Image" />
                                         </td>
                                         <td colspan="7" class="no-border" style="padding-bottom: 40px;">
                                             <div class="company-name-size" style="display: flex; justify-content: end; font-size:18px; text-transform: uppercase; font-family: 'Font Awesome 5 Free'; padding-top:20px;"><strong>For:
@@ -264,6 +268,9 @@
                                         <td class="no-border" colspan="3"><strong>Signature of Processor/Job
                                                 Worker</strong></td>
                                         <td class="no-border" style="padding-left:24px;" colspan="5">
+                                            <div class="signImage">
+                                                <img style="max-width:70px; max-height:70px; margin:50px 0px 0px 20px;" src="{{ Config::get('DocumentConstant.DELIVERY_CHALAN_VIEW') . $showData['purchaseOrder']->image}}" alt="{{ strip_tags($showData['purchaseOrder']->image) }} Image" />
+                                            </div>
                                             <div style="text-align: center; "> <strong>(Authorized Signatory)</strong></div>
                                         </td>
                                     </tr>
