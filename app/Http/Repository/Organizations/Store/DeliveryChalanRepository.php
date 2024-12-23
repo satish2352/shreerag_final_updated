@@ -67,7 +67,8 @@ class DeliveryChalanRepository
                 $designDetails->hsn_id = $item['hsn_id'];
                 $designDetails->quantity = $item['quantity'];
                 $designDetails->size = $item['size'];
-                $designDetails->rate = $item['rate'];
+                // $designDetails->rate = $item['rate'];
+                $designDetails->rate = isset($item['rate']) && $item['rate'] !== '' ? $item['rate'] : null; // Handle optional rate
                 $designDetails->amount = $item['amount'];
                 $designDetails->save();
             }
@@ -266,7 +267,9 @@ class DeliveryChalanRepository
                     $designDetails->quantity = $item['quantity'];
                     $designDetails->unit_id = $item['unit_id'];
                     $designDetails->size = $item['size'];
-                    $designDetails->rate = $item['rate'];
+                    // $designDetails->rate = $item['rate'];
+                    $rate = $request->input("rate_" . $i);
+                    $designDetails->rate = isset($rate) && $rate !== '' ? $rate : null;
                     $designDetails->amount = $item['amount'];
                     // $designDetails->actual_quantity = '0';
                     // $designDetails->accepted_quantity = '0';
