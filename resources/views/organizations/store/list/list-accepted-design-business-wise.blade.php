@@ -103,7 +103,7 @@
                                                 <th data-field="re_design_image" data-editable="false">Revised Design Layout
                                                 </th>
                                                 <th data-field="re_bom_image" data-editable="false">Revised BOM</th>
-                                                <th data-field="action" data-editable="false">Action</th>
+                                                <th data-field="action" data-editable="false" ><span style="display: flex; justify-content: center;">Action</span></th>
                                             </tr>
                                         </thead>
                                       
@@ -143,14 +143,14 @@
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
                                                             <div style="display: inline-block; align-items: center;">
-                                                                <a href="{{route('edit-material-list-bom-wise-new-req',base64_encode($data->business_details_id))}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>Issue Product Material</button></a>
+                                                                <a href="{{route('edit-material-list-bom-wise-new-req',base64_encode($data->business_details_id))}}"><button data-toggle="tooltip" style="padding: 14px;" title="View Details" class="pd-setting-ed">Issue Product Material</button></a>
                                                             </div>
                                                             @if($data->material_send_production == 1)
                                                             <a href="{{ route('accepted-and-material-sent', base64_encode($data->business_details_id)) }}">
-                                                                <button class="pd-setting-ed enabled-btn" title="Requirement forwarded for production">Requirement forwarded For production</button>
+                                                                <button class="pd-setting-ed enabled-btn" style="width: 200px;" title="Requirement forwarded for production">Requirement forwarded For production</button>
                                                             </a>
                                                         @else
-                                                        <button class="pd-setting-ed disabled-btn" title="Requirement forwarded for production" disabled>Requirement forwarded For production</button>  
+                                                        <button class="pd-setting-ed disabled-btn" style="width: 200px;"  title="Requirement forwarded for production" disabled>Requirement forwarded For production</button>  
                                                         @endif
                                                             {{-- <a
                                                                 href="{{ route('accepted-and-material-sent', base64_encode($data->business_details_id)) }} "><button
@@ -165,7 +165,7 @@
                                                                     <a
                                                                     href="{{ route('need-to-create-req', base64_encode($data->business_details_id)) }} "><button
                                                                         data-toggle="tooltip" title="Need To Purchase"
-                                                                        class="pd-setting-ed">Need To Purchase</button></a>
+                                                                        class="pd-setting-ed" style="padding: 14px;">Need To Purchase</button></a>
                                                                     
                                                         </div>
                                                     </td>
