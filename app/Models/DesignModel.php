@@ -10,4 +10,8 @@ class DesignModel extends Model
     use HasFactory;
     protected $table = 'designs';
     protected $primaryKey = 'id';
+    public function business()
+    {
+        return $this->belongsTo(Business::class, 'business_id');
+    }
 }

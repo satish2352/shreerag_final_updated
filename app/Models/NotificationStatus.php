@@ -10,4 +10,9 @@ class NotificationStatus extends Model
     use HasFactory;
     protected $table = 'tbl_notification_status';
     protected $primaryKey = 'id';
+
+    public function notificationStatus()
+{
+    return $this->belongsTo(Business::class, 'business_id');
+}
 }

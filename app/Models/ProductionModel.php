@@ -11,5 +11,10 @@ class ProductionModel extends Model
     protected $table = 'production';
     protected $primaryKey = 'id';
     protected $fillable = ['title','description', 'image'];
+
+    public function productionModel()
+    {
+        return $this->belongsTo(Business::class, 'business_id');
+    }
     
 }

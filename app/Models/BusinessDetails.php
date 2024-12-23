@@ -11,5 +11,10 @@ class BusinessDetails extends Model
     protected $table = 'businesses_details';
     protected $primaryKey = 'id';
     protected $fillable = ['product_name', 'description', 'quantity', 'rate'];
+    
+    public function business()
+    {
+        return $this->belongsTo(Business::class, 'business_id');
+    }
 
 }

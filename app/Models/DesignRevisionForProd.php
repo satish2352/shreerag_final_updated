@@ -10,6 +10,10 @@ class DesignRevisionForProd extends Model
     use HasFactory;
     protected $table = 'design_revision_for_prod';
     protected $primaryKey = 'id';
+    public function designRevisionForProd()
+    {
+        return $this->belongsTo(Business::class, 'business_id');
+    }
 }
 
 

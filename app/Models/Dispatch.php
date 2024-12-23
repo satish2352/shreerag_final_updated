@@ -21,5 +21,9 @@ protected $fillable = [
     'is_active', 
     'is_deleted'
 ];
+public function dispatch()
+{
+    return $this->belongsTo(Business::class, 'business_id');
+}
 
 }

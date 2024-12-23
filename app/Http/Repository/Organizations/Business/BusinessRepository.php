@@ -286,21 +286,60 @@ class BusinessRepository
                 return $e;
             }
         }
-    public function deleteById($id)
-    {
-        try {
-            $deleteDataById = Business::find($id);
 
-            if ($deleteDataById) {
-                $deleteDataById->delete();
-                return $deleteDataById;
-            } else {
-                return null;
-            }
-        } catch (\Exception $e) {
-            return $e;
+        public function deleteById($id)
+{
+    try {
+        $business = Business::find($id);
+
+        if ($business) {
+            $business->businessDetails()->delete(); 
+            $business->designModel()->delete(); 
+
+            $business->businessApplicationProcesses()->delete(); 
+            $business->designRevisionForProd()->delete(); 
+            $business->productionModel()->delete(); 
+            $business->productionDetails()->delete(); 
+            $business->purchaseOrderModel()->delete(); 
+            $business->requisition()->delete(); 
+            $business->customerProductQuantityTracking()->delete(); 
+            $business->deliveryChalan()->delete(); 
+            $business->dispatch()->delete(); 
+            $business->logistics()->delete(); 
+            $business->notificationStatus()->delete(); 
+            $business->returnableChalan()->delete(); 
+
+            // Delete the main business record
+            $business->delete();
+
+            return true;
+        } else {
+            return false; // Record not found
         }
+    } catch (\Exception $e) {
+        \Log::error('Error deleting business: ' . $e->getMessage());
+        throw $e; // Re-throw the exception to be handled by the service
     }
+}
+
+
+    // public function deleteById($id)
+    // {
+    //     try {
+    //         $deleteDataById = Business::find($id);
+    //         $business->orders()->delete(); // Delete related business details
+    //         $business->invoices()->delete(); // Delete related design models
+
+    //         if ($deleteDataById) {
+    //             $deleteDataById->delete();
+    //             return $deleteDataById;
+    //         } else {
+    //             return null;
+    //         }
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
 
     public function acceptPurchaseOrder($purchase_order_id, $business_id)
     {

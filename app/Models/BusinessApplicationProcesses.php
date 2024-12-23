@@ -10,4 +10,9 @@ class BusinessApplicationProcesses extends Model
     use HasFactory;
     protected $table = 'business_application_processes';
     protected $primaryKey = 'id';
+
+  public function businessApplicationProcesses()
+    {
+        return $this->belongsTo(Business::class, 'business_id');
+    }
 }

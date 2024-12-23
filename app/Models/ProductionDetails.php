@@ -18,5 +18,10 @@ class ProductionDetails extends Model
     'business_id',
     'design_id',
     'production_id'];
+
+    public function productionDetails()
+    {
+        return $this->belongsTo(Business::class, 'business_id');
+    }
     
 }

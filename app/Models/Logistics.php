@@ -21,4 +21,9 @@ protected $fillable = [
     'is_deleted'
 ];
 
+public function logistics()
+{
+    return $this->belongsTo(Business::class, 'business_id');
+}
+
 }
