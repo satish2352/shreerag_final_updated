@@ -152,6 +152,7 @@ class DeliveryChalanController extends Controller
             'image.mimes' => 'The logo must be in JPEG, PNG, JPG format.',
             'image.max' => 'The logo size must not exceed 1MB.',
             'image.min' => 'The logo size must not be less than 1KB.',
+            
         ];
         try {
             $validation = Validator::make($request->all(), $rules, $messages);
