@@ -34,6 +34,7 @@ use Config;
     {
         try {
             $result = $this->repo->submitBOMToOwner($request);
+           
             $path = Config::get('DocumentConstant.RETURNABLE_CHALAN_ADD');
             $ImageName = $result['ImageName'];
             uploadImage($request, 'image', $path, $ImageName);

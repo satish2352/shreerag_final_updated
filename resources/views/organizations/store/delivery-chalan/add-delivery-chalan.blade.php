@@ -692,8 +692,8 @@
                         // min: 0.01,
                         messages: {
                             required: "Please enter the size.",
-                            number: "Please enter a valid number for size.",
-                            min: "size must be a positive number."
+                            // number: "Please enter a valid number for size.",
+                            // min: "size must be a positive number."
                         }
                     });
                     row.find('.total_amount').rules("add", {
