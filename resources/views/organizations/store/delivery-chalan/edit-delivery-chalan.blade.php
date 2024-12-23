@@ -549,10 +549,10 @@
                         maxlength: 255
                     },
 
-                    'rate_0': {
-                        required: true,
-                        number: true,
-                    },
+                    // 'rate_0': {
+                    //     required: true,
+                    //     number: true,
+                    // },
                     'amount_0': {
                         required: true,
                     },

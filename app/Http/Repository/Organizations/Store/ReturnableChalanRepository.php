@@ -65,8 +65,7 @@ class ReturnableChalanRepository
                 $designDetails->amount = $item['amount'];
                 $designDetails->save();
             }
-            dd($designDetails);
-            die();
+           
             return [
                 'ImageName' => $imageName,
                 'status' => 'success'
