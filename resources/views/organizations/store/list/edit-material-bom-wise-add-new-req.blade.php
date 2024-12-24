@@ -24,8 +24,6 @@
             <div class="sparkline12-graph">
                 <div class="basic-login-form-ad">
                     <div class="row">
-                      
-
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             @if (Session::get('status') == 'success')
                                 <div class="col-12 grid-margin">
@@ -35,7 +33,6 @@
                                     </div>
                                 </div>
                             @endif
-
                             @if (Session::get('status') == 'error')
                                 <div class="col-12 grid-margin">
                                     <div class="alert alert-custom-danger " id="error-alert">
@@ -46,12 +43,99 @@
                             @endif
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="all-form-element-inner">
+                                    @if (Session::get('status') == 'error')
+                                    <div class="col-12 grid-margin">
+                                        <div class="alert alert-custom-danger " id="error-alert">
+                                            <button type="button" data-bs-dismiss="alert"></button>
+                                            <strong style="color: red;">Error!</strong> {!! session('msg') !!}
+                                        </div>
+                                    </div>
+                                @endif
+                                
+
                                     <form action="{{ route('update-material-list-bom-wise-new-req', $id) }}" method="POST" id="addProductForm" enctype="multipart/form-data">
                                         @csrf
-                                        {{-- <input type="hidden" name="id" id="id" value="{{ $productDetails->id }}"> --}}
                                         <input type="hidden" name="business_details_id" id="business_details_id" value="{{ $id }}">
-                                        {{-- <input type="hidden" name="business_details_id" id="business_details_id" value="{{ $business_id }}"> --}}
-                                        {{-- <input type="hidden" name="production_id" id="production_id" value="{{ $productDetails->productionId }}"> --}}
+                                    
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <label for="product_name">Name:</label>
+                                                <input type="text" class="form-control" id="name" name="product_name" value="{{ $productDetails->product_name }}" placeholder="Enter Product Name" readonly>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <label for="description">Description:</label>
+                                                <input type="text" class="form-control" id="description" name="description" value="{{ $productDetails->description }}" placeholder="Enter Description" readonly>
+                                            </div>
+                                        </div>
+                                    
+                                        <div class="table-responsive">
+                                            <table class="table table-hover table-white repeater" id="purchase_order_table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Part Item</th>
+                                                        <th>Quantity</th>
+                                                        <th>Unit</th>
+                                                        <th>Send to Production</th>
+                                                        <th>
+                                                            <button type="button" class="btn btn-sm btn-success" id="add_more_btn">
+                                                                <i class="fa fa-plus"></i>
+                                                            </button>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($dataGroupedById as $key => $items)
+                                                        @foreach ($items as $index => $item)
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="text" name="addmore[{{ $index }}][id]" class="form-control" readonly value="{{ $index + 1 }}">
+                                                                </td>
+                                                                <td>
+                                                                    <select class="form-control part-no" name="addmore[{{ $index }}][part_item_id]" required>
+                                                                        <option value="">Select Part Item</option>
+                                                                        @foreach ($dataOutputPartItem as $partItem)
+                                                                            <option value="{{ $partItem->id }}" {{ $partItem->id == $item->part_item_id ? 'selected' : '' }}>
+                                                                                {{ $partItem->description }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <input class="form-control quantity" name="addmore[{{ $index }}][quantity]" type="number" step="any" required value="{{ $item->quantity }}">
+                                                                </td>
+                                                                <td>
+                                                                    <select class="form-control unit" name="addmore[{{ $index }}][unit]" required>
+                                                                        <option value="">Select Unit</option>
+                                                                        @foreach ($dataOutputUnitMaster as $unitName)
+                                                                            <option value="{{ $unitName->id }}" {{ $unitName->id == $item->unit ? 'selected' : '' }}>
+                                                                                {{ $unitName->name }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="checkbox" name="addmore[{{ $index }}][material_send_production]" value="1" {{ $item->material_send_production ? 'checked' : '' }}>
+                                                                </td>
+                                                                <td>
+                                                                    <button type="button" class="btn btn-sm btn-danger remove-row">
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="login-btn-inner">
+                                            <button class="btn btn-sm btn-primary" type="submit" id="saveBtn">Save Data</button>
+                                        </div>
+                                    </form>
+                                    
+                                    {{-- <form action="{{ route('update-material-list-bom-wise-new-req', $id) }}" method="POST" id="addProductForm" enctype="multipart/form-data">
+                                        @csrf
+                                        <input type="hidden" name="business_details_id" id="business_details_id" value="{{ $id }}">
                                     
                                         <div class="row">
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -124,98 +208,10 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                    
                                         <div class="login-btn-inner">
                                             <button class="btn btn-sm btn-primary" type="submit" id="saveBtn">Save Data</button>
                                         </div>
-                                    </form>
-                                    
-                             {{-- <form action="{{ route('update-material-list-bom-wise', $business_id) }}" method="POST" id="addProductForm" enctype="multipart/form-data">
-                                @csrf
-                                <input type="hidden" name="id" id="id" value="{{ $productDetails->id }}">
-
-                                <input type="hidden" name="business_details_id" id="business_details_id" value="{{ $business_id }}">
-                                <input type="hidden" name="production_id" id="production_id" value="{{ $productDetails->productionId }}"> <!-- Hidden field for productionId -->
-                                <div class="row">
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <label for="product_name">Name:</label>
-                                        <input type="text" class="form-control" id="name" name="product_name" value="{{ $productDetails->product_name }}" placeholder="Enter Product Name" readonly>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <label for="description">Description:</label>
-                                        <input type="text" class="form-control" id="description" name="description" value="{{ $productDetails->description }}" placeholder="Enter Description" readonly>
-                                    </div>
-                                </div>
-                                
-                                <div class="table-responsive">
-                                    <table class="table table-hover table-white repeater" id="purchase_order_table">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Part Item</th>
-                                                <th>Quantity</th>
-                                                <th>Unit</th>
-                                                <th>Send to Production</th>
-
-                                                <th>
-                                                    <button type="button" class="btn btn-sm btn-success" id="add_more_btn">
-                                                        <i class="fa fa-plus"></i>
-                                                    </button>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($dataGroupedById as $key => $items)
-                                                @foreach ($items as $index => $item)
-                                                    <tr>
-                                                        <td>
-                                                            <input type="text" name="addmore[{{ $index }}][id]" class="form-control" readonly value="{{ $index + 1 }}">
-                                                        </td>
-                                                        <td>
-                                                            <select class="form-control part-no" name="addmore[{{ $index }}][unit]">
-                                                                <option value="">Select Part Item</option>
-                                                                @foreach ($dataOutputPartItem as $partItem)
-                                                                    <option value="{{ $partItem->id }}" {{ $partItem->id == $item->unit ? 'selected' : '' }}>
-                                                                        {{ $partItem->description }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </td>
-                                                        <td>
-                                                            <input class="form-control quantity" name="addmore[{{ $index }}][quantity]" type="text" value="{{ $item->quantity }}">
-                                                        </td>
-                                                        <td>
-                                                            <select class="form-control unit" name="addmore[{{ $index }}][unit]">
-                                                                <option value="">Select Unit</option>
-                                                                @foreach ($dataOutputUnitMaster as $unitName)
-                                                                    <option value="{{ $unitName->id }}" {{ $unitName->id == $item->unit ? 'selected' : '' }}>
-                                                                        {{ $unitName->name }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </td>                                                        
-                                                        <td>
-                                                            <input type="checkbox" name="addmore[{{ $index }}][material_send_production]" value="1" {{ $item->material_send_production ? 'checked' : '' }}>
-
-                                                        </td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-sm btn-danger remove-row">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="login-btn-inner">
-                                    <button class="btn btn-sm btn-primary" type="submit" id="saveBtn">Save Data</button>
-                                </div>
-                            </form>
-                             --}}
-                                
-                                    
+                                    </form> --}}
                                 </div>
                             </div>
                         </div>
@@ -275,50 +271,97 @@
                 }
             }
         });
-    
         // Add more rows dynamically
         var i_count = $("#purchase_order_table tbody tr").length;
-        $("#add_more_btn").click(function() {
-            i_count++;
-            var newRow = `
-                <tr>
-                    <td>
-                        <input type="text" name="addmore[${i_count}][id]" class="form-control" readonly value="${i_count}">
-                    </td>
-                    <td>
-                        <select class="form-control part-no" name="addmore[${i_count}][part_item_id]">
-                            <option value="">Select Part Item</option>
-                            @foreach ($dataOutputPartItem as $data)
-                                <option value="{{ $data['id'] }}">{{ $data['description'] }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        <input class="form-control quantity" name="addmore[${i_count}][quantity]" type="text">
-                    </td>
-                    <td>
-                        <select class="form-control mb-2 unit" name="addmore[${i_count}][unit]">
-                            <option value="">Select Unit</option>
-                            @foreach ($dataOutputUnitMaster as $data)
-                                <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        <input type="checkbox" class="material_send_production" name="addmore[${i_count}][material_send_production]" value="1">
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-sm btn-danger remove-row">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `;
+        $(document).ready(function() {
+    var i_count = $("#purchase_order_table tbody tr").length;
+
+    // Add new row
+    $("#add_more_btn").click(function() {
+        i_count++;
+        var newRow = `
+            <tr>
+                <td>
+                    <input type="text" name="addmore[${i_count}][id]" class="form-control" readonly value="${i_count}">
+                </td>
+                <td>
+                    <select class="form-control part-no" name="addmore[${i_count}][part_item_id]" required>
+                        <option value="">Select Part Item</option>
+                        @foreach ($dataOutputPartItem as $data)
+                            <option value="{{ $data->id }}">{{ $data->description }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td>
+                    <input class="form-control quantity" name="addmore[${i_count}][quantity]" type="number" step="any" required>
+                </td>
+                <td>
+                    <select class="form-control unit" name="addmore[${i_count}][unit]" required>
+                        <option value="">Select Unit</option>
+                        @foreach ($dataOutputUnitMaster as $data)
+                            <option value="{{ $data->id }}">{{ $data->name }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td>
+                    <input type="checkbox" name="addmore[${i_count}][material_send_production]" value="1">
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-danger remove-row">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </td>
+            </tr>`;
+        $("#purchase_order_table tbody").append(newRow);
+    });
+
+    // Remove row
+    $("#purchase_order_table").on("click", ".remove-row", function() {
+        $(this).closest('tr').remove();
+    });
+});
+
+        // $("#add_more_btn").click(function() {
+        //     i_count++;
+        //     var newRow = `
+        //         <tr>
+        //             <td>
+        //                 <input type="text" name="addmore[${i_count}][id]" class="form-control" readonly value="${i_count}">
+        //             </td>
+        //             <td>
+        //                 <select class="form-control part-no" name="addmore[${i_count}][part_item_id]">
+        //                     <option value="">Select Part Item</option>
+        //                     @foreach ($dataOutputPartItem as $data)
+        //                         <option value="{{ $data['id'] }}">{{ $data['description'] }}</option>
+        //                     @endforeach
+        //                 </select>
+        //             </td>
+        //             <td>
+        //                 <input class="form-control quantity" name="addmore[${i_count}][quantity]" type="text">
+        //             </td>
+        //             <td>
+        //                 <select class="form-control mb-2 unit" name="addmore[${i_count}][unit]">
+        //                     <option value="">Select Unit</option>
+        //                     @foreach ($dataOutputUnitMaster as $data)
+        //                         <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+        //                     @endforeach
+        //                 </select>
+        //             </td>
+        //             <td>
+        //                 <input type="checkbox" class="material_send_production" name="addmore[${i_count}][material_send_production]" value="1">
+        //             </td>
+        //             <td>
+        //                 <button type="button" class="btn btn-sm btn-danger remove-row">
+        //                     <i class="fa fa-trash"></i>
+        //                 </button>
+        //             </td>
+        //         </tr>
+        //     `;
     
-            $("#purchase_order_table tbody").append(newRow);
-            validator.resetForm(); // Reset validation state
-            initializeValidation($("#purchase_order_table"));
-        });
+        //     $("#purchase_order_table tbody").append(newRow);
+        //     validator.resetForm(); // Reset validation state
+        //     initializeValidation($("#purchase_order_table"));
+        // });
     
         // Remove a row
         $("#purchase_order_table").on("click", ".remove-row", function() {

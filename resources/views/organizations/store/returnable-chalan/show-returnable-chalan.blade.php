@@ -301,7 +301,9 @@
                 printWindow.document.write('.font-size-delivery { font-size: 14px !important; }'); // Corrected CSS for company-name-size     
                 printWindow.document.write('table td {padding: 8px;}'); // Corrected CSS for company-name-size     
                 printWindow.document.write('.top-spacing {padding: 0px; width: 100%; display: flex; justify-content: space-between;}'); // Corrected CSS for company-name-size     
-    
+                printWindow.document.write('.signImage{display: flex; justify-content: center; padding-bottom: 10px; }'); // Corrected CSS for company-name-size     
+
+                
                    
                 printWindow.document.write('</style>');
                 printWindow.document.write('</head><body>');

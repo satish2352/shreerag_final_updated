@@ -152,7 +152,8 @@ class DeliveryChalanRepository
                     'tbl_delivery_chalan.remark',
                     'tbl_delivery_chalan.dc_number',
                     'tbl_delivery_chalan.image',
-                    'tbl_delivery_chalan.dc_date'
+                    'tbl_delivery_chalan.dc_date',
+                     'tbl_delivery_chalan.remark'
                 )
                 ->first();
             if (!$purchaseOrder) {

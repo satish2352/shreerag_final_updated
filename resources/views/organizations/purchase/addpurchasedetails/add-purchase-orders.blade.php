@@ -196,7 +196,7 @@
                                                         <td>
                                                             <select class="form-control mb-2 part-no"name="addmore[0][part_no_id]"
                                                                 id="" style="min-width:100px">
-                                                                <option value="" default>Select HSN</option>
+                                                                <option value="" default>Select Description</option>
                                                                 @foreach ($dataOutputPartItem as $data)
                                                                     <option value="{{ $data['id'] }}">
                                                                         {{ $data['description'] }}</option>

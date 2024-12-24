@@ -140,7 +140,8 @@ class ReturnableChalanRepository
                     'tbl_returnable_chalan.vehicle_number',
                     'tbl_returnable_chalan.dc_number',
                     'tbl_returnable_chalan.image',
-                    'tbl_returnable_chalan.dc_date'
+                    'tbl_returnable_chalan.dc_date',
+                      'tbl_returnable_chalan.remark'
                 )
                 ->where('tbl_returnable_chalan.id', $return_id)
                 ->first();
