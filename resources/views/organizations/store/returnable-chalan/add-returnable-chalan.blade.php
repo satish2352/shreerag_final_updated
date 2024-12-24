@@ -490,7 +490,7 @@
                     // },  
                     lr_number: {
                         required: "Please enter lr number.",
-                        date: "Please enter a valid lr number."
+                        // date: "Please enter a valid lr number."
                     },
                     remark: {
                         required: "Please enter remark.",
