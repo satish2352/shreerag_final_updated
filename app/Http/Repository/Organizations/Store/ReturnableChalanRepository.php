@@ -30,7 +30,7 @@ class ReturnableChalanRepository
         //   $dataOutput->business_id = $request->business_id;
             $dataOutput->transport_id = $request->transport_id;
             $dataOutput->vehicle_id = $request->vehicle_id;
-            $dataOutput->customer_po_no = $request->customer_po_no;
+            // $dataOutput->customer_po_no = $request->customer_po_no;
             $dataOutput->plant_id = $request->plant_id;
             $dataOutput->tax_id = $request->tax_id;
             $dataOutput->tax_type = $request->tax_type;
@@ -45,6 +45,10 @@ class ReturnableChalanRepository
             if ($request->has('business_id')) {
                 $dataOutput->business_id = $request->business_id;
             }
+            if ($request->has('customer_po_no')) {
+                $dataOutput->customer_po_no = $request->customer_po_no;
+            }
+            // $dataOutput->customer_po_no = $request->customer_po_no;
             $dataOutput->save();
             $last_insert_id = $dataOutput->id;
             $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();

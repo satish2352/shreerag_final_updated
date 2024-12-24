@@ -63,6 +63,15 @@ return $data_output;
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
+    public function updateProductMaterialWiseAddNewReq($request) {
+        try {
+            $result = $this->repo->updateProductMaterialWiseAddNewReq($request);
+            return $result; // Ensure this is always an array
+        } catch (\Exception $e) {
+            return ['status' => 'error', 'message' => $e->getMessage()];
+        }
+    }
+    
     // public function updateProductMaterialWiseAddNewReq($request) {
     //     try {
     //         $result = $this->repo->updateProductMaterialWiseAddNewReq($request);
@@ -73,15 +82,6 @@ return $data_output;
     //         return ['status' => 'error', 'message' => $e->getMessage()];
     //     }
     // }
-    public function updateProductMaterialWiseAddNewReq($request) {
-        try {
-            $result = $this->repo->updateProductMaterialWiseAddNewReq($request);
-            return $result;
-        } catch (\Exception $e) {
-            return ['status' => 'error', 'message' => $e->getMessage()];
-        }
-    }
-    
     public function editProductMaterialWiseAdd($purchase_orders_id, $business_id) {
         try {
             $data_output = $this->repo->editProductMaterialWiseAdd($purchase_orders_id, $business_id);
