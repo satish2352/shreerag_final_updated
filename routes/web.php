@@ -230,6 +230,11 @@ Route::group(['middleware' => ['admin']], function () {
 
         Route::get('/edit-material-list-bom-wise-new-req/{id}', ['as' => 'edit-material-list-bom-wise-new-req', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@editProductMaterialWiseAddNewReq']);
         Route::post('/update-material-list-bom-wise-new-req/{id}', ['as' => 'update-material-list-bom-wise-new-req', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@updateProductMaterialWiseAddNewReq']);
+     
+        Route::get('/check-stock-quantity', ['as' => 'check-stock-quantity', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@checkStockQuantity']);
+
+        // Route::get('/check-stock-quantity', [YourController::class, 'checkStockQuantity'])->name('check-stock-quantity');
+
 
         Route::get('/edit-material-list-bom-wise/{purchase_orders_id}/{business_id}', ['as' => 'edit-material-list-bom-wise', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@editProductMaterialWiseAdd']);
         Route::post('/update-material-list-bom-wise/{id}', ['as' => 'update-material-list-bom-wise', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@updateProductMaterialWiseAdd']);

@@ -12,7 +12,8 @@ use Carbon;
 use App\Models\ {
     PartItem,
     User,
-    UnitMaster
+    UnitMaster,
+    ItemStock
 
 };
 
@@ -109,102 +110,128 @@ class StoreController extends Controller
             return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
         }
     }
-    // public function updateProductMaterialWiseAddNewReq(Request $request) {
-    //     $rules = [
-    //     ];
-        
-    //     $messages = [
-    //     ];
-        
-    //     $validation = Validator::make($request->all(), $rules, $messages);
-        
-    //     if ($validation->fails()) {
-    //         return redirect()->back()->withInput()->withErrors($validation);
-    //     }
-    
-    //     try {
-    //                    $updateData = $this->service->updateProductMaterialWiseAddNewReq($request);
-    
-    //         if ($updateData['status'] == 'success') {
-    //             return redirect('storedept/list-accepted-design-from-prod')->with(['status' => 'success', 'msg' => $updateData['message']]);
-    //         } else {
-    //             return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $updateData['message']]);
-    //         }
-    //     } catch (\Exception $e) {
-    //         return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $e->getMessage()]);
-    //     }
-    // }
-    // public function updateProductMaterialWiseAddNewReq(Request $request)
+
+    // public function checkStockQuantity(Request $request)
     // {
-    //     $rules = [
-    //         'addmore.*.part_item_id' => 'required|exists:tbl_part_item,id',
-    //         'addmore.*.quantity' => 'required|numeric|min:1',
-    //         'addmore.*.unit' => 'required|exists:tbl_unit,id',
-    //     ];
+    //     $partItemId = $request->input('part_item_id');
+   
+    //     $quantity = $request->input('quantity');
     
-    //     $messages = [
-    //         'addmore.*.part_item_id.required' => 'Part Item is required.',
-    //         'addmore.*.quantity.required' => 'Quantity is required.',
-    //         'addmore.*.quantity.min' => 'Quantity must be at least 1.',
-    //         'addmore.*.unit.required' => 'Unit is required.',
-    //     ];
-    
-    //     $validation = Validator::make($request->all(), $rules, $messages);
-    
-    //     if ($validation->fails()) {
-    //         return redirect()->back()->withInput()->withErrors($validation);
+    //     // Fetch part item from the database
+    //     $partItem = ItemStock::find($partItemId);
+    //     dd($partItem);
+    //     die();
+    //     if (!$partItem) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Part Item not found'
+    //         ]);
     //     }
     
-    //     try {
-    //         $updateData = $this->service->updateProductMaterialWiseAddNewReq($request);
+    //     // Get the available quantity for the part item
+    //     $availableQuantity = $partItem->quantity; // Assuming the field is named `quantity`
     
-    //         if ($updateData['status'] == 'success') {
-    //             return redirect('storedept/list-accepted-design-from-prod')->with(['status' => 'success', 'msg' => $updateData['message']]);
-    //         } else {
-    //             return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $updateData['errors']]);
-    //         }
-    //     } catch (\Exception $e) {
-    //         return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+    //     if ($availableQuantity === null) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'available_quantity' => 0
+    //         ]);
+    //     }
+    
+    //     if ($quantity > $availableQuantity) {
+    //         // If the requested quantity exceeds the available stock
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'available_quantity' => $availableQuantity
+    //         ]);
+    //     } else {
+    //         // If stock is sufficient
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'available_quantity' => $availableQuantity
+    //         ]);
     //     }
     // }
-    public function updateProductMaterialWiseAddNewReq(Request $request)
+    public function checkStockQuantity(Request $request)
 {
     try {
-        // Validate the request data
-        $validatedData = $request->validate([
-            // Add necessary validation rules here
-            'field_name' => 'required|string|max:255',
-            'another_field' => 'required|integer',
-            // Add more fields as per your requirements
-        ]);
+        $partItemId = $request->input('part_item_id');
+        $quantity = $request->input('quantity');
 
-        // Call the service method to handle the update logic
-        $updateData = $this->service->updateProductMaterialWiseAddNewReq($validatedData);
+        // Log incoming values for debugging
+        \Log::info('Checking stock quantity', ['part_item_id' => $partItemId, 'quantity' => $quantity]);
 
-        // Check if the update was successful
-        if (isset($updateData['status']) && $updateData['status'] === 'success') {
-            return redirect('storedept/list-accepted-design-from-prod')->with([
-                'status' => 'success',
-                'msg' => $updateData['message'],
-            ]);
-        } else {
-            return redirect()->back()->withInput()->with([
+        // Validate inputs
+        if (!$partItemId || !$quantity) {
+            return response()->json([
                 'status' => 'error',
-                'msg' => $updateData['errors'] ?? 'An unexpected error occurred.', // Ensure errors key exists
+                'message' => 'Invalid inputs. Please provide both part_item_id and quantity.',
+            ], 400);
+        }
+
+        // Fetch part item from the database
+        $partItem = ItemStock::find($partItemId);
+// dd($partItem);
+// die();
+        if (!$partItem) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Part Item not found',
+            ], 404);
+        }
+
+        // Get the available quantity
+        $availableQuantity = $partItem->quantity ?? 0; // Ensure it's not null
+
+        if ($quantity > $availableQuantity) {
+            return response()->json([
+                'status' => 'error',
+                'available_quantity' => $availableQuantity,
+                'message' => 'Insufficient stock',
             ]);
         }
-    } catch (\Exception $e) {
-        // Log the error for debugging
-        \Log::error('Error updating product material: ' . $e->getMessage());
 
-        return redirect()->back()->withInput()->with([
-            'status' => 'error',
-            'msg' => 'An unexpected error occurred. Please try again later.',
+        // Sufficient stock
+        return response()->json([
+            'status' => 'success',
+            'available_quantity' => $availableQuantity,
         ]);
+    } catch (\Exception $e) {
+        \Log::error('Error in checkStockQuantity:', ['error' => $e->getMessage()]);
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Internal Server Error',
+        ], 500);
     }
 }
 
-
+    
+    public function updateProductMaterialWiseAddNewReq(Request $request) {
+        $rules = [
+        ];
+        
+        $messages = [
+        ];
+        
+        $validation = Validator::make($request->all(), $rules, $messages);
+        
+        if ($validation->fails()) {
+            return redirect()->back()->withInput()->withErrors($validation);
+        }
+    
+        try {
+                       $updateData = $this->service->updateProductMaterialWiseAddNewReq($request);
+    
+            if ($updateData['status'] == 'success') {
+                return redirect('storedept/list-accepted-design-from-prod')->with(['status' => 'success', 'msg' => $updateData['message']]);
+            } else {
+                return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $updateData['message']]);
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+        }
+    }
+   
     public function editProductMaterialWiseAdd($purchase_orders_id, $business_id) {
         try {
             $purchase_orders_id = base64_decode($purchase_orders_id);
