@@ -347,14 +347,18 @@ class StoreRepository
         ProductionDetails::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)->delete();
         
         $errorMessages = []; // Array to hold error messages
-// dd($request);
-// die();
+dd($request);
+die();
         foreach ($request->addmore as $item) {
             $dataOutput = new ProductionDetails();
             $dataOutput->part_item_id = $item['part_item_id'];
             $dataOutput->quantity = $item['quantity'];
             $dataOutput->unit = $item['unit'];
-            $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
+             // Update material_send_production only if provided
+    if (isset($item['material_send_production']) && $item['material_send_production'] == 1) {
+        $dataOutput->material_send_production = 1;
+    }
+            // $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
             $dataOutput->business_id = $dataOutput_ProductionDetails->business_id;
             $dataOutput->design_id = $dataOutput_ProductionDetails->design_id;
             $dataOutput->business_details_id = $dataOutput_ProductionDetails->business_details_id;
