@@ -157,12 +157,25 @@ class AllListController extends Controller
             return $e;
         }
     }
-    public function getGRNDetails($purchase_orders_id)
+    public function getGRNDetails($purchase_orders_id,$business_details_id, $id)
     {
         try {
             $idtoedit = base64_decode($purchase_orders_id);
+            $grn_id = base64_decode($id);
+            // dd($grn_id);
+            // die();
             $purchase_order_data = PurchaseOrdersModel::where('purchase_orders_id', '=', $idtoedit)->first();
-            $grn_data = GRNModel::where('purchase_orders_id', '=', $idtoedit)->first();
+            $grn_data = GRNModel::leftJoin('gatepass', function ($join) {
+                $join->on('grn_tbl.gatepass_id', '=', 'gatepass.id');
+            })
+            ->where('grn_tbl.purchase_orders_id', '=', $idtoedit)->where('grn_tbl.id', '=', $grn_id)
+            ->select(
+                'grn_tbl.*',
+                'gatepass.*'
+            )
+            ->first();
+            // dd($grn_data);
+            // die();
             $po_id = $purchase_order_data->id;
 
             $purchase_order_details_data = PurchaseOrderDetailsModel::where('purchase_id', $po_id)

@@ -47,6 +47,7 @@ class GRNController extends Controller
                     'message' => 'No data found for designs received for correction'
                 ]);
             }
+         
             // if ($all_gatepass->isNotEmpty()) {
             //     foreach ($all_gatepass as $data) {
             //         $business_details_id = $data->id; 
@@ -80,7 +81,7 @@ class GRNController extends Controller
             $po_id = $purchase_order_data->id;
             $purchase_order_details_data = PurchaseOrderDetailsModel::where('purchase_id', $po_id)
                 ->get();
-                              $gatepassId = Gatepass::select('gatepass.id')
+                              $gatepassId = Gatepass::select('gatepass.id', 'gatepass.gatepass_name')
     ->where('gatepass.id', $gatepass_id) // Specify the table for clarity
     ->first();
             return view('organizations.quality.grn.add-grn', compact('purchase_order_data', 'purchase_order_details_data', 'gatepassId'));

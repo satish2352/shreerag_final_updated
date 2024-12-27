@@ -101,11 +101,14 @@
                                                 {{-- <th data-field="purchase_id" data-editable="false">Remark</th> --}}
                                                 {{-- <th data-field="design_image" data-editable="false">Design Layout</th>
                                                 <th data-field="bom_image" data-editable="false">BOM</th> --}}
-                                                <th data-field="action" data-editable="false">Action</th>
+                                                {{-- <th data-field="action" data-editable="false">Action</th> --}}
                                             </tr>
                                         </thead>
                                         <tbody>
-                                       
+                                       <?php
+                                    //    dd($data_output );
+                                    //    die();
+                                       ?>
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     
@@ -124,12 +127,13 @@
                                                 </td> --}}
                                                 <td>
                                                     <div style="display: flex; align-items: center;">
-                                                        <a href="{{ route('list-grn-details', [base64_encode($data->purchase_orders_id), base64_encode($data->business_details_id)]) }}">
+                                                        <a href="{{ route('list-grn-details', [base64_encode($data->purchase_orders_id), base64_encode($data->business_details_id), base64_encode($data->id)]) }}">
                                                             <button data-toggle="tooltip" title="GRN Details" class="pd-setting-ed">GRN Details</button>
                                                         </a>
+                                                       
                                                     </div>
                                                 </td>
-                                                    <td>
+                                                    {{-- <td> --}}
                                                         {{-- <div style="display: flex; align-items: center;">
                                                             <a
                                                                 href="{{ route('accepted-store-material-sent-to-production', base64_encode($data->purchase_orders_id)/base64_encode($data->business_id)) }} "><button
@@ -137,23 +141,23 @@
                                                                     class="pd-setting-ed">Forwared For production  </button></a>
 
                                                         </div> --}}
-                                                        <div style="display: inline-block; align-items: center;">
+                                                        {{-- <div style="display: inline-block; align-items: center;">
                                                             <a href="{{route('edit-material-list-bom-wise',[base64_encode($data->purchase_orders_id), base64_encode($data->business_details_id)])}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i>Edit Product Material</button></a>
-                                                        </div>
+                                                        </div> --}}
                                                         
                                                         {{-- <div style="display: flex; align-items: center;">
                                                             <a href="{{ route('accepted-store-material-sent-to-production', [base64_encode($data->purchase_orders_id), base64_encode($data->business_details_id)]) }}">
                                                                 <button data-toggle="tooltip" title="Forwarded For Production" class="pd-setting-ed">Forwarded For Production</button>
                                                             </a>
                                                         </div> --}}
-                                                        @if($data->material_send_production == 1)
+                                                        {{-- @if($data->material_send_production == 1)
                                                         <a href="{{ route('accepted-store-material-sent-to-production',  [base64_encode($data->purchase_orders_id), base64_encode($data->business_details_id)]) }}">
                                                             <button class="pd-setting-ed enabled-btn" title="Requirement forwarded for production">Requirement forwarded For production</button>
                                                         </a>
                                                     @else
                                                     <button class="pd-setting-ed disabled-btn" style="margin-top:10px;" title="Requirement forwarded for production" disabled>Requirement forwarded For production</button>  
-                                                    @endif
-                                                    </td>
+                                                    @endif --}}
+                                                    {{-- </td> --}}
 
                                                 </tr>
                                             @endforeach

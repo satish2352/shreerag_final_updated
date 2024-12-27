@@ -216,7 +216,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-material-sent-to-purchase', ['as' => 'list-material-sent-to-purchase', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialSentToPurchase']);
         Route::get('/list-material-received-from-quality', ['as' => 'list-material-received-from-quality', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialReceivedFromQuality']);
         Route::get('/list-material-received-from-quality-bussinesswise/{id}', ['as' => 'list-material-received-from-quality-bussinesswise', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@submitFinalPurchaseOrder']);
-        Route::get('/list-grn-details/{purchase_orders_id}/{business_id}', ['as' => 'list-grn-details', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getGRNDetails']);
+        Route::get('/list-grn-details/{purchase_orders_id}/{business_details_id}/{id}', ['as' => 'list-grn-details', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getGRNDetails']);
         Route::get('/list-grn-details-po-tracking/{purchase_orders_id}/{business_id}', ['as' => 'list-grn-details-po-tracking', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getGRNDetailsPOTracking']);
 
         Route::get('/list-material-received-from-quality-po-tracking', ['as' => 'list-material-received-from-quality-po-tracking', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialReceivedFromQualityPOTracking']);
@@ -225,8 +225,10 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/accepted-store-material-sent-to-production/{purchase_orders_id}/{business_id}', ['as' => 'accepted-store-material-sent-to-production', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@genrateStoreReciptAndForwardMaterialToTheProduction']);
     
         Route::get('/list-rejected-chalan', ['as' => 'list-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\RejectedChalanController@index']);
-        Route::get('/add-rejected-chalan/{purchase_orders_id}', ['as' => 'add-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\RejectedChalanController@add']);
+        Route::get('/add-rejected-chalan/{purchase_orders_id}/{id}', ['as' => 'add-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\RejectedChalanController@add']);
         Route::post('/store-rejected-chalan', ['as' => 'store-rejected-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\RejectedChalanController@store']);
+        Route::get('/list-rejected-chalan-updated', ['as' => 'list-rejected-chalan-updated', 'uses' => 'App\Http\Controllers\Organizations\Store\RejectedChalanController@getAllRejectedChalanList']);
+        Route::get('/list-rejected-chalan-details/{purchase_orders_id}/{id}', ['as' => 'list-rejected-chalan-details', 'uses' => 'App\Http\Controllers\Organizations\Store\RejectedChalanController@getAllRejectedChalanDetailsList']);
 
         Route::get('/edit-material-list-bom-wise-new-req/{id}', ['as' => 'edit-material-list-bom-wise-new-req', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@editProductMaterialWiseAddNewReq']);
         Route::post('/update-material-list-bom-wise-new-req/{id}', ['as' => 'update-material-list-bom-wise-new-req', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@updateProductMaterialWiseAddNewReq']);
@@ -236,8 +238,8 @@ Route::group(['middleware' => ['admin']], function () {
         // Route::get('/check-stock-quantity', [YourController::class, 'checkStockQuantity'])->name('check-stock-quantity');
 
 
-        Route::get('/edit-material-list-bom-wise/{purchase_orders_id}/{business_id}', ['as' => 'edit-material-list-bom-wise', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@editProductMaterialWiseAdd']);
-        Route::post('/update-material-list-bom-wise/{id}', ['as' => 'update-material-list-bom-wise', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@updateProductMaterialWiseAdd']);
+        // Route::get('/edit-material-list-bom-wise/{purchase_orders_id}/{business_id}', ['as' => 'edit-material-list-bom-wise', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@editProductMaterialWiseAdd']);
+        // Route::post('/update-material-list-bom-wise/{id}', ['as' => 'update-material-list-bom-wise', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@updateProductMaterialWiseAdd']);
 
         Route::get('/list-product-inprocess-received-from-production', ['as' => 'list-product-inprocess-received-from-production', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllInprocessProductProduction']);
         Route::get('/edit-recived-inprocess-production-material/{id}', ['as' => 'edit-recived-inprocess-production-material', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@editProduct']);

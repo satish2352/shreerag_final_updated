@@ -1,12 +1,23 @@
 @extends('admin.layouts.master')
 @section('content')
+<style>
+     .sparkline13-list-new {
+        background-color: #fff;
+        padding: 22px;
+        margin-top: 72px;
+        margin-bottom: 80px;
+    }
+</style>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="sparkline12-list">
+            <div class="sparkline13-list-new">
                 <div class="sparkline12-hd">
                     <div class="main-sparkline12-hd">
                         <center>
-                            <h1> GRN Details</h1>
+                            <h1> GRN Details</h1><br>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <h4 style="display: flex; justify-content: right; color: green;">GRN Accepted Quantity Add In Store Inventory</h4> 
+                                    
                         </center>
                     </div>
                 </div>
@@ -81,12 +92,16 @@
                                                         </div>
                                                     @endif
                                                 </div>
+                                                <?php
+                                                // dd($grn_data);
+                                                // die();
+                                                ?>
                                                 <div class="row">
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="grn_date">GRN Date:</label>
                                                         <input type="date" class="form-control" id="grn_date"
                                                             name="grn_date" placeholder="Enter GRN Date"
-                                                            value="{{ date('Y-m-d') }}" readonly>
+                                                            value="{{ $grn_data->grn_date }}" readonly>
 
                                                     </div>
 
@@ -103,7 +118,15 @@
                                                             name="po_date" placeholder="Enter PO Date"
                                                             value="{{ $purchase_order_data->created_at->format('Y-m-d') }}"
                                                             readonly>
-                                                    </div>                                                    
+                                                    </div> 
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                        <label for="gatepass_name">Customer Name :</label>
+                                                        <input type="text" class="form-control" id="gatepass_name"
+                                                            name="gatepass_name" placeholder="Enter PO Date"
+                                                            value="{{ $grn_data->gatepass_name }}"
+                                                            readonly>
+
+                                                    </div>                                              
                                                 </div>
 
                                                 <div style="margin-top:20px">

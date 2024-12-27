@@ -51,7 +51,31 @@ class RejectedChalanServices
             return $e;
         }
     }
+    public function getAllRejectedChalanList()
+    {
+        try {
+            $data = $this->repo->getAllRejectedChalanList();
+            return $data;
+        } catch (\Exception $e) {
+        
+            return $e; 
+        }
+    }
 
+    public function getAllRejectedChalanDetailsList($purchase_orders_id, $id)
+    {
+        try {
+            $data = $this->repo->getAllRejectedChalanDetailsList($purchase_orders_id, $id);
+            // dd($data);
+            // die();
+            return $data;
+        } catch (\Exception $e) {
+        
+            return $e; 
+        }
+    }
+    
+    
     // public function addAll($request)
     // {
     //     try {

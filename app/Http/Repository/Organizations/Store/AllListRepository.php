@@ -10,7 +10,8 @@ use App\Models\ {
     ProductionModel,
     DesignRevisionForProd,
     PurchaseOrdersModel,
-    GrnPOQuantityTracking
+    GrnPOQuantityTracking,
+    GRNModel
     };
 use Config;
 
@@ -330,56 +331,264 @@ public function getAllListMaterialReceivedFromQuality()
         return response()->json(['error' => $e->getMessage()], 500);
     }
 }
-  public function getPurchaseOrderBusinessWise($id)
+//   public function getPurchaseOrderBusinessWise($id)
+// {
+//     try {
+//       $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
+//       $array_to_be_check_new = ['0'];
+
+//       $data_output = GRNModel::leftJoin('purchase_orders', function ($join) {
+//         $join->on('grn_tbl.purchase_orders_id', '=', 'purchase_orders.purchase_orders_id');
+//       })
+//     ->leftJoin('gatepass', function ($join) {
+//         $join->on('grn_tbl.gatepass_id', '=', 'gatepass.id');
+//     })
+//     ->leftJoin('gatepass', function ($join) {
+//         $join->on('grn_tbl.gatepass_id', '=', 'gatepass.id');
+//     })
+//         ->leftJoin('business_application_processes', function ($join) {
+//           $join->on('purchase_orders.business_details_id', '=', 'business_application_processes.business_details_id');
+//         })
+       
+//         ->leftJoin('designs', function ($join) {
+//           $join->on('purchase_orders.business_details_id', '=', 'designs.business_details_id');
+//         })
+//         ->leftJoin('production_details', function($join) {
+//           $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
+//       })
+//         ->where('businesses_details.id', $id)
+//         ->distinct('purchase_orders.purchase_orders_id')
+//         ->select(
+//           // 'purchase_orders.id',
+//           'businesses_details.id',
+//             'business_application_processes.business_details_id',
+//             'purchase_orders.purchase_orders_id',         
+//             'vendors.vendor_name', 
+//             'vendors.vendor_company_name', 
+//             'vendors.vendor_email', 
+//             'vendors.vendor_address', 
+//             'vendors.contact_no', 
+//             'vendors.gst_no',
+//             'businesses_details.product_name', 
+//             'businesses_details.description', 
+//             'production_details.material_send_production',
+//             'designs.bom_image',
+//             'designs.design_image',
+//             'purchase_orders.is_active',
+//             'businesses_details.updated_at'
+//         )
+//          ->whereIn('purchase_orders.quality_status_id',$array_to_be_check)
+//         // ->whereIn('purchase_orders.store_receipt_no',$array_to_be_check_new)
+//         ->orderBy('businesses_details.updated_at', 'desc')
+//         ->get(); 
+     
+//         return $data_output;
+//     } catch (\Exception $e) {
+//         return $e->getMessage(); 
+//     }
+// }
+// public function getPurchaseOrderBusinessWise($id)
+// {
+//     try {
+//         $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
+//         $array_to_be_check_new = ['0'];
+
+//         $data_output = GRNModel::leftJoin('purchase_orders', function ($join) {
+//             $join->on('grn_tbl.purchase_orders_id', '=', 'purchase_orders.purchase_orders_id');
+//         })
+//         ->leftJoin('vendors', function ($join) {
+//             $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
+//         })
+//         ->leftJoin('businesses_details', function ($join) {
+//             $join->on('purchase_orders.business_details_id', '=', 'businesses_details.id');
+//         })
+//         ->leftJoin('gatepass as gatepass_one', function ($join) {
+//             $join->on('grn_tbl.gatepass_id', '=', 'gatepass_one.id');
+//         })
+//         ->leftJoin('gatepass as gatepass_two', function ($join) {
+//             $join->on('grn_tbl.gatepass_id', '=', 'gatepass_two.id');
+//         })
+//         ->leftJoin('business_application_processes', function ($join) {
+//             $join->on('purchase_orders.business_details_id', '=', 'business_application_processes.business_details_id');
+//         })
+//         ->leftJoin('designs', function ($join) {
+//             $join->on('purchase_orders.business_details_id', '=', 'designs.business_details_id');
+//         })
+//         ->leftJoin('production_details', function ($join) {
+//             $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
+//         })
+//         ->where('businesses_details.id', $id)
+//         ->distinct('grn_tbl.id')
+//         ->select(
+//             'grn_tbl.id',
+//             'business_application_processes.business_details_id',
+//             'purchase_orders.purchase_orders_id',
+//             'vendors.vendor_name',
+//             'vendors.vendor_company_name',
+//             'vendors.vendor_email',
+//             'vendors.vendor_address',
+//             'vendors.contact_no',
+//             'vendors.gst_no',
+//             'businesses_details.product_name',
+//             'businesses_details.description',
+//             'production_details.material_send_production',
+//             'designs.bom_image',
+//             'designs.design_image',
+//             'purchase_orders.is_active',
+//             'grn_tbl.updated_at'
+//         )
+//         ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
+//         // ->whereIn('purchase_orders.store_receipt_no', $array_to_be_check_new)
+//         ->orderBy('grn_tbl.updated_at', 'desc')
+//         ->get();
+
+//         return $data_output;
+//     } catch (\Exception $e) {
+//         return $e->getMessage();
+//     }
+// }
+// public function getPurchaseOrderBusinessWise($id)
+// {
+//     try {
+//         // dd($grn_id);
+//         // die();
+//         $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
+
+//         $data_output = GRNModel::leftJoin('purchase_orders', function ($join) {
+//             $join->on('grn_tbl.purchase_orders_id', '=', 'purchase_orders.purchase_orders_id');
+//         })
+//         ->leftJoin('vendors', function ($join) {
+//             $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
+//         })
+//         ->leftJoin('businesses_details', function ($join) {
+//             $join->on('purchase_orders.business_details_id', '=', 'businesses_details.id');
+//         })
+//         ->leftJoin('gatepass as gatepass_one', function ($join) {
+//             $join->on('grn_tbl.gatepass_id', '=', 'gatepass_one.id');
+//         })
+//         ->leftJoin('business_application_processes', function ($join) {
+//             $join->on('purchase_orders.business_details_id', '=', 'business_application_processes.business_details_id');
+//         })
+//         ->leftJoin('designs', function ($join) {
+//             $join->on('purchase_orders.business_details_id', '=', 'designs.business_details_id');
+//         })
+//         ->leftJoin('production_details', function ($join) {
+//             $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
+//         })
+//         ->where('businesses_details.id', $id)
+//         ->select(
+//             'grn_tbl.id',
+//             'vendors.vendor_name',
+//             'vendors.vendor_company_name',
+//             'vendors.vendor_email',
+//             'vendors.vendor_address',
+//             'vendors.contact_no',
+//             'vendors.gst_no',
+//             'businesses_details.product_name',
+//             'businesses_details.description',
+//             'production_details.material_send_production',
+//             'designs.bom_image',
+//             'designs.design_image',
+//             'purchase_orders.is_active',
+//             'grn_tbl.updated_at'
+//         )
+//         ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
+//         ->groupBy(
+//             'grn_tbl.id',
+//             'vendors.vendor_name',
+//             'vendors.vendor_company_name',
+//             'vendors.vendor_email',
+//             'vendors.vendor_address',
+//             'vendors.contact_no',
+//             'vendors.gst_no',
+//             'businesses_details.product_name',
+//             'businesses_details.description',
+//             'production_details.material_send_production',
+//             'designs.bom_image',
+//             'designs.design_image',
+//             'purchase_orders.is_active',
+//             'grn_tbl.updated_at'
+//         )
+//         ->orderBy('grn_tbl.updated_at', 'desc')
+//         ->get();
+
+//         return $data_output;
+//     } catch (\Exception $e) {
+//         return $e->getMessage();
+//     }
+// }
+public function getPurchaseOrderBusinessWise($id)
 {
     try {
-      $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
-      $array_to_be_check_new = ['0'];
-        $data_output = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
+        $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
+
+        $data_output = GRNModel::leftJoin('purchase_orders', function ($join) {
+            $join->on('grn_tbl.purchase_orders_id', '=', 'purchase_orders.purchase_orders_id');
+        })
+        ->leftJoin('vendors', function ($join) {
+            $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
+        })
         ->leftJoin('businesses_details', function ($join) {
-          $join->on('purchase_orders.business_details_id', '=', 'businesses_details.id');
+            $join->on('purchase_orders.business_details_id', '=', 'businesses_details.id');
+        })
+        ->leftJoin('gatepass as gatepass_one', function ($join) {
+            $join->on('grn_tbl.gatepass_id', '=', 'gatepass_one.id');
         })
         ->leftJoin('business_application_processes', function ($join) {
-          $join->on('purchase_orders.business_details_id', '=', 'business_application_processes.business_details_id');
+            $join->on('purchase_orders.business_details_id', '=', 'business_application_processes.business_details_id');
         })
-       
         ->leftJoin('designs', function ($join) {
-          $join->on('purchase_orders.business_details_id', '=', 'designs.business_details_id');
+            $join->on('purchase_orders.business_details_id', '=', 'designs.business_details_id');
         })
-        ->leftJoin('production_details', function($join) {
-          $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
-      })
+        ->leftJoin('production_details', function ($join) {
+            $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
+        })
         ->where('businesses_details.id', $id)
-        ->distinct('purchase_orders.purchase_orders_id')
         ->select(
-          // 'purchase_orders.id',
-          'businesses_details.id',
+            'grn_tbl.id',
+            'grn_tbl.grn_date',
             'business_application_processes.business_details_id',
-            'purchase_orders.purchase_orders_id',         
-            'vendors.vendor_name', 
-            'vendors.vendor_company_name', 
-            'vendors.vendor_email', 
-            'vendors.vendor_address', 
-            'vendors.contact_no', 
+            'purchase_orders.purchase_orders_id',
+            'vendors.vendor_name',
+            'vendors.vendor_company_name',
+            'vendors.vendor_email',
+            'vendors.vendor_address',
+            'vendors.contact_no',
             'vendors.gst_no',
-            'businesses_details.product_name', 
-            'businesses_details.description', 
-            'production_details.material_send_production',
-            'designs.bom_image',
-            'designs.design_image',
+            'businesses_details.product_name',
+            'businesses_details.description',
+            DB::raw('MAX(production_details.material_send_production) as material_send_production'),
+            DB::raw('GROUP_CONCAT(DISTINCT designs.bom_image) as bom_image'),
+            DB::raw('GROUP_CONCAT(DISTINCT designs.design_image) as design_image'),
             'purchase_orders.is_active',
-            'businesses_details.updated_at'
+            'grn_tbl.updated_at'
         )
-         ->whereIn('purchase_orders.quality_status_id',$array_to_be_check)
-        // ->whereIn('purchase_orders.store_receipt_no',$array_to_be_check_new)
-        ->orderBy('businesses_details.updated_at', 'desc')
-        ->get(); 
-     
+        ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
+        ->groupBy(
+            'grn_tbl.id',
+            'grn_tbl.grn_date',
+            'business_application_processes.business_details_id',
+            'purchase_orders.purchase_orders_id',
+            'vendors.vendor_name',
+            'vendors.vendor_company_name',
+            'vendors.vendor_email',
+            'vendors.vendor_address',
+            'vendors.contact_no',
+            'vendors.gst_no',
+            'businesses_details.product_name',
+            'businesses_details.description',
+            'purchase_orders.is_active',
+            'grn_tbl.updated_at'
+        )
+        ->orderBy('grn_tbl.updated_at', 'desc')
+        ->get();
+
         return $data_output;
     } catch (\Exception $e) {
-        return $e->getMessage(); 
+        return $e->getMessage();
     }
 }
+
 public function getAllListMaterialReceivedFromQualityPOTracking()
 {
     try {

@@ -59,6 +59,10 @@
                                         <form action="{{ route('store-rejected-chalan') }}" method="POST" id="addDesignsForm"
                                             enctype="multipart/form-data">
                                             @csrf
+
+                                            <input type="hidden" name="id" id=""
+                                            class="form-control" value="{{ $gatepass_data->id }}"
+                                            placeholder="">
                                             <div class="form-group-inner">
 
                                                 {{-- ========================== --}}
@@ -101,43 +105,42 @@
                                                 </div>
 
                                                 {{-- =================== --}}
-
+<?php
+// dd($gatepass_data);
+// die();
+?>
                                                 <div class="row">
-                                                    {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="grn_number">GRN No:</label>
-                                                    <input type="text" class="form-control" id="grn_number"
-                                                        name="grn_number" placeholder="Enter GRN Number">
-                                                </div> --}}
-
-                                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                                        <label for="grn_date">GRN Date:</label>
-                                                        <input type="date" class="form-control" id="grn_date"
-                                                            name="grn_date" placeholder="Enter GRN Date"
-                                                            value="{{ date('Y-m-d') }}" readonly>
-
-                                                    </div>
-
-                                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="purchase_orders_id">PO No.:</label>
                                                         <input type="text" class="form-control" id="purchase_orders_id"
                                                             name="purchase_orders_id" placeholder="Enter Purchase No."
                                                             value="{{ $purchase_order_data->purchase_orders_id }}" readonly>
                                                     </div>
 
-                                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="po_date">PO Date :</label>
                                                         <!-- <input type="date" class="form-control" id="po_date"
                                                                 name="po_date" placeholder="Enter PO Date"> -->
-
                                                         <input type="date" class="form-control" id="po_date"
                                                             name="po_date" placeholder="Enter PO Date"
                                                             value="{{ $purchase_order_data->created_at->format('Y-m-d') }}"
                                                             readonly>
-
                                                     </div>
 
-                                                   
-                                                   
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                        <label for="gatepass_name">Customer Name :</label>
+                                                        <input type="text" class="form-control" id="gatepass_name"
+                                                            name="gatepass_name" placeholder="Enter Customer Name"
+                                                            value="{{ $gatepass_data->gatepass_name }}"
+                                                            readonly>
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                        <label for="grn_date">GRN Date:</label>
+                                                        <input type="date" class="form-control" id="grn_date"
+                                                            name="grn_date" placeholder="Enter GRN Date"
+                                                            value="{{ date('Y-m-d') }}" readonly>
+
+                                                    </div>
                                                 </div>
 
                                                 <div style="margin-top:20px">

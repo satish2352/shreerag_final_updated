@@ -62,6 +62,8 @@
                                             <input type="hidden" name="id" id=""
                                             class="form-control" value="{{ $gatepassId->id }}"
                                             placeholder="">
+
+                                            
                                             <div class="form-group-inner">
 
                                                 {{-- ========================== --}}
@@ -104,7 +106,10 @@
                                                 </div>
 
                                                 {{-- =================== --}}
-
+<?php
+// dd($gatepassId);
+// die();
+?>
                                                 <div class="row">
                                                                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="grn_date">GRN Date:</label>
@@ -126,6 +131,14 @@
                                                         <input type="date" class="form-control" id="po_date"
                                                             name="po_date" placeholder="Enter PO Date"
                                                             value="{{ $purchase_order_data->created_at->format('Y-m-d') }}"
+                                                            readonly>
+
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                        <label for="gatepass_name">Customer Name :</label>
+                                                        <input type="text" class="form-control" id="gatepass_name"
+                                                            name="gatepass_name" placeholder="Enter PO Date"
+                                                            value="{{ $gatepassId->gatepass_name }}"
                                                             readonly>
 
                                                     </div>

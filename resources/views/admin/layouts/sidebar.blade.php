@@ -506,13 +506,16 @@
                                 <span class="mini-click-non">Material Sent to Store</span>
                             </a>
                         </li>
-                        <li
+                        <li><a  href="{{ route('list-rejected-chalan-updated') }}"><i
+                            class="fa big-icon fa-ban  icon-wrap" aria-hidden="true"></i> <span
+                            class="mini-click-non">List Rejected Chalan</span></a></li>
+                        {{-- <li
                                 class="nav-item {{ Request::is('list-rejected-chalan-po-wise') ? 'active' : '' }}">
                                 <a 
                                     href="{{ route('list-rejected-chalan-po-wise') }}"><i
                                         class="fa big-icon fa-times-circle  icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">PO wise Rejected Chalan</span></a>
-                            </li>
+                            </li> --}}
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.STORE'))
                     
@@ -555,16 +558,19 @@
                             <span class="mini-click-non">Material Received PO Tracking</span>
                         </a>
                     </li>
-                        <li
+                        {{-- <li
                         class="nav-item {{ request()->is('storedept/list-product-inprocess-received-from-production') ? 'active' : '' }}">
                         <a href="{{ route('list-product-inprocess-received-from-production') }}">
                             <i class="fa big-icon fa-box-open icon-wrap"></i>
                             <span class="mini-click-non">Production Department send material list</span>
                         </a>
-                    </li>
+                    </li> --}}
                     <li><a  href="{{ route('list-rejected-chalan') }}"><i
                         class="fa big-icon fa-ban  icon-wrap" aria-hidden="true"></i> <span
-                        class="mini-click-non">List Rejected Chalan</span></a></li>
+                        class="mini-click-non">Create Rejected Chalan</span></a></li>
+                        <li><a  href="{{ route('list-rejected-chalan-updated') }}"><i
+                            class="fa big-icon fa-ban  icon-wrap" aria-hidden="true"></i> <span
+                            class="mini-click-non">List Rejected Chalan</span></a></li>
                         {{-- <li>
                             <a class="has-arrow" href="{{ route('list-rejected-chalan') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-ban  icon-wrap"></i> <span class="mini-click-non">Rejected Chalan

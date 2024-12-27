@@ -31,7 +31,7 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Create Rejecte Chalan  <span class="table-project-n"></span></h1>
+                                <h1>List Rejected Chalan  <span class="table-project-n"></span></h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
                                         {{-- <div class="login-horizental cancel-wp pull-left">
@@ -93,11 +93,11 @@
 
                                         </thead>
                                         <tbody>
-<?php
-// dd($all_gatepass);
-// die();
-?>
-                                            @foreach ($all_gatepass as $data)
+
+     <?php
+    //  dd($all_gatepass);
+    //  die();
+     ?>                                       @foreach ($all_gatepass as $data)
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
@@ -109,10 +109,10 @@
 
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
-                                                            <a href="{{ route('add-rejected-chalan', [base64_encode($data->purchase_orders_id), base64_encode($data->id)])}}"><button
+                                                            <a href="{{ route('list-rejected-chalan-details', 
+                                                             [base64_encode($data->purchase_orders_id), base64_encode($data->id)]) }}"><button
                                                                     data-toggle="tooltip" title="Edit"
-                                                                    class="pd-setting-ed"><i class="fa fa-pencil-square-o"
-                                                                        aria-hidden="true"></i></button></a>
+                                                                    class="pd-setting-ed"><i class="fa fa-eye" aria-hidden="true"></i></button></a>
                                                         </div>
                                                     </td>
 
