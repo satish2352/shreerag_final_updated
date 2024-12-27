@@ -347,7 +347,8 @@ class StoreRepository
         ProductionDetails::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)->delete();
         
         $errorMessages = []; // Array to hold error messages
-
+// dd($request);
+// die();
         foreach ($request->addmore as $item) {
             $dataOutput = new ProductionDetails();
             $dataOutput->part_item_id = $item['part_item_id'];

@@ -116,9 +116,11 @@
                                                                 </select>
                                                             </td>
                                                             <td>
+                                                                {{-- <input type="checkbox" class="material-send-checkbox" name="addmore[{{ $index }}][material_send_production]" value="1" {{ $item->material_send_production ? 'checked' : '' }}> --}}
+                                                                <input type="hidden" name="addmore[{{ $index }}][material_send_production]" value="0">
                                                                 <input type="checkbox" class="material-send-checkbox" name="addmore[{{ $index }}][material_send_production]" value="1" {{ $item->material_send_production ? 'checked' : '' }}>
-
-                                                                {{-- <input type="checkbox" name="addmore[{{ $index }}][material_send_production]" value="1" {{ $item->material_send_production ? 'checked' : '' }}> --}}
+                                                                
+                                                                {{-- <input type="checkbox" class="material-send-checkbox" name="addmore[{{ $index }}][material_send_production]" value="1" {{ $item->material_send_production ? 'checked' : '' }}> --}}
                                                             </td>
                                                             <td>
                                                                 <button type="button" class="btn btn-sm btn-danger remove-row">
