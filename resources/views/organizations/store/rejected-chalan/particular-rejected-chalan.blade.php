@@ -148,8 +148,12 @@
                                         style="width: 44%; vertical-align: top; padding-top:0px; padding-left:0px; padding-right:0px; border: 1px solid black; ">
                                         @foreach($all_gatepass as $gatepass)
                                         <div class="top-spacing" style="padding: 2px; width: 100%; display: flex; justify-content: space-between;">
+                                            <span><strong>GRN No. :</strong> {{ $gatepass->grn_no }}</span>
+                                        </div>
+                                        <div class="top-spacing" style="padding: 2px; width: 100%; display: flex; justify-content: space-between;">
                                             <span><strong>PO No. :</strong> {{ $gatepass->purchase_orders_id }}</span>
                                         </div>
+                                        
                                         <div class="top-spacing" style="padding: 2px; width: 100%; display: flex; justify-content: space-between;">
                                             <span style="padding-right: 20px;">
                                                 <strong>PO Date:</strong> {{ $gatepass->po_date }}

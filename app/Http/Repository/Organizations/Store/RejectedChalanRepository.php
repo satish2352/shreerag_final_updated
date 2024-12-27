@@ -121,8 +121,6 @@ class RejectedChalanRepository
     {
         try {
             $dataOutputCategory = GRNModel::join('purchase_orders', 'purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id')
-
-            
             ->leftJoin('tbl_rejected_chalan', function ($join) {
                 $join->on('grn_tbl.id', '=', 'tbl_rejected_chalan.grn_id');
             })
@@ -141,11 +139,13 @@ class RejectedChalanRepository
                 'tbl_rejected_chalan.reference_no',
                 'tbl_rejected_chalan.remark',
                 'gatepass.gatepass_name',
+                'purchase_orders.grn_no',
                 'tbl_rejected_chalan.is_active'
             )
             ->groupBy( 'grn_tbl.id','tbl_rejected_chalan.purchase_orders_id', 'grn_tbl.po_date', 'grn_tbl.grn_date', 'grn_tbl.remark',
             'tbl_rejected_chalan.chalan_no',
             'tbl_rejected_chalan.reference_no',
+            'purchase_orders.grn_no',
             'tbl_rejected_chalan.remark', 'tbl_rejected_chalan.grn_id','gatepass.gatepass_name', 'tbl_rejected_chalan.is_active')
             ->orderBy('tbl_rejected_chalan.purchase_orders_id', 'desc')
             ->get();  
