@@ -86,7 +86,7 @@
                                                         <label for="grn_date">GRN Date:</label>
                                                         <input type="date" class="form-control" id="grn_date"
                                                             name="grn_date" placeholder="Enter GRN Date"
-                                                            value="{{ date('Y-m-d') }}" readonly>
+                                                            value="{{ $grn_data->grn_date }}" readonly>
                                                     </div>
                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="purchase_orders_id">PO No.:</label>

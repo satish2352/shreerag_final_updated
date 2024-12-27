@@ -186,16 +186,34 @@ class AllListController extends Controller
         }
     }
 
-    public function getGRNDetailsPOTracking($purchase_orders_id, $grn_id)
+    public function getGRNDetailsPOTracking($purchase_orders_id,$business_details_id, $id)
     {
         try {
-            $purchase_number =  base64_decode($purchase_orders_id);
-            $idtoedit = base64_decode($grn_id);
-            $purchase_order_data = PurchaseOrdersModel::where('purchase_orders_id', '=', $purchase_number)->first();
-            $grn_data = GRNModel::where('id', '=', $idtoedit)->first();
-            $po_id = $grn_data->purchase_orders_id;
-            $po_details = $grn_data->id;
-            $purchase_order_details_data = GrnPOQuantityTracking::where('grn_id', $po_details)
+            // $purchase_number =  base64_decode($purchase_orders_id);
+            // $idtoedit = base64_decode($grn_id);
+            // $purchase_order_data = PurchaseOrdersModel::where('purchase_orders_id', '=', $purchase_number)->first();
+            // $grn_data = GRNModel::where('id', '=', $idtoedit)->first();
+            // $po_id = $grn_data->purchase_orders_id;
+            // $po_details = $grn_data->id;
+            // $purchase_order_details_data = GrnPOQuantityTracking::where('grn_id', $po_details)
+            //     ->get();
+            $idtoedit = base64_decode($purchase_orders_id);
+            $grn_id = base64_decode($id);
+         
+            $purchase_order_data = PurchaseOrdersModel::where('purchase_orders_id', '=', $idtoedit)->first();
+            $grn_data = GRNModel::leftJoin('gatepass', function ($join) {
+                $join->on('grn_tbl.gatepass_id', '=', 'gatepass.id');
+            })
+            ->where('grn_tbl.purchase_orders_id', '=', $idtoedit)->where('grn_tbl.id', '=', $grn_id)
+            ->select(
+                'grn_tbl.*',
+                'gatepass.*'
+            )
+            ->first();
+          
+            $po_id = $purchase_order_data->id;
+
+            $purchase_order_details_data = PurchaseOrderDetailsModel::where('purchase_id', $po_id)
                 ->get();
             return view('organizations.store.list.list-grn-po-tracking', compact('purchase_order_data', 'purchase_order_details_data', 'grn_data'));
         } catch (\Exception $e) {

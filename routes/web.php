@@ -217,7 +217,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-material-received-from-quality', ['as' => 'list-material-received-from-quality', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialReceivedFromQuality']);
         Route::get('/list-material-received-from-quality-bussinesswise/{id}', ['as' => 'list-material-received-from-quality-bussinesswise', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@submitFinalPurchaseOrder']);
         Route::get('/list-grn-details/{purchase_orders_id}/{business_details_id}/{id}', ['as' => 'list-grn-details', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getGRNDetails']);
-        Route::get('/list-grn-details-po-tracking/{purchase_orders_id}/{business_id}', ['as' => 'list-grn-details-po-tracking', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getGRNDetailsPOTracking']);
+        Route::get('/list-grn-details-po-tracking/{purchase_orders_id}/{business_details_id}/{id}', ['as' => 'list-grn-details-po-tracking', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getGRNDetailsPOTracking']);
 
         Route::get('/list-material-received-from-quality-po-tracking', ['as' => 'list-material-received-from-quality-po-tracking', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialReceivedFromQualityPOTracking']);
         Route::get('/list-material-received-from-quality-bussinesswise-tracking/{id}', ['as' => 'list-material-received-from-quality-bussinesswise-tracking', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialReceivedFromQualityPOTrackingBusinessWise']);

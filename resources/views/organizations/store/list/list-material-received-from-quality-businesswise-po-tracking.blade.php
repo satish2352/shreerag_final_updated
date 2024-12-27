@@ -102,7 +102,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                       
+                                       <?php
+                                    //    dd($data_output);
+                                    //    die();
+                                       ?>
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     
@@ -112,7 +115,7 @@
                                                     <td>{{ ucwords($data->description) }}</td>
                                                 <td>
                                                     <div style="display: flex; align-items: center;">
-                                                        <a href="{{ route('list-grn-details-po-tracking', [base64_encode($data->purchase_orders_id), base64_encode($data->grn_id), base64_encode($data->business_details_id)]) }}">
+                                                        <a href="{{ route('list-grn-details-po-tracking', [base64_encode($data->purchase_orders_id), base64_encode($data->business_details_id), base64_encode($data->grn_id)]) }}">
                                                             <button data-toggle="tooltip" title="GRN Details" class="pd-setting-ed">GRN Details</button>
                                                         </a>
                                                     </div>
