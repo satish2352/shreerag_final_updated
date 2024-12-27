@@ -16,7 +16,7 @@
                         <center>
                             <h1> GRN Details</h1><br>
                             <div class="d-flex justify-content-center align-items-center">
-                                <h4 style="display: flex; justify-content: right; color: green;">GRN Accepted Quantity Add In Store Inventory</h4> 
+                                <h4 style="display: flex; justify-content: right; color: green;">Note: First You will Add This Accepted Quantity In Inventory Department, Then Only You Can Issue Material to Production Department.</h4> 
                                     
                         </center>
                     </div>
