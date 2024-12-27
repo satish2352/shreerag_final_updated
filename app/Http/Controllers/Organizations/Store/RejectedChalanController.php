@@ -59,7 +59,7 @@ class RejectedChalanController extends Controller
                 ->leftJoin('gatepass', function ($join) {
                     $join->on('grn_tbl.gatepass_id', '=','gatepass.id');
                 })
-                ->where('tbl_rejected_chalan.purchase_orders_id', '=', $purchase_orders_id)->where('tbl_rejected_chalan.id', '=', $rejected_id)
+                ->where('tbl_rejected_chalan.purchase_orders_id', '=', $purchase_orders_id)->where('tbl_rejected_chalan.grn_id', '=', $rejected_id)
                 ->select(
                     'tbl_rejected_chalan.id',
                     'gatepass.gatepass_name',
