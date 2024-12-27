@@ -509,6 +509,13 @@
                         <li><a  href="{{ route('list-rejected-chalan-updated') }}"><i
                             class="fa big-icon fa-ban  icon-wrap" aria-hidden="true"></i> <span
                             class="mini-click-non">List Rejected Chalan</span></a></li>
+                            <li
+                            class="nav-item {{ request()->is('storedept/list-material-received-from-quality-po-tracking') ? 'active' : '' }}">
+                            <a href="{{ route('list-material-received-from-quality-po-tracking') }}">
+                                <i class="fa fa-clipboard-list icon-wrap"></i>
+                                <span class="mini-click-non">GRN List</span>
+                            </a>
+                        </li>
                         {{-- <li
                                 class="nav-item {{ Request::is('list-rejected-chalan-po-wise') ? 'active' : '' }}">
                                 <a 
