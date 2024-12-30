@@ -26,8 +26,8 @@ class AllListRepository  {
           $array_to_be_check_store = [config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION')];
 
 
-          $array_to_be_check_store11 = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
-          $array_to_be_check_production = [config('constants.STORE_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
+          $array_to_be_check_store_after_quality = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
+          $array_to_be_check_production = [config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
           $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
             $join->on('business_application_processes.business_id', '=', 'production.business_id');
           })
@@ -46,7 +46,7 @@ class AllListRepository  {
         ->where(function ($query) use ($array_to_be_check, $array_to_be_check_store) {
           $query->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store)
                 ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check)
-                ->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store11)
+                ->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store_after_quality)
                 ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check_production);
 
       })
