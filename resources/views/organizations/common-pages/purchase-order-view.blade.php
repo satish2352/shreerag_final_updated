@@ -395,11 +395,31 @@
                                     </tr>
                                     <tr style="bold; font-family: 'Font Awesome 5 Free'!important; font-size:12px;">
                                         <td class="no-border" colspan="2" style="padding-bottom: 10px;  font-size:11px;">
+                                           
+                                        </td>
+                                        <td class="no-border" colspan="2" style="padding-bottom: 10px; text-align:center; font-size:11px;"></td>
+                                        <td class="no-border" colspan="3" style="padding-bottom: 10px; text-align:center; font-size:11px;"></td>
+                                        <td class="no-border" colspan="2" style="display: block; text-align: center; padding-bottom: 10px; font-size:11px;">
+                                            @if($purchaseOrder->purchase_status_from_owner == 1127)
+                                            <div style="font-size: 26px; color: green;">
+                                                 {{-- <i class="fa fa-check" aria-hidden="true"></i> --}}
+                                            <img src="{{ asset('website/assets/img/tick.png')}}" style="width: 44px;" alt="">
+                                        </div>
+                                            @else
+                                            
+                                            @endif
+                                            </td>
+                                    </tr>
+
+
+                                    <tr style="bold; font-family: 'Font Awesome 5 Free'!important; font-size:12px;">
+                                        <td class="no-border" colspan="2" style="padding-bottom: 10px;  font-size:11px;">
                                             <strong>Prepared By</strong>
                                         </td>
                                         <td class="no-border" colspan="2" style="padding-bottom: 10px; text-align:center; font-size:11px;">( Finance Signatory )</td>
                                         <td class="no-border" colspan="3" style="padding-bottom: 10px; text-align:center; font-size:11px;">( Purchase Signatory )</td>
-                                        <td class="no-border" colspan="2" style="display: block; text-align: center; padding-bottom: 10px; font-size:11px;">(Authorized Signatory)</td>
+                                        <td class="no-border" colspan="2" style="display: block; text-align: center; padding-bottom: 10px; font-size:11px;">
+                                            (Authorized Signatory)</td>
                                     </tr>
                                 </tfoot>
                             </table>
