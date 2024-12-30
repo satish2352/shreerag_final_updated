@@ -192,6 +192,7 @@ class StoreRepository
                 // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
                 ->where('businesses_details.is_active', true)
                 ->select(
+                    'businesses_details.id',
                     'gatepass.id',
                     'businesses_details.product_name',
                     'businesses_details.quantity',
