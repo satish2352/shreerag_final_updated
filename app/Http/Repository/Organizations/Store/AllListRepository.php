@@ -19,90 +19,149 @@ class AllListRepository  {
 
 
   
-  public function getAllListDesignRecievedForMaterial(){
-      try {
+//   public function getAllListDesignRecievedForMaterial(){
+//       try {
 
-          $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION')];
-          $array_to_be_check_store = [config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION')];
+//           $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION')];
+//           $array_to_be_check_store = [config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION')];
+//           $array_to_be_check_store_after_quality = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
+//           $array_to_be_check_production = [config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
+//           $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
+//             $join->on('business_application_processes.business_id', '=', 'production.business_id');
+//           })
+//           ->leftJoin('designs', function($join) {
+//             $join->on('business_application_processes.business_id', '=', 'designs.business_id');
+//           })
+//           ->leftJoin('businesses', function($join) {
+//             $join->on('business_application_processes.business_id', '=', 'businesses.id');
+//           })
+//           ->leftJoin('design_revision_for_prod', function($join) {
+//             $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
+//           })
+//           ->leftJoin('purchase_orders', function($join) {
+//           $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
+//         })
+//         ->where(function ($query) use ($array_to_be_check, $array_to_be_check_store) {
+//           $query->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store)
+//                 ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check)
+//                 ->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store_after_quality)
+//                 ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check_production);
 
-
-          $array_to_be_check_store_after_quality = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
-          $array_to_be_check_production = [config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
-          $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
-            $join->on('business_application_processes.business_id', '=', 'production.business_id');
-          })
-          ->leftJoin('designs', function($join) {
-            $join->on('business_application_processes.business_id', '=', 'designs.business_id');
-          })
-          ->leftJoin('businesses', function($join) {
-            $join->on('business_application_processes.business_id', '=', 'businesses.id');
-          })
-          ->leftJoin('design_revision_for_prod', function($join) {
-            $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
-          })
-          ->leftJoin('purchase_orders', function($join) {
-          $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
-        })
-        ->where(function ($query) use ($array_to_be_check, $array_to_be_check_store) {
-          $query->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store)
-                ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check)
-                ->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store_after_quality)
-                ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check_production);
-
-      })
+//       })
       
-        // ->orwhereIn('business_application_processes.store_status_id',$array_to_be_check)
-        //   -orwhereIn('business_application_processes.production_status_id',$array_to_be_check_store)
-          ->distinct('businesses.id')
-          ->where('businesses.is_active',true)
-          ->groupBy(
+//         // ->orwhereIn('business_application_processes.store_status_id',$array_to_be_check)
+//         //   -orwhereIn('business_application_processes.production_status_id',$array_to_be_check_store)
+//           ->distinct('businesses.id')
+//           ->where('businesses.is_active',true)
+//           ->groupBy(
+//             'businesses.id',
+//             'businesses.customer_po_number',
+//             // 'businesses.product_name',
+//             // 'businesses.title',
+//             // 'businesses.descriptions',
+//             // 'businesses.quantity',
+//             'businesses.remarks',
+//             'businesses.is_active',
+//             'production.business_id',
+//              'businesses.updated_at'
+//               // 'production.id as productionId',
+//               // 'design_revision_for_prod.reject_reason_prod',
+//               // 'design_revision_for_prod.id as design_revision_for_prod_id'
+//         )
+//           ->select(
+//               'businesses.id',
+//               // 'businesses.product_name',
+//               // 'businesses.title',
+//               'businesses.customer_po_number',
+//               // 'businesses.descriptions',
+//               'businesses.remarks',
+//               'businesses.is_active',
+//               'production.business_id',
+//                'businesses.updated_at'
+//               // 'production.id as productionId',
+//               // 'design_revision_for_prod.reject_reason_prod',
+//               // 'design_revision_for_prod.id as design_revision_for_prod_id',
+//               // 'designs.bom_image',
+//               // 'designs.design_image'
+
+//               )
+//               ->orderBy('businesses.updated_at', 'desc')
+//           ->get();
+//         return $data_output;
+//       } catch (\Exception $e) {
+          
+//           return $e;
+//       }
+//   }
+public function getAllListDesignRecievedForMaterial(){
+    try {
+
+        // Define your arrays properly
+        $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION')];
+        $array_to_be_check_store = [config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION')];
+        $array_to_be_check_store_after_quality = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
+        $array_to_be_check_production = [config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
+
+        $data_output = BusinessApplicationProcesses::leftJoin('production', function($join) {
+            $join->on('business_application_processes.business_id', '=', 'production.business_id');
+        })
+        ->leftJoin('designs', function($join) {
+            $join->on('business_application_processes.business_id', '=', 'designs.business_id');
+        })
+        ->leftJoin('businesses', function($join) {
+            $join->on('business_application_processes.business_id', '=', 'businesses.id');
+        })
+        ->leftJoin('design_revision_for_prod', function($join) {
+            $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
+        })
+        ->leftJoin('purchase_orders', function($join) {
+            $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
+        })
+        ->where(function ($query) use ($array_to_be_check, $array_to_be_check_store, $array_to_be_check_store_after_quality, $array_to_be_check_production) {
+            $query->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store)
+                  ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check)
+                  ->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store_after_quality)
+                  ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check_production);
+        })
+        ->where('businesses.is_active', true)
+        ->distinct('businesses.id')
+        ->groupBy(
             'businesses.id',
             'businesses.customer_po_number',
-            // 'businesses.product_name',
-            // 'businesses.title',
-            // 'businesses.descriptions',
-            // 'businesses.quantity',
             'businesses.remarks',
             'businesses.is_active',
             'production.business_id',
-             'businesses.updated_at'
-              // 'production.id as productionId',
-              // 'design_revision_for_prod.reject_reason_prod',
-              // 'design_revision_for_prod.id as design_revision_for_prod_id'
+            'businesses.updated_at'
         )
-          ->select(
-              'businesses.id',
-              // 'businesses.product_name',
-              // 'businesses.title',
-              'businesses.customer_po_number',
-              // 'businesses.descriptions',
-              'businesses.remarks',
-              'businesses.is_active',
-              'production.business_id',
-               'businesses.updated_at'
-              // 'production.id as productionId',
-              // 'design_revision_for_prod.reject_reason_prod',
-              // 'design_revision_for_prod.id as design_revision_for_prod_id',
-              // 'designs.bom_image',
-              // 'designs.design_image'
+        ->select(
+            'businesses.id',
+            'businesses.customer_po_number',
+            'businesses.remarks',
+            'businesses.is_active',
+            'production.business_id',
+            'businesses.updated_at'
+        )
+        ->orderBy('businesses.updated_at', 'desc')
+        ->get();
 
-              )
-              ->orderBy('businesses.updated_at', 'desc')
-          ->get();
         return $data_output;
-      } catch (\Exception $e) {
-          
-          return $e;
-      }
-  }
- 
+    } catch (\Exception $e) {
+        return $e;
+    }
+}
+
   public function getAllListDesignRecievedForMaterialBusinessWise($business_id)
 {
     try {
         $decoded_business_id = base64_decode($business_id);
 
+        // $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION')];
+        // $array_to_be_check_store = [config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION')];
         $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION')];
         $array_to_be_check_store = [config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION')];
+        $array_to_be_check_store_after_quality = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
+        $array_to_be_check_production = [config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
+
         $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
             $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
         })
@@ -127,11 +186,16 @@ class AllListRepository  {
         ->where('businesses_details.business_id', $decoded_business_id)
         ->distinct('businesses.id')
         ->where('production.is_approved_production', 1)
-
-        ->where(function ($query) use ($array_to_be_check, $array_to_be_check_store) {
-          $query->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store)
-                ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check);
-      })
+        ->where(function ($query) use ($array_to_be_check, $array_to_be_check_store, $array_to_be_check_store_after_quality, $array_to_be_check_production) {
+            $query->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store)
+                  ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check)
+                  ->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store_after_quality)
+                  ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check_production);
+        })
+    //     ->where(function ($query) use ($array_to_be_check, $array_to_be_check_store) {
+    //       $query->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store)
+    //             ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check);
+    //   })
 
         // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
         ->groupBy(
