@@ -462,7 +462,7 @@ $(document).ready(function () {
     // Disable checkbox when ticked
     $(document).on('change', '.material-send-checkbox', function () {
         if ($(this).is(':checked')) {
-            $(this).prop('disabled', true); // Disable the checkbox
+            // $(this).prop('disabled', true); // Disable the checkbox
         }
     });
 });

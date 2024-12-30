@@ -24,26 +24,31 @@ class AllListRepository  {
 
           $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION')];
           $array_to_be_check_store = [config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION')];
+
+
+          $array_to_be_check_store11 = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
+          $array_to_be_check_production = [config('constants.STORE_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
           $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
             $join->on('business_application_processes.business_id', '=', 'production.business_id');
           })
           ->leftJoin('designs', function($join) {
             $join->on('business_application_processes.business_id', '=', 'designs.business_id');
           })
-         
           ->leftJoin('businesses', function($join) {
             $join->on('business_application_processes.business_id', '=', 'businesses.id');
           })
           ->leftJoin('design_revision_for_prod', function($join) {
             $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
           })
-
           ->leftJoin('purchase_orders', function($join) {
           $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
         })
         ->where(function ($query) use ($array_to_be_check, $array_to_be_check_store) {
           $query->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store)
-                ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check);
+                ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check)
+                ->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store11)
+                ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check_production);
+
       })
       
         // ->orwhereIn('business_application_processes.store_status_id',$array_to_be_check)
@@ -130,6 +135,7 @@ class AllListRepository  {
 
         // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
         ->groupBy(
+            'businesses_details.id',
             'production.business_details_id',
             'businesses_details.product_name',
             'businesses_details.description',
@@ -147,6 +153,7 @@ class AllListRepository  {
             'production.updated_at'
         )
         ->select(
+            'businesses_details.id',
             'production.business_details_id',
             'businesses_details.product_name',
             'businesses_details.description',
@@ -164,6 +171,7 @@ class AllListRepository  {
             'production.updated_at'
         )
         ->orderBy('production.updated_at', 'desc')
+        // ->distinct() 
         ->get();
 
         return $data_output;
