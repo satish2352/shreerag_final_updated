@@ -175,25 +175,25 @@ class StoreRepository
                 ->leftJoin('design_revision_for_prod', function($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
                 })
-                ->leftJoin('purchase_orders', function($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-                })
+                // ->leftJoin('purchase_orders', function($join) {
+                //     $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+                // })
                 ->leftJoin('production_details', function($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
                 })
-                ->leftJoin('grn_tbl', function($join) {
-                    $join->on('purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id');
-                })
-                ->leftJoin('gatepass', function($join) {
-                    $join->on('grn_tbl.gatepass_id', '=', 'gatepass.id');
-                })
+                // ->leftJoin('grn_tbl', function($join) {
+                //     $join->on('purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id');
+                // })
+                // ->leftJoin('gatepass', function($join) {
+                //     $join->on('grn_tbl.gatepass_id', '=', 'gatepass.id');
+                // })
                 ->where('businesses_details.id', $id)
                 // ->where('purchase_orders.purchase_orders_id', $purchase_orders_id)
                 // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
                 ->where('businesses_details.is_active', true)
                 ->select(
                     'businesses_details.id',
-                    'gatepass.id',
+                    // 'gatepass.id',
                     'businesses_details.product_name',
                     'businesses_details.quantity',
                     'businesses_details.description',
@@ -210,7 +210,7 @@ class StoreRepository
                 // die();
             // Extract product details and data for table
             $productDetails = $dataOutputByid->first(); // Assuming the first entry contains the product details
-            $dataGroupedById = $dataOutputByid->groupBy('business_application_processes.business_details_id');
+            $dataGroupedById = $dataOutputByid->groupBy('business_details_id');
     
             return [
                 'productDetails' => $productDetails,
