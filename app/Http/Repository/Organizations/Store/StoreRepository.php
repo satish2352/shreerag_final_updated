@@ -210,7 +210,7 @@ class StoreRepository
                 // die();
             // Extract product details and data for table
             $productDetails = $dataOutputByid->first(); // Assuming the first entry contains the product details
-            $dataGroupedById = $dataOutputByid->groupBy('business_details_id');
+            $dataGroupedById = $dataOutputByid->groupBy('business_details_id.id');
     
             return [
                 'productDetails' => $productDetails,
