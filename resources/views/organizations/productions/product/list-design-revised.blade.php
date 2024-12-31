@@ -137,12 +137,21 @@
                                                     <td>{{ ucwords($data->remark_by_design) }}</td>
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
-
-                                                            <a
+                                                            <a href="{{route('reject-design-edit', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed mb-4"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Reject</button></a> &nbsp;
+                                                            {{-- <a
                                                                 href="{{ route('accept-design', base64_encode($data->id)) }} "><button
                                                                     data-toggle="tooltip" title="Accept Design"
                                                                     class="pd-setting-ed"><i class="fa fa-check"
-                                                                        aria-hidden="true"></i></button></a>
+                                                                        aria-hidden="true"></i></button></a> --}}
+
+
+                                                                        <a href="{{ route('accept-design', base64_encode($data->id)) }}"
+                                                                            onclick="return confirmAccept('{{ route('accept-design', base64_encode($data->id)) }}')"
+                                                                            class="pd-setting-ed"
+                                                                            data-toggle="tooltip"
+                                                                            title="Accept">
+                                                                            <button><i class="fa fa-check" aria-hidden="true"></i> Accept </button>
+                                                                        </a>
                                                         </div>
                                                     </td>
 

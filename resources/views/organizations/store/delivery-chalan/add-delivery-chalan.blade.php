@@ -70,7 +70,7 @@
                                                         <div class="form-group-inner">
                                                             <div class="row">
                                                                 <!-- Vendor Selection -->
-                                                                <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                {{-- <div class="col-lg-4 col-md-4 col-sm-4">
                                                                     <div class="form-group">
                                                                         <label for="vendor_id">Vendor Company Name <span
                                                                                 class="text-danger">*</span></label>
@@ -97,9 +97,9 @@
                                                                             <!-- Dynamically populated -->
                                                                         </select>
                                                                     </div>
-                                                                </div>
+                                                                </div> --}}
 
-                                                                {{-- <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                <div class="col-lg-4 col-md-4 col-sm-4">
                                                                     <div class="form-group">
                                                                         <label for="vendor_id">Vendor Company Name <span
                                                                                 class="text-danger">*</span></label>
@@ -114,7 +114,37 @@
                                                                             @endforeach
                                                                         </select>
                                                                     </div>
-                                                                </div> --}}
+                                                                </div>
+                                                                <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label for="business_id">PO Number
+                                                                            (Optional)</label>
+                                                                        <select class="form-control mb-2" name="business_id"
+                                                                            id="business_id">
+                                                                            <option value="" default>Select PO Number
+                                                                            </option>
+                                                                            @foreach ($dataOutputBusiness as $data)
+                                                                                <option value="{{ $data['id'] }}">
+                                                                                    {{ $data['customer_po_number'] }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                    <div class="form-group">
+                                                                    <label for="customer_po_no">Customer PO Number
+                                                                        (optional)</label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="customer_po_no"
+                                                                        value="{{ old('customer_po_no') }}"
+                                                                        name="customer_po_no"
+                                                                        placeholder="Enter Customer PO Number">
+                                                                    @if ($errors->has('customer_po_no'))
+                                                                        <span class="red-text"><?php echo $errors->first('customer_po_no', ':message'); ?></span>
+                                                                    @endif
+                                                                    </div>
+                                                                </div>
                                                                 <div class="col-lg-4 col-md-4 col-sm-4">
                                                                     <div class="form-group">
                                                                         <label for="transport_id">Transport Name<span
@@ -144,41 +174,6 @@
                                                                             @endforeach
                                                                         </select>
                                                                     </div>
-                                                                </div>
-                                                            
-                                                            {{-- <div class="row"> --}}
-                                                                {{-- <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                    <div class="form-group">
-                                                                        <label for="business_id">PO Number
-                                                                            (Optional)</label>
-                                                                        <select class="form-control mb-2" name="business_id"
-                                                                            id="business_id">
-                                                                            <option value="" default>Select PO Number
-                                                                            </option>
-                                                                            @foreach ($dataOutputBusiness as $data)
-                                                                                <option value="{{ $data['id'] }}">
-                                                                                    {{ $data['customer_po_number'] }}
-                                                                                </option>
-                                                                            @endforeach
-                                                                        </select>
-                                                                    </div>
-                                                                </div> --}}
-                                                                <!-- Vendor Selection -->
-
-
-
-
-                                                                <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                    <label for="customer_po_no">Customer PO Number
-                                                                        (optional)</label>
-                                                                    <input type="text" class="form-control"
-                                                                        id="customer_po_no"
-                                                                        value="{{ old('customer_po_no') }}"
-                                                                        name="customer_po_no"
-                                                                        placeholder="Enter Customer PO Number">
-                                                                    @if ($errors->has('customer_po_no'))
-                                                                        <span class="red-text"><?php echo $errors->first('customer_po_no', ':message'); ?></span>
-                                                                    @endif
                                                                 </div>
                                                                 <div class="col-lg-4 col-md-4 col-sm-4">
                                                                     <label for="plant_id">Plant Name <span
@@ -456,50 +451,6 @@
         <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
-            $(document).ready(function() {
-                // When Vendor is selected
-                $('#vendor_id').change(function() {
-                    var vendorId = $(this).val(); // Get selected Vendor ID
-
-                    if (vendorId) {
-                        // Show PO Number dropdown if Vendor is selected
-                        $('#po_number_div').show();
-
-                        // Optionally: Make an AJAX call to get PO numbers for the selected Vendor
-                        $.ajax({
-                            url: '{{ route('fetch-po-numbers') }}', // Use the Laravel route helper
-                            type: 'GET',
-                            // url: '/fetch-po-numbers', // Your route to fetch PO numbers
-                            // type: 'GET',
-                            data: {
-                                vendor_id: vendorId
-                            },
-                            success: function(response) {
-                                // Clear the current options in PO Number dropdown
-                                $('#business_id').empty();
-                                $('#business_id').append(
-                                    '<option value="">Select PO Number</option>');
-
-                                // Populate PO Number dropdown
-                                $.each(response.poNumbers, function(index, po) {
-                                    $('#business_id').append('<option value="' + po.id +
-                                        '">' + po.purchase_orders_id + '</option>');
-                                });
-                            },
-                            error: function() {
-                                alert('Error fetching PO numbers');
-                            }
-                        });
-                    } else {
-                        // Hide PO Number dropdown if no Vendor is selected
-                        // $('#po_number_div').hide();
-                    }
-                });
-            });
-        </script>
-
-
         <script>
             $(document).ready(function() {
                 function setMinDate() {

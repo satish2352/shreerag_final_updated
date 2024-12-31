@@ -133,7 +133,7 @@ label.error {
                                                             <a href="{{ route('list-gatepass') }}" class="btn btn-white"
                                                                 style="margin-bottom:50px">Cancel</a>
                                                             <button class="btn btn-sm btn-primary login-submit-cs"
-                                                                type="submit" style="margin-bottom:50px">Genrate gatepass and submit to quality </button>
+                                                                type="submit" style="margin-bottom:50px">Generate gate pass and submit to quality </button>
                                                         </div>
                                                     </div>
                                                 </div>

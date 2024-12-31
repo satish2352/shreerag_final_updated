@@ -177,23 +177,7 @@ class DeliveryChalanController extends Controller
             return redirect('storedept/add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
-    public function fetchPONumbers(Request $request)
-    {
-        try {
-            // Get the vendor_id from the request
-            $vendorId = $request->vendor_id;
-    
-            // Fetch PO numbers based on the selected vendor
-            $poNumbers = PurchaseOrdersModel::where('vendor_id', $vendorId)
-                                  ->where('is_active', true)
-                                  ->get(['id', 'purchase_orders_id']); // Adjust column names as needed
-    
-            // Return PO numbers as a JSON response
-            return response()->json(['poNumbers' => $poNumbers]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
+  
     
     public function show(Request $request)
     {
@@ -443,6 +427,9 @@ class DeliveryChalanController extends Controller
                         ->with(['msg' => $e->getMessage(), 'status' => 'error']);
                 }
             }
+
+           
+
             public function destroyAddmore(Request $request)
 {
     $delete_data_id = $request->delete_id; // Get the delete ID from the request

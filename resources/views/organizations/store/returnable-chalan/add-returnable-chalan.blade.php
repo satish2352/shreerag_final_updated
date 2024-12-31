@@ -64,7 +64,7 @@
                                                 @csrf
                                                 <div class="form-group-inner">
                                                 <div>
-                                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                                        {{-- <div class="col-lg-4 col-md-4 col-sm-4">
                                                             <div class="form-group">
                                                                 <label for="vendor_id">Vendor Company Name <span class="text-danger">*</span></label>
                                                                     <select class="form-control mb-2" name="vendor_id" id="vendor_id">
@@ -73,6 +73,34 @@
                                                                             <option value="{{ $data['id'] }}" >
                                                                                 {{ $data['vendor_company_name'] }}</option>
                                                                     @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div> --}}
+                                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label for="vendor_id">Vendor Company Name <span
+                                                                        class="text-danger">*</span></label>
+                                                                <select class="form-control mb-2" name="vendor_id"
+                                                                    id="vendor_id">
+                                                                    <option value="">Select Vendor</option>
+                                                                    @foreach ($dataOutputVendor as $data)
+                                                                        <option value="{{ $data['id'] }}">
+                                                                            {{ $data['vendor_company_name'] }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- PO Number (Hidden initially) -->
+                                                        <div class="col-lg-4 col-md-4 col-sm-4" id="po_number_div">
+                                                            <div class="form-group">
+                                                                <label for="business_id">PO Number
+                                                                    (Optional)</label>
+                                                                <select class="form-control mb-2" name="business_id"
+                                                                    id="business_id">
+                                                                    <option value="">Select PO Number</option>
+                                                                    <!-- Dynamically populated -->
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -337,6 +365,49 @@
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
     <script>
+        $(document).ready(function() {
+            // When Vendor is selected
+            $('#vendor_id').change(function() {
+                var vendorId = $(this).val(); // Get selected Vendor ID
+
+                if (vendorId) {
+                    // Show PO Number dropdown if Vendor is selected
+                    $('#po_number_div').show();
+
+                    // Optionally: Make an AJAX call to get PO numbers for the selected Vendor
+                    $.ajax({
+                        url: '{{ route('fetch-po-numbers') }}', // Use the Laravel route helper
+                        type: 'GET',
+                        // url: '/fetch-po-numbers', // Your route to fetch PO numbers
+                        // type: 'GET',
+                        data: {
+                            vendor_id: vendorId
+                        },
+                        success: function(response) {
+                            // Clear the current options in PO Number dropdown
+                            $('#business_id').empty();
+                            $('#business_id').append(
+                                '<option value="">Select PO Number</option>');
+
+                            // Populate PO Number dropdown
+                            $.each(response.poNumbers, function(index, po) {
+                                $('#business_id').append('<option value="' + po.id +
+                                    '">' + po.purchase_orders_id + '</option>');
+                            });
+                        },
+                        error: function() {
+                            alert('Error fetching PO numbers');
+                        }
+                    });
+                } else {
+                    // Hide PO Number dropdown if no Vendor is selected
+                    // $('#po_number_div').hide();
+                }
+            });
+        });
+    </script>
+
+  <script>
         $(document).ready(function() {
             function setMinDate() {
                 var today = new Date();

@@ -302,7 +302,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::any('/update-delivery-chalan', ['as' => 'update-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@update']);
         Route::any('/delete-delivery-chalan/{id}', ['as' => 'delete-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@destroy']);
         Route::post('/delete-addmore-delivery', ['as' => 'delete-addmore-delivery', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@destroyAddmore']);
-        Route::get('/fetch-po-numbers', ['as' => 'fetch-po-numbers', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@fetchPONumbers']);
+
 
         Route::get('/list-returnable-chalan', ['as' => 'list-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@index']);
         // Route::post('/list-returnable-chalan', ['as' => 'list-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ReturnableChalanController@index']);
@@ -313,6 +313,8 @@ Route::group(['middleware' => ['admin']], function () {
         Route::any('/update-returnable-chalan', ['as' => 'update-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@update']);
         Route::any('/delete-returnable-chalan/{id}', ['as' => 'delete-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@destroy']);
         Route::post('/delete-addmore-returnable', ['as' => 'delete-addmore-returnable', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@destroyAddmore']);
+        Route::get('/fetch-po-numbers', ['as' => 'fetch-po-numbers', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@fetchPONumbers']);
+        Route::get('/get-po-numbers/{vendor_id}', ['as' => 'get-po-numbers', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@getPONumbers']);
     });
     Route::group(['prefix' => 'purchase'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);

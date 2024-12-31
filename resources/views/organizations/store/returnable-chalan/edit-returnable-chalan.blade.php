@@ -70,7 +70,7 @@
                                                         ?>
                                                             @if ($key == 0)
                                                                 <div class="row">
-                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                    {{-- <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
                                                                             <label for="Service">Vendor Company
                                                                                 Name:  <span
@@ -91,6 +91,32 @@
                                                                                     class="red-text">{{ $errors->first('vendor_id') }}</span>
                                                                             @endif
                                                                         </div>
+                                                                    </div> --}}
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label for="vendor_id">Vendor</label>
+                                                                        <select class="form-control" id="vendor_id" name="vendor_id">
+                                                                            <option value="" default>Select Vendor</option>
+                                                                            @foreach ($dataOutputVendor as $vendor)
+                                                                                <option value="{{ $vendor->id }}" {{ old('vendor_id', $editDataNew->vendor_id) == $vendor->id ? 'selected' : '' }}>
+                                                                                    {{ $vendor->vendor_company_name }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label for="business_id">PO Number (Optional)</label>
+                                                                        <select class="form-control" id="business_id" name="business_id">
+                                                                            <option value="" default>Select PO Number</option>
+                                                                            @foreach ($dataOutputBusiness as $OutputBusiness)
+                                                                                <option value="{{ $OutputBusiness['id'] }}" {{ old('business_id', $editDataNew->business_id) == $OutputBusiness->id ? 'selected' : '' }}>
+                                                                                    {{ $OutputBusiness->customer_po_number }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
                                                                     </div>
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
@@ -130,7 +156,7 @@
                                                                             @endif
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                    {{-- <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
                                                                             <label for="business_id">PO Number (Optional)</label>
                                                                                 <select class="form-control mb-2" name="business_id" id="business_id">
@@ -143,7 +169,7 @@
                                                                             @endforeach
                                                                             </select>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
                                                                             <label>Customer PO Number (optional) <span
@@ -438,6 +464,54 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script>
+    $(document).ready(function () {
+    const poDropdown = $('#business_id');
+    let preselectedPoId = poDropdown.val(); // Get the preselected PO ID (if any)
+
+    $('#vendor_id').change(function () {
+        const vendorId = $(this).val();
+
+        if (vendorId) {
+            const url = '{{ route("get-po-numbers", ":vendorId") }}'.replace(':vendorId', vendorId);
+
+            // Clear the dropdown immediately before fetching new data
+            poDropdown.empty().append('<option value="">Select PO Number</option>');
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (response) {
+                    if (response.status === 'success') {
+                        response.data.forEach(function (po) {
+                            // Check if the current PO is preselected and mark it as selected
+                            const isSelected = preselectedPoId == po.id ? 'selected' : '';
+                            console.log(isSelected, "isSelectedisSelected");
+                            
+                            poDropdown.append(`<option value="${po.id}" ${isSelected}>${po.purchase_orders_id}</option>`);
+                        });
+                    } else {
+                        alert(response.message || 'Failed to load PO numbers');
+                    }
+                },
+                error: function () {
+                    alert('An error occurred while fetching PO numbers.');
+                }
+            });
+        } else {
+            // Clear the dropdown if no vendor is selected
+            poDropdown.empty().append('<option value="">Select PO Number</option>');
+        }
+    });
+
+    // Trigger change event to populate dropdown on page load if a vendor is preselected
+    const preselectedVendorId = $('#vendor_id').val();
+    if (preselectedVendorId) {
+        $('#vendor_id').trigger('change');
+    }
+});
+
+    </script>
+   <script>
         $(document).ready(function() {
             var validator = $("#editDesignsForm").validate({
                 ignore: [],

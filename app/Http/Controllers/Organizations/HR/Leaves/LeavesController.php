@@ -343,7 +343,7 @@ class LeavesController extends Controller
               $validation = Validator::make($request->all(), $rules, $messages);
               
               if ($validation->fails()) {
-                  return redirect('add-leaves')
+                  return redirect('hr/add-leaves')
                       ->withInput()
                       ->withErrors($validation);
               } else {
@@ -354,14 +354,14 @@ class LeavesController extends Controller
                       $status = $add_record['status'];
   
                       if ($status == 'success') {
-                          return redirect('list-leaves')->with(compact('msg', 'status'));
+                          return redirect('hr/list-leaves')->with(compact('msg', 'status'));
                       } else {
-                          return redirect('add-leaves')->withInput()->with(compact('msg', 'status'));
+                          return redirect('hr/add-leaves')->withInput()->with(compact('msg', 'status'));
                       }
                   }
               }
           } catch (Exception $e) {
-              return redirect('add-leaves')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+              return redirect('hr/add-leaves')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
           }
       }
 
@@ -526,7 +526,7 @@ class LeavesController extends Controller
                         $msg = $update_data['msg'];
                         $status = $update_data['status'];
                         if ($status == 'success') {
-                            return redirect('list-leaves')->with(compact('msg', 'status'));
+                            return redirect('hr/list-leaves')->with(compact('msg', 'status'));
                         } else {
                             return redirect()->back()
                                 ->withInput()

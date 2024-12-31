@@ -73,7 +73,7 @@
 
                                                 <div class="row">
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="design_image">Upload Design Layout (upload pdf file min:1KB to max:2MB) :</label>
+                                                        <label for="design_image">Upload Design Layout (upload pdf file min:1KB to max:5MB) :</label>
                                                         <input type="file" class="form-control" accept="application/pdf"
                                                             id="design_image" name="design_image">
                                                         @if ($errors->has('design_image'))

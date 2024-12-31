@@ -70,9 +70,9 @@ class LeaveManagmentController extends Controller
                     $status = $add_record['status'];
 
                     if ($status == 'success') {
-                        return redirect('list-yearly-leave-management')->with(compact('msg', 'status'));
+                        return redirect('hr/list-yearly-leave-management')->with(compact('msg', 'status'));
                     } else {
-                        return redirect('add-yearly-leave-management')->withInput()->with(compact('msg', 'status'));
+                        return redirect('hr/add-yearly-leave-management')->withInput()->with(compact('msg', 'status'));
                     }
                 }
             }

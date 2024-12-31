@@ -237,8 +237,32 @@ class ReturnableChalanController extends Controller
         }
     }
 
-
-
+    public function fetchPONumbers(Request $request)
+    {
+        try {
+            // Get the vendor_id from the request
+            $vendorId = $request->vendor_id;
+    
+            // Fetch PO numbers based on the selected vendor
+            $poNumbers = PurchaseOrdersModel::where('vendor_id', $vendorId)
+                                  ->where('is_active', true)
+                                  ->get(['id', 'purchase_orders_id']); // Adjust column names as needed
+    
+            // Return PO numbers as a JSON response
+            return response()->json(['poNumbers' => $poNumbers]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    public function getPONumbers($vendor_id)
+    {
+        try {
+            $poNumbers = PurchaseOrdersModel::where('vendor_id', $vendor_id)->where('is_active', true)->get(['id', 'purchase_orders_id']);
+            return response()->json(['status' => 'success', 'data' => $poNumbers]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+        }
+    }
     public function show(Request $request)
     {
         // Decode the id

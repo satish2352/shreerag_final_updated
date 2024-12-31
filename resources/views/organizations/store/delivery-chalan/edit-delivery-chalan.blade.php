@@ -97,6 +97,36 @@
                                                                     </div>
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
+                                                                            <label for="business_id">PO Number
+                                                                                (Optional)</label>
+                                                                            <select class="form-control mb-2"
+                                                                                name="business_id" id="business_id">
+                                                                                <option value="" default>Select PO
+                                                                                    Number</option>
+                                                                                @foreach ($dataOutputBusiness as $OutputBusiness)
+                                                                                    <option
+                                                                                        value="{{ $OutputBusiness['id'] }}"
+                                                                                        {{ old('business_id', $editDataNew->business_id) == $OutputBusiness->id ? 'selected' : '' }}>
+                                                                                        {{ $OutputBusiness->customer_po_number }}
+                                                                                    </option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
+                                                                            <label>Customer PO Number (optional) <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <div class="cal-icon">
+                                                                                <input class="form-control datetimepicker"
+                                                                                    type="text" name="customer_po_no"
+                                                                                    id="customer_po_no"
+                                                                                    value="{{ $editDataNew->customer_po_no }}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
                                                                             <label for="transport_id">Transport Name <span
                                                                                     class="text-danger">*</span></label>
                                                                             <select class="form-control" id="transport_id"
@@ -138,36 +168,6 @@
                                                                                 <span
                                                                                     class="red-text"><?php echo $errors->first('vehicle_id', ':message'); ?></span>
                                                                             @endif
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                        <div class="form-group">
-                                                                            <label for="business_id">PO Number
-                                                                                (Optional)</label>
-                                                                            <select class="form-control mb-2"
-                                                                                name="business_id" id="business_id">
-                                                                                <option value="" default>Select PO
-                                                                                    Number</option>
-                                                                                @foreach ($dataOutputBusiness as $OutputBusiness)
-                                                                                    <option
-                                                                                        value="{{ $OutputBusiness['id'] }}"
-                                                                                        {{ old('business_id', $editDataNew->business_id) == $OutputBusiness->id ? 'selected' : '' }}>
-                                                                                        {{ $OutputBusiness->customer_po_number }}
-                                                                                    </option>
-                                                                                @endforeach
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                        <div class="form-group">
-                                                                            <label>Customer PO Number (optional) <span
-                                                                                    class="text-danger">*</span></label>
-                                                                            <div class="cal-icon">
-                                                                                <input class="form-control datetimepicker"
-                                                                                    type="text" name="customer_po_no"
-                                                                                    id="customer_po_no"
-                                                                                    value="{{ $editDataNew->customer_po_no }}">
-                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
