@@ -145,13 +145,13 @@
                                                             <div style="display: inline-block; align-items: center;">
                                                                 <a href="{{route('edit-material-list-bom-wise-new-req',base64_encode($data->business_details_id))}}"><button data-toggle="tooltip" style="padding: 14px;" title="View Details" class="pd-setting-ed">Issue Product Material</button></a>
                                                             </div>
-                                                            @if($data->material_send_production == 1)
+                                                            {{-- @if($data->material_send_production == 1)
                                                             <a href="{{ route('accepted-and-material-sent', base64_encode($data->business_details_id)) }}">
                                                                 <button class="pd-setting-ed enabled-btn" style="width: 200px;" title="Requirement forwarded for production">Requirement forwarded For production</button>
                                                             </a>
                                                         @else
                                                         <button class="pd-setting-ed disabled-btn" style="width: 200px;"  title="Requirement forwarded for production" disabled>Requirement forwarded For production</button>  
-                                                        @endif
+                                                        @endif --}}
                                                             {{-- <a
                                                                 href="{{ route('accepted-and-material-sent', base64_encode($data->business_details_id)) }} "><button
                                                                     data-toggle="tooltip" title="Requirement forwareded For production"

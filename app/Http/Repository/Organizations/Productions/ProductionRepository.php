@@ -520,7 +520,7 @@ public function updateProductMaterial($request) {
                         $dataOutput->part_item_id = $item['part_item_id'];
                         $dataOutput->quantity = $item['quantity'] ?? 0;
                         $dataOutput->unit = $item['unit'] ?? '';
-                        $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 1;
+                        $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
                         $dataOutput->save();
                     }
                 } else {
@@ -529,7 +529,7 @@ public function updateProductMaterial($request) {
                     $newRow->part_item_id = $item['part_item_id'];
                     $newRow->quantity = $item['quantity'] ?? 0;
                     $newRow->unit = $item['unit'] ?? '';
-                    $newRow->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 1;
+                    $newRow->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
 
                     // Set the necessary relationships
                     $newRow->business_id = $dataOutput_ProductionDetails->first()->business_id ?? null;

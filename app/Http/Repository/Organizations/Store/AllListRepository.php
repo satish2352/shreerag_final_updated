@@ -213,7 +213,7 @@ public function getAllListDesignRecievedForMaterial(){
             'design_revision_for_prod.id', // Use the column name directly
             'design_revision_for_prod.design_image', // Keep this as it is
             'design_revision_for_prod.bom_image', // Keep this as it is
-            'production_details.material_send_production',
+            // 'production_details.material_send_production',
             'production.updated_at'
         )
         ->select(
@@ -231,7 +231,7 @@ public function getAllListDesignRecievedForMaterial(){
             'design_revision_for_prod.id as design_revision_for_prod_id',
             'design_revision_for_prod.design_image as re_design_image',
             'design_revision_for_prod.bom_image as re_bom_image',
-            'production_details.material_send_production',
+            // 'production_details.material_send_production',
             'production.updated_at'
         )
         ->orderBy('production.updated_at', 'desc')

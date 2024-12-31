@@ -69,7 +69,37 @@
                                                         @csrf
                                                         <div class="form-group-inner">
                                                             <div class="row">
+                                                                <!-- Vendor Selection -->
                                                                 <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label for="vendor_id">Vendor Company Name <span
+                                                                                class="text-danger">*</span></label>
+                                                                        <select class="form-control mb-2" name="vendor_id"
+                                                                            id="vendor_id">
+                                                                            <option value="">Select Vendor</option>
+                                                                            @foreach ($dataOutputVendor as $data)
+                                                                                <option value="{{ $data['id'] }}">
+                                                                                    {{ $data['vendor_company_name'] }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- PO Number (Hidden initially) -->
+                                                                <div class="col-lg-4 col-md-4 col-sm-4" id="po_number_div">
+                                                                    <div class="form-group">
+                                                                        <label for="business_id">PO Number
+                                                                            (Optional)</label>
+                                                                        <select class="form-control mb-2" name="business_id"
+                                                                            id="business_id">
+                                                                            <option value="">Select PO Number</option>
+                                                                            <!-- Dynamically populated -->
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                                {{-- <div class="col-lg-4 col-md-4 col-sm-4">
                                                                     <div class="form-group">
                                                                         <label for="vendor_id">Vendor Company Name <span
                                                                                 class="text-danger">*</span></label>
@@ -84,7 +114,7 @@
                                                                             @endforeach
                                                                         </select>
                                                                     </div>
-                                                                </div>
+                                                                </div> --}}
                                                                 <div class="col-lg-4 col-md-4 col-sm-4">
                                                                     <div class="form-group">
                                                                         <label for="transport_id">Transport Name<span
@@ -115,9 +145,9 @@
                                                                         </select>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-lg-4 col-md-4 col-sm-4">
+                                                            
+                                                            {{-- <div class="row"> --}}
+                                                                {{-- <div class="col-lg-4 col-md-4 col-sm-4">
                                                                     <div class="form-group">
                                                                         <label for="business_id">PO Number
                                                                             (Optional)</label>
@@ -132,7 +162,12 @@
                                                                             @endforeach
                                                                         </select>
                                                                     </div>
-                                                                </div>
+                                                                </div> --}}
+                                                                <!-- Vendor Selection -->
+
+
+
+
                                                                 <div class="col-lg-4 col-md-4 col-sm-4">
                                                                     <label for="customer_po_no">Customer PO Number
                                                                         (optional)</label>
@@ -156,7 +191,7 @@
                                                                     @endif
                                                                 </div>
                                                             </div>
-                                                                <div class="row">
+                                                            <div class="row">
                                                                 <div class="col-lg-4 col-md-4 col-sm-4">
                                                                     <div class="form-group">
                                                                         <label>Tax Type<span
@@ -198,8 +233,8 @@
                                                                         <span class="red-text"><?php echo $errors->first('vehicle_number', ':message'); ?></span>
                                                                     @endif
                                                                 </div>
-                                                                </div>
-                                                                <div class="row">
+                                                            </div>
+                                                            <div class="row">
                                                                 <div class="col-lg-4 col-md-4 col-sm-4">
                                                                     <label for="po_date">PO Date <span
                                                                             class="text-danger">*</span></label>
@@ -219,181 +254,175 @@
                                                                         <span class="red-text"><?php echo $errors->first('lr_number', ':message'); ?></span>
                                                                     @endif
                                                                 </div>
-                                                                </div>
+                                                            </div>
 
-                                                                <div class="row">
-                                                                    <div class="col-md-12 col-sm-12">
-                                                                        <div class="table-responsive">
-                                                                            <table
-                                                                                class="table table-hover table-white repeater"
-                                                                                id="purchase_order_table">
-                                                                                <thead>
-                                                                                    <tr>
-                                                                                        <th>#</th>
-                                                                                        <th class="col-sm-2">Product Name
-                                                                                        </th>
-                                                                                        <th class="col-md-1">Unit</th>
-                                                                                        <th class="col-md-1">HSN</th>
-                                                                                        <th class="col-md-2">process</th>
-                                                                                        <th class="col-md-2">Quantity</th>
-                                                                                        <th class="col-md-1">Rate</th>
-                                                                                        <th class="col-md-1">Size</th>
-                                                                                        <th class="col-md-1">Amount</th>
-                                                                                        <th>
-                                                                                            <button type="button"
-                                                                                                class="btn btn-sm btn-success font-18 mr-1"
-                                                                                                id="add_more_btn"
-                                                                                                title="Add"
-                                                                                                data-repeater-create>
-                                                                                                <i class="fa fa-plus"></i>
-                                                                                            </button>
-                                                                                        </th>
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody>
-                                                                                    <tr>
-                                                                                        <td>
-                                                                                            <input type="text"
-                                                                                                name="id"
-                                                                                                class="form-control"
-                                                                                                style="min-width:50px"
-                                                                                                readonly value="1">
-                                                                                            <input type="hidden"
-                                                                                                id="i_id"
-                                                                                                class="form-control"
-                                                                                                style="min-width:50px"
-                                                                                                readonly value="0">
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <select
-                                                                                                class="form-control part_item_id mb-2"
-                                                                                                name="addmore[0][part_item_id]"
-                                                                                                id="part_item_id_0">
-                                                                                                <option value=""
-                                                                                                    default>Select Part Item
+                                                            <div class="row">
+                                                                <div class="col-md-12 col-sm-12">
+                                                                    <div class="table-responsive">
+                                                                        <table
+                                                                            class="table table-hover table-white repeater"
+                                                                            id="purchase_order_table">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>#</th>
+                                                                                    <th class="col-sm-2">Product Name
+                                                                                    </th>
+                                                                                    <th class="col-md-1">Unit</th>
+                                                                                    <th class="col-md-1">HSN</th>
+                                                                                    <th class="col-md-2">process</th>
+                                                                                    <th class="col-md-2">Quantity</th>
+                                                                                    <th class="col-md-1">Rate</th>
+                                                                                    <th class="col-md-1">Size</th>
+                                                                                    <th class="col-md-1">Amount</th>
+                                                                                    <th>
+                                                                                        <button type="button"
+                                                                                            class="btn btn-sm btn-success font-18 mr-1"
+                                                                                            id="add_more_btn"
+                                                                                            title="Add"
+                                                                                            data-repeater-create>
+                                                                                            <i class="fa fa-plus"></i>
+                                                                                        </button>
+                                                                                    </th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <input type="text"
+                                                                                            name="id"
+                                                                                            class="form-control"
+                                                                                            style="min-width:50px" readonly
+                                                                                            value="1">
+                                                                                        <input type="hidden"
+                                                                                            id="i_id"
+                                                                                            class="form-control"
+                                                                                            style="min-width:50px" readonly
+                                                                                            value="0">
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <select
+                                                                                            class="form-control part_item_id mb-2"
+                                                                                            name="addmore[0][part_item_id]"
+                                                                                            id="part_item_id_0">
+                                                                                            <option value="" default>
+                                                                                                Select Part Item
+                                                                                            </option>
+                                                                                            @foreach ($dataOutputPartItem as $data)
+                                                                                                <option
+                                                                                                    value="{{ $data['id'] }}">
+                                                                                                    {{ $data['description'] }}
                                                                                                 </option>
-                                                                                                @foreach ($dataOutputPartItem as $data)
-                                                                                                    <option
-                                                                                                        value="{{ $data['id'] }}">
-                                                                                                        {{ $data['description'] }}
-                                                                                                    </option>
-                                                                                                @endforeach
-                                                                                            </select>
+                                                                                            @endforeach
+                                                                                        </select>
 
-                                                                                            {{-- <input class="form-control part_item_id" name="addmore[0][part_item_id]" type="text" style="min-width:150px"> --}}
-                                                                                        </td>
+                                                                                        {{-- <input class="form-control part_item_id" name="addmore[0][part_item_id]" type="text" style="min-width:150px"> --}}
+                                                                                    </td>
 
-                                                                                        <td>
-                                                                                            <select
-                                                                                                class="form-control mb-2"
-                                                                                                name="addmore[0][unit_id]"
-                                                                                                id="">
-                                                                                                <option value=""
-                                                                                                    default>Select Unit
+                                                                                    <td>
+                                                                                        <select class="form-control mb-2"
+                                                                                            name="addmore[0][unit_id]"
+                                                                                            id="">
+                                                                                            <option value="" default>
+                                                                                                Select Unit
+                                                                                            </option>
+                                                                                            @foreach ($dataOutputUnitMaster as $data)
+                                                                                                <option
+                                                                                                    value="{{ $data['id'] }}">
+                                                                                                    {{ $data['name'] }}
                                                                                                 </option>
-                                                                                                @foreach ($dataOutputUnitMaster as $data)
-                                                                                                    <option
-                                                                                                        value="{{ $data['id'] }}">
-                                                                                                        {{ $data['name'] }}
-                                                                                                    </option>
-                                                                                                @endforeach
-                                                                                            </select>
-                                                                                            {{-- <input class="form-control description" name="addmore[0][description]" type="text" style="min-width:150px"> --}}
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <select
-                                                                                                class="form-control mb-2"
-                                                                                                name="addmore[0][hsn_id]"
-                                                                                                id="">
-                                                                                                <option value=""
-                                                                                                    default>Select HSN
+                                                                                            @endforeach
+                                                                                        </select>
+                                                                                        {{-- <input class="form-control description" name="addmore[0][description]" type="text" style="min-width:150px"> --}}
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <select class="form-control mb-2"
+                                                                                            name="addmore[0][hsn_id]"
+                                                                                            id="">
+                                                                                            <option value="" default>
+                                                                                                Select HSN
+                                                                                            </option>
+                                                                                            @foreach ($dataOutputHSNMaster as $data)
+                                                                                                <option
+                                                                                                    value="{{ $data['id'] }}">
+                                                                                                    {{ $data['name'] }}
                                                                                                 </option>
-                                                                                                @foreach ($dataOutputHSNMaster as $data)
-                                                                                                    <option
-                                                                                                        value="{{ $data['id'] }}">
-                                                                                                        {{ $data['name'] }}
-                                                                                                    </option>
-                                                                                                @endforeach
-                                                                                            </select>
-                                                                                            {{-- <input class="form-control quantity" name="addmore[0][quantity]" type="text"> --}}
-                                                                                        </td>
-                                                                                        {{-- <td>
+                                                                                            @endforeach
+                                                                                        </select>
+                                                                                        {{-- <input class="form-control quantity" name="addmore[0][quantity]" type="text"> --}}
+                                                                                    </td>
+                                                                                    {{-- <td>
                                                                                 <input class="form-control unit" name="addmore[0][unit]"  type="text">
                                                                             </td> --}}
-                                                                                        <td>
-                                                                                            <select
-                                                                                                class="form-control mb-2"
-                                                                                                name="addmore[0][process_id]"
-                                                                                                id="">
-                                                                                                <option value=""
-                                                                                                    default>Select Process
+                                                                                    <td>
+                                                                                        <select class="form-control mb-2"
+                                                                                            name="addmore[0][process_id]"
+                                                                                            id="">
+                                                                                            <option value="" default>
+                                                                                                Select Process
+                                                                                            </option>
+                                                                                            @foreach ($dataOutputProcessMaster as $data)
+                                                                                                <option
+                                                                                                    value="{{ $data['id'] }}">
+                                                                                                    {{ $data['name'] }}
                                                                                                 </option>
-                                                                                                @foreach ($dataOutputProcessMaster as $data)
-                                                                                                    <option
-                                                                                                        value="{{ $data['id'] }}">
-                                                                                                        {{ $data['name'] }}
-                                                                                                    </option>
-                                                                                                @endforeach
-                                                                                            </select>
-                                                                                            {{-- <input class="form-control rate" name="addmore[0][rate]" type="text"> --}}
-                                                                                        </td>
-                                                                                        <td><input
-                                                                                                class="form-control quantity"
-                                                                                                name="addmore[0][quantity]"
-                                                                                                type="text"></td>
-                                                                                        <td><input
-                                                                                                class="form-control rate"
-                                                                                                name="addmore[0][rate]"
-                                                                                                type="text"> </td>
-                                                                                        <td><input
-                                                                                                class="form-control rate"
-                                                                                                name="addmore[0][size]"
-                                                                                                type="text"> </td>
-                                                                                        <td>
-                                                                                            <input
-                                                                                                class="form-control total_amount"
-                                                                                                name="addmore[0][amount]"
-                                                                                                readonly
-                                                                                                style="width:120px"
-                                                                                                type="text">
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <button type="button"
-                                                                                                class="btn btn-sm btn-danger font-18 ml-2 remove-row"
-                                                                                                title="Delete"
-                                                                                                data-repeater-delete>
-                                                                                                <i class="fa fa-trash"></i>
-                                                                                            </button>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
+                                                                                            @endforeach
+                                                                                        </select>
+                                                                                        {{-- <input class="form-control rate" name="addmore[0][rate]" type="text"> --}}
+                                                                                    </td>
+                                                                                    <td><input
+                                                                                            class="form-control quantity"
+                                                                                            name="addmore[0][quantity]"
+                                                                                            type="text"></td>
+                                                                                    <td><input class="form-control rate"
+                                                                                            name="addmore[0][rate]"
+                                                                                            type="text"> </td>
+                                                                                    <td><input class="form-control rate"
+                                                                                            name="addmore[0][size]"
+                                                                                            type="text"> </td>
+                                                                                    <td>
+                                                                                        <input
+                                                                                            class="form-control total_amount"
+                                                                                            name="addmore[0][amount]"
+                                                                                            readonly style="width:120px"
+                                                                                            type="text">
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <button type="button"
+                                                                                            class="btn btn-sm btn-danger font-18 ml-2 remove-row"
+                                                                                            title="Delete"
+                                                                                            data-repeater-delete>
+                                                                                            <i class="fa fa-trash"></i>
+                                                                                        </button>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                <div class="sparkline12-graph">
+                                                                    <div id="pwd-container1">
+                                                                        <div class="form-group">
+                                                                            <label for="remark">Remark <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <textarea class="form-control" rows="3" type="text" class="form-control" id="remark" name="remark"
+                                                                                placeholder="Enter Remark">{{ old('remark') }}</textarea>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <div class="pwstrength_viewport_progress">
+                                                                                </span></div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                    <div class="sparkline12-graph">
-                                                                        <div id="pwd-container1">
-                                                                            <div class="form-group">
-                                                                                <label for="remark">Remark <span
-                                                                                        class="text-danger">*</span></label>
-                                                                                <textarea class="form-control" rows="3" type="text" class="form-control" id="remark" name="remark"
-                                                                                    placeholder="Enter Remark">{{ old('remark') }}</textarea>
-                                                                            </div>
-                                                                            <div class="form-group">
-                                                                                <div class="pwstrength_viewport_progress">
-                                                                                    </span></div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                    <label for="image">Upload Signature: <span
-                                                                            class="text-danger">*</span></label>
-                                                                    <input type="file" class="form-control"
-                                                                        accept="image*" id="image" name="image">
-                                                                </div>
-                                                           
+                                                            </div>
+                                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                <label for="image">Upload Signature: <span
+                                                                        class="text-danger">*</span></label>
+                                                                <input type="file" class="form-control"
+                                                                    accept="image*" id="image" name="image">
+                                                            </div>
+
                                                         </div>
                                                         <div class="login-btn-inner">
                                                             <div class="row">
@@ -426,6 +455,51 @@
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
         <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                // When Vendor is selected
+                $('#vendor_id').change(function() {
+                    var vendorId = $(this).val(); // Get selected Vendor ID
+
+                    if (vendorId) {
+                        // Show PO Number dropdown if Vendor is selected
+                        $('#po_number_div').show();
+
+                        // Optionally: Make an AJAX call to get PO numbers for the selected Vendor
+                        $.ajax({
+                            url: '{{ route('fetch-po-numbers') }}', // Use the Laravel route helper
+                            type: 'GET',
+                            // url: '/fetch-po-numbers', // Your route to fetch PO numbers
+                            // type: 'GET',
+                            data: {
+                                vendor_id: vendorId
+                            },
+                            success: function(response) {
+                                // Clear the current options in PO Number dropdown
+                                $('#business_id').empty();
+                                $('#business_id').append(
+                                    '<option value="">Select PO Number</option>');
+
+                                // Populate PO Number dropdown
+                                $.each(response.poNumbers, function(index, po) {
+                                    $('#business_id').append('<option value="' + po.id +
+                                        '">' + po.purchase_orders_id + '</option>');
+                                });
+                            },
+                            error: function() {
+                                alert('Error fetching PO numbers');
+                            }
+                        });
+                    } else {
+                        // Hide PO Number dropdown if no Vendor is selected
+                        // $('#po_number_div').hide();
+                    }
+                });
+            });
+        </script>
+
+
         <script>
             $(document).ready(function() {
                 function setMinDate() {

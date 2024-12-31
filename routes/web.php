@@ -302,7 +302,8 @@ Route::group(['middleware' => ['admin']], function () {
         Route::any('/update-delivery-chalan', ['as' => 'update-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@update']);
         Route::any('/delete-delivery-chalan/{id}', ['as' => 'delete-delivery-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@destroy']);
         Route::post('/delete-addmore-delivery', ['as' => 'delete-addmore-delivery', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@destroyAddmore']);
-  
+        Route::get('/fetch-po-numbers', ['as' => 'fetch-po-numbers', 'uses' => 'App\Http\Controllers\Organizations\Store\DeliveryChalanController@fetchPONumbers']);
+
         Route::get('/list-returnable-chalan', ['as' => 'list-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@index']);
         // Route::post('/list-returnable-chalan', ['as' => 'list-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ReturnableChalanController@index']);
         Route::post('/add-returnable-chalan', ['as' => 'add-returnable-chalan', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@create']);

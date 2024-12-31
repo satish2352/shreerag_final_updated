@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Organizations\Store;
 
-use App\Models\PurchaseOrdersModel;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
@@ -22,6 +21,7 @@ use App\Models\{
     ProcessMaster,
     DeliveryChalan,
     DeliveryChalanItemDetails,
+    PurchaseOrdersModel
     
 };
 use App\Http\Controllers\Organizations\CommanController;
@@ -177,7 +177,24 @@ class DeliveryChalanController extends Controller
             return redirect('storedept/add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
-
+    public function fetchPONumbers(Request $request)
+    {
+        try {
+            // Get the vendor_id from the request
+            $vendorId = $request->vendor_id;
+    
+            // Fetch PO numbers based on the selected vendor
+            $poNumbers = PurchaseOrdersModel::where('vendor_id', $vendorId)
+                                  ->where('is_active', true)
+                                  ->get(['id', 'purchase_orders_id']); // Adjust column names as needed
+    
+            // Return PO numbers as a JSON response
+            return response()->json(['poNumbers' => $poNumbers]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    
     public function show(Request $request)
     {
         // Decode the id
