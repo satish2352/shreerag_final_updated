@@ -55,7 +55,7 @@ class VisionMissionController extends Controller
                 $validation = Validator::make($request->all(), $rules, $messages);
                 
                 if ($validation->fails()) {
-                    return redirect('add-vision-mission')
+                    return redirect('cms/add-vision-mission')
                         ->withInput()
                         ->withErrors($validation);
                 } else {
@@ -66,14 +66,14 @@ class VisionMissionController extends Controller
                         $status = $add_record['status'];
     
                         if ($status == 'success') {
-                            return redirect('list-vision-mission')->with(compact('msg', 'status'));
+                            return redirect('cms/list-vision-mission')->with(compact('msg', 'status'));
                         } else {
-                            return redirect('add-vision-mission')->withInput()->with(compact('msg', 'status'));
+                            return redirect('cms/add-vision-mission')->withInput()->with(compact('msg', 'status'));
                         }
                     }
                 }
             } catch (Exception $e) {
-                return redirect('add-vision-mission')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                return redirect('cms/add-vision-mission')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
             }
         }
         public function show(Request $request){
@@ -136,7 +136,7 @@ class VisionMissionController extends Controller
                         $msg = $update_data['msg'];
                         $status = $update_data['status'];
                         if ($status == 'success') {
-                            return redirect('list-vision-mission')->with(compact('msg', 'status'));
+                            return redirect('cms/list-vision-mission')->with(compact('msg', 'status'));
                         } else {
                             return redirect()->back()
                                 ->withInput()

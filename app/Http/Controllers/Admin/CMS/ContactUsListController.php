@@ -36,7 +36,7 @@ class ContactUsListController extends Controller
                     $msg = $delete_record['msg'];
                     $status = $delete_record['status'];
                     if ($status == 'success') {
-                        return redirect('delete-contactus-form')->with(compact('msg', 'status'));
+                        return redirect('cms/delete-contactus-form')->with(compact('msg', 'status'));
                     } else {
                         return redirect()->back()
                             ->withInput()

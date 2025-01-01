@@ -98,15 +98,15 @@
             </div>
         </div>
         
-        <form method="POST" action="{{ url('/delete-director-desk') }}" id="deleteform">
+        <form method="POST" action="{{ url('cms/delete-director-desk') }}" id="deleteform">
             @csrf
             <input type="hidden" name="delete_id" id="delete_id" value="">
         </form>
-        <form method="POST" action="{{ url('/show-director-desk') }}" id="showform">
+        <form method="POST" action="{{ url('cms/show-director-desk') }}" id="showform">
             @csrf
             <input type="hidden" name="show_id" id="show_id" value="">
         </form>
-        <form method="POST" action="{{ url('/update-active-director-desk') }}" id="activeform">
+        <form method="POST" action="{{ url('cms/update-active-director-desk') }}" id="activeform">
             @csrf
             <input type="hidden" name="active_id" id="active_id" value="">
         </form>

@@ -872,7 +872,7 @@
                                                         class="mini-click-non">Testimonial</span></a></li>  -->
                             <li class="nav-item"><a  href="{{ route('list-contactus-form') }}" aria-expanded="false"><i
                                                             class="fa big-icon fa-edit icon-wrap" aria-hidden="true"></i> <span
-                                                            class="mini-click-non">Contactus Form </span></a></li>                               
+                                                            class="mini-click-non">Contact Us Form </span></a></li>                               
                         <!-- </ul>
                     </li>                    -->
                     @endif
@@ -888,12 +888,12 @@
                                             class="mini-click-non">Add Leaves Request</span></a></li>
                             </ul>
                         </li>
-                        <li class="nav-item {{ request()->is('particular-notice-department-wise') ? 'active' : '' }}">
+                        {{-- <li class="nav-item {{ request()->is('particular-notice-department-wise') ? 'active' : '' }}">
                             <a href="{{ route('particular-notice-department-wise') }}">
                                 <i class="fa big-icon fa-bell  icon-wrap"></i>
                                 <span class="mini-click-non">Notice</span>
                             </a>
-                        </li>
+                        </li> --}}
                         
                     @endif
 
@@ -1040,10 +1040,10 @@
             </div>
         </div>
     </div>
-    <form method="POST" action="{{ url('/particular-notice-department-wise') }}" id="showform">
+    {{-- <form method="POST" action="{{ url('/particular-notice-department-wise') }}" id="showform">
         @csrf
         <input type="hidden" name="show_id" id="show_id" value="">
-    </form>
+    </form> --}}
 
     {{-- <script>
         function fetch_new_hold() {

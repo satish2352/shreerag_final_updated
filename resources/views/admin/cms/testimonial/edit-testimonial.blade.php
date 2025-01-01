@@ -1,7 +1,14 @@
 @extends('admin.layouts.master')
 
 @section('content')
-
+<style>
+    .error{
+        color: red !important;
+    }
+    .red-text{
+        color: red !important;
+    }
+</style>
     <div class="">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list">

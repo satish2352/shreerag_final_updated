@@ -73,10 +73,14 @@
                                                             <a href="{{ route('edit-product', base64_encode($item->id)) }}"
                                                                 class="btn btn-sm btn-outline-primary m-1"
                                                                 title="Edit Slide"><i class="fas fa-pencil-alt"></i></a>
-
-                                                            <a data-id="{{ $item->id }}"
+                                                                
+                                                                <a data-id="{{ $item->id }}"
+                                                                    class="show-btn btn btn-sm btn-outline-primary m-1"
+                                                                    title="Show Slide "><i class="fas fa-eye"></i></a>
+                                                            {{-- <a  href="{{ route('show-product', base64_encode($item->id)) }} "
+                                                            data-id="{{ $item->id }}"
                                                                 class="show-btn btn btn-sm btn-outline-primary m-1"
-                                                                title="Show Slide "><i class="fas fa-eye"></i></a>
+                                                                title="Show Slide "><i class="fas fa-eye"></i></a> --}}
                                                             <a
                                                                 href="{{ route('delete-product', base64_encode($item->id)) }} "><button
                                                                     data-toggle="tooltip" title="Trash"
@@ -103,11 +107,21 @@
         @csrf
         <input type="hidden" name="delete_id" id="delete_id" value="">
     </form> --}}
-    <form method="POST" action="{{ url('/show-product') }}" id="showform">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $('.show-btn').click(function(e) {
+            $("#show_id").val($(this).attr("data-id"));
+            $("#showform").submit();
+        })
+    </script>
+
+    <form method="POST" action="{{ url('cms/show-product') }}" id="showform">
         @csrf
         <input type="hidden" name="show_id" id="show_id" value="">
     </form>
-    <form method="POST" action="{{ url('/update-active-product') }}" id="activeform">
+    <form method="POST" action="{{ url('cms/update-active-product') }}" id="activeform">
         @csrf
         <input type="hidden" name="active_id" id="active_id" value="">
     </form>

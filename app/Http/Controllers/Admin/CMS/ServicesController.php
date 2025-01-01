@@ -45,7 +45,7 @@ class ServicesController extends Controller
                 $validation = Validator::make($request->all(), $rules, $messages);
                 
                 if ($validation->fails()) {
-                    return redirect('add-services')
+                    return redirect('cms/add-services')
                         ->withInput()
                         ->withErrors($validation);
                 } else {
@@ -56,14 +56,14 @@ class ServicesController extends Controller
                         $status = $add_record['status'];
     
                         if ($status == 'success') {
-                            return redirect('list-services')->with(compact('msg', 'status'));
+                            return redirect('cms/list-services')->with(compact('msg', 'status'));
                         } else {
-                            return redirect('add-services')->withInput()->with(compact('msg', 'status'));
+                            return redirect('cms/add-services')->withInput()->with(compact('msg', 'status'));
                         }
                     }
                 }
             } catch (Exception $e) {
-                return redirect('add-services')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                return redirect('cms/add-services')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
             }
         }
         public function show(Request $request){
@@ -113,7 +113,7 @@ class ServicesController extends Controller
                         $msg = $update_data['msg'];
                         $status = $update_data['status'];
                         if ($status == 'success') {
-                            return redirect('list-services')->with(compact('msg', 'status'));
+                            return redirect('cms/list-services')->with(compact('msg', 'status'));
                         } else {
                             return redirect()->back()
                                 ->withInput()
@@ -131,7 +131,7 @@ class ServicesController extends Controller
             try {
                 $active_id = $request->active_id;
             $result = $this->service->updateOne($active_id);
-                return redirect('list-services')->with('flash_message', 'Updated!');  
+                return redirect('cms/list-services')->with('flash_message', 'Updated!');  
             } catch (\Exception $e) {
                 return $e;
             }
@@ -144,7 +144,7 @@ class ServicesController extends Controller
                     $msg = $delete_record['msg'];
                     $status = $delete_record['status'];
                     if ($status == 'success') {
-                        return redirect('list-services')->with(compact('msg', 'status'));
+                        return redirect('cms/list-services')->with(compact('msg', 'status'));
                     } else {
                         return redirect()->back()
                             ->withInput()

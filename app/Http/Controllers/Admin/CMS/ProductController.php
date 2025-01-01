@@ -45,7 +45,7 @@ class ProductController extends Controller
                 $validation = Validator::make($request->all(), $rules, $messages);
                 
                 if ($validation->fails()) {
-                    return redirect('add-product')
+                    return redirect('cms/add-product')
                         ->withInput()
                         ->withErrors($validation);
                 } else {
@@ -56,19 +56,22 @@ class ProductController extends Controller
                         $status = $add_record['status'];
     
                         if ($status == 'success') {
-                            return redirect('list-product')->with(compact('msg', 'status'));
+                            return redirect('cms/list-product')->with(compact('msg', 'status'));
                         } else {
-                            return redirect('add-product')->withInput()->with(compact('msg', 'status'));
+                            return redirect('cms/add-product')->withInput()->with(compact('msg', 'status'));
                         }
                     }
                 }
             } catch (Exception $e) {
-                return redirect('add-product')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                return redirect('cms/add-product')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
             }
         }
-        public function show(Request $request){
+        public function showProduct(Request $request){
             try {
+                // dd($request);
+                // die();
                 $showData = $this->service->getById($request->show_id);
+               
                 return view('admin.cms.product.show-product', compact('showData'));
             } catch (\Exception $e) {
                 return $e;
@@ -113,7 +116,7 @@ class ProductController extends Controller
                         $msg = $update_data['msg'];
                         $status = $update_data['status'];
                         if ($status == 'success') {
-                            return redirect('list-product')->with(compact('msg', 'status'));
+                            return redirect('cms/list-product')->with(compact('msg', 'status'));
                         } else {
                             return redirect()->back()
                                 ->withInput()
@@ -131,7 +134,7 @@ class ProductController extends Controller
             try {
                 $active_id = $request->active_id;
             $result = $this->service->updateOne($active_id);
-                return redirect('list-product')->with('flash_message', 'Updated!');  
+                return redirect('cms/list-product')->with('flash_message', 'Updated!');  
             } catch (\Exception $e) {
                 return $e;
             }
@@ -144,7 +147,7 @@ class ProductController extends Controller
                     $msg = $delete_record['msg'];
                     $status = $delete_record['status'];
                     if ($status == 'success') {
-                        return redirect('list-product')->with(compact('msg', 'status'));
+                        return redirect('cms/list-product')->with(compact('msg', 'status'));
                     } else {
                         return redirect()->back()
                             ->withInput()

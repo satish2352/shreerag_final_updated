@@ -1,6 +1,14 @@
 @extends('admin.layouts.master')
 
 @section('content')
+<style>
+    .error{
+        color: red !important;
+    }
+    .red-text{
+        color: red !important;
+    }
+</style>
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -84,7 +92,7 @@
                                             Save &amp; Submit
                                         </button>
                                         {{-- <button type="reset" class="btn btn-sm btn-danger">Cancel</button> --}}
-                                        <span><a href="{{ route('list-services') }}"
+                                        <span><a href="{{ route('list-product') }}"
                                                 class="btn btn-sm btn-primary ">Back</a></span>
                                     </div>
                                 </div>
@@ -100,6 +108,9 @@
 </div>
 </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
         <script>
             $(document).ready(function() {
                 // Function to check if all input fields are filled with valid data
