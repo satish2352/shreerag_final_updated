@@ -79,9 +79,12 @@ class GRNController extends Controller
            $gatepass_id = base64_decode($id);
             $purchase_order_data = PurchaseOrdersModel::where('purchase_orders_id', '=', $purchase_ordersId)->first();
             $po_id = $purchase_order_data->id;
-            $purchase_order_details_data = PurchaseOrderDetailsModel::where('purchase_id', $po_id)
+            $purchase_order_details_data = PurchaseOrderDetailsModel::leftJoin('tbl_part_item', function ($join) {
+                $join->on('purchase_order_details.part_no_id', '=', 'tbl_part_item.id');
+              })
+            ->where('purchase_order_details.purchase_id', $po_id)
                 ->get();
-                              $gatepassId = Gatepass::select('gatepass.id', 'gatepass.gatepass_name')
+       $gatepassId = Gatepass::select('gatepass.id', 'gatepass.gatepass_name')
     ->where('gatepass.id', $gatepass_id) // Specify the table for clarity
     ->first();
             return view('organizations.quality.grn.add-grn', compact('purchase_order_data', 'purchase_order_details_data', 'gatepassId'));

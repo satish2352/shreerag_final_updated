@@ -195,11 +195,35 @@ class GRNRepository
     try {
         $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
 
-        $data_output = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
-        ->leftJoin('businesses_details', function($join) {
-            $join->on('purchase_orders.business_details_id', '=', 'businesses_details.id');
+        // $data_output = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
+        // ->leftJoin('businesses_details', function($join) {
+        //     $join->on('purchase_orders.business_details_id', '=', 'businesses_details.id');
+        // })
+        // ->distinct('businesses_details.id')  
+        // ->select(
+        //     'purchase_orders.id',
+        //     'purchase_orders.purchase_orders_id',         
+        //     'vendors.vendor_name', 
+        //     'vendors.vendor_company_name', 
+        //     'vendors.vendor_email', 
+        //     'vendors.vendor_address', 
+        //     'vendors.contact_no', 
+        //     'vendors.gst_no', 
+        //     'purchase_orders.is_active'
+        // )
+        // ->get(); // Added to execute the query and get results
+
+        $data_output = GRNModel::leftJoin('purchase_orders', function($join) {
+            $join->on('grn_tbl.purchase_orders_id', '=', 'purchase_orders.purchase_orders_id');
         })
-        ->distinct('businesses_details.id')  
+        ->leftJoin('vendors', function($join) {
+            $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
+        })
+        // join('purchase_orders', 'purchase_orders.purchase_orders_id', '=', 'purchase_orders.vendor_id')
+        // ->leftJoin('businesses_details', function($join) {
+        //     $join->on('purchase_orders.business_details_id', '=', 'businesses_details.id');
+        // })
+        // ->distinct('businesses_details.id')  
         ->select(
             'purchase_orders.id',
             'purchase_orders.purchase_orders_id',         
