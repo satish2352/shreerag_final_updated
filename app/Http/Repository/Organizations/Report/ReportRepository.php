@@ -160,7 +160,7 @@ public function getCompletedProductList($request)
                 'businesses_details.description',
                 'businesses_details.quantity'
             )
-            ->havingRaw('SUM(tcqt1.completed_quantity) = businesses_details.quantity') 
+            ->havingRaw('SUM(tcqt1.completed_quantity) = businesses_details.quantity')
             ->get()
             ->count();
 

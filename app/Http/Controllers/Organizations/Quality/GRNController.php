@@ -216,15 +216,17 @@ class GRNController extends Controller
             return $e;
         }
     }
-    public function getAllListMaterialSentFromQualityBusinessWise($id){
+    public function getAllListMaterialSentFromQualityBusinessWise(Request $request, $id)
+    {
         try {
-            $data_output = $this->service->getAllListMaterialSentFromQualityBusinessWise($id);
-          
+            $data_output = $this->service->getAllListMaterialSentFromQualityBusinessWise($request, $id);
             return view('organizations.quality.list.list-checked-material-sent-to-store-businesswise', compact('data_output'));
         } catch (\Exception $e) {
-            return $e;
+            \Log::error('Error in Controller: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong. Please try again.');
         }
     }
+    
 
     public function getAllRejectedChalanList()
     {

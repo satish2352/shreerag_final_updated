@@ -245,20 +245,16 @@ class GRNRepository
 //     }
 // }
 
-public function getAllListMaterialSentFromQualityBusinessWise($id)
+public function getAllListMaterialSentFromQualityBusinessWise($request, $id)
 {
     try {
         $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
 
-        // Fetching the required data with necessary joins
-        $data_output = PurchaseOrdersModel::leftJoin('grn_tbl', 'purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id')
+        $query = PurchaseOrdersModel::leftJoin('grn_tbl', 'purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id')
             ->leftJoin('businesses_details', 'purchase_orders.business_details_id', '=', 'businesses_details.id')
             ->leftJoin('purchase_order_details', 'purchase_orders.id', '=', 'purchase_order_details.purchase_id')
             ->leftJoin('tbl_grn_po_quantity_tracking', 'purchase_orders.id', '=', 'tbl_grn_po_quantity_tracking.purchase_order_id')
-            ->leftJoin('vendors', function ($join) {
-                $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
-            })
-            // Selecting relevant fields
+            ->leftJoin('vendors', 'purchase_orders.vendor_id', '=', 'vendors.id')
             ->select(
                 'purchase_orders.business_details_id',
                 'purchase_orders.purchase_orders_id',
@@ -273,13 +269,21 @@ public function getAllListMaterialSentFromQualityBusinessWise($id)
                 'businesses_details.description',
                 'tbl_grn_po_quantity_tracking.grn_id as tracking_grn_id'
             )
-            // Filter data based on quality status
             ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
+            ->where('businesses_details.id', $id);
 
-            // Optional: Filter by business ID if required
-            ->where('businesses_details.id', $id)
+        // Apply filters if request parameters are provided
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+            $query->whereBetween('grn_tbl.updated_at', [$request->from_date, $request->to_date]);
+        }
+        if ($request->filled('year')) {
+            $query->whereYear('grn_tbl.updated_at', $request->year);
+        }
+        if ($request->filled('month')) {
+            $query->whereMonth('grn_tbl.updated_at', $request->month);
+        }
 
-            // Group by all selected fields to satisfy SQL mode requirements
+        $data_output = $query
             ->groupBy(
                 'purchase_orders.business_details_id',
                 'purchase_orders.purchase_orders_id',
@@ -293,17 +297,18 @@ public function getAllListMaterialSentFromQualityBusinessWise($id)
                 'businesses_details.product_name',
                 'businesses_details.description'
             )
-
-            // Order results by GRN ID
             ->orderBy('tbl_grn_po_quantity_tracking.grn_id', 'desc')
             ->get();
 
         return $data_output;
+
     } catch (\Exception $e) {
-        // Return error message string for debugging
-        return $e->getMessage();
+        // Log the exception and return an error message
+        \Log::error('Error fetching materials from quality: ' . $e->getMessage());
+        throw new \Exception('Unable to fetch materials from quality.');
     }
 }
+
 
 public function getAllRejectedChalanList()
 {

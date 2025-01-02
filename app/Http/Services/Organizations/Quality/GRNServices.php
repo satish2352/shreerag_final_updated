@@ -77,18 +77,11 @@ class GRNServices
         }
     }
     
-    public function getAllListMaterialSentFromQualityBusinessWise($id)
+    public function getAllListMaterialSentFromQualityBusinessWise($request, $id)
     {
-        try {
-            $data_output = $this->repo->getAllListMaterialSentFromQualityBusinessWise($id);
-            // dd($data_output);
-            // die();
-            return $data_output;
-
-        } catch (\Exception $e) {
-            return $e;
-        }
+        return $this->repo->getAllListMaterialSentFromQualityBusinessWise($request, $id);
     }
+    
     public function getAllRejectedChalanList()
     {
         try {
