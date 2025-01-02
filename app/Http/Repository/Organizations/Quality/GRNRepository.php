@@ -190,60 +190,120 @@ class GRNRepository
         }
     }
     
-    public function getAllListMaterialSentFromQualityBusinessWise($id)
+//     public function getAllListMaterialSentFromQualityBusinessWise($id)
+// {
+//     try {
+      
+//         $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
+
+//         // Fetching the required data with necessary joins
+//         $data_output = PurchaseOrdersModel::leftJoin('grn_tbl', 'purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id')
+//             ->leftJoin('businesses_details', 'purchase_orders.business_details_id', '=', 'businesses_details.id')
+//             ->leftJoin('purchase_order_details', 'purchase_orders.id', '=', 'purchase_order_details.purchase_id')
+//             ->leftJoin('tbl_grn_po_quantity_tracking', 'purchase_orders.id', '=', 'tbl_grn_po_quantity_tracking.purchase_order_id')
+//             ->leftJoin('vendors', function($join) {
+//                         $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
+//                     })
+//             // Selecting relevant fields from the purchase orders, GRN, and other tables
+//             ->select(
+//             //           'purchase_orders.id',
+//             // 'purchase_orders.purchase_orders_id',   
+//                 // 'purchase_orders.id',
+//                 'purchase_orders.business_details_id',
+//                 // 'purchase_orders.purchase_orders_id',
+//                 // 'purchase_order_details.id',
+//                 'purchase_orders.purchase_orders_id',
+//                 'tbl_grn_po_quantity_tracking.grn_id', 
+//                'vendors.vendor_name', 
+//             'vendors.vendor_company_name', 
+//             'vendors.vendor_email', 
+//             'vendors.vendor_address', 
+//             'vendors.contact_no', 
+//             'vendors.gst_no',
+
+//                 'businesses_details.product_name', 
+//                 'businesses_details.description',
+//                 'tbl_grn_po_quantity_tracking.grn_id as tracking_grn_id' // GRN ID from tracking table
+//             )
+
+//             // Filter data based on quality status (PO checked and GRN generated)
+//             ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
+
+//             // Optional: Filter by business ID if required
+//             ->where('businesses_details.id', $id)
+
+//             // Group the results by GRN ID
+//             ->groupBy( 'purchase_orders.purchase_orders_id','tbl_grn_po_quantity_tracking.grn_id',   'purchase_orders.business_details_id','businesses_details.product_name', 
+//             'businesses_details.description',)
+
+//             // Get the results, ordered by GRN ID for better visibility
+//             ->orderBy('tbl_grn_po_quantity_tracking.grn_id', 'desc')
+//             ->get(); 
+//         return $data_output;
+//     } catch (\Exception $e) {
+//         return $e->getMessage(); // Changed to return the error message string
+//     }
+// }
+
+public function getAllListMaterialSentFromQualityBusinessWise($id)
 {
     try {
         $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
 
-        // $data_output = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
-        // ->leftJoin('businesses_details', function($join) {
-        //     $join->on('purchase_orders.business_details_id', '=', 'businesses_details.id');
-        // })
-        // ->distinct('businesses_details.id')  
-        // ->select(
-        //     'purchase_orders.id',
-        //     'purchase_orders.purchase_orders_id',         
-        //     'vendors.vendor_name', 
-        //     'vendors.vendor_company_name', 
-        //     'vendors.vendor_email', 
-        //     'vendors.vendor_address', 
-        //     'vendors.contact_no', 
-        //     'vendors.gst_no', 
-        //     'purchase_orders.is_active'
-        // )
-        // ->get(); // Added to execute the query and get results
+        // Fetching the required data with necessary joins
+        $data_output = PurchaseOrdersModel::leftJoin('grn_tbl', 'purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id')
+            ->leftJoin('businesses_details', 'purchase_orders.business_details_id', '=', 'businesses_details.id')
+            ->leftJoin('purchase_order_details', 'purchase_orders.id', '=', 'purchase_order_details.purchase_id')
+            ->leftJoin('tbl_grn_po_quantity_tracking', 'purchase_orders.id', '=', 'tbl_grn_po_quantity_tracking.purchase_order_id')
+            ->leftJoin('vendors', function ($join) {
+                $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
+            })
+            // Selecting relevant fields
+            ->select(
+                'purchase_orders.business_details_id',
+                'purchase_orders.purchase_orders_id',
+                'tbl_grn_po_quantity_tracking.grn_id',
+                'vendors.vendor_name',
+                'vendors.vendor_company_name',
+                'vendors.vendor_email',
+                'vendors.vendor_address',
+                'vendors.contact_no',
+                'vendors.gst_no',
+                'businesses_details.product_name',
+                'businesses_details.description',
+                'tbl_grn_po_quantity_tracking.grn_id as tracking_grn_id'
+            )
+            // Filter data based on quality status
+            ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
 
-        $data_output = GRNModel::leftJoin('purchase_orders', function($join) {
-            $join->on('grn_tbl.purchase_orders_id', '=', 'purchase_orders.purchase_orders_id');
-        })
-        ->leftJoin('vendors', function($join) {
-            $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
-        })
-        
-        // join('purchase_orders', 'purchase_orders.purchase_orders_id', '=', 'purchase_orders.vendor_id')
-        // ->leftJoin('businesses_details', function($join) {
-        //     $join->on('purchase_orders.business_details_id', '=', 'businesses_details.id');
-        // })
-        // ->distinct('businesses_details.id')  
-        ->select(
-            'purchase_orders.id',
-            'purchase_orders.purchase_orders_id',         
-            'vendors.vendor_name', 
-            'vendors.vendor_company_name', 
-            'vendors.vendor_email', 
-            'vendors.vendor_address', 
-            'vendors.contact_no', 
-            'vendors.gst_no', 
-            'purchase_orders.is_active'
-        )
-        ->get(); // Added to execute the query and get results
-       
+            // Optional: Filter by business ID if required
+            ->where('businesses_details.id', $id)
+
+            // Group by all selected fields to satisfy SQL mode requirements
+            ->groupBy(
+                'purchase_orders.business_details_id',
+                'purchase_orders.purchase_orders_id',
+                'tbl_grn_po_quantity_tracking.grn_id',
+                'vendors.vendor_name',
+                'vendors.vendor_company_name',
+                'vendors.vendor_email',
+                'vendors.vendor_address',
+                'vendors.contact_no',
+                'vendors.gst_no',
+                'businesses_details.product_name',
+                'businesses_details.description'
+            )
+
+            // Order results by GRN ID
+            ->orderBy('tbl_grn_po_quantity_tracking.grn_id', 'desc')
+            ->get();
+
         return $data_output;
     } catch (\Exception $e) {
-        return $e->getMessage(); // Changed to return the error message string
+        // Return error message string for debugging
+        return $e->getMessage();
     }
 }
-
 
 public function getAllRejectedChalanList()
 {

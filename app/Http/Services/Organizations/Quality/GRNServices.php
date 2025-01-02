@@ -81,6 +81,8 @@ class GRNServices
     {
         try {
             $data_output = $this->repo->getAllListMaterialSentFromQualityBusinessWise($id);
+            // dd($data_output);
+            // die();
             return $data_output;
 
         } catch (\Exception $e) {
