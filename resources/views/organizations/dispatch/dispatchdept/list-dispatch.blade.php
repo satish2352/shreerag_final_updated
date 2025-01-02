@@ -114,7 +114,7 @@
                                                     <td>{{ ucwords($data->outdoor_no) }}</td>
                                                     <td>{{ ucwords($data->gate_entry) }}</td>
                                                     <td>{{ ucwords($data->remark) }}</td>  
-                                                    <td>{{ ucwords($data->updated_at) }}</td>
+                                                    <td>{{ $data->updated_at ? $data->updated_at->format('Y-m-d') : 'N/A' }} </td>
                                                    
 
                                                
