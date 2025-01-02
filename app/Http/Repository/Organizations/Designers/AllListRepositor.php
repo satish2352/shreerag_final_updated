@@ -222,28 +222,31 @@ public function getAllListDesignRecievedForCorrection() {
           ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
           ->where('businesses.is_active', true)
           ->select(
-              'businesses.id as business_id',
-              'businesses_details.id as detail_id',
-              'businesses.customer_po_number',
-              'businesses_details.product_name',
-              'businesses_details.quantity',
-              'businesses_details.description',
-              'businesses.remarks',
-              'designs.bom_image',
-              'designs.design_image',
-              DB::raw('MAX(COALESCE(design_revision_for_prod.reject_reason_prod, "")) as reject_reason_prod'),
+            'businesses.id',
+            'businesses_details.id',
+            'businesses.customer_po_number',
+            'businesses_details.product_name',
+            'businesses_details.description',
+            'businesses_details.quantity',
+            'businesses_details.is_active',
+            'production.business_id',
+            DB::raw('MAX(COALESCE(design_revision_for_prod.reject_reason_prod, "")) as reject_reason_prod'),
+            'businesses.updated_at',
+            'designs.bom_image',
+            'designs.design_image'
           )
           ->groupBy(
-              'businesses.id',
-              'businesses_details.id',
-              'businesses.customer_po_number',
-              'businesses_details.product_name',
-              'businesses_details.quantity',
-              'businesses_details.description',
-              'businesses.remarks',
-              'designs.bom_image',
-              'designs.design_image',
-              'design_revision_for_prod.reject_reason_prod'
+            'businesses.id',
+            'businesses_details.id',
+            'businesses.customer_po_number',
+            'businesses_details.product_name',
+            'businesses_details.description',
+            'businesses_details.quantity',
+            'businesses_details.is_active',
+            'production.business_id',
+            'businesses.updated_at',
+            'designs.bom_image',
+            'designs.design_image'
           )
           ->orderBy('businesses.updated_at', 'desc')
           ->get();
