@@ -163,10 +163,11 @@ class GatepassRepository
     {
 
         try {
-
+// dd($request);
+// die();
             // Update main design data
             $dataOutput = Gatepass::findOrFail($request->id);
-            $dataOutput->purchase_id = $request->purchase_id;
+            $dataOutput->purchase_orders_id = $request->purchase_orders_id;
             $dataOutput->gatepass_name = $request->gatepass_name;
             $dataOutput->gatepass_date = $request->gatepass_date;
             $dataOutput->gatepass_time = $request->gatepass_time;
@@ -176,6 +177,7 @@ class GatepassRepository
             
 
             // Prepare data to update admin and notification statuses
+            $business_application = BusinessApplicationProcesses::where('business_details_id', $dataOutput->business_details_id)->first();
 
             $update_data_admin['off_canvas_status'] = 26;
 

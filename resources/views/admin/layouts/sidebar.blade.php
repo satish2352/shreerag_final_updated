@@ -325,7 +325,7 @@
                         <li class="nav-item {{ request()->is('purchase/list-submited-po-to-vendor') ? 'active' : '' }}">
                             <a class="" href="{{ route('list-submited-po-to-vendor') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-check-circle icon-wrap"></i> <span
-                                    class="mini-click-non">Submited PO by Vendor List</span></a>
+                                    class="mini-click-non">Submitted PO by Vendor List</span></a>
                         </li>
                         <li
                         class="nav-item {{ request()->is('storedept/list-material-received-from-quality-po-tracking') ? 'active' : '' }}">

@@ -29,6 +29,7 @@
                                     @csrf
                                     <div class="form-group-inner">
                                         <input type="hidden" class="form-control" value="@if (old('id')) {{ old('id') }}@else{{ $editData->id }} @endif" id="id" name="id">
+                                        <input type="hidden" class="form-control" value="@if (old('business_details_id')) {{ old('business_details_id') }}@else{{ $editData->business_details_id }} @endif" id="business_details_id" name="business_details_id">
                                         <div class="row">
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                 <label for="purchase_orders_id">PO:</label>
@@ -88,32 +89,66 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
-    <script>
-        $(document).ready(function() {
-            // Custom validation rule to check if the input does not contain only spaces
-            $.validator.addMethod("spcenotallow", function(value, element) {
-                return this.optional(element) || value.trim().length > 0;
-            }, "Enter some valid text");
-        
-            // Initialize the form validation
-            $("#regForm").validate({
-                rules: {
-                    name: {
-                        required: true,
-                        spcenotallow: true,
-                    },
-                    // You can add more fields here as needed
+<script>
+    $(document).ready(function() {
+        // Custom validation rule for spaces
+        $.validator.addMethod("spcenotallow", function(value, element) {
+            return this.optional(element) || value.trim().length > 0;
+        }, "Enter some valid text");
+
+        // Initialize form validation
+        $("#regForm").validate({
+            rules: {
+                gatepass_name: {
+                    required: true,
+                    spcenotallow: true,
                 },
-                messages: {
-                    name: {
-                        required: "Please enter the name.",
-                        spcenotallow: "Name cannot contain only spaces.",
-                    },
-                    // Custom error messages for other fields can go here
+                gatepass_date: {
+                    required: true,
+                    date: true,
                 },
-            });
+                gatepass_time: {
+                    required: true,
+                },
+                remark: {
+                    spcenotallow: true,
+                },
+            },
+            messages: {
+                gatepass_name: {
+                    required: "Please enter the name.",
+                    spcenotallow: "Name cannot contain only spaces.",
+                },
+                gatepass_date: {
+                    required: "Please select a date.",
+                    date: "Enter a valid date.",
+                },
+                gatepass_time: {
+                    required: "Please select a time.",
+                },
+                remark: {
+                    spcenotallow: "Remark cannot contain only spaces.",
+                },
+            },
+            submitHandler: function(form) {
+                // Confirmation dialog before submitting the form
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "Gatepass Updated successfully?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, submit it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            }
         });
-        </script>
+    });
+</script>
         
 
 @endsection
