@@ -219,6 +219,7 @@ class GRNRepository
         ->leftJoin('vendors', function($join) {
             $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
         })
+        
         // join('purchase_orders', 'purchase_orders.purchase_orders_id', '=', 'purchase_orders.vendor_id')
         // ->leftJoin('businesses_details', function($join) {
         //     $join->on('purchase_orders.business_details_id', '=', 'businesses_details.id');

@@ -176,7 +176,7 @@ class GRNController extends Controller
 
                 ->distinct('businesses.id')
                 ->select(
-                    'businesses.id',
+                    'businesses_details.id',
                     'businesses_details.product_name',
                     'businesses.title',
                     'businesses_details.description',
