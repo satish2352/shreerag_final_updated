@@ -232,7 +232,9 @@ public function getAllListDesignRecievedForCorrection() {
               'designs.bom_image',
               'designs.design_image',
               // DB::raw('COALESCE(design_revision_for_prod.reject_reason_prod, "") as reject_reason_prod')
-          )
+              DB::raw('MAX(COALESCE(design_revision_for_prod.reject_reason_prod, "")) as reject_reason_prod'),
+
+              )
           ->groupBy(
               'businesses.id',
               'businesses_details.id',
@@ -244,7 +246,6 @@ public function getAllListDesignRecievedForCorrection() {
               'designs.bom_image',
               'designs.design_image',
               // 'design_revision_for_prod.reject_reason_prod'
-              DB::raw('MAX(COALESCE(design_revision_for_prod.reject_reason_prod, "")) as reject_reason_prod'),
           )
           ->orderBy('businesses.updated_at', 'desc')
           ->get();
