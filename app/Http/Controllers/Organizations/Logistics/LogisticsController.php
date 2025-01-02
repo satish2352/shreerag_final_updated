@@ -56,15 +56,19 @@ class LogisticsController extends Controller
     public function storeLogistics(Request $request)
     {
         $rules = [
-            // 'chalan_no' => 'required',
-            // 'reference_no' => 'required',
-            // 'remark' => 'required',
+        'vehicle_type_id' => 'required',
+        'transport_name_id' => 'required',
+        'truck_no' => 'required',
+        'from_place' => 'required',
+        'to_place' => 'required',
         ];
 
         $messages = [
-            // 'chalan_no.required' => 'The chalan number is required.',
-            // 'reference_no.required' => 'The reference number is required.',
-            // 'remark.required' => 'The remark is required.',
+            'vehicle_type_id.required' => 'The vehicle type is required.',
+            'transport_name_id.required' => 'The transport name is required.',
+            'truck_no.required' => 'The truck number is required.',
+            'from_place.required' => 'The origin place is required.',
+            'to_place.required' => 'The destination place is required.',
         ];
 
         try {

@@ -107,8 +107,8 @@
                                                                     <input class="form-control val-unit" name="addmore[{{ $index }}][unit]" type="text" value="{{ $item->unit_name }}" @if($item->material_send_production) readonly @endif>
                                                                 </td> --}}
                                                                 <td>
-                                                                    <select class="form-control part-no" name="addmore[{{ $index }}][unit]" @if($item->material_send_production) disabled @endif>
-                                                                        <option value="">Select Part Item</option>
+                                                                    <select class="form-control val-unit" name="addmore[{{ $index }}][unit]" @if($item->material_send_production) disabled @endif>
+                                                                        <option value="">Select Unit</option>
                                                                         @foreach ($dataOutputUnitMaster as $unit_data)
                                                                             <option value="{{ $unit_data->id }}" {{ $unit_data->id == $item->unit ? 'selected' : '' }}>
                                                                                 {{ $unit_data->name }}
@@ -157,7 +157,7 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-<script>
+{{-- <script>
     let rowCounter = @json($dataGroupedById->count());
 
     function initializeValidation(row) {
@@ -183,6 +183,7 @@
                 required: "Please enter the unit."
             }
         });
+        
     }
 
     function updateSerialNumbers() {
@@ -250,5 +251,122 @@
     $(document).ready(function() {
         $("#addProductForm").validate();
     });
+</script> --}}
+<script>
+    $(document).ready(function () {
+    let rowCounter = @json($dataGroupedById->count());
+
+    // Initialize validation for rows
+    function initializeValidation(row) {
+        row.find('.part-no').rules("add", {
+            required: true,
+            messages: {
+                required: "Please select a Part Item."
+            }
+        });
+        row.find('.val-quantity').rules("add", {
+            required: true,
+            digits: true,
+            min: 1,
+            messages: {
+                required: "Please enter the Quantity.",
+                digits: "Quantity must be a valid number.",
+                min: "Quantity must be at least 1."
+            }
+        });
+        row.find('.val-unit').rules("add", {
+            required: true,
+            messages: {
+                required: "Please select a Unit."
+            }
+        });
+    }
+
+    // Update serial numbers for rows
+    function updateSerialNumbers() {
+        $("#purchase_order_table tbody tr").each(function (index) {
+            $(this).find("td:first input[type='text']").val(index + 1);
+        });
+    }
+
+    // Add new row functionality
+    $("#add_more_btn").click(function () {
+        rowCounter++;
+        const newRow = `
+            <tr>
+                <td>
+                    <input type="hidden" name="addmore[${rowCounter}][id]" class="form-control" value="">
+                    <input type="text" class="form-control" readonly value="${rowCounter + 1}">
+                </td>
+                <td>
+                    <select class="form-control part-no" name="addmore[${rowCounter}][part_item_id]">
+                        <option value="">Select Part Item</option>
+                        @foreach ($dataOutputPartItem as $partItem)
+                            <option value="{{ $partItem->id }}">{{ $partItem->description }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td>
+                    <input class="form-control val-quantity" name="addmore[${rowCounter}][quantity]" type="text">
+                </td>
+                <td>
+                    <select class="form-control val-unit" name="addmore[${rowCounter}][unit]">
+                        <option value="">Select Unit</option>
+                        @foreach ($dataOutputUnitMaster as $data)
+                            <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td>
+                    <span class="material-send-production-status">
+                        <i class="fa fa-question" style="color: gray;"></i>
+                    </span>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-danger remove-row">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </td>
+            </tr>`;
+        
+        const row = $(newRow).appendTo("#purchase_order_table tbody");
+        initializeValidation(row); // Apply validation to the new row
+        updateSerialNumbers(); // Update serial numbers
+    });
+
+    // Remove row functionality
+    $(document).on("click", ".remove-row", function () {
+        $(this).closest("tr").remove();
+        updateSerialNumbers();
+    });
+
+    // Form submission with validation and confirmation
+    $("form").validate({
+        ignore: [], // Validate all inputs, including hidden ones
+        errorPlacement: function (error, element) {
+            error.insertAfter(element); // Place errors after the invalid field
+        },
+        submitHandler: function (form) {
+            Swal.fire({
+                icon: 'question',
+                title: 'Are you sure?',
+                text: 'You want to send this request to the Store Department?',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+    });
+
+    // Initialize validation on existing rows
+    $("#purchase_order_table tbody tr").each(function () {
+        initializeValidation($(this));
+    });
+});
+
 </script>
 @endsection

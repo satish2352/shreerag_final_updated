@@ -116,14 +116,14 @@
                                                                 </select>
                                                             </td>
                                                             <td>
-                                                                @if($productDetails->material_send_production == 1)
+                                                                {{-- @if($productDetails->material_send_production == 1)
                                                                 <input type="hidden" name="addmore[{{ $index }}][material_send_production]" value="1">
                                                                 <input type="checkbox" class="material-send-checkbox" name="addmore[{{ $index }}][material_send_production]" value="1" {{ $item->material_send_production == 1 ? 'checked' : '' }} disabled>
                                                                 
-                                                            @else
+                                                            @else --}}
                                                             <input type="hidden" name="addmore[{{ $index }}][material_send_production]" value="1">
                                                             <input type="checkbox" class="material-send-checkbox" name="addmore[{{ $index }}][material_send_production]" value="1" {{ $item->material_send_production == 1 ? 'checked' : '' }} required>
-                                                                                                                        @endif
+                                                                                                                        {{-- @endif --}}
 
 
 
@@ -529,53 +529,186 @@
 //     }
 // });
 // ===============
-$(document).ready(function () {
-    var i_count = $("#purchase_order_table tbody tr").length; // Initial row count
+// $(document).ready(function () {
+//     var i_count = $("#purchase_order_table tbody tr").length; // Initial row count
 
-    // Function to check stock
+//     // Function to check stock
+//     function checkStock($row) {
+//         var quantity = $row.find('.quantity').val(); // Get quantity value
+//         var partItemId = $row.find('select[name*="part_item_id"]').val(); // Get selected part item ID
+//         var stockAvailableMessage = $row.find('.stock-available'); // Target the stock message span
+
+//         if (partItemId && quantity) {
+//             // AJAX request to check stock
+//             $.ajax({
+//                 url: '{{ route('check-stock-quantity') }}',
+//                 type: 'GET',
+//                 data: {
+//                     part_item_id: partItemId,
+//                     quantity: quantity
+//                 },
+//                 success: function (response) {
+//                     if (response.status === 'error') {
+//                         stockAvailableMessage.text('Insufficient stock. Available: ' + response.available_quantity);
+//                         stockAvailableMessage.css('color', 'red');
+//                     } else {
+//                         stockAvailableMessage.text('Stock is sufficient');
+//                         stockAvailableMessage.css('color', 'green');
+//                     }
+//                 },
+//                 error: function () {
+//                     stockAvailableMessage.text('Error checking stock');
+//                     stockAvailableMessage.css('color', 'red');
+//                 }
+//             });
+//         } else {
+//             stockAvailableMessage.text(''); // Clear message if inputs are incomplete
+//         }
+//     }
+
+//     // Add new row functionality
+//     $("#add_more_btn").click(function () {
+//         i_count++;
+//         var newRow = `
+//             <tr class="item-row">
+//                 <td>
+//                     <input type="text" name="addmore[${i_count}][id]" class="form-control" readonly value="${i_count + 1}">
+//                 </td>
+//                 <td>
+//                     <select class="form-control part-no" name="addmore[${i_count}][part_item_id]" required>
+//                         <option value="">Select Part Item</option>
+//                         @foreach ($dataOutputPartItem as $data)
+//                             <option value="{{ $data->id }}">{{ $data->description }}</option>
+//                         @endforeach
+//                     </select>
+//                 </td>
+//                 <td>
+//                     <input class="form-control quantity" name="addmore[${i_count}][quantity]" type="number" step="any" required>
+//                     <span class="stock-available"></span>
+//                 </td>
+//                 <td>
+//                     <select class="form-control unit" name="addmore[${i_count}][unit]" required>
+//                         <option value="">Select Unit</option>
+//                         @foreach ($dataOutputUnitMaster as $data)
+//                             <option value="{{ $data->id }}">{{ $data->name }}</option>
+//                         @endforeach
+//                     </select>
+//                 </td>
+//                 <td>
+//                     <input type="hidden" name="addmore[${i_count}][material_send_production]" value="0">
+//                     <input type="checkbox" class="material-send-checkbox" name="addmore[${i_count}][material_send_production]" value="1">
+//                 </td>
+//                 <td>
+//                     <button type="button" class="btn btn-sm btn-danger remove-row">
+//                         <i class="fa fa-trash"></i>
+//                     </button>
+//                 </td>
+//             </tr>`;
+//         $("#purchase_order_table tbody").append(newRow); // Append new row
+//     });
+
+//     // Remove row functionality
+//     $("#purchase_order_table").on("click", ".remove-row", function () {
+//         $(this).closest('tr').remove(); // Remove the row
+//     });
+
+//     // Trigger stock check on quantity input change
+//     $(document).on('input', '.quantity', function () {
+//         var $row = $(this).closest('tr'); // Get the current row
+//         checkStock($row); // Call the stock check function
+//     });
+
+//     // Trigger stock check on checkbox tick
+//     $(document).on('change', '.material-send-checkbox', function () {
+//         var $row = $(this).closest('tr'); // Get the current row
+//         if ($(this).is(':checked')) {
+//             checkStock($row); // Call the stock check function when checkbox is ticked
+//         } else {
+//             $row.find('.stock-available').text(''); // Clear the message when checkbox is unticked
+//         }
+//     });
+// });
+$(document).ready(function () {
+    const purchaseOrderTable = $("#purchase_order_table");
+    const validationMessages = {
+        partNo: "Please select a Part Item",
+        quantity: {
+            required: "Please enter the Quantity",
+            digits: "Quantity must be a valid number",
+        },
+        unit: "Please select a Unit",
+        materialSend: "Please check this box if materials will be sent for production",
+    };
+
+    // Initialize validation rules
+    function initializeValidation(context) {
+        $(context).find('.part-no').each(function () {
+            $(this).rules("add", {
+                required: true,
+                messages: { required: validationMessages.partNo }
+            });
+        });
+        $(context).find('.quantity').each(function () {
+            $(this).rules("add", {
+                required: true,
+                digits: true,
+                messages: validationMessages.quantity
+            });
+        });
+        $(context).find('.unit').each(function () {
+            $(this).rules("add", {
+                required: true,
+                messages: { required: validationMessages.unit }
+            });
+        });
+        $(context).find('.material-send-checkbox').each(function () {
+            $(this).rules("add", {
+                required: true,
+                messages: { required: validationMessages.materialSend }
+            });
+        });
+    }
+
+    let rowCount = purchaseOrderTable.find("tbody tr").length;
+
+    // Function to check stock availability
     function checkStock($row) {
-        var quantity = $row.find('.quantity').val(); // Get quantity value
-        var partItemId = $row.find('select[name*="part_item_id"]').val(); // Get selected part item ID
-        var stockAvailableMessage = $row.find('.stock-available'); // Target the stock message span
+        const quantity = $row.find('.quantity').val();
+        const partItemId = $row.find('select[name*="part_item_id"]').val();
+        const stockAvailableMessage = $row.find('.stock-available');
 
         if (partItemId && quantity) {
-            // AJAX request to check stock
             $.ajax({
-                url: '{{ route('check-stock-quantity') }}',
+                url: '{{ route("check-stock-quantity") }}',
                 type: 'GET',
-                data: {
-                    part_item_id: partItemId,
-                    quantity: quantity
-                },
+                data: { part_item_id: partItemId, quantity: quantity },
                 success: function (response) {
                     if (response.status === 'error') {
-                        stockAvailableMessage.text('Insufficient stock. Available: ' + response.available_quantity);
-                        stockAvailableMessage.css('color', 'red');
+                        stockAvailableMessage.text('Insufficient stock. Available: ' + response.available_quantity)
+                            .css('color', 'red');
                     } else {
-                        stockAvailableMessage.text('Stock is sufficient');
-                        stockAvailableMessage.css('color', 'green');
+                        stockAvailableMessage.text('Stock is sufficient').css('color', 'green');
                     }
                 },
                 error: function () {
-                    stockAvailableMessage.text('Error checking stock');
-                    stockAvailableMessage.css('color', 'red');
+                    stockAvailableMessage.text('Error checking stock').css('color', 'red');
                 }
             });
         } else {
-            stockAvailableMessage.text(''); // Clear message if inputs are incomplete
+            stockAvailableMessage.text('');
         }
     }
 
     // Add new row functionality
     $("#add_more_btn").click(function () {
-        i_count++;
-        var newRow = `
+        rowCount++;
+        const newRow = `
             <tr class="item-row">
                 <td>
-                    <input type="text" name="addmore[${i_count}][id]" class="form-control" readonly value="${i_count + 1}">
+                    <input type="text" name="addmore[${rowCount}][id]" class="form-control" readonly value="${rowCount + 1}">
                 </td>
                 <td>
-                    <select class="form-control part-no" name="addmore[${i_count}][part_item_id]" required>
+                    <select class="form-control part-no" name="addmore[${rowCount}][part_item_id]" required>
                         <option value="">Select Part Item</option>
                         @foreach ($dataOutputPartItem as $data)
                             <option value="{{ $data->id }}">{{ $data->description }}</option>
@@ -583,11 +716,11 @@ $(document).ready(function () {
                     </select>
                 </td>
                 <td>
-                    <input class="form-control quantity" name="addmore[${i_count}][quantity]" type="number" step="any" required>
+                    <input class="form-control quantity" name="addmore[${rowCount}][quantity]" type="number" step="any" required>
                     <span class="stock-available"></span>
                 </td>
                 <td>
-                    <select class="form-control unit" name="addmore[${i_count}][unit]" required>
+                    <select class="form-control unit" name="addmore[${rowCount}][unit]" required>
                         <option value="">Select Unit</option>
                         @foreach ($dataOutputUnitMaster as $data)
                             <option value="{{ $data->id }}">{{ $data->name }}</option>
@@ -595,8 +728,8 @@ $(document).ready(function () {
                     </select>
                 </td>
                 <td>
-                    <input type="hidden" name="addmore[${i_count}][material_send_production]" value="0">
-                    <input type="checkbox" class="material-send-checkbox" name="addmore[${i_count}][material_send_production]" value="1">
+                    <input type="hidden" name="addmore[${rowCount}][material_send_production]" value="0">
+                    <input type="checkbox" class="material-send-checkbox" name="addmore[${rowCount}][material_send_production]" value="1">
                 </td>
                 <td>
                     <button type="button" class="btn btn-sm btn-danger remove-row">
@@ -604,29 +737,53 @@ $(document).ready(function () {
                     </button>
                 </td>
             </tr>`;
-        $("#purchase_order_table tbody").append(newRow); // Append new row
+        purchaseOrderTable.find("tbody").append(newRow);
+
+        const addedRow = purchaseOrderTable.find("tbody tr").last();
+        initializeValidation(addedRow);
     });
 
     // Remove row functionality
-    $("#purchase_order_table").on("click", ".remove-row", function () {
-        $(this).closest('tr').remove(); // Remove the row
+    purchaseOrderTable.on("click", ".remove-row", function () {
+        $(this).closest('tr').remove();
     });
 
     // Trigger stock check on quantity input change
-    $(document).on('input', '.quantity', function () {
-        var $row = $(this).closest('tr'); // Get the current row
-        checkStock($row); // Call the stock check function
+    purchaseOrderTable.on('input', '.quantity', function () {
+        const $row = $(this).closest('tr');
+        checkStock($row);
     });
 
-    // Trigger stock check on checkbox tick
-    $(document).on('change', '.material-send-checkbox', function () {
-        var $row = $(this).closest('tr'); // Get the current row
+    // Trigger stock check on checkbox change
+    purchaseOrderTable.on('change', '.material-send-checkbox', function () {
+        const $row = $(this).closest('tr');
         if ($(this).is(':checked')) {
-            checkStock($row); // Call the stock check function when checkbox is ticked
+            checkStock($row);
         } else {
-            $row.find('.stock-available').text(''); // Clear the message when checkbox is unticked
+            $row.find('.stock-available').text('');
         }
     });
+
+    // Submit form with confirmation
+    $("form").validate({
+        submitHandler: function (form) {
+            Swal.fire({
+                icon: 'question',
+                title: 'Are you sure?',
+                text: 'You want to send this material to the Production Department?',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+    });
+
+    // Initialize validation on existing rows
+    initializeValidation(purchaseOrderTable.find("tbody tr"));
 });
 
 

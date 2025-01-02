@@ -86,16 +86,8 @@ class StoreController extends Controller
     }
     public function editProductMaterialWiseAddNewReq($id) {
         try {
-            // $purchase_orders_id = base64_decode($purchase_orders_id);
-            
-            // $business_id = base64_decode($business_id);
             $id = $id;
-            // dd($id);
-            // die();
             $editData = $this->service->editProductMaterialWiseAddNewReq($id);
-           
-            // dd($editData);
-            // die();
             $dataOutputPartItem = PartItem::where('is_active', true)->get();
             $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
             return view('organizations.store.list.edit-material-bom-wise-add-new-req', [

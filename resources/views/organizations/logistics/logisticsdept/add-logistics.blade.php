@@ -178,7 +178,7 @@
                                                         <div class="col-lg-5"></div>
                                                         <div class="col-lg-7">
                                                             <div class="login-horizental cancel-wp pull-left">
-                                                                <a href="{{ route('list-products') }}"
+                                                                <a href="{{ route('list-final-production-completed-recive-to-logistics') }}"
                                                                     class="btn btn-white"
                                                                     style="margin-bottom:50px">Cancel</a>
                                                                 <button class="btn btn-sm btn-primary login-submit-cs"
@@ -202,6 +202,66 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    {{-- <script>
+        $(document).ready(function () {
+            // Custom validation method to prevent spaces
+            $.validator.addMethod("spcenotallow", function (value, element) {
+                return value.trim().length > 0;
+            }, "This field cannot be empty or only spaces.");
+    
+            // Initialize form validation
+            $("#editLogisticsForm").validate({
+                rules: {
+                    vehicle_type_id: {
+                        required: true,
+                    },
+                    transport_name_id: {
+                        required: true,
+                    },
+                    from_place: {
+                        required: true,
+                        spcenotallow: true,
+                    },
+                    to_place: {
+                        required: true,
+                        spcenotallow: true,
+                    },
+                    truck_no: {
+                        required: true,
+                        spcenotallow: true,
+                    }
+                },
+                messages: {
+                    vehicle_type_id: {
+                        required: "Please select the vehicle type.",
+                    },
+                    transport_name_id: {
+                        required: "Please select the transport name.",
+                    },
+                    from_place: {
+                        required: "Please enter the origin place.",
+                        spcenotallow: "Origin place cannot be empty or only spaces.",
+                    },
+                    to_place: {
+                        required: "Please enter the destination place.",
+                        spcenotallow: "Destination place cannot be empty or only spaces.",
+                    },
+                    truck_no: {
+                        required: "Please enter the truck number.",
+                        spcenotallow: "Truck number cannot be empty or only spaces.",
+                    }
+                },
+                errorElement: "span",
+                errorClass: "error",
+                highlight: function (element) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function (element) {
+                    $(element).removeClass('is-invalid');
+                }
+            });
+        });
+    </script> --}}
     <script>
         $(document).ready(function () {
             // Custom validation method to prevent spaces
@@ -258,6 +318,22 @@
                 },
                 unhighlight: function (element) {
                     $(element).removeClass('is-invalid');
+                },
+                submitHandler: function (form) {
+                    // Confirmation dialog before submitting the form
+                    Swal.fire({
+                        title: "Are you sure?",
+                        text: "Do you want to submit the Logistics data to Fianance Department ?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, submit it!"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
                 }
             });
         });

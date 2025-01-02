@@ -12,6 +12,9 @@
         background-color: #f0f0f0;
         opacity: 0.6;
     }
+    .red-text{
+        color: red;
+    }
     .disabled-row input,
     .disabled-row select,
     .disabled-row button {
@@ -72,7 +75,8 @@
                                                     <input type="text" class="form-control" id="quantity" name="quantity" value="{{ $productDetails->quantity }}" placeholder="Enter Quantity" readonly>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="completed_quantity">Completed Quantity :</label>
+                                                    <label for="completed_quantity">Completed Quantity <span
+                                                        class="red-text">*</span> : </label>
                                                     <input type="text" class="form-control" id="completed_quantity" name="completed_quantity" value="" placeholder="Enter Completed Quantity" >
                                                 </div>
                                             {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -100,4 +104,47 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+    $(document).ready(function () {
+        // Validate the form
+        $("#addProductForm").validate({
+            rules: {
+                completed_quantity: {
+                    required: true,
+                    number: true,
+                    min: 1,
+                    max: function () {
+                        return parseInt($("#quantity").val());
+                    }
+                }
+            },
+            messages: {
+                completed_quantity: {
+                    required: "Please enter the completed quantity.",
+                    number: "Please enter a valid number.",
+                    min: "Completed quantity must be at least 1.",
+                    max: "Completed quantity cannot exceed the actual quantity."
+                }
+            },
+            submitHandler: function (form) {
+                // Confirmation dialog before submitting the form
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "Do you want to submit the completed quantity?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, submit it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            }
+        });
+    });
+</script>
+
 @endsection

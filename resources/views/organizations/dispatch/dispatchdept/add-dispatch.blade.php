@@ -47,9 +47,7 @@
                                 @endif
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="all-form-element-inner">
-                                        <form  action="{{ route('store-dispatch', ['id' => $editData->id, 'business_details_id' => $editData->business_details_id]) }}" method="POST"
-                                       
-                                          id="editDesignsForm" enctype="multipart/form-data">
+                                        <form  action="{{ route('store-dispatch', ['id' => $editData->id, 'business_details_id' => $editData->business_details_id]) }}" id="addProductForm" method="POST"  enctype="multipart/form-data">
                                             @csrf
                                             <input type="hidden" name="id" id=""
                                             class="form-control" value="{{ $editData->id }}"
@@ -130,18 +128,14 @@
                                                 
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="outdoor_no">Outdoor No. :  <span class="text-danger">*</span></label> 
-                                                    <input type="text" class="form-control" id="outdoor_no"
-                                                     value=" @if (old('outdoor_no')) {{ old('outdoor_no') }}@else{{ $editData->outdoor_no }} @endif"
-                                                        name="outdoor_no" placeholder="Enter Product Name">
+                                                    <input type="text" class="form-control" id="outdoor_no" name="outdoor_no" value="" placeholder="Enter Outdoor Number" >
                                                         @if ($errors->has('outdoor_no'))
                                                         <span class="red-text"><?php echo $errors->first('outdoor_no', ':message'); ?></span>
                                                     @endif
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="gate_entry">Gate Entry :  <span class="text-danger">*</span></label> 
-                                                    <input type="text" class="form-control" id="gate_entry"
-                                                     value=" "
-                                                        name="gate_entry" placeholder="Enter Product Name">
+                                                    <input type="text" class="form-control" id="gate_entry" name="gate_entry" value="" placeholder="Enter Gate Entry" >
                                                         @if ($errors->has('gate_entry'))
                                                         <span class="red-text"><?php echo $errors->first('gate_entry', ':message'); ?></span>
                                                     @endif
@@ -176,7 +170,7 @@
                                                                     class="btn btn-white"
                                                                     style="margin-bottom:50px">Cancel</a>
                                                                 <button class="btn btn-sm btn-primary login-submit-cs"
-                                                                    type="submit" style="margin-bottom:50px">Save Data</button>
+                                                                    type="submit" style="margin-bottom:50px" id="submitButton">Save Data</button>
                                                                
                                                             </div>
                                                         </div>
@@ -195,10 +189,52 @@
     </div>
     </div>
  
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
  
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+    $(document).ready(function () {
+        // Validate the form
+        $("#addProductForm").validate({
+            rules: {
+                outdoor_no:{
+                    required: true,
+                },
+                gate_entry: {
+                    required: true,
+                   
+                }
+            },
+            messages: {
+                gate_entry: {
+                    required: "Please enter the gate entry."
+                    
+                },
+                gate_entry: {
+                    required: "Please enter the completed quantity."
+                    
+                }
+            },
+            submitHandler: function (form) {
+                // Confirmation dialog before submitting the form
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "Do you want to mark this quantity as completed for dispatch?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, submit it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            }
+        });
+    });
+</script>
 
 @endsection

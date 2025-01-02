@@ -89,15 +89,15 @@ class DispatchController extends Controller
     public function storeDispatch(Request $request)
     {
         $rules = [
-            // 'outdoor_no' => 'required',
-            // 'gate_entry' => 'required',
-            // 'remark' => 'required',
+         'outdoor_no' => 'required',
+        'gate_entry' => 'required',
+        
         ];
 
         $messages = [
-            // 'outdoor_no.required' => 'The outdoor number is required.',
-            // 'gate_entry.required' => 'The gate entry is required.',
-            // 'remark.required' => 'The remark is required.',
+        'outdoor_no.required' => 'The outdoor number is required.',
+        'gate_entry.required' => 'The gate entry is required.',
+
         ];
 
         try {

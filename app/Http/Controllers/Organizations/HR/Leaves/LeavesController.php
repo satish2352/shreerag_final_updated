@@ -80,7 +80,7 @@ class LeavesController extends Controller
         try {
             $active_id = $request->active_id;
         $result = $this->service->updateOne($active_id);
-            return redirect('list-leaves-accepted')->with('flash_message', 'Updated!');  
+            return redirect('hr/list-leaves-accepted')->with('flash_message', 'Updated!');  
         } catch (\Exception $e) {
             return $e;
         }
@@ -221,9 +221,9 @@ class LeavesController extends Controller
     
             // Redirect based on the action
             if ($action === 'approve') {
-                return redirect('list-leaves-approvedby-hr')->with('status', 'success')->with('msg', 'Leave status updated successfully');
+                return redirect('hr/list-leaves-approvedby-hr')->with('status', 'success')->with('msg', 'Leave status updated successfully');
             } elseif ($action === 'notapprove') {
-                return redirect('list-leaves-not-approvedby-hr')->with('status', 'success')->with('msg', 'Leave status updated successfully');
+                return redirect('hr/list-leaves-not-approvedby-hr')->with('status', 'success')->with('msg', 'Leave status updated successfully');
             }
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Update failed', 'error' => $e->getMessage()], 500);
@@ -549,7 +549,7 @@ class LeavesController extends Controller
                     $msg = $delete_record['msg'];
                     $status = $delete_record['status'];
                     if ($status == 'success') {
-                        return redirect('list-leaves')->with(compact('msg', 'status'));
+                        return redirect('hr/list-leaves')->with(compact('msg', 'status'));
                     } else {
                         return redirect()->back()
                             ->withInput()
