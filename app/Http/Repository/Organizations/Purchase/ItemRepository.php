@@ -156,6 +156,9 @@ class ItemRepository  {
     public function updateAll($request)
     {
         try {
+
+            // dd($request);
+            // die();
             $return_data = array();
             $dataOutput = PartItem::find($request->id);
     
@@ -173,7 +176,10 @@ class ItemRepository  {
             $dataOutput->group_type_id = $request->group_type_id;
             // $dataOutput->rack_id = $request->rack_id;
             $dataOutput->basic_rate = $request->basic_rate;
-            $dataOutput->opening_stock = $request->opening_stock;
+            if ($request->has('opening_stock')) {
+                $dataOutput->opening_stock = $request->opening_stock;
+            }
+            // $dataOutput->opening_stock = $request->opening_stock;
             if ($request->has('rack_id')) {
                 $dataOutput->rack_id = $request->rack_id;
             }

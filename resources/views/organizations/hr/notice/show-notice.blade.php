@@ -18,16 +18,16 @@
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
                             <div class="row">
-                                @if($showData->isNotEmpty())
+                                {{-- @if($showData->isNotEmpty())
                                     @php
                                         $notice = $showData->first();
-                                    @endphp
+                                    @endphp --}}
                             <div class="row">
                                 <div class="col-lg-3 col-md-3 col-sm-3 padding-col-left">
                                     <label>Department Name :</label>
                                 </div>
                                 <div class="col-lg-8 col-md-8 col-sm-8">
-                                    <label>{{ strip_tags($notice->department_name) }}</label>
+                                    <label>{{ strip_tags($showData->department_name) }}</label>
                                 </div>
                             </div>
                                     <div class="row">
@@ -35,7 +35,7 @@
                                             <label>Title :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($notice->title) }}</label>
+                                            <label>{{ strip_tags($showData->title) }}</label>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -43,7 +43,7 @@
                                             <label>Description :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($notice->description) }}</label>
+                                            <label>{{ strip_tags($showData->description) }}</label>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -53,12 +53,12 @@
                                         <div class="col-lg-8 col-md-8 col-sm-8">
                                           
 
-                                            <a href="{{ Config::get('DocumentConstant.NOTICE_VIEW') }}{{ $notice['image'] }}" target="blank"> Click to view</a>
+                                            <a href="{{ Config::get('DocumentConstant.NOTICE_VIEW') }}{{ $showData['image'] }}" target="blank"> Click to view</a>
                                         </div>
                                     </div>
-                                @else
+                                {{-- @else
                                     <p>No notice found.</p>
-                                @endif
+                                @endif --}}
                             </div>
                             
 

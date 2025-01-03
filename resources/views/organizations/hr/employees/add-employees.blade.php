@@ -692,7 +692,7 @@
                     required: "Please Select State",
                 },
                 city: {
-                    required: "Please Select State",
+                    required: "Please Select City",
                 },
                 // user_profile: {
                 //     required: "Upload Media File",

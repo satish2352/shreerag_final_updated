@@ -73,6 +73,9 @@ class NoticeController extends Controller
         public function show(Request $request){
             try {
                 $showData = $this->service->getById($request->show_id);
+
+                // dd($showData);
+                // die();
                 return view('organizations.hr.notice.show-notice', compact('showData'));
             } catch (\Exception $e) {
                 return $e;
@@ -160,7 +163,7 @@ class NoticeController extends Controller
                     $msg = $delete_record['msg'];
                     $status = $delete_record['status'];
                     if ($status == 'success') {
-                        return redirect('list-notice')->with(compact('msg', 'status'));
+                        return redirect('hr/list-notice')->with(compact('msg', 'status'));
                     } else {
                         return redirect()->back()
                             ->withInput()

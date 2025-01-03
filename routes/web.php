@@ -530,7 +530,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::post('/add-notice', ['as' => 'add-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@store']);
         Route::get('/edit-notice/{edit_id}', ['as' => 'edit-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@edit']);
         Route::post('/update-notice', ['as' => 'update-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@update']);
-        Route::any('/show-notice/{id}', ['as' => 'show-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@show']);
+        Route::post('/show-notice', ['as' => 'show-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@show']);
         Route::any('/delete-notice/{id}', ['as' => 'delete-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@destroy']);
         Route::post('/update-active-notice', ['as' => 'update-active-notice', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@updateOne']);
         // Route::get('/particular-notice-department-wise', ['as' => 'particular-notice-department-wise', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@departmentWiseNotice']);
