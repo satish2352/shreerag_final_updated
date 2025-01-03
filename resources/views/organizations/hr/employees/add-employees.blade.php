@@ -277,9 +277,11 @@
                                         <div class="col-lg-6 col-md-6 col-sm-6">
                                             <div class="form-group">
                                                 <label for="pincode">Pincode</label>&nbsp<span class="red-text">*</span>
-                                                <input type="text" class="form-control" name="pincode" id="pincode"
+                                                {{-- <input type="text" class="form-control" name="pincode" id="pincode"
                                                     placeholder="" value="{{ old('pincode') }}"
-                                                    onkeyup="addvalidatePincode(this.value)">
+                                                    onkeyup="addvalidatePincode(this.value)"> --}}
+                                                    <input type="text" class="form-control" id="pincode" name="pincode" oninput="addvalidatePincode(this.value)">
+                                                    <span id="validation-message-pincode" style="color: red;"></span>
                                                 <span id="validation-message-pincode" class="red-text"></span>
                                                 @if ($errors->has('pincode'))
                                                     <span class="red-text"><?php echo $errors->first('pincode', ':message'); ?></span>
@@ -704,7 +706,19 @@
         });
     });
 </script>
+<script>
+    function addvalidatePincode(pincode) {
+        // Regular expression for exactly 6 digits and numbers only
+        var pincodePattern = /^\d{6}$/; 
+        var validationMessage = document.getElementById("validation-message-pincode");
 
+        if (pincodePattern.test(pincode)) {
+            validationMessage.textContent = ""; // Clear error message
+        } else {
+            validationMessage.textContent = "Please enter a valid 6-digit number."; // Show error
+        }
+    }
+</script>
 
 
 

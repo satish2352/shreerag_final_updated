@@ -229,10 +229,10 @@ class EmployeesHrController extends Controller
                     $msg = $register_user['msg'];
                     $status = $register_user['status'];
                     if($status=='success') {
-                        return redirect('list-users')->with(compact('msg','status'));
+                        return redirect('hr/list-users')->with(compact('msg','status'));
                     }
                     else {
-                        return redirect('list-users')->withInput()->with(compact('msg','status'));
+                        return redirect('hr/list-users')->withInput()->with(compact('msg','status'));
                     }
                 }
                 
@@ -267,7 +267,7 @@ class EmployeesHrController extends Controller
                 $msg = $delete_record['msg'];
                 $status = $delete_record['status'];
                 if ($status == 'success') {
-                    return redirect('list-users')->with(compact('msg', 'status'));
+                    return redirect('hr/list-users')->with(compact('msg', 'status'));
                 } else {
                     return redirect()->back()
                         ->withInput()

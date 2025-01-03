@@ -66,22 +66,27 @@
                                         <span class="mini-click-non">List Organizations</span>
                                     </a>
                                 </li>
-                                <li class="nav-item {{ Request::is('organizations-list-employees') ? 'active' : '' }}">
+                                <li>
+                                    <a  href="{{ route('list-users') }}" aria-expanded="false"><i
+                                            class="fa big-icon fa-users icon-wrap" aria-hidden="true"></i> <span
+                                            class="mini-click-non">Add Employees</span></a>
+                                </li>
+                                {{-- <li class="nav-item {{ Request::is('organizations-list-employees') ? 'active' : '' }}">
                                     <a  href="{{ route('organizations-list-employees') }}">
                                         <i class="fa big-icon fa-users icon-wrap" aria-hidden="true"></i>
                                         <span class="mini-click-non">List Employees</span>
                                     </a>
-                                </li>
-                                <li class="nav-item {{ Request::is('list-departments') ? 'active' : '' }}">
+                                </li> --}}
+                                {{-- <li class="nav-item {{ Request::is('list-departments') ? 'active' : '' }}">
                                     <a  href="{{ route('list-departments') }}">
                                         <i class="fa big-icon fa-sitemap  icon-wrap" aria-hidden="true"></i>
                                         <span class="mini-click-non">List Departments</span>
                                     </a>
-                                </li>
+                                </li> --}}
                                 <li class="nav-item {{ Request::is('list-roles') ? 'active' : '' }}">
                                     <a  href="{{ route('list-roles') }}">
                                         <i class="fa big-icon fa-user-tag icon-wrap" aria-hidden="true"></i>
-                                        <span class="mini-click-non">List Roles</span>
+                                        <span class="mini-click-non">List Department</span>
                                     </a>
                                 </li>
                             </ul>

@@ -9,6 +9,9 @@
         font-size: 12px; /* Adjust font size if needed */
         /* Add any other styling as per your design */
     }
+    .red-text{
+        color: red;  
+    }
 </style>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -59,17 +62,18 @@
                                 action="{{ route('update-users') }}" enctype="multipart/form-data">
                                 <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
                                 <div class="row">
-                                    {{-- <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="u_email">Email ID</label>&nbsp<span class="red-text">*</span>
-                                        <input type="text" class="form-control" name="u_email" id="u_email"
-                                            placeholder="" value="{{$user_data['data_users']['u_email']}}">
-                                        @if ($errors->has('u_email'))
-                                        <span
-                                            class="red-text"><?php echo $errors->first('u_email', ':message'); ?></span>
-                                        @endif
-                                    </div>
-                                </div> 
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="u_email">Email ID</label>&nbsp<span class="red-text">*</span>
+                                            <input type="text" class="form-control" name="u_email" id="u_email"
+                                                placeholder="" value="{{$user_data['data_users']['u_email']}}">
+                                            @if ($errors->has('u_email'))
+                                            <span
+                                                class="red-text"><?php echo $errors->first('u_email', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                    </div> 
+                                    {{-- 
                                           <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label for="u_uname">User Name</label>&nbsp<span class="red-text">*</span>
@@ -96,7 +100,7 @@
                                         <div class="form-group">
                                             <label for="role_id">Department</label>&nbsp<span class="red-text">*</span>
                                             <select class="form-control" id="role_id" name="role_id"
-                                                onchange="myFunction(this.value)">
+                                                onchange="myFunction(this.value)" disabled>
                                                 <option>Select</option>
                                                 @foreach ($user_data['roles'] as $role)
                                                     <option value="{{ $role['id'] }}"
@@ -147,7 +151,7 @@
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="number">Number</label>&nbsp<span class="red-text">*</span>
+                                            <label for="number">Mobile Number</label>&nbsp<span class="red-text">*</span>
                                             <input type="text" class="form-control mb-2" name="number" id="number"
                                                 placeholder="" value="{{ $user_data['data_users']['number'] }}"
                                                 onkeyup="editvalidateMobileNumber(this.value)"
