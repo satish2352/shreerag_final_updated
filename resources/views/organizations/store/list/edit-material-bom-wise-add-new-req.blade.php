@@ -25,7 +25,7 @@
                 <div class="basic-login-form-ad">
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            @if (Session::get('status') == 'success')
+                            {{-- @if (Session::get('status') == 'success')
                                 <div class="col-12 grid-margin">
                                     <div class="alert alert-custom-success " id="success-alert">
                                         <button type="button" data-bs-dismiss="alert"></button>
@@ -40,7 +40,7 @@
                                         <strong style="color: red;">Error!</strong> {!! session('msg') !!}
                                     </div>
                                 </div>
-                            @endif
+                            @endif --}}
                             {{-- <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="all-form-element-inner">
                                     @if (Session::get('status') == 'error')
@@ -51,7 +51,31 @@
                                         </div>
                                     </div>
                                 @endif --}}
-                                
+                                {{-- @if(session('status') === 'error')
+    <div class="alert alert-danger">
+        {{ session('msg') }}
+    </div>
+@endif --}}
+@if(session('status') === 'error')
+    <div class="alert alert-danger">
+        {{ session('msg') ?? 'An unexpected error occurred.' }}
+    </div>
+@endif
+
+@if(session('status') === 'success')
+    <div class="alert alert-success">
+        {{ session('msg') ?? 'Operation completed successfully.' }}
+    </div>
+@endif
+
+@if(isset($productDetails) && isset($dataGroupedById))
+    <!-- Display product details -->
+@else
+    <div class="alert alert-warning">
+        No product details available.
+    </div>
+@endif
+
 
                                 <form action="{{ route('update-material-list-bom-wise-new-req', $id) }}" method="POST" id="addProductForm" enctype="multipart/form-data">
                                     @csrf

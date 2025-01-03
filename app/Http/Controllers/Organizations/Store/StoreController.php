@@ -84,25 +84,49 @@ class StoreController extends Controller
             return $e;
         }
     }
-    public function editProductMaterialWiseAddNewReq($id) {
+    // public function editProductMaterialWiseAddNewReq($id) {
+    //     try {
+    //         $id = $id;
+    //         $editData = $this->service->editProductMaterialWiseAddNewReq($id);
+    //         $dataOutputPartItem = PartItem::where('is_active', true)->get();
+    //         $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
+    //         return view('organizations.store.list.edit-material-bom-wise-add-new-req', [
+    //             'productDetails' => $editData['productDetails'],
+    //             'dataGroupedById' => $editData['dataGroupedById'],
+    //             'dataOutputPartItem' => $dataOutputPartItem,
+    //             'dataOutputUnitMaster'=>$dataOutputUnitMaster,
+              
+    //             'id' => $id
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+    //     }
+    // }
+    public function editProductMaterialWiseAddNewReq($id)
+    {
         try {
-            $id = $id;
             $editData = $this->service->editProductMaterialWiseAddNewReq($id);
+    
+            // Check if the returned data has an error
+            if (isset($editData['status']) && $editData['status'] === 'error') {
+                return redirect()->back()->with(['status' => 'error', 'msg' => $editData['msg']]);
+            }
+    
             $dataOutputPartItem = PartItem::where('is_active', true)->get();
             $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
+    
             return view('organizations.store.list.edit-material-bom-wise-add-new-req', [
                 'productDetails' => $editData['productDetails'],
                 'dataGroupedById' => $editData['dataGroupedById'],
                 'dataOutputPartItem' => $dataOutputPartItem,
-                'dataOutputUnitMaster'=>$dataOutputUnitMaster,
-              
-                'id' => $id
+                'dataOutputUnitMaster' => $dataOutputUnitMaster,
+                'id' => $id,
             ]);
         } catch (\Exception $e) {
             return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
         }
     }
-
+    
     // public function checkStockQuantity(Request $request)
     // {
     //     $partItemId = $request->input('part_item_id');

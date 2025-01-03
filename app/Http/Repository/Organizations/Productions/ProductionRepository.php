@@ -522,6 +522,8 @@ public function updateProductMaterial($request) {
                         $dataOutput->unit = $item['unit'] ?? '';
                         $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
                         $dataOutput->save();
+
+                       
                     }
                 } else {
                     // Create new ProductionDetails record for each row
@@ -530,7 +532,7 @@ public function updateProductMaterial($request) {
                     $newRow->quantity = $item['quantity'] ?? 0;
                     $newRow->unit = $item['unit'] ?? '';
                     $newRow->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
-
+                    $newRow->quantity_minus_status = 'pending';
                     // Set the necessary relationships
                     $newRow->business_id = $dataOutput_ProductionDetails->first()->business_id ?? null;
                     $newRow->design_id = $dataOutput_ProductionDetails->first()->design_id ?? null;

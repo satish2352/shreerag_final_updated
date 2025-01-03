@@ -54,15 +54,32 @@ class StoreServices
             return $e;
         }
     }
-    public function editProductMaterialWiseAddNewReq($id) {
-        try {
-            $data_output = $this->repo->editProductMaterialWiseAddNewReq($id);
+//     public function editProductMaterialWiseAddNewReq($id) {
+//         try {
+//             $data_output = $this->repo->editProductMaterialWiseAddNewReq($id);
          
-return $data_output;
-        } catch (\Exception $e) {
-            return ['status' => 'error', 'msg' => $e->getMessage()];
+// return $data_output;
+//         } catch (\Exception $e) {
+//             return ['status' => 'error', 'msg' => $e->getMessage()];
+//         }
+//     }
+
+public function editProductMaterialWiseAddNewReq($id)
+{
+    try {
+        $data_output = $this->repo->editProductMaterialWiseAddNewReq($id);
+
+        // Ensure the repository returns proper keys
+        if (empty($data_output) || !isset($data_output['productDetails']) || !isset($data_output['dataGroupedById'])) {
+            throw new \Exception('Invalid data structure returned from repository.');
         }
+
+        return $data_output;
+    } catch (\Exception $e) {
+        return ['status' => 'error', 'msg' => $e->getMessage()];
     }
+}
+
     public function updateProductMaterialWiseAddNewReq($request) {
         try {
             $result = $this->repo->updateProductMaterialWiseAddNewReq($request);
