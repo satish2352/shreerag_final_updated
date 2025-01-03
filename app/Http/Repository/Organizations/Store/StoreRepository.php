@@ -224,6 +224,90 @@ class StoreRepository
             ];
         }
     }
+
+    public function updateProductMaterialWiseAddNewReq($request)
+{
+    try {
+        $business_details_id = base64_decode($request->business_details_id);
+
+        // Update production model
+        $dataOutput_Production = ProductionModel::where('business_details_id', $business_details_id)->firstOrFail();
+        $dataOutput_Production->production_status_quantity_tracking = 'incomplete';
+        $dataOutput_Production->save();
+
+        // Fetch production details with specific conditions
+        $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $dataOutput_Production->business_details_id)
+            ->where('material_send_production', 0)
+            ->where('quantity_minus_status', 'pending')
+            ->get();
+
+        if ($dataOutput_ProductionDetails->isEmpty()) {
+            return [
+                'status' => 'error',
+                'msg' => 'No pending production details found.' // Single message
+            ];
+        }
+
+        $errorMessages = []; // Collect error messages for insufficient stock or missing items
+
+        foreach ($dataOutput_ProductionDetails as $dataOutput) {
+            // Fetch stock for the current part item
+            $itemStock = ItemStock::where('part_item_id', $dataOutput->part_item_id)->first();
+
+            if ($itemStock) {
+                if ($itemStock->quantity >= $dataOutput->quantity) {
+                    // Deduct stock and update the status to 'done'
+                    $itemStock->quantity -= $dataOutput->quantity;
+                    $itemStock->save();
+
+                    $dataOutput->material_send_production = 1;
+                    $dataOutput->quantity_minus_status = 'done';
+                    $dataOutput->save();
+                } else {
+                    // Insufficient stock message
+                    $errorMessages[] = "Not enough stock for part item ID: " . $dataOutput->part_item_id . 
+                                       ". Required: " . $dataOutput->quantity . ", Available: " . $itemStock->quantity;
+                }
+            } else {
+                // Missing stock message
+                $errorMessages[] = "Item stock not found for part item ID: " . $dataOutput->part_item_id;
+            }
+        }
+
+        // Update application and notification statuses
+        $business_application = BusinessApplicationProcesses::where('business_details_id', $business_details_id)->firstOrFail();
+        $business_application->off_canvas_status = 17;
+        $business_application->save();
+
+        AdminView::where('business_details_id', $business_application->business_details_id)
+            ->update(['off_canvas_status' => 17, 'is_view' => '0']);
+
+        NotificationStatus::where('business_details_id', $business_application->business_details_id)
+            ->update(['off_canvas_status' => 17]);
+
+        if (!empty($errorMessages)) {
+            return [
+                'status' => 'error',
+                'msg' => implode('<br>', $errorMessages) // Concatenate all errors into one message
+            ];
+        }
+
+        // Update business application process status
+        $businessOutput = BusinessApplicationProcesses::where('business_details_id', $business_details_id)->firstOrFail();
+        $businessOutput->product_production_inprocess_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_INPROCESS_FOR_PRODUCTION');
+        $businessOutput->save();
+
+        return [
+            'status' => 'success',
+            'msg' => 'Pending production materials updated successfully.'
+        ];
+    } catch (\Exception $e) {
+        return [
+            'status' => 'error',
+            'msg' => $e->getMessage() // Ensure 'msg' key is always returned
+        ];
+    }
+}
     // public function updateProductMaterialWiseAddNewReq($request) {
     //     try {
     //         $business_details_id = base64_decode($request->business_details_id);
@@ -515,89 +599,7 @@ class StoreRepository
 //         ];
 //     }
 // }
-public function updateProductMaterialWiseAddNewReq($request)
-{
-    try {
-        $business_details_id = base64_decode($request->business_details_id);
 
-        // Update production model
-        $dataOutput_Production = ProductionModel::where('business_details_id', $business_details_id)->firstOrFail();
-        $dataOutput_Production->production_status_quantity_tracking = 'incomplete';
-        $dataOutput_Production->save();
-
-        // Fetch production details with specific conditions
-        $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $dataOutput_Production->business_details_id)
-            ->where('material_send_production', 0)
-            ->where('quantity_minus_status', 'pending')
-            ->get();
-
-        if ($dataOutput_ProductionDetails->isEmpty()) {
-            return [
-                'status' => 'error',
-                'msg' => 'No pending production details found.' // Single message
-            ];
-        }
-
-        $errorMessages = []; // Collect error messages for insufficient stock or missing items
-
-        foreach ($dataOutput_ProductionDetails as $dataOutput) {
-            // Fetch stock for the current part item
-            $itemStock = ItemStock::where('part_item_id', $dataOutput->part_item_id)->first();
-
-            if ($itemStock) {
-                if ($itemStock->quantity >= $dataOutput->quantity) {
-                    // Deduct stock and update the status to 'done'
-                    $itemStock->quantity -= $dataOutput->quantity;
-                    $itemStock->save();
-
-                    $dataOutput->material_send_production = 1;
-                    $dataOutput->quantity_minus_status = 'done';
-                    $dataOutput->save();
-                } else {
-                    // Insufficient stock message
-                    $errorMessages[] = "Not enough stock for part item ID: " . $dataOutput->part_item_id . 
-                                       ". Required: " . $dataOutput->quantity . ", Available: " . $itemStock->quantity;
-                }
-            } else {
-                // Missing stock message
-                $errorMessages[] = "Item stock not found for part item ID: " . $dataOutput->part_item_id;
-            }
-        }
-
-        // Update application and notification statuses
-        $business_application = BusinessApplicationProcesses::where('business_details_id', $business_details_id)->firstOrFail();
-        $business_application->off_canvas_status = 17;
-        $business_application->save();
-
-        AdminView::where('business_details_id', $business_application->business_details_id)
-            ->update(['off_canvas_status' => 17, 'is_view' => '0']);
-
-        NotificationStatus::where('business_details_id', $business_application->business_details_id)
-            ->update(['off_canvas_status' => 17]);
-
-        if (!empty($errorMessages)) {
-            return [
-                'status' => 'error',
-                'msg' => implode('<br>', $errorMessages) // Concatenate all errors into one message
-            ];
-        }
-
-        // Update business application process status
-        $businessOutput = BusinessApplicationProcesses::where('business_details_id', $business_details_id)->firstOrFail();
-        $businessOutput->product_production_inprocess_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_INPROCESS_FOR_PRODUCTION');
-        $businessOutput->save();
-
-        return [
-            'status' => 'success',
-            'msg' => 'Pending production materials updated successfully.'
-        ];
-    } catch (\Exception $e) {
-        return [
-            'status' => 'error',
-            'msg' => $e->getMessage() // Ensure 'msg' key is always returned
-        ];
-    }
-}
 
 
 
