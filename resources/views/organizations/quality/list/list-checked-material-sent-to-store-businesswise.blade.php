@@ -22,58 +22,18 @@
             font-size: 14px;
             text-align: left;
         }
+        .sparkline13-list-product {
+        background-color: #fff;
+        padding: 22px;
+        margin-top: 72px;
+        margin-bottom: 80px;
+    }
     </style>
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="sparkline13-list">
-                        <form method="GET" action="{{ route('list-material-sent-to-quality-businesswise', ['id' => $id]) }}">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label for="from_date">From Date</label>
-                                    <input type="date" name="from_date" class="form-control" value="{{ request()->from_date }}">
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="to_date">To Date</label>
-                                    <input type="date" name="to_date" class="form-control" value="{{ request()->to_date }}">
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="year">Year</label>
-                                    <select name="year" class="form-control">
-                                        <option value="">Select Year</option>
-                                        @for ($i = now()->year; $i >= 2010; $i--)
-                                            <option value="{{ $i }}" {{ request()->year == $i ? 'selected' : '' }}>{{ $i }}</option>
-                                        @endfor
-                                    </select>
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="month">Month</label>
-                                    <select name="month" class="form-control">
-                                        <option value="">Select Month</option>
-                                        @foreach (range(1, 12) as $month)
-                                            <option value="{{ $month }}" {{ request()->month == $month ? 'selected' : '' }}>
-                                                {{ date("F", mktime(0, 0, 0, $month, 1)) }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="year"></label>
-                                    {{-- <p style="font-size: 18px;"><strong>Total Records: {{ $total_count }}</strong></p> --}}
-                                </div>
-                            </div>
-                                <div class="row d-flex justify-content-center">
-                                    {{-- <div class="d-flex justify-content-center"> --}}
-                                    <div class="col-md-12 mt-4" style="display: flex; justify-content: center; margin-top:20px;">
-                                        <button type="submit" class="btn btn-primary">Filter</button>
-                                        <a href="{{ route('list-product-completed-report') }}" class="btn btn-secondary">Reset</a>
-                                    {{-- </div> --}}
-                                    </div>
-                                </div>
-                                
-                            </div>
-                        </form>
+                    <div class="sparkline13-list-product">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
                                 <h1>Material Need To Sent To<span class="table-project-n"> Production</span> Department Business Wise</h1>
@@ -87,6 +47,47 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <form method="GET" action="{{ route('list-material-sent-to-quality-businesswise', ['id' => $id]) }}">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="from_date">From Date</label>
+                                    <input type="date" name="from_date" class="form-control" value="{{ request()->from_date }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="to_date">To Date</label>
+                                    <input type="date" name="to_date" class="form-control" value="{{ request()->to_date }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="year">Year</label>
+                                    <select name="year" class="form-control">
+                                        <option value="">Select Year</option>
+                                        @for ($i = now()->year; $i >= 2010; $i--)
+                                            <option value="{{ $i }}" {{ request()->year == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="month">Month</label>
+                                    <select name="month" class="form-control">
+                                        <option value="">Select Month</option>
+                                        @foreach (range(1, 12) as $month)
+                                            <option value="{{ $month }}" {{ request()->month == $month ? 'selected' : '' }}>
+                                                {{ date("F", mktime(0, 0, 0, $month, 1)) }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-md-12 mt-4" style="display: flex; justify-content: center; margin-top:20px;">
+                                    <button type="submit" class="btn btn-primary">Filter</button>
+                                    <a href="{{ route('list-material-sent-to-quality-businesswise', ['id' => $id]) }}" class="btn btn-secondary">Reset</a>
+                                </div>
+                            </div>
+                        </form>
+                        
+                       
 
                         @if (Session::get('status') == 'success')
                             <div class="alert alert-success alert-success-style1">

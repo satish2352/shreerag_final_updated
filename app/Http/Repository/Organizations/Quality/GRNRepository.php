@@ -100,7 +100,7 @@ class GRNRepository
             $dataOutput->save();
     
             $last_insert_id = $dataOutput->id;
-  
+;
             // Update purchase order details with quantities
             foreach ($request->addmore as $item) {
                 PurchaseOrderDetailsModel::where('id', $item['edit_id'])

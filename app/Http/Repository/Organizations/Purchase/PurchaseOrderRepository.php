@@ -42,7 +42,7 @@ class PurchaseOrderRepository
             $dataOutput->terms_condition = '';
             $dataOutput->remark = '';
             $dataOutput->image = 'null';
-            $dataOutput->quote_no = $request->quote_no;
+            // $dataOutput->quote_no = $request->quote_no;
             $dataOutput->contact_person_name = $request->contact_person_name;
             $dataOutput->contact_person_number = $request->contact_person_number;
             $dataOutput->tax_type = $request->tax_type;

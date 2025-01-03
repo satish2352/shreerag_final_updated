@@ -96,15 +96,15 @@ class GRNController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'grn_date' => 'required',
-            'purchase_orders_id' => 'required',
-            'po_date' => 'required',
+            // 'grn_date' => 'required',
+            // 'purchase_orders_id' => 'required',
+            // 'po_date' => 'required',
         ];
 
         $messages = [
-            'grn_date.required' => 'The Client Name is required.',
-            'purchase_orders_id.required' => 'The purchase orders no is required.',
-            'po_date.required' => 'The Email is required.',
+            // 'grn_date.required' => 'The Client Name is required.',
+            // 'purchase_orders_id.required' => 'The purchase orders no is required.',
+            // 'po_date.required' => 'The Email is required.',
         ];
 
         try {
@@ -121,7 +121,7 @@ class GRNController extends Controller
                     $status = $add_record['status'];
 
                     if ($status == 'success') {
-                        return redirect('quality/list-grn')->with(compact('msg', 'status'));
+                        return redirect('quality/list-material-sent-to-quality')->with(compact('msg', 'status'));
                     } else {
                         return redirect('quality/add-grn')->withInput()->with(compact('msg', 'status'));
                     }
@@ -216,17 +216,27 @@ class GRNController extends Controller
             return $e;
         }
     }
+    // public function getAllListMaterialSentFromQualityBusinessWise(Request $request, $id)
+    // {
+    //     try {
+    //         $data_output = $this->service->getAllListMaterialSentFromQualityBusinessWise($request, $id);
+    //         return view('organizations.quality.list.list-checked-material-sent-to-store-businesswise', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         \Log::error('Error in Controller: ' . $e->getMessage());
+    //         return redirect()->back()->with('error', 'Something went wrong. Please try again.');
+    //     }
+    // }
     public function getAllListMaterialSentFromQualityBusinessWise(Request $request, $id)
-    {
-        try {
-            $data_output = $this->service->getAllListMaterialSentFromQualityBusinessWise($request, $id);
-            return view('organizations.quality.list.list-checked-material-sent-to-store-businesswise', compact('data_output'));
-        } catch (\Exception $e) {
-            \Log::error('Error in Controller: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Something went wrong. Please try again.');
-        }
+{
+    try {
+        $data_output = $this->service->getAllListMaterialSentFromQualityBusinessWise($request, $id);
+        return view('organizations.quality.list.list-checked-material-sent-to-store-businesswise', compact('data_output', 'id'));
+    } catch (\Exception $e) {
+        \Log::error('Error in Controller: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Something went wrong. Please try again.');
     }
-    
+}
+
 
     public function getAllRejectedChalanList()
     {
