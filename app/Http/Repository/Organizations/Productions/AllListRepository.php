@@ -275,7 +275,6 @@ public function getAllNewRequirementBusinessWise($business_id) {
   }
   public function acceptdesignlistBusinessWise($business_id){
     try {
-     
       $decoded_business_id = base64_decode($business_id);
         $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION')];
        
