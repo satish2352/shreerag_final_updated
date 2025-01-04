@@ -51,20 +51,9 @@
                                         </div>
                                     </div>
                                 @endif --}}
-                                {{-- @if(session('status') === 'error')
+                                @if(session('status') === 'error')
     <div class="alert alert-danger">
         {{ session('msg') }}
-    </div>
-@endif --}}
-@if(session('status') === 'error')
-    <div class="alert alert-danger">
-        {{ session('msg') ?? 'An unexpected error occurred.' }}
-    </div>
-@endif
-
-@if(session('status') === 'success')
-    <div class="alert alert-success">
-        {{ session('msg') ?? 'Operation completed successfully.' }}
     </div>
 @endif
 
@@ -145,7 +134,7 @@
                                                                 <input type="checkbox" class="material-send-checkbox" name="addmore[{{ $index }}][material_send_production]" value="1" {{ $item->material_send_production == 1 ? 'checked' : '' }} disabled>
                                                                 
                                                             @else --}}
-                                                            <input type="hidden" name="addmore[{{ $index }}][material_send_production]" value="1">
+                                                            <input type="hidden" name="addmore[{{ $index }}][material_send_production]" value="0">
                                                             <input type="checkbox" class="material-send-checkbox" name="addmore[{{ $index }}][material_send_production]" value="1" {{ $item->material_send_production == 1 ? 'checked' : '' }} required>
                                                                                                                         {{-- @endif --}}
 

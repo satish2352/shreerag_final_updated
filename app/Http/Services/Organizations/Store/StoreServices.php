@@ -57,7 +57,7 @@ class StoreServices
     public function editProductMaterialWiseAddNewReq($id) {
         try {
             $data_output = $this->repo->editProductMaterialWiseAddNewReq($id);
-         
+        
 return $data_output;
         } catch (\Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
