@@ -225,7 +225,8 @@ public function getAllDispatchClosedProduct() {
               'businesses.title',
               'businesses_details.product_name',
               'businesses_details.description',
-              'businesses_details.quantity'
+              'businesses_details.quantity',
+              'tbl_dispatch.updated_at'
           )
           
           // Select the fields, including sum of quantities
@@ -236,6 +237,7 @@ public function getAllDispatchClosedProduct() {
               'businesses_details.product_name',
               'businesses_details.description',
               'businesses_details.quantity',
+               'tbl_dispatch.updated_at',
               DB::raw('SUM(tcqt1.completed_quantity) as total_completed_quantity')
           )
           
