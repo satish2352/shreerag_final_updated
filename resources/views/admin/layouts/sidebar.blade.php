@@ -637,10 +637,15 @@
                                 class="mini-click-non">Returnable Challan</span></a></li>
                      @endif
                      @if (session()->get('role_id') == config('constants.ROLE_ID.INVENTORY'))
-                     <li class="nav-item {{ request()->is('inventory/dashboard') ? 'active' : '' }}">
+                     <li class="nav-item {{ request()->is('owner/dashboard') ? 'active' : '' }}">
                         <a  href="{{ route('dashboard') }}"><i
                         class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
                         class="mini-click-non">Dashboard</span></a></li>
+
+                     {{-- <li class="nav-item {{ request()->is('inventory/dashboard') ? 'active' : '' }}">
+                        <a  href="{{ route('dashboard') }}"><i
+                        class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
+                        class="mini-click-non">Dashboard</span></a></li> --}}
                      <li class="nav-item {{ request()->is('storedept/list-accepted-design-from-prod') ? 'active' : '' }}">
                         <a href="{{ route('list-accepted-design-from-prod') }}" aria-expanded="false"><i
                                 class="fa big-icon fa-list icon-wrap"></i> <span class="mini-click-non">All
@@ -658,13 +663,13 @@
                                     
                         </ul>
                     </li>
-                    <li
+                    {{-- <li
                     class="nav-item {{ request()->is('storedept/list-product-inprocess-received-from-production') ? 'active' : '' }}">
                     <a href="{{ route('list-product-inprocess-received-from-production') }}">
                         <i class="fa big-icon fa-box-open icon-wrap"></i>
                         <span class="mini-click-non">Production Department send material list</span>
                     </a>
-                </li>
+                </li> --}}
                      @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.HR'))
                     <li class="nav-item {{ request()->is('hr/dashboard') ? 'active' : '' }}">
@@ -718,13 +723,17 @@
                         </a></li>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.EMPOLYEE'))
+                    <li class="nav-item {{ request()->is('dashboard') ? 'active' : '' }}">
+                        <a  href="{{ route('dashboard') }}"><i
+                        class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
+                        class="mini-click-non">Dashboard</span></a></li>
                     <li class="nav-item {{ request()->is('list-sr-and-gr-genrated-business') ? 'active' : '' }}">
                         <a href="{{ route('list-sr-and-gr-genrated-business') }}">
                             <i class="fa big-icon fa-money-check icon-wrap"></i>
                             <span class="mini-click-non">Profile</span>
                         </a>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a class="has-arrow" href="{{ route('list-inventory-material') }}" aria-expanded="false"><i
                                 class="fa big-icon fa-ban  icon-wrap"></i> <span class="mini-click-non">Inventory
                                 </span></a>
@@ -735,7 +744,7 @@
                            
                                     
                         </ul>
-                    </li>
+                    </li> --}}
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.FINANCE'))
                         <li class="nav-item {{ request()->is('list-sr-and-gr-genrated-business') ? 'active' : '' }}">

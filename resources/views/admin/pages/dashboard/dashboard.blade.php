@@ -1426,7 +1426,7 @@
                                             </div>
                                         </div>
                                         <div class="mt-2 mb-0 text-sm">
-                                            <a href="{{ route('list-po-sent-for-approval') }}">
+                                            <a href="{{ route('list-po-sanction-and-need-to-do-payment-to-vendor') }}">
                                                 <span
                                                     class="badge badge-pill bg-soft-success text-success me-2">
                                                     <i class="fa-solid fa-arrow-right"></i> </span>
@@ -1566,7 +1566,7 @@
                                         </div>
                                     </div>
 
-                            <div class="col-xl-4 col-sm-6 col-12">
+                            {{-- <div class="col-xl-4 col-sm-6 col-12">
                                 <div class="card shadow border-0">
                                     <div class="card-body">
                                         <div class="row border-bottom">
@@ -1595,7 +1595,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                     @elseif ($role == config('constants.ROLE_ID.DISPATCH')) 

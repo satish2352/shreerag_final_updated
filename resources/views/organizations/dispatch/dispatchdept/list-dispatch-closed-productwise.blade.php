@@ -87,6 +87,7 @@
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="total_quantity" data-editable="false">Total Product Quantity</th>
                                                 <th data-field="total_completed_quantity" data-editable="false">Total Production Done Quantity</th>                                                
+                                                <th data-field="updated_at" data-editable="false">Dispatch Completed Date</th>      
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -98,13 +99,14 @@
                                                 <td>{{ ucwords($data->product_name) }}</td>
                                                 <td>{{ ucwords($data->quantity) }}</td>
                                                 <td>{{ ucwords($data->total_completed_quantity) }}</td>
+                                                <td>{{ ucwords($data->updated_at) }}</td>
                                                 {{-- <td>{{ ucwords($data->from_place) }}</td>
                                                 <td>{{ ucwords($data->to_place) }}</td>
                                                 <td>{{ ucwords($data->truck_no) }}</td>
                                                 <td>{{ ucwords($data->outdoor_no) }}</td>
                                                 <td>{{ ucwords($data->gate_entry) }}</td>
                                                 <td>{{ ucwords($data->remark) }}</td>
-                                                <td>{{ ucwords($data->updated_at) }}</td> --}}
+                                            --}}
                                               </tr>
                                             @endforeach
                                           </tbody>

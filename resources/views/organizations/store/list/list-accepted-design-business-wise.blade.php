@@ -143,7 +143,7 @@
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
                                                             <div style="display: inline-block; align-items: center;">
-                                                                <a href="{{route('edit-material-list-bom-wise-new-req',base64_encode($data->business_details_id))}}"><button data-toggle="tooltip" style="padding: 14px;" title="View Details" class="pd-setting-ed">Issue Product Material</button></a>
+                                                                <a href="{{route('edit-material-list-bom-wise-new-req',base64_encode($data->business_details_id))}}"><button data-toggle="tooltip" style="padding: 14px; width:130px;" title="View Details" class="pd-setting-ed">Issue Product Material</button></a>
                                                             </div>
                                                             {{-- @if($data->material_send_production == 1)
                                                             <a href="{{ route('accepted-and-material-sent', base64_encode($data->business_details_id)) }}">
