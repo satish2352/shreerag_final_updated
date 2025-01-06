@@ -149,9 +149,15 @@
                                                                 
                                                             </td>
                                                             <td>
+                                                                @if($productDetails->quantity_minus_status == 'pending')
                                                                 <button type="button" class="btn btn-sm btn-danger remove-row">
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
+                                                                @else
+                                                                <button type="button" class="btn btn-sm btn-danger remove-row" disabled>
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                                @endif
                                                             </td>
                                                         </tr>
                                                     @endforeach
