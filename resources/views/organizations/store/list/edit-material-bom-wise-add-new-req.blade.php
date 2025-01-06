@@ -65,12 +65,15 @@
         No product details available.
     </div>
 @endif
-
+<?php
+// dd($productDetails);
+// die();  
+?>
 
                                 <form action="{{ route('update-material-list-bom-wise-new-req', $id) }}" method="POST" id="addProductForm" enctype="multipart/form-data">
                                     @csrf
                                     <input type="hidden" name="business_details_id" id="business_details_id" value="{{ $id }}">
-                                
+                                    <input type="hidden" name="id" id="id" value="{{ $productDetails->id }}">
                                     <div class="row">
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                             <label for="product_name">Name:</label>
@@ -130,6 +133,7 @@
                                                                 </select>
                                                             </td>
                                                             <td>
+                                                                <input type="hidden" name="addmore[{{ $index }}][quantity_minus_status]" value="{{ $item->quantity_minus_status }}" >
                                                                 {{-- @if($productDetails->material_send_production == 1)
                                                                 <input type="hidden" name="addmore[{{ $index }}][material_send_production]" value="1">
                                                                 <input type="checkbox" class="material-send-checkbox" name="addmore[{{ $index }}][material_send_production]" value="1" {{ $item->material_send_production == 1 ? 'checked' : '' }} disabled>
