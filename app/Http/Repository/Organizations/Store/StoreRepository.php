@@ -633,8 +633,8 @@ public function updateProductMaterialWiseAddNewReq($request)
                 $newEntry->design_id = $dataOutput_ProductionDetails->design_id;
                 $newEntry->business_details_id = $dataOutput_ProductionDetails->business_details_id;
                 $newEntry->production_id = $dataOutput_ProductionDetails->production_id;
-                dd($newEntry);
-                die();
+                // dd($newEntry);
+                // die();
                 $newEntry->save();
                     // Handle stock and quantity deduction
                     $partItemId = $newEntry->part_item_id;
