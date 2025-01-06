@@ -31,7 +31,7 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Production Completed List</h1>
+                                <h1>Production Send to Logistics Tracking</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
                                         {{-- <div class="login-horizental cancel-wp pull-left">
@@ -64,13 +64,13 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                <div id="toolbar">
+                                {{-- <div id="toolbar">
                                     <select class="form-control">
                                         <option value="">Export Basic</option>
                                         <option value="all">Export All</option>
                                         <option value="selected">Export Selected</option>
                                     </select>
-                                </div>
+                                </div> --}}
 
 
                                 <div class="table-responsive">
@@ -84,40 +84,41 @@
                                                 <th data-field="id">Sr.No.</th>
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
+                                                <th data-field="grn_date" data-editable="false">Description</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
                                                 <th data-field="completed_quantity" data-editable="false">Completed Production</th>
-                                                <th data-field="updated_at" data-editable="false">Date</th>
-                                                <th data-field="remark" data-editable="false">Remark</th>
-                                                <th data-field="title" data-editable="false">customer Name</th>
-                                              
-                                                {{-- <th data-field="vendor_company_name" data-editable="false">Vendor company Name</th>
-                                                <th data-field="vendor_email" data-editable="false">Vendor Email</th>
-                                                <th data-field="contact_no" data-editable="false">Vendor Contact Number</th>
-                                                <th data-field="vendor_address" data-editable="false">Vendor Address</th> --}}
+                                                <th data-field="action" data-editable="false">Action</th>
+                                                {{-- <th data-field="purchase_id" data-editable="false">Remark</th> --}}
                                                 {{-- <th data-field="store_material_sent_date" data-editable="false">Matrial Recieved Date</th> --}}
-                                                {{-- <th data-field="design_image" data-editable="false">Design Layout</th> --}}
-                                                {{-- <th data-field="bom_image" data-editable="false">BOM</th> --}}
-                                                <th data-field="" data-editable="false">Action</th>
+                                                {{-- <th data-field="design_image" data-editable="false">Design Layout</th>
+                                                <th data-field="bom_image" data-editable="false">BOM</th> --}}
+                                                {{-- <th data-field="" data-editable="false">Action</th> --}}
                                             </tr>
 
                                         </thead>
-                                        <tbody>
 
+<?php
+// dd($data_output);
+// die();
+?>
+
+                                        <tbody>
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
+                                                    <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
                                                     <td>{{ ucwords($data->completed_quantity) }}</td>
-                                                    <td>{{ $data->updated_at ? $data->updated_at->format('Y-m-d') : 'N/A' }} </td>
-                                                    <td>{{ ucwords($data->remarks) }}</td>
-                                                    <td>{{ ucwords($data->title) }}</td>
-                                                   
-                                                    {{-- <td>{{ ucwords($data->vendor_company_name) }}</td>
-                                                    <td>{{ ucwords($data->vendor_email) }}</td>
-                                                    <td>{{ ucwords($data->contact_no) }}</td>
-                                                    <td>{{ ucwords($data->vendor_address) }}</td> --}}
+
+                                                    <td>
+                                                        <div style="display: inline-block; align-items: center;">
+                                                            <a href="{{route('list-final-prod-completed-send-to-logistics-tracking-product-wise', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed">View Details</button></a>
+                                                        </div>
+                                                        </td>
+
+                                                    {{-- <td>{{ ucwords($data->remarks) }}</td> --}}
                                                     {{-- <td>{{ ucwords($data->store_material_sent_date) }}</td> --}}
                                                     {{-- <td> <a class="img-size" target="_blank"
                                                         href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
@@ -127,12 +128,6 @@
                                                         href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
                                                         alt="bill of material" >Click to download</a>
                                                 </td> --}}
-                                                <td>
-                                                    <div style="display: flex; align-items: center;">
-                                                        <a href="{{route('add-logistics', $data->id)}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                                        {{-- <a href="{{route('delete-products')}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a> --}}
-                                                    </div>
-                                                </td>
 
                                                    
 

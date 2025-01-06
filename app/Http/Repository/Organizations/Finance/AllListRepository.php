@@ -687,9 +687,9 @@ class AllListRepository
       $join->on('tbl_logistics.vehicle_type_id', '=', 'tbl_vehicle_type.id');
   })
 
-    ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status',$array_to_be_quantity_tracking)
+    // ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status',$array_to_be_quantity_tracking)
 
-      ->whereIn('bap1.dispatch_status_id',$array_to_be_check)
+      // ->whereIn('bap1.dispatch_status_id',$array_to_be_check)
       // ->whereIn('purchase_orders.store_receipt_no',$array_to_be_check_new)
       ->where('businesses.is_active',true)
       // ->distinct('businesses_details.id')

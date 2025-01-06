@@ -216,7 +216,7 @@ public function getAllListSendToFiananceByLogistics(){
         ->leftJoin('businesses_details', function($join) {
             $join->on('tbl_logistics.business_details_id', '=', 'businesses_details.id');
         }) 
-      ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status',$array_to_be_quantity_tracking)
+      // ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status',$array_to_be_quantity_tracking)
       // ->whereIn('bap1.logistics_status_id',$array_to_be_check)
     
       ->where('businesses.is_active',true)

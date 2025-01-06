@@ -191,7 +191,8 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/edit-recived-bussinesswise/{id}', ['as' => 'edit-recived-bussinesswise', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@editProduct']);
         Route::post('/update-production/{id}', ['as' => 'update-production', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@updateProductMaterial']);
         Route::get('/list-final-production-completed', ['as' => 'list-final-production-completed', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllCompletedProduction']);
-
+        Route::get('/list-final-prod-completed-send-to-logistics-tracking', ['as' => 'list-final-prod-completed-send-to-logistics-tracking', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllCompletedProductionSendToLogistics']);
+        Route::get('/list-final-prod-completed-send-to-logistics-tracking-product-wise/{id}', ['as' => 'list-final-prod-completed-send-to-logistics-tracking-product-wise', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllCompletedProductionSendToLogisticsProductWise']);
 
         Route::get('/edit-recived-bussinesswise-quantity-tracking/{id}', ['as' => 'edit-recived-bussinesswise-quantity-tracking', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@editProductQuantityTracking']);
 
