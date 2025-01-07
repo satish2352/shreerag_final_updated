@@ -55,7 +55,13 @@ class DashboardController extends Controller {
     try {
       
         // Get the counts
-        $user_active_count = User::where('is_active', 1)->count(); 
+        // $user_active_count = User::where('is_active', 1)->count(); 
+        $user_active_count= User::leftJoin('tbl_roles', function ($join) {
+            $join->on('users.role_id', '=', 'tbl_roles.id');
+        })
+        ->where('users.is_active', 1)
+        ->where('users.id', '>', 1)
+        ->count(); 
         $active_count = Business::where('is_active', 1)->count(); 
         $business_details_count = BusinessDetails::where('is_active', 1)->count(); 
         $product_completed_count = BusinessApplicationProcesses::where('is_active', 1)

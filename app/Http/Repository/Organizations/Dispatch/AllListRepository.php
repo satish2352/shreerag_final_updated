@@ -194,63 +194,131 @@ public function getAllDispatch(){
       return $e;
   }
 }
-public function getAllDispatchClosedProduct() {
-  try {
-      $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.LIST_DISPATCH_COMPLETED_FROM_DISPATCH_DEPARTMENT')];
-      $array_to_be_quantity_tracking = [config('constants.DISPATCH_DEPARTMENT.SUBMITTED_COMPLETED_QUANLTITY_DISPATCH_DEPT')];
+// public function getAllDispatchClosedProduct() {
+//   try {
+//       $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.LIST_DISPATCH_COMPLETED_FROM_DISPATCH_DEPARTMENT')];
+//       $array_to_be_quantity_tracking = [config('constants.DISPATCH_DEPARTMENT.SUBMITTED_COMPLETED_QUANLTITY_DISPATCH_DEPT')];
       
-      $data_output = Logistics::leftJoin('tbl_customer_product_quantity_tracking as tcqt1', function($join) {
-              $join->on('tbl_logistics.quantity_tracking_id', '=', 'tcqt1.id');
-          })
-          ->leftJoin('businesses', function($join) {
-              $join->on('tbl_logistics.business_id', '=', 'businesses.id');
-          })
-          ->leftJoin('business_application_processes as bap1', function($join) {
-              $join->on('tbl_logistics.business_application_processes_id', '=', 'bap1.id');
-          })
-          ->leftJoin('businesses_details', function($join) {
-              $join->on('tbl_logistics.business_details_id', '=', 'businesses_details.id');
-          })
-          ->leftJoin('tbl_dispatch', function($join) {
-              $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_dispatch.quantity_tracking_id');
-          })
-          ->whereIn('tcqt1.quantity_tracking_status', $array_to_be_quantity_tracking)
-          ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
-          ->where('businesses.is_active', true)
+//       $data_output = Logistics::leftJoin('tbl_customer_product_quantity_tracking as tcqt1', function($join) {
+//               $join->on('tbl_logistics.quantity_tracking_id', '=', 'tcqt1.id');
+//           })
+//           ->leftJoin('businesses', function($join) {
+//               $join->on('tbl_logistics.business_id', '=', 'businesses.id');
+//           })
+//           ->leftJoin('business_application_processes as bap1', function($join) {
+//               $join->on('tbl_logistics.business_application_processes_id', '=', 'bap1.id');
+//           })
+//           ->leftJoin('businesses_details', function($join) {
+//               $join->on('tbl_logistics.business_details_id', '=', 'businesses_details.id');
+//           })
+//           ->leftJoin('tbl_dispatch', function($join) {
+//               $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_dispatch.quantity_tracking_id');
+//           })
+//           ->whereIn('tcqt1.quantity_tracking_status', $array_to_be_quantity_tracking)
+//           ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
+//           ->where('businesses.is_active', true)
           
-          // Group by business_details_id and other selected fields
-          ->groupBy(
-              'businesses_details.id',
-              'businesses.customer_po_number',
-              'businesses.title',
-              'businesses_details.product_name',
-              'businesses_details.description',
-              'businesses_details.quantity',
-              'tbl_dispatch.updated_at'
-          )
+//           // Group by business_details_id and other selected fields
+//           ->groupBy(
+//               'businesses_details.id',
+//               'businesses.customer_po_number',
+//               'businesses.title',
+//               'businesses_details.product_name',
+//               'businesses_details.description',
+//               'businesses_details.quantity',
+//               'tbl_dispatch.updated_at'
+//           )
           
-          // Select the fields, including sum of quantities
-          ->select(
-              'businesses_details.id as business_details_id',
-              'businesses.customer_po_number',
-              'businesses.title',
-              'businesses_details.product_name',
-              'businesses_details.description',
-              'businesses_details.quantity',
-               'tbl_dispatch.updated_at',
-              DB::raw('SUM(tcqt1.completed_quantity) as total_completed_quantity')
-          )
+//           // Select the fields, including sum of quantities
+//           ->select(
+//               'businesses_details.id as business_details_id',
+//               'businesses.customer_po_number',
+//               'businesses.title',
+//               'businesses_details.product_name',
+//               'businesses_details.description',
+//               'businesses_details.quantity',
+//                'tbl_dispatch.updated_at',
+//               DB::raw('SUM(tcqt1.completed_quantity) as total_completed_quantity')
+//           )
           
-          // Filter records where the sum of completed_quantity matches the quantity
-          ->havingRaw('SUM(tcqt1.completed_quantity) = businesses_details.quantity')
+//           // Filter records where the sum of completed_quantity matches the quantity
+//           ->havingRaw('SUM(tcqt1.completed_quantity) = businesses_details.quantity')
           
-          ->orderBy('businesses_details.id', 'asc')
-          ->get();
+//           ->orderBy('businesses_details.id', 'asc')
+//           ->get();
 
-      return $data_output;
-  } catch (\Exception $e) {
-      return $e;
-  }
+//       return $data_output;
+//   } catch (\Exception $e) {
+//       return $e;
+//   }
+// }
+public function getAllDispatchClosedProduct()
+{
+    try {
+        // Define constants for checks
+        $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.LIST_DISPATCH_COMPLETED_FROM_DISPATCH_DEPARTMENT')];
+        $array_to_be_quantity_tracking = [config('constants.DISPATCH_DEPARTMENT.SUBMITTED_COMPLETED_QUANLTITY_DISPATCH_DEPT')];
+
+        // Base query
+        $data_output = Logistics::leftJoin('tbl_customer_product_quantity_tracking as tcqt1', function ($join) {
+                $join->on('tbl_logistics.quantity_tracking_id', '=', 'tcqt1.id');
+            })
+            ->leftJoin('businesses', function ($join) {
+                $join->on('tbl_logistics.business_id', '=', 'businesses.id');
+            })
+            ->leftJoin('business_application_processes as bap1', function ($join) {
+                $join->on('tbl_logistics.business_application_processes_id', '=', 'bap1.id');
+            })
+            ->leftJoin('businesses_details', function ($join) {
+                $join->on('tbl_logistics.business_details_id', '=', 'businesses_details.id');
+            })
+            ->leftJoin('tbl_dispatch', function ($join) {
+                $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_dispatch.quantity_tracking_id');
+            })
+            ->whereIn('tcqt1.quantity_tracking_status', $array_to_be_quantity_tracking)
+            ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
+            ->where('businesses.is_active', true)
+
+            // Select fields
+            ->select(
+                'businesses_details.id as business_details_id',
+                'businesses.customer_po_number',
+                'businesses.title',
+                'businesses_details.product_name',
+                'businesses_details.description',
+                'businesses_details.quantity',
+                DB::raw('SUM(tcqt1.completed_quantity) as total_completed_quantity'),
+                DB::raw('MAX(tbl_dispatch.updated_at) as last_updated_at') // Get the last updated_at value
+            )
+
+            // Group by necessary fields only
+            ->groupBy(
+                'businesses_details.id',
+                'businesses.customer_po_number',
+                'businesses.title',
+                'businesses_details.product_name',
+                'businesses_details.description',
+                'businesses_details.quantity'
+            )
+
+            // Ensure completed quantity matches the required quantity
+            ->havingRaw('SUM(tcqt1.completed_quantity) = businesses_details.quantity')
+
+            // Order by ID for consistent results
+            ->orderBy('businesses_details.id', 'asc')
+            ->get()
+            ->map(function($data) {
+                // Convert last_updated_at to Carbon instance if it's not already
+                $data->last_updated_at = Carbon::parse($data->last_updated_at);
+                return $data;
+            });
+// dd($data_output);
+// die();
+        return $data_output;
+    } catch (\Exception $e) {
+        // Return exception for debugging purposes
+        return $e;
+    }
 }
 
 // public function getAllDispatchClosedProduct() {

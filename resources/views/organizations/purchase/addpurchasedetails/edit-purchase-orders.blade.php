@@ -77,7 +77,10 @@
                                                             </div>
     @endif -->
 
-  
+  <?php
+//   dd($editData);
+//   die();
+  ?>
 
                                                         @foreach ($editData as $key => $editDataNew)
                                                             @if ($key == 0)
@@ -243,7 +246,7 @@
                                                                             value="{{ $editDataNew->purchase_order_details_id }}"
                                                                             placeholder="">
                                                                         <td>
-                                                                            <select class="form-control part-no mb-2" name="part_no_id_{{ $key }}" id="">
+                                                                            <select class="form-control part_no_id mb-2" name="part_no_id_{{ $key }}" id="">
                                                                                 <option value="" default>Select Description</option>
                                                                                 @foreach ($dataOutputPartItem as $data)
                                                                                 <option value="{{ $data['id'] }}"
@@ -254,7 +257,21 @@
                                                                             </select>
                                                                         </td>
                                                                         <td>
-                                                                            <select class="form-control hsn_id mb-2" name="hsn_id_{{ $key }}" id="">
+                                                                            <input type="text"
+                                                                                name="hsn_id_{{ $key }}"
+                                                                                value="{{ $editDataNew->hsn_name }}"
+                                                                                placeholder="Enter hsn_id"
+                                                                                class="form-control hsn_name" style="min-width:100px" disabled>
+
+                                                                                <input type="hidden"
+                                                                                name="hsn_id_{{ $key }}"
+                                                                                value="{{ $editDataNew->hsn_id }}"
+                                                                                placeholder="Enter hsn_id"
+                                                                                class="form-control hsn_id" style="min-width:100px" >
+
+                                                                                
+                                                                           
+                                                                            {{-- <select class="form-control hsn_id mb-2" name="hsn_id_{{ $key }}" id=""  style="min-width:100px">
                                                                                 <option value="" default>Select HSN</option>
                                                                                 @foreach ($dataOutputHSNMaster as $data)
                                                                                 <option value="{{ $data['id'] }}"
@@ -262,14 +279,14 @@
                                                                                     {{ $data->name }}
                                                                                 </option>
                                                                             @endforeach
-                                                                            </select>
+                                                                            </select> --}}
                                                                         </td>                                                                        
                                                                         <td>
                                                                             <input type="text"
                                                                                 name="description_{{ $key }}"
                                                                                 value="{{ $editDataNew->description }}"
                                                                                 placeholder="Enter Description"
-                                                                                class="form-control description" />
+                                                                                class="form-control description" style="min-width:100px"/>
                                                                         </td>
 
                                                                         {{-- <td>
@@ -288,7 +305,7 @@
                                                                                 class="form-control quantity" />
                                                                         </td>
                                                                         <td>
-                                                                            <select class="form-control unit mb-2" name="unit_{{ $key }}" id="">
+                                                                            <select class="form-control unit mb-2" name="unit_{{ $key }}" id="" style="min-width:100px">
                                                                                 <option value="" default>Select Unit</option>
                                                                                 @foreach ($dataOutputUnitMaster as $data)
                                                                                 <option value="{{ $data['id'] }}"
@@ -306,7 +323,7 @@
                                                                                 class="form-control rate" />
                                                                         </td>
                                                                         <td>
-                                                                            <select class="form-control discount" name="discount_{{ $key }}" id="discount_{{ $key }}">
+                                                                            <select class="form-control discount" name="discount_{{ $key }}" id="discount_{{ $key }}" style="min-width:100px">
                                                                                 <option value="0" {{ $editDataNew->discount == 0 ? 'selected' : '' }}>0 %</option>
                                                                                 <option value="1" {{ $editDataNew->discount == 1 ? 'selected' : '' }}>1 %</option>
                                                                                 <option value="2" {{ $editDataNew->discount == 2 ? 'selected' : '' }}>2 %</option>
@@ -581,14 +598,8 @@
                     '<option value="{{ $data['id'] }}">{{ $data['description'] }}</option>' +
                 '@endforeach' +
             '</select>' + 
-            '<td>' +
-            '<select class="form-control hsn_id mb-2" name="addmore[' + i + '][hsn_id]" id="">' +
-                '<option value="" default>Select HSN</option>' +
-                '@foreach ($dataOutputHSNMaster as $data)' +
-                    '<option value="{{ $data['id'] }}">{{ $data['name'] }}</option>' +
-                '@endforeach' +
-            '</select>'+
-            '</td>' +
+'<td>'+'<input type="text" class="form-control hsn_name" placeholder=" " readonly />  <input type="hidden" name="addmore[' + i +'][hsn_id]" class="form-control hsn_id"  placeholder=" Amount" readonly /></td>'
+                +
                     '<td><input type="text" class="form-control description" name="addmore[' + i +
                     '][description]" placeholder=" Description" /></td>' +
                     
@@ -622,6 +633,9 @@
                 required: "Please select the Part Number",
             }
         });
+
+
+       
 
         $('select[name="addmore[' + i + '][hsn_id]"]').rules("add", {
             required: true,
@@ -740,6 +754,41 @@
             });
         });
     </script>
+<script>
+       $(document).ready(function() {
+     $(document).on('change', '.part_no_id', function() {
+            // alert("hii");
+    var partNoId = $(this).val(); // Get the selected part_no_id
+    var currentRow = $(this).closest('tr'); // Get the current row
 
+    if (partNoId) {
+        // Make an AJAX request to fetch the HSN based on the part_no_id
+        $.ajax({
+            url: '{{ route('get-hsn-for-part') }}', // Use the Laravel route helper
+            type: 'GET',
+            data: { part_no_id: partNoId }, // Pass the part_no_id as a query parameter
+            success: function(response) {
+                console.log("HSN response:", response);
+
+                if (response.part && response.part.length > 0) {
+                    var hsnName = response.part[0].name;
+                    var hsnId = response.part[0].id;
+
+                    // Update the HSN inputs for the current row only
+                    currentRow.find('.hsn_name').val(hsnName); // Set HSN name
+                    currentRow.find('.hsn_id').val(hsnId); // Set HSN ID
+                } else {
+                    alert("HSN not found for the selected part.");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX Error: ", status, error);
+                alert("Error fetching HSN. Please try again.");
+            }
+        });
+    }
+});
+});
+    </script>
 
 @endsection

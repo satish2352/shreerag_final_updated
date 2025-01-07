@@ -205,14 +205,21 @@
                                                             {{-- <input class="form-control quantity" name="addmore[0][quantity]" type="text"> --}}
                                                         </td>
                                                         <td>
-                                                            <select class="form-control mb-2" name="addmore[0][hsn_id]"
+                                                            <input class="form-control hsn_name"
+                                                            name="addmore[0][hsn_id]" type="text"
+                                                            style="min-width:100px" disabled>
+
+                                                            <input  type="hidden"  class="form-control hsn_id"
+                                                            name="addmore[0][hsn_id]" type="text"
+                                                            style="min-width:100px">
+                                                            {{-- <select class="form-control mb-2" name="addmore[0][hsn_id]"
                                                                 id="" style="min-width:100px">
                                                                 <option value="" default>Select HSN</option>
                                                                 @foreach ($dataOutputHSNMaster as $data)
                                                                     <option value="{{ $data['id'] }}">
                                                                         {{ $data['name'] }}</option>
                                                                 @endforeach
-                                                            </select>
+                                                            </select> --}}
                                                             {{-- <input class="form-control quantity" name="addmore[0][quantity]" type="text"> --}}
                                                         </td>
                                                         <td>
@@ -529,12 +536,8 @@
         </select>
     </td>
                       <td>
-                             <select class="form-control mb-2 hsn_id" name="addmore[${i}][hsn_id]">
-                                <option value="" default>Select HSN</option>
-                                @foreach ($dataOutputHSNMaster as $data)
-                                    <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
-                                @endforeach
-                            </select>
+                        <input class="form-control hsn_name"  type="text" style="min-width:150px" disabled>
+                             <input type="hidden" class="form-control hsn_id" name="addmore[${i}][hsn_id]" type="text" style="min-width:150px">
                         </td>
                     <td>
                         <input class="form-control description" name="addmore[${i}][description]" type="text" style="min-width:150px">
@@ -629,32 +632,38 @@
                                 initializeValidation($("#purchase_order_table")); // Initialize for all rows
                             });
 
-                            //                             $(document).on('change', '.part-no', function() {
-                            //     var partNoId = $(this).val(); // Get the selected part_no_id
-                            //     var rowId = $(this).data('row-id'); // Get the row id
+                            $(document).on('change', '.part-no', function() {
+    var partNoId = $(this).val(); // Get the selected part_no_id
+    var currentRow = $(this).closest('tr'); // Get the current row
 
-                            //     if (partNoId) {
-                            //         // Make an AJAX request to fetch the HSN based on the part_no_id
-                            //         $.ajax({
-                            //             url: '{{ route('get-hsn-for-part') }}', // Use the Laravel route helper
-                            //             type: 'GET',
-                            //             data: { part_no: partNoId }, // Pass the part_no as a query parameter
-                            //             success: function(response) {
-                            //                 console.log("HSN response:", response);
-                            //                 if (response.hsn_id) {
-                            //                     // Set the HSN dropdown value based on the response
-                            //                     $(`select[name="addmore[${rowId}][hsn_id]"]`).val(response.hsn_id);
-                            //                 } else {
-                            //                     alert("HSN not found for the selected part.");
-                            //                 }
-                            //             },
-                            //             error: function(xhr, status, error) {
-                            //                 console.error("AJAX Error: ", status, error);
-                            //                 alert("Error fetching HSN. Please try again.");
-                            //             }
-                            //         });
-                            //     }
-                            // });
+    if (partNoId) {
+        // Make an AJAX request to fetch the HSN based on the part_no_id
+        $.ajax({
+            url: '{{ route('get-hsn-for-part') }}', // Use the Laravel route helper
+            type: 'GET',
+            data: { part_no_id: partNoId }, // Pass the part_no_id as a query parameter
+            success: function(response) {
+                console.log("HSN response:", response);
+
+                if (response.part && response.part.length > 0) {
+                    var hsnName = response.part[0].name;
+                    var hsnId = response.part[0].id;
+
+                    // Update the HSN inputs for the current row only
+                    currentRow.find('.hsn_name').val(hsnName); // Set HSN name
+                    currentRow.find('.hsn_id').val(hsnId); // Set HSN ID
+                } else {
+                    alert("HSN not found for the selected part.");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX Error: ", status, error);
+                alert("Error fetching HSN. Please try again.");
+            }
+        });
+    }
+});
+
 
 
 

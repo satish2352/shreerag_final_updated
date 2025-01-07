@@ -212,10 +212,10 @@
                                class="mini-click-non">Dispatch Dept Production Dispatch Completed</span></a>
                    </li> 
                             <li
-                            class="nav-item {{ Request::is('list-rejected-chalan-po-wise') ? 'active' : '' }}">
-                            <a href="{{ route('list-rejected-chalan-po-wise') }}" aria-expanded="false"><i
+                            class="nav-item {{ Request::is('list-rejected-chalan-updated') ? 'active' : '' }}">
+                            <a href="{{ route('list-rejected-chalan-updated') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-times-circle icon-wrap" aria-hidden="true"></i> <span
-                                    class="mini-click-non">PO wise Rejected Chalan</span></a>
+                                    class="mini-click-non">List Rejected Chalan</span></a>
                         </li>
                            <li
                             class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') ? 'active' : '' }}">

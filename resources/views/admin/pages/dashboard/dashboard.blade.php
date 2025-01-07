@@ -2148,13 +2148,15 @@
                                                         </div>
                                                     </div>
                                                     <div class="mt-2 mb-0 text-sm">
-                                                        <a href="{{ route('list-product-dispatch-completed') }}">
+                                                        {{-- <a href="{{ route('list-product-dispatch-completed') }}"> --}}
                                                             <span
                                                                 class="badge badge-pill bg-soft-success text-success me-2">
                                                                 <i class="fa-solid fa-arrow-right"></i> </span>
-                                                            <span class="text-nowrap text-xs text-muted">view
-                                                                details</span>
-                                                        </a>
+                                                            <span class="text-nowrap text-xs text-muted">
+                                                                {{-- view
+                                                                details --}}
+                                                            </span>
+                                                        {{-- </a> --}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -2179,7 +2181,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="mt-2 mb-0 text-sm">
-                                                        <a href="{{ route('list-product-dispatch-completed') }}">
+                                                        <a href="{{ route('list-dispatch-final-product-close') }}">
                                                             <span
                                                                 class="badge badge-pill bg-soft-success text-success me-2">
                                                                 <i class="fa-solid fa-arrow-right"></i> </span>
@@ -2210,7 +2212,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="mt-2 mb-0 text-sm">
-                                                        <a href="{{ route('list-product-dispatch-completed') }}">
+                                                        <a href="{{ route('list-dispatch-final-product-close') }}">
                                                             <span
                                                                 class="badge badge-pill bg-soft-success text-success me-2">
                                                                 <i class="fa-solid fa-arrow-right"></i> </span>

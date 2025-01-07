@@ -99,7 +99,8 @@
                                                 <td>{{ ucwords($data->product_name) }}</td>
                                                 <td>{{ ucwords($data->quantity) }}</td>
                                                 <td>{{ ucwords($data->total_completed_quantity) }}</td>
-                                                <td>{{ $data->updated_at ? $data->updated_at->format('Y-m-d') : 'N/A' }} </td>
+                                                <td>{{ $data->last_updated_at ? $data->last_updated_at->format('Y-m-d') : 'N/A' }} </td>
+
                                                 {{-- <td>{{ ucwords($data->from_place) }}</td>
                                                 <td>{{ ucwords($data->to_place) }}</td>
                                                 <td>{{ ucwords($data->truck_no) }}</td>
