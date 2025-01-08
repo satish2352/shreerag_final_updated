@@ -118,7 +118,7 @@
                                             {{-- <td>{{ucwords($data->descriptions)}}</td> --}}
 
 
-                                            <td>
+                                            {{-- <td>
                                                 @if($data->is_approved_production == 1)
                                                 <button data-toggle="tooltip" title="Edit" class="pd-setting-ed"
                                                     disabled>
@@ -139,7 +139,30 @@
                                                                 class="fa fa-trash" aria-hidden="true"></i></button></a>
                                                 </div>
                                                 @endif
+                                            </td> --}}
+
+                                            <td>
+                                                @if($data->is_approved_production == 1)
+                                                <button data-toggle="tooltip" title="Edit" class="pd-setting-ed" disabled>
+                                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                </button>
+                                                <button data-toggle="tooltip" title="Trash" class="pd-setting-ed" disabled>
+                                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                                </button>
+                                                @else
+                                                <div style="display: flex; align-items: center;">
+                                                    <a href="{{route('edit-business', base64_encode($data->id))}}">
+                                                        <button data-toggle="tooltip" title="Edit" class="pd-setting-ed">
+                                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                        </button>
+                                                    </a>
+                                                    <button data-toggle="tooltip" title="Trash" class="pd-setting-ed delete-button" data-url="{{route('delete-business', base64_encode($data->id))}}">
+                                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
+                                                @endif
                                             </td>
+                                            
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -152,5 +175,36 @@
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="{{ asset('js/password-meter/pwstrength-bootstrap.min.js') }}"></script>
+            <script src="{{ asset('js/password-meter/zxcvbn.js') }}"></script>
+            <script src="{{ asset('js/password-meter/password-meter-active.js') }}"></script>
+            <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+<script>
+    $.noConflict();
+    jQuery(document).ready(function($) {
+        $(".delete-button").click(function(event) {
+            event.preventDefault(); // Prevent default button behavior
+            var deleteUrl = $(this).data('url'); // Get the delete URL from data attribute
+            
+            // Show SweetAlert confirmation
+            Swal.fire({
+                icon: 'question',
+                title: 'Are you sure?',
+                text: 'Do you want to delete this Business Entry?',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Delete it',
+                cancelButtonText: 'No, Keep it',
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    // If confirmed, navigate to the delete URL
+                    window.location.href = deleteUrl;
+                }
+            });
+        });
+    });
+</script>
 
 @endsection

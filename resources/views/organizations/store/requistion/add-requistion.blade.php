@@ -155,14 +155,14 @@ label.error {
             bom_file_req: {
                 required: true,
                 fileExtension: ["xlsx", "xls"],
-                fileSize: [10, 5120], // Min 1KB and Max 2MB (2 * 1024 KB)
+                fileSize: [1, 5120], // Min 1KB and Max 2MB (2 * 1024 KB)
             },
         },
         messages: {
             bom_file_req: {
                 required: "Please upload an Excel file (xlsx, xls).",
                 fileExtension: "Only XLSX and XLS files are allowed.",
-                fileSize: "File size must be between 10 KB and 5120 KB.",
+                fileSize: "File size must be between 1 KB and 5120 KB.",
             },
         },
     });

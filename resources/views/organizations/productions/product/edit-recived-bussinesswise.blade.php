@@ -132,6 +132,13 @@
                                                                         </button>
                                                                     @endif
                                                                 </td>
+
+                                                                <td>
+                                                                    <a data-id="{{ $item->id }}"
+                                                                        class="delete-btn btn btn-danger m-1"
+                                                                        title="Delete Tender"><i
+                                                                            class="fas fa-archive"></i></a>
+                                                                </td>
                                                             </tr>
                                                         @endforeach
                                                     @endforeach
@@ -153,6 +160,11 @@
         </div>
     </div>
 </div>
+
+<form method="POST" action="{{ route('delete-addmore') }}" id="deleteform">
+    @csrf
+    <input type="hidden" name="delete_id" id="delete_id" value="">
+</form>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>

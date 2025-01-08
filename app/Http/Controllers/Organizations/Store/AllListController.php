@@ -178,7 +178,9 @@ class AllListController extends Controller
             // die();
             $po_id = $purchase_order_data->id;
 
-            $purchase_order_details_data = PurchaseOrderDetailsModel::where('purchase_id', $po_id)
+            $purchase_order_details_data = GrnPOQuantityTracking::where('purchase_order_id', $po_id)
+
+            
                 ->get();
             return view('organizations.store.list.list-grn', compact('purchase_order_data', 'purchase_order_details_data', 'grn_data'));
         } catch (\Exception $e) {

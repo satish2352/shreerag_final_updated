@@ -1,4 +1,10 @@
 @extends('admin.layouts.master')
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 @section('content')
     <style>
         .form-control {
@@ -20,7 +26,18 @@
         }
 
         /* The container of the dropdown button */
-        
+        .marginTop {
+            margin-top: 200px;
+        }
+
+        .select2-container .select2-selection--single {
+            height: 34px !important;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border: 1px solid #ccc !important;
+            border-radius: 0px !important;
+        }
     </style>
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
@@ -142,6 +159,10 @@
                                         </div>
                                     </div>
                                 </div>
+
+
+
+
                                 <div class="row">
                                     <div class="col-md-12 col-sm-12">
                                         <div class="table-responsive">
@@ -177,8 +198,8 @@
                                                             <input type="hidden" id="i_id" class="form-control"
                                                                 style="min-width:50px" readonly value="0">
                                                         </td>
-                                                       
-                                                        
+
+
 
                                                         {{-- <td>
                                                             <select class="form-control part-no mb-2"
@@ -194,7 +215,8 @@
                                                         </td> --}}
 
                                                         <td>
-                                                            <select class="form-control mb-2 part-no"name="addmore[0][part_no_id]"
+                                                            <select
+                                                                class="form-control mb-2 part-no select2"name="addmore[0][part_no_id]"
                                                                 id="" style="min-width:100px">
                                                                 <option value="" default>Select Description</option>
                                                                 @foreach ($dataOutputPartItem as $data)
@@ -205,13 +227,12 @@
                                                             {{-- <input class="form-control quantity" name="addmore[0][quantity]" type="text"> --}}
                                                         </td>
                                                         <td>
-                                                            <input class="form-control hsn_name"
-                                                            name="addmore[0][hsn_id]" type="text"
-                                                            style="min-width:100px" disabled>
+                                                            <input class="form-control hsn_name" name="addmore[0][hsn_id]"
+                                                                type="text" style="min-width:100px" disabled>
 
-                                                            <input  type="hidden"  class="form-control hsn_id"
-                                                            name="addmore[0][hsn_id]" type="text"
-                                                            style="min-width:100px">
+                                                            <input type="hidden" class="form-control hsn_id"
+                                                                name="addmore[0][hsn_id]" type="text"
+                                                                style="min-width:100px">
                                                             {{-- <select class="form-control mb-2" name="addmore[0][hsn_id]"
                                                                 id="" style="min-width:100px">
                                                                 <option value="" default>Select HSN</option>
@@ -370,6 +391,10 @@
                     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
 
 
+                    
+                    <script>
+                        var jQuery321 = $.noConflict(true);
+                    </script>
                     <script>
                         $(document).ready(function() {
                             // Initialize jQuery Validation
@@ -512,7 +537,7 @@
                                     });
                                 });
                             }
-                           
+
 
 
 
@@ -528,7 +553,7 @@
                         <input type="text" name="id" class="form-control" style="min-width:50px" readonly value="${i}">
                     </td>
                     <td>
-        <select class="form-control part-no mb-2" name="addmore[${i}][part_no_id]" id="">
+        <select class="form-control part-no select2 mb-2" name="addmore[${i}][part_no_id]" id="">
             <option value="" default>Select Description</option>
             @foreach ($dataOutputPartItem as $data)
                 <option value="{{ $data['id'] }}">{{ $data['description'] }}</option>
@@ -626,48 +651,15 @@
                 </tr>
             `;
                                 $("#purchase_order_table tbody").append(newRow);
-
+                                // $('.select2').select2();
                                 // Reinitialize validation for dynamically added fields
                                 validator.resetForm(); // Reset validation state
                                 initializeValidation($("#purchase_order_table")); // Initialize for all rows
                             });
 
-                            $(document).on('change', '.part-no', function() {
-    var partNoId = $(this).val(); // Get the selected part_no_id
-    var currentRow = $(this).closest('tr'); // Get the current row
-
-    if (partNoId) {
-        // Make an AJAX request to fetch the HSN based on the part_no_id
-        $.ajax({
-            url: '{{ route('get-hsn-for-part') }}', // Use the Laravel route helper
-            type: 'GET',
-            data: { part_no_id: partNoId }, // Pass the part_no_id as a query parameter
-            success: function(response) {
-                console.log("HSN response:", response);
-
-                if (response.part && response.part.length > 0) {
-                    var hsnName = response.part[0].name;
-                    var hsnId = response.part[0].id;
-
-                    // Update the HSN inputs for the current row only
-                    currentRow.find('.hsn_name').val(hsnName); // Set HSN name
-                    currentRow.find('.hsn_id').val(hsnId); // Set HSN ID
-                } else {
-                    alert("HSN not found for the selected part.");
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error("AJAX Error: ", status, error);
-                alert("Error fetching HSN. Please try again.");
-            }
-        });
-    }
-});
 
 
-
-
-
+                          
                             // Remove a row when the "Remove" button is clicked
                             $(document).on("click", ".remove-row", function() {
                                 var i_count = $('#i_id').val();
@@ -689,27 +681,6 @@
                                 var inputDate = new Date(value);
                                 return inputDate >= today;
                             }, "The date must be today or later.");
-                            // $(document).on('keyup', '.quantity, .rate, .discount', function(e) {
-                            //     var currentRow = $(this).closest("tr");
-
-                            //     // Fetch input values and convert them to numbers (default to 0 if empty)
-                            //     var current_row_quantity = parseFloat(currentRow.find('.quantity').val()) || 0;
-                            //     var current_row_rate = parseFloat(currentRow.find('.rate').val()) || 0;
-                            //     var current_row_discount = parseFloat(currentRow.find('.discount').val()) || 0;
-
-                            //     // Calculate total price before discount
-                            //     var new_total_price = current_row_quantity * current_row_rate;
-
-                            //     // Calculate the discount amount
-                            //     var discount_amount = (new_total_price * current_row_discount) / 100;
-
-                            //     // Calculate the final total amount after applying the discount
-                            //     var final_total_amount = new_total_price - discount_amount;
-
-                            //     // Update the total amount field (format to 2 decimal places)
-                            //     currentRow.find('.total_amount').val(final_total_amount.toFixed(2));
-                            // });
-
                         });
                     </script>
 
@@ -873,4 +844,53 @@
 
                         });
                     </script>
+                    <script>
+
+$(document).ready(function() {
+
+// var jQuery321 = $.noConflict(true);
+// Initialize Select2
+// $('.select2').select2();
+
+// Bind the select2:select event
+$(document).on('change', '.part-no', function(e) {
+    var partNoId = $(this).val(); // Get the selected part_no_id
+    var currentRow = $(this).closest('tr'); // Get the current row
+
+    // Check if partNoId has value
+    if (partNoId) {
+        console.log("Selected partNoId: ", partNoId); // Debugging the selected ID
+
+        // Make an AJAX request to fetch the HSN based on the part_no_id
+        $.ajax({
+            url: '{{ route('get-hsn-for-part') }}', // Ensure this route is correct in your routes file
+            type: 'GET',
+            data: {
+                part_no_id: partNoId
+            }, // Pass the part_no_id as a query parameter
+            success: function(response) {
+                console.log("HSN response:",
+                response); // Debug the response
+
+                if (response.part && response.part.length > 0) {
+                    var hsnName = response.part[0].name;
+                    var hsnId = response.part[0].id;
+
+                    // Update the HSN inputs for the current row only
+                    currentRow.find('.hsn_name').val(
+                    hsnName); // Set HSN name
+                    currentRow.find('.hsn_id').val(hsnId); // Set HSN ID
+                } else {
+                    alert("HSN not found for the selected part.");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX Error: ", status, error);
+                alert("Error fetching HSN. Please try again.");
+            }
+        });
+    }
+});
+});
+                        </script>
                 @endsection
