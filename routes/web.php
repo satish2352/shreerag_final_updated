@@ -193,6 +193,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-final-production-completed', ['as' => 'list-final-production-completed', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllCompletedProduction']);
         Route::get('/list-final-prod-completed-send-to-logistics-tracking', ['as' => 'list-final-prod-completed-send-to-logistics-tracking', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllCompletedProductionSendToLogistics']);
         Route::get('/list-final-prod-completed-send-to-logistics-tracking-product-wise/{id}', ['as' => 'list-final-prod-completed-send-to-logistics-tracking-product-wise', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllCompletedProductionSendToLogisticsProductWise']);
+        Route::post('/delete-addmore-store-item', ['as' => 'delete-addmore-store-item', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@destroyAddmoreStoreItem']);
 
         Route::get('/edit-recived-bussinesswise-quantity-tracking/{id}', ['as' => 'edit-recived-bussinesswise-quantity-tracking', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@editProductQuantityTracking']);
 

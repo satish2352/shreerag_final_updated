@@ -100,7 +100,7 @@
  var id = $(this).attr('data-id');
 
 // Show the id in an alert
-alert('ID: ' + id);
+// alert('ID: ' + id);
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",

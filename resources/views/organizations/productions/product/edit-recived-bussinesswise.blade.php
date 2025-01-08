@@ -85,6 +85,11 @@
                                                 <tbody style="overflow: scroll;">
                                                     @foreach ($dataGroupedById as $key => $items)
                                                         @foreach ($items as $index => $item)
+
+                                                        <?php
+                                                        // dd($item);
+                                                        // die();
+                                                        ?>
                                                             <tr @if($item->material_send_production) class="disabled-row" @endif>
                                                                 <td>
                                                                     <input type="hidden" name="addmore[{{ $index }}][id]" class="form-control" value="{{ $item->id }}">
@@ -126,19 +131,19 @@
                                                                     </span>
                                                                 </td>
                                                                 <td>
+                                                                   
                                                                     @if(!$item->material_send_production)
-                                                                        <button type="button" class="btn btn-sm btn-danger remove-row">
-                                                                            <i class="fa fa-trash"></i>
-                                                                        </button>
-                                                                    @endif
-                                                                </td>
-
-                                                                <td>
                                                                     <a data-id="{{ $item->id }}"
                                                                         class="delete-btn btn btn-danger m-1"
                                                                         title="Delete Tender"><i
                                                                             class="fas fa-archive"></i></a>
+                                                                        {{-- <button type="button" class="btn btn-sm btn-danger remove-row">
+                                                                            <i class="fa fa-trash"></i>
+                                                                        </button> --}}
+                                                                    @endif
                                                                 </td>
+
+                                                              
                                                             </tr>
                                                         @endforeach
                                                     @endforeach
@@ -161,7 +166,7 @@
     </div>
 </div>
 
-<form method="POST" action="{{ route('delete-addmore') }}" id="deleteform">
+<form method="POST" action="{{ route('delete-addmore-store-item') }}" id="deleteform">
     @csrf
     <input type="hidden" name="delete_id" id="delete_id" value="">
 </form>
@@ -381,4 +386,5 @@
 });
 
 </script>
+
 @endsection

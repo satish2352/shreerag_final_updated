@@ -66,7 +66,19 @@ return $data_output;
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
-
+    public function destroyAddmoreStoreItem($id)
+    {
+        try {
+            $delete = $this->repo->destroyAddmoreStoreItem($id);
+            if ($delete) {
+                return ['status' => 'success', 'msg' => 'Deleted Successfully.'];
+            } else {
+                return ['status' => 'error', 'msg' => ' Not Deleted.'];
+            }  
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        } 
+    }
     public function editProductQuantityTracking($id) {
         try {
             $data_output = $this->repo->editProductQuantityTracking($id);

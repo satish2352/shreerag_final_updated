@@ -107,6 +107,27 @@ class ProductionController extends Controller
     //         return $e;
     //     }
     // }
+    public function destroyAddmoreStoreItem(Request $request)
+    {
+        dd($request);
+        die();
+        $delete_data_id = $request->delete_id; // Get the delete ID from the request
+        
+        try {
+            $delete_record = $this->service->destroyAddmoreStoreItem($delete_data_id);
+            if ($delete_record) {
+                $msg = $delete_record['msg'];
+                $status = $delete_record['status'];
+                if ($status == 'success') {
+                    return redirect('storedept/list-delivery-chalan')->with(compact('msg', 'status'));
+                } else {
+                    return redirect()->back()->withInput()->with(compact('msg', 'status'));
+                }
+            }
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     public function editProduct($id) {
         try {
             $editData = $this->service->editProduct($id);

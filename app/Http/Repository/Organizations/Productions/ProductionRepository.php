@@ -402,6 +402,7 @@ class ProductionRepository  {
                 ->where('businesses_details.is_active', true)
                 ->select(
                     'businesses_details.id',
+                    'pd.id',
                     'businesses_details.product_name',
                     'businesses_details.description',
                     'pd.part_item_id',
@@ -491,7 +492,17 @@ class ProductionRepository  {
             ];
         }
     }
-    
+    public function destroyAddmoreStoreItem($id){
+        try {
+            $deleteDataById = ProductionDetails::find($id);
+            // dd($deleteDataById);
+            // die();
+            $deleteDataById->delete();
+            return $deleteDataById;
+        
+        } catch (\Exception $e) {
+            return $e;
+        }    }
 // public function updateProductMaterial($request) {
 //     try {
       
