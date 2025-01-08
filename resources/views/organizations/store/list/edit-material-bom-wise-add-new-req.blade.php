@@ -65,10 +65,6 @@
         No product details available.
     </div>
 @endif
-<?php
-// dd($productDetails);
-// die();  
-?>
 
                                 <form action="{{ route('update-material-list-bom-wise-new-req', $id) }}" method="POST" id="addProductForm" enctype="multipart/form-data">
                                     @csrf

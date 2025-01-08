@@ -93,11 +93,7 @@
 
                                         </thead>
                                         <tbody>
-
-     <?php
-    //  dd($all_gatepass);
-    //  die();
-     ?>                                       @foreach ($all_gatepass as $data)
+                                          @foreach ($all_gatepass as $data)
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>

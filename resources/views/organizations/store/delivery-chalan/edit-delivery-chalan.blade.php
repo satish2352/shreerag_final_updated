@@ -65,10 +65,7 @@
                                                                 </div>
     @endif -->
 
-<?php
-// dd($editData);
-// die();
-?>
+
 
                                                         @foreach ($editData as $key => $editDataNew)
                                                             @if ($key == 0)

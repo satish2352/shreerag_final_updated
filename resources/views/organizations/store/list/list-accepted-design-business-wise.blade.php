@@ -106,11 +106,6 @@
                                                 <th data-field="action" data-editable="false" ><span style="display: flex; justify-content: center;">Action</span></th>
                                             </tr>
                                         </thead>
-                                      
-                                        <?php
-                                        // dd($data_output);
-                                        // die();
-                                        ?>
                                         <tbody>
                                             @foreach ($data_output as $data)
                                                 <tr>

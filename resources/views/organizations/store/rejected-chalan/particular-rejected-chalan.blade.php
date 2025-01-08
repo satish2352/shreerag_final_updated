@@ -124,10 +124,6 @@
                                 </div>
                                 <!-- Details Section (Centered) -->
                             </div>
-                            <?php
-                            // dd($all_gatepass);
-                            // die();
-                            ?>
                             <table
                                 style="width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px; font-family: 'Font Awesome 5 Free">
                                 <tr>

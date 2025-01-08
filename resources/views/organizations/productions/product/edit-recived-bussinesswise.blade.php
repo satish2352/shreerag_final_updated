@@ -86,10 +86,6 @@
                                                     @foreach ($dataGroupedById as $key => $items)
                                                         @foreach ($items as $index => $item)
 
-                                                        <?php
-                                                        // dd($item);
-                                                        // die();
-                                                        ?>
                                                             <tr @if($item->material_send_production) class="disabled-row" @endif>
                                                                 <td>
                                                                     <input type="hidden" name="addmore[{{ $index }}][id]" class="form-control" value="{{ $item->id }}">

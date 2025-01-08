@@ -96,12 +96,6 @@
                                             </tr>
 
                                         </thead>
-
-<?php
-// dd($data_output);
-// die();
-?>
-
                                         <tbody>
                                             @foreach ($data_output as $data)
                                                 <tr>

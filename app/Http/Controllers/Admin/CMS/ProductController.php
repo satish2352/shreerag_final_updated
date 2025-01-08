@@ -68,8 +68,6 @@ class ProductController extends Controller
         }
         public function showProduct(Request $request){
             try {
-                // dd($request);
-                // die();
                 $showData = $this->service->getById($request->show_id);
                
                 return view('admin.cms.product.show-product', compact('showData'));

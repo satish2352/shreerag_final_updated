@@ -500,8 +500,6 @@ class DashboardController extends Controller {
                 ->where('is_view', '0')
                 ->select('id')
                     ->get();
-                    // dd($po_send_to_vendor);
-                    // die();
                 $po_send_to_vendor_count = $po_send_to_vendor->count();
                 $notifications[] = ['admin_count' => $po_send_to_vendor_count,
                 'message' => 'Submitted PO by Vendor',
@@ -718,12 +716,7 @@ class DashboardController extends Controller {
             ->where('purchase_is_view','0')
             ->select('id')
             ->get();
-            // dd($received_requistion_req);
             $received_requistion_req_count = $received_requistion_req->count();
-
-            
-// dd($received_requistion_req_count);
-// die();
             $notifications[] = ['admin_count' => $received_requistion_req_count,
                 'message' => 'Received Requistion Request',
                 'url' => $baseUrl . '/purchase/list-purchase'

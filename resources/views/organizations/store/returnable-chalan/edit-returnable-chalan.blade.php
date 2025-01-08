@@ -64,10 +64,6 @@
   
 
                                                         @foreach ($editData as $key => $editDataNew)
-                                                        <?php
-// dd($editDataNew);
-// die();
-                                                        ?>
                                                             @if ($key == 0)
                                                                 <div class="row">
                                                                     {{-- <div class="col-lg-4 col-md-4 col-sm-4">
