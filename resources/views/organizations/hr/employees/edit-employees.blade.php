@@ -410,7 +410,7 @@
 $(document).ready(function() {
 // Function to check if all input fields are filled with valid data
 function checkFormValidity() {
-    const role_id = $('#role_id').val();
+    // const role_id = $('#role_id').val();
     const f_name = $('#f_name').val();
     const m_name = $('#m_name').val();
     const l_name = $('#l_name').val();
@@ -436,9 +436,9 @@ var validator = form.validate({
         // u_email: {
         //     required: true,
         // },
-        role_id: {
-            required: true,
-        },
+        // role_id: {
+        //     required: true,
+        // },
         // u_password: {
         //     required: true,
         // },
@@ -480,9 +480,9 @@ var validator = form.validate({
         // u_email: {
         //     required: "Please Enter the Eamil",
         // },
-        role_id: {
-            required: "Please Select Role Name",
-        },
+        // role_id: {
+        //     required: "Please Select Role Name",
+        // },
         // u_password: {
         //     required: "Please Enter the Password",
         // },
