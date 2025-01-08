@@ -98,7 +98,7 @@ class ServicesRepository  {
 
             // Assuming 'is_active' is a field in the model
             if ($updateOutput) {
-                $is_active = $updateOutput->is_active === 1 ? 0 : 1;
+                $is_active = $updateOutput->is_active === '1' ? '0' : '1';
                 $updateOutput->is_active = $is_active;
                 $updateOutput->save();
 
