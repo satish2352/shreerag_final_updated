@@ -44,39 +44,65 @@ public function addContactUs(Request $request) {
         'g-recaptcha-response.required' =>'Please verify that you are not a robot.',
     ];
 
+    // try {
+    //     $validation = Validator::make($request->all(), $rules, $messages);
+    //     if($validation->fails()) {
+    //         return redirect('contactus')
+    //             ->withInput()
+    //             ->withErrors($validation);
+    //     } else {
+    //         $add_contact = $this->service->addAll($request);
+
+
+
+    //         if ($add_contact) {
+    //             $msg = 'Contact Us Information Submitted Successfully!!';
+    //             $status = 'success';
+    //         } else {
+    //             $msg = 'Failed to Your Contact Us Information Submitted';
+    //             $status = 'error';
+    //         }
+            
+    //         // Session::flash('success_message', 'Contact Us submitted successfully!');
+    //         $request->session()->flash('success', 'Contact Us Information Submitted Successfully!!');
+    //         return redirect('contactus')
+    //         ->with(compact('msg', 'status'));
+
+
+    //         // if($add_contact['status'] == 'success') {
+    //         //     return redirect()->back()->with('success_message', 'Your message has been submitted successfully!');
+    //         // } else {
+    //         //     return redirect('contactus')->withInput()->with(compact('msg', 'status'));
+    //         // }
+    //     }
+    // } catch (Exception $e) {
+    //     return redirect('contactus')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+    // }
+
     try {
+        // Validate request data
         $validation = Validator::make($request->all(), $rules, $messages);
-        if($validation->fails()) {
+
+        if ($validation->fails()) {
             return redirect('contactus')
                 ->withInput()
                 ->withErrors($validation);
-        } else {
-            $add_contact = $this->service->addAll($request);
+        }
 
+        // Save the contact us data using your service
+        $add_contact = $this->service->addAll($request);
 
-
-            if ($add_contact) {
-                $msg = 'Contact Us Information Submitted Successfully!!';
-                $status = 'success';
-            } else {
-                $msg = 'Failed to Your Contact Us Information Submitted';
-                $status = 'error';
-            }
-            
-            // Session::flash('success_message', 'Contact Us submitted successfully!');
+        if ($add_contact) {
             $request->session()->flash('success', 'Contact Us Information Submitted Successfully!!');
-            return redirect('contactus')
-            ->with(compact('msg', 'status'));
-
-
-            // if($add_contact['status'] == 'success') {
-            //     return redirect()->back()->with('success_message', 'Your message has been submitted successfully!');
-            // } else {
-            //     return redirect('contactus')->withInput()->with(compact('msg', 'status'));
-            // }
+            return redirect('contactus')->with('sweet_success', 'Contact Us Information Submitted Successfully!!');
+        } else {
+            $request->session()->flash('error', 'Failed to Submit Contact Us Information.');
+            return redirect('contactus')->with('sweet_error', 'Failed to Submit Contact Us Information.');
         }
     } catch (Exception $e) {
-        return redirect('contactus')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+        return redirect('contactus')->withInput()->with([
+            'sweet_error' => 'An error occurred: ' . $e->getMessage(),
+        ]);
     }
 }
 

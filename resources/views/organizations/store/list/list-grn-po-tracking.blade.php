@@ -86,7 +86,7 @@
                                                         <label for="po_date">GRN No. :</label>
                                                         <input type="text" class="form-control" id="grn_no"
                                                             name="grn_no" placeholder=""
-                                                            value="{{ $purchase_order_data->grn_no }}"
+                                                            value="{{ $grn_data->grn_no_generate }}"
                                                             readonly>
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">

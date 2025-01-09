@@ -212,10 +212,10 @@ class AllListController extends Controller
                 'gatepass.*'
             )
             ->first();
-          
-            $po_id = $purchase_order_data->id;
-// dd($po_id);
+//           dd($grn_data);
 // die();
+            $po_id = $purchase_order_data->id;
+
             $purchase_order_details_data = GrnPOQuantityTracking::where('purchase_order_id', $po_id)
                 ->get();
             return view('organizations.store.list.list-grn-po-tracking', compact('purchase_order_data', 'purchase_order_details_data', 'grn_data'));

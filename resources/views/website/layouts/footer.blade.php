@@ -1,6 +1,17 @@
 
     <!-- Footer area start -->
     {{-- for desktop view  --}}
+    <style>
+         .links-list a {
+        color: #000; /* Default color */
+        text-decoration: none;
+        transition: color 0.3s ease; /* Smooth transition */
+    }
+
+    .links-list a:hover {
+        color: #029A99; /* Hover color */
+    }
+    </style>
 <section class="desktopfoot paddiall2">
     <div class="row ">
     <!-- footlogocol -->

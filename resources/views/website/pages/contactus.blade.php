@@ -299,6 +299,8 @@
       @endif
     </div>
 </section>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     function addvalidateMobileNumber(number) {
         var mobileNumberPattern = /^\d*$/;
@@ -399,4 +401,28 @@
         }
     }
   </script>
+  @if(session('sweet_success'))
+  <script>
+      Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: "{{ session('sweet_success') }}",
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'OK'
+      });
+  </script>
+  @endif
+  
+  @if(session('sweet_error'))
+  <script>
+      Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: "{{ session('sweet_error') }}",
+          confirmButtonColor: '#d33',
+          confirmButtonText: 'Try Again'
+      });
+  </script>
+  @endif
+  
 @endsection

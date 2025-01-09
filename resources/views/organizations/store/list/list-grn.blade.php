@@ -16,7 +16,7 @@
                         <center>
                             <h1> GRN Details</h1><br>
                             <div class="d-flex justify-content-center align-items-center">
-                                <h4 style="display: flex; justify-content: right; color: green;">Note: First You will Add This Accepted Quantity In Inventory Department, Then Only You Can Issue Material to Production Department.</h4> 
+                                <h4 style="display: flex; justify-content: left; color: green;padding-left: 16px;">Note: First You will Add This Accepted Quantity In Inventory Department, Then Only You Can Issue Material to Production Department.</h4> 
                                     
                         </center>
                     </div>
@@ -97,7 +97,7 @@
                                                         <label for="po_date">GRN No. :</label>
                                                         <input type="text" class="form-control" id="grn_no"
                                                             name="grn_no" placeholder=""
-                                                            value="{{ $purchase_order_data->grn_no }}"
+                                                            value="{{ $grn_data->grn_no_generate }}"
                                                             readonly>
                                                     </div> 
 

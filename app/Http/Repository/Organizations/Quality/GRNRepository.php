@@ -63,6 +63,8 @@ class GRNRepository
         }
             // Generate a unique GRN number
             $grn_no = str_replace(array("-", ":"), "", date('Y-m-d') . time());
+
+            $grn_no_generate= str_replace(array("-", ":"), "", date('Y-m-d') . time());
     
             // Fetch purchase orders details
             $purchase_orders_details = PurchaseOrderModel::where('purchase_orders_id', $request->purchase_orders_id)->first();
@@ -93,6 +95,7 @@ class GRNRepository
             $dataOutput->po_date = $request->po_date;
             $dataOutput->grn_date = $request->grn_date;
             $dataOutput->remark = $request->remark;
+            $dataOutput->grn_no_generate = $grn_no_generate;
             $dataOutput->image = 'null'; // Initial image state
             $dataOutput->is_approve = '0';
             $dataOutput->is_active = '1';
