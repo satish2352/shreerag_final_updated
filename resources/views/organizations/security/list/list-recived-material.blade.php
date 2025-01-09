@@ -87,6 +87,7 @@
                                                 <th data-field="purchase_id" data-editable="false">Remark</th>
                                                 {{-- <th data-field="store_material_sent_date" data-editable="false">Matrial Recieved Date</th> --}}
                                                 {{-- <th data-field="design_image" data-editable="false">Purchase order</th> --}}
+                                                <th data-field="" data-editable="false">Purchase Order</th>
                                                 <th data-field="bom_image" data-editable="false">Genrate Gate Pass</th>
 
                                             </tr>
@@ -111,6 +112,18 @@
                                                         
                                                     </div>
                                                     </td> --}}
+
+                                                    <td>
+                                                        <div style="display: flex; align-items: center;">
+                                                               
+                                                                <a href="{{ route('check-details-of-po-before-send-vendor', $data->purchase_orders_id) }}"
+                                                                {{-- {{ route('list-po-details', [base64_encode($data->id), base64_encode($data->purchase_orders_id)]) }}" --}}
+                                                                 >
+                                                                    <button data-toggle="tooltip"
+                                                                    title="View PO" class="pd-setting-ed">Check PO Details</button></a>
+                                                            
+                                                        </div>
+                                                        </td>
                                                 <td> 
                                                     <a class="btn btn-sm btn-primary login-submit-cs" type="button"
                                                     href="{{route('add-gatepass-with-po', base64_encode($data->purchase_orders_id))}}"
