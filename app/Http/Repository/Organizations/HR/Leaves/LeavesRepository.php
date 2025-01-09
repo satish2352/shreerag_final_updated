@@ -53,6 +53,7 @@ class LeavesRepository  {
                     'tbl_leaves.leave_end_date',
                     'tbl_leaves.leave_day',
                     'tbl_leaves.leave_count',
+                    'tbl_leaves.leave_type_id',
                     'tbl_leave_management.name as leave_type_name',
                     'tbl_leaves.reason',
                     'tbl_leaves.is_approved'
@@ -60,7 +61,8 @@ class LeavesRepository  {
             ->orderBy('tbl_leaves.updated_at', 'desc')
             ->where('tbl_leaves.id', $id)
             ->first();
-
+// dd( $data_output);
+// die();
                 if ($data_output) {
                     return $data_output;
                 } else {

@@ -83,6 +83,13 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                        <label for="po_date">GRN No. :</label>
+                                                        <input type="text" class="form-control" id="grn_no"
+                                                            name="grn_no" placeholder=""
+                                                            value="{{ $purchase_order_data->grn_no }}"
+                                                            readonly>
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="grn_date">GRN Date:</label>
                                                         <input type="date" class="form-control" id="grn_date"
                                                             name="grn_date" placeholder="Enter GRN Date"
