@@ -130,7 +130,7 @@
                       <td>{{ucwords($data->vendor_email)}}</td>
                       <td>{{ucwords($data->contact_no)}}</td>
                       <td>{{ucwords($data->gst_no)}}</td>
-                      <td>{{ucwords($data->payment_terms)}}</td>
+                      <td>{{ucwords($data->purchase_payment_terms)}}</td>
                       <td>{{ucwords($data->invoice_date)}}</td>
                       {{-- <td>{{ucwords($data->total)}}.00 Rs</td> --}}
                       <td>{{ucwords($data->quote_no)}}</td>

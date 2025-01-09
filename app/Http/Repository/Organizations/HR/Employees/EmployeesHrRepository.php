@@ -254,22 +254,40 @@ class EmployeesHrRepository  {
 
     public function update($request){
         // $ipAddress = getIPAddress($request);
-		$user_data = User::where('id',$request['edit_id']) 
-						->update([
-							// 'u_uname' => $request['u_uname'],
-							'role_id' => $request['role_id'],
-							'f_name' => $request['f_name'],
-							'm_name' => $request['m_name'],
-							'l_name' => $request['l_name'],
-							'number' => $request['number'],
-							'designation' => $request['designation'],
-							'address' => $request['address'],
-							'state' => $request['state'],
-							'city' => $request['city'],
-							'pincode' => $request['pincode'],
-							'is_active' => isset($request['is_active']) ? true :false,
-						]);
-		
+		// $user_data = User::where('id',$request['edit_id']) 
+		// 				->update([
+		// 					// 'u_uname' => $request['u_uname'],
+		// 					// 'role_id' => $request['role_id'],
+		// 					'f_name' => $request['f_name'],
+		// 					'm_name' => $request['m_name'],
+		// 					'l_name' => $request['l_name'],
+		// 					'number' => $request['number'],
+		// 					'designation' => $request['designation'],
+		// 					'address' => $request['address'],
+		// 					'state' => $request['state'],
+		// 					'city' => $request['city'],
+		// 					'pincode' => $request['pincode'],
+		// 					'is_active' => isset($request['is_active']) ? true :false,
+		// 				]);
+		$updateData = [
+			'f_name' => $request['f_name'],
+			'm_name' => $request['m_name'],
+			'l_name' => $request['l_name'],
+			'number' => $request['number'],
+			'designation' => $request['designation'],
+			'address' => $request['address'],
+			'state' => $request['state'],
+			'city' => $request['city'],
+			'pincode' => $request['pincode'],
+			'is_active' => isset($request['is_active']) ? true : false,
+		];
+	
+		// Add 'role_id' to the update data only if it exists in the request and is not null
+		if (!empty($request['role_id'])) {
+			$updateData['role_id'] = $request['role_id'];
+		}
+	
+		$user_data = User::where('id', $request['edit_id'])->update($updateData);
 		// $this->updateRolesPermissions($request, $request->edit_id);
 		return $request->edit_id;
 	}
