@@ -753,7 +753,7 @@
 <script>
        $(document).ready(function() {
      $(document).on('change', '.part_no_id', function() {
-            alert("hii");
+            // alert("hii");
     var partNoId = $(this).val(); // Get the selected part_no_id
     var currentRow = $(this).closest('tr'); // Get the current row
 
