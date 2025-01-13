@@ -2,7 +2,6 @@
 namespace App\Http\Repository\Organizations\Store;
 use Illuminate\Database\QueryException;
 use DB;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Carbon;
 use App\Models\ {
     Business, 
@@ -94,109 +93,56 @@ class AllListRepository  {
 //           return $e;
 //       }
 //   }
-// public function getAllListDesignRecievedForMaterial(){
-//     try {
-
-//         // Define your arrays properly
-//         $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION')];
-//         $array_to_be_check_store = [config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION')];
-//         $array_to_be_check_store_after_quality = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
-//         $array_to_be_check_production = [config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
-
-//         $data_output = BusinessApplicationProcesses::leftJoin('production', function($join) {
-//             $join->on('business_application_processes.business_id', '=', 'production.business_id');
-//         })
-//         ->leftJoin('designs', function($join) {
-//             $join->on('business_application_processes.business_id', '=', 'designs.business_id');
-//         })
-//         ->leftJoin('businesses', function($join) {
-//             $join->on('business_application_processes.business_id', '=', 'businesses.id');
-//         })
-//         ->leftJoin('design_revision_for_prod', function($join) {
-//             $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
-//         })
-//         ->leftJoin('purchase_orders', function($join) {
-//             $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
-//         })
-//         ->where(function ($query) use ($array_to_be_check, $array_to_be_check_store, $array_to_be_check_store_after_quality, $array_to_be_check_production) {
-//             $query->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store)
-//                   ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check)
-//                   ->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store_after_quality)
-//                   ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check_production);
-//         })
-//         ->where('businesses.is_active', true)
-//         ->distinct('businesses.id')
-//         ->groupBy(
-//             'businesses.id',
-//             'businesses.customer_po_number',
-//             'businesses.remarks',
-//             'businesses.is_active',
-//             'production.business_id',
-//             'businesses.updated_at'
-//         )
-//         ->select(
-//             'businesses.id',
-//             'businesses.customer_po_number',
-//             'businesses.remarks',
-//             'businesses.is_active',
-//             'production.business_id',
-//             'businesses.updated_at'
-//         )
-//         ->orderBy('businesses.updated_at', 'desc')
-//         ->get();
-
-//         return $data_output;
-//     } catch (\Exception $e) {
-//         return $e;
-//     }
-// }
-public function getAllListDesignRecievedForMaterial()
-{
+public function getAllListDesignRecievedForMaterial(){
     try {
+
+        // Define your arrays properly
         $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION')];
         $array_to_be_check_store = [config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION')];
         $array_to_be_check_store_after_quality = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
         $array_to_be_check_production = [config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
 
-        $cacheKey = 'all_list_design_received_material';
-        $data_output = Cache::remember($cacheKey, 60, function () use (
-            $array_to_be_check,
-            $array_to_be_check_store,
-            $array_to_be_check_store_after_quality,
-            $array_to_be_check_production
-        ) {
-            return BusinessApplicationProcesses::leftJoin('production', 'business_application_processes.business_id', '=', 'production.business_id')
-                ->leftJoin('designs', 'business_application_processes.business_id', '=', 'designs.business_id')
-                ->leftJoin('businesses', 'business_application_processes.business_id', '=', 'businesses.id')
-                ->leftJoin('design_revision_for_prod', 'business_application_processes.business_id', '=', 'design_revision_for_prod.business_id')
-                ->leftJoin('purchase_orders', 'business_application_processes.business_id', '=', 'purchase_orders.business_id')
-                ->where(function ($query) use ($array_to_be_check, $array_to_be_check_store, $array_to_be_check_store_after_quality, $array_to_be_check_production) {
-                    $query->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store)
-                        ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check)
-                        ->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store_after_quality)
-                        ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check_production);
-                })
-                ->where('businesses.is_active', true)
-                ->distinct('businesses.id')
-                ->groupBy(
-                    'businesses.id',
-                    'businesses.customer_po_number',
-                    'businesses.remarks',
-                    'businesses.is_active',
-                    'production.business_id',
-                    'businesses.updated_at'
-                )
-                ->select(
-                    'businesses.id',
-                    'businesses.customer_po_number',
-                    'businesses.remarks',
-                    'businesses.is_active',
-                    'production.business_id',
-                    'businesses.updated_at'
-                )
-                ->orderBy('businesses.updated_at', 'desc')
-                ->paginate(20); // Fetch 20 records per page
-        });
+        $data_output = BusinessApplicationProcesses::leftJoin('production', function($join) {
+            $join->on('business_application_processes.business_id', '=', 'production.business_id');
+        })
+        ->leftJoin('designs', function($join) {
+            $join->on('business_application_processes.business_id', '=', 'designs.business_id');
+        })
+        ->leftJoin('businesses', function($join) {
+            $join->on('business_application_processes.business_id', '=', 'businesses.id');
+        })
+        ->leftJoin('design_revision_for_prod', function($join) {
+            $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
+        })
+        ->leftJoin('purchase_orders', function($join) {
+            $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
+        })
+        ->where(function ($query) use ($array_to_be_check, $array_to_be_check_store, $array_to_be_check_store_after_quality, $array_to_be_check_production) {
+            $query->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store)
+                  ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check)
+                  ->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store_after_quality)
+                  ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check_production);
+        })
+        ->where('businesses.is_active', true)
+        ->distinct('businesses.id')
+        ->groupBy(
+            'businesses.id',
+            'businesses.customer_po_number',
+            'businesses.remarks',
+            'businesses.is_active',
+            'production.business_id',
+            'businesses.updated_at'
+        )
+        ->select(
+            'businesses.id',
+            'businesses.customer_po_number',
+            'businesses.remarks',
+            'businesses.is_active',
+            'production.business_id',
+            'businesses.updated_at'
+        )
+        ->orderBy('businesses.updated_at', 'desc')
+        ->get();
 
         return $data_output;
     } catch (\Exception $e) {
