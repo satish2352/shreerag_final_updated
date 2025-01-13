@@ -302,6 +302,8 @@ public function updateAll($request)
     public function updateReUploadDesign($request)
     {
         try {
+            // dd($request);
+            // die();
             $return_data = array();
 
             $designRevisionForProd = DesignRevisionForProd::where('id', $request->design_revision_for_prod_id)->orderBy('id','desc')->first();
