@@ -895,6 +895,7 @@ public function loadDesignSubmittedForProductionBusinessWise($business_id)
                 'businesses_details.quantity',
                 'businesses_details.description',
                 'businesses.remarks',
+                DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'),
                 DB::raw('MAX(designs.bom_image) as bom_image'),
                 DB::raw('MAX(designs.design_image) as design_image'),
                 DB::raw('MAX(design_revision_for_prod.bom_image) as re_bom_image'),
