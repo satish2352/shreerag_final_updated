@@ -236,9 +236,11 @@ class DashboardController extends Controller {
         ->where('production_status_id', 1116)
         ->where('is_active',1)->count();
 
-        $BOM_recived_for_purchase= BusinessApplicationProcesses::where('business_status_id',1123)->where('design_status_id', 1114)
-        ->where('production_status_id', 1117)->where('store_status_id',1123)
-        ->where('is_active',1)->count();
+        // $BOM_recived_for_purchase= BusinessApplicationProcesses::where('business_status_id',1123)->where('design_status_id', 1114)
+        // ->where('production_status_id', 1117)->where('store_status_id',1123)
+        // ->where('is_active',1)->count();
+        
+        $BOM_recived_for_purchase= PurchaseOrderModel::where('is_active',1)->count();
         $vendor_list = Vendors::where('is_active',1)->count();
         $tax = Tax::where('is_active',1)->count();
         $part_item = PartItem::where('is_active',1)->count();
