@@ -82,12 +82,17 @@
                                             <tr>
 
                                                 <th data-field="id">ID</th>
-                                                <th data-field="purchase_order_id" data-editable="false">Purchase Order No</th>
-                                                <th data-field="grn_no" data-editable="false">GRN No</th>
-                                                <th data-field="store_receipt_no" data-editable="false">SR No</th>
-                                                <th data-field="grn_number" data-editable="false">Title</th>
-                                                <th data-field="grn_date" data-editable="false">Description</th>
-                                                <th data-field="purchase_id" data-editable="false">Remark</th>
+                                                <th data-field="purchase_orders_id" data-editable="false">PO Number</th>
+                                                <th data-field="grn_no_generate" data-editable="false">GRN No.</th>
+                                                <th data-field="store_receipt_no_generate" data-editable="false">SR No.</th>
+                                                <th data-field="store_remark" data-editable="false">Store Remark.</th>
+                                                <th data-field="vendor_name" data-editable="false">Vendor Name</th>
+
+                                                <th data-field="vendor_email" data-editable="false">Vendor Email Id</th>
+                                                <th data-field="vendor_name" data-editable="false">Vendor Name</th>
+                                                <th data-field="contact_no" data-editable="false">Vendor Contact No</th>
+                                                <th data-field="vendor_address" data-editable="false">Vendor Address</th>
+                                                <th data-field="gst_no" data-editable="false">GST No.</th>
                                                 <th data-field="action" data-editable="false">Action</th>
                                             </tr>
                                         </thead>
@@ -97,19 +102,29 @@
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ ucwords($data->purchase_orders_id) }}</td>
+                                                    <td>{{ucwords($data->purchase_orders_id)}}</td>
+                                                    <td>{{ucwords($data->grn_no_generate)}}</td>
+                                                    <td>{{ucwords($data->store_receipt_no_generate)}}</td>
+                                                    <td>{{ucwords($data->store_remark)}}</td>
+                                                    <td>{{ucwords($data->vendor_name)}}</td>
+                                                    <td>{{ucwords($data->vendor_company_name)}}</td>
+                                                    <td>{{ucwords($data->vendor_email)}}</td>
+                                                    <td>{{ucwords($data->contact_no)}}</td>
+                                                    <td>{{ucwords($data->vendor_address)}}</td>
+                                                    <td>{{ucwords($data->gst_no)}}</td>
+                                                    {{-- <td>{{ ucwords($data->purchase_orders_id) }}</td>
                                                     <td>{{ ucwords($data->grn_no) }}</td>
                                                     <td>{{ ucwords($data->store_receipt_no) }}</td>
                                                     <td>{{ ucwords($data->title) }}</td>
                                                     <td>{{ ucwords($data->descriptions) }}</td>
-                                                    <td>{{ ucwords($data->remarks) }} ok Satish</td>
+                                                    <td>{{ ucwords($data->remarks) }} ok Satish</td> --}}
 
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
                                                             <a
-                                                                href="{{ route('accept-purchase-order', [$data->purchase_orders_id, $data->business_details_id]) }} "><button
+                                                                href="{{ route('accept-purchase-order-payment-release', [$data->purchase_orders_id, $data->id]) }} "><button
                                                                     data-toggle="tooltip" title="Check details"
-                                                                    class="pd-setting-ed">Check details</button></a>
+                                                                    class="pd-setting-ed">Accept</button></a>
 
 
                                                         </div>

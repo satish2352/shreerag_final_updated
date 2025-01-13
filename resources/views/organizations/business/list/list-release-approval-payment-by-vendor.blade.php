@@ -30,7 +30,7 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>PO Submited For Sanction For Payment</h1>
+                                <h1>PO Payment Release By Vendor List</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
                                         {{-- <div class="login-horizental cancel-wp pull-left">
@@ -81,14 +81,6 @@
                                         <thead>
                                             <tr>
 
-                                                {{-- <th data-field="id">ID</th>
-                                                <th data-field="purchase_order_id" data-editable="false">Purchase Order No</th>
-                                                <th data-field="grn_no" data-editable="false">GRN No</th>
-                                                <th data-field="store_receipt_no" data-editable="false">SR No</th>
-                                                <th data-field="grn_number" data-editable="false">Title</th>
-                                                <th data-field="grn_date" data-editable="false">Description</th>
-                                                <th data-field="purchase_id" data-editable="false">Remark</th>
-                                                <th data-field="action" data-editable="false">Action</th> --}}
                                                 <th data-field="id">ID</th>
                                                 <th data-field="purchase_orders_id" data-editable="false">PO Number</th>
                                                 <th data-field="grn_no_generate" data-editable="false">GRN No.</th>
@@ -105,8 +97,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            
                                             @foreach ($data_output as $data)
                                                 <tr>
+
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ucwords($data->purchase_orders_id)}}</td>
                                                     <td>{{ucwords($data->grn_no_generate)}}</td>
@@ -118,20 +112,19 @@
                                                     <td>{{ucwords($data->contact_no)}}</td>
                                                     <td>{{ucwords($data->vendor_address)}}</td>
                                                     <td>{{ucwords($data->gst_no)}}</td>
-                                                    {{-- <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ ucwords($data->purchase_orders_id	) }}</td>
+                                                    {{-- <td>{{ ucwords($data->purchase_orders_id) }}</td>
                                                     <td>{{ ucwords($data->grn_no) }}</td>
                                                     <td>{{ ucwords($data->store_receipt_no) }}</td>
                                                     <td>{{ ucwords($data->title) }}</td>
-                                                    <td>{{ ucwords($data->description) }}</td>
-                                                    <td>{{ ucwords($data->remarks) }}</td> --}}
+                                                    <td>{{ ucwords($data->descriptions) }}</td>
+                                                    <td>{{ ucwords($data->remarks) }} ok Satish</td> --}}
 
                                                     {{-- <td>
                                                         <div style="display: flex; align-items: center;">
                                                             <a
-                                                                href="{{ route('list-accepted-grn-srn-finance', base64_encode($data->purchase_order_id)) }} "><button
+                                                                href="{{ route('accept-purchase-order-payment-release', [$data->purchase_orders_id, $data->id]) }} "><button
                                                                     data-toggle="tooltip" title="Check details"
-                                                                    class="pd-setting-ed">Check details</button></a>
+                                                                    class="pd-setting-ed">Accept</button></a>
 
 
                                                         </div>

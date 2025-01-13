@@ -329,7 +329,28 @@ class EmployeesHrRepository  {
 			];
 		}
 	}
-
+	public function showParticularDetails($id){
+		try {
+			
+			$user = User::leftJoin('tbl_roles', 'tbl_roles.id', '=', 'users.role_id')
+				->leftJoin('tbl_area as state_user', 'users.state', '=', 'state_user.location_id')
+				->leftJoin('tbl_area as city_user', 'users.city', '=', 'city_user.location_id')
+				->where('users.id', $id)
+				->select('users.f_name','users.m_name','users.l_name','users.u_email','users.number','users.designation','users.address','users.pincode','tbl_roles.role_name','state_user.name as state','city_user.name as city')
+				->first();
+				
+			if ($user) {
+				return $user;
+			} else {
+				return null;
+			}
+		} catch (\Exception $e) {
+			return [
+				'msg' => $e->getMessage(),
+				'status' => 'error'
+			];
+		}
+	}
 	public function updateOne($request){
         try {
             $user = User::find($request); // Assuming $request directly contains the ID

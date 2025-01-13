@@ -85,6 +85,13 @@ class EmployeesHrServices
         }
     }
 
+    public function showParticularDetails($id){
+        try {
+            return $this->repo->showParticularDetails($id);
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     public function getProfile( $request ) {
         $data_users = $this->repo->getProfile( $request );
         return $data_users;

@@ -97,6 +97,15 @@ class AllListServices
             return $e;
         }
     }
+    public function listPOPaymentReleaseByVendor()
+    {
+        try {
+            $data_output = $this->repo->listPOPaymentReleaseByVendor();
+        return $data_output;
+    } catch (\Exception $e) {
+            return $e;
+        }
+    }
 
     public function loadDesignSubmittedForProduction()
     {

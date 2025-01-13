@@ -229,7 +229,12 @@
                                         class="fa big-icon fa-file-invoice icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">PO Payment Release Request</span></a>
                             </li>
-                           
+                            <li
+                            class="nav-item {{ request()->is('owner/list-release-approval-payment-by-vendor') ? 'active' : '' }}">
+                            <a href="{{ route('list-release-approval-payment-by-vendor') }}" aria-expanded="false"><i
+                                    class="fa big-icon fa-file-invoice icon-wrap" aria-hidden="true"></i> <span
+                                    class="mini-click-non">PO Payment Release to Vendor By Fianance</span></a>
+                        </li>
                             
                             <li><a href="{{ route('list-rules-regulations') }}" aria-expanded="false"><i
                                 class="fa big-icon fa-file-alt  icon-wrap" aria-hidden="true"></i> <span
@@ -734,12 +739,12 @@
                         <a  href="{{ route('dashboard') }}"><i
                         class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
                         class="mini-click-non">Dashboard</span></a></li>
-                    <li class="nav-item {{ request()->is('list-sr-and-gr-genrated-business') ? 'active' : '' }}">
+                    {{-- <li class="nav-item {{ request()->is('list-sr-and-gr-genrated-business') ? 'active' : '' }}">
                         <a href="{{ route('list-sr-and-gr-genrated-business') }}">
                             <i class="fa big-icon fa-money-check icon-wrap"></i>
                             <span class="mini-click-non">Profile</span>
                         </a>
-                    </li>
+                    </li> --}}
                     {{-- <li>
                         <a class="has-arrow" href="{{ route('list-inventory-material') }}" aria-expanded="false"><i
                                 class="fa big-icon fa-ban  icon-wrap"></i> <span class="mini-click-non">Inventory
@@ -780,7 +785,12 @@
                                 <span class="mini-click-non">PO Pyament Need To Release</span>
                             </a>
                         </li>
-
+                        <li
+                        class="nav-item {{ request()->is('owner/list-release-approval-payment-by-vendor') ? 'active' : '' }}">
+                        <a href="{{ route('list-release-approval-payment-by-vendor') }}" aria-expanded="false"><i
+                                class="fa big-icon fa-file-invoice icon-wrap" aria-hidden="true"></i> <span
+                                class="mini-click-non">PO Payment Release to Vendor By Fianance</span></a>
+                    </li>
                         <li class="nav-item {{ request()->is('recive-logistics-list') ? 'active' : '' }}">
                             <a href="{{ route('recive-logistics-list') }}">
                                 <i class="fa big-icon fa-list-check icon-wrap"></i>

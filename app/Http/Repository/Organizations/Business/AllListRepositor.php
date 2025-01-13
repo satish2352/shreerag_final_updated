@@ -515,63 +515,229 @@ class AllListRepositor
       }
   }
   
+  // public function listPOReceivedForApprovaTowardsOwner()
+  // {
+  //   try {
+
+  //     // $array_to_be_check = [config('constants.FINANCE_DEPARTMENT.LIST_STORE_RECIEPT_AND_GRN_RECEIVED_FROM_STORE_DEAPRTMENT')];
+  //     $array_to_be_check = [config('constants.HIGHER_AUTHORITY.INVOICE_RECEIVED_FOR_BILL_APPROVAL_TO_HIGHER_AUTHORITY'),
+  //     config('constants.FINANCE_DEPARTMENT.LIST_STORE_RECIEPT_AND_GRN_RECEIVED_FROM_STORE_DEAPRTMENT')];
+
+  //     $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+  //       $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+  //     })
+  //       ->leftJoin('designs', function ($join) {
+  //         $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+  //       })
+
+  //       ->leftJoin('businesses', function ($join) {
+  //         $join->on('business_application_processes.business_id', '=', 'businesses.id');
+  //       })
+  //       ->leftJoin('businesses_details', function($join) {
+  //         $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+  //     })
+  //       ->leftJoin('design_revision_for_prod', function ($join) {
+  //         $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+  //       })
+  //       ->leftJoin('purchase_orders', function($join) {
+  //         $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+  //       })
+  //       ->whereIn('purchase_orders.finanace_store_receipt_status_id', $array_to_be_check)
+  //       // ->whereIn('business_application_processes.business_status_id', $array_to_be_check)
+  //       ->where('businesses.is_active', true)
+  //       ->select(
+  //         'purchase_orders.purchase_orders_id',
+  //         'business_application_processes.store_receipt_no',
+  //         'purchase_orders.grn_no',
+  //         'businesses.id',
+  //         'businesses.title',
+  //         // 'businesses.description',
+  //         // 'businesses.remarks',
+  //         'businesses.is_active',
+  //         'production.business_id',
+  //         'business_application_processes.business_details_id',
+  //         // 'production.id as productionId',
+  //         // 'design_revision_for_prod.reject_reason_prod',
+  //         // 'design_revision_for_prod.id as design_revision_for_prod_id',
+  //         // 'designs.bom_image',
+  //         // 'designs.design_image'
+
+  //         'purchase_orders.updated_at'
+  //         )->orderBy('purchase_orders.updated_at', 'desc')
+  //       ->get();
+  //     return $data_output;
+  //   } catch (\Exception $e) {
+      
+  //     return $e;
+  //   }
+  // }
+
   public function listPOReceivedForApprovaTowardsOwner()
   {
-    try {
+      try {
+          // $array_to_be_check = [config('constants.FINANCE_DEPARTMENT.LIST_STORE_RECIEPT_AND_GRN_RECEIVED_FROM_STORE_DEAPRTMENT')];
+          // $array_not_to_be_check = [config('constants.FINANCE_DEPARTMENT.INVOICE_SENT_FOR_BILL_APPROVAL_TO_HIGHER_AUTHORITY')];
+             $array_to_be_check = [config('constants.FINANCE_DEPARTMENT.INVOICE_SENT_FOR_BILL_APPROVAL_TO_HIGHER_AUTHORITY_PARTICULAR_GRN_WISE')];
 
-      // $array_to_be_check = [config('constants.FINANCE_DEPARTMENT.LIST_STORE_RECIEPT_AND_GRN_RECEIVED_FROM_STORE_DEAPRTMENT')];
-      $array_to_be_check = [config('constants.HIGHER_AUTHORITY.INVOICE_RECEIVED_FOR_BILL_APPROVAL_TO_HIGHER_AUTHORITY'),
-      config('constants.FINANCE_DEPARTMENT.LIST_STORE_RECIEPT_AND_GRN_RECEIVED_FROM_STORE_DEAPRTMENT')];
-
-      $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-      })
-        ->leftJoin('designs', function ($join) {
-          $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-        })
-
-        ->leftJoin('businesses', function ($join) {
-          $join->on('business_application_processes.business_id', '=', 'businesses.id');
-        })
-        ->leftJoin('businesses_details', function($join) {
-          $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-      })
-        ->leftJoin('design_revision_for_prod', function ($join) {
-          $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-        })
-        ->leftJoin('purchase_orders', function($join) {
-          $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-        })
-        ->whereIn('purchase_orders.finanace_store_receipt_status_id', $array_to_be_check)
-        // ->whereIn('business_application_processes.business_status_id', $array_to_be_check)
-        ->where('businesses.is_active', true)
-        ->select(
-          'purchase_orders.purchase_orders_id',
-          'business_application_processes.store_receipt_no',
-          'purchase_orders.grn_no',
-          'businesses.id',
-          'businesses.title',
-          // 'businesses.description',
-          // 'businesses.remarks',
-          'businesses.is_active',
-          'production.business_id',
-          'business_application_processes.business_details_id',
-          // 'production.id as productionId',
-          // 'design_revision_for_prod.reject_reason_prod',
-          // 'design_revision_for_prod.id as design_revision_for_prod_id',
-          // 'designs.bom_image',
-          // 'designs.design_image'
-
-          'purchase_orders.updated_at'
-          )->orderBy('purchase_orders.updated_at', 'desc')
-        ->get();
-      return $data_output;
-    } catch (\Exception $e) {
-      
-      return $e;
-    }
+          $data_output = PurchaseOrdersModel::leftJoin('gatepass', function ($join) {
+              $join->on('purchase_orders.purchase_orders_id', '=', 'gatepass.purchase_orders_id');
+          })
+          ->leftJoin('vendors', function ($join) {
+              $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
+          })
+          ->leftJoin('grn_tbl', function ($join) {
+              $join->on('purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id');
+          })
+          ->where('grn_tbl.grn_status_sanction', $array_to_be_check)
+          ->whereNotNull('grn_tbl.grn_no_generate')
+          ->whereNotNull('grn_tbl.store_receipt_no_generate')
+          ->whereNotNull('grn_tbl.store_remark')
+          ->groupBy(
+              'purchase_orders.purchase_orders_id',
+              'grn_tbl.id',
+              'grn_tbl.grn_no_generate',
+              'grn_tbl.store_receipt_no_generate',
+              'grn_tbl.store_remark',
+              'vendors.vendor_name',
+              'vendors.vendor_company_name',
+              'vendors.vendor_email',
+              'vendors.contact_no',
+              'vendors.vendor_address',
+              'vendors.gst_no',
+              'vendors.quote_no'
+          )
+          ->select(
+              'purchase_orders.purchase_orders_id',
+              'grn_tbl.id',
+              'grn_tbl.grn_no_generate',
+              'grn_tbl.store_receipt_no_generate',
+              'grn_tbl.store_remark',
+              'vendors.vendor_name',
+              'vendors.vendor_company_name',
+              'vendors.vendor_email',
+              'vendors.contact_no',
+              'vendors.vendor_address',
+              'vendors.gst_no',
+              'vendors.quote_no'
+          )
+          ->get();
+  
+          return $data_output;
+      } catch (\Exception $e) {
+          return $e->getMessage();
+      }
   }
+  public function listPOPaymentReleaseByVendor()
+  {
+      try {
+          // $array_to_be_check = [config('constants.FINANCE_DEPARTMENT.LIST_STORE_RECIEPT_AND_GRN_RECEIVED_FROM_STORE_DEAPRTMENT')];
+          // $array_not_to_be_check = [config('constants.FINANCE_DEPARTMENT.INVOICE_SENT_FOR_BILL_APPROVAL_TO_HIGHER_AUTHORITY')];
+             $array_to_be_check = [config('constants.FINANCE_DEPARTMENT.FORWARDED_PURCHASE_ORDER_PAYMENT_TO_THE_VENDOR_GRN_WISE')];
 
+          $data_output = PurchaseOrdersModel::leftJoin('gatepass', function ($join) {
+              $join->on('purchase_orders.purchase_orders_id', '=', 'gatepass.purchase_orders_id');
+          })
+          ->leftJoin('vendors', function ($join) {
+              $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
+          })
+          ->leftJoin('grn_tbl', function ($join) {
+              $join->on('purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id');
+          })
+          ->where('grn_tbl.grn_status_sanction', $array_to_be_check)
+          ->whereNotNull('grn_tbl.grn_no_generate')
+          ->whereNotNull('grn_tbl.store_receipt_no_generate')
+          ->whereNotNull('grn_tbl.store_remark')
+          ->groupBy(
+              'purchase_orders.purchase_orders_id',
+              'grn_tbl.id',
+              'grn_tbl.grn_no_generate',
+              'grn_tbl.store_receipt_no_generate',
+              'grn_tbl.store_remark',
+              'vendors.vendor_name',
+              'vendors.vendor_company_name',
+              'vendors.vendor_email',
+              'vendors.contact_no',
+              'vendors.vendor_address',
+              'vendors.gst_no',
+              'vendors.quote_no'
+          )
+          ->select(
+              'purchase_orders.purchase_orders_id',
+              'grn_tbl.id',
+              'grn_tbl.grn_no_generate',
+              'grn_tbl.store_receipt_no_generate',
+              'grn_tbl.store_remark',
+              'vendors.vendor_name',
+              'vendors.vendor_company_name',
+              'vendors.vendor_email',
+              'vendors.contact_no',
+              'vendors.vendor_address',
+              'vendors.gst_no',
+              'vendors.quote_no'
+          )
+          ->get();
+  
+          return $data_output;
+      } catch (\Exception $e) {
+          return $e->getMessage();
+      }
+  }
+  // public function listPOReceivedForApprovaTowardsOwner()
+  // {
+  //   try {
+
+  //     // $array_to_be_check = [config('constants.FINANCE_DEPARTMENT.LIST_STORE_RECIEPT_AND_GRN_RECEIVED_FROM_STORE_DEAPRTMENT')];
+  //     $array_to_be_check = [config('constants.HIGHER_AUTHORITY.INVOICE_RECEIVED_FOR_BILL_APPROVAL_TO_HIGHER_AUTHORITY'),
+  //     config('constants.FINANCE_DEPARTMENT.LIST_STORE_RECIEPT_AND_GRN_RECEIVED_FROM_STORE_DEAPRTMENT')];
+
+  //     $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+  //       $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+  //     })
+  //       ->leftJoin('designs', function ($join) {
+  //         $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+  //       })
+
+  //       ->leftJoin('businesses', function ($join) {
+  //         $join->on('business_application_processes.business_id', '=', 'businesses.id');
+  //       })
+  //       ->leftJoin('businesses_details', function($join) {
+  //         $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+  //     })
+  //       ->leftJoin('design_revision_for_prod', function ($join) {
+  //         $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+  //       })
+  //       ->leftJoin('purchase_orders', function($join) {
+  //         $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+  //       })
+  //       ->whereIn('purchase_orders.finanace_store_receipt_status_id', $array_to_be_check)
+  //       // ->whereIn('business_application_processes.business_status_id', $array_to_be_check)
+  //       ->where('businesses.is_active', true)
+  //       ->select(
+  //         'purchase_orders.purchase_orders_id',
+  //         'business_application_processes.store_receipt_no',
+  //         'purchase_orders.grn_no',
+  //         'businesses.id',
+  //         'businesses.title',
+  //         // 'businesses.description',
+  //         // 'businesses.remarks',
+  //         'businesses.is_active',
+  //         'production.business_id',
+  //         'business_application_processes.business_details_id',
+  //         // 'production.id as productionId',
+  //         // 'design_revision_for_prod.reject_reason_prod',
+  //         // 'design_revision_for_prod.id as design_revision_for_prod_id',
+  //         // 'designs.bom_image',
+  //         // 'designs.design_image'
+
+  //         'purchase_orders.updated_at'
+  //         )->orderBy('purchase_orders.updated_at', 'desc')
+  //       ->get();
+  //     return $data_output;
+  //   } catch (\Exception $e) {
+      
+  //     return $e;
+  //   }
+  // }
   public function loadDesignSubmittedForProduction(){
     try {
 

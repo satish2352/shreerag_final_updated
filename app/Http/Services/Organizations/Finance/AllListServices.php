@@ -21,6 +21,8 @@ class AllListServices
     public function getAllListSRAndGRNGeanrated(){
         try {
             $data_output = $this->repo->getAllListSRAndGRNGeanrated();
+            // dd($data_output);
+            // die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;

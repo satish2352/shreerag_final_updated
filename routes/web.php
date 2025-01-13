@@ -127,6 +127,10 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-design-uploaded-owner-business-wise/{business_id}', ['as' => 'list-design-uploaded-owner-business-wise', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@loadDesignSubmittedForProductionBusinessWise']);
 
         Route::get('/list-po-recived-for-approval-payment', ['as' => 'list-po-recived-for-approval-payment', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@listPOReceivedForApprovaTowardsOwner']);
+        Route::get('/accept-purchase-order-payment-release/{purchase_order_id}/{business_id}', ['as' => 'accept-purchase-order-payment-release', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@acceptPurchaseOrderPaymentRelease']);
+        Route::get('/list-release-approval-payment-by-vendor', ['as' => 'list-release-approval-payment-by-vendor', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@listPOPaymentReleaseByVendor']);
+
+       
         Route::get('/list-product-dispatch-completed', ['as' => 'list-product-dispatch-completed', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@listProductDispatchCompletedFromDispatch']);
 
         Route::post('/delete-addmore', ['as' => 'delete-addmore', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@destroyAddmore']);
@@ -220,7 +224,10 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-material-received-from-quality-bussinesswise/{id}', ['as' => 'list-material-received-from-quality-bussinesswise', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@submitFinalPurchaseOrder']);
         Route::get('/list-grn-details/{purchase_orders_id}/{business_details_id}/{id}', ['as' => 'list-grn-details', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getGRNDetails']);
         Route::get('/list-grn-details-po-tracking/{purchase_orders_id}/{business_details_id}/{id}', ['as' => 'list-grn-details-po-tracking', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getGRNDetailsPOTracking']);
+       
+        Route::post('/generate-sr-store-dept', ['as' => 'generate-sr-store-dept', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@generateSRstoreDept']);
 
+        
         Route::get('/list-material-received-from-quality-po-tracking', ['as' => 'list-material-received-from-quality-po-tracking', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialReceivedFromQualityPOTracking']);
         Route::get('/list-material-received-from-quality-bussinesswise-tracking/{id}', ['as' => 'list-material-received-from-quality-bussinesswise-tracking', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialReceivedFromQualityPOTrackingBusinessWise']);
 
@@ -609,8 +616,10 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
     });
 
-    Route::group(['prefix' => 'EMPOLYEE'], function () {
+    Route::group(['prefix' => 'employee'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
+        Route::any('/show-employee-profile/{id}', ['as' => 'show-employee-profile', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@showParticularDetails']);
+
     });
 // frontend website shreerag path 
 Route::get('/', ['as' => 'index', 'uses' => 'App\Http\Controllers\Website\PagesController@index']);

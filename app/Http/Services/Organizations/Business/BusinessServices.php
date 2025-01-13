@@ -115,5 +115,15 @@ class BusinessServices
             return $e;
         }
     }
-
+    public function acceptPurchaseOrderPaymentRelease($id, $business_id)
+    {
+        try {
+            $acceptPurchaseOrderPaymentRelease = $this->repo->acceptPurchaseOrderPaymentRelease($id, $business_id);
+        //  dd($acceptPurchaseOrderPaymentRelease);
+        //  die();
+            return $acceptPurchaseOrderPaymentRelease;
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
+    }
 }

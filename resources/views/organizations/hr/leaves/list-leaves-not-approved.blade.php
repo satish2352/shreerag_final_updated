@@ -125,7 +125,7 @@
         </div>
     </div>
 </div>
-<form method="POST" action="{{ url('/update-status') }}" id="activeform">
+<form method="POST" action="{{ url('/hr/update-status') }}" id="activeform">
     @csrf
     <input type="hidden" name="active_id" id="active_id" value="">
     <input type="hidden" name="action" id="action" value="">

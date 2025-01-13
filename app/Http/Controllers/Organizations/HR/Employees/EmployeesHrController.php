@@ -258,6 +258,19 @@ class EmployeesHrController extends Controller
         }
     }
 
+    public function showParticularDetails(Request $request){
+        try {
+            $id = Auth::user()->id;
+            
+            $data_id = base64_decode($request->id);
+          
+            $user_detail = $this->service->showParticularDetails($data_id);
+  
+            return view('organizations.hr.employees.show-employees', compact('user_detail'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     public function destroy(Request $request){
         $delete_data_id = base64_decode($request->id);
      

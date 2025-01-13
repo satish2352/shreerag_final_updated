@@ -7,6 +7,9 @@
         margin-top: 72px;
         margin-bottom: 80px;
     }
+    .error{
+        color: red;
+    }
 </style>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -201,6 +204,56 @@
 
                                             </div>
                                         </form>
+                                        @if($grn_data->store_receipt_no_generate === NULL && $grn_data->store_remark === NULL)
+                                        <form action="{{ route('generate-sr-store-dept') }}" method="POST" id="addStoreRemark" enctype="multipart/form-data">
+                                            @csrf
+                                            <!-- Hidden Input for GRN ID -->
+                                            <input type="hidden" name="id" id="id" value="{{ $grn_id }}">
+                                            
+                                            <!-- Store Remark Input -->
+                                            <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <label for="store_remark">Store Remark:</label>
+                                                <textarea
+                                                    class="form-control"
+                                                    rows="3"
+                                                    id="store_remark"
+                                                    name="store_remark"
+                                                    placeholder="Enter store remark">{{ $grn_data->store_remark }}</textarea>
+                                            </div>
+                                            
+                                            <!-- Submit Button -->
+                                            <div class="form-group col-lg-12">
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                                <a href="{{ url()->previous() }}" class="btn btn-secondary">Cancel</a>
+                                            </div>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('generate-sr-store-dept') }}" method="POST" id="addStoreRemark" enctype="multipart/form-data">
+                                            @csrf
+                                            <!-- Hidden Input for GRN ID -->
+                                            <input type="hidden" name="id" id="id" value="{{ $grn_id }}">
+                                            
+                                            <!-- Store Remark Input -->
+                                            <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <label for="store_remark">Store Remark:</label>
+                                                <textarea
+                                                    class="form-control"
+                                                    rows="3"
+                                                    id="store_remark"
+                                                    name="store_remark"
+                                                    placeholder="Enter store remark" disabled>{{ $grn_data->store_remark }}</textarea>
+                                            </div>
+                                            
+                                            <!-- Submit Button -->
+                                            <div class="form-group col-lg-12">
+                                                <button type="submit" class="btn btn-primary" disabled>Submit</button>
+                                                <a href="{{ url()->previous() }}" class="btn btn-secondary">Cancel</a>
+                                            </div>
+                                        </form>
+                                    @endif
+                                    
+                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -210,4 +263,28 @@
             </div>
         </div>
     </div>
+    <!-- jQuery Validation Script -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        var i = 0;
+    </script>
+    <script>
+        jQuery.noConflict();
+        jQuery(document).ready(function($) {
+            $("#addStoreRemark").validate({
+                rules: {
+                    store_remark: {
+                        required: true,
+                    },
+                },
+                messages: {
+                    store_remark: {
+                        required: "Please enter Remark.",
+                    },
+                },
+            });
+        });
+    </script>
+    
 @endsection

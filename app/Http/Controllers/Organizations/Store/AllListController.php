@@ -182,7 +182,7 @@ class AllListController extends Controller
 
             
                 ->get();
-            return view('organizations.store.list.list-grn', compact('purchase_order_data', 'purchase_order_details_data', 'grn_data'));
+            return view('organizations.store.list.list-grn', compact('purchase_order_data', 'purchase_order_details_data', 'grn_data','grn_id'));
         } catch (\Exception $e) {
             return $e;
         }

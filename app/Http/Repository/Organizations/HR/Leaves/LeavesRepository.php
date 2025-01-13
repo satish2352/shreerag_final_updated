@@ -143,6 +143,7 @@ class LeavesRepository  {
             $data_output = Leaves::join('users', 'tbl_leaves.employee_id', '=', 'users.id')
             ->join('tbl_leave_management', 'tbl_leaves.leave_type_id', '=', 'tbl_leave_management.id')
             ->where('organization_id', session()->get('org_id'))
+            ->where('is_approved', 2)
             ->select(
                 'tbl_leaves.id',
                     'users.u_email',

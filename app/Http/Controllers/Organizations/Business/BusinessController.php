@@ -220,4 +220,22 @@ class BusinessController extends Controller
         } 
     }
 
+    public function acceptPurchaseOrderPaymentRelease($purchase_order_id, $business_id)
+    {
+        try {
+            $delete = $this->service->acceptPurchaseOrderPaymentRelease($purchase_order_id,$business_id);
+            if ($delete) {
+                $status = 'success';
+                $msg ='Purchase order accepted.';
+            } else {
+                $status = 'success';
+                $msg ='Purchase order accepted.';
+            }  
+
+            return redirect('owner/list-po-recived-for-approval-payment')->with(compact('msg', 'status'));
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        } 
+    }
+
 }

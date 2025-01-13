@@ -13,7 +13,8 @@ use App\Models\ {
     PartItem,
     User,
     UnitMaster,
-    ItemStock
+    ItemStock,
+    GRNModel
 
 };
 
@@ -343,5 +344,82 @@ class StoreController extends Controller
             return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $e->getMessage()]);
         }
     }
-    
+//     public function generateSRstoreDept($request)
+// {
+//     try {
+//         dd($request);
+//         die();
+//         // Validate input
+//         if (empty($request->id)) {
+//             return redirect()->back()->with('error', 'GRN ID is required.');
+//         }
+
+//         // Fetch the existing GRN record
+//         $gatepass = GRNModel::where('id', $request->id)->first();
+//         dd($gatepass);
+//         die();
+//         if (!$gatepass) {
+//             return redirect()->back()->with('error', 'GRN not found.');
+//         }
+
+//         // Generate a unique GRN number
+//         $store_receipt_no_generate = 'GRN' . str_replace(['-', ':', ' '], '', date('YmdHis'));
+
+//         // Update the existing GRN entry
+//         $gatepass->store_remark = $request->store_remark;
+//         $gatepass->store_receipt_no_generate = $store_receipt_no_generate;
+
+//         if ($gatepass->save()) {
+//             return redirect('storedept/list-material-received-from-quality')
+//                 ->with('success', 'GRN updated successfully.');
+//         }
+
+//         return redirect()->back()->with('error', 'Failed to update GRN.');
+//     } catch (\Exception $e) {
+//         // Log the exception
+//         \Log::error('Error in storeGRN: ' . $e->getMessage());
+
+//         return redirect()->back()->with('error', 'An error occurred while updating GRN.');
+//     }
+// }
+
+public function generateSRstoreDept(Request $request)
+{
+    try {
+        // Debugging: dump and die
+        // dd($request->all());
+
+        // Validate input
+        if (empty($request->id)) {
+            return redirect()->back()->with('error', 'GRN ID is required.');
+        }
+
+        // Fetch the existing GRN record
+        $gatepass = GRNModel::where('id', $request->id)->first();
+        if (!$gatepass) {
+            return redirect()->back()->with('error', 'GRN not found.');
+        }
+
+        // Generate a unique GRN number
+        $store_receipt_no_generate = str_replace(['-', ':', ' '], '', date('YmdHis'));
+
+        // Update the existing GRN entry
+        $gatepass->store_remark = $request->store_remark;
+        $gatepass->store_receipt_no_generate = $store_receipt_no_generate;
+        $gatepass->grn_status_sanction = config('constants.STORE_DEPARTMENT.STORE_RECIEPT_GENRATED_SENT_TO_FINANCE_GRN_WISE');
+        
+
+        if ($gatepass->save()) {
+            return redirect('storedept/list-material-received-from-quality')
+                ->with('success', 'GRN updated successfully.');
+        }
+
+        return redirect()->back()->with('error', 'Failed to update GRN.');
+    } catch (\Exception $e) {
+        // Log the exception
+        \Log::error('Error in storeGRN: ' . $e->getMessage());
+
+        return redirect()->back()->with('error', 'An error occurred while updating GRN.');
+    }
+}
 }

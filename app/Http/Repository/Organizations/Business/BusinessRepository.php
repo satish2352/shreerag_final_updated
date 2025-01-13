@@ -14,7 +14,8 @@ use App\Models\{
     Vendors,
     BusinessDetails,
     AdminView,
-    NotificationStatus
+    NotificationStatus,
+    GRNModel
 };
 use Config;
 use App\Http\Controllers\Organizations\CommanController;
@@ -375,8 +376,102 @@ class BusinessRepository
             return $e;
         }
     }
+    public function acceptPurchaseOrderPaymentRelease($purchase_order_id, $business_id)
+    {
+        try {
+            // Retrieve the purchase order and GRN models
+            $purchase_order = PurchaseOrdersModel::where('purchase_orders_id', $purchase_order_id)->first();
+            $grn_update = GRNModel::where('id', $business_id)->first(); // Ensure you're fetching the correct GRN based on the business_id
+//  dd( $grn);
+//  die();
+            // Check if both the purchase order and GRN exist
+            if ($grn_update) {
 
+                // dd($grn);
+                // die();
+                // Update the GRN and purchase order statuses
+                $grn_update->grn_status_sanction = config('constants.HIGHER_AUTHORITY.INVOICE_RECEIVED_FOR_BILL_APPROVAL_TO_HIGHER_AUTHORITY_GRN_WISE');
+                // $purchase_order->purchase_order_status = 'updated_status'; // Replace 'updated_status' with the actual status
     
+                // Save the updated GRN and purchase order
+               
+                $grn_update->save();
+                
+                // $purchase_order->save();
+    
+                return [
+                    'status' => 'success',
+                    'message' => 'GRN and Purchase Order updated successfully.',
+                    'grn' => $grn_update,
+                    // 'purchase_order' => $purchase_order
+                ];
+            }
+    
+            // If either the GRN or purchase order does not exist
+            return [
+                'status' => 'error',
+                'message' => 'GRN or Purchase Order not found.',
+            ];
+    
+        } catch (\Exception $e) {
+            // Catch and return any exceptions
+            return [
+                'status' => 'error',
+                'message' => 'An error occurred while updating the GRN and Purchase Order.',
+                'error' => $e->getMessage(),
+            ];
+        }
+    }
+    
+    // public function acceptPurchaseOrderPaymentRelease($purchase_order_id, $business_id)
+    // {
+    //     try {
+
+    //         $purchase_order = PurchaseOrderModel::where('purchase_orders_id', $purchase_orders_id)->first();
+    //         $grn = GRNModel::where('id', $business_id)->first(); // Add first() to retrieve the model instance
+            
+    //         if ($grn && $purchase_order) {
+    //             // Update the GRN and purchase order statuses
+    //             $grn->grn_status_sanction = config('constants.FINANCE_DEPARTMENT.INVOICE_RECEIVED_FOR_BILL_APPROVAL_TO_HIGHER_AUTHORITY_GRN_WISE');
+    //             $purchase_order->purchase_orders_id = $purchase_orders_id;
+                
+    //             // Save the updated GRN and purchase order
+    //             $grn->save();
+    //             $purchase_order->save();
+    
+    //             return ['grn' => $grn, 'purchase_order' => $purchase_order];
+    //         }
+            // $business_application = BusinessApplicationProcesses::where('business_details_id', $business_id)->first();
+            // $po_count = $this->serviceCommon->getNumberOfPOCount($business_id, $purchase_order_id);
+            // if ($business_application) {
+
+            //     if($po_count > 0) {
+            //         $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.HALF_APPROVED_PO_FROM_PURCHASE');
+            //         $business_application->off_canvas_status = 24;
+            //     } else {
+            //         $business_application->off_canvas_status = 24;
+            //     }
+            //     $business_application->save();
+            // }
+            // $PurchaseOrdersData = PurchaseOrdersModel::where('purchase_orders_id', $purchase_order_id)->first();
+            // $PurchaseOrdersData->owner_po_action_date= date('Y-m-d');
+            // $PurchaseOrdersData->finanace_store_receipt_status_id = config('constants.FINANCE_DEPARTMENT.INVOICE_APPROVED_FROM_HIGHER_AUTHORITY');
+            // $PurchaseOrdersData->save();
+            // $update_data_admin['off_canvas_status'] = 24;
+            // $update_data_business['off_canvas_status'] = 24;
+            // $update_data_admin['is_view'] = '0';
+            // $update_data_business['purchase_order_is_view_po'] = 0;
+            // AdminView::where('business_details_id', $business_application->business_details_id)
+            //     ->update($update_data_admin);
+            //     NotificationStatus::where('business_details_id', $business_application->business_details_id)
+            //     ->update($update_data_business);
+            
+            // return $business_application;
+
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
     public function getPurchaseOrderDetails($purchase_order_id)
 {
     try {

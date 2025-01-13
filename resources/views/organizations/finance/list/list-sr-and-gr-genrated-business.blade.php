@@ -82,27 +82,56 @@
                                             <tr>
 
                                                 <th data-field="id">ID</th>
-                                                <th data-field="product_name" data-editable="false">Product Name</th>
-                                                <th data-field="descriptions" data-editable="false">Description</th>
+                                                <th data-field="purchase_orders_id" data-editable="false">PO Number</th>
+                                                <th data-field="grn_no_generate" data-editable="false">GRN No.</th>
+                                                <th data-field="store_receipt_no_generate" data-editable="false">SR No.</th>
+                                                <th data-field="store_remark" data-editable="false">Store Remark.</th>
+                                                <th data-field="vendor_name" data-editable="false">Vendor Name</th>
+
+                                                <th data-field="vendor_email" data-editable="false">Vendor Email Id</th>
+                                                <th data-field="vendor_name" data-editable="false">Vendor Name</th>
+                                                <th data-field="contact_no" data-editable="false">Vendor Contact No</th>
+                                                <th data-field="vendor_address" data-editable="false">Vendor Address</th>
+                                                <th data-field="gst_no" data-editable="false">GST No.</th>
                                                 <th data-field="action" data-editable="false">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <?php
+// dd($data_output);
+// die();
+                                            ?>
                                             @foreach ($data_output as $data)
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ucwords($data->product_name)}}</td>
-                                            <td>{{ucwords($data->description)}}</td>
-
+                                                    <td>{{ucwords($data->purchase_orders_id)}}</td>
+                                            <td>{{ucwords($data->grn_no_generate)}}</td>
+                                            <td>{{ucwords($data->store_receipt_no_generate)}}</td>
+                                            <td>{{ucwords($data->store_remark)}}</td>
+                                            <td>{{ucwords($data->vendor_name)}}</td>
+                                            <td>{{ucwords($data->vendor_company_name)}}</td>
+                                            <td>{{ucwords($data->vendor_email)}}</td>
+                                            <td>{{ucwords($data->contact_no)}}</td>
+                                            <td>{{ucwords($data->vendor_address)}}</td>
+                                            <td>{{ucwords($data->gst_no)}}</td>
                                                     <td>
+
                                                         <div style="display: flex; align-items: center;">
+                                                            <a href="{{ route('forward-the-purchase-order-to-the-owner-for-sanction', [$data->purchase_orders_id, $data->id]) }}">
+                                                                <button data-toggle="tooltip" title="Trash" class="pd-setting-ed">
+                                                                   Send Owner For Approval
+                                                                </button>
+                                                            </a>
+                                                        </div>
+
+                                                        {{-- <div style="display: flex; align-items: center;">
                                                             <a href="{{ route('list-sr-and-gr-genrated-business-wise', $data->id) }}">
                                                                 <button data-toggle="tooltip" title="Trash" class="pd-setting-ed">
                                                                     Check details
                                                                 </button>
                                                             </a>
-                                                        </div>
+                                                        </div> --}}
                                                         
                                                         {{-- <div style="display: flex; align-items: center;">
                                                             <a href="{{ route('list-accepted-grn-srn-finance', [$data->business_id, $data->purchase_orders_id]) }}">

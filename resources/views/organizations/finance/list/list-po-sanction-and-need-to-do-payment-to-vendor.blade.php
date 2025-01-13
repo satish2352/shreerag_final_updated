@@ -83,14 +83,17 @@
 
                                                 <th data-field="id">ID</th>
                                                 
-                                                <th data-field="product_name" data-editable="false">Product Name</th>
-                                                <th data-field="purchase_order_id" data-editable="false">Purchase Order No</th>
-                                                <th data-field="grn_no" data-editable="false">GRN No</th>
-                                                <th data-field="store_receipt_no" data-editable="false">SR No</th>
+                                                <th data-field="purchase_orders_id" data-editable="false">PO Number</th>
+                                                <th data-field="grn_no_generate" data-editable="false">GRN No.</th>
+                                                <th data-field="store_receipt_no_generate" data-editable="false">SR No.</th>
+                                                <th data-field="store_remark" data-editable="false">Store Remark.</th>
                                                 <th data-field="vendor_name" data-editable="false">Vendor Name</th>
-                                                <th data-field="vendor_company_name" data-editable="false">Vendor Company Name</th>
-                                                <th data-field="vendor_email" data-editable="false">Vendor Email</th>
-                                                <th data-field="contact_no" data-editable="false">Vendor Contact Number</th>
+
+                                                <th data-field="vendor_email" data-editable="false">Vendor Email Id</th>
+                                                <th data-field="vendor_name" data-editable="false">Vendor Name</th>
+                                                <th data-field="contact_no" data-editable="false">Vendor Contact No</th>
+                                                <th data-field="vendor_address" data-editable="false">Vendor Address</th>
+                                                <th data-field="gst_no" data-editable="false">GST No.</th>
                                                 <th data-field="action" data-editable="false">Action</th>
                                             </tr>
                                         </thead>
@@ -99,18 +102,20 @@
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ ucwords($data->product_name) }}</td>
-                                                    <td>{{ ucwords($data->purchase_orders_id) }}</td>
-                                                    <td>{{ ucwords($data->grn_no) }}</td>
-                                                    <td>{{ ucwords($data->store_receipt_no) }}</td>
-                                                    <td>{{ ucwords($data->vendor_name) }}</td>
-                                                    <td>{{ ucwords($data->vendor_company_name) }}</td>
-                                                    <td>{{ ucwords($data->vendor_email) }}</td>
-                                                    <td>{{ ucwords($data->contact_no) }}</td>
+                                                    <td>{{ucwords($data->purchase_orders_id)}}</td>
+                                                    <td>{{ucwords($data->grn_no_generate)}}</td>
+                                                    <td>{{ucwords($data->store_receipt_no_generate)}}</td>
+                                                    <td>{{ucwords($data->store_remark)}}</td>
+                                                    <td>{{ucwords($data->vendor_name)}}</td>
+                                                    <td>{{ucwords($data->vendor_company_name)}}</td>
+                                                    <td>{{ucwords($data->vendor_email)}}</td>
+                                                    <td>{{ucwords($data->contact_no)}}</td>
+                                                    <td>{{ucwords($data->vendor_address)}}</td>
+                                                    <td>{{ucwords($data->gst_no)}}</td>
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
                                                             <a
-                                                                href="{{ route('send-payment-to-vendor', [$data->purchase_orders_id, $data->business_details_id]) }} "><button
+                                                                href="{{ route('send-payment-to-vendor', [$data->purchase_orders_id, $data->id]) }} "><button
                                                                     data-toggle="tooltip" title="Payment Paid To Vendor"
                                                                     class="pd-setting-ed">Payment Paid To Vendor</button></a>
                                                         </div>

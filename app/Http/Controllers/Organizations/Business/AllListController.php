@@ -176,7 +176,14 @@ class AllListController extends Controller
             return $e;
         }
     } 
-
+    public function listPOPaymentReleaseByVendor(Request $request){
+        try {
+            $data_output = $this->service->listPOPaymentReleaseByVendor();
+            return view('organizations.business.list.list-release-approval-payment-by-vendor', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
     public function loadDesignSubmittedForProduction(){
         try {
             $data_output = $this->service->loadDesignSubmittedForProduction();
