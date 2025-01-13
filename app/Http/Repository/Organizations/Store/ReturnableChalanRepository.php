@@ -103,10 +103,30 @@ class ReturnableChalanRepository
     }
     public function getById($id) {
         try {
-            $designData = ReturnableChalan::leftJoin('tbl_returnable_chalan_item_details', 'tbl_returnable_chalan.id', '=', 'tbl_returnable_chalan_item_details.returnable_chalan_id')
-                ->select('tbl_returnable_chalan_item_details.*', 'tbl_returnable_chalan_item_details.id as tbl_returnable_chalan_item_details_id', 
-                'tbl_returnable_chalan.id as purchase_main_id', 'tbl_returnable_chalan.vendor_id','tbl_returnable_chalan.transport_id', 'tbl_returnable_chalan.vehicle_id', 'tbl_returnable_chalan.business_id','tbl_returnable_chalan.tax_type', 'tbl_returnable_chalan.tax_id','tbl_returnable_chalan.po_date','tbl_returnable_chalan.customer_po_no', 
-                'tbl_returnable_chalan.vehicle_number','tbl_returnable_chalan.plant_id', 'tbl_returnable_chalan.vehicle_number','tbl_returnable_chalan.remark','tbl_returnable_chalan.image','tbl_returnable_chalan.id')
+            $designData = ReturnableChalan::leftJoin('tbl_returnable_chalan_item_details as retd1', 'tbl_returnable_chalan.id', '=', 'retd1.returnable_chalan_id')
+            // leftJoin('tbl_returnable_chalan_item_details', 'tbl_returnable_chalan.id', '=', 'tbl_returnable_chalan_item_details.returnable_chalan_id')
+            ->leftJoin('tbl_hsn as hsn', 'hsn.id', '=', 'retd1.hsn_id')     
+            ->select( 'retd1.*',
+            'retd1.id as tbl_returnable_chalan_item_details_id',
+                
+            //     'tbl_returnable_chalan_item_details.*', 
+            // 'tbl_returnable_chalan_item_details.id as tbl_returnable_chalan_item_details_id', 
+                'tbl_returnable_chalan.id as purchase_main_id', 
+                'tbl_returnable_chalan.vendor_id',
+                'tbl_returnable_chalan.transport_id',
+                 'tbl_returnable_chalan.vehicle_id',
+                  'tbl_returnable_chalan.business_id',
+                  'tbl_returnable_chalan.tax_type', 
+                  'tbl_returnable_chalan.tax_id',
+                  'tbl_returnable_chalan.po_date',
+                  'tbl_returnable_chalan.customer_po_no', 
+                'tbl_returnable_chalan.vehicle_number',
+                'tbl_returnable_chalan.plant_id', 
+                'tbl_returnable_chalan.vehicle_number',
+                'tbl_returnable_chalan.remark',
+                'tbl_returnable_chalan.image',
+                'tbl_returnable_chalan.id',
+                'hsn.name as hsn_name')
                 ->where('tbl_returnable_chalan.id', $id)
                 ->get();
             if ($designData->isEmpty()) {

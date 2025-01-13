@@ -501,4 +501,35 @@ class DeliveryChalanController extends Controller
         }
     }
     
+    public function getHsnForPartItemInDelivery(Request $request)
+    {
+    
+        // $partNoId = $request->input('part-no'); // Get the part_no from the request
+        // $partNoId = $request->id;
+     
+        // // Fetch HSN details based on the part_no_id
+        // $part = PartItem::where('description', $partNoId)->first(['hsn_id', 'hsn_id']);
+    try{
+
+        $partNoId = $request->part_item_id;
+    
+        // Fetch PO numbers based on the selected vendor
+        $part = PartItem::leftJoin('tbl_hsn', function($join) {
+            $join->on('tbl_part_item.hsn_id', '=', 'tbl_hsn.id');
+        })
+        ->where('tbl_part_item.id', $partNoId)
+                              ->where('tbl_hsn.is_active', true)
+                              ->get(['tbl_hsn.id', 'name']); // Adjust column names as needed
+                             
+
+        // if ($part) {
+        //     return response()->json(['hsn_id' => $part->hsn_id, 'hsn_id' => $part->hsn_id]);
+        // }
+    
+        return response()->json(['part' => $part]);
+    }
+    catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+    }
 }

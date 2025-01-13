@@ -109,8 +109,7 @@ class ProductionController extends Controller
     // }
     public function destroyAddmoreStoreItem(Request $request)
     {
-        dd($request);
-        die();
+     
         $delete_data_id = $request->delete_id; // Get the delete ID from the request
         
         try {
@@ -119,7 +118,7 @@ class ProductionController extends Controller
                 $msg = $delete_record['msg'];
                 $status = $delete_record['status'];
                 if ($status == 'success') {
-                    return redirect('storedept/list-delivery-chalan')->with(compact('msg', 'status'));
+                    return redirect('proddept/list-material-recived')->with(compact('msg', 'status'));
                 } else {
                     return redirect()->back()->withInput()->with(compact('msg', 'status'));
                 }

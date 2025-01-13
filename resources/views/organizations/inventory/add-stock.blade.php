@@ -40,7 +40,7 @@
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                 <label for="quantity">Quantity:</label>
-                                                <input type="text" class="form-control" id="quantity" name="quantity" placeholder="Enter opening stock">
+                                                <input type="text" class="form-control" id="quantity" name="quantity" placeholder="Enter stock quantity">
                                                 @if ($errors->has('quantity'))
                                                 <span class="red-text">{{ $errors->first('quantity') }}</span>
                                                 @endif
@@ -74,66 +74,37 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
     $(document).ready(function() {
+        // Custom method to check for spaces only
         $.validator.addMethod("spcenotallow", function(value, element) {
             return this.optional(element) || value.trim().length > 0;
         }, "Field cannot contain only spaces.");
 
+        // Validate the form
         $("#regForm").validate({
             rules: {
-                part_number: {
+                part_item_id: {
                     required: true,
                     spcenotallow: true
                 },
-                description: {
+                quantity: {
                     required: true,
-                    spcenotallow: true
-                },
-                unit_id: {
-                    required: true
-                },
-                hsn_id: {
-                    required: true
-                },
-                group_type_id: {
-                    required: true
-                },
-                basic_rate: {
-                    required: true,
-                    number: true
-                },
-                opening_stock: {
-                    required: true,
-                    number: true
+                    spcenotallow: true,
+                    number: true // Ensures only valid numeric values
                 }
             },
             messages: {
-                part_number: {
-                    required: "Please enter the part number.",
+                part_item_id: {
+                    required: "Please select the part number.",
                     spcenotallow: "Part number cannot contain only spaces."
                 },
-                description: {
-                    required: "Please enter a description.",
-                    spcenotallow: "Description cannot contain only spaces."
-                },
-                unit_id: {
-                    required: "Please select a unit."
-                },
-                hsn_id: {
-                    required: "Please select an HSN/SAC number."
-                },
-                group_type_id: {
-                    required: "Please select a group."
-                },
-                basic_rate: {
-                    required: "Please enter the basic rate.",
-                    number: "Please enter a valid number."
-                },
-                opening_stock: {
-                    required: "Please enter the opening stock.",
-                    number: "Please enter a valid number."
+                quantity: {
+                    required: "Please enter a quantity.",
+                    spcenotallow: "Quantity cannot contain only spaces.",
+                    number: "Please enter a valid number for quantity."
                 }
             }
         });
     });
 </script>
+
 @endsection

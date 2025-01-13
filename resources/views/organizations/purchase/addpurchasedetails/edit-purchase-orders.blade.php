@@ -242,7 +242,7 @@
                                                                             value="{{ $editDataNew->purchase_order_details_id }}"
                                                                             placeholder="">
                                                                         <td>
-                                                                            <select class="form-control part_no_id mb-2" name="part_no_id_{{ $key }}" id="">
+                                                                            <select class="form-control part_no_id mb-2" name="part_no_id_{{ $key }}" id="part_no_id">
                                                                                 <option value="" default>Select Description</option>
                                                                                 @foreach ($dataOutputPartItem as $data)
                                                                                 <option value="{{ $data['id'] }}"
@@ -753,7 +753,7 @@
 <script>
        $(document).ready(function() {
      $(document).on('change', '.part_no_id', function() {
-            // alert("hii");
+            alert("hii");
     var partNoId = $(this).val(); // Get the selected part_no_id
     var currentRow = $(this).closest('tr'); // Get the current row
 

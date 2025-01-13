@@ -262,8 +262,8 @@
                                                                                     <th>#</th>
                                                                                     <th class="col-sm-2">Product Name
                                                                                     </th>
-                                                                                    <th class="col-md-1">Unit</th>
                                                                                     <th class="col-md-1">HSN</th>
+                                                                                    <th class="col-md-1">Unit</th>
                                                                                     <th class="col-md-2">process</th>
                                                                                     <th class="col-md-2">Quantity</th>
                                                                                     <th class="col-md-1">Rate</th>
@@ -312,7 +312,23 @@
 
                                                                                         {{-- <input class="form-control part_item_id" name="addmore[0][part_item_id]" type="text" style="min-width:150px"> --}}
                                                                                     </td>
-
+                                                                                    <td>
+                                                                                        <input class="form-control hsn_name" name="addmore[0][hsn_id]"
+                                                                                            type="text" style="min-width:100px" disabled>
+                            
+                                                                                        <input type="hidden" class="form-control hsn_id"
+                                                                                            name="addmore[0][hsn_id]" type="text"
+                                                                                            style="min-width:100px">
+                                                                                        {{-- <select class="form-control mb-2" name="addmore[0][hsn_id]"
+                                                                                            id="" style="min-width:100px">
+                                                                                            <option value="" default>Select HSN</option>
+                                                                                            @foreach ($dataOutputHSNMaster as $data)
+                                                                                                <option value="{{ $data['id'] }}">
+                                                                                                    {{ $data['name'] }}</option>
+                                                                                            @endforeach
+                                                                                        </select> --}}
+                                                                                        {{-- <input class="form-control quantity" name="addmore[0][quantity]" type="text"> --}}
+                                                                                    </td>
                                                                                     <td>
                                                                                         <select class="form-control mb-2"
                                                                                             name="addmore[0][unit_id]"
@@ -329,7 +345,7 @@
                                                                                         </select>
                                                                                         {{-- <input class="form-control description" name="addmore[0][description]" type="text" style="min-width:150px"> --}}
                                                                                     </td>
-                                                                                    <td>
+                                                                                    {{-- <td>
                                                                                         <select class="form-control mb-2"
                                                                                             name="addmore[0][hsn_id]"
                                                                                             id="">
@@ -343,8 +359,7 @@
                                                                                                 </option>
                                                                                             @endforeach
                                                                                         </select>
-                                                                                        {{-- <input class="form-control quantity" name="addmore[0][quantity]" type="text"> --}}
-                                                                                    </td>
+                                                                                    </td> --}}
                                                                                     {{-- <td>
                                                                                 <input class="form-control unit" name="addmore[0][unit]"  type="text">
                                                                             </td> --}}
@@ -754,6 +769,10 @@
                         </select>
                         </td>
                         <td>
+                        <input class="form-control hsn_name"  type="text" style="min-width:150px" disabled>
+                             <input type="hidden" class="form-control hsn_id" name="addmore[${i}][hsn_id]" type="text" style="min-width:150px">
+                        </td>
+                     <td>
                              <select class="form-control mb-2 unit_id" name="addmore[${i}][unit_id]">
                                 <option value="" default>Select Unit</option>
                                 @foreach ($dataOutputUnitMaster as $data)
@@ -761,14 +780,7 @@
                                 @endforeach
                             </select>
                         </td>
-                         <td>
-                             <select class="form-control mb-2 hsn_id" name="addmore[${i}][hsn_id]">
-                                <option value="" default>Select HSN</option>
-                                @foreach ($dataOutputHSNMaster as $data)
-                                    <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
-                                @endforeach
-                            </select>
-                        </td>
+                        
                           <td>
                             <select class="form-control mb-2 process_id" name="addmore[${i}][process_id]">
                                 <option value="" default>Select Process</option>
@@ -815,4 +827,53 @@
                 });
             });
         </script>
+         <script>
+
+            $(document).ready(function() {
+            
+            // var jQuery321 = $.noConflict(true);
+            // Initialize Select2
+            // $('.select2').select2();
+            
+            // Bind the select2:select event
+            $(document).on('change', '.part_item_id', function(e) {
+                var partNoId = $(this).val(); // Get the selected part_no_id
+                var currentRow = $(this).closest('tr'); // Get the current row
+            
+                // Check if partNoId has value
+                if (partNoId) {
+                    console.log("Selected partNoId: ", partNoId); // Debugging the selected ID
+            
+                    // Make an AJAX request to fetch the HSN based on the part_no_id
+                    $.ajax({
+                        url: '{{ route('get-hsn-for-part') }}', // Ensure this route is correct in your routes file
+                        type: 'GET',
+                        data: {
+                            part_no_id: partNoId
+                        }, // Pass the part_no_id as a query parameter
+                        success: function(response) {
+                            console.log("HSN response:",
+                            response); // Debug the response
+            
+                            if (response.part && response.part.length > 0) {
+                                var hsnName = response.part[0].name;
+                                var hsnId = response.part[0].id;
+            
+                                // Update the HSN inputs for the current row only
+                                currentRow.find('.hsn_name').val(
+                                hsnName); // Set HSN name
+                                currentRow.find('.hsn_id').val(hsnId); // Set HSN ID
+                            } else {
+                                alert("HSN not found for the selected part.");
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("AJAX Error: ", status, error);
+                            alert("Error fetching HSN. Please try again.");
+                        }
+                    });
+                }
+            });
+            });
+                                    </script>
     @endsection

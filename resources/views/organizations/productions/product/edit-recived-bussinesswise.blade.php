@@ -82,6 +82,10 @@
                                                         </th>
                                                     </tr>
                                                 </thead>
+                                                <?php
+                                                // dd($dataGroupedById);
+                                                // die();
+                                                ?>
                                                 <tbody style="overflow: scroll;">
                                                     @foreach ($dataGroupedById as $key => $items)
                                                         @foreach ($items as $index => $item)
@@ -354,7 +358,7 @@
     });
 
     // Form submission with validation and confirmation
-    $("form").validate({
+    $("addProductForm").validate({
         ignore: [], // Validate all inputs, including hidden ones
         errorPlacement: function (error, element) {
             error.insertAfter(element); // Place errors after the invalid field
