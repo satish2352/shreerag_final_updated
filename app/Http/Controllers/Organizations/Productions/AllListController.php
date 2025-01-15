@@ -126,7 +126,7 @@ class AllListController extends Controller
                     }
                 }
             } else {
-                return view('organizations.designer.list.list_design_received_from_production_for_correction', [
+                return view('organizations.productions.product.list-design-revised', [
                     'data_output' => [],
                     'message' => 'No data found for designs received for correction'
                 ]);
