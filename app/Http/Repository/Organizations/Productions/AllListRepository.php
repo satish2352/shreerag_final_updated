@@ -751,9 +751,9 @@ public function getAllListMaterialRecievedToProductionBusinessWise($id){
       ->leftJoin('designs', function($join) {
         $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
       })
-      // ->leftJoin('businesses', function($join) {
-      //   $join->on('business_application_processes.business_id', '=', 'businesses.id');
-      // })
+      ->leftJoin('businesses', function($join) {
+        $join->on('business_application_processes.business_id', '=', 'businesses.id');
+      })
       ->leftJoin('businesses_details', function($join) {
         $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
     })
