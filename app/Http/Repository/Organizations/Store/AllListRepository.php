@@ -177,8 +177,11 @@ public function getAllListDesignRecievedForMaterial(){
         ->leftJoin('production_details', function($join) {
             $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
         })
+        // ->leftJoin('design_revision_for_prod', function ($join) {
+        //     $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+        // })
         ->leftJoin('design_revision_for_prod', function ($join) {
-            $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+            $join->on('designs.id', '=', 'design_revision_for_prod.design_id');
         })
         ->leftJoin('purchase_orders', function ($join) {
             $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
@@ -198,45 +201,74 @@ public function getAllListDesignRecievedForMaterial(){
     //   })
 
         // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
-        ->groupBy(
-            'businesses_details.id',
-            'production.business_details_id',
-            'businesses_details.product_name',
-            'businesses_details.description',
-            'businesses_details.quantity',
-            'businesses_details.is_active',
-            'production.business_id',
-            'production.id', // Keep this as it is
-            'designs.bom_image',
-            'designs.design_image',
-            'design_revision_for_prod.reject_reason_prod',
-            'design_revision_for_prod.id', // Use the column name directly
-            'design_revision_for_prod.design_image', // Keep this as it is
-            'design_revision_for_prod.bom_image', // Keep this as it is
-            // 'production_details.material_send_production',
-            'production.updated_at'
-        )
         ->select(
-            'businesses_details.id',
-            'production.business_details_id',
+            'business_application_processes.id',
+            'businesses.id as business_id',
+            'businesses.customer_po_number',
+            'businesses.title',
+            'businesses_details.id as business_details_id',
             'businesses_details.product_name',
-            'businesses_details.description',
             'businesses_details.quantity',
-            'businesses_details.is_active',
-            'production.business_id',
-            'production.id as productionId',
-            'designs.bom_image',
-            'designs.design_image',
-            'design_revision_for_prod.reject_reason_prod',
-            'design_revision_for_prod.id as design_revision_for_prod_id',
-            'design_revision_for_prod.design_image as re_design_image',
-            'design_revision_for_prod.bom_image as re_bom_image',
-            // 'production_details.material_send_production',
-            'production.updated_at'
+            'businesses_details.description',
+            'businesses.remarks',
+            DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'), // Aggregated
+            DB::raw('MAX(designs.bom_image) as bom_image'), // Aggregated
+            DB::raw('MAX(designs.design_image) as design_image'), // Aggregated
+            DB::raw('MAX(design_revision_for_prod.bom_image) as re_bom_image'), // Aggregated
+            DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image'), // Aggregated
+            DB::raw('MAX(design_revision_for_prod.remark_by_design) as remark_by_design') // Aggregated                
         )
-        ->orderBy('production.updated_at', 'desc')
-        // ->distinct() 
+        ->groupBy(
+            'business_application_processes.id',
+            'businesses.id',
+            'businesses.customer_po_number',
+            'businesses.title',
+            'businesses_details.id',
+            'businesses_details.product_name',
+            'businesses_details.quantity',
+            'businesses_details.description',
+            'businesses.remarks'
+        )
         ->get();
+        // ->groupBy(
+        //     'businesses_details.id',
+        //     'production.business_details_id',
+        //     'businesses_details.product_name',
+        //     'businesses_details.description',
+        //     'businesses_details.quantity',
+        //     'businesses_details.is_active',
+        //     'production.business_id',
+        //     'production.id', // Keep this as it is
+        //     'designs.bom_image',
+        //     'designs.design_image',
+        //     'design_revision_for_prod.reject_reason_prod',
+        //     'design_revision_for_prod.id', // Use the column name directly
+        //     'design_revision_for_prod.design_image', // Keep this as it is
+        //     'design_revision_for_prod.bom_image', // Keep this as it is
+        //     // 'production_details.material_send_production',
+        //     'production.updated_at'
+        // )
+        // ->select(
+        //     'businesses_details.id',
+        //     'production.business_details_id',
+        //     'businesses_details.product_name',
+        //     'businesses_details.description',
+        //     'businesses_details.quantity',
+        //     'businesses_details.is_active',
+        //     'production.business_id',
+        //     'production.id as productionId',
+        //     'designs.bom_image',
+        //     'designs.design_image',
+        //     'design_revision_for_prod.reject_reason_prod',
+        //     'design_revision_for_prod.id as design_revision_for_prod_id',
+        //     'design_revision_for_prod.design_image as re_design_image',
+        //     'design_revision_for_prod.bom_image as re_bom_image',
+        //     // 'production_details.material_send_production',
+        //     'production.updated_at'
+        // )
+        // ->orderBy('production.updated_at', 'desc')
+        // // ->distinct() 
+        // ->get();
 
         return $data_output;
     } catch (\Exception $e) {
