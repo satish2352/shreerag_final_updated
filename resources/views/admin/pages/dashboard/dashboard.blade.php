@@ -191,7 +191,7 @@
 }
 .offcanvas-body{
     overflow: scroll;
-    height: 500px;
+    height: 700px;
 }
 </style>
 
