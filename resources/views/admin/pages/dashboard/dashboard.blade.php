@@ -189,6 +189,10 @@
     background-color: #243772 !important;
     color: white;
 }
+.offcanvas-body{
+    overflow: scroll;
+    height: 800px;
+}
 </style>
 
 <div class="data-table-area mg-tb-15">
