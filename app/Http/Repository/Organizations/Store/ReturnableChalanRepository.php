@@ -38,8 +38,9 @@ class ReturnableChalanRepository
             $dataOutput->po_date = $request->po_date;
             $dataOutput->image = 'null';
             $dataOutput->dc_date = now();
-            $lastChalan = ReturnableChalan::orderBy('dc_number', 'desc')->first();
-            $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
+                 // Retrieve the last dc_number and increment it
+        $lastChalan = ReturnableChalan::orderBy('dc_number', 'desc')->first();
+        $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
             $dataOutput->lr_number = $request->lr_number;
             $dataOutput->remark = $request->remark;
             if ($request->has('business_id')) {
@@ -158,6 +159,7 @@ class ReturnableChalanRepository
                     'vendors.vendor_email', 
                     'vendors.vendor_address', 
                     'vendors.gst_no', 
+                    'vendors.contact_no',
                     'vendors.quote_no',
                     'tbl_returnable_chalan.tax_type',
                     'tbl_tax.name as tax_number',
@@ -256,6 +258,8 @@ class ReturnableChalanRepository
             $dataOutput->vehicle_number = $request->vehicle_number;
             $dataOutput->po_date = $request->po_date;
             $dataOutput->lr_number = $request->lr_number;
+        // $lastChalan = ReturnableChalan::orderBy('dc_number', 'desc')->first();
+        // $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
             $dataOutput->remark = $request->remark;
             $dataOutput->image = $imageName;
             if ($request->has('business_id')) {

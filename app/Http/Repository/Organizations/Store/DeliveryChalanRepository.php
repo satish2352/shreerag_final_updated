@@ -265,6 +265,11 @@ class DeliveryChalanRepository
             $dataOutput->plant_id = $request->plant_id;
             $dataOutput->vehicle_number = $request->vehicle_number;
             $dataOutput->po_date = $request->po_date;
+
+        //      // Retrieve the last dc_number and increment it
+        // $lastChalan = DeliveryChalan::orderBy('dc_number', 'desc')->first();
+        // $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
+
             $dataOutput->lr_number = $request->lr_number;
             $dataOutput->image = $imageName;
             $dataOutput->remark = $request->remark;

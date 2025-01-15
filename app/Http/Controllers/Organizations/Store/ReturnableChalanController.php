@@ -270,6 +270,7 @@ class ReturnableChalanController extends Controller
     
         // Call service to fetch purchase order details
         $showData = $this->service->getPurchaseOrderDetails($show_data_id);
+       
         $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
         $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
         return view('organizations.store.returnable-chalan.show-returnable-chalan', compact('showData', 'getOrganizationData', 'getAllRulesAndRegulations'));
