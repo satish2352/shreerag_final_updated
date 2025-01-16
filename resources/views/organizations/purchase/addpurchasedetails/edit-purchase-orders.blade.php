@@ -26,6 +26,23 @@
             /* Adjust font size if needed */
             /* Add any other styling as per your design */
         }
+
+        .reverse-label {
+  display: flex;
+  flex-direction: row-reverse; /* Reverse the order of elements */
+  flex-wrap: wrap-reverse; /* Allow elements to wrap onto the next line */
+  align-items: center; /* Align items vertically if needed */
+  
+}
+
+.reverse-label span {
+  order: 2; /* Place span after the label content */
+}
+
+.reverse-label label {
+  order: 1; /* Ensure label content appears before span */
+  width: -webkit-fill-available;
+}
     </style>
 
     <div class="container-fluid">
@@ -247,7 +264,7 @@
                                                                             class="form-control"
                                                                             value="{{ $editDataNew->purchase_order_details_id }}"
                                                                             placeholder="">
-                                                                        <td>
+                                                                        <td class="reverse-label">
                                                                             <select class="form-control part_no_id mb-2 select2" name="part_no_id_{{ $key }}" id="part_no_id">
                                                                                 <option value="" default>Select Description</option>
                                                                                 @foreach ($dataOutputPartItem as $data)
@@ -322,7 +339,7 @@
                                                                                 name="rate_{{ $key }}"
                                                                                 value="{{ $editDataNew->rate }}"
                                                                                 placeholder="Enter Rate"
-                                                                                class="form-control rate" />
+                                                                                class="form-control rate" style="min-width:100px" />
                                                                         </td>
                                                                         <td>
                                                                             <select class="form-control discount" name="discount_{{ $key }}" id="discount_{{ $key }}" style="min-width:100px">
@@ -386,7 +403,7 @@
                                                                                 name="amount_{{ $key }}"
                                                                                 value="{{ $editDataNew->amount }}"
                                                                                 placeholder="Enter Amount"
-                                                                                class="form-control amount" />
+                                                                                class="form-control amount" style="width:100px" />
                                                                         </td>
 
                                                                         <td>
@@ -595,7 +612,7 @@
                     '][design_count]" class="form-control" value="' + i +
                     '" placeholder=""> <input type="hidden" name="addmore[' + i +
                     '][purchase_id]" class="form-control" value="' + i + '" placeholder="">' +
-                    '<td>' +
+                    '<td class="reverse-label">' +
             '<select class="form-control part_no_id mb-2 select2" name="addmore[' + i + '][part_no_id]" id="" required>' +
                 '<option value="" default>Select Description</option>' +
                 '@foreach ($dataOutputPartItem as $data)' +
@@ -623,7 +640,7 @@
                     ' <td><select class="form-control discount" name="addmore[' + i +'][discount] " ><option value="0" {{ $editDataNew->discount == 0 ? 'selected' : '' }}>0 %</option><option value="1" {{ $editDataNew->discount == 1 ? 'selected' : '' }}>1 %</option><option value="2" {{ $editDataNew->discount == 2 ? 'selected' : '' }}>2 %</option><option value="3" {{ $editDataNew->discount == 3 ? 'selected' : '' }}>3 %</option><option value="4" {{ $editDataNew->discount == 4 ? 'selected' : '' }}>4 %</option><option value="5" {{ $editDataNew->discount == 5 ? 'selected' : '' }}>5 %</option><option value="6" {{ $editDataNew->discount == 6 ? 'selected' : '' }}>6 %</option><option value="7" {{ $editDataNew->discount == 7 ? 'selected' : '' }}>7 %</option><option value="8" {{ $editDataNew->discount == 8 ? 'selected' : '' }}>8 %</option><option value="9" {{ $editDataNew->discount == 9 ? 'selected' : '' }}>9 %</option><option value="10" {{ $editDataNew->discount == 10 ? 'selected' : '' }}>10 %</option><option value="11" {{ $editDataNew->discount == 11 ? 'selected' : '' }}>11 %</option><option value="12" {{ $editDataNew->discount == 12 ? 'selected' : '' }}>12 %</option><option value="13" {{ $editDataNew->discount == 13 ? 'selected' : '' }}>13 %</option><option value="14" {{ $editDataNew->discount == 14 ? 'selected' : '' }}>14 %</option><option value="15" {{ $editDataNew->discount == 15 ? 'selected' : '' }}>15 %</option><option value="16" {{ $editDataNew->discount == 16 ? 'selected' : '' }}>16 %</option><option value="17" {{ $editDataNew->discount == 17 ? 'selected' : '' }}>17 %</option><option value="18" {{ $editDataNew->discount == 18 ? 'selected' : '' }}>18 %</option><option value="19" {{ $editDataNew->discount == 19 ? 'selected' : '' }}>19 %</option><option value="20" {{ $editDataNew->discount == 20 ? 'selected' : '' }}>20 %</option><option value="21" {{ $editDataNew->discount == 21 ? 'selected' : '' }}>21 %</option><option value="22" {{ $editDataNew->discount == 22 ? 'selected' : '' }}>22 %</option><option value="23" {{ $editDataNew->discount == 23 ? 'selected' : '' }}>23 %</option><option value="24" {{ $editDataNew->discount == 24 ? 'selected' : '' }}>24 %</option><option value="25" {{ $editDataNew->discount == 25 ? 'selected' : '' }}>25 %</option><option value="26" {{ $editDataNew->discount == 26 ? 'selected' : '' }}>26 %</option><option value="27" {{ $editDataNew->discount == 27 ? 'selected' : '' }}>27 %</option><option value="28" {{ $editDataNew->discount == 28 ? 'selected' : '' }}>28 %</option><option value="29" {{ $editDataNew->discount == 29 ? 'selected' : '' }}>29 %</option><option value="30" {{ $editDataNew->discount == 30 ? 'selected' : '' }}>30 %</option><option value="31" {{ $editDataNew->discount == 31 ? 'selected' : '' }}>31 %</option><option value="32" {{ $editDataNew->discount == 32 ? 'selected' : '' }}>32 %</option><option value="33" {{ $editDataNew->discount == 33 ? 'selected' : '' }}>33 %</option><option value="34" {{ $editDataNew->discount == 34 ? 'selected' : '' }}>34 %</option><option value="35" {{ $editDataNew->discount == 35 ? 'selected' : '' }}>35 %</option><option value="36" {{ $editDataNew->discount == 36 ? 'selected' : '' }}>36 %</option><option value="37" {{ $editDataNew->discount == 37 ? 'selected' : '' }}>37 %</option><option value="38" {{ $editDataNew->discount == 38 ? 'selected' : '' }}>38 %</option><option value="39" {{ $editDataNew->discount == 39 ? 'selected' : '' }}>39 %</option><option value="40" {{ $editDataNew->discount == 40 ? 'selected' : '' }}>40 %</option><option value="41" {{ $editDataNew->discount == 41 ? 'selected' : '' }}>41 %</option><option value="42" {{ $editDataNew->discount == 42 ? 'selected' : '' }}>42 %</option><option value="43" {{ $editDataNew->discount == 43 ? 'selected' : '' }}>43 %</option><option value="44" {{ $editDataNew->discount == 44 ? 'selected' : '' }}>44 %</option><option value="45" {{ $editDataNew->discount == 45 ? 'selected' : '' }}>45 %</option><option value="46" {{ $editDataNew->discount == 46 ? 'selected' : '' }}>46 %</option><option value="47" {{ $editDataNew->discount == 47 ? 'selected' : '' }}>47 %</option><option value="48" {{ $editDataNew->discount == 48 ? 'selected' : '' }}>48 %</option><option value="49" {{ $editDataNew->discount == 49 ? 'selected' : '' }}>49 %</option><option value="50" {{ $editDataNew->discount == 50 ? 'selected' : '' }}>50 %</option></select></td>'
                       +
                     '<td><input type="text" class="form-control amount" name="addmore[' + i +
-                    '][amount]" placeholder=" Amount" readonly  required /></td>' +
+                    '][amount]" placeholder=" Amount" readonly  required  style="width:100px"/></td>' +
                     '<td><a class="remove-tr delete-btn btn btn-danger m-1" title="Delete Tender"><i class="fas fa-archive" style="color: #fff;"></i></a></td>' +
                     '</tr>'
                 );

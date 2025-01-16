@@ -39,12 +39,23 @@
             border-radius: 0px !important;
         }
         /* Add this CSS to ensure error message visibility */
-.error {
-    display: block;
-    margin-top: 5px; /* Adjust space between the input field and the error message */
-    font-size: 12px;  /* Optional, adjust the font size */
-    color: red;       /* Optional, set the color of the error message */
+
+.reverse-label {
+  display: flex;
+  flex-direction: row-reverse; /* Reverse the order of elements */
+  flex-wrap: wrap-reverse; /* Allow elements to wrap onto the next line */
+  align-items: center; /* Align items vertically if needed */
 }
+
+.reverse-label span {
+  order: 2; /* Place span after the label content */
+}
+
+.reverse-label label {
+  order: 1; /* Ensure label content appears before span */
+}
+
+
 
     </style>
     <div class="data-table-area mg-tb-15">
@@ -222,7 +233,7 @@
 
                                                         </td> --}}
 
-                                                        <td>
+                                                        <td class="reverse-label">
                                                             <select
                                                                 class="form-control mb-2 part_no_id select2"name="addmore[0][part_no_id]"
                                                                 id="" style="min-width:100px">
@@ -236,11 +247,11 @@
                                                         </td>
                                                         <td>
                                                             <input class="form-control hsn_name" name="addmore[0][hsn_id]"
-                                                                type="text" style="min-width:100px" disabled>
+                                                                type="text" style="min-width:80px" disabled>
 
                                                             <input type="hidden" class="form-control hsn_id"
                                                                 name="addmore[0][hsn_id]" type="text"
-                                                                style="min-width:100px">
+                                                                style="min-width:80px">
                                                             {{-- <select class="form-control mb-2" name="addmore[0][hsn_id]"
                                                                 id="" style="min-width:100px">
                                                                 <option value="" default>Select HSN</option>
@@ -254,7 +265,7 @@
                                                         <td>
                                                             <input class="form-control description"
                                                                 name="addmore[0][description]" type="text"
-                                                                style="min-width:100px">
+                                                                style="min-width:80px">
                                                         </td>
                                                         {{-- <td>
                                         <input class="form-control due-date" placeholder="YYYY-MM-DD" name="addmore[0][due_date]" type="date"
@@ -270,7 +281,7 @@
                                     </td> --}}
                                                         <td>
                                                             <select class="form-control mb-2 unit" name="addmore[0][unit]"
-                                                                id="" style="min-width:100px">
+                                                                id="" style="min-width:80px">
                                                                 <option value="" default>Select Unit</option>
                                                                 @foreach ($dataOutputUnitMaster as $data)
                                                                     <option value="{{ $data['id'] }}">
@@ -285,7 +296,7 @@
                                                         </td>
                                                         <td>
                                                             <select class="form-control discount"
-                                                                name="addmore[0][discount]" id="discount">
+                                                                name="addmore[0][discount]" id="discount" style="min-width:80px">
                                                                 <option value="0">0 %</option>
                                                                 <option value="1">1 %</option>
                                                                 <option value="2">2 %</option>
@@ -459,30 +470,16 @@
                                     },
                                 },
                                 errorPlacement: function(error, element) {
-    if (element.hasClass("part_no_id")) {
-        // Place the error message below the select field in the same td
-        error.insertAfter(element.closest('td').find('.select2')); 
-        error.css('color', 'red'); // Make the error message red
-    } else if (element.hasClass("discount") || element.hasClass("quantity") || element.hasClass("unit") || element.hasClass("rate") || element.hasClass("total_amount")) {
-        error.insertAfter(element.closest('td')); // Place after td for other fields
-        error.css('color', 'red');
-    } else {
-        error.insertAfter(element); // Default placement
-        error.css('color', 'red');
-    }
-}
-
-                                // errorPlacement: function(error, element) {
-                                //     if (element.hasClass("part-no") ||
-                                //         element.hasClass("discount") ||
-                                //         element.hasClass("quantity") || element.hasClass("unit") || element.hasClass(
-                                //             "rate") ||
-                                //         element.hasClass("total_amount")) {
-                                //         error.insertAfter(element.closest('td'));
-                                //     } else {
-                                //         error.insertAfter(element);
-                                //     }
-                                // }
+                                    if (element.hasClass("part_no_id") ||
+                                        element.hasClass("discount") ||
+                                        element.hasClass("quantity") || element.hasClass("unit") || element.hasClass(
+                                            "rate") ||
+                                        element.hasClass("total_amount")) {
+                                        error.insertAfter(element.closest('td'));
+                                    } else {
+                                        error.insertAfter(element);
+                                    }
+                                }
                             });
 
                             // Remove validation message when a valid option is selected
@@ -579,7 +576,7 @@
                     <td>
                 <input type="text" name="id" class="form-control" style="min-width:50px" readonly value="${i + 1}"> <!-- This will start numbering from 2 -->
             </td>
-                      <td>
+                      <td class="reverse-label">
                     <select class="form-control part_no_id select2 mb-2" name="addmore[${i}][part_no_id]" id="" required>
                         <option value="" default>Select Description</option>
                         @foreach ($dataOutputPartItem as $data)
@@ -588,19 +585,19 @@
                     </select>
                 </td>
                       <td>
-                        <input class="form-control hsn_name"  type="text" style="min-width:150px" disabled>
-                             <input type="hidden" class="form-control hsn_id" name="addmore[${i}][hsn_id]" type="text" style="min-width:150px">
+                        <input class="form-control hsn_name"  type="text" style="min-width:80px" disabled>
+                             <input type="hidden" class="form-control hsn_id" name="addmore[${i}][hsn_id]" type="text" style="min-width:80px">
                         </td>
                     <td>
-                        <input class="form-control description" name="addmore[${i}][description]" type="text" style="min-width:150px">
+                        <input class="form-control description" name="addmore[${i}][description]" type="text" style="min-width:80px">
                     </td>
                     
                     <td>
-                        <input class="form-control quantity" name="addmore[${i}][quantity]" style="width:70px" type="text" required>
+                        <input class="form-control quantity" name="addmore[${i}][quantity]" style="width:80px" type="text" required>
                     </td>
                   
                    <td>
-                             <select class="form-control mb-2 unit" name="addmore[${i}][unit]" required>
+                             <select class="form-control mb-2 unit" name="addmore[${i}][unit]" required style="width:80px">
                                 <option value="" default>Select Unit</option>
                                 @foreach ($dataOutputUnitMaster as $data)
                                     <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
