@@ -102,7 +102,7 @@
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
-{{--                                                    
+                                                   
                                                 <td>
                                                     <div style="display: flex; align-items: center;">
                                                            
@@ -111,19 +111,18 @@
                                                                 title="View PO" class="pd-setting-ed">Check PO Details</button></a>
                                                         
                                                     </div>
-                                                    </td> --}}
+                                                    </td>
 
-                                                    <td>
+                                                    {{-- <td>
                                                         <div style="display: flex; align-items: center;">
                                                                
                                                                 <a href="{{ route('check-details-of-po-before-send-vendor', $data->purchase_orders_id) }}"
-                                                                {{-- {{ route('list-po-details', [base64_encode($data->id), base64_encode($data->purchase_orders_id)]) }}" --}}
                                                                  >
                                                                     <button data-toggle="tooltip"
                                                                     title="View PO" class="pd-setting-ed">Check PO Details</button></a>
                                                             
                                                         </div>
-                                                        </td>
+                                                        </td> --}}
                                                 <td> 
                                                     <a class="btn btn-sm btn-primary login-submit-cs" type="button"
                                                     href="{{route('add-gatepass-with-po', base64_encode($data->purchase_orders_id))}}"
