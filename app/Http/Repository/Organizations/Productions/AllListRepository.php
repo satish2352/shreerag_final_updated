@@ -173,7 +173,7 @@ public function getAllNewRequirementBusinessWise($business_id) {
               'business_application_processes.production_status_id',
               'business_application_processes.business_status_id',
               'business_application_processes.design_status_id',
-              'production.updated_at',
+              'production.updated_at'
           )->orderBy('production.updated_at', 'desc')
           ->get();
 
@@ -249,7 +249,7 @@ public function getAllNewRequirementBusinessWise($business_id) {
             ->where('businesses.is_active',true)
             ->groupBy([
               'businesses.id', 
-              'businesses_details.product_name',
+              // 'businesses_details.product_name',
               'businesses.customer_po_number', 
               'businesses.remarks', 
               'businesses.is_active', 
@@ -258,7 +258,7 @@ public function getAllNewRequirementBusinessWise($business_id) {
           ])
           ->select(
               'businesses.id',
-              'businesses_details.product_name',
+              // 'businesses_details.product_name',
               'businesses.customer_po_number',
               'businesses.remarks',
               'businesses.is_active',

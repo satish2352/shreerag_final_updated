@@ -38,6 +38,14 @@
             border: 1px solid #ccc !important;
             border-radius: 0px !important;
         }
+        /* Add this CSS to ensure error message visibility */
+.error {
+    display: block;
+    margin-top: 5px; /* Adjust space between the input field and the error message */
+    font-size: 12px;  /* Optional, adjust the font size */
+    color: red;       /* Optional, set the color of the error message */
+}
+
     </style>
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
@@ -65,7 +73,7 @@
                                             {{-- <select class="form-control"  name="vendor_id" id="vendor_id">
                           <option>Select</option> --}}
 
-                                            <select class="form-control mb-2" name="vendor_id" id="vendor_id">
+                                            <select class="form-control mb-2 select2" name="vendor_id" id="vendor_id">
                                                 <option value="" default>Vendor Company Name</option>
 
                                                 @foreach ($dataOutputVendor as $data)
@@ -216,7 +224,7 @@
 
                                                         <td>
                                                             <select
-                                                                class="form-control mb-2 part-no select2"name="addmore[0][part_no_id]"
+                                                                class="form-control mb-2 part_no_id select2"name="addmore[0][part_no_id]"
                                                                 id="" style="min-width:100px">
                                                                 <option value="" default>Select Description</option>
                                                                 @foreach ($dataOutputPartItem as $data)
@@ -385,13 +393,9 @@
                             </form>
                         </div>
                     </div>
-
                     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
                     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
                     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
-
-
-                    
                     <script>
                         var jQuery321 = $.noConflict(true);
                     </script>
@@ -455,17 +459,40 @@
                                     },
                                 },
                                 errorPlacement: function(error, element) {
-                                    if (element.hasClass("part-no") ||
-                                        element.hasClass("discount") ||
-                                        element.hasClass("quantity") || element.hasClass("unit") || element.hasClass(
-                                            "rate") ||
-                                        element.hasClass("total_amount")) {
-                                        error.insertAfter(element.closest('td'));
-                                    } else {
-                                        error.insertAfter(element);
-                                    }
-                                }
+    if (element.hasClass("part_no_id")) {
+        // Place the error message below the select field in the same td
+        error.insertAfter(element.closest('td').find('.select2')); 
+        error.css('color', 'red'); // Make the error message red
+    } else if (element.hasClass("discount") || element.hasClass("quantity") || element.hasClass("unit") || element.hasClass("rate") || element.hasClass("total_amount")) {
+        error.insertAfter(element.closest('td')); // Place after td for other fields
+        error.css('color', 'red');
+    } else {
+        error.insertAfter(element); // Default placement
+        error.css('color', 'red');
+    }
+}
+
+                                // errorPlacement: function(error, element) {
+                                //     if (element.hasClass("part-no") ||
+                                //         element.hasClass("discount") ||
+                                //         element.hasClass("quantity") || element.hasClass("unit") || element.hasClass(
+                                //             "rate") ||
+                                //         element.hasClass("total_amount")) {
+                                //         error.insertAfter(element.closest('td'));
+                                //     } else {
+                                //         error.insertAfter(element);
+                                //     }
+                                // }
                             });
+
+                            // Remove validation message when a valid option is selected
+        $(document).on('change', '.part_no_id', function () {
+            var currentSelect = $(this); // Get current select field
+            if (currentSelect.val()) {
+                // Trigger validation check to remove the error
+                currentSelect.valid();
+            }
+        });
                             // Custom validation method for minimum date
                             $.validator.addMethod("minDate", function(value, element) {
                                 var today = new Date();
@@ -474,7 +501,7 @@
                             }, "The date must be today or later.");
                             // Function to initialize validation for dynamically added fields
                             function initializeValidation(context) {
-                                $(context).find('.part-no').each(function() {
+                                $(context).find('.part_no_id').each(function() {
                                     $(this).rules("add", {
                                         required: true,
                                         messages: {
@@ -550,16 +577,16 @@
                                 var newRow = `
                 <tr>
                     <td>
-                        <input type="text" name="id" class="form-control" style="min-width:50px" readonly value="${i}">
-                    </td>
-                    <td>
-        <select class="form-control part-no select2 mb-2" name="addmore[${i}][part_no_id]" id="">
-            <option value="" default>Select Description</option>
-            @foreach ($dataOutputPartItem as $data)
-                <option value="{{ $data['id'] }}">{{ $data['description'] }}</option>
-            @endforeach
-        </select>
-    </td>
+                <input type="text" name="id" class="form-control" style="min-width:50px" readonly value="${i + 1}"> <!-- This will start numbering from 2 -->
+            </td>
+                      <td>
+                    <select class="form-control part_no_id select2 mb-2" name="addmore[${i}][part_no_id]" id="" required>
+                        <option value="" default>Select Description</option>
+                        @foreach ($dataOutputPartItem as $data)
+                            <option value="{{ $data['id'] }}">{{ $data['description'] }}</option>
+                        @endforeach
+                    </select>
+                </td>
                       <td>
                         <input class="form-control hsn_name"  type="text" style="min-width:150px" disabled>
                              <input type="hidden" class="form-control hsn_id" name="addmore[${i}][hsn_id]" type="text" style="min-width:150px">
@@ -569,11 +596,11 @@
                     </td>
                     
                     <td>
-                        <input class="form-control quantity" name="addmore[${i}][quantity]" style="width:70px" type="text">
+                        <input class="form-control quantity" name="addmore[${i}][quantity]" style="width:70px" type="text" required>
                     </td>
                   
                    <td>
-                             <select class="form-control mb-2 unit" name="addmore[${i}][unit]">
+                             <select class="form-control mb-2 unit" name="addmore[${i}][unit]" required>
                                 <option value="" default>Select Unit</option>
                                 @foreach ($dataOutputUnitMaster as $data)
                                     <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
@@ -583,7 +610,7 @@
                     
 
                     <td>
-                        <input class="form-control rate" name="addmore[${i}][rate]" style="width:80px" type="text">
+                        <input class="form-control rate" name="addmore[${i}][rate]" style="width:80px" type="text" required>
                     </td>
                      <td>
                                        <select class="form-control discount" name="addmore[${i}][discount]">
@@ -641,7 +668,7 @@
                                               </select>
                                     </td>
                     <td>
-                        <input class="form-control total_amount" name="addmore[${i}][amount]" readonly style="width:120px" type="text">
+                        <input class="form-control total_amount" name="addmore[${i}][amount]" readonly style="width:120px" type="text" required>
                     </td>
                     <td>
                         <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete" data-repeater-delete>
@@ -651,7 +678,7 @@
                 </tr>
             `;
                                 $("#purchase_order_table tbody").append(newRow);
-                                // $('.select2').select2();
+                                $('.select2').select2();
                                 // Reinitialize validation for dynamically added fields
                                 validator.resetForm(); // Reset validation state
                                 initializeValidation($("#purchase_order_table")); // Initialize for all rows
@@ -848,12 +875,12 @@
 
 $(document).ready(function() {
 
-// var jQuery321 = $.noConflict(true);
+var jQuery321 = $.noConflict(true);
 // Initialize Select2
 // $('.select2').select2();
 
 // Bind the select2:select event
-$(document).on('change', '.part-no', function(e) {
+$(document).on('change', '.part_no_id', function(e) {
     var partNoId = $(this).val(); // Get the selected part_no_id
     var currentRow = $(this).closest('tr'); // Get the current row
 
