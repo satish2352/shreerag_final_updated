@@ -67,9 +67,14 @@ class GatepassController extends Controller
                     $join->on('tbl_unit.id', '=', 'purchase_order_details.unit')
                          ->orOn('tbl_unit.id', '=', 'purchase_order_details.unit');
                 })
+                ->join('tbl_hsn', function ($join) {
+                    $join->on('tbl_hsn.id', '=', 'purchase_order_details.hsn_id')
+                         ->orOn('tbl_hsn.id', '=', 'purchase_order_details.hsn_id');
+                })
                 ->leftJoin('gatepass', function($join) {
                     $join->on('purchase_orders.business_details_id', '=', 'gatepass.business_details_id');
                   })
+                //   ->leftJoin('tbl_hsn as hsn', 'hsn.id', '=', 'pod1.hsn_id')
                  ->where('gatepass.id', $businessDetailsId)
                 ->where('purchase_orders.purchase_orders_id', $purchaseOrderId)
                 ->select(
@@ -102,6 +107,8 @@ class GatepassController extends Controller
                     'tbl_part_item.id',            // Fetch part number from the tbl_part_item table
                     'tbl_part_item.description as part_name' ,
                     'tbl_unit.name as unit_name' ,
+                     'tbl_hsn.name as hsn_name',
+                     'purchase_orders.note'
                    
                 )->get();
             $purchaseOrder = $data->first();
