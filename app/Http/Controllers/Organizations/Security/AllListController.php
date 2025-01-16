@@ -22,6 +22,9 @@ class AllListController extends Controller
     
     public function getAllListMaterialRecieved(Request $request){
         try {
+            $array_to_be_check_security = [config('constants.SECURIY_DEPARTMENT.LIST_PO_TO_BE_CHECKED')];
+            $array_to_be_purchase = [ config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')];
+
             $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
               })
@@ -36,6 +39,8 @@ class AllListController extends Controller
               ->leftJoin('businesses_details', function($join) {
                 $join->on('production.business_details_id', '=', 'businesses_details.id');
             })
+            ->whereIn('purchase_orders.purchase_status_from_owner',$array_to_be_check_security)
+            ->whereIn('purchase_orders.purchase_status_from_purchase',$array_to_be_purchase)
               ->where('purchase_orders.purchase_orders_id', 'like', '%' . $request->purchase_orders_id . '%')
               ->where('businesses.is_active',true)
               ->select(
