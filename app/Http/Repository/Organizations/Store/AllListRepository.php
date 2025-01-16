@@ -329,48 +329,88 @@ public function getAllListDesignRecievedForMaterial(){
       
       $array_to_be_check = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
       $array_not_to_be_check = [NULL];
-        
-        $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
-          $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-        })
-        ->leftJoin('designs', function($join) {
-          $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-        })
-        ->leftJoin('businesses', function($join) {
-          $join->on('business_application_processes.business_id', '=', 'businesses.id');
-        })
-        ->leftJoin('design_revision_for_prod', function($join) {
-          $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-        })
-        ->leftJoin('businesses_details', function($join) {
-          $join->on('production.business_details_id', '=', 'businesses_details.id');
-      })
-      ->leftJoin('requisition', function($join) {
+      $data_output = BusinessApplicationProcesses::leftJoin('production', function($join) {
+        $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+    })
+    ->leftJoin('designs', function($join) {
+        $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+    })
+    ->leftJoin('businesses', function($join) {
+        $join->on('business_application_processes.business_id', '=', 'businesses.id');
+    })
+    ->leftJoin('design_revision_for_prod', function($join) {
+        $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+    })
+    ->leftJoin('businesses_details', function($join) {
+        $join->on('production.business_details_id', '=', 'businesses_details.id');
+    })
+    ->leftJoin('requisition', function($join) {
         $join->on('business_application_processes.business_details_id', '=', 'requisition.business_details_id');
     })
-        ->whereIn('business_application_processes.store_status_id',$array_to_be_check)
-        // ->whereIn('purchase_orders.grn_no',$array_not_to_be_check)
-        ->where('businesses.is_active',true)
-        ->select(
-            'businesses.id',
-            'businesses.customer_po_number',
-            'businesses_details.product_name',
-            'businesses.title',
-            'businesses_details.description',
-            'businesses_details.quantity',
-            'businesses.remarks',
-            'businesses.is_active',
-            'production.business_id',
-            'production.id as productionId',
-            'design_revision_for_prod.reject_reason_prod',
-            'design_revision_for_prod.id as design_revision_for_prod_id',
-            'designs.bom_image',
-            'designs.design_image',
-            'requisition.bom_file',
-            'businesses.updated_at'
+    ->groupBy('businesses_details.id')
+    ->whereIn('business_application_processes.store_status_id', $array_to_be_check)
+    ->where('businesses.is_active', true)
+    ->selectRaw("
+        MAX(businesses.id) as business_id,
+        MAX(businesses.customer_po_number) as customer_po_number,
+        businesses_details.product_name,
+        MAX(businesses.title) as title,
+        businesses_details.description,
+        SUM(businesses_details.quantity) as quantity,
+        MAX(businesses.remarks) as remarks,
+        MAX(production.business_id) as production_business_id,
+        MAX(production.id) as productionId,
+        MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod,
+        MAX(design_revision_for_prod.id) as design_revision_for_prod_id,
+        MAX(designs.bom_image) as bom_image,
+        MAX(designs.design_image) as design_image,
+        MAX(requisition.bom_file) as bom_file,
+        MAX(businesses.updated_at) as updated_at
+    ")
+    ->orderBy('updated_at', 'desc')
+    ->get();
 
-        )->orderBy('businesses.updated_at', 'desc')
-        ->get();
+    //     $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
+    //       $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+    //     })
+    //     ->leftJoin('designs', function($join) {
+    //       $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+    //     })
+    //     ->leftJoin('businesses', function($join) {
+    //       $join->on('business_application_processes.business_id', '=', 'businesses.id');
+    //     })
+    //     ->leftJoin('design_revision_for_prod', function($join) {
+    //       $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+    //     })
+    //     ->leftJoin('businesses_details', function($join) {
+    //       $join->on('production.business_details_id', '=', 'businesses_details.id');
+    //   })
+    //   ->leftJoin('requisition', function($join) {
+    //     $join->on('business_application_processes.business_details_id', '=', 'requisition.business_details_id');
+    // })
+    //     ->whereIn('business_application_processes.store_status_id',$array_to_be_check)
+    //     // ->whereIn('purchase_orders.grn_no',$array_not_to_be_check)
+    //     ->where('businesses.is_active',true)
+    //     ->select(
+    //         'businesses.id',
+    //         'businesses.customer_po_number',
+    //         'businesses_details.product_name',
+    //         'businesses.title',
+    //         'businesses_details.description',
+    //         'businesses_details.quantity',
+    //         'businesses.remarks',
+    //         'businesses.is_active',
+    //         'production.business_id',
+    //         'production.id as productionId',
+    //         'design_revision_for_prod.reject_reason_prod',
+    //         'design_revision_for_prod.id as design_revision_for_prod_id',
+    //         'designs.bom_image',
+    //         'designs.design_image',
+    //         'requisition.bom_file',
+    //         'businesses.updated_at'
+
+    //     )->orderBy('businesses.updated_at', 'desc')
+    //     ->get();
       return $data_output;
     } catch (\Exception $e) {
         return $e;
