@@ -344,12 +344,12 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="image">Upload Signature: <span
                                                                 class="text-danger">*</span></label>
                                                         <input type="file" class="form-control"
                                                             accept="image*" id="image" name="image">
-                                                    </div>
+                                                    </div> --}}
                                                     </div>
                                                 </div>
                                                 <div class="login-btn-inner">
@@ -480,10 +480,10 @@
                     po_date: {
                         required: true,
                     },
-                    image: {
-                            required: true,
-                            extension: "jpg|jpeg|png"
-                        },
+                    // image: {
+                    //         required: true,
+                    //         extension: "jpg|jpeg|png"
+                    //     },
                     // dc_date: {
                     //     required: true,
                     // },
@@ -562,10 +562,10 @@
                         required: "Please select PO date.",
                         date: "Please select a valid date."
                     },
-                    image: {
-                            required: "Please upload an signature",
-                            extension: "Only image files (jpg, jpeg, png) are allowed"
-                        },
+                    // image: {
+                    //         required: "Please upload an signature",
+                    //         extension: "Only image files (jpg, jpeg, png) are allowed"
+                    //     },
                     // dc_date: {
                     //     required: "Please select dc date.",
                     //     date: "Please select a valid date."
@@ -846,10 +846,10 @@
                         po_date: {
                             required: true,
                         },
-                        image: {
-                            required: true,
-                            extension: "jpg|jpeg|png"
-                        },
+                        // image: {
+                        //     required: true,
+                        //     extension: "jpg|jpeg|png"
+                        // },
                         // dc_date: {
                         //     required: true,
                         // },
@@ -925,10 +925,10 @@
                             required: "Please select PO date.",
                             date: "Please select a valid date."
                         },
-                        image: {
-                            required: "Please upload an signature",
-                            extension: "Only image files (jpg, jpeg, png) are allowed"
-                        },
+                        // image: {
+                        //     required: "Please upload an signature",
+                        //     extension: "Only image files (jpg, jpeg, png) are allowed"
+                        // },
                         // dc_date: {
                         //     required: "Please select dc date.",
                         //     date: "Please select a valid date."

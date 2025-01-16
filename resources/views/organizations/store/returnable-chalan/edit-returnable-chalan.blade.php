@@ -416,13 +416,13 @@
 
                                                                         </div>
                                                            
-                                                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                                            {{-- <div class="col-lg-6 col-md-6 col-sm-6">
                                                                 <div class="form-group">
                                                                     <label for="image">Update Signature : <span class="text-danger">*</span></label>
                                                                     <input type="file" name="image" class="form-control mb-2"
                                                                         id="english_image" accept="image/*" placeholder="image">
                                                                     @if ($errors->has('image'))
-                                                                        <span class="red-text"><?php echo $errors->first('image', ':message'); ?></span>
+                                                                        <span class="red-text"><?php //echo $errors->first('image', ':message'); ?></span>
                                                                     @endif
                                                                 </div>
                                                                 <img id="english"
@@ -431,7 +431,7 @@
                                                                 <img id="english_imgPreview" src="#"
                                                                     alt="Vision Image"
                                                                     class="img-fluid img-thumbnail" width="150" style="display:none">
-                                                            </div>
+                                                            </div> --}}
                                                             @endif
                                                         @endforeach
                                                     </div>

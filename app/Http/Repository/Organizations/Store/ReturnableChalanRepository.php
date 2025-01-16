@@ -36,7 +36,7 @@ class ReturnableChalanRepository
             $dataOutput->tax_type = $request->tax_type;
             $dataOutput->vehicle_number = $request->vehicle_number;
             $dataOutput->po_date = $request->po_date;
-            $dataOutput->image = 'null';
+            // $dataOutput->image = 'null';
             $dataOutput->dc_date = now();
                  // Retrieve the last dc_number and increment it
         $lastChalan = ReturnableChalan::orderBy('dc_number', 'desc')->first();
@@ -52,10 +52,10 @@ class ReturnableChalanRepository
             // $dataOutput->customer_po_no = $request->customer_po_no;
             $dataOutput->save();
             $last_insert_id = $dataOutput->id;
-            $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
-            $finalOutput = ReturnableChalan::find($last_insert_id);
-            $finalOutput->image = $imageName;
-            $finalOutput->save();
+            // $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
+            // $finalOutput = ReturnableChalan::find($last_insert_id);
+            // $finalOutput->image = $imageName;
+            // $finalOutput->save();
 
             foreach ($request->addmore as $index => $item) {
                 $designDetails = new ReturnableChalanItemDetails();
@@ -73,7 +73,7 @@ class ReturnableChalanRepository
             }
            
             return [
-                'ImageName' => $imageName,
+                // 'ImageName' => $imageName,
                 'status' => 'success'
             ];
         } catch (\Exception $e) {
@@ -125,7 +125,7 @@ class ReturnableChalanRepository
                 'tbl_returnable_chalan.plant_id', 
                 'tbl_returnable_chalan.vehicle_number',
                 'tbl_returnable_chalan.remark',
-                'tbl_returnable_chalan.image',
+                // 'tbl_returnable_chalan.image',
                 'tbl_returnable_chalan.id',
                 'hsn.name as hsn_name')
                 ->where('tbl_returnable_chalan.id', $id)
@@ -165,7 +165,7 @@ class ReturnableChalanRepository
                     'tbl_tax.name as tax_number',
                     'tbl_returnable_chalan.vehicle_number',
                     'tbl_returnable_chalan.dc_number',
-                    'tbl_returnable_chalan.image',
+                    // 'tbl_returnable_chalan.image',
                     'tbl_returnable_chalan.dc_date',
                       'tbl_returnable_chalan.remark'
                 )
@@ -222,13 +222,13 @@ class ReturnableChalanRepository
                 ];
             }
        
-          $imageName = $dataOutputNew->image; 
+        //   $imageName = $dataOutputNew->image; 
 
-        if ($request->hasFile('image')) {
-            $imageName = $dataOutputNew->id . '_' . rand(100000, 999999) . '.' . $request->file('image')->getClientOriginalExtension();
-            $dataOutputNew->image = $imageName;  
-        }
-        $dataOutputNew->save();
+        // if ($request->hasFile('image')) {
+        //     $imageName = $dataOutputNew->id . '_' . rand(100000, 999999) . '.' . $request->file('image')->getClientOriginalExtension();
+        //     $dataOutputNew->image = $imageName;  
+        // }
+        // $dataOutputNew->save();
 
             for ($i = 0; $i <= $request->design_count; $i++) {
                 $designDetails = ReturnableChalanItemDetails::findOrFail($request->input("design_id_" . $i));
@@ -261,7 +261,7 @@ class ReturnableChalanRepository
         // $lastChalan = ReturnableChalan::orderBy('dc_number', 'desc')->first();
         // $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
             $dataOutput->remark = $request->remark;
-            $dataOutput->image = $imageName;
+            // $dataOutput->image = $imageName;
             if ($request->has('business_id')) {
                 $dataOutput->business_id = $request->business_id;
             }
@@ -298,7 +298,7 @@ class ReturnableChalanRepository
             $last_insert_id = $dataOutput->id;
 
             $return_data['last_insert_id'] = $last_insert_id;
-            $return_data['image'] = $imageName;
+            // $return_data['image'] = $imageName;
             return  $return_data;
     
             // Returning success message
@@ -319,9 +319,9 @@ class ReturnableChalanRepository
             try {
                 $deleteDataById = ReturnableChalan::find($id);
                 if ($deleteDataById) {
-                    if (file_exists_view(Config::get('DocumentConstant.RETURNABLE_CHALAN_ADD') . $deleteDataById->image)){
-                        removeImage(Config::get('DocumentConstant.RETURNABLE_CHALAN_ADD') . $deleteDataById->image);
-                    }
+                    // if (file_exists_view(Config::get('DocumentConstant.RETURNABLE_CHALAN_ADD') . $deleteDataById->image)){
+                    //     removeImage(Config::get('DocumentConstant.RETURNABLE_CHALAN_ADD') . $deleteDataById->image);
+                    // }
                     $deleteDataById->delete();
                     
                     return $deleteDataById;

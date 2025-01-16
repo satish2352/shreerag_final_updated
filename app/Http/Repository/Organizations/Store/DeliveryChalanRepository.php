@@ -34,7 +34,7 @@ class DeliveryChalanRepository
             $dataOutput->plant_id = $request->plant_id;
             $dataOutput->vehicle_number = $request->vehicle_number;
             $dataOutput->po_date = $request->po_date;
-            $dataOutput->image = 'null';
+            // $dataOutput->image = 'null';
            $dataOutput->dc_date = now();
 
         // Retrieve the last dc_number and increment it
@@ -53,10 +53,10 @@ class DeliveryChalanRepository
           
             $dataOutput->save();
             $last_insert_id = $dataOutput->id;
-            $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
-            $finalOutput = DeliveryChalan::find($last_insert_id);
-            $finalOutput->image = $imageName;
-            $finalOutput->save();
+            // $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
+            // $finalOutput = DeliveryChalan::find($last_insert_id);
+            // $finalOutput->image = $imageName;
+            // $finalOutput->save();
 
             foreach ($request->addmore as $index => $item) {
                 $designDetails = new DeliveryChalanItemDetails();
@@ -73,7 +73,7 @@ class DeliveryChalanRepository
                 $designDetails->save();
             }
             return [
-                'ImageName' => $imageName,
+                // 'ImageName' => $imageName,
                 'status' => 'success'
             ];
         } catch (\Exception $e) {
@@ -124,7 +124,7 @@ class DeliveryChalanRepository
                 'tbl_delivery_chalan.plant_id', 
                 'tbl_delivery_chalan.vehicle_number',
                 'tbl_delivery_chalan.remark',
-                'tbl_delivery_chalan.image',
+                // 'tbl_delivery_chalan.image',
                 'tbl_delivery_chalan.id',
                 'hsn.name as hsn_name')
                 ->where('tbl_delivery_chalan.id', $id)
@@ -169,7 +169,7 @@ class DeliveryChalanRepository
                     'tbl_delivery_chalan.vehicle_number',
                     'tbl_delivery_chalan.remark',
                     'tbl_delivery_chalan.dc_number',
-                    'tbl_delivery_chalan.image',
+                    // 'tbl_delivery_chalan.image',
                     'tbl_delivery_chalan.dc_date',
                      'tbl_delivery_chalan.remark'
                 )
@@ -231,14 +231,14 @@ class DeliveryChalanRepository
                 ];
             }
        
-          $imageName = $dataOutputNew->image; 
+        //   $imageName = $dataOutputNew->image; 
 
-        if ($request->hasFile('image')) {
-            $imageName = $dataOutputNew->id . '_' . rand(100000, 999999) . '.' . $request->file('image')->getClientOriginalExtension();
-            $dataOutputNew->image = $imageName;  
-        }
+        // if ($request->hasFile('image')) {
+        //     $imageName = $dataOutputNew->id . '_' . rand(100000, 999999) . '.' . $request->file('image')->getClientOriginalExtension();
+        //     $dataOutputNew->image = $imageName;  
+        // }
 
-        $dataOutputNew->save();
+        // $dataOutputNew->save();
 
             for ($i = 0; $i <= $request->design_count; $i++) {
                 $designDetails = DeliveryChalanItemDetails::findOrFail($request->input("design_id_" . $i));
@@ -271,7 +271,7 @@ class DeliveryChalanRepository
         // $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
 
             $dataOutput->lr_number = $request->lr_number;
-            $dataOutput->image = $imageName;
+            // $dataOutput->image = $imageName;
             $dataOutput->remark = $request->remark;
             if ($request->has('business_id')) {
                 $dataOutput->business_id = $request->business_id;
@@ -312,7 +312,7 @@ class DeliveryChalanRepository
             $last_insert_id = $dataOutput->id;
 
             $return_data['last_insert_id'] = $last_insert_id;
-            $return_data['image'] = $imageName;
+            // $return_data['image'] = $imageName;
             // $return_data['image'] = $previousImage;
             return  $return_data;
     
@@ -334,9 +334,9 @@ class DeliveryChalanRepository
             try {
                 $deleteDataById = DeliveryChalan::find($id);
                 if ($deleteDataById) {
-                    if (file_exists_view(Config::get('DocumentConstant.DELIVERY_CHALAN_DELETE') . $deleteDataById->image)){
-                        removeImage(Config::get('DocumentConstant.DELIVERY_CHALAN_DELETE') . $deleteDataById->image);
-                    }
+                    // if (file_exists_view(Config::get('DocumentConstant.DELIVERY_CHALAN_DELETE') . $deleteDataById->image)){
+                    //     removeImage(Config::get('DocumentConstant.DELIVERY_CHALAN_DELETE') . $deleteDataById->image);
+                    // }
                     $deleteDataById->delete();
                     
                     return $deleteDataById;

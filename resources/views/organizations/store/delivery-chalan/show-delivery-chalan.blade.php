@@ -268,9 +268,9 @@
                                         <td class="no-border" colspan="3"><strong>Signature of Processor/Job
                                                 Worker</strong></td>
                                         <td class="no-border" style="padding-left:24px;" colspan="5">
-                                            <div class="signImage">
+                                            {{-- <div class="signImage">
                                                 <img style="max-width:70px; max-height:70px; margin:50px 0px 0px 20px;" src="{{ Config::get('DocumentConstant.DELIVERY_CHALAN_VIEW') . $showData['purchaseOrder']->image}}" alt="{{ strip_tags($showData['purchaseOrder']->image) }} Image" />
-                                            </div>
+                                            </div> --}}
                                             <div style="text-align: center; "> <strong>(Authorized Signatory)</strong></div>
                                         </td>
                                     </tr>

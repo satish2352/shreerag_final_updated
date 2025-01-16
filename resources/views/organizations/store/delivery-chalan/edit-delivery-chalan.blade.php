@@ -421,7 +421,7 @@
                                                                 <div class="form-group-inner">
                                                                     <div class="row">
                                                                         <div class="row">
-                                                                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                            {{-- <div class="col-lg-6 col-md-6 col-sm-6">
                                                                                 <div class="form-group">
                                                                                     <label for="image">Update Signature : <span class="text-danger">*</span></label>
                                                                                     <input type="file" name="image" class="form-control mb-2"
@@ -436,7 +436,7 @@
                                                                                 <img id="english_imgPreview" src="#"
                                                                                     alt="Vision Image"
                                                                                     class="img-fluid img-thumbnail" width="150" style="display:none">
-                                                                            </div>
+                                                                            </div> --}}
 
 
                                                                             <div
@@ -490,7 +490,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-    <script>
+    {{-- <script>
         $(document).ready(() => {
             $("#english_image").change(function() {
                 $('#english').css('display', 'none');
@@ -507,7 +507,7 @@
                 }
             });
         });
-    </script>
+    </script> --}}
    <script>
         $(document).ready(function() {
             var validator = $("#editDesignsForm").validate({
