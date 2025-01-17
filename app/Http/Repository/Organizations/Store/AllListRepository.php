@@ -105,18 +105,18 @@ public function getAllListDesignRecievedForMaterial(){
         $data_output = BusinessApplicationProcesses::leftJoin('production', function($join) {
             $join->on('business_application_processes.business_id', '=', 'production.business_id');
         })
-        ->leftJoin('designs', function($join) {
-            $join->on('business_application_processes.business_id', '=', 'designs.business_id');
-        })
+        // ->leftJoin('designs', function($join) {
+        //     $join->on('business_application_processes.business_id', '=', 'designs.business_id');
+        // })
         ->leftJoin('businesses', function($join) {
             $join->on('business_application_processes.business_id', '=', 'businesses.id');
         })
-        ->leftJoin('design_revision_for_prod', function($join) {
-            $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
-        })
-        ->leftJoin('purchase_orders', function($join) {
-            $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
-        })
+        // ->leftJoin('design_revision_for_prod', function($join) {
+        //     $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
+        // })
+        // ->leftJoin('purchase_orders', function($join) {
+        //     $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
+        // })
         ->where(function ($query) use ($array_to_be_check, $array_to_be_check_store, $array_to_be_check_store_after_quality, $array_to_be_check_production) {
             $query->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store)
                   ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check)
@@ -149,6 +149,7 @@ public function getAllListDesignRecievedForMaterial(){
         return $e;
     }
 }
+
 
   public function getAllListDesignRecievedForMaterialBusinessWise($business_id)
 {

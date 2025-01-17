@@ -782,7 +782,7 @@
                             class="nav-item {{ request()->is('list-po-sanction-and-need-to-do-payment-to-vendor') ? 'active' : '' }}">
                             <a href="{{ route('list-po-sanction-and-need-to-do-payment-to-vendor') }}">
                                 <i class="fa big-icon fa-file-signature icon-wrap"></i>
-                                <span class="mini-click-non">PO Pyament Need To Release</span>
+                                <span class="mini-click-non">PO Payment Needs to Be Released</span>
                             </a>
                         </li>
                         <li
