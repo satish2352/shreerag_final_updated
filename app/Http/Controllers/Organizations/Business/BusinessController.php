@@ -219,7 +219,23 @@ class BusinessController extends Controller
             return ['status' => 'error', 'msg' => $e->getMessage()];
         } 
     }
+    public function rejectedPurchaseOrder($purchase_order_id, $business_id)
+    {
+        try {
+            $delete = $this->service->rejectedPurchaseOrder($purchase_order_id,$business_id);
+            if ($delete) {
+                $status = 'success';
+                $msg ='Purchase order accepted.';
+            } else {
+                $status = 'success';
+                $msg ='Purchase order accepted.';
+            }  
 
+            return redirect('owner/list-rejected-purchase-orders-owner')->with(compact('msg', 'status'));
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        } 
+    }
     public function acceptPurchaseOrderPaymentRelease($purchase_order_id, $business_id)
     {
         try {

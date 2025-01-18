@@ -46,7 +46,165 @@ class GatepassController extends Controller
             return $e;
         }
     }
+    // public function getPurchaseDetails($id, $purchase_order_id)
+    // {
+    //     try {
+           
+    //         $businessDetailsId = base64_decode($id);
+    //         $purchaseOrderId = base64_decode($purchase_order_id);
+    //         $data = PurchaseOrdersModel::leftJoin('businesses_details', function($join) {
+    //             $join->on('purchase_orders.business_details_id', '=', 'businesses_details.id');
+    //           })
+    //           ->leftJoin('vendors', function($join) {
+    //             $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
+    //           })
+    //             ->join('purchase_order_details', 'purchase_order_details.purchase_id', '=', 'purchase_orders.id')
+    //             ->join('tbl_part_item', function ($join) {
+    //                 $join->on('tbl_part_item.id', '=', 'purchase_order_details.part_no_id')
+    //                      ->orOn('tbl_part_item.id', '=', 'purchase_order_details.part_no_id');
+    //             })
+    //             ->join('tbl_unit', function ($join) {
+    //                 $join->on('tbl_unit.id', '=', 'purchase_order_details.unit')
+    //                      ->orOn('tbl_unit.id', '=', 'purchase_order_details.unit');
+    //             })
+    //             ->join('tbl_hsn', function ($join) {
+    //                 $join->on('tbl_hsn.id', '=', 'purchase_order_details.hsn_id')
+    //                      ->orOn('tbl_hsn.id', '=', 'purchase_order_details.hsn_id');
+    //             })
+    //             ->leftJoin('gatepass', function($join) {
+    //                 $join->on('purchase_orders.business_details_id', '=', 'gatepass.business_details_id');
+    //               })
+    //             //   ->leftJoin('tbl_hsn as hsn', 'hsn.id', '=', 'pod1.hsn_id')
+    //              ->where('purchase_orders.id', $businessDetailsId)
+    //             ->where('purchase_orders.purchase_orders_id', $purchaseOrderId)
+    //             ->select(
+    //                 'purchase_orders.id as purchase_order_id',
+    //                 // 'purchase_orders.business_id',
+    //                 'purchase_orders.purchase_orders_id',
+    //                 'purchase_orders.requisition_id', 
+    //                 // 'purchase_orders.business_id', 
+    //                 'purchase_orders.business_details_id', 
+    //                 'purchase_orders.production_id', 
+    //                 'purchase_orders.po_date', 
+    //                 'purchase_orders.terms_condition', 
+    //                 'purchase_orders.transport_dispatch', 
+    //                 'purchase_orders.purchase_status_from_purchase',
+    //                 'purchase_orders.contact_person_name', 
+    //                 'purchase_orders.contact_person_number',
+    //                 'purchase_orders.image', 
+    //                 'purchase_orders.tax_type', 
+    //                 'purchase_orders.tax_id', 
+    //                 'purchase_orders.invoice_date', 
+    //                 'purchase_orders.payment_terms', 
+    //                 // 'purchase_orders.discount', 
+    //                 'vendors.vendor_name', 
+    //                 'vendors.vendor_company_name', 
+    //                 'vendors.vendor_email', 
+    //                 'vendors.vendor_address', 
+    //                 'vendors.contact_no', 
+    //                 'vendors.gst_no', 
+    //                 'vendors.quote_no', 
+    //                 'purchase_orders.is_active',
+    //                 'purchase_orders.created_at',
+    //                 'purchase_order_details.*',
+    //                 'tbl_part_item.id',            // Fetch part number from the tbl_part_item table
+    //                 'tbl_part_item.description as part_name' ,
+    //                 'tbl_unit.name as unit_name' ,
+    //                  'tbl_hsn.name as hsn_name',
+    //                  'purchase_orders.note'
+                   
+    //             )->get();
+    //         $purchaseOrder = $data->first();
+    //         $purchaseOrderDetails = $data;
+ 
+    //         $business_id = $purchaseOrder->business_id;
+    //         $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
+         
+    //         return view('organizations.security.gatepass.list-particular-purchase-order-details', compact(
+    //             'purchase_order_id',
+    //             'purchaseOrder',
+    //             'purchaseOrderDetails',
+    //             'business_id',
+    //             'getOrganizationData',
+    //             'businessDetailsId'
+    //         ));
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => $e->getMessage()], 500);
+    //     }
+    // }
     public function getPurchaseDetails($id, $purchase_order_id)
+{
+    try {
+        $businessDetailsId = base64_decode($id);
+        $purchaseOrderId = base64_decode($purchase_order_id);
+
+        $data = PurchaseOrdersModel::leftJoin('businesses_details', 'purchase_orders.business_details_id', '=', 'businesses_details.id')
+            ->leftJoin('vendors', 'purchase_orders.vendor_id', '=', 'vendors.id')
+            ->join('purchase_order_details', 'purchase_order_details.purchase_id', '=', 'purchase_orders.id')
+            ->join('tbl_part_item', 'tbl_part_item.id', '=', 'purchase_order_details.part_no_id')
+            ->join('tbl_unit', 'tbl_unit.id', '=', 'purchase_order_details.unit')
+            ->join('tbl_hsn', 'tbl_hsn.id', '=', 'purchase_order_details.hsn_id')
+            ->join('tbl_tax', 'tbl_tax.id', '=', 'purchase_orders.tax_id')
+            ->leftJoin('gatepass', 'purchase_orders.business_details_id', '=', 'gatepass.business_details_id')
+            ->where('purchase_orders.id', $businessDetailsId)
+            ->where('purchase_orders.purchase_orders_id', $purchaseOrderId)
+            ->select(
+                'purchase_orders.id as purchase_order_id',
+                'purchase_orders.purchase_orders_id',
+                'purchase_orders.requisition_id', 
+                'purchase_orders.business_details_id', 
+                'purchase_orders.production_id', 
+                'purchase_orders.po_date', 
+                'purchase_orders.terms_condition', 
+                'purchase_orders.transport_dispatch', 
+                'purchase_orders.purchase_status_from_purchase',
+                'purchase_orders.contact_person_name', 
+                'purchase_orders.contact_person_number',
+                'purchase_orders.image', 
+                'purchase_orders.tax_type', 
+                'purchase_orders.tax_id', 
+                'purchase_orders.invoice_date', 
+                'purchase_orders.payment_terms', 
+                'vendors.vendor_name', 
+                'vendors.vendor_company_name', 
+                'vendors.vendor_email', 
+                'vendors.vendor_address', 
+                'vendors.contact_no', 
+                'vendors.gst_no', 
+                'vendors.quote_no', 
+                'purchase_orders.is_active',
+                'purchase_orders.created_at',
+                'purchase_order_details.*',
+                'tbl_part_item.id', // Part number from tbl_part_item
+                'tbl_part_item.description as part_name',
+                'tbl_unit.name as unit_name',
+                'tbl_hsn.name as hsn_name',
+                'tbl_tax.name as tax_name',
+                'purchase_orders.note'
+            )
+            ->distinct() // Ensure unique rows
+            ->get();
+
+        $purchaseOrder = $data->first();
+        $purchaseOrderDetails = $data;
+
+        $business_id = $purchaseOrder->business_id;
+        $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
+
+        return view('organizations.security.gatepass.list-particular-purchase-order-details', compact(
+            'purchase_order_id',
+            'purchaseOrder',
+            'purchaseOrderDetails',
+            'business_id',
+            'getOrganizationData',
+            'businessDetailsId'
+        ));
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
+
+    public function getPurchaseDetailsAfterGatepass($id, $purchase_order_id)
     {
         try {
            
@@ -70,6 +228,10 @@ class GatepassController extends Controller
                 ->join('tbl_hsn', function ($join) {
                     $join->on('tbl_hsn.id', '=', 'purchase_order_details.hsn_id')
                          ->orOn('tbl_hsn.id', '=', 'purchase_order_details.hsn_id');
+                })
+                ->join('tbl_tax', function ($join) {
+                    $join->on('tbl_tax.id', '=', 'purchase_order_details.tax_id')
+                         ->orOn('tbl_tax.id', '=', 'purchase_order_details.tax_id');
                 })
                 ->leftJoin('gatepass', function($join) {
                     $join->on('purchase_orders.business_details_id', '=', 'gatepass.business_details_id');
@@ -111,9 +273,12 @@ class GatepassController extends Controller
                     'tbl_part_item.description as part_name' ,
                     'tbl_unit.name as unit_name' ,
                      'tbl_hsn.name as hsn_name',
+                     'tbl_tax.name as tax_name',
                      'purchase_orders.note'
                    
                 )->get();
+                dd($data);
+                die();
             $purchaseOrder = $data->first();
             $purchaseOrderDetails = $data;
  
@@ -132,7 +297,6 @@ class GatepassController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    
 
     public function index()
     {

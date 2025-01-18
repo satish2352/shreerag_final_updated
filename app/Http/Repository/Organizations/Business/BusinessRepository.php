@@ -376,6 +376,42 @@ class BusinessRepository
             return $e;
         }
     }
+
+    public function rejectedPurchaseOrder($purchase_order_id, $business_id)
+    {
+        try {
+            $business_application = BusinessApplicationProcesses::where('business_details_id', $business_id)->first();
+            $po_count = $this->serviceCommon->getNumberOfPOCount($business_id, $purchase_order_id);
+            if ($business_application) {
+
+                if($po_count > 0) {
+                    // $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.REJECTED_PO_FROM_OWNER');
+                    $business_application->off_canvas_status = 23;
+                } else {
+                    $business_application->off_canvas_status = 23;
+                }
+                $business_application->save();
+            }
+            $PurchaseOrdersData = PurchaseOrdersModel::where('purchase_orders_id', $purchase_order_id)->first();
+            $PurchaseOrdersData->owner_po_action_date= date('Y-m-d');
+            $PurchaseOrdersData->purchase_status_from_owner = config('constants.HIGHER_AUTHORITY.REJECTED_PO_FROM_OWNER');
+            // $PurchaseOrdersData->finanace_store_receipt_status_id = config('constants.FINANCE_DEPARTMENT.INVOICE_APPROVED_FROM_HIGHER_AUTHORITY');
+            $PurchaseOrdersData->save();
+            $update_data_admin['off_canvas_status'] = 23;
+            $update_data_business['off_canvas_status'] = 23;
+            $update_data_admin['is_view'] = '0';
+            $update_data_business['purchase_order_is_view_po'] = 0;
+            AdminView::where('business_details_id', $business_application->business_details_id)
+                ->update($update_data_admin);
+                NotificationStatus::where('business_details_id', $business_application->business_details_id)
+                ->update($update_data_business);
+            
+            return $business_application;
+
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     public function acceptPurchaseOrderPaymentRelease($purchase_order_id, $business_id)
     {
         try {

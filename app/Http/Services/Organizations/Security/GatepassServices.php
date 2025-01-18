@@ -22,6 +22,8 @@ class GatepassServices
     {
         try {
             $data = $this->repo->getAll();
+            // dd($data);
+            // die();
             return $data; // Add this line to return the data
         } catch (\Exception $e) {
             return $e;

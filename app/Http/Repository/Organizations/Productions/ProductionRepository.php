@@ -467,6 +467,7 @@ class ProductionRepository  {
                     'businesses_details.quantity',
                     'businesses_details.description',
                     'production_details.part_item_id',
+                    // DB::raw('(businesses_details.quantity - tbl_customer_product_quantity_tracking.completed_quantity) AS remaining_quantity'),
                     // 'production_details.quantity',
                     'production_details.unit',
                     'production_details.business_details_id',

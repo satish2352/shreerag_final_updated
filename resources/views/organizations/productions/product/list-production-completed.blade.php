@@ -87,7 +87,7 @@
                                                 <th data-field="grn_date" data-editable="false">Description</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
                                                 <th data-field="completed_quantity" data-editable="false">Completed Production</th>
-                                               
+                                                <th data-field="remaining_quantity" data-editable="false">Balance Quantity</th>
                                                 {{-- <th data-field="purchase_id" data-editable="false">Remark</th> --}}
                                                 {{-- <th data-field="store_material_sent_date" data-editable="false">Matrial Recieved Date</th> --}}
                                                 {{-- <th data-field="design_image" data-editable="false">Design Layout</th>
@@ -108,7 +108,7 @@
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
                                                     <td>{{ ucwords($data->completed_quantity) }}</td>
-                                                 
+                                                    <td>{{ $data->remaining_quantity }}</td>
                                                     {{-- <td>{{ ucwords($data->remarks) }}</td> --}}
                                                     {{-- <td>{{ ucwords($data->store_material_sent_date) }}</td> --}}
                                                     {{-- <td> <a class="img-size" target="_blank"

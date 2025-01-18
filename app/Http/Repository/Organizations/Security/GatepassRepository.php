@@ -44,7 +44,7 @@ class GatepassRepository
               ->select(
 
                 'gatepass.*',     
-
+'purchase_orders.id as purchase_id',
                 'purchase_orders.quality_status_id', // Replace with the fields you need from purchase_orders
 
             )

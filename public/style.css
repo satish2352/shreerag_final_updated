@@ -1133,6 +1133,14 @@ ul.two-part-sp li{
     background: #243772;
     color: #fff;
 }
+.reject-btn{
+    padding: 8px 15px;
+    font-size: 16px;
+    border-radius: 3px;
+    border: 1px solid rgba(0,0,0,.12);
+    background: #d62f0c;
+    color: #fff;
+}
 .sales-report-stn-his button.product-btn-history, button.pd-setting-ed {
     padding: 5px 10px;
     font-size: 14px;

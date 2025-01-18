@@ -104,7 +104,17 @@ class BusinessServices
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
-
+    public function rejectedPurchaseOrder($id, $business_id)
+    {
+        try {
+            $rejectedPurchaseOrder = $this->repo->rejectedPurchaseOrder($id, $business_id);
+    //   dd($rejectedPurchaseOrder);
+    //   die();
+            return $rejectedPurchaseOrder;
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
+    }
     public function getPurchaseOrderBusinessWise($purchase_order_id)
     {
         try {

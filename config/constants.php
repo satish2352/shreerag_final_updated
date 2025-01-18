@@ -52,6 +52,7 @@ return [
         'LIST_PO_TO_BE_APPROVE_FROM_PURCHASE'         => 1126,
         'APPROVED_PO_FROM_PURCHASE'               => 1127,
         'HALF_APPROVED_PO_FROM_PURCHASE'               => 1200,
+        'REJECTED_PO_FROM_OWNER'               => 1201,
         'NOT_APPROVED_PO_FROM_PURCHASE'           => 1128,
         'LIST_APPROVED_PO_SENT_TO_VENDOR_BY_PURCHASE'  => 1129,
         'LIST_INVOICE_TO_BE_APPROVE_FINANCE'             => 1139,

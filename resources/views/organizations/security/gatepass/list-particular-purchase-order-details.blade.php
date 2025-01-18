@@ -347,7 +347,7 @@
                                     </tr>
                                     <tr style="bold; font-family: 'Font Awesome 5 Free'!important; font-size:12px;">
                                         <td class="no-border" colspan="6"></td>
-                                        <td style="border: 1px solid black;"><b>{{ $purchaseOrder->tax_type }} {{ $purchaseOrder->name }}%</b></td>
+                                        <td style="border: 1px solid black;"><b>{{ $purchaseOrder->tax_type }} {{ $item->tax_name }}%</b></td>
                                         {{-- <td style="border-top: 1px solid black;border-bottom:1px solid black;border-left:1px solid black; border-right:none;padding:5px; text-align:right;" class="text-right">
                                             {{ 
                                                 ($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * ($purchaseOrder->name / 100) 
@@ -355,7 +355,7 @@
                                         </td> --}}
                                         <td style="border-top: 1px solid black;border-bottom:1px solid black;border-left:1px solid black; border-right:none;padding:5px; text-align:right;" class="text-right">
                                            <b> {{ 
-                                                $purchaseOrderDetails->sum('amount') * ($purchaseOrder->name / 100) 
+                                                $purchaseOrderDetails->sum('amount') * ($purchaseOrder->tax_name / 100) 
                                             }} </b>
                                         </td>
                                         

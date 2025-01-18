@@ -168,6 +168,39 @@ class AllListController extends Controller
             return $e;
         }
     }
+
+    public function getAllListRejectedPurchaseOrderOwnerlogin(Request $request){
+        try {
+            $data_output = $this->service->getAllListRejectedPurchaseOrderOwnerlogin();
+            if ($data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
+                    $business_id = $data->id; 
+                    if (!empty($business_id)) {
+                        $update_data['is_view'] = '1';
+                        AdminView::where('is_view', '0')
+                            ->where('id', $business_id)
+                            ->update($update_data);
+                    }
+                }
+            } else {
+                return view('organizations.business.list.list-purchase-order-rejected', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
+            return view('organizations.business.list.list-purchase-order-rejected', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getPurchaseOrderRejectedBusinessWise($id){
+        try {
+            $data_output = $this->service->getPurchaseOrderRejectedBusinessWise($id);
+            return view('organizations.business.list.list-purchase-order-rejected-bussinesswise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     public function listPOReceivedForApprovaTowardsOwner(Request $request){
         try {
             $data_output = $this->service->listPOReceivedForApprovaTowardsOwner();

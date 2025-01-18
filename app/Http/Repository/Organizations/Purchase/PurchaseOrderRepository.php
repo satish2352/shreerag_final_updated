@@ -224,6 +224,7 @@ class PurchaseOrderRepository
             $dataOutput->payment_terms = $request->payment_terms;
             // $dataOutput->discount = $request->discount;
             $dataOutput->note = $request->note;
+            $dataOutput->purchase_status_from_owner = NULL;
             $dataOutput->transport_dispatch = $request->transport_dispatch;
             if ($request->has('quote_no')) {
                 $dataOutput->quote_no = $request->quote_no;

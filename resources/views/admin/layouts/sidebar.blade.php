@@ -147,6 +147,11 @@
                                         class="fa big-icon fa-check icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">Purchase Order Approved</span></a>
                             </li>
+                            <li class="nav-item {{ request()->is('owner/list-rejected-purchase-orders-owner') ? 'active' : '' }}">
+                                <a href="{{ route('list-rejected-purchase-orders-owner') }}" aria-expanded="false"><i
+                                        class="fa big-icon fa-file-invoice icon-wrap" aria-hidden="true"></i> <span
+                                        class="mini-click-non">Purchase Order Rejected</span></a>
+                            </li>
                             <li
                                 class="nav-item {{ request()->is('owner/list-owner-submited-po-to-vendor') ? 'active' : '' }}">
                                 <a title="Inbox" href="{{ route('list-owner-submited-po-to-vendor') }}"><i
@@ -275,7 +280,11 @@
                                             class="fa big-icon fa-list-check icon-wrap" aria-hidden="true"></i> <span
                                             class="mini-click-non">List Purchase Orders To Be Finalize</span></a></li>
                                             
-                            </ul>
+                                            <li class="nav-item {{ Request::is('list-purchase-order-rejected') ? 'active' : '' }}"><a
+                                                href="{{ route('list-purchase-order-rejected') }}"><i
+                                                   class="fa big-icon fa-list-check icon-wrap" aria-hidden="true"></i> <span
+                                                   class="mini-click-non">Rejected  Purchase Orders List</span></a></li>
+                                        </ul>
                         </li>
                         <li class="nav-item {{ Request::is('list-vendor') ? 'active' : '' }}"><a
                             href="{{ route('list-vendor') }}"><i

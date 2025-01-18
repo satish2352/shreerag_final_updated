@@ -86,6 +86,7 @@
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
                                                 <th data-field="completed_quantity" data-editable="false">Completed Production</th>
+                                                <th data-field="remaining_quantity" data-editable="false">Balance Quantity</th>
                                                 <th data-field="title" data-editable="false">customer Name</th>
                                                 <th data-field="" data-editable="false">Action</th>
                                             </tr>
@@ -99,6 +100,7 @@
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
                                                     <td>{{ ucwords($data->completed_quantity) }}</td>
+                                                    <td>{{ $data->remaining_quantity }}</td>
                                                     {{-- <td>{{ ucwords($data->remarks) }}</td> --}}
                                                     <td>{{ ucwords($data->title) }}</td>
                                                 <td>

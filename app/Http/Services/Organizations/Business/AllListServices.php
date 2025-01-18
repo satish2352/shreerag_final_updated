@@ -86,6 +86,16 @@ class AllListServices
         }
     }
 
+    public function getAllListRejectedPurchaseOrderOwnerlogin()
+    {
+        try {
+            $data_output = $this->repo->getAllListRejectedPurchaseOrderOwnerlogin();
+    
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
 
 
     public function listPOReceivedForApprovaTowardsOwner()
@@ -131,6 +141,16 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->getPurchaseOrderBusinessWise($purchase_order_id);
+            return $data_output;
+
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getPurchaseOrderRejectedBusinessWise($purchase_order_id)
+    {
+        try {
+            $data_output = $this->repo->getPurchaseOrderRejectedBusinessWise($purchase_order_id);
             return $data_output;
 
         } catch (\Exception $e) {

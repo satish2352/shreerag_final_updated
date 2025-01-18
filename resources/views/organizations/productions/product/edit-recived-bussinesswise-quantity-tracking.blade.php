@@ -74,6 +74,7 @@
                                                     <label for="quantity">Actual Quantity :</label>
                                                     <input type="text" class="form-control" id="quantity" name="quantity" value="{{ $productDetails->quantity }}" placeholder="Enter Quantity" readonly>
                                                 </div>
+                                             
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="completed_quantity">Completed Quantity <span
                                                         class="red-text">*</span> : </label>

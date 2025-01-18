@@ -72,6 +72,51 @@ class PurchaseOrderController extends Controller
         );
     }
 
+    public function rejectedPurchaseOrder()
+    {
+        $array_to_be_check = [config('constants.HIGHER_AUTHORITY.REJECTED_PO_FROM_OWNER')];
+        $getOutput = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
+        // ->whereNull('purchase_status_from_owner')
+        ->where('purchase_orders.purchase_status_from_owner', $array_to_be_check)
+        // ->where('businesses_details.id', $id)
+        // ->where('requisition_id', base64_decode($requistition_id))
+        // ->where('business_details_id', base64_decode($business_details_id))
+         ->select(
+            'purchase_orders.id',
+            'purchase_orders.purchase_orders_id',
+            'purchase_orders.requisition_id',
+            'purchase_orders.business_id',
+            'business_details_id',
+            'purchase_orders.production_id',
+            'purchase_orders.po_date',
+            'purchase_orders.vendor_id',
+            'purchase_orders.payment_terms as purchase_payment_terms',
+            'purchase_orders.quote_no',
+            'purchase_orders.contact_person_name',
+            'purchase_orders.contact_person_number',
+            'purchase_orders.purchase_status_from_owner',
+            'purchase_orders.po_date',
+            'purchase_orders.invoice_date',
+            'vendors.vendor_name',
+            'vendors.vendor_company_name',
+            'vendors.vendor_email',
+            'vendors.contact_no',
+            'vendors.vendor_address',
+            'vendors.gst_no'
+            )
+        ->orderBy('purchase_orders.updated_at', 'desc')
+        ->get();
+        // dd($getOutput);
+        // die();
+               return view(
+            'organizations.purchase.addpurchasedetails.list-purchase-order-rejected',
+            compact(
+                'getOutput',
+                // 'requistition_id',
+                // 'business_details_id'
+            )
+        );
+    }
     public function create(Request $request)
     {
         $requistition_id = $request->requistition_id;

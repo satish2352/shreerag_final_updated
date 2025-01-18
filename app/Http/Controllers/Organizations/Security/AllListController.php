@@ -102,7 +102,8 @@ class AllListController extends Controller
         })
         ->where('businesses.is_active', true)
         ->select(
-            'gatepass.id as gatepass_id',
+            // 'gatepass.id as gatepass_id',
+             'purchase_orders.id as gatepass_id',
             'businesses_details.id as business_details_id',
             'businesses.title',
             'businesses_details.product_name',
