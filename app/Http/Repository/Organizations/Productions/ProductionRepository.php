@@ -390,7 +390,7 @@ class ProductionRepository  {
                     'businesses_details.id',
                     'businesses_details.product_name',
                     'businesses_details.description',
-                    'pd.id',
+                    \DB::raw('MAX(pd.id) as pd_id'),
                     'pd.part_item_id',
                      'pd.quantity',
                     // \DB::raw('SUM(pd.quantity) as total_quantity'), // Aggregate quantity
@@ -405,7 +405,7 @@ class ProductionRepository  {
                     'businesses_details.product_name',
                     'businesses_details.description',
                     'pd.part_item_id',
-                    'pd.id',
+                    // 'pd.id',
                            'pd.quantity',
                     'pd.unit',
                     'tbl_unit.name',
