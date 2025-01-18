@@ -41,78 +41,86 @@ public function getAllReceivedFromFianance(){
     ->leftJoin('tbl_vehicle_type', function($join) {
         $join->on('tbl_logistics.vehicle_type_id', '=', 'tbl_vehicle_type.id');
     })
-    //   $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
-    //     $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-    //   })
-    //   ->leftJoin('designs', function($join) {
-    //     $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-    //   })
-    //   ->leftJoin('businesses', function($join) {
-    //     $join->on('business_application_processes.business_id', '=', 'businesses.id');
-    //   })
-    //   ->leftJoin('businesses_details', function($join) {
-    //     $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-    // })
-    //   ->leftJoin('design_revision_for_prod', function($join) {
-    //     $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-    //   })
-    //   ->leftJoin('purchase_orders', function($join) {
-    //     $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-    //   })
-    //   ->leftJoin('tbl_logistics', function($join) {
-    //     $join->on('business_application_processes.business_details_id', '=', 'tbl_logistics.business_details_id');
-    //   })
-    //   ->leftJoin('tbl_transport_name', function($join) {
-    //     $join->on('tbl_logistics.transport_name_id', '=', 'tbl_transport_name.id');
-    // })
-    // ->leftJoin('tbl_customer_product_quantity_tracking', function($join) {
-    //   $join->on('business_application_processes.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id');
-    // })
-    // ->leftJoin('tbl_vehicle_type', function($join) {
-    //     $join->on('tbl_logistics.vehicle_type_id', '=', 'tbl_vehicle_type.id');
-    // })
+    ->leftJoin('production', function($join) {
+        $join->on('tbl_customer_product_quantity_tracking.production_id', '=', 'production.id');
+    })
     ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status',$array_to_be_quantity_tracking)
 
       // ->whereIn('bap1.dispatch_status_id',$array_to_be_check)
       ->where('businesses.is_active',true)
       // ->distinct('businesses_details.id')
-      ->groupBy(
-      'tbl_customer_product_quantity_tracking.id','tbl_customer_product_quantity_tracking.business_id',
-      'tbl_customer_product_quantity_tracking.business_details_id',
-        'businesses.customer_po_number',
-        'businesses.title',
-        // 'businesses_details.id',
-        'businesses_details.product_name',
-        'businesses_details.quantity',
-        'businesses_details.description',
-        'bap1.id',
-        'tbl_logistics.truck_no',
-        'tbl_transport_name.name',
-        'tbl_vehicle_type.name',
-        'tbl_logistics.from_place',
-        'tbl_logistics.to_place',
-        'tbl_customer_product_quantity_tracking.completed_quantity'
-    )
-      ->select(
-  'tbl_customer_product_quantity_tracking.id','tbl_customer_product_quantity_tracking.business_id',
-      'tbl_customer_product_quantity_tracking.business_details_id',
-        'businesses.customer_po_number',
-        'businesses.title',
-        // 'businesses_details.id',
-        'businesses_details.product_name',
-        'businesses_details.description',
-        'businesses_details.quantity',
-          // 'production.id as productionId',
-          // 'business_application_processes.store_material_sent_date',
-          'tbl_logistics.truck_no',
+//       ->groupBy(
+//       'tbl_customer_product_quantity_tracking.id','tbl_customer_product_quantity_tracking.business_id',
+//       'tbl_customer_product_quantity_tracking.business_details_id',
+//         'businesses.customer_po_number',
+//         'businesses.title',
+//         // 'businesses_details.id',
+//         'businesses_details.product_name',
+//         'businesses_details.quantity',
+//         'businesses_details.description',
+//         'bap1.id',
+//         'tbl_logistics.truck_no',
+//         'tbl_transport_name.name',
+//         'tbl_vehicle_type.name',
+//         'tbl_logistics.from_place',
+//         'tbl_logistics.to_place',
+//         'tbl_customer_product_quantity_tracking.completed_quantity'
+//     )
+//       ->select(
+//   'tbl_customer_product_quantity_tracking.id','tbl_customer_product_quantity_tracking.business_id',
+//       'tbl_customer_product_quantity_tracking.business_details_id',
+//         'businesses.customer_po_number',
+//         'businesses.title',
+//         // 'businesses_details.id',
+//         'businesses_details.product_name',
+//         'businesses_details.description',
+//         'businesses_details.quantity',
+//           // 'production.id as productionId',
+//           // 'business_application_processes.store_material_sent_date',
+//           'tbl_logistics.truck_no',
+//           'tbl_transport_name.name as transport_name',
+//           'tbl_vehicle_type.name as vehicle_name',
+//           'tbl_vehicle_type.name',
+//           'tbl_logistics.from_place',
+//           'tbl_logistics.to_place',
+//           'tbl_customer_product_quantity_tracking.completed_quantity'
+//           // 'tbl_logistics.vendor_id',
+//       )
+->select(
+    'tbl_customer_product_quantity_tracking.id',
+    'tbl_customer_product_quantity_tracking.business_details_id',
+    'businesses.title',
+    'businesses.customer_po_number',
+    'businesses_details.product_name',
+    'businesses.title',
+    'businesses_details.quantity',
+    'businesses.remarks',
+    'businesses.is_active',
+    'tbl_customer_product_quantity_tracking.completed_quantity',
+    // DB::raw('(businesses_details.quantity - tbl_customer_product_quantity_tracking.completed_quantity) AS remaining_quantity'),
+    DB::raw('(SELECT SUM(t2.completed_quantity)
+    FROM tbl_customer_product_quantity_tracking AS t2
+    WHERE t2.business_details_id = businesses_details.id
+      AND t2.id <= tbl_customer_product_quantity_tracking.id
+   ) AS cumulative_completed_quantity'),
+DB::raw('(businesses_details.quantity - (SELECT SUM(t2.completed_quantity)
+    FROM tbl_customer_product_quantity_tracking AS t2
+    WHERE t2.business_details_id = businesses_details.id
+      AND t2.id <= tbl_customer_product_quantity_tracking.id
+   )) AS remaining_quantity'),
+// DB::raw('production.updated_at AS updated_at'),
+    'production.business_id',
+    'production.id as productionId',
+    'bap1.store_material_sent_date',
+    'tbl_customer_product_quantity_tracking.updated_at',
           'tbl_transport_name.name as transport_name',
-          'tbl_vehicle_type.name as vehicle_name',
-          'tbl_vehicle_type.name',
-          'tbl_logistics.from_place',
-          'tbl_logistics.to_place',
-          'tbl_customer_product_quantity_tracking.completed_quantity'
-          // 'tbl_logistics.vendor_id',
-      )
+      'tbl_vehicle_type.name as vehicle_name',
+           'tbl_logistics.truck_no',
+    'tbl_logistics.from_place',
+    'tbl_logistics.to_place',
+ 
+) 
+->orderBy('tbl_logistics.updated_at', 'desc')
       ->get();
         
       
@@ -130,6 +138,8 @@ public function getAllDispatch(){
     $array_to_be_quantity_tracking = [ config('constants.DISPATCH_DEPARTMENT.SUBMITTED_COMPLETED_QUANLTITY_DISPATCH_DEPT')];
 
     $array_to_be_check_new = ['0'];
+
+    
     $data_output = Logistics::leftJoin('tbl_customer_product_quantity_tracking as tcqt1', function($join) {
       $join->on('tbl_logistics.quantity_tracking_id', '=', 'tcqt1.id');
   })

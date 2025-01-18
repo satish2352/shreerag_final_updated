@@ -99,7 +99,7 @@
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
-                                                    <td>{{ ucwords($data->completed_quantity) }}</td>
+                                                    <td>{{ ucwords($data->cumulative_completed_quantity) }}</td>
                                                     <td>{{ $data->remaining_quantity }}</td>
                                                     {{-- <td>{{ ucwords($data->remarks) }}</td> --}}
                                                     <td>{{ ucwords($data->title) }}</td>

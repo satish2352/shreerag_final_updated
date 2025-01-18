@@ -57,13 +57,25 @@ public function getAllCompletedProduction(){
           'businesses.remarks',
           'businesses.is_active',
           'tbl_customer_product_quantity_tracking.completed_quantity',
-          DB::raw('(businesses_details.quantity - tbl_customer_product_quantity_tracking.completed_quantity) AS remaining_quantity'),
+          // DB::raw('(businesses_details.quantity - tbl_customer_product_quantity_tracking.completed_quantity) AS remaining_quantity'),
+          DB::raw('(SELECT SUM(t2.completed_quantity)
+          FROM tbl_customer_product_quantity_tracking AS t2
+          WHERE t2.business_details_id = businesses_details.id
+            AND t2.id <= tbl_customer_product_quantity_tracking.id
+         ) AS cumulative_completed_quantity'),
+DB::raw('(businesses_details.quantity - (SELECT SUM(t2.completed_quantity)
+          FROM tbl_customer_product_quantity_tracking AS t2
+          WHERE t2.business_details_id = businesses_details.id
+            AND t2.id <= tbl_customer_product_quantity_tracking.id
+         )) AS remaining_quantity'),
+// DB::raw('production.updated_at AS updated_at'),
           'production.business_id',
           'production.id as productionId',
           'bap1.store_material_sent_date',
           'tbl_customer_product_quantity_tracking.updated_at'
        
-      ) ->orderBy('tbl_customer_product_quantity_tracking.updated_at', 'desc')
+      ) 
+      ->orderBy('tbl_customer_product_quantity_tracking.updated_at', 'desc')
       ->get();
       
     return $data_output;
@@ -155,7 +167,9 @@ public function getAllLogistics() {
           ->leftJoin('business_application_processes as bap1', function($join) {
               $join->on('tbl_logistics.business_application_processes_id', '=', 'bap1.id');
           })
-          
+          ->leftJoin('production', function($join) {
+            $join->on('tbl_customer_product_quantity_tracking.production_id', '=', 'production.id');
+        })
           ->leftJoin('businesses_details', function($join) {
               $join->on('tbl_logistics.business_details_id', '=', 'businesses_details.id');
           })
@@ -164,32 +178,61 @@ public function getAllLogistics() {
           // ->whereIn('bap1.logistics_status_id', $array_to_be_check)
           // ->whereNull('bap1.dispatch_status_id')
           ->where('businesses.is_active', true)
-          ->groupBy(
-            'tbl_customer_product_quantity_tracking.id',
-            'tbl_customer_product_quantity_tracking.business_details_id',
-              'businesses.customer_po_number',
-              'businesses.title',
-              // 'businesses_details.id',
-              'businesses_details.product_name',
-              'businesses_details.quantity',
-              'businesses_details.description',
-              // 'bap1.id',
-              'tbl_customer_product_quantity_tracking.completed_quantity',
-              'tbl_logistics.updated_at'
-          )
+          // ->groupBy(
+          //   'tbl_customer_product_quantity_tracking.id',
+          //   'tbl_customer_product_quantity_tracking.business_details_id',
+          //     'businesses.customer_po_number',
+          //     'businesses.title',
+          //     // 'businesses_details.id',
+          //     'businesses_details.product_name',
+          //     'businesses_details.quantity',
+          //     'businesses_details.description',
+          //     // 'bap1.id',
+          //     'tbl_customer_product_quantity_tracking.completed_quantity',
+          //     'tbl_logistics.updated_at'
+          // )
+          // ->select(
+          //   'tbl_customer_product_quantity_tracking.id',
+          //   'tbl_customer_product_quantity_tracking.business_details_id',
+          //     'businesses.customer_po_number',
+          //     'businesses.title',
+          //     // 'businesses_details.id',
+          //     DB::raw('(businesses_details.quantity - tbl_customer_product_quantity_tracking.completed_quantity) AS remaining_quantity'),
+          //     'businesses_details.product_name',
+          //     'businesses_details.description',
+          //     'businesses_details.quantity',
+          //     'tbl_customer_product_quantity_tracking.completed_quantity',
+          //     'tbl_logistics.updated_at'
+          // )
           ->select(
             'tbl_customer_product_quantity_tracking.id',
             'tbl_customer_product_quantity_tracking.business_details_id',
-              'businesses.customer_po_number',
-              'businesses.title',
-              // 'businesses_details.id',
-              DB::raw('(businesses_details.quantity - tbl_customer_product_quantity_tracking.completed_quantity) AS remaining_quantity'),
-              'businesses_details.product_name',
-              'businesses_details.description',
-              'businesses_details.quantity',
-              'tbl_customer_product_quantity_tracking.completed_quantity',
-              'tbl_logistics.updated_at'
-          )
+            'businesses.title',
+            'businesses.customer_po_number',
+            'businesses_details.product_name',
+            'businesses.title',
+            'businesses_details.quantity',
+            'businesses.remarks',
+            'businesses.is_active',
+            'tbl_customer_product_quantity_tracking.completed_quantity',
+            // DB::raw('(businesses_details.quantity - tbl_customer_product_quantity_tracking.completed_quantity) AS remaining_quantity'),
+            DB::raw('(SELECT SUM(t2.completed_quantity)
+            FROM tbl_customer_product_quantity_tracking AS t2
+            WHERE t2.business_details_id = businesses_details.id
+              AND t2.id <= tbl_customer_product_quantity_tracking.id
+           ) AS cumulative_completed_quantity'),
+  DB::raw('(businesses_details.quantity - (SELECT SUM(t2.completed_quantity)
+            FROM tbl_customer_product_quantity_tracking AS t2
+            WHERE t2.business_details_id = businesses_details.id
+              AND t2.id <= tbl_customer_product_quantity_tracking.id
+           )) AS remaining_quantity'),
+  // DB::raw('production.updated_at AS updated_at'),
+            'production.business_id',
+            'production.id as productionId',
+            'bap1.store_material_sent_date',
+            'tbl_customer_product_quantity_tracking.updated_at'
+         
+        ) 
           ->orderBy('tbl_logistics.updated_at', 'desc')
           ->get();
       
@@ -218,41 +261,77 @@ public function getAllListSendToFiananceByLogistics(){
         ->leftJoin('businesses_details', function($join) {
             $join->on('tbl_logistics.business_details_id', '=', 'businesses_details.id');
         }) 
+        ->leftJoin('production', function($join) {
+          $join->on('tbl_customer_product_quantity_tracking.production_id', '=', 'production.id');
+      })
       // ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status',$array_to_be_quantity_tracking)
       // ->whereIn('bap1.logistics_status_id',$array_to_be_check)
     
       ->where('businesses.is_active',true)
       // ->distinct('businesses_details.id')
-      ->groupBy(
-        'tbl_customer_product_quantity_tracking.id',
-        'businesses.customer_po_number',
-        'businesses.title',
-        'businesses_details.id',
-        'businesses_details.product_name',
-        'businesses_details.quantity',
-        'businesses_details.description',
-        'bap1.id',
-        'tbl_customer_product_quantity_tracking.completed_quantity',
-        'tbl_logistics.truck_no',
-        'tbl_logistics.from_place',
-        'tbl_logistics.to_place',
-    )
       ->select(
         'tbl_customer_product_quantity_tracking.id',
-        'businesses.customer_po_number',
+        'tbl_customer_product_quantity_tracking.business_details_id',
         'businesses.title',
-        'businesses_details.id',
+        'businesses.customer_po_number',
         'businesses_details.product_name',
-        'businesses_details.description',
+        'businesses.title',
         'businesses_details.quantity',
+        'businesses.remarks',
+        'businesses.is_active',
         'tbl_customer_product_quantity_tracking.completed_quantity',
-        DB::raw('(businesses_details.quantity - tbl_customer_product_quantity_tracking.completed_quantity) AS remaining_quantity'),
-          // 'production.id as productionId',
-          // 'business_application_processes.store_material_sent_date',
-          'tbl_logistics.truck_no',
-          'tbl_logistics.from_place',
-          'tbl_logistics.to_place',
-      )
+        // DB::raw('(businesses_details.quantity - tbl_customer_product_quantity_tracking.completed_quantity) AS remaining_quantity'),
+        DB::raw('(SELECT SUM(t2.completed_quantity)
+        FROM tbl_customer_product_quantity_tracking AS t2
+        WHERE t2.business_details_id = businesses_details.id
+          AND t2.id <= tbl_customer_product_quantity_tracking.id
+       ) AS cumulative_completed_quantity'),
+DB::raw('(businesses_details.quantity - (SELECT SUM(t2.completed_quantity)
+        FROM tbl_customer_product_quantity_tracking AS t2
+        WHERE t2.business_details_id = businesses_details.id
+          AND t2.id <= tbl_customer_product_quantity_tracking.id
+       )) AS remaining_quantity'),
+// DB::raw('production.updated_at AS updated_at'),
+        'production.business_id',
+        'production.id as productionId',
+        'bap1.store_material_sent_date',
+        'tbl_customer_product_quantity_tracking.updated_at',
+               'tbl_logistics.truck_no',
+        'tbl_logistics.from_place',
+        'tbl_logistics.to_place',
+     
+    ) 
+    ->orderBy('tbl_logistics.updated_at', 'desc')
+    //   ->groupBy(
+    //     'tbl_customer_product_quantity_tracking.id',
+    //     'businesses.customer_po_number',
+    //     'businesses.title',
+    //     'businesses_details.id',
+    //     'businesses_details.product_name',
+    //     'businesses_details.quantity',
+    //     'businesses_details.description',
+    //     'bap1.id',
+    //     'tbl_customer_product_quantity_tracking.completed_quantity',
+    //     'tbl_logistics.truck_no',
+    //     'tbl_logistics.from_place',
+    //     'tbl_logistics.to_place',
+    // )
+    //   ->select(
+    //     'tbl_customer_product_quantity_tracking.id',
+    //     'businesses.customer_po_number',
+    //     'businesses.title',
+    //     'businesses_details.id',
+    //     'businesses_details.product_name',
+    //     'businesses_details.description',
+    //     'businesses_details.quantity',
+    //     'tbl_customer_product_quantity_tracking.completed_quantity',
+    //     DB::raw('(businesses_details.quantity - tbl_customer_product_quantity_tracking.completed_quantity) AS remaining_quantity'),
+    //       // 'production.id as productionId',
+    //       // 'business_application_processes.store_material_sent_date',
+    //       'tbl_logistics.truck_no',
+    //       'tbl_logistics.from_place',
+    //       'tbl_logistics.to_place',
+    //   )
       ->get();
      
  

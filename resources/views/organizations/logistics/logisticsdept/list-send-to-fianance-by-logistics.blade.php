@@ -105,7 +105,7 @@
                                                     <td>{{ ucwords($data->title) }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
-                                                    <td>{{ ucwords($data->completed_quantity) }}</td>
+                                                    <td>{{ ucwords($data->cumulative_completed_quantity) }}</td>
                                                     <td>{{ $data->remaining_quantity }}</td>
                                                     <td>{{ ucwords($data->from_place) }}</td>
                                                     <td>{{ ucwords($data->to_place) }}</td>

@@ -34,9 +34,7 @@
                                 <h1>Production Completed List</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
-                                        {{-- <div class="login-horizental cancel-wp pull-left">
-                                                <a href="{{ route('add-design-upload') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Design</button></a>
-                                        </div> --}}
+                                        {{-- Add Button or Other Actions Here --}}
                                     </div>
                                     <div class="col-lg-10"></div>
                                 </div>
@@ -48,7 +46,6 @@
                                 <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
                                     <span class="icon-sc-cl" aria-hidden="true">&times;</span>
                                 </button>
-                                {{-- <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i> --}}
                                 <p><strong>Success!</strong> {{ Session::get('msg') }}</p>
                             </div>
                         @endif
@@ -57,22 +54,12 @@
                                 <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
                                     <span class="icon-sc-cl" aria-hidden="true">&times;</span>
                                 </button>
-                                <i class="fa fa-times adminpro-danger-error admin-check-pro" aria-hidden="true"></i>
-                                <p><strong>Danger!</strong> {{ Session::get('msg') }}</p>
+                                <p><strong>Error!</strong> {{ Session::get('msg') }}</p>
                             </div>
                         @endif
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -81,51 +68,25 @@
                                         data-click-to-select="true" data-toolbar="#toolbar">
                                         <thead>
                                             <tr>
-                                                <th data-field="id">Sr.No.</th>
-                                                <th data-field="customer_po_number" data-editable="false">PO Number</th>
-                                                <th data-field="product_name" data-editable="false">Product Name</th>
-                                                <th data-field="grn_date" data-editable="false">Description</th>
-                                                <th data-field="quantity" data-editable="false">Quantity</th>
-                                                <th data-field="completed_quantity" data-editable="false">Completed Production</th>
-                                                <th data-field="remaining_quantity" data-editable="false">Balance Quantity</th>
-                                                {{-- <th data-field="purchase_id" data-editable="false">Remark</th> --}}
-                                                {{-- <th data-field="store_material_sent_date" data-editable="false">Matrial Recieved Date</th> --}}
-                                                {{-- <th data-field="design_image" data-editable="false">Design Layout</th>
-                                                <th data-field="bom_image" data-editable="false">BOM</th> --}}
-                                                {{-- <th data-field="" data-editable="false">Action</th> --}}
+                                                <th>Sr. No.</th>
+                                                <th>PO Number</th>
+                                                <th>Product Name</th>
+                                                <th>Description</th>
+                                                <th>Quantity</th>
+                                                <th>Completed Production</th>
+                                                <th>Balance Quantity</th>
                                             </tr>
-
                                         </thead>
-
-
-
                                         <tbody>
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ ucwords($data->customer_po_number) }}</td>
-                                                    <td>{{ ucwords($data->product_name) }}</td>
-                                                    <td>{{ ucwords($data->description) }}</td>
-                                                    <td>{{ ucwords($data->quantity) }}</td>
-                                                    <td>{{ ucwords($data->completed_quantity) }}</td>
+                                                    <td>{{ $data->customer_po_number }}</td>
+                                                    <td>{{ $data->product_name }}</td>
+                                                    <td>{{ $data->description }}</td>
+                                                    <td>{{ $data->quantity }}</td>
+                                                    <td>{{ $data->cumulative_completed_quantity }}</td>
                                                     <td>{{ $data->remaining_quantity }}</td>
-                                                    {{-- <td>{{ ucwords($data->remarks) }}</td> --}}
-                                                    {{-- <td>{{ ucwords($data->store_material_sent_date) }}</td> --}}
-                                                    {{-- <td> <a class="img-size" target="_blank"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
-                                                        alt="Design"> Click to view</a>
-                                                </td>
-                                                <td> <a class="img-size"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                        alt="bill of material" >Click to download</a>
-                                                </td> --}}
-
-                                                   
-
-                                               
-
-
-
                                                 </tr>
                                             @endforeach
                                         </tbody>

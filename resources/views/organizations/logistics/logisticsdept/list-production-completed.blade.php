@@ -64,15 +64,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div>
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -85,8 +76,10 @@
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
-                                                <th data-field="completed_quantity" data-editable="false">Completed Production</th>
-                                                <th data-field="remaining_quantity" data-editable="false">Balance Quantity</th>
+                                                <th data-field="completed_quantity" data-editable="false">Completed
+                                                    Production</th>
+                                                <th data-field="remaining_quantity" data-editable="false">Balance Quantity
+                                                </th>
 
                                                 <th data-field="updated_at" data-editable="false">Date</th>
                                                 <th data-field="remark" data-editable="false">Remark</th>
@@ -111,12 +104,13 @@
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
-                                                    <td>{{ ucwords($data->completed_quantity) }}</td>
+                                                    <td>{{ $data->cumulative_completed_quantity }}</td>
                                                     <td>{{ $data->remaining_quantity }}</td>
-                                                    <td>{{ $data->updated_at ? $data->updated_at->format('Y-m-d') : 'N/A' }} </td>
+                                                    <td>{{ $data->updated_at ? $data->updated_at->format('Y-m-d') : 'N/A' }}
+                                                    </td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                     <td>{{ ucwords($data->title) }}</td>
-                                                   
+
                                                     {{-- <td>{{ ucwords($data->vendor_company_name) }}</td>
                                                     <td>{{ ucwords($data->vendor_email) }}</td>
                                                     <td>{{ ucwords($data->contact_no) }}</td>
@@ -130,16 +124,19 @@
                                                         href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
                                                         alt="bill of material" >Click to download</a>
                                                 </td> --}}
-                                                <td>
-                                                    <div style="display: flex; align-items: center;">
-                                                        <a href="{{route('add-logistics', $data->id)}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                                        {{-- <a href="{{route('delete-products')}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a> --}}
-                                                    </div>
-                                                </td>
+                                                    <td>
+                                                        <div style="display: flex; align-items: center;">
+                                                            <a href="{{ route('add-logistics', $data->id) }}"><button
+                                                                    data-toggle="tooltip" title="Edit"
+                                                                    class="pd-setting-ed"><i class="fa fa-pencil-square-o"
+                                                                        aria-hidden="true"></i></button></a>
+                                                            {{-- <a href="{{route('delete-products')}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a> --}}
+                                                        </div>
+                                                    </td>
 
-                                                   
 
-                                               
+
+
 
 
 
