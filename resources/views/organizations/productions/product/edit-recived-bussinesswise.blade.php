@@ -96,6 +96,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody style="overflow: scroll;">
+                                                            
                                                             @foreach ($dataGroupedById as $key => $items)
                                                                 @foreach ($items as $index => $item)
                                                                     <tr
