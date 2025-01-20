@@ -719,7 +719,8 @@ class AllListRepositor
               'vendors.contact_no',
               'vendors.vendor_address',
               'vendors.gst_no',
-              'vendors.quote_no'
+              'vendors.quote_no',
+              'purchase_orders.updated_at'
           )
           ->select(
               'purchase_orders.purchase_orders_id',
