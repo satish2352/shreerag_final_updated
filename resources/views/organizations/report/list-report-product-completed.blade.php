@@ -124,7 +124,8 @@
                                                 <th data-field="title" data-editable="false">customer Name</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="total_quantity" data-editable="false">Total Product Quantity</th>
-                                                <th data-field="total_completed_quantity" data-editable="false">Total Production Done Quantity</th>                                                
+                                                <th data-field="total_completed_quantity" data-editable="false">Total Production Done Quantity</th>    
+                                                <th data-field="updated_at" data-editable="false">Date</th>                                                                                            
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -136,6 +137,7 @@
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
                                                     <td>{{ ucwords($data->total_completed_quantity) }}</td>
+                                                    <td>{{ $data->updated_at ? $data->updated_at->format('Y-m-d') : 'N/A' }} </td>
                                                       </tr>
                                             @endforeach
                                         </tbody>

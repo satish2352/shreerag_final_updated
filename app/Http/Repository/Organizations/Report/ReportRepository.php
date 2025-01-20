@@ -137,8 +137,9 @@ public function getCompletedProductList($request)
             'businesses_details.product_name',
             'businesses_details.description',
             'businesses_details.quantity',
-            DB::raw('SUM(tcqt1.completed_quantity) as total_completed_quantity')
-        )
+            DB::raw('SUM(tcqt1.completed_quantity) as total_completed_quantity'),
+            DB::raw('MAX(tbl_dispatch.updated_at) as updated_at') // Alias for MAX(updated_at)
+            )
         ->groupBy(
             'businesses_details.id',
             'businesses.customer_po_number',
@@ -148,6 +149,7 @@ public function getCompletedProductList($request)
             'businesses_details.quantity'
         )
         ->havingRaw('SUM(tcqt1.completed_quantity) = businesses_details.quantity')
+        ->orderBy('tbl_dispatch.updated_at', 'desc')
         ->get();
 
         // Calculate total count using a subquery to match data_output
