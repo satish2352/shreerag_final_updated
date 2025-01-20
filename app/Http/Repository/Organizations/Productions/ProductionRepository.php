@@ -106,6 +106,7 @@ class ProductionRepository  {
     public function rejectdesign($request){
         try {
             $idtoedit = base64_decode($request->business_id);
+           
             // $idtoedit = BusinessApplicationProcesses::where('business_details_id', $id)->first();
             $production_data = ProductionModel::where('business_details_id', $idtoedit)->first();
             $designRevisionForProdID = DesignRevisionForProd::where('id', $production_data->id)->orderBy('id','desc')->first();
