@@ -45,7 +45,7 @@ class ItemRepository  {
             'tbl_part_item.group_type_id',
             'tbl_group_master.name as group_name',
             'tbl_rack_master.name as rack_name'
-        )
+        )->orderBy('tbl_part_item.updated_at', 'desc')
           ->get();
   
             return $data_output;

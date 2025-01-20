@@ -13,7 +13,7 @@ class GroupRepository  {
 
     public function getAll(){
         try {
-          $data_output = GroupMaster::get();
+          $data_output = GroupMaster::orderBy('updated_at', 'desc')->get();
             return $data_output;
         } catch (\Exception $e) {
             return $e;

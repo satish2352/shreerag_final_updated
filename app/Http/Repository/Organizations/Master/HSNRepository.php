@@ -13,7 +13,7 @@ class HSNRepository  {
 
     public function getAll(){
         try {
-          $data_output = HSNMaster::get();
+          $data_output = HSNMaster::orderBy('updated_at', 'desc')->get();
             return $data_output;
         } catch (\Exception $e) {
             return $e;

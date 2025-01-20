@@ -13,7 +13,7 @@ class UnitRepository  {
 
     public function getAll(){
         try {
-          $data_output = UnitMaster::get();
+          $data_output = UnitMaster::orderBy('updated_at', 'desc')->get();
             return $data_output;
         } catch (\Exception $e) {
             return $e;

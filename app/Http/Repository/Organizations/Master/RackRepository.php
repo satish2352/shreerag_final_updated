@@ -13,7 +13,7 @@ class RackRepository  {
 
     public function getAll(){
         try {
-          $data_output = RackMaster::get();
+          $data_output = RackMaster::orderBy('updated_at', 'desc')->get();
             return $data_output;
         } catch (\Exception $e) {
             return $e;

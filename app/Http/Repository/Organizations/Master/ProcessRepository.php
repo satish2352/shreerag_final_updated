@@ -13,7 +13,7 @@ class ProcessRepository  {
 
     public function getAll(){
         try {
-          $data_output = ProcessMaster::get();
+          $data_output = ProcessMaster::orderBy('updated_at', 'desc')->get();
             return $data_output;
         } catch (\Exception $e) {
             return $e;

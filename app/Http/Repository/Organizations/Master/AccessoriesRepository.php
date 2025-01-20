@@ -13,7 +13,7 @@ class AccessoriesRepository  {
 
     public function getAll(){
         try {
-          $data_output = AccesoriesMaster::get();
+          $data_output = AccesoriesMaster::orderBy('updated_at', 'desc')->get();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
