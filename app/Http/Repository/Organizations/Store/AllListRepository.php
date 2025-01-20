@@ -447,18 +447,18 @@ public function getAllListMaterialReceivedFromQuality()
         $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
             })
-            ->leftJoin('designs', function ($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-            })
+            // ->leftJoin('designs', function ($join) {
+            //     $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+            // })
             ->leftJoin('businesses', function ($join) {
                 $join->on('business_application_processes.business_id', '=', 'businesses.id');
             })
             ->leftJoin('businesses_details', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
             })
-            ->leftJoin('design_revision_for_prod', function ($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-            })
+            // ->leftJoin('design_revision_for_prod', function ($join) {
+            //     $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+            // })
             ->leftJoin('purchase_orders', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
             })
