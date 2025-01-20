@@ -974,6 +974,69 @@ class AllListRepositor
 //       return $e;
 //   }
 // }
+// public function loadDesignSubmittedForProductionBusinessWise($business_id)
+// {
+//     try {
+//         $decoded_business_id = base64_decode($business_id);
+
+//         $array_to_be_check = [
+//             config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN'),
+//             config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_PRODUCTION'),
+//             config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECIVED_FROM_PRODUCTION_DEPT_REVISED'),
+//         ];
+
+//         $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+//             $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+//         })
+//             ->leftJoin('businesses_details', function ($join) {
+//                 $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+//             })
+//             ->leftJoin('designs', function ($join) {
+//                 $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+//             })
+//             ->leftJoin('design_revision_for_prod', function ($join) {
+//                 $join->on('designs.id', '=', 'design_revision_for_prod.design_id');
+//             })
+//             ->leftJoin('businesses', function ($join) {
+//                 $join->on('businesses_details.business_id', '=', 'businesses.id');
+//             }) // Added this join
+//             ->where('businesses_details.business_id', $decoded_business_id)
+//             ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
+//             ->where('businesses_details.is_active', true)
+//             ->select(
+//                 'business_application_processes.id',
+//                 'businesses.id as business_id',
+//                 'businesses.customer_po_number',
+//                 'businesses.title',
+//                 'businesses_details.id as business_details_id',
+//                 'businesses_details.product_name',
+//                 'businesses_details.quantity',
+//                 'businesses_details.description',
+//                 'businesses.remarks',
+//                 DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'),
+//                 DB::raw('MAX(designs.bom_image) as bom_image'),
+//                 DB::raw('MAX(designs.design_image) as design_image'),
+//                 DB::raw('MAX(design_revision_for_prod.bom_image) as re_bom_image'),
+//                 DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image')
+//             )
+//             ->groupBy(
+//                 'business_application_processes.id',
+//                 'businesses.id',
+//                 'businesses.customer_po_number',
+//                 'businesses.title',
+//                 'businesses_details.id',
+//                 'businesses_details.product_name',
+//                 'businesses_details.quantity',
+//                 'businesses_details.description',
+//                 'businesses.remarks'
+//             )
+//             ->get();
+
+//         return $data_output;
+//     } catch (\Exception $e) {
+//         return $e;
+//     }
+// }
 public function loadDesignSubmittedForProductionBusinessWise($business_id)
 {
     try {
@@ -988,18 +1051,28 @@ public function loadDesignSubmittedForProductionBusinessWise($business_id)
         $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
             $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
         })
+        
+         ->leftJoin('design_revision_for_prod', function ($join) {
+                $join->on('production.id', '=', 'design_revision_for_prod.production_id'); // Ensure proper join condition
+            })
+            ->leftJoin('designs', function ($join) {
+                $join->on('design_revision_for_prod.design_id', '=', 'designs.id'); // Correct alias usage
+            })
             ->leftJoin('businesses_details', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
             })
-            ->leftJoin('designs', function ($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-            })
-            ->leftJoin('design_revision_for_prod', function ($join) {
-                $join->on('designs.id', '=', 'design_revision_for_prod.design_id');
-            })
             ->leftJoin('businesses', function ($join) {
                 $join->on('businesses_details.business_id', '=', 'businesses.id');
-            }) // Added this join
+            }) // Ensure 'businesses' is joined properly
+            // ->leftJoin('design_revision_for_prod', function ($join) {
+            //     $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+            // })
+            // ->leftJoin('designs', function ($join) {
+            //     $join->on('designs.id', '=', 'design_revision_for_prod.design_id');
+            // }) // Use correct order: Join 'design_revision_for_prod' first
+            ->leftJoin('production as production_revision', function ($join) {
+                $join->on('design_revision_for_prod.production_id', '=', 'production_revision.id');
+            })
             ->where('businesses_details.business_id', $decoded_business_id)
             ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
             ->where('businesses_details.is_active', true)
@@ -1034,7 +1107,7 @@ public function loadDesignSubmittedForProductionBusinessWise($business_id)
 
         return $data_output;
     } catch (\Exception $e) {
-        return $e;
+        return $e->getMessage(); // Return a user-friendly message
     }
 }
 public function getAllListSubmitedPurchaeOrderByVendorOwnerside(){
