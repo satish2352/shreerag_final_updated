@@ -609,6 +609,7 @@ public function getAllRevisedDesign() {
                 'businesses_details.quantity',
                 'businesses_details.description',
                 'businesses.remarks',
+                'design_revision_for_prod.updated_at',
                  DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'), // Aggregated
                 DB::raw('MAX(designs.bom_image) as bom_image'),
                 DB::raw('MAX(designs.design_image) as design_image'),
@@ -625,8 +626,9 @@ public function getAllRevisedDesign() {
                 'businesses_details.product_name',
                 'businesses_details.quantity',
                 'businesses_details.description',
-                'businesses.remarks'
-            )
+                'businesses.remarks',
+                'design_revision_for_prod.updated_at'
+            )->orderBy('design_revision_for_prod.updated_at', 'desc')
             ->get();
 
         return $data_output;
