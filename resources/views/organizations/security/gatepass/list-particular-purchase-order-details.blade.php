@@ -371,13 +371,23 @@
                                         </td>
                                         <td class="no-border" colspan="1"></td>
                                         <td style="border: 1px solid black;"><strong>Net Total (Including {{ $purchaseOrder->tax_type }})</strong></td>
-                                        <td style="border-top: 1px solid black;border-bottom:1px solid black;border-left:1px solid black; border-right:none;padding:5px; text-align:right;" class="text-right">
+                                        {{-- <td style="border-top: 1px solid black;border-bottom:1px solid black;border-left:1px solid black; border-right:none;padding:5px; text-align:right;" class="text-right">
                                             <strong>  {{ 
                                                 ($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * (1 + ($purchaseOrder->tax_name / 100)) 
                                             }} </strong>
                                           <div>
                                             @php
                                             echo convertToWords(($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * (1 + ($purchaseOrder->tax_name / 100)));
+                                                                                      @endphp
+                                          </div>
+                                        </td> --}}
+                                        <td style="border-top: 1px solid black;border-bottom:1px solid black;border-left:1px solid black; border-right:none;padding:5px; text-align:right;" class="text-right">
+                                            <strong>  {{ 
+                                                ($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * (1 + ($purchaseOrder->name / 100)) 
+                                            }} </strong>
+                                          <div>
+                                            @php
+                                            echo convertToWords(($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * (1 + ($purchaseOrder->name / 100)));
                                                                                       @endphp
                                           </div>
                                         </td>
