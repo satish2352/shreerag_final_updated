@@ -305,7 +305,7 @@ public function getAllDispatchClosedProduct()
                 'businesses_details.product_name',
                 'businesses_details.description',
                 'businesses_details.quantity',
-                'tbl_logistics.updated_at'
+                
             )
 
             // Ensure completed quantity matches the required quantity
