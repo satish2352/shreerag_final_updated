@@ -345,19 +345,24 @@ public function acceptdesignlistBusinessWise($business_id){
     $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
       $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
     })
-      ->leftJoin('designs', function ($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-      })
-
+    //   ->leftJoin('designs', function ($join) {
+    //     $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+    //   })
+    ->leftJoin('design_revision_for_prod', function ($join) {
+        $join->on('production.id', '=', 'design_revision_for_prod.production_id'); // Ensure proper join condition
+    })
+    ->leftJoin('designs', function ($join) {
+        $join->on('design_revision_for_prod.design_id', '=', 'designs.id'); // Correct alias usage
+    })
       ->leftJoin('businesses', function ($join) {
         $join->on('business_application_processes.business_id', '=', 'businesses.id');
       })
       ->leftJoin('businesses_details', function($join) {
         $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
     })
-    ->leftJoin('design_revision_for_prod', function ($join) {
-      $join->on('designs.id', '=', 'design_revision_for_prod.design_id');
-  })
+//     ->leftJoin('design_revision_for_prod', function ($join) {
+//       $join->on('designs.id', '=', 'design_revision_for_prod.design_id');
+//   })
       // ->leftJoin('purchase_orders', function($join) {
       //   $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
       // })
