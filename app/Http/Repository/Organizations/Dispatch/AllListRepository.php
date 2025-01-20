@@ -310,7 +310,7 @@ public function getAllDispatchClosedProduct()
             ->havingRaw('SUM(tcqt1.completed_quantity) = businesses_details.quantity')
 
             // Order by ID for consistent results
-            ->orderBy('businesses_details.id', 'asc')
+            ->orderBy('tbl_dispatch.updated_at', 'desc')
             ->get()
             ->map(function($data) {
                 // Convert last_updated_at to Carbon instance if it's not already
