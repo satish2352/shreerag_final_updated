@@ -1077,32 +1077,32 @@ public function loadDesignSubmittedForProductionBusinessWise($business_id)
             ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
             ->where('businesses_details.is_active', true)
             ->select(
-                'business_application_processes.id',
-                'businesses.id as business_id',
-                'businesses.customer_po_number',
-                'businesses.title',
-                'businesses_details.id as business_details_id',
-                'businesses_details.product_name',
-                'businesses_details.quantity',
-                'businesses_details.description',
-                'businesses.remarks',
-                DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'),
-                DB::raw('MAX(designs.bom_image) as bom_image'),
-                DB::raw('MAX(designs.design_image) as design_image'),
-                DB::raw('MAX(design_revision_for_prod.bom_image) as re_bom_image'),
-                DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image')
-            )
-            ->groupBy(
-                'business_application_processes.id',
-                'businesses.id',
-                'businesses.customer_po_number',
-                'businesses.title',
-                'businesses_details.id',
-                'businesses_details.product_name',
-                'businesses_details.quantity',
-                'businesses_details.description',
-                'businesses.remarks'
-            )
+                              'business_application_processes.id',
+                              'businesses.id as business_id',
+                              'businesses.customer_po_number',
+                              'businesses.title',
+                              'businesses_details.id as business_details_id',
+                              'businesses_details.product_name',
+                              'businesses_details.quantity',
+                              'businesses_details.description',
+                              'businesses.remarks',
+                              DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'),
+                              DB::raw('MAX(designs.bom_image) as bom_image'),
+                              DB::raw('MAX(designs.design_image) as design_image'),
+                              DB::raw('MAX(design_revision_for_prod.bom_image) as re_bom_image'),
+                              DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image')
+                          )
+                          ->groupBy(
+                              'business_application_processes.id',
+                              'businesses.id',
+                              'businesses.customer_po_number',
+                              'businesses.title',
+                              'businesses_details.id',
+                              'businesses_details.product_name',
+                              'businesses_details.quantity',
+                              'businesses_details.description',
+                              'businesses.remarks'
+                          )
             ->get();
 
         return $data_output;
