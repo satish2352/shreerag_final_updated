@@ -605,7 +605,7 @@ public function getAllRevisedDesign() {
             ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
             ->where('businesses.is_active', true)
             ->select(
-                'business_application_processes.id',
+                'design_revision_for_prod.id',
                 'businesses.id as business_id',
                 'businesses.customer_po_number',
                 'businesses.title',
@@ -623,7 +623,7 @@ public function getAllRevisedDesign() {
                 DB::raw('MAX(design_revision_for_prod.remark_by_design) as remark_by_design') // Aggregated  
             )
             ->groupBy(
-                'business_application_processes.id',
+                'design_revision_for_prod.id',
                 'businesses.id',
                 'businesses.customer_po_number',
                 'businesses.title',
