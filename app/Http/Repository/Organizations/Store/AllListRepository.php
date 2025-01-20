@@ -474,10 +474,10 @@ public function getAllListMaterialReceivedFromQuality()
                 'businesses.is_active',
                 'production.business_id',
                 'production.id as productionId',
-                'design_revision_for_prod.reject_reason_prod',
-                'design_revision_for_prod.id as design_revision_for_prod_id',
-                'designs.bom_image',
-                'designs.design_image',
+                // 'design_revision_for_prod.reject_reason_prod',
+                // 'design_revision_for_prod.id as design_revision_for_prod_id',
+                // 'designs.bom_image',
+                // 'designs.design_image',
                 'business_application_processes.store_receipt_no',
                 'businesses.updated_at'
             )
