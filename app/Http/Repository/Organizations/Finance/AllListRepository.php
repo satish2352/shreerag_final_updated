@@ -53,7 +53,8 @@ class AllListRepository
               'vendors.contact_no',
               'vendors.vendor_address',
               'vendors.gst_no',
-              'vendors.quote_no'
+              'vendors.quote_no',
+               'grn_tbl.updated_at'
           )
           ->select(
               'purchase_orders.purchase_orders_id',
@@ -67,8 +68,10 @@ class AllListRepository
               'vendors.contact_no',
               'vendors.vendor_address',
               'vendors.gst_no',
-              'vendors.quote_no'
+              'vendors.quote_no',
+              'grn_tbl.updated_at'
           )
+          ->orderBy('grn_tbl.updated_at', 'desc')
           ->get();
   
           return $data_output;
