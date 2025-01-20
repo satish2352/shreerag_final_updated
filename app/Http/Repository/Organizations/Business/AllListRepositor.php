@@ -733,8 +733,10 @@ class AllListRepositor
               'vendors.contact_no',
               'vendors.vendor_address',
               'vendors.gst_no',
-              'vendors.quote_no'
+              'vendors.quote_no',
+              'purchase_orders.updated_at'
           )
+          ->orderBy('purchase_orders.updated_at', 'desc')
           ->get();
   
           return $data_output;
@@ -790,6 +792,7 @@ class AllListRepositor
               'vendors.gst_no',
               'vendors.quote_no'
           )
+
           ->get();
   
           return $data_output;

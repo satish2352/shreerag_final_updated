@@ -15,7 +15,8 @@ use App\Models\{
     BusinessApplicationProcesses,
     Gatepass,
     RejectedChalan,
-    GRNModel
+    GRNModel,
+    GrnPOQuantityTracking
 };
 use App\Http\Controllers\Organizations\CommanController;
 class RejectedChalanController extends Controller
@@ -66,6 +67,25 @@ class RejectedChalanController extends Controller
                     'grn_tbl.grn_date'
                 )
                 ->first();
+
+
+
+
+                // $grn_data = GRNModel::leftJoin('gatepass', function ($join) {
+                //     $join->on('grn_tbl.gatepass_id', '=', 'gatepass.id');
+                // })
+                // ->where('grn_tbl.purchase_orders_id', '=', $idtoedit)->where('grn_tbl.id', '=', $grn_id)
+                // ->select(
+                //     'grn_tbl.*',
+                //     'gatepass.*'
+                // )
+                // ->first();
+    //           dd($grn_data);
+    // die();
+                $po_id = $purchase_order_data->id;
+    
+                $purchase_order_details_data = GrnPOQuantityTracking::where('purchase_order_id', $po_id)
+                    ->get();
                 // dd($gatepass_data);
                 // die();
             return view('organizations.store.rejected-chalan.add-rejected-chalan', compact('purchase_order_data', 'purchase_order_details_data', 'gatepass_data'));
@@ -126,8 +146,11 @@ class RejectedChalanController extends Controller
     public function getAllRejectedChalanDetailsList($purchase_orders_id, $id)
     {
         try {
+
             $id = base64_decode($id);
+           
             $purchase_orders_id = base64_decode($purchase_orders_id);
+            // dd($purchase_orders_id);
             $all_gatepass = $this->service->getAllRejectedChalanDetailsList($purchase_orders_id, $id);
 
             $purchase_order_data = PurchaseOrdersModel::where('purchase_orders_id', '=', $purchase_orders_id)->first();

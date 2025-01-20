@@ -140,8 +140,8 @@ public function getAllDispatch(){
     $array_to_be_check_new = ['0'];
 
     
-    $data_output = Logistics::leftJoin('tbl_customer_product_quantity_tracking as tcqt1', function($join) {
-      $join->on('tbl_logistics.quantity_tracking_id', '=', 'tcqt1.id');
+    $data_output = Logistics::leftJoin('tbl_customer_product_quantity_tracking', function($join) {
+      $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_customer_product_quantity_tracking.id');
   })
   ->leftJoin('businesses', function($join) {
       $join->on('tbl_logistics.business_id', '=', 'businesses.id');
@@ -161,27 +161,11 @@ public function getAllDispatch(){
   ->leftJoin('tbl_dispatch', function($join) {
   $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_dispatch.quantity_tracking_id');
 })
-      ->whereIn('tcqt1.quantity_tracking_status',$array_to_be_quantity_tracking)
+      ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status',$array_to_be_quantity_tracking)
       // ->whereIn('bap1.dispatch_status_id',$array_to_be_check)
       ->where('businesses.is_active',true)
-      ->groupBy(
-        'tcqt1.id',
-        'businesses.customer_po_number',
-        'businesses.title',
-        'businesses_details.product_name',
-        'businesses_details.quantity',
-        'businesses_details.description',
-        'tbl_logistics.truck_no',
-        'tbl_dispatch.outdoor_no',
-        'tbl_dispatch.gate_entry',
-        'tbl_dispatch.remark',
-        'tbl_dispatch.updated_at',
-        'tbl_logistics.from_place',
-        'tbl_logistics.to_place',
-        'tcqt1.completed_quantity'
-    )
       ->select(
-        'tcqt1.id',
+        'tbl_customer_product_quantity_tracking.id',
         'businesses.customer_po_number',
         'businesses.title',
         'businesses_details.product_name',
@@ -194,8 +178,19 @@ public function getAllDispatch(){
           'tbl_dispatch.updated_at',
           'tbl_logistics.from_place',
           'tbl_logistics.to_place',
-          'tcqt1.completed_quantity'
-      )->orderBy('tbl_dispatch.updated_at', 'desc')
+          'tbl_customer_product_quantity_tracking.completed_quantity',
+          DB::raw('(SELECT SUM(t2.completed_quantity)
+          FROM tbl_customer_product_quantity_tracking AS t2
+          WHERE t2.business_details_id = businesses_details.id
+            AND t2.id <= tbl_customer_product_quantity_tracking.id
+         ) AS cumulative_completed_quantity'),
+      DB::raw('(businesses_details.quantity - (SELECT SUM(t2.completed_quantity)
+          FROM tbl_customer_product_quantity_tracking AS t2
+          WHERE t2.business_details_id = businesses_details.id
+            AND t2.id <= tbl_customer_product_quantity_tracking.id
+         )) AS remaining_quantity'),
+      )
+      ->orderBy('tbl_dispatch.updated_at', 'desc')
       ->get();
      
  
