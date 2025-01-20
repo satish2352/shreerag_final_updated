@@ -139,7 +139,29 @@
 
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="image">Signature:</label>
+                                                        <div class="form-group">
+                                                            <label>Bill No. : <span class="text-danger">*</span></label>
+                                                            <input type="text" class="form-control" id="bill_no"
+                                                                value="{{ old('bill_no') }}" name="bill_no"
+                                                                placeholder="Enter Bill Number">
+                                                            @if ($errors->has('bill_no'))
+                                                                <span class="red-text"><?php echo $errors->first('bill_no', ':message'); ?></span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                        <div class="form-group">
+                                                            <label>Bill Date. : <span class="text-danger">*</span></label>
+                                                            <input type="date" class="form-control" id="bill_date"
+                                                                value="{{ old('bill_date') }}" name="bill_date"
+                                                                placeholder="Enter Bill Number">
+                                                            @if ($errors->has('bill_date'))
+                                                                <span class="red-text"><?php echo $errors->first('bill_date', ':message'); ?></span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                        <label for="image">Signature :</label>
                                                         <input type="file" class="form-control" accept="image/*"
                                                             id="image" name="image">
                                                     </div>
@@ -294,6 +316,12 @@
                     invoice_date: {
                         required: true,
                     },
+                    bill_no: {
+                        required: true,
+                    },
+                    bill_date: {
+                        required: true,
+                    },
                     remark: {
                         required: true,
                     },
@@ -329,6 +357,12 @@
                     },
                     purchase_orders_id: {
                         required: "Please Enter PO No",
+                    },
+                    bill_no: {
+                        required: "Please Enter Bill No.",
+                    },
+                    bill_date: {
+                        required: "Please select bill Date.",
                     },
                     po_date: {
                         required: "Please select PO Date.",

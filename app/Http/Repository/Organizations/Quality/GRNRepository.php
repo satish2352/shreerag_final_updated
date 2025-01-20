@@ -28,7 +28,7 @@ class GRNRepository
             $data_output = Gatepass::leftJoin('purchase_orders', function ($join) {
                 $join->on('gatepass.purchase_orders_id', '=', 'purchase_orders.purchase_orders_id');
             })
-            ->where('po_tracking_status', 4001)
+            ->where('gatepass.po_tracking_status', 4001)
             ->select(
                 'gatepass.id',
                 'purchase_orders.business_details_id',
@@ -94,6 +94,8 @@ class GRNRepository
             // gatepass_id
             $dataOutput->po_date = $request->po_date;
             $dataOutput->grn_date = $request->grn_date;
+            $dataOutput->bill_no = $request->bill_no;
+            $dataOutput->bill_date = $request->bill_date;
             $dataOutput->remark = $request->remark;
             $dataOutput->grn_no_generate = $grn_no_generate;
             $dataOutput->image = 'null'; // Initial image state
@@ -323,6 +325,8 @@ public function getAllRejectedChalanList()
             'grn_tbl.po_date', 
             'grn_tbl.grn_date', 
             'grn_tbl.remark', 
+            'grn_tbl.bill_no', 
+            'grn_tbl.bill_date', 
             'tbl_rejected_chalan.is_active'
         )
         ->groupBy('tbl_rejected_chalan.purchase_orders_id', 'grn_tbl.po_date', 'grn_tbl.grn_date', 'grn_tbl.remark', 'tbl_rejected_chalan.is_active')

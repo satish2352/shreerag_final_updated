@@ -104,11 +104,26 @@
 
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="po_date">PO Date :</label>
-                                                        <input type="date" class="form-control" id="po_date"
+                                                        <input type="text" class="form-control" id="po_date"
                                                             name="po_date" placeholder="Enter PO Date"
                                                             value="{{ $purchase_order_data->created_at->format('Y-m-d') }}"
                                                             readonly>
-                                                    </div>                                                    
+                                                    </div>   
+                                                    
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                        <label for="bill_no">Bill No. :</label>
+                                                        <input type="text" class="form-control" id="bill_no"
+                                                            name="bill_no" placeholder=""
+                                                            value="{{ $grn_data->bill_no}}"
+                                                            readonly>
+                                                    </div> 
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                        <label for="bill_date">Bill Date :</label>
+                                                        <input type="date" class="form-control" id="bill_date"
+                                                            name="bill_date" placeholder=""
+                                                            value="{{ $grn_data->bill_date }}"
+                                                            readonly>
+                                                    </div> 
                                                 </div>
 
                                                 <div style="margin-top:20px">

@@ -126,8 +126,21 @@
                                                             value="{{ $purchase_order_data->created_at->format('Y-m-d') }}"
                                                             readonly>
                                                     </div> 
-                                                    
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                        <label for="bill_no">Bill No. :</label>
+                                                        <input type="text" class="form-control" id="bill_no"
+                                                            name="bill_no" placeholder=""
+                                                            value="{{ $grn_data->bill_no}}"
+                                                            readonly>
+                                                    </div> 
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-2">
+                                                        <label for="bill_date">Bill Date :</label>
+                                                        <input type="date" class="form-control" id="bill_date"
+                                                            name="bill_date" placeholder=""
+                                                            value="{{ $grn_data->bill_date }}"
+                                                            readonly>
+                                                    </div> 
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-2">
                                                         <label for="gatepass_name">Customer Name :</label>
                                                         <input type="text" class="form-control" id="gatepass_name"
                                                             name="gatepass_name" placeholder="Enter PO Date"

@@ -19,6 +19,8 @@ return new class extends Migration
                 $table->unsignedBigInteger('gatepass_id');
                 $table->string('po_date')->nullable();
                 $table->string('grn_date')->nullable();
+                $table->string('bill_no')->nullable();
+                $table->string('bill_date')->nullable();
                 $table->string('image');
                 $table->string('remark')->nullable();
                 $table->boolean('is_approve')->default(false);

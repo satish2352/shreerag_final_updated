@@ -907,6 +907,7 @@ public function getAllListMaterialReceivedFromQualityPOTracking()
 public function getAllListMaterialReceivedFromQualityPOTrackingBusinessWise($id)
 {
     try {
+       
         // Define the status that needs to be checked for quality
         $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
 
