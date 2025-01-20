@@ -219,7 +219,7 @@
                                     </tr>
                                     <tr style="height:80px; font-family: 'Font Awesome 5 Free">
 
-                                        <td class="no-border" colspan="3"><strong>Signature of Processor/Job
+                                        <td class="no-border" colspan="3"><strong>Signature of Receiver/Job
                                                 Worker</strong></td>
                                         <td class="no-border" style="padding-left:24px;" colspan="5">
                                             <div class="signImage">
