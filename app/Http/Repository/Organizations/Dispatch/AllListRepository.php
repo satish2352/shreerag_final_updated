@@ -292,6 +292,7 @@ public function getAllDispatchClosedProduct()
                 'businesses_details.product_name',
                 'businesses_details.description',
                 'businesses_details.quantity',
+                'tbl_dispatch.updated_at',
                 DB::raw('SUM(tcqt1.completed_quantity) as total_completed_quantity'),
                 DB::raw('MAX(tbl_dispatch.updated_at) as last_updated_at') // Get the last updated_at value
             )
@@ -303,7 +304,8 @@ public function getAllDispatchClosedProduct()
                 'businesses.title',
                 'businesses_details.product_name',
                 'businesses_details.description',
-                'businesses_details.quantity'
+                'businesses_details.quantity',
+                'tbl_dispatch.updated_at'
             )
 
             // Ensure completed quantity matches the required quantity
