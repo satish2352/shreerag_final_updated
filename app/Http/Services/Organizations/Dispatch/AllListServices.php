@@ -38,8 +38,8 @@ class AllListServices
     public function getAllDispatchClosedProduct(){
         try {
           $data_output = $this->repo->getAllDispatchClosedProduct();
-        //   dd($data_output);
-        //   die();
+          dd($data_output);
+          die();
           return $data_output;
         } catch (\Exception $e) {
             return $e;
