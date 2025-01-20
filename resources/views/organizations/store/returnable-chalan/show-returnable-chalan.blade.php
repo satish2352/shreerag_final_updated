@@ -268,6 +268,7 @@
                                                {{-- <div class="signImage">
                                                 <img style="max-width:70px; max-height:70px; text-align: center;" src="{{ Config::get('DocumentConstant.RETURNABLE_CHALAN_VIEW') . $showData['purchaseOrder']->image}}" alt="{{ strip_tags($showData['purchaseOrder']->image) }} Image" />
                                                </div> --}}
+                                               
                                                 <div style="text-align: center; "> <strong>(Authorized Signatory)</strong></div>
                                             </td>
                                         </tr>
