@@ -83,6 +83,7 @@
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
+                                                <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="purchase_id" data-editable="false">Name</th>
                                                 {{-- <th data-field="store_material_sent_date" data-editable="false">Matrial Recieved Date</th> --}}
                                                 {{-- <th data-field="design_image" data-editable="false">Design Layout</th>
@@ -100,7 +101,7 @@
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
-                                                    {{-- <td>{{ ucwords($data->descriptions) }}</td> --}}
+                                                    <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->title) }}</td>
                                                     {{-- <td>{{ ucwords($data->store_material_sent_date) }}</td>
                                                     <td> <a class="img-size" target="_blank"
