@@ -70,7 +70,7 @@
                                         <div class="form-group" id="summernote_id">
                                             <label for="description">Description <span
                                                     class="red-text">*</span></label>
-                                            <textarea class="form-control" name="description" id="description" placeholder="Enter Page Content">{{ old('description') }}</textarea>
+                                            <textarea class="form-control" name="description" id="description" placeholder="Enter Page Description">{{ old('description') }}</textarea>
                                             @if ($errors->has('description'))
                                                 <span
                                                     class="red-text">{{ $errors->first('description') }}</span>
@@ -111,7 +111,57 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
-        <script>
+{{-- <script>
+    $(document).ready(function () {
+    // Custom validation method to check if the field is not empty
+    $.validator.addMethod("spcenotallow", function (value, element) {
+        return value.trim().length > 0; // Ensure value is not just spaces
+    }, "This field cannot be empty or just spaces.");
+
+    // Initialize form validation
+    $("#regForm").validate({
+        rules: {
+            title: {
+                required: true,
+                spcenotallow: true,
+            },
+            description: {
+                required: true,
+                spcenotallow: true, // Apply custom validation to prevent only spaces
+            },
+            image: {
+                required: true,
+                fileExtension: ["jpg", "jpeg", "png"],
+                fileSize: [1, 1048], // File size in KB
+            },
+        },
+        messages: {
+            title: {
+                required: "Please enter the Title.",
+                spcenotallow: "Enter some valid text for the Title.",
+            },
+            description: {
+                required: "Please enter the Description.",
+                spcenotallow: "Description cannot be empty or only spaces.",
+            },
+            image: {
+                required: "Please upload an Image (jpg, jpeg, png).",
+                fileExtension: "Only JPG, JPEG, and PNG images are allowed.",
+                fileSize: "File size must be between 1 KB and 1048 KB.",
+            },
+        },
+        // Trigger validation error placement
+        errorPlacement: function (error, element) {
+            error.insertAfter(element);
+        },
+        submitHandler: function (form) {
+            form.submit(); // Submit the form if validation passes
+        },
+    });
+});
+
+</script>        --}}
+<script>
             $(document).ready(function() {
                 // Function to check if all input fields are filled with valid data
                 function checkFormValidity() {
@@ -154,11 +204,14 @@
                             required: true,
                             spcenotallow: true,
                         },
+                        description:{
+                            required: true,
+                        },
                         image: {
                             required: true,
                             fileExtension: ["jpg", "jpeg", "png"],
-                            fileSize: [50, 1048], // Min 1KB and Max 2MB (2 * 1024 KB)
-                            imageDimensions: [200, 200, 1000, 1000], // Min width x height and Max width x height
+                            fileSize: [1, 1048], // Min 1KB and Max 2MB (2 * 1024 KB)
+                            // imageDimensions: [200, 200, 1000, 1000], // Min width x height and Max width x height
                         },
                     },
                     messages: {
@@ -166,11 +219,14 @@
                             required: "Please enter the Title.",
                             spcenotallow: "Enter Some Title",
                         },
+                        description:{
+                            required: "Please enter the Description.",
+                        },
                         image: {
                             required: "Please upload an Image (jpg, jpeg, png).",
                             fileExtension: "Only JPG, JPEG, and PNG images are allowed.",
-                            fileSize: "File size must be between 50 KB and 1048 KB.",
-                            imageDimensions: "Image dimensions must be between 200x200 and 1000x1000 pixels.",
+                            fileSize: "File size must be between 1 KB and 1048 KB.",
+                            // imageDimensions: "Image dimensions must be between 200x200 and 1000x1000 pixels.",
                         },
                     },
                 });
