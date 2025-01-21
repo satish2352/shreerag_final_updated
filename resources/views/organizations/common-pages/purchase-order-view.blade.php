@@ -400,7 +400,7 @@
                                         <td class="no-border" colspan="2" style="padding-bottom: 10px; text-align:center; font-size:11px;"></td>
                                         <td class="no-border" colspan="3" style="padding-bottom: 10px; text-align:center; font-size:11px;"></td>
                                         <td class="no-border" colspan="2" style="display: block; text-align: center; padding-bottom: 10px; font-size:11px;">
-                                            @if($purchaseOrder->purchase_status_from_owner == 1127)
+                                            @if($purchaseOrder->purchase_status_from_owner == 1127 || $purchaseOrder->purchase_status_from_owner == 1129)
                                             <div style="font-size: 26px; color: green;">
                                                  {{-- <i class="fa fa-check" aria-hidden="true"></i> --}}
                                             <img src="{{ asset('website/assets/img/tick.png')}}" style="width: 44px;" alt="">
