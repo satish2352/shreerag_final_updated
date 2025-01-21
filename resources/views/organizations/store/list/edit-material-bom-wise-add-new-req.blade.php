@@ -725,7 +725,7 @@ $(document).ready(function () {
         const newRow = `
             <tr class="item-row">
                 <td>
-                    <input type="text" name="addmore[${rowCount}][id]" class="form-control" readonly value="${rowCount + 1}">
+                    <input type="text" name="addmore[${rowCount}][id]" class="form-control" readonly value="${rowCount}">
                 </td>
                 <td>
                     <select class="form-control part-no" name="addmore[${rowCount}][part_item_id]" required>

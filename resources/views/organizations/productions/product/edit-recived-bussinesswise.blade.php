@@ -340,7 +340,7 @@
             <tr>
                 <td>
                     <input type="hidden" name="addmore[${rowCounter}][id]" class="form-control" value="">
-                    <input type="text" class="form-control" readonly value="${rowCounter + 1}">
+                    <input type="text" class="form-control" readonly value="${rowCounter}">
                 </td>
                 <td>
                     <select class="form-control part-no" name="addmore[${rowCounter}][part_item_id]">
