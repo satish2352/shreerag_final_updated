@@ -224,7 +224,8 @@ public function getAllListDesignRecievedForMaterial(){
             DB::raw('MAX(designs.design_image) as design_image'), // Aggregated
             DB::raw('MAX(design_revision_for_prod.bom_image) as re_bom_image'), // Aggregated
             DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image'), // Aggregated
-            DB::raw('MAX(design_revision_for_prod.remark_by_design) as remark_by_design') // Aggregated                
+            DB::raw('MAX(design_revision_for_prod.remark_by_design) as remark_by_design'),
+            'production.updated_at',              
         )
         ->groupBy(
             'business_application_processes.id',
@@ -235,8 +236,10 @@ public function getAllListDesignRecievedForMaterial(){
             'businesses_details.product_name',
             'businesses_details.quantity',
             'businesses_details.description',
-            'businesses.remarks'
+            'businesses.remarks',
+            'production.updated_at', 
         )
+        ->orderBy('production.updated_at', 'desc')
         ->get();
         // ->groupBy(
         //     'businesses_details.id',
