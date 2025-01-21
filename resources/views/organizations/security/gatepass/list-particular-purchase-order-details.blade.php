@@ -381,16 +381,19 @@
                                                                                       @endphp
                                           </div>
                                         </td> --}}
-                                        <td style="border-top: 1px solid black;border-bottom:1px solid black;border-left:1px solid black; border-right:none;padding:5px; text-align:right;" class="text-right">
-                                            <strong>  {{ 
-                                                ($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * (1 + ($purchaseOrder->tax_name / 100)) 
-                                            }} </strong>
-                                          <div>
-                                            @php
-                                            echo convertToWords(($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * (1 + ($purchaseOrder->tax_name / 100)));
-                                                                                      @endphp
-                                          </div>
+                                        <td style="border-top: 1px solid black; border-bottom:1px solid black; border-left:1px solid black; border-right:none; padding:5px; text-align:right;" class="text-right">
+                                            <strong>  
+                                                {{ 
+                                                    $purchaseOrderDetails->sum('amount') * (1 + ($purchaseOrder->tax_name / 100)) 
+                                                }} 
+                                            </strong>
+                                            <div>
+                                                @php
+                                                echo convertToWords($purchaseOrderDetails->sum('amount') * (1 + ($purchaseOrder->tax_name / 100)));
+                                                @endphp
+                                            </div>
                                         </td>
+                                        
                                     </tr>
                                     <tr style="padding-bottom: 20px; bold; font-family: 'Font Awesome 5 Free'!important; font-size:12px;">
                                         <td colspan="8" class="no-border" style="padding: 0px;">
