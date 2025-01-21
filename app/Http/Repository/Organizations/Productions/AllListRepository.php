@@ -519,79 +519,15 @@ public function getAllNewRequirementBusinessWise($business_id) {
     }
   }
 
-//   public function getAllRevisedDesign() {
-//     try {
-//         $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECIVED_FROM_PRODUCTION_DEPT_REVISED')];
-
-//         $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
-//                 $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-//             })
-//             ->leftJoin('designs', function ($join) {
-//                 $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-//             })
-//             ->leftJoin('businesses_details', function ($join) {
-//                 $join->on('production.business_details_id', '=', 'businesses_details.id');
-//             })
-//             ->leftJoin('businesses', function ($join) {
-//                 $join->on('business_application_processes.business_id', '=', 'businesses.id');
-//             })
-//             ->leftJoin('design_revision_for_prod', function ($join) {
-//                 $join->on('designs.id', '=', 'design_revision_for_prod.design_id');
-//             })
-//             ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
-//             ->where('businesses.is_active', true)
-//             ->select(
-//                 'business_application_processes.id',
-//                 'businesses.id as business_id',
-//                 'businesses.customer_po_number',
-//                 'businesses.title',
-//                 'businesses_details.id as business_details_id',
-//                 'businesses_details.product_name',
-//                 'businesses_details.quantity',
-//                 'businesses_details.description',
-//                 'businesses.remarks',
-//                 DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'), // Aggregated
-//                 DB::raw('MAX(designs.bom_image) as bom_image'), // Aggregated
-//                 DB::raw('MAX(designs.design_image) as design_image'), // Aggregated
-//                 DB::raw('MAX(design_revision_for_prod.bom_image) as re_bom_image'), // Aggregated
-//                 DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image'), // Aggregated
-//                 DB::raw('MAX(design_revision_for_prod.remark_by_design) as remark_by_design') // Aggregated                
-//             )
-//             ->groupBy(
-//                 'business_application_processes.id',
-//                 'businesses.id',
-//                 'businesses.customer_po_number',
-//                 'businesses.title',
-//                 'businesses_details.id',
-//                 'businesses_details.product_name',
-//                 'businesses_details.quantity',
-//                 'businesses_details.description',
-//                 'businesses.remarks'
-//             )
-//             ->get();
-
-//         return $data_output;
-
-//     } catch (\Exception $e) {
-//         // Log the exception for debugging
-//         \Log::error('Error in getAllRevisedDesign: ' . $e->getMessage());
-//         return response()->json(['error' => $e->getMessage()], 500);
-//     }
-// }
-public function getAllRevisedDesign() {
+  public function getAllRevisedDesign() {
     try {
-        // The array to check for production statuses
         $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECIVED_FROM_PRODUCTION_DEPT_REVISED')];
 
-        // Querying the database with proper joins and error handling
         $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
             })
-            ->leftJoin('design_revision_for_prod', function ($join) {
-                $join->on('production.id', '=', 'design_revision_for_prod.production_id'); // Ensure proper join condition
-            })
             ->leftJoin('designs', function ($join) {
-                $join->on('design_revision_for_prod.design_id', '=', 'designs.id'); // Correct alias usage
+                $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
             })
             ->leftJoin('businesses_details', function ($join) {
                 $join->on('production.business_details_id', '=', 'businesses_details.id');
@@ -599,8 +535,8 @@ public function getAllRevisedDesign() {
             ->leftJoin('businesses', function ($join) {
                 $join->on('business_application_processes.business_id', '=', 'businesses.id');
             })
-            ->leftJoin('production as production_revision', function ($join) { 
-                $join->on('design_revision_for_prod.production_id', '=', 'production_revision.id');
+            ->leftJoin('design_revision_for_prod', function ($join) {
+                $join->on('designs.id', '=', 'design_revision_for_prod.design_id');
             })
             ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
             ->where('businesses.is_active', true)
@@ -614,13 +550,12 @@ public function getAllRevisedDesign() {
                 'businesses_details.quantity',
                 'businesses_details.description',
                 'businesses.remarks',
-                'design_revision_for_prod.updated_at',
-                 DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'), // Aggregated
-                DB::raw('MAX(designs.bom_image) as bom_image'),
-                DB::raw('MAX(designs.design_image) as design_image'),
-                DB::raw('MAX(design_revision_for_prod.bom_image) as re_bom_image'),
-                DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image'),
-                DB::raw('MAX(design_revision_for_prod.remark_by_design) as remark_by_design') // Aggregated  
+                DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'), // Aggregated
+                DB::raw('MAX(designs.bom_image) as bom_image'), // Aggregated
+                DB::raw('MAX(designs.design_image) as design_image'), // Aggregated
+                DB::raw('MAX(design_revision_for_prod.bom_image) as re_bom_image'), // Aggregated
+                DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image'), // Aggregated
+                DB::raw('MAX(design_revision_for_prod.remark_by_design) as remark_by_design') // Aggregated                
             )
             ->groupBy(
                 'business_application_processes.id',
@@ -631,9 +566,8 @@ public function getAllRevisedDesign() {
                 'businesses_details.product_name',
                 'businesses_details.quantity',
                 'businesses_details.description',
-                'businesses.remarks',
-                'design_revision_for_prod.updated_at'
-            )->orderBy('design_revision_for_prod.updated_at', 'desc')
+                'businesses.remarks'
+            )
             ->get();
 
         return $data_output;
@@ -644,6 +578,72 @@ public function getAllRevisedDesign() {
         return response()->json(['error' => $e->getMessage()], 500);
     }
 }
+// public function getAllRevisedDesign() {
+//     try {
+//         // The array to check for production statuses
+//         $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECIVED_FROM_PRODUCTION_DEPT_REVISED')];
+
+//         // Querying the database with proper joins and error handling
+//         $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+//                 $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+//             })
+//             ->leftJoin('design_revision_for_prod', function ($join) {
+//                 $join->on('production.id', '=', 'design_revision_for_prod.production_id'); // Ensure proper join condition
+//             })
+//             ->leftJoin('designs', function ($join) {
+//                 $join->on('design_revision_for_prod.design_id', '=', 'designs.id'); // Correct alias usage
+//             })
+//             ->leftJoin('businesses_details', function ($join) {
+//                 $join->on('production.business_details_id', '=', 'businesses_details.id');
+//             })
+//             ->leftJoin('businesses', function ($join) {
+//                 $join->on('business_application_processes.business_id', '=', 'businesses.id');
+//             })
+//             ->leftJoin('production as production_revision', function ($join) { 
+//                 $join->on('design_revision_for_prod.production_id', '=', 'production_revision.id');
+//             })
+//             ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
+//             ->where('businesses.is_active', true)
+//             ->select(
+//                 'business_application_processes.id',
+//                 'businesses.id as business_id',
+//                 'businesses.customer_po_number',
+//                 'businesses.title',
+//                 'businesses_details.id as business_details_id',
+//                 'businesses_details.product_name',
+//                 'businesses_details.quantity',
+//                 'businesses_details.description',
+//                 'businesses.remarks',
+//                 'design_revision_for_prod.updated_at',
+//                  DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'), // Aggregated
+//                 DB::raw('MAX(designs.bom_image) as bom_image'),
+//                 DB::raw('MAX(designs.design_image) as design_image'),
+//                 DB::raw('MAX(design_revision_for_prod.bom_image) as re_bom_image'),
+//                 DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image'),
+//                 DB::raw('MAX(design_revision_for_prod.remark_by_design) as remark_by_design') // Aggregated  
+//             )
+//             ->groupBy(
+//                 'business_application_processes.id',
+//                 'businesses.id',
+//                 'businesses.customer_po_number',
+//                 'businesses.title',
+//                 'businesses_details.id',
+//                 'businesses_details.product_name',
+//                 'businesses_details.quantity',
+//                 'businesses_details.description',
+//                 'businesses.remarks',
+//                 'design_revision_for_prod.updated_at'
+//             )->orderBy('design_revision_for_prod.updated_at', 'desc')
+//             ->get();
+
+//         return $data_output;
+
+//     } catch (\Exception $e) {
+//         // Log the exception for debugging
+//         \Log::error('Error in getAllRevisedDesign: ' . $e->getMessage());
+//         return response()->json(['error' => $e->getMessage()], 500);
+//     }
+// }
   // public function getAllreviseddesign(){
   //   try {
 
