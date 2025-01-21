@@ -343,6 +343,9 @@ class PurchaseOrderController extends Controller
             
             $data_purchase_orders_update = PurchaseOrdersModel::where('requisition_id', $requistition_id)->first();
             $data_purchase_orders_update->purchase_status_from_purchase = config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL');
+            $data_purchase_orders_update->po_send_owner_status = 'send_owner';
+
+            
             $data_purchase_orders_update->save();
 
             $business_application = BusinessApplicationProcesses::where('requisition_id', $requistition_id)->first();

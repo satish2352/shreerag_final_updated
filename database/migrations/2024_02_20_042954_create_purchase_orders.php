@@ -35,7 +35,7 @@ return new class extends Migration
                 $table->string('payment_terms');
                 // $table->string('discount');
                 $table->string('note');
-
+                $table->string('po_send_owner_status')->nullable();
                 $table->date('owner_po_action_date')->nullable();
                 $table->string('purchase_status_from_owner')->nullable();
                 $table->unsignedBigInteger('purchase_status_from_purchase')->nullable();

@@ -346,6 +346,7 @@ class AllListRepositor
         ->leftJoin('businesses_details', function($join) {
           $join->on('production.business_details_id', '=', 'businesses_details.id');
       })
+      ->where('purchase_orders.po_send_owner_status', 'send_owner')
       ->whereIn('purchase_orders.purchase_status_from_purchase',$array_to_be_check)
       ->whereNull('purchase_orders.purchase_status_from_owner')
         // ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
