@@ -34,9 +34,9 @@ class ItemServices
           return ['status' => 'error', 'msg' => $e->getMessage()];
       }      
     }
-    public function getById($emp_id){
+    public function getById($id){
         try {
-            return $this->repo->getById($emp_id);
+            return $this->repo->getById($id);
         } catch (\Exception $e) {
             return $e;
         }
@@ -45,8 +45,7 @@ class ItemServices
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);     
-            // dd($return_data);
-            // die();
+           
             if ($return_data) {
                 return ['status' => 'success', 'msg' => 'Data Updated Successfully.'];
             } else {

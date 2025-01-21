@@ -102,56 +102,99 @@ class ItemRepository  {
             ];
         }
     }
+    public function getById($id) {
+        try {
+            // Debugging: Confirm the received ID
+            // dd($id);
     
-
-    public function getById($id){
-    try {
-            // $dataOutputByid = PartItem::find($id);
-            $dataOutputByid = PartItem::leftJoin('tbl_unit', function ($join) {
-                $join->on('tbl_part_item.unit_id', '=', 'tbl_unit.id');
-            })
-            ->leftJoin('tbl_hsn', function ($join) {
-                $join->on('tbl_part_item.hsn_id', '=', 'tbl_hsn.id');
-            })
-            ->leftJoin('tbl_group_master', function ($join) {
-                $join->on('tbl_part_item.group_type_id', '=', 'tbl_group_master.id');
-            })
-            ->leftJoin('tbl_rack_master', function ($join) {
-                $join->on('tbl_part_item.rack_id', '=', 'tbl_rack_master.id');
-            })
-            ->select(
-                'tbl_part_item.id',
-                'tbl_part_item.part_number',
-                'tbl_part_item.basic_rate',
-                'tbl_part_item.opening_stock',
-                'tbl_part_item.description',
-                'tbl_part_item.extra_description',
-                'tbl_part_item.unit_id',
-                'tbl_unit.id',
-                'tbl_unit.name',
-                'tbl_part_item.hsn_id',
-                'tbl_hsn.id',
-                'tbl_hsn.name as hsn_name',
-                'tbl_part_item.group_type_id',
-                'tbl_group_master.id',
-                'tbl_group_master.name as group_name',
-                'tbl_part_item.rack_id',
-                 'tbl_rack_master.name as rack_name'
-            )
-            ->where('tbl_part_item.id', $id)
-            ->first();
-            if ($dataOutputByid) {
-                return $dataOutputByid;
-            } else {
-                return null;
-            }
+            $dataOutputByid = PartItem::leftJoin('tbl_unit', 'tbl_part_item.unit_id', '=', 'tbl_unit.id')
+                ->leftJoin('tbl_hsn', 'tbl_part_item.hsn_id', '=', 'tbl_hsn.id')
+                ->leftJoin('tbl_group_master', 'tbl_part_item.group_type_id', '=', 'tbl_group_master.id')
+                ->leftJoin('tbl_rack_master', 'tbl_part_item.rack_id', '=', 'tbl_rack_master.id')
+                ->select(
+                    'tbl_part_item.id as part_item_id',
+                    'tbl_part_item.part_number',
+                    'tbl_part_item.basic_rate',
+                    'tbl_part_item.opening_stock',
+                    'tbl_part_item.description',
+                    'tbl_part_item.extra_description',
+                    'tbl_unit.id as unit_id',
+                    'tbl_unit.name as unit_name',
+                    'tbl_hsn.id as hsn_id',
+                    'tbl_hsn.name as hsn_name',
+                    'tbl_group_master.id as group_type_id',
+                    'tbl_group_master.name as group_name',
+                    'tbl_rack_master.id as rack_id',
+                    'tbl_rack_master.name as rack_name'
+                )
+                ->where('tbl_part_item.id', $id)
+                ->first();
+    
+            // dd($dataOutputByid); // Debug the output of the query
+    
+            return $dataOutputByid ?: null;
+    
         } catch (\Exception $e) {
             return [
-                'msg' => $e,
+                'msg' => $e->getMessage(),
                 'status' => 'error'
             ];
         }
     }
+    
+    
+    
+
+    // public function getById($id){
+    // try {
+    //     // dd($id);
+    //     // die();
+    //         // $dataOutputByid = PartItem::find($id);
+    //         $dataOutputByid = PartItem::leftJoin('tbl_unit', function ($join) {
+    //             $join->on('tbl_part_item.unit_id', '=', 'tbl_unit.id');
+    //         })
+    //         ->leftJoin('tbl_hsn', function ($join) {
+    //             $join->on('tbl_part_item.hsn_id', '=', 'tbl_hsn.id');
+    //         })
+    //         ->leftJoin('tbl_group_master', function ($join) {
+    //             $join->on('tbl_part_item.group_type_id', '=', 'tbl_group_master.id');
+    //         })
+    //         ->leftJoin('tbl_rack_master', function ($join) {
+    //             $join->on('tbl_part_item.rack_id', '=', 'tbl_rack_master.id');
+    //         })
+    //         ->select(
+    //             'tbl_part_item.id',
+    //             'tbl_part_item.part_number',
+    //             'tbl_part_item.basic_rate',
+    //             'tbl_part_item.opening_stock',
+    //             'tbl_part_item.description',
+    //             'tbl_part_item.extra_description',
+    //             'tbl_part_item.unit_id',
+    //             'tbl_unit.id',
+    //             'tbl_unit.name',
+    //             'tbl_part_item.hsn_id',
+    //             'tbl_hsn.id',
+    //             'tbl_hsn.name as hsn_name',
+    //             'tbl_part_item.group_type_id',
+    //             'tbl_group_master.id',
+    //             'tbl_group_master.name as group_name',
+    //             'tbl_part_item.rack_id',
+    //              'tbl_rack_master.name as rack_name'
+    //         )
+    //         ->where('tbl_part_item.id', $id)
+    //         ->first();
+    //         if ($dataOutputByid) {
+    //             return $dataOutputByid;
+    //         } else {
+    //             return null;
+    //         }
+    //     } catch (\Exception $e) {
+    //         return [
+    //             'msg' => $e,
+    //             'status' => 'error'
+    //         ];
+    //     }
+    // }
 
     // public function updateAll($request)
     // {
@@ -222,7 +265,9 @@ class ItemRepository  {
     {
         try {
             // Fetch the part item by ID
-            $dataOutput = PartItem::find($request->id);
+            $dataOutput = PartItem::find($request->part_item_id);
+            // dd($dataOutput);
+            // die();
     
             // Check if the record exists
             if (!$dataOutput) {
