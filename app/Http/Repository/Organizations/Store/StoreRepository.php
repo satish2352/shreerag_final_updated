@@ -155,93 +155,47 @@ class StoreRepository
             return $e->getMessage();
         }
     }
-    // public function editProductMaterialWiseAddNewReq($id) {
-    //     try {
-    //         $id = base64_decode($id); 
-    //         // $purchase_orders_id = $purchase_orders_id;
-    //         // dd($purchase_orders_id);
-    //         // die();
-    //         // $business_id = $business_id;
-    //         // Fetch all related data
-    //         $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function($join) {
-    //                 $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-    //             })
-    //             ->leftJoin('designs', function($join) {
-    //                 $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-    //             })
-    //             ->leftJoin('businesses_details', function($join) {
-    //                 $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-    //             })
-    //             ->leftJoin('design_revision_for_prod', function($join) {
-    //                 $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-    //             })
-    //             // ->leftJoin('purchase_orders', function($join) {
-    //             //     $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-    //             // })
-    //             ->leftJoin('production_details', function($join) {
-    //                 $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
-    //             })
-    //             // ->leftJoin('grn_tbl', function($join) {
-    //             //     $join->on('purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id');
-    //             // })
-    //             // ->leftJoin('gatepass', function($join) {
-    //             //     $join->on('grn_tbl.gatepass_id', '=', 'gatepass.id');
-    //             // })
-    //             ->where('businesses_details.id', $id)
-    //             // ->where('purchase_orders.purchase_orders_id', $purchase_orders_id)
-    //             // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
-    //             ->where('businesses_details.is_active', true)
-    //             ->select(
-    //                 'businesses_details.id',
-    //                 // 'gatepass.id',
-    //                 'production_details.id',
-    //                 'businesses_details.product_name',
-    //                 'businesses_details.quantity',
-    //                 'businesses_details.description',
-    //                 'production_details.part_item_id',
-    //                 'production_details.quantity',
-    //                 'production_details.unit',
-    //                 'production_details.quantity_minus_status',
-    //                 'production_details.material_send_production',
-    //                 'designs.bom_image',
-    //                 'designs.design_image',
-    //                 'business_application_processes.store_material_sent_date'
-    //             )
-    //             ->get(); 
-    //             // dd($dataOutputByid);
-    //             // die();
-    //         // Extract product details and data for table
-    //         $productDetails = $dataOutputByid->first(); // Assuming the first entry contains the product details
-    //         $dataGroupedById = $dataOutputByid->groupBy('business_details_id');
-    
-    //         return [
-    //             'productDetails' => $productDetails,
-    //             'dataGroupedById' => $dataGroupedById
-    //         ]; 
-    //         // return  $dataOutputByid;
-    //     } catch (\Exception $e) {
-    //         return [
-    //             'status' => 'error',
-    //             'msg' => $e->getMessage()
-    //         ];
-    //     }
-    // }
-
     public function editProductMaterialWiseAddNewReq($id) {
         try {
-            $id = base64_decode($id);
-    
-            $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', 'business_application_processes.business_details_id', '=', 'production.business_details_id')
-                ->leftJoin('designs', 'business_application_processes.business_details_id', '=', 'designs.business_details_id')
-                ->leftJoin('businesses_details', 'business_application_processes.business_details_id', '=', 'businesses_details.id')
-                ->leftJoin('design_revision_for_prod', 'business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id')
-                ->leftJoin('production_details', 'business_application_processes.business_details_id', '=', 'production_details.business_details_id')
+            $id = base64_decode($id); 
+            // $purchase_orders_id = $purchase_orders_id;
+            // dd($purchase_orders_id);
+            // die();
+            // $business_id = $business_id;
+            // Fetch all related data
+            $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+                })
+                ->leftJoin('designs', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+                })
+                ->leftJoin('businesses_details', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+                })
+                ->leftJoin('design_revision_for_prod', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+                })
+                // ->leftJoin('purchase_orders', function($join) {
+                //     $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+                // })
+                ->leftJoin('production_details', function($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
+                })
+                // ->leftJoin('grn_tbl', function($join) {
+                //     $join->on('purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id');
+                // })
+                // ->leftJoin('gatepass', function($join) {
+                //     $join->on('grn_tbl.gatepass_id', '=', 'gatepass.id');
+                // })
                 ->where('businesses_details.id', $id)
+                // ->where('purchase_orders.purchase_orders_id', $purchase_orders_id)
+                // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
                 ->where('businesses_details.is_active', true)
                 ->select(
                     'businesses_details.id',
+                    // 'gatepass.id',
+                    'production_details.id',
                     'businesses_details.product_name',
-                       'businesses_details.product_name',
                     'businesses_details.quantity',
                     'businesses_details.description',
                     'production_details.part_item_id',
@@ -253,16 +207,18 @@ class StoreRepository
                     'designs.design_image',
                     'business_application_processes.store_material_sent_date'
                 )
-                ->distinct()
-                ->get();
-    
-            $productDetails = $dataOutputByid->first(); // Fetch the first entry
+                ->get(); 
+                // dd($dataOutputByid);
+                // die();
+            // Extract product details and data for table
+            $productDetails = $dataOutputByid->first(); // Assuming the first entry contains the product details
             $dataGroupedById = $dataOutputByid->groupBy('business_details_id');
     
             return [
                 'productDetails' => $productDetails,
                 'dataGroupedById' => $dataGroupedById
-            ];
+            ]; 
+            // return  $dataOutputByid;
         } catch (\Exception $e) {
             return [
                 'status' => 'error',
@@ -270,6 +226,50 @@ class StoreRepository
             ];
         }
     }
+
+    // public function editProductMaterialWiseAddNewReq($id) {
+    //     try {
+    //         $id = base64_decode($id);
+    
+    //         $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', 'business_application_processes.business_details_id', '=', 'production.business_details_id')
+    //             ->leftJoin('designs', 'business_application_processes.business_details_id', '=', 'designs.business_details_id')
+    //             ->leftJoin('businesses_details', 'business_application_processes.business_details_id', '=', 'businesses_details.id')
+    //             ->leftJoin('design_revision_for_prod', 'business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id')
+    //             ->leftJoin('production_details', 'business_application_processes.business_details_id', '=', 'production_details.business_details_id')
+    //             ->where('businesses_details.id', $id)
+    //             ->where('businesses_details.is_active', true)
+    //             ->select(
+    //                 'businesses_details.id',
+    //                 'businesses_details.product_name',
+    //                    'businesses_details.product_name',
+    //                 'businesses_details.quantity',
+    //                 'businesses_details.description',
+    //                 'production_details.part_item_id',
+    //                 'production_details.quantity',
+    //                 'production_details.unit',
+    //                 'production_details.quantity_minus_status',
+    //                 'production_details.material_send_production',
+    //                 'designs.bom_image',
+    //                 'designs.design_image',
+    //                 'business_application_processes.store_material_sent_date'
+    //             )
+    //             ->distinct()
+    //             ->get();
+    
+    //         $productDetails = $dataOutputByid->first(); // Fetch the first entry
+    //         $dataGroupedById = $dataOutputByid->groupBy('business_details_id');
+    
+    //         return [
+    //             'productDetails' => $productDetails,
+    //             'dataGroupedById' => $dataGroupedById
+    //         ];
+    //     } catch (\Exception $e) {
+    //         return [
+    //             'status' => 'error',
+    //             'msg' => $e->getMessage()
+    //         ];
+    //     }
+    // }
     
     // public function updateProductMaterialWiseAddNewReq($request) {
     //     try {
