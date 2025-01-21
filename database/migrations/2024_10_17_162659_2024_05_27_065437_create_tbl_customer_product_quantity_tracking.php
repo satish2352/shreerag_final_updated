@@ -21,6 +21,8 @@ return new class extends Migration
             $table->unsignedBigInteger('production_id');
             $table->string('completed_quantity')->nullable();
             $table->unsignedBigInteger('quantity_tracking_status')->nullable();
+            $table->unsignedBigInteger('logistics_list_status')->nullable();
+            $table->unsignedBigInteger('fianace_list_status')->nullable();
             // $table->unsignedBigInteger('production_status')->nullable();
             //   $table->unsignedBigInteger('logistics_status')->nullable();
             //   $table->unsignedBigInteger('logistics_send_fianance_status')->nullable();
