@@ -153,15 +153,78 @@ class ItemRepository  {
         }
     }
 
+    // public function updateAll($request)
+    // {
+    //     try {
+
+    //         // dd($request);
+    //         // die();
+    //         $return_data = array();
+    //         $dataOutput = PartItem::find($request->id);
+    
+    //         if (!$dataOutput) {
+    //             return [
+    //                 'msg' => 'Update Data not found.',
+    //                 'status' => 'error'
+    //             ];
+    //         }
+    
+    //         $dataOutput->part_number = $request->part_number;
+    //         $dataOutput->description = $request->description;
+    //         $dataOutput->unit_id = $request->unit_id;
+    //         $dataOutput->hsn_id = $request->hsn_id;
+    //         $dataOutput->group_type_id = $request->group_type_id;
+    //         // $dataOutput->rack_id = $request->rack_id;
+    //         $dataOutput->basic_rate = $request->basic_rate;
+    //         if ($request->has('opening_stock')) {
+    //             $dataOutput->opening_stock = $request->opening_stock;
+    //         }
+    //         // $dataOutput->opening_stock = $request->opening_stock;
+    //         if ($request->has('rack_id')) {
+    //             $dataOutput->rack_id = $request->rack_id;
+    //         }
+    //         if ($request->has('extra_description')) {
+    //             $dataOutput->extra_description = $request->extra_description;
+    //         }
+    
+    //         $dataOutput->save();
+    
+    //         // Retrieve the last inserted ID
+    //         // $last_insert_id = $dataOutput->id;
+    
+    //         // // Check if ItemStock record exists
+    //         // $itemStock = ItemStock::where('part_item_id', $last_insert_id)->first();
+    //         //     // Update existing record with the new quantity
+    //         //     $itemStock->quantity = $dataOutput->opening_stock; // Set new quantity
+    //         //     $itemStock->save();
+    //         //     // Check if ItemStockHistory record exists
+    //         //     $itemStockHistory = ItemStockHistory::where('part_item_id', $last_insert_id)->first();
+    //         //     // Update existing history record with the new quantity
+    //         //     $itemStockHistory->quantity = $dataOutput->opening_stock; // Set new quantity
+    //         //     $itemStockHistory->save();
+            
+              
+    
+    //         $return_data['data'] = $dataOutput;
+    //         $return_data['status'] = 'success';
+    
+    //         return $return_data;
+    //     } catch (\Exception $e) {
+    //         return [
+    //             'msg' => 'Failed to Update Data.',
+    //             'status' => 'error',
+    //             'error' => $e->getMessage()
+    //         ];
+    //     }
+    // }
+    
     public function updateAll($request)
     {
         try {
-
-            // dd($request);
-            // die();
-            $return_data = array();
+            // Fetch the part item by ID
             $dataOutput = PartItem::find($request->id);
     
+            // Check if the record exists
             if (!$dataOutput) {
                 return [
                     'msg' => 'Update Data not found.',
@@ -169,47 +232,39 @@ class ItemRepository  {
                 ];
             }
     
+            // Update the fields
             $dataOutput->part_number = $request->part_number;
             $dataOutput->description = $request->description;
             $dataOutput->unit_id = $request->unit_id;
             $dataOutput->hsn_id = $request->hsn_id;
             $dataOutput->group_type_id = $request->group_type_id;
-            // $dataOutput->rack_id = $request->rack_id;
             $dataOutput->basic_rate = $request->basic_rate;
-            if ($request->has('opening_stock')) {
+    
+            // Update opening_stock if provided
+            if ($request->filled('opening_stock')) {
                 $dataOutput->opening_stock = $request->opening_stock;
             }
-            // $dataOutput->opening_stock = $request->opening_stock;
-            if ($request->has('rack_id')) {
+    
+            // Update rack_id if provided
+            if ($request->filled('rack_id')) {
                 $dataOutput->rack_id = $request->rack_id;
             }
-            if ($request->has('extra_description')) {
+    
+            // Update extra_description if provided
+            if ($request->filled('extra_description')) {
                 $dataOutput->extra_description = $request->extra_description;
             }
     
+            // Save the updated record
             $dataOutput->save();
     
-            // Retrieve the last inserted ID
-            $last_insert_id = $dataOutput->id;
-    
-            // Check if ItemStock record exists
-            $itemStock = ItemStock::where('part_item_id', $last_insert_id)->first();
-                // Update existing record with the new quantity
-                $itemStock->quantity = $dataOutput->opening_stock; // Set new quantity
-                $itemStock->save();
-                // Check if ItemStockHistory record exists
-                $itemStockHistory = ItemStockHistory::where('part_item_id', $last_insert_id)->first();
-                // Update existing history record with the new quantity
-                $itemStockHistory->quantity = $dataOutput->opening_stock; // Set new quantity
-                $itemStockHistory->save();
-            
-              
-    
-            $return_data['data'] = $dataOutput;
-            $return_data['status'] = 'success';
-    
-            return $return_data;
+            // Return success response
+            return [
+                'data' => $dataOutput,
+                'status' => 'success',
+            ];
         } catch (\Exception $e) {
+            // Return error response
             return [
                 'msg' => 'Failed to Update Data.',
                 'status' => 'error',
@@ -218,7 +273,6 @@ class ItemRepository  {
         }
     }
     
-
 
     public function deleteById($id){
             try {
