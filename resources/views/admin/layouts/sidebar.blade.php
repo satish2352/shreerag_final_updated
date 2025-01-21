@@ -453,7 +453,7 @@
                             <li class="nav-item {{ request()->is('proddept/list-final-prod-completed-send-to-logistics-tracking') ? 'active' : '' }}">
                                 <a href="{{ route('list-final-prod-completed-send-to-logistics-tracking') }}">
                                     <i class="fa fa-check-circle icon-wrap"></i>
-                                    <span class="mini-click-non">Tracking Send to Logistics</span>
+                                    <span class="mini-click-non">Tracking Of Send Material To Logistics Dept</span>
                                 </a>
                             </li>
                         </ul>
