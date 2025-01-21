@@ -136,6 +136,8 @@ class FinanceRepository
             if ($quantity_tracking) {
               $quantity_tracking = CustomerProductQuantityTracking::where('id', $quantity_tracking->id)->first();
               $quantity_tracking->quantity_tracking_status = config('constants.FINANCE_DEPARTMENT.SEND_COMPLETED_QUANLTITY_FROM_FIANANCE_DEPT_TO_DISPATCH_DEPT');
+              $quantity_tracking->fianace_list_status = 'Send_Dispatch';
+
               $quantity_tracking->save();
             $update_data_admin['off_canvas_status'] = 21;
             $update_data_business['off_canvas_status'] = 21;

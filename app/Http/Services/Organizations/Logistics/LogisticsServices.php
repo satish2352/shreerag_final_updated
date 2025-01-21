@@ -42,6 +42,7 @@ class LogisticsServices
     public function sendToFianance($id,  $business_details_id){
         try {
            $update_data = $this->repo->sendToFianance($id,  $business_details_id);
+          
            return $update_data;
         } catch (\Exception $e) {
             return $e;

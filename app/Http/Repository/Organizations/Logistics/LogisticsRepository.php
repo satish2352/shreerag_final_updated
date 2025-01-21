@@ -85,6 +85,7 @@ public function sendToFianance($id,  $business_details_id) {
               $quantity_tracking = CustomerProductQuantityTracking::where('id', $quantity_tracking->id)->first();
                
               $quantity_tracking->quantity_tracking_status = config('constants.LOGISTICS_DEPARTMENT.UPDATED_COMPLETED_QUANLTITY_LOGISTICS_DEPT_SEND_TO_FIANANCE_DEPT');
+              $quantity_tracking->logistics_list_status = 'Send_Fianance';
               $quantity_tracking->save();
 
              // $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');

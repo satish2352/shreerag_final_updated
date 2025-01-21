@@ -264,9 +264,13 @@ public function getAllListSendToFiananceByLogistics(){
         ->leftJoin('production', function($join) {
           $join->on('tbl_customer_product_quantity_tracking.production_id', '=', 'production.id');
       })
+      // ->whereNotNull('tbl_logistics.vehicle_type_id')
+      // ->whereNotNull('tbl_logistics.transport_name_id')
+      // ->whereNotNull('tbl_logistics.from_place')
+      ->where('tbl_customer_product_quantity_tracking.logistics_list_status','Send_Fianance')
       // ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status',$array_to_be_quantity_tracking)
-      // ->whereIn('bap1.logistics_status_id',$array_to_be_check)
-    
+      // ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status',$array_to_be_check)
+      
       ->where('businesses.is_active',true)
       // ->distinct('businesses_details.id')
       ->select(
