@@ -932,12 +932,12 @@
                                             class="mini-click-non">Add Leaves Request</span></a></li>
                             </ul>
                         </li>
-                        {{-- <li class="nav-item {{ request()->is('particular-notice-department-wise') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('particular-notice-department-wise') ? 'active' : '' }}">
                             <a href="{{ route('particular-notice-department-wise') }}">
                                 <i class="fa big-icon fa-bell  icon-wrap"></i>
                                 <span class="mini-click-non">Notice</span>
                             </a>
-                        </li> --}}
+                        </li>
                         
                     @endif
 
