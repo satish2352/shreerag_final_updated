@@ -7,7 +7,8 @@ use Illuminate\Support\Carbon;
 use App\Models\{
     DeliveryChalan,
     DeliveryChalanItemDetails,
-    BusinessApplicationProcesses
+    BusinessApplicationProcesses,
+    ItemStock
 };
 use Config;
 
@@ -22,68 +23,140 @@ class DeliveryChalanRepository
         return DeliveryChalan::where('id', '=', $id)->first();
 
     }
+
     public function submitBOMToOwner($request)
-    {
-        try {
-            $dataOutput = new DeliveryChalan();
-           $dataOutput->vendor_id = $request->vendor_id;
-        //   $dataOutput->business_id = $request->business_id;
-            $dataOutput->transport_id = $request->transport_id;
-            $dataOutput->vehicle_id = $request->vehicle_id;
-            $dataOutput->customer_po_no = $request->customer_po_no;
-            $dataOutput->plant_id = $request->plant_id;
-            $dataOutput->vehicle_number = $request->vehicle_number;
-            $dataOutput->po_date = $request->po_date;
-            // $dataOutput->image = 'null';
-           $dataOutput->dc_date = now();
+{
+    try {
+        $dataOutput = new DeliveryChalan();
+        $dataOutput->vendor_id = $request->vendor_id;
+        $dataOutput->transport_id = $request->transport_id;
+        $dataOutput->vehicle_id = $request->vehicle_id;
+        $dataOutput->customer_po_no = $request->customer_po_no;
+        $dataOutput->plant_id = $request->plant_id;
+        $dataOutput->vehicle_number = $request->vehicle_number;
+        $dataOutput->po_date = $request->po_date;
+        $dataOutput->dc_date = now();
 
         // Retrieve the last dc_number and increment it
         $lastChalan = DeliveryChalan::orderBy('dc_number', 'desc')->first();
         $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
-            $dataOutput->lr_number = $request->lr_number;
+        $dataOutput->lr_number = $request->lr_number;
+        $dataOutput->tax_type = $request->tax_type;
+        $dataOutput->tax_id = $request->tax_id;
+        $dataOutput->remark = $request->remark;
 
-            $dataOutput->tax_type = $request->tax_type;
-            $dataOutput->tax_id = $request->tax_id;
-
-            $dataOutput->remark = $request->remark;
-
-            if ($request->has('business_id')) {
-                $dataOutput->business_id = $request->business_id;
-            }
-          
-            $dataOutput->save();
-            $last_insert_id = $dataOutput->id;
-            // $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
-            // $finalOutput = DeliveryChalan::find($last_insert_id);
-            // $finalOutput->image = $imageName;
-            // $finalOutput->save();
-
-            foreach ($request->addmore as $index => $item) {
-                $designDetails = new DeliveryChalanItemDetails();
-                $designDetails->delivery_chalan_id = $last_insert_id;
-                $designDetails->part_item_id = $item['part_item_id'];
-                $designDetails->unit_id = $item['unit_id'];
-                $designDetails->process_id = $item['process_id'];
-                $designDetails->hsn_id = $item['hsn_id'];
-                $designDetails->quantity = $item['quantity'];
-                $designDetails->size = $item['size'];
-                // $designDetails->rate = $item['rate'];
-                $designDetails->rate = isset($item['rate']) && $item['rate'] !== '' ? $item['rate'] : null; // Handle optional rate
-                $designDetails->amount = $item['amount'];
-                $designDetails->save();
-            }
-            return [
-                // 'ImageName' => $imageName,
-                'status' => 'success'
-            ];
-        } catch (\Exception $e) {
-            
-            return [
-                'msg' => $e->getMessage(),
-                'status' => 'error'
-            ];
+        if ($request->has('business_id')) {
+            $dataOutput->business_id = $request->business_id;
         }
+
+        $dataOutput->save();
+        $last_insert_id = $dataOutput->id;
+
+        foreach ($request->addmore as $index => $item) {
+            $designDetails = new DeliveryChalanItemDetails();
+            $designDetails->delivery_chalan_id = $last_insert_id;
+            $designDetails->part_item_id = $item['part_item_id'];
+            $designDetails->unit_id = $item['unit_id'];
+            $designDetails->process_id = $item['process_id'];
+            $designDetails->hsn_id = $item['hsn_id'];
+            $designDetails->quantity = $item['quantity'];
+            $designDetails->size = $item['size'];
+            $designDetails->rate = isset($item['rate']) && $item['rate'] !== '' ? $item['rate'] : null; // Handle optional rate
+            $designDetails->amount = $item['amount'];
+            $designDetails->save();
+
+            // Handle stock deduction
+            $partItemId = $item['part_item_id'];
+            $itemStock = ItemStock::where('part_item_id', $partItemId)->first();
+
+            if ($itemStock) {
+                if ($itemStock->quantity >= $item['quantity']) {
+                    // Deduct stock
+                    $itemStock->quantity -= $item['quantity'];
+                    $itemStock->save();
+                } else {
+                    // Log error if not enough stock
+                    throw new \Exception("Not enough stock for part item ID: " . $partItemId);
+                }
+            } else {
+                // Log error if stock record not found
+                throw new \Exception("Item stock not found for part item ID: " . $partItemId);
+            }
+        }
+
+        return [
+            'status' => 'success'
+        ];
+    } catch (\Exception $e) {
+        return [
+            'msg' => $e->getMessage(),
+            'status' => 'error'
+        ];
     }
+}
+
+    // public function submitBOMToOwner($request)
+    // {
+    //     try {
+    //         $dataOutput = new DeliveryChalan();
+    //        $dataOutput->vendor_id = $request->vendor_id;
+    //     //   $dataOutput->business_id = $request->business_id;
+    //         $dataOutput->transport_id = $request->transport_id;
+    //         $dataOutput->vehicle_id = $request->vehicle_id;
+    //         $dataOutput->customer_po_no = $request->customer_po_no;
+    //         $dataOutput->plant_id = $request->plant_id;
+    //         $dataOutput->vehicle_number = $request->vehicle_number;
+    //         $dataOutput->po_date = $request->po_date;
+    //         // $dataOutput->image = 'null';
+    //        $dataOutput->dc_date = now();
+
+    //     // Retrieve the last dc_number and increment it
+    //     $lastChalan = DeliveryChalan::orderBy('dc_number', 'desc')->first();
+    //     $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
+    //         $dataOutput->lr_number = $request->lr_number;
+
+    //         $dataOutput->tax_type = $request->tax_type;
+    //         $dataOutput->tax_id = $request->tax_id;
+
+    //         $dataOutput->remark = $request->remark;
+
+    //         if ($request->has('business_id')) {
+    //             $dataOutput->business_id = $request->business_id;
+    //         }
+          
+    //         $dataOutput->save();
+    //         $last_insert_id = $dataOutput->id;
+    //         // $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
+    //         // $finalOutput = DeliveryChalan::find($last_insert_id);
+    //         // $finalOutput->image = $imageName;
+    //         // $finalOutput->save();
+
+    //         foreach ($request->addmore as $index => $item) {
+    //             $designDetails = new DeliveryChalanItemDetails();
+    //             $designDetails->delivery_chalan_id = $last_insert_id;
+    //             $designDetails->part_item_id = $item['part_item_id'];
+    //             $designDetails->unit_id = $item['unit_id'];
+    //             $designDetails->process_id = $item['process_id'];
+    //             $designDetails->hsn_id = $item['hsn_id'];
+    //             $designDetails->quantity = $item['quantity'];
+    //             $designDetails->size = $item['size'];
+    //             // $designDetails->rate = $item['rate'];
+    //             $designDetails->rate = isset($item['rate']) && $item['rate'] !== '' ? $item['rate'] : null; // Handle optional rate
+    //             $designDetails->amount = $item['amount'];
+    //             $designDetails->save();
+    //         }
+    //         return [
+    //             // 'ImageName' => $imageName,
+    //             'status' => 'success'
+    //         ];
+    //     } catch (\Exception $e) {
+            
+    //         return [
+    //             'msg' => $e->getMessage(),
+    //             'status' => 'error'
+    //         ];
+    //     }
+    // }
 
 
     public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id) {
@@ -215,7 +288,102 @@ class DeliveryChalanRepository
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    
+//     public function updateAll($request)
+// {
+//     try {
+//         $edit_id = $request->id;
+
+//         $dataOutputNew = DeliveryChalan::find($edit_id);
+//         if (!$dataOutputNew) {
+//             return [
+//                 'msg' => 'Delivery Chalan not found.',
+//                 'status' => 'error',
+//             ];
+//         }
+
+//         // Update existing design details and manage ItemStock
+//         for ($i = 0; $i <= $request->design_count; $i++) {
+//             $designDetails = DeliveryChalanItemDetails::findOrFail($request->input("design_id_" . $i));
+//             $partItemId = $designDetails->part_item_id;
+
+//             // Restore the previous quantity to stock
+//             $itemStock = ItemStock::where('part_item_id', $partItemId)->first();
+//             if ($itemStock) {
+//                 $itemStock->quantity += $designDetails->quantity;
+//                 $itemStock->save();
+//             }
+
+//             // Update design details
+//             $designDetails->part_item_id = $request->input("part_item_id_" . $i);
+//             $designDetails->hsn_id = $request->input("hsn_id_" . $i);
+//             $designDetails->process_id = $request->input("process_id_" . $i);
+//             $designDetails->quantity = $request->input("quantity_" . $i);
+//             $designDetails->unit_id = $request->input("unit_id_" . $i);
+//             $designDetails->size = $request->input("size_" . $i);
+//             $designDetails->rate = $request->input("rate_" . $i);
+//             $designDetails->amount = $request->input("amount_" . $i);
+//             $designDetails->save();
+
+//             // Deduct the new quantity from stock
+//             $itemStock = ItemStock::where('part_item_id', $designDetails->part_item_id)->first();
+//             if ($itemStock) {
+//                 $itemStock->quantity -= $designDetails->quantity;
+//                 $itemStock->save();
+//             }
+//         }
+
+//         // Update DeliveryChalan main record
+//         $dataOutputNew->update([
+//             'vendor_id' => $request->vendor_id,
+//             'tax_type' => $request->tax_type,
+//             'tax_id' => $request->tax_id,
+//             'transport_id' => $request->transport_id,
+//             'vehicle_id' => $request->vehicle_id,
+//             'customer_po_no' => $request->customer_po_no,
+//             'plant_id' => $request->plant_id,
+//             'vehicle_number' => $request->vehicle_number,
+//             'po_date' => $request->po_date,
+//             'lr_number' => $request->lr_number,
+//             'remark' => $request->remark,
+//         ]);
+
+//         // Handle new rows added via `addmore`
+//         if ($request->has('addmore')) {
+//             foreach ($request->addmore as $item) {
+//                 $designDetails = new DeliveryChalanItemDetails();
+//                 $designDetails->delivery_chalan_id = $edit_id; // Link to the parent DeliveryChalan
+//                 $designDetails->part_item_id = $item['part_item_id'];
+//                 $designDetails->hsn_id = $item['hsn_id'];
+//                 $designDetails->process_id = $item['process_id'];
+//                 $designDetails->quantity = $item['quantity'];
+//                 $designDetails->unit_id = $item['unit_id'];
+//                 $designDetails->size = $item['size'];
+//                 $designDetails->rate = $item['rate'] ?? null;
+//                 $designDetails->amount = $item['amount'];
+//                 $designDetails->save();
+
+//                 // Deduct stock for newly added rows
+//                 $itemStock = ItemStock::where('part_item_id', $item['part_item_id'])->first();
+//                 if ($itemStock) {
+//                     $itemStock->quantity -= $item['quantity'];
+//                     $itemStock->save();
+//                 }
+//             }
+//         }
+
+//         return [
+//             'msg' => 'Data updated successfully.',
+//             'status' => 'success'
+//         ];
+//     } catch (\Exception $e) {
+//         return [
+//             'msg' => 'Failed to update data.',
+//             'status' => 'error',
+//             'error' => $e->getMessage()
+//         ];
+//     }
+// }
+
     public function updateAll($request){
        
         try {
@@ -230,18 +398,19 @@ class DeliveryChalanRepository
                     'status' => 'error',
                 ];
             }
-       
-        //   $imageName = $dataOutputNew->image; 
-
-        // if ($request->hasFile('image')) {
-        //     $imageName = $dataOutputNew->id . '_' . rand(100000, 999999) . '.' . $request->file('image')->getClientOriginalExtension();
-        //     $dataOutputNew->image = $imageName;  
-        // }
-
-        // $dataOutputNew->save();
 
             for ($i = 0; $i <= $request->design_count; $i++) {
                 $designDetails = DeliveryChalanItemDetails::findOrFail($request->input("design_id_" . $i));
+                // $designDetails = DeliveryChalanItemDetails::findOrFail($request->input("design_id_" . $i));
+            // $partItemId = $designDetails->part_item_id;
+
+            // Restore the previous quantity to stock
+            // $itemStock = ItemStock::where('part_item_id', $partItemId)->first();
+            // if ($itemStock) {
+            //     $itemStock->quantity += $designDetails->quantity;
+            //     $itemStock->save();
+            // }
+               
                 $designDetails->part_item_id = $request->input("part_item_id_" . $i);
                 $designDetails->hsn_id = $request->input("hsn_id_" . $i);
                 $designDetails->process_id = $request->input("process_id_" . $i);
@@ -292,15 +461,26 @@ class DeliveryChalanRepository
                     $designDetails->unit_id = $item['unit_id'];
                     $designDetails->size = $item['size'];
                     // $designDetails->rate = $item['rate'];
-                    $rate = $request->input("rate_" . $i);
-                    $designDetails->rate = isset($rate) && $rate !== '' ? $rate : null;
+                     // Check if the 'rate' field exists and is not empty, and set it
+                    if (!empty($item['rate'])) {
+                        $designDetails->rate = $item['rate'];
+                    } else {
+                        $designDetails->rate = null; // Set to null if 'rate' is missing or empty
+                    }
+                                // $rate = $request->input("rate" . $i);
+                    // $designDetails->rate = isset($rate) && $rate !== '' ? $rate : null;
                     $designDetails->amount = $item['amount'];
                     // $designDetails->actual_quantity = '0';
                     // $designDetails->accepted_quantity = '0';
                     // $designDetails->rejected_quantity = '0';
                   
                     $designDetails->save();
-                    
+                     // Deduct stock for newly added rows
+                $itemStock = ItemStock::where('part_item_id', $item['part_item_id'])->first();
+                if ($itemStock) {
+                    $itemStock->quantity -= $item['quantity'];
+                    $itemStock->save();
+                }
                  
 
                 }

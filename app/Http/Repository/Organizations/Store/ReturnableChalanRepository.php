@@ -7,7 +7,8 @@ use Illuminate\Support\Carbon;
 use App\Models\{
     ReturnableChalan,
     ReturnableChalanItemDetails,
-    BusinessApplicationProcesses
+    BusinessApplicationProcesses,
+    ItemStock
 };
 use Config;
 
@@ -70,6 +71,24 @@ class ReturnableChalanRepository
                 $designDetails->rate = isset($item['rate']) && $item['rate'] !== '' ? $item['rate'] : null; // Handle optional rate
                 $designDetails->amount = $item['amount'];
                 $designDetails->save();
+
+                 // Handle stock deduction
+            $partItemId = $item['part_item_id'];
+            $itemStock = ItemStock::where('part_item_id', $partItemId)->first();
+
+            if ($itemStock) {
+                if ($itemStock->quantity >= $item['quantity']) {
+                    // Deduct stock
+                    $itemStock->quantity -= $item['quantity'];
+                    $itemStock->save();
+                } else {
+                    // Log error if not enough stock
+                    throw new \Exception("Not enough stock for part item ID: " . $partItemId);
+                }
+            } else {
+                // Log error if stock record not found
+                throw new \Exception("Item stock not found for part item ID: " . $partItemId);
+            }
             }
            
             return [
@@ -279,7 +298,12 @@ class ReturnableChalanRepository
                     $designDetails->quantity = $item['quantity'];
                     $designDetails->unit_id = $item['unit_id'];
                     $designDetails->size = $item['size'];
-                    $designDetails->rate = $item['rate'];
+                    // $designDetails->rate = $item['rate'];
+                    if (!empty($item['rate'])) {
+                        $designDetails->rate = $item['rate'];
+                    } else {
+                        $designDetails->rate = null; // Set to null if 'rate' is missing or empty
+                    }
                     $designDetails->amount = $item['amount'];
                     // $designDetails->actual_quantity = '0';
                     // $designDetails->accepted_quantity = '0';
@@ -287,6 +311,11 @@ class ReturnableChalanRepository
                   
                     $designDetails->save();
                     
+                    $itemStock = ItemStock::where('part_item_id', $item['part_item_id'])->first();
+                if ($itemStock) {
+                    $itemStock->quantity -= $item['quantity'];
+                    $itemStock->save();
+                }
                  
 
                 }

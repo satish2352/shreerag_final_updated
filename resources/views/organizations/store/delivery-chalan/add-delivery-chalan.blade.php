@@ -382,7 +382,8 @@
                                                                                     <td><input
                                                                                             class="form-control quantity"
                                                                                             name="addmore[0][quantity]"
-                                                                                            type="text"></td>
+                                                                                            type="text">
+                                                                                            <span class="stock-available"></span></td>
                                                                                     <td><input class="form-control rate"
                                                                                             name="addmore[0][rate]"
                                                                                             type="text"> </td>
@@ -466,7 +467,280 @@
         <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
+
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+
+<script>
+    $(document).ready(function () {
+        // Function to set the minimum date for PO date
+        function setMinDate() {
+            var today = new Date();
+            var day = String(today.getDate()).padStart(2, '0');
+            var month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+            var year = today.getFullYear();
+            var todayDate = year + '-' + month + '-' + day;
+            $('#po_date').attr('min', todayDate);
+        }
+        setMinDate();
+
+        // Function to set the minimum date for DC date
+        function setMinDate11() {
+            var today = new Date();
+            var day = String(today.getDate()).padStart(2, '0');
+            var month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+            var year = today.getFullYear();
+            var todayDate = year + '-' + month + '-' + day;
+            $('#dc_date').attr('min', todayDate);
+        }
+        setMinDate11();
+
+        // Initialize jQuery Validation
+        var validator = $("#addEmployeeForm").validate({
+            ignore: [], // Validate hidden inputs as well
+            rules: {
+                vendor_id: {
+                    required: true
+                },
+                transport_id: {
+                    required: true
+                },
+                vehicle_id: {
+                    required: true
+                },
+                tax_type: {
+                    required: true
+                },
+                tax_id: {
+                    required: true
+                },
+                plant_id: {
+                    required: true
+                },
+                vehicle_number: {
+                    required: true
+                },
+                po_date: {
+                    required: true,
+                },
+                'addmore[0][part_item_id]': {
+                    required: true,
+                    maxlength: 100
+                },
+                'addmore[0][unit_id]': {
+                    required: true,
+                    maxlength: 255
+                },
+                'addmore[0][hsn_id]': {
+                    required: true,
+                    maxlength: 255
+                },
+                'addmore[0][process_id]': {
+                    required: true,
+                    maxlength: 255
+                },
+                'addmore[0][size]': {
+                    required: true,
+                    maxlength: 255
+                },
+                'addmore[0][quantity]': {
+                    required: true,
+                    digits: true,
+                    min: 1
+                },
+                'addmore[0][amount]': {
+                    required: true,
+                }
+            },
+            messages: {
+                vendor_id: {
+                    required: "Select vendor name."
+                },
+                transport_id: {
+                    required: "Select transport name."
+                },
+                vehicle_id: {
+                    required: "Select vehicle type."
+                },
+                tax_type: {
+                    required: "Select tax type"
+                },
+                tax_id: {
+                    required: "Select tax name."
+                },
+                vehicle_number: {
+                    required: "Enter vehicle number."
+                },
+                plant_id: {
+                    required: "Enter plant name."
+                },
+                po_date: {
+                    required: "Please select PO date.",
+                    date: "Please select a valid date."
+                },
+                'addmore[0][part_item_id]': {
+                    required: "Please enter the Product Name.",
+                    maxlength: "Product Name must be at most 100 characters long."
+                },
+                'addmore[0][unit_id]': {
+                    required: "Please enter the unit_id.",
+                    maxlength: "unit_id must be at most 255 characters long."
+                },
+                'addmore[0][hsn_id]': {
+                    required: "Please enter the hsn_id.",
+                    maxlength: "hsn_id must be at most 255 characters long."
+                },
+                'addmore[0][process_id]': {
+                    required: "Please select the process."
+                },
+                'addmore[0][size]': {
+                    required: "Please enter the size."
+                },
+                'addmore[0][quantity]': {
+                    required: "Please enter the Quantity.",
+                    digits: "Please enter only digits for Quantity.",
+                    min: "Quantity must be at least 1."
+                },
+                'addmore[0][amount]': {
+                    required: "Please Enter the Amount"
+                },
+            },
+            errorPlacement: function (error, element) {
+                error.addClass('text-danger');
+                if (element.closest('.form-group').length) {
+                    element.closest('.form-group').append(error);
+                } else if (element.closest('td').length) {
+                    element.closest('td').append(error);
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+
+        // Function to check stock availability
+        function checkStock($row) {
+            const quantity = $row.find('.quantity').val();
+            const partItemId = $row.find('select[name*="part_item_id"]').val();
+            const stockAvailableMessage = $row.find('.stock-available');
+
+            if (partItemId && quantity) {
+                $.ajax({
+                    url: '{{ route("check-stock-quantity") }}',
+                    type: 'GET',
+                    data: { part_item_id: partItemId, quantity: quantity },
+                    success: function (response) {
+                        if (response.status === 'error') {
+                            stockAvailableMessage.text('Insufficient stock. Available: ' + response.available_quantity)
+                                .css('color', 'red');
+                        } else {
+                            stockAvailableMessage.text('Stock is sufficient').css('color', 'green');
+                        }
+                    },
+                    error: function () {
+                        stockAvailableMessage.text('Error checking stock').css('color', 'red');
+                    }
+                });
+            } else {
+                stockAvailableMessage.text('');
+            }
+        }
+
+        // Add more rows when the "Add More" button is clicked
+        $("#add_more_btn").click(function () {
+            var i_count = $('#i_id').val();
+            var i = parseInt(i_count) + 1;
+            $('#i_id').val(i);
+
+            if (i_count === "0") {
+                i = 2;
+            }
+
+            $('#i_id').val(i);
+            var newRow = `
+                <tr>
+                    <td>
+                        <input type="text" name="id" class="form-control" style="min-width:50px" readonly value="${i}">
+                    </td>
+                    <td>
+                        <select class="form-control part_item_id mb-2" name="addmore[${i}][part_item_id]">
+                            <option value="" default>Select Part Item</option>
+                            @foreach ($dataOutputPartItem as $data)
+                                <option value="{{ $data['id'] }}">{{ $data['description'] }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <input class="form-control hsn_name" type="text" style="min-width:150px" disabled>
+                        <input type="hidden" class="form-control hsn_id" name="addmore[${i}][hsn_id]" type="text" style="min-width:150px">
+                    </td>
+                    <td>
+                        <select class="form-control mb-2 unit_id" name="addmore[${i}][unit_id]">
+                            <option value="" default>Select Unit</option>
+                            @foreach ($dataOutputUnitMaster as $data)
+                                <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control mb-2 process_id" name="addmore[${i}][process_id]">
+                            <option value="" default>Select Process</option>
+                            @foreach ($dataOutputProcessMaster as $data)
+                                <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <input class="form-control quantity" name="addmore[${i}][quantity]" type="text">
+                        <span class="stock-available"></span>
+                    </td>
+                    <td>
+                        <input class="form-control rate" name="addmore[${i}][rate]" type="text">
+                    </td>
+                    <td>
+                        <input class="form-control size" name="addmore[${i}][size]" type="text">
+                    </td>
+                    <td>
+                        <input class="form-control total_amount" name="addmore[${i}][amount]" readonly style="width:120px" type="text">
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove_row"><i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>`;
+
+            $('#purchase_order_table tbody').append(newRow);
+            initializeValidation($('#purchase_order_table tbody tr:last-child'));
+            validator.resetForm(); // Reset the validation errors
+        });
+
+        // Remove a row when the "Remove" button is clicked
+        $(document).on('click', '.remove_row', function () {
+            $(this).closest('tr').remove();
+            validator.resetForm(); // Reset the validation errors
+        });
+
+        // Recalculate the total amount when quantity or rate changes
+        $(document).on('keyup', '.quantity, .rate', function () {
+            var $row = $(this).closest('tr');
+            var quantity = $row.find('.quantity').val();
+            var rate = $row.find('.rate').val();
+            var totalAmount = (parseFloat(quantity) * parseFloat(rate)).toFixed(2);
+            $row.find('.total_amount').val(totalAmount);
+            checkStock($row); // Check stock after calculating total
+        });
+
+        // Initialize validation for the newly added row
+        function initializeValidation(row) {
+            row.find('.part_item_id, .unit_id, .process_id, .quantity, .rate').each(function () {
+                $(this).rules('add', {
+                    required: true
+                });
+            });
+        }
+    });
+</script>
+
+        {{-- <script>
             $(document).ready(function() {
                 function setMinDate() {
                     var today = new Date();
@@ -743,7 +1017,33 @@
                         }
                     });
                 }
+ // Function to check stock availability
+ function checkStock($row) {
+        const quantity = $row.find('.quantity').val();
+        const partItemId = $row.find('select[name*="part_item_id"]').val();
+        const stockAvailableMessage = $row.find('.stock-available');
 
+        if (partItemId && quantity) {
+            $.ajax({
+                url: '{{ route("check-stock-quantity") }}',
+                type: 'GET',
+                data: { part_item_id: partItemId, quantity: quantity },
+                success: function (response) {
+                    if (response.status === 'error') {
+                        stockAvailableMessage.text('Insufficient stock. Available: ' + response.available_quantity)
+                            .css('color', 'red');
+                    } else {
+                        stockAvailableMessage.text('Stock is sufficient').css('color', 'green');
+                    }
+                },
+                error: function () {
+                    stockAvailableMessage.text('Error checking stock').css('color', 'red');
+                }
+            });
+        } else {
+            stockAvailableMessage.text('');
+        }
+    }
                 // Add more rows when the "Add More" button is clicked
                 $("#add_more_btn").click(function() {
                     var i_count = $('#i_id').val();
@@ -791,7 +1091,8 @@
                         </td>
                         <td>
                             <input class="form-control quantity" name="addmore[${i}][quantity]" type="text">
-                        </td>
+                         <span class="stock-available"></span>
+                            </td>
                         <td>
                             <input class="form-control rate" name="addmore[${i}][rate]" type="text">
                         </td>
@@ -826,7 +1127,7 @@
                     $row.find('.total_amount').val(total);
                 });
             });
-        </script>
+        </script> --}}
          <script>
 
             $(document).ready(function() {

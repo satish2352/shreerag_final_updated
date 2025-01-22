@@ -311,7 +311,8 @@
                                                                                 </select>
                                                                                 {{-- <input class="form-control rate" name="addmore[0][rate]" type="text"> --}}
                                                                             </td>
-                                                                            <td><input class="form-control quantity" name="addmore[0][quantity]" type="text"></td>
+                                                                            <td><input class="form-control quantity" name="addmore[0][quantity]" type="text">
+                                                                                <span class="stock-available"></span></td>
                                                                             <td><input class="form-control rate" name="addmore[0][rate]" type="text"> </td>
                                                                             <td><input class="form-control rate" name="addmore[0][size]" type="text"> </td>
                                                                             <td>
@@ -704,7 +705,34 @@
                     }
                 });
             }
-    
+      // Function to check stock availability
+      function checkStock($row) {
+            const quantity = $row.find('.quantity').val();
+            const partItemId = $row.find('select[name*="part_item_id"]').val();
+            const stockAvailableMessage = $row.find('.stock-available');
+
+            if (partItemId && quantity) {
+                $.ajax({
+                    url: '{{ route("check-stock-quantity") }}',
+                    type: 'GET',
+                    data: { part_item_id: partItemId, quantity: quantity },
+                    success: function (response) {
+                        if (response.status === 'error') {
+                            stockAvailableMessage.text('Insufficient stock. Available: ' + response.available_quantity)
+                                .css('color', 'red');
+                        } else {
+                            stockAvailableMessage.text('Stock is sufficient').css('color', 'green');
+                        }
+                    },
+                    error: function () {
+                        stockAvailableMessage.text('Error checking stock').css('color', 'red');
+                    }
+                });
+            } else {
+                stockAvailableMessage.text('');
+            }
+        }
+
             // Add more rows when the "Add More" button is clicked
             $("#add_more_btn").click(function() {
                 var i_count = $('#i_id').val();
@@ -751,7 +779,8 @@
                         </td>
                         <td>
                             <input class="form-control quantity" name="addmore[${i}][quantity]" type="text">
-                        </td>
+                         <span class="stock-available"></span>
+                            </td>
                         <td>
                             <input class="form-control rate" name="addmore[${i}][rate]" type="text">
                         </td>

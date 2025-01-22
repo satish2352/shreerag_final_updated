@@ -305,7 +305,7 @@
                                                                             value="{{ $editDataNew->tbl_returnable_chalan_item_details_id }}"
                                                                             placeholder="">
                                                                         <td>
-                                                                            <select class="form-control part-no mb-2" name="part_item_id_{{ $key }}" id="">
+                                                                            <select class="form-control part-no mb-2" name="part_item_id_{{ $key }}" id="" disabled  style="min-width:150px">
                                                                                 <option value="" default>Select Item</option>
                                                                                 @foreach ($dataOutputPartItem as $data)
                                                                                 <option value="{{ $data['id'] }}"
@@ -341,7 +341,7 @@
                                                                             </select> --}}
                                                                         </td>   
                                                                         <td>
-                                                                            <select class="form-control process_id mb-2" name="process_id_{{ $key }}" id="">
+                                                                            <select class="form-control process_id mb-2" name="process_id_{{ $key }}" id=""  style="min-width:100px">
                                                                                 <option value="" default>Select Process</option>
                                                                                 @foreach ($dataOutputHSNMaster as $data)
                                                                                 <option value="{{ $data['id'] }}"
@@ -356,10 +356,11 @@
                                                                                 name="quantity_{{ $key }}"
                                                                                 value="{{ $editDataNew->quantity }}"
                                                                                 placeholder="Enter Quantity"
-                                                                                class="form-control quantity" />
+                                                                                class="form-control quantity" disabled style="min-width:100px"/>
+                                                                                <span class="stock-available"></span>
                                                                         </td>
                                                                         <td>
-                                                                            <select class="form-control unit_id mb-2" name="unit_id_{{ $key }}" id="">
+                                                                            <select class="form-control unit_id mb-2" name="unit_id_{{ $key }}" id=""  style="min-width:100px">
                                                                                 <option value="" default>Select Unit</option>
                                                                                 @foreach ($dataOutputUnitMaster as $data)
                                                                                 <option value="{{ $data['id'] }}"
@@ -374,22 +375,22 @@
                                                                                 name="rate_{{ $key }}"
                                                                                 value="{{ $editDataNew->rate }}"
                                                                                 placeholder="Enter Rate"
-                                                                                class="form-control rate" />
+                                                                                class="form-control rate"  style="min-width:100px"/>
                                                                         </td>
                                                                         <td>
                                                                             <input type="text"
                                                                                 name="size_{{ $key }}"
                                                                                 value="{{ $editDataNew->size }}"
                                                                                 placeholder="Enter size"
-                                                                                class="form-control size" />
+                                                                                class="form-control size"  style="min-width:100px"/>
                                                                         </td>
                                                                        
                                                                         <td>
                                                                             <input type="text"
                                                                                 name="amount_{{ $key }}"
                                                                                 value="{{ $editDataNew->amount }}"
-                                                                                placeholder="Enter Amount"
-                                                                                class="form-control amount" />
+                                                                                placeholder="0"
+                                                                                class="form-control amount"  style="min-width:100px" disabled/>
                                                                         </td>
                                                                         <td>
                                                                             <a data-id="{{ $editDataNew->tbl_returnable_chalan_item_details_id }}"
@@ -521,7 +522,7 @@
 });
 
     </script>
-   <script>
+   {{-- <script>
         $(document).ready(function() {
             var validator = $("#editDesignsForm").validate({
                 ignore: [],
@@ -669,7 +670,7 @@
             '</select>'+
             '</td>' +
                     '<td><input type="text" class="form-control quantity" name="addmore[' + i +
-                        '][quantity]" placeholder=" Quantity" /></td>' +                   
+                        '][quantity]" placeholder=" Quantity" /><span class="stock-available"></span></td>' +                   
 
                     '<td>' +
                     '<select class="form-control unit_id mb-2" name="addmore[' + i + '][unit_id]" id="">' +
@@ -792,6 +793,295 @@
     });
 });
 
+        });
+    </script> --}}
+    <script>
+        $(document).ready(function() {
+            var validator = $("#editDesignsForm").validate({
+                ignore: [],
+                rules: {
+                    vendor_id: {
+                        required: true,
+                    },
+                    transport_id: {
+                        required: true,
+                    },
+                    vehicle_id: {
+                        required: true,
+                    },
+                    plant_id: {
+                        required: true,
+                    },
+                    vehicle_number: {
+                        required: true,
+                    },
+                    tax_type: {
+                        required: true,
+                    },
+                    tax_id: {
+                        required: true,
+                    },
+                    remark: {
+                        required: true,
+                    },
+                    'part_item_id_0': {
+                        required: true,
+                    },
+                    'quantity_0': {
+                        required: true,
+                        digits: true,
+                    },
+                    'unit_id_0': {
+                        required: true,
+                    },
+                    'hsn_id_0': {
+                        required: true,
+                        maxlength: 255
+                    },
+                    'process_id_0': {
+                        required: true,
+                        maxlength: 255
+                    },
+                    'amount_0': {
+                        required: true,
+                    },
+                },
+                messages: {
+                    vendor_id: {
+                        required: "Please Select the Vendor Company Name",
+                    },
+                    transport_id: {
+                        required: "Please Select the transport Name",
+                    },
+                    vehicle_id: {
+                        required: "Please Select the vehicle Name",
+                    },
+                    plant_id: {
+                        required: "Please Enter the plant name",
+                    },
+                    vehicle_number: {
+                        required: "Please Enter the vehicle number",
+                    },
+                    tax_type: {
+                        required: "Please Select the tax type",
+                    },
+                    tax_id: {
+                        required: "Please Select the Tax",
+                    },
+                    remark: {
+                        required: "Please Enter the remark",
+                    },
+                    'part_item_id_0': {
+                        required: "Please enter the Part Number",
+                    },
+                    'quantity_0': {
+                        required: "Please enter the Quantity",
+                        digits: "Please enter only digits for Quantity",
+                    },
+                    'unit_id_0': {
+                        required: "Please enter the unit_id",
+                    },
+                    'hsn_id_0': {
+                        required: "Please enter the hsn_id.",
+                        maxlength: "hsn must be at most 255 characters long."
+                    },
+                    'process_id_0': {
+                        required: "Please enter the process.",
+                        maxlength: "process must be at most 255 characters long."
+                    },
+                    'amount_0': {
+                        required: "Please enter the Amount",
+                    },
+                },
+                errorPlacement: function(error, element) {
+                    if (element.hasClass("part_item_id") || element.hasClass("hsn_id") || element
+                        .hasClass("process_id") ||
+                        element.hasClass("quantity") || element.hasClass("unit_id") ||
+                        element.hasClass("amount")) {
+                        error.insertAfter(element);
+                    } else {
+                        error.insertAfter(element);
+                    }
+                }
+            });
+     // Function to check stock availability
+     function checkStock($row) {
+                const quantity = $row.find('.quantity').val();
+                const partItemId = $row.find('select[name*="part_item_id"]').val();
+                const stockAvailableMessage = $row.find('.stock-available');
+    
+                if (partItemId && quantity) {
+                    $.ajax({
+                        url: '{{ route("check-stock-quantity") }}',
+                        type: 'GET',
+                        data: { part_item_id: partItemId, quantity: quantity },
+                        success: function (response) {
+                            if (response.status === 'error') {
+                                stockAvailableMessage.text('Insufficient stock. Available: ' + response.available_quantity)
+                                    .css('color', 'red');
+                            } else {
+                                stockAvailableMessage.text('Stock is sufficient').css('color', 'green');
+                            }
+                        },
+                        error: function () {
+                            stockAvailableMessage.text('Error checking stock').css('color', 'red');
+                        }
+                    });
+                } else {
+                    stockAvailableMessage.text('');
+                }
+            }
+            var i = {!! count($editData) !!}; // Initialize i with the number of existing rows
+    
+            $("#add").click(function() {
+                ++i;
+    
+                var newRow = $(`
+                    <tr>
+                        <input type="hidden" name="addmore[${i}][design_count]" class="form-control" value="${i}" placeholder="">
+                        <input type="hidden" name="addmore[${i}][purchase_id]" class="form-control" value="${i}" placeholder="">
+                        <td>
+                            <select class="form-control part_item_id mb-2" name="addmore[${i}][part_item_id]" id="">
+                                <option value="" default>Select Part Item</option>
+                                @foreach ($dataOutputPartItem as $data)
+                                    <option value="{{ $data['id'] }}">{{ $data['description'] }}</option>
+                                @endforeach
+                            </select>
+                        </td> 
+                        <td><input type="text" class="form-control hsn_name" placeholder=" " readonly />
+                            <input type="hidden" name="addmore[${i}][hsn_id]" class="form-control hsn_id" placeholder=" Amount" readonly />
+                        </td>
+                        <td>
+                            <select class="form-control process_id mb-2" name="addmore[${i}][process_id]" id="">
+                                <option value="" default>Select Process</option>
+                                @foreach ($dataOutputProcessMaster as $data)
+                                    <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control quantity" name="addmore[${i}][quantity]" placeholder=" Quantity" />
+                             <span class="stock-available"></span></td>
+                        <td>
+                            <select class="form-control unit_id mb-2" name="addmore[${i}][unit_id]" id="">
+                                <option value="" default>Select Unit</option>
+                                @foreach ($dataOutputUnitMaster as $data)
+                                    <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control rate" name="addmore[${i}][rate]" placeholder="rate" /></td>
+                        <td><input type="text" class="form-control size" name="addmore[${i}][size]" placeholder="size" /></td>
+                        <td><input type="text" class="form-control amount" name="addmore[${i}][amount]" placeholder=" Amount" readonly /></td>
+                        <td><a class="remove-tr delete-btn btn btn-danger m-1" title="Delete Tender" data-id="{{ $editDataNew->id }}"><i class="fas fa-archive"></i></a></td>
+                    </tr>
+                `);
+    
+                $("#dynamicTable").append(newRow);
+    
+                // Reinitialize validation for the new row
+                $('select[name="addmore[' + i + '][part_item_id]"]').rules("add", {
+                    required: true,
+                    messages: {
+                        required: "Please select the Part Number",
+                    }
+                });
+    
+                $('select[name="addmore[' + i + '][hsn_id]"]').rules("add", {
+                    required: true,
+                    messages: {
+                        required: "Please select the HSN",
+                    }
+                });
+    
+                $('select[name="addmore[' + i + '][process_id]"]').rules("add", {
+                    required: true,
+                    messages: {
+                        required: "Please select the process",
+                    }
+                });
+    
+                $('input[name="addmore[' + i + '][quantity]"]').rules("add", {
+                    required: true,
+                    digits: true,
+                    messages: {
+                        required: "Please enter the Quantity",
+                        digits: "Please enter only digits for Quantity",
+                    }
+                });
+    
+                $('input[name="addmore[' + i + '][unit_id]"]').rules("add", {
+                    required: true,
+                    digits: true,
+                    messages: {
+                        required: "Please enter the unit",
+                    }
+                });
+    
+                $('select[name="addmore[' + i + '][size]"]').rules("add", {
+                    required: true,
+                    messages: {
+                        required: "Please enter the size",
+                    }
+                });
+    
+                $('input[name="addmore[' + i + '][amount]"]').rules("add", {
+                    required: true,
+                    messages: {
+                        required: "Please enter the Amount",
+                    }
+                });
+    
+                // Call checkStock function whenever quantity is entered
+                $('input[name="addmore[' + i + '][quantity]"]').on('keyup', function() {
+                    var currentRow = $(this).closest("tr");
+                    checkStock(currentRow); // Check stock when quantity changes
+                });
+            });
+            $(document).on('keyup', '.quantity, .rate', function(e) {
+                    var currentRow = $(this).closest("tr");
+                    var quantity = currentRow.find('.quantity').val();
+                    var rate = currentRow.find('.rate').val();
+                    var amount = quantity * rate;
+                    currentRow.find('.amount').val(amount);
+                });
+            $(document).on("click", ".remove-tr", function() {
+                $(this).parents("tr").remove();
+            });
+    
+            // Function to check stock availability
+            function checkStock($row) {
+                const quantity = $row.find('.quantity').val();
+                const partItemId = $row.find('select[name*="part_item_id"]').val();
+                const stockAvailableMessage = $row.find('.stock-available');
+    
+                if (partItemId && quantity) {
+                    $.ajax({
+                        url: '{{ route("check-stock-quantity") }}',
+                        type: 'GET',
+                        data: { part_item_id: partItemId, quantity: quantity },
+                        success: function (response) {
+                            if (response.status === 'error') {
+                                stockAvailableMessage.text('Insufficient stock. Available: ' + response.available_quantity)
+                                    .css('color', 'red');
+                            } else {
+                                stockAvailableMessage.text('Stock is sufficient').css('color', 'green');
+                            }
+                        },
+                        error: function () {
+                            stockAvailableMessage.text('Error checking stock').css('color', 'red');
+                        }
+                    });
+                } else {
+                    stockAvailableMessage.text('');
+                }
+            }
+    
+            // Custom validation method for minimum date
+            $.validator.addMethod("minDate", function(value, element) {
+                var today = new Date();
+                var inputDate = new Date(value);
+                return inputDate >= today;
+            }, "The date must be today or later.");
         });
     </script>
 <script>
