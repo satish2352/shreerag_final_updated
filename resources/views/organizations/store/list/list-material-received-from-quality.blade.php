@@ -85,7 +85,7 @@
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="grn_date" data-editable="false">Description</th>
                                                 <th data-field="purchase_id" data-editable="false">Remark</th>
-                                                <th data-field="bom_image" data-editable="false">BOM</th>
+                                                {{-- <th data-field="bom_image" data-editable="false">BOM</th> --}}
                                                 {{-- <th data-field="design_image" data-editable="false">Design Layout</th>
                                                --}}
                                                 <th data-field="action" data-editable="false">Action</th>
@@ -99,10 +99,10 @@
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
-                                                    <td> <a class="img-size"
+                                                    {{-- <td> <a class="img-size"
                                                         href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
                                                         alt="bill of material" >Click to download</a>
-                                                </td>
+                                                </td> --}}
                                                     {{-- <td> <a class="img-size" target="_blank"
                                                         href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
                                                         alt="Design"> Click to view</a>
