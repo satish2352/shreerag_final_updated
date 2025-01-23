@@ -380,46 +380,75 @@ class ProductionRepository  {
             ];
     
             // Fetch all related data
-            $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-                })
-                // ->leftJoin('designs', function($join) {
-                //     $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-                // })
-                ->leftJoin('businesses_details', function($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-                })
-                // ->leftJoin('design_revision_for_prod', function($join) {
-                //     $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-                // })
-                ->leftJoin('purchase_orders', function($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-                })
-                ->leftJoin('production_details as pd', function($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'pd.business_details_id');
-                })
-                ->leftJoin('tbl_unit', 'pd.unit', '=', 'tbl_unit.id')  // Ensure this join is present
+
+            $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+            })
+            ->leftJoin('businesses_details', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+            })
+            ->leftJoin('production_details as pd', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'pd.business_details_id');
+            })
+            ->leftJoin('tbl_unit', 'pd.unit', '=', 'tbl_unit.id')
+            ->where('businesses_details.id', $id)
+            ->where('businesses_details.is_active', true)
+            ->select(
+                'businesses_details.id',
+                'pd.id as pd_id',
+                'businesses_details.product_name',
+                'businesses_details.description',
+                'pd.part_item_id',
+                'pd.quantity',
+                'pd.unit',
+                'tbl_unit.name as unit_name',
+                'pd.business_details_id',
+                'pd.material_send_production',
+                'business_application_processes.store_material_sent_date'
+            )
+            ->distinct()
+            ->get();
+        
+            // $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function($join) {
+            //         $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+            //     })
+            //     // ->leftJoin('designs', function($join) {
+            //     //     $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+            //     // })
+            //     ->leftJoin('businesses_details', function($join) {
+            //         $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+            //     })
+            //     // ->leftJoin('design_revision_for_prod', function($join) {
+            //     //     $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+            //     // })
+            //     ->leftJoin('purchase_orders', function($join) {
+            //         $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+            //     })
+            //     ->leftJoin('production_details as pd', function($join) {
+            //         $join->on('business_application_processes.business_details_id', '=', 'pd.business_details_id');
+            //     })
+            //     ->leftJoin('tbl_unit', 'pd.unit', '=', 'tbl_unit.id')  // Ensure this join is present
                 
-                // ->join('production_details', 'production_details.unit', '=', 'tbl_unit.id')
-                ->where('businesses_details.id', $id)
-                // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
-                ->where('businesses_details.is_active', true)
-                ->select(
-                    'businesses_details.id',
-                    'pd.id as pd_id',
-                    'businesses_details.product_name',
-                    'businesses_details.description',
-                    'pd.part_item_id',
-                    'pd.quantity',
-                    'pd.unit',
-                    'tbl_unit.name as unit_name',  // Ensure tbl_unit.name exists in the table
-                    'pd.business_details_id',
-                    'pd.material_send_production',
-                    // 'designs.bom_image',
-                    // 'designs.design_image',
-                    'business_application_processes.store_material_sent_date'
-                )
-                ->get(); 
+            //     // ->join('production_details', 'production_details.unit', '=', 'tbl_unit.id')
+            //     ->where('businesses_details.id', $id)
+            //     // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
+            //     ->where('businesses_details.is_active', true)
+            //     ->select(
+            //         'businesses_details.id',
+            //         'pd.id as pd_id',
+            //         'businesses_details.product_name',
+            //         'businesses_details.description',
+            //         'pd.part_item_id',
+            //         'pd.quantity',
+            //         'pd.unit',
+            //         'tbl_unit.name as unit_name',  // Ensure tbl_unit.name exists in the table
+            //         'pd.business_details_id',
+            //         'pd.material_send_production',
+            //         // 'designs.bom_image',
+            //         // 'designs.design_image',
+            //         'business_application_processes.store_material_sent_date'
+            //     )
+            //     ->get(); 
     
             $productDetails = $dataOutputByid->first(); // Assuming the first entry contains the product details
             $dataGroupedById = $dataOutputByid->groupBy('business_details_id');
