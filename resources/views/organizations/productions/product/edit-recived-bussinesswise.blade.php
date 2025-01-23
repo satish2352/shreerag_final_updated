@@ -105,7 +105,7 @@
                                                                             <input type="hidden"
                                                                                 name="addmore[{{ $index }}][id]"
                                                                                 class="form-control"
-                                                                                value="{{ $item->id }}">
+                                                                                value="{{ $item->pd_id }}">
                                                                             <input type="text" class="form-control"
                                                                                 readonly value="{{ $index + 1 }}">
                                                                         </td>
@@ -160,7 +160,7 @@
                                                                         <td>
 
                                                                             @if (!$item->material_send_production)
-                                                                                <a data-id="{{ $item->id }}"
+                                                                                <a data-id="{{ $item->pd_id }}"
                                                                                     class="delete-btn btn btn-danger m-1"
                                                                                     title="Delete Tender"><i
                                                                                         class="fas fa-archive"></i></a>

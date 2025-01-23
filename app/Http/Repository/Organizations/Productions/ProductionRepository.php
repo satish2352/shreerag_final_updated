@@ -406,6 +406,7 @@ class ProductionRepository  {
                 ->where('businesses_details.is_active', true)
                 ->select(
                     'businesses_details.id',
+                    'pd.id as pd_id',
                     'businesses_details.product_name',
                     'businesses_details.description',
                     'pd.part_item_id',

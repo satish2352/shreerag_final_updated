@@ -30,6 +30,7 @@ use App\Models\ {
     Notice,
     TransportName,
     NotificationStatus,
+    RolesModel,
 //     Gallery,
 //     AdditionalSolutions,
 //     OurSolutions,
@@ -55,7 +56,7 @@ class DashboardController extends Controller {
     try {
       
         // Get the counts
-        // $user_active_count = User::where('is_active', 1)->count(); 
+        $department_count = RolesModel::where('is_active', 1)->count(); 
         $user_active_count= User::leftJoin('tbl_roles', function ($join) {
             $join->on('users.role_id', '=', 'tbl_roles.id');
         })
@@ -321,6 +322,9 @@ class DashboardController extends Controller {
             'product_count'=>$product_count,
             
         ];
+        $department_count =[
+            'department_total_count' => $department_count,
+        ];
           
           $cms_counts = [
             'product_count' => $product_count,
@@ -409,7 +413,7 @@ class DashboardController extends Controller {
             'employee_rejected_leave_request' => $employee_rejected_leave_request,
         ];
 
-        return view('admin.pages.dashboard.dashboard', ['return_data' => $counts, 'cms_counts' =>$cms_counts, 'logistics_counts'=>$logistics_counts, 'design_dept_counts'=>$design_dept_counts,
+        return view('admin.pages.dashboard.dashboard', ['return_data' => $counts,'department_count' =>$department_count, 'cms_counts' =>$cms_counts, 'logistics_counts'=>$logistics_counts, 'design_dept_counts'=>$design_dept_counts,
     'production_dept_counts'=>$production_dept_counts, 'store_dept_counts'=>$store_dept_counts,
 'purchase_dept_counts'=>$purchase_dept_counts, 'secuirty_dept_counts'=>$secuirty_dept_counts, 'quality_dept_counts'=>$quality_dept_counts,'fianance_counts'=>$fianance_counts,
 'inventory_dept_counts'=>$inventory_dept_counts,'dispatch_counts'=>$dispatch_counts, 'hr_counts'=>$hr_counts, 'employee_counts'=>$employee_counts, 'employee_leave_type'=>$employee_leave_type ]);
