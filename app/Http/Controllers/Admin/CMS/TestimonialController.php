@@ -28,7 +28,10 @@ class TestimonialController extends Controller
         public function store(Request $request){
             $rules = [
                 'title' => 'required',
-                'image' => 'required|image|mimes:jpeg,png,jpg|max:'.Config::get("AllFileValidation.TESTIMONIAL_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.TESTIMONIAL_IMAGE_MIN_SIZE").'',
+                'image' => 'required|image|mimes:jpeg,png,jpg|max:'.Config::get("AllFileValidation.TESTIMONIAL_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.TESTIMONIAL_IMAGE_MIN_SIZE").'|dimensions:min_width=' . Config::get("AllFileValidation.IMAGE_MIN_WIDTH") . 
+            ',min_height=' . Config::get("AllFileValidation.IMAGE_MIN_HEIGHT") . 
+            ',max_width=' . Config::get("AllFileValidation.IMAGE_MAX_WIDTH") . 
+            ',max_height=' . Config::get("AllFileValidation.IMAGE_MAX_HEIGHT"), 
                
             ];
             $messages = [    
@@ -38,7 +41,12 @@ class TestimonialController extends Controller
                 'image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
                 'image.max' => 'The image size must not exceed '.Config::get("AllFileValidation.TESTIMONIAL_IMAGE_MAX_SIZE").'KB .',
                 'image.min' => 'The image size must not be less than '.Config::get("AllFileValidation.TESTIMONIAL_IMAGE_MIN_SIZE").'KB .',
-                // 'image.dimensions' => 'The image dimensions must be between 200X200 and 1000x1000 pixels.',
+                'image.dimensions' => 'The image dimensions must be between ' . 
+                Config::get("AllFileValidation.IMAGE_MIN_WIDTH") . 'x' . 
+                Config::get("AllFileValidation.IMAGE_MIN_HEIGHT") . 
+                ' and ' . 
+                Config::get("AllFileValidation.IMAGE_MAX_WIDTH") . 'x' . 
+                Config::get("AllFileValidation.IMAGE_MAX_HEIGHT") . ' pixels.',
             ];
     
             try {
@@ -86,7 +94,10 @@ class TestimonialController extends Controller
             ];
     
             if($request->has('image')) {
-                $rules['image'] = 'required|image|mimes:jpeg,png,jpg|max:'.Config::get("AllFileValidation.TESTIMONIAL_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.TESTIMONIAL_IMAGE_MIN_SIZE");
+                $rules['image'] = 'required|image|mimes:jpeg,png,jpg|max:'.Config::get("AllFileValidation.TESTIMONIAL_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.TESTIMONIAL_IMAGE_MIN_SIZE").   '|dimensions:min_width=' . Config::get("AllFileValidation.IMAGE_MIN_WIDTH") . 
+                ',min_height=' . Config::get("AllFileValidation.IMAGE_MIN_HEIGHT") . 
+                ',max_width=' . Config::get("AllFileValidation.IMAGE_MAX_WIDTH") . 
+                ',max_height=' . Config::get("AllFileValidation.IMAGE_MAX_HEIGHT");
             }
            
             $messages = [   
@@ -96,7 +107,12 @@ class TestimonialController extends Controller
                 'image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
                 'image.max' => 'The image size must not exceed '.Config::get("AllFileValidation.TESTIMONIAL_IMAGE_MAX_SIZE").'KB .',
                 'image.min' => 'The image size must not be less than '.Config::get("AllFileValidation.TESTIMONIAL_IMAGE_MIN_SIZE").'KB .',
-                // 'image.dimensions' => 'The image dimensions must be between 200X200 and 1000x1000 pixels.',
+                'image.dimensions' => 'The image dimensions must be between ' . 
+                Config::get("AllFileValidation.IMAGE_MIN_WIDTH") . 'x' . 
+                Config::get("AllFileValidation.IMAGE_MIN_HEIGHT") . 
+                ' and ' . 
+                Config::get("AllFileValidation.IMAGE_MAX_WIDTH") . 'x' . 
+                Config::get("AllFileValidation.IMAGE_MAX_HEIGHT") . ' pixels.',
                
             ];
     

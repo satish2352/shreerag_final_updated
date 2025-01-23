@@ -128,13 +128,13 @@
                         english_image: {
                             required: true,
                             fileExtension: ["jpg", "jpeg", "png"],
-                            fileSize: [150, 1048], // Min 1KB and Max 2MB (2 * 1024 KB)
+                            fileSize: [1, 1048], // Min 1KB and Max 2MB (2 * 1024 KB)
                             imageDimensions: [300, 300, 1000, 1000], // Min width x height and Max width x height
                         },
                         english_image_new: {
                             required: true,
                             fileExtension: ["jpg", "jpeg", "png"],
-                            fileSize: [150, 1048], // Min 1KB and Max 2MB (2 * 1024 KB)
+                            fileSize: [1, 1048], // Min 1KB and Max 2MB (2 * 1024 KB)
                             imageDimensions: [300, 300, 1000, 1000], // Min width x height and Max width x height
                         },
                     },
@@ -148,13 +148,13 @@
                         english_image: {
                             required: "Please upload an Image (jpg, jpeg, png).",
                             fileExtension: "Only JPG, JPEG, and PNG images are allowed.",
-                            fileSize: "File size must be between 150 KB and 1048 KB.",
+                            fileSize: "File size must be between 1 KB and 1048 KB.",
                             imageDimensions: "Image dimensions must be between 300x300 and 1000x1000 pixels.",
                         },
                         english_image_new: {
                             required: "Please upload an Image (jpg, jpeg, png).",
                             fileExtension: "Only JPG, JPEG, and PNG images are allowed.",
-                            fileSize: "File size must be between 150 KB and 1048 KB.",
+                            fileSize: "File size must be between 1 KB and 1048 KB.",
                             imageDimensions: "Image dimensions must be between 300x300 and 1000x1000 pixels.",
                         },
                     },

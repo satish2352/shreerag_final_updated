@@ -29,8 +29,14 @@ class VisionMissionController extends Controller
             $rules = [
                 'vision_description' => 'required',
                 'mission_description' => 'required',
-                'vision_image' => 'required|image|mimes:jpeg,png,jpg|max:'.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MIN_SIZE").'',
-                'mission_image' => 'required|image|mimes:jpeg,png,jpg|max:'.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MIN_SIZE").'',
+                'vision_image' => 'required|image|mimes:jpeg,png,jpg|max:'.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MIN_SIZE").'|dimensions:min_width=' . Config::get("AllFileValidation.IMAGE_MIN_WIDTH") . 
+            ',min_height=' . Config::get("AllFileValidation.IMAGE_MIN_HEIGHT") . 
+            ',max_width=' . Config::get("AllFileValidation.IMAGE_MAX_WIDTH") . 
+            ',max_height=' . Config::get("AllFileValidation.IMAGE_MAX_HEIGHT"), 
+                'mission_image' => 'required|image|mimes:jpeg,png,jpg|max:'.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MIN_SIZE").'|dimensions:min_width=' . Config::get("AllFileValidation.IMAGE_MIN_WIDTH") . 
+            ',min_height=' . Config::get("AllFileValidation.IMAGE_MIN_HEIGHT") . 
+            ',max_width=' . Config::get("AllFileValidation.IMAGE_MAX_WIDTH") . 
+            ',max_height=' . Config::get("AllFileValidation.IMAGE_MAX_HEIGHT"), 
                
             ];
             $messages = [    
@@ -41,14 +47,24 @@ class VisionMissionController extends Controller
             'vision_image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
             'vision_image.max' => 'The image size must not exceed '.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MAX_SIZE").'KB .',
             'vision_image.min' => 'The image size must not be less than '.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MIN_SIZE").'KB .',
-            // 'vision_image.dimensions' => 'The image dimensions must be between 300X300 and 1000x1000 pixels.',
+            'vision_image.dimensions' => 'The image dimensions must be between ' . 
+                             Config::get("AllFileValidation.IMAGE_MIN_WIDTH") . 'x' . 
+                             Config::get("AllFileValidation.IMAGE_MIN_HEIGHT") . 
+                             ' and ' . 
+                             Config::get("AllFileValidation.IMAGE_MAX_WIDTH") . 'x' . 
+                             Config::get("AllFileValidation.IMAGE_MAX_HEIGHT") . ' pixels.',
             
             'mission_image.required' => 'The image is required.',
             'mission_image.image' => 'The image must be a valid image file.',
             'mission_image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
             'mission_image.max' => 'The image size must not exceed '.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MAX_SIZE").'KB .',
             'mission_image.min' => 'The image size must not be less than '.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MIN_SIZE").'KB .',
-            // 'mission_image.dimensions' => 'The image dimensions must be between 300X300 and 1000x1000 pixels.',
+            'mission_image.dimensions' => 'The image dimensions must be between ' . 
+            Config::get("AllFileValidation.IMAGE_MIN_WIDTH") . 'x' . 
+            Config::get("AllFileValidation.IMAGE_MIN_HEIGHT") . 
+            ' and ' . 
+            Config::get("AllFileValidation.IMAGE_MAX_WIDTH") . 'x' . 
+            Config::get("AllFileValidation.IMAGE_MAX_HEIGHT") . ' pixels.',
             ];
     
             try {
@@ -98,10 +114,16 @@ class VisionMissionController extends Controller
             ];
     
             if($request->has('vision_image')) {
-                $rules['vision_image'] = 'required|image|mimes:jpeg,png,jpg|max:'.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MIN_SIZE");
+                $rules['vision_image'] = 'required|image|mimes:jpeg,png,jpg|max:'.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MIN_SIZE").'|dimensions:min_width=' . Config::get("AllFileValidation.IMAGE_MIN_WIDTH") . 
+                ',min_height=' . Config::get("AllFileValidation.IMAGE_MIN_HEIGHT") . 
+                ',max_width=' . Config::get("AllFileValidation.IMAGE_MAX_WIDTH") . 
+                ',max_height=' . Config::get("AllFileValidation.IMAGE_MAX_HEIGHT");
             }
             if($request->has('mission_image')) {
-                $rules['mission_image'] = 'required|image|mimes:jpeg,png,jpg|max:'.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MIN_SIZE");
+                $rules['mission_image'] = 'required|image|mimes:jpeg,png,jpg|max:'.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MIN_SIZE").'|dimensions:min_width=' . Config::get("AllFileValidation.IMAGE_MIN_WIDTH") . 
+                ',min_height=' . Config::get("AllFileValidation.IMAGE_MIN_HEIGHT") . 
+                ',max_width=' . Config::get("AllFileValidation.IMAGE_MAX_WIDTH") . 
+                ',max_height=' . Config::get("AllFileValidation.IMAGE_MAX_HEIGHT");
             }
            
             $messages = [   
@@ -112,14 +134,24 @@ class VisionMissionController extends Controller
             'vision_image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
             'vision_image.max' => 'The image size must not exceed '.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MAX_SIZE").'KB .',
             'vision_image.min' => 'The image size must not be less than '.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MIN_SIZE").'KB .',
-            // 'vision_image.dimensions' => 'The image dimensions must be between 300X300 and 1000x1000 pixels.',
+            'vision_image.dimensions' => 'The image dimensions must be between ' . 
+            Config::get("AllFileValidation.IMAGE_MIN_WIDTH") . 'x' . 
+            Config::get("AllFileValidation.IMAGE_MIN_HEIGHT") . 
+            ' and ' . 
+            Config::get("AllFileValidation.IMAGE_MAX_WIDTH") . 'x' . 
+            Config::get("AllFileValidation.IMAGE_MAX_HEIGHT") . ' pixels.',
             
             'mission_image.required' => 'The image is required.',
             'mission_image.image' => 'The image must be a valid image file.',
             'mission_image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
             'mission_image.max' => 'The image size must not exceed '.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MAX_SIZE").'KB .',
             'mission_image.min' => 'The image size must not be less than '.Config::get("AllFileValidation.VISION_MISSION_IMAGE_MIN_SIZE").'KB .',
-            // 'mission_image.dimensions' => 'The image dimensions must be between 300X300 and 1000x1000 pixels.',
+            'mission_image.dimensions' => 'The image dimensions must be between ' . 
+            Config::get("AllFileValidation.IMAGE_MIN_WIDTH") . 'x' . 
+            Config::get("AllFileValidation.IMAGE_MIN_HEIGHT") . 
+            ' and ' . 
+            Config::get("AllFileValidation.IMAGE_MAX_WIDTH") . 'x' . 
+            Config::get("AllFileValidation.IMAGE_MAX_HEIGHT") . ' pixels.',
                
             ];
     

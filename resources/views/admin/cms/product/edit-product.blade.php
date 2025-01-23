@@ -48,7 +48,7 @@
                                 @endif
 
                                 <div class="all-form-element-inner">
-                                    @if ($errors->any())
+                                    {{-- @if ($errors->any())
                                         <div class="alert alert-danger">
                                             <ul>
                                                 @foreach ($errors->all() as $error)
@@ -56,7 +56,7 @@
                                                 @endforeach
                                             </ul>
                                         </div>
-                                    @endif
+                                    @endif --}}
                                     <form class="forms-sample" action="{{ route('update-product') }}" method="post"
                                         id="regForm" enctype="multipart/form-data">
                                         @csrf

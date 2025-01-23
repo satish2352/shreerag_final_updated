@@ -19,7 +19,7 @@
                 <div class="" style="background-color: #fff; padding:25px;">
                            
                                
-                                <div class="col-12 borderpage" id="printableArea">
+                                <div class="col-12 " id="printableArea" style="border: 1px solid black;">
                                     @include('admin.layouts.alert')
 
 
@@ -65,7 +65,7 @@
                                         
                                     </div>
 
-                                    <div class="row " >
+                                    <div class="row " style="padding-left:10px;">
                                         {{-- <div class="col-lg-4 col-md-4 col-sm-4">
                                             <label>Name :</label>
                                         </div> --}}
@@ -74,7 +74,7 @@
                                                 {{ $user_detail->l_name }}</h4>
                                         </div>
                                     </div>
-                                    <div class="row ">
+                                    <div class="row "  style="padding-left:10px;">
                                         {{-- <div class="col-lg-4 col-md-4 col-sm-4">
                                             <label>Email :</label>
                                         </div> --}}
@@ -82,19 +82,19 @@
                                             <label style="font-family: 'Font Awesome 5 Free'!important;"><strong>Email Id</strong> : {{ strip_tags($user_detail->u_email) }}</label>
                                         </div>
                                     </div>
-                                    <div class="row ">
+                                    <div class="row "  style="padding-left:10px;">
                                         <div class="col-lg-12 col-md-12 col-sm-12" style="font-family: 'Font Awesome 5 Free'!important;">
                                             <label><strong>From Date</strong> :</label>
                                             <label>{{ strip_tags($user_detail->leave_start_date) }}</label>
                                         </div>
                                     </div>
-                                    <div class="row ">
+                                    <div class="row "  style="padding-left:10px;">
                                         <div class="col-lg-12 col-md-12 col-sm-12" style="font-family: 'Font Awesome 5 Free'!important;">
                                             <label><strong>To Date</strong> :</label>
                                             <label>{{ strip_tags($user_detail->leave_end_date) }}</label>
                                         </div>
                                     </div>
-                                    <div class="row ">
+                                    <div class="row "  style="padding-left:10px;">
                                         <div class="col-lg-12 col-md-12 col-sm-12" style="font-family: 'Font Awesome 5 Free'!important;">
                                             <label><strong>Leave Day</strong> :</label>
                                             <label>{{ strip_tags($user_detail->leave_day) }}</label>
@@ -102,19 +102,19 @@
                                     </div>
 
 
-                                    <div class="row ">
+                                    <div class="row "  style="padding-left:10px;">
                                         <div class="col-lg-12 col-md-12 col-sm-12" style="font-family: 'Font Awesome 5 Free'!important;">
                                             <label><strong>Leave Count</strong> :</label>
                                             <label>{{ strip_tags($user_detail->leave_count) }}</label>
                                         </div>
                                     </div>
-                                    <div class="row ">
+                                    <div class="row "  style="padding-left:10px;">
                                         <div class="col-lg-12 col-md-12 col-sm-12" style="font-family: 'Font Awesome 5 Free'!important;">
                                             <label><strong>Leave Type Name</strong> :</label>
                                             <label>{{ strip_tags($user_detail->leave_type_name) }}</label>
                                         </div>
                                     </div>
-                                    <div class="row ">
+                                    <div class="row "  style="padding-left:10px;">
                                         <div class="col-lg-12 col-md-12 col-sm-12" style="font-family: 'Font Awesome 5 Free'!important;">
                                             <label><strong>Reason</strong> :</label>
                                             <label>{{ strip_tags($user_detail->reason) }}</label>
@@ -139,9 +139,9 @@
                         // Write the content to the new window with proper styles
                         printWindow.document.write('<html><head><title>Print</title>');
                         printWindow.document.write('<style>');
-                        printWindow.document.write('body { font-family: Arial, sans-serif; margin: 0; padding: 50px; font-size:30px; font-family: fangsong; border: 1px solid black;}'); // Add padding to body
+                        printWindow.document.write('body { font-family: Arial, sans-serif; margin: 0; padding: 10px; font-size:30px; font-family: fangsong; border: 1px solid black;}'); // Add padding to body
                         printWindow.document.write('#printableArea { width: 100%; overflow: hidden;  }'); // Ensure full width of content
-                        printWindow.document.write('.borderpage { border: 1px solid black; padding:10px; }'); // Corrected CSS for company-name-size
+                        printWindow.document.write('.borderpage { border: 1px solid black; }'); // Corrected CSS for company-name-size
                         // printWindow.document.write('.font-size-delivery { font-size: 14px !important; }'); // Corrected CSS for company-name-size     
                         // printWindow.document.write('table td {padding: 8px;}'); // Corrected CSS for company-name-size     
                         // printWindow.document.write('.top-spacing {padding: 0px; width: 100%; display: flex; justify-content: space-between;}'); // Corrected CSS for company-name-size     
