@@ -81,6 +81,8 @@ padding-left: 20px !important;
                                             <th data-field="id">Sr.No.</th> 
                                             <th data-field="product_name" data-editable="false">Product Name</th>
                                             <th data-field="quantity" data-editable="false">Quantity</th>
+                                            <th data-field="completed_quantity" data-editable="false">Completed Production</th>
+                                            <th data-field="remaining_quantity" data-editable="false">Balance Quantity</th>
                                             <th data-field="grn_date" data-editable="false">Description</th>
                                             <th data-field="action" data-editable="false">Action</th>
 
@@ -95,6 +97,8 @@ padding-left: 20px !important;
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ucwords($data->product_name)}}</td>
                                             <td>{{ucwords($data->quantity)}}</td>
+                                            <td>{{ ucwords($data->cumulative_completed_quantity) }}</td>
+                                            <td>{{ $data->remaining_quantity }}</td>
                                             <td>{{ ucwords($data->description) }}</td>
                                             <td>
                                                 <div style="display: inline-block; align-items: center;">

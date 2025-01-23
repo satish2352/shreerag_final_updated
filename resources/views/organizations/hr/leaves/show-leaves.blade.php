@@ -21,12 +21,56 @@
                                
                                 <div class="col-12 borderpage" id="printableArea">
                                     @include('admin.layouts.alert')
+
+
+
+                                    <div style="border-bottom: 1px solid black; padding-bottom: 10px;">
+                                        <table style="width: 100%;">
+                                            <tr>
+                                                <!-- Left Side: Logo -->
+                                                <td style="width: 10%; text-align: left; vertical-align: middle;">
+                                                    <img 
+                                                        src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}" 
+                                                        alt="no image" 
+                                                        style="width: 100px; padding: 10px;"
+                                                    />
+                                                </td>
+                                        
+                                                <!-- Center: Company Name and Details -->
+                                                <td style="width: 80%; text-align: center; vertical-align: middle;">
+                                                    <div 
+                                                    {{-- style="font-size: 20px; font-weight: bold; text-transform: uppercase; font-family: sans-serif;" --}}
+                                                    style="
+                                                    font-size: 20px;    /* Set font size for smaller appearance */
+                                                    font-weight: bold;  /* Make it bold */
+                                                    text-transform: uppercase; /* Convert to uppercase */
+                                                    line-height: 1.2;   /* Adjust line height */
+                                                    font-family: Arial, sans-serif; /* Set clean font family */
+                                                     font-family: 'Font Awesome 5 Free'!important;
+                                                "
+                                                    >
+                                                        {{ $getOrganizationData->company_name }}
+                                                    </div>
+                                                    <div style="margin-top: 5px; font-size: 12px;  font-family: 'Font Awesome 5 Free'!important;">
+                                                        {{ $getOrganizationData->address }}, CIN: {{ $getOrganizationData->cin_number }}<br>
+                                                        Phone No.: {{ $getOrganizationData->mobile_number }}, Email Id: {{ $getOrganizationData->email }}<br>
+                                                        GST No: {{ $getOrganizationData->gst_no }}
+                                                    </div>
+                                                </td>
+                                        
+                                                <!-- Right Side: Empty (For spacing) -->
+                                                <td style="width: 10%;"></td>
+                                            </tr>
+                                        </table>
+                                        
+                                    </div>
+
                                     <div class="row " >
                                         {{-- <div class="col-lg-4 col-md-4 col-sm-4">
                                             <label>Name :</label>
                                         </div> --}}
                                         <div class="col-lg-12 col-md-12 col-sm-12">
-                                            <h4>Full Name : {{ $user_detail->f_name }} {{ $user_detail->m_name }}
+                                            <h4 style="font-family: 'Font Awesome 5 Free'!important;">Full Name : {{ $user_detail->f_name }} {{ $user_detail->m_name }}
                                                 {{ $user_detail->l_name }}</h4>
                                         </div>
                                     </div>
@@ -35,23 +79,23 @@
                                             <label>Email :</label>
                                         </div> --}}
                                         <div class="col-lg-12 col-md-12 col-sm-12">
-                                            <label><strong>Email Id</strong> : {{ strip_tags($user_detail->u_email) }}</label>
+                                            <label style="font-family: 'Font Awesome 5 Free'!important;"><strong>Email Id</strong> : {{ strip_tags($user_detail->u_email) }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
-                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="col-lg-12 col-md-12 col-sm-12" style="font-family: 'Font Awesome 5 Free'!important;">
                                             <label><strong>From Date</strong> :</label>
                                             <label>{{ strip_tags($user_detail->leave_start_date) }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
-                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="col-lg-12 col-md-12 col-sm-12" style="font-family: 'Font Awesome 5 Free'!important;">
                                             <label><strong>To Date</strong> :</label>
                                             <label>{{ strip_tags($user_detail->leave_end_date) }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
-                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="col-lg-12 col-md-12 col-sm-12" style="font-family: 'Font Awesome 5 Free'!important;">
                                             <label><strong>Leave Day</strong> :</label>
                                             <label>{{ strip_tags($user_detail->leave_day) }}</label>
                                         </div>
@@ -59,19 +103,19 @@
 
 
                                     <div class="row ">
-                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="col-lg-12 col-md-12 col-sm-12" style="font-family: 'Font Awesome 5 Free'!important;">
                                             <label><strong>Leave Count</strong> :</label>
                                             <label>{{ strip_tags($user_detail->leave_count) }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
-                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="col-lg-12 col-md-12 col-sm-12" style="font-family: 'Font Awesome 5 Free'!important;">
                                             <label><strong>Leave Type Name</strong> :</label>
                                             <label>{{ strip_tags($user_detail->leave_type_name) }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
-                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="col-lg-12 col-md-12 col-sm-12" style="font-family: 'Font Awesome 5 Free'!important;">
                                             <label><strong>Reason</strong> :</label>
                                             <label>{{ strip_tags($user_detail->reason) }}</label>
                                         </div>

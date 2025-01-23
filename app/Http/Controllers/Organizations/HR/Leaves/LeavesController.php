@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organizations\HR\Leaves;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Services\Organizations\HR\Leaves\LeavesServices;
+use App\Http\Controllers\Organizations\CommanController;
 use Session;
 use Validator;
 use Config;
@@ -20,6 +21,7 @@ class LeavesController extends Controller
 { 
     public function __construct(){
         $this->service = new LeavesServices();
+        $this->serviceCommon = new CommanController();
     }
 
 
@@ -47,8 +49,8 @@ class LeavesController extends Controller
             $data_id = base64_decode($request->id);
           
             $user_detail = $this->service->getById($data_id);
-  
-            return view('organizations.hr.leaves.show-leaves', compact('user_detail'));
+            $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
+            return view('organizations.hr.leaves.show-leaves', compact('user_detail', 'getOrganizationData'));
         } catch (\Exception $e) {
             return $e;
         }

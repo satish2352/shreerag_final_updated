@@ -811,89 +811,152 @@ public function getAllListMaterialRecievedToProduction()
         return $e;
     }
 }
+public function getAllListMaterialRecievedToProductionBusinessWise($id)
+{
+    try {
+        $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_BOM_PART_MATERIAL_RECIVED_FROM_STORE_DEPT_FOR_PRODUCTION')];
 
-public function getAllListMaterialRecievedToProductionBusinessWise($id){
-  try {
+        $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+            $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+        })
+            ->leftJoin('businesses', function ($join) {
+                $join->on('business_application_processes.business_id', '=', 'businesses.id');
+            })
+            ->leftJoin('businesses_details', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+            })
+            ->leftJoin('tbl_customer_product_quantity_tracking', 'business_application_processes.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id')
+            ->leftJoin('purchase_orders', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+            })
+            ->where('businesses_details.id', $id)
+            ->where('businesses_details.is_active', true)
+            ->distinct('businesses.id')
+            ->select(
+                'business_application_processes.id',
+                'businesses.id as business_id',
+                'businesses.customer_po_number',
+                'businesses.title',
+                'businesses_details.id as business_details_id',
+                'businesses_details.product_name',
+                'businesses_details.quantity',
+                'businesses_details.description',
+                'businesses.remarks',
+                DB::raw('(SELECT SUM(t2.completed_quantity)
+                          FROM tbl_customer_product_quantity_tracking AS t2
+                          WHERE t2.business_details_id = businesses_details.id
+                            AND t2.id <= tbl_customer_product_quantity_tracking.id
+                         ) AS cumulative_completed_quantity'),
+                DB::raw('(businesses_details.quantity - (SELECT SUM(t2.completed_quantity)
+                          FROM tbl_customer_product_quantity_tracking AS t2
+                          WHERE t2.business_details_id = businesses_details.id
+                            AND t2.id <= tbl_customer_product_quantity_tracking.id
+                         )) AS remaining_quantity'),
+                'production.updated_at'
+            )
+            ->groupBy(
+                'business_application_processes.id',
+                'businesses.id',
+                'businesses.customer_po_number',
+                'businesses.title',
+                'businesses_details.id',
+                'businesses_details.product_name',
+                'businesses_details.quantity',
+                'businesses_details.description',
+                'businesses.remarks',
+                'tbl_customer_product_quantity_tracking.id', // Added to resolve the issue
+            'production.updated_at'
+                )
+            ->get();
 
-
-      $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_BOM_PART_MATERIAL_RECIVED_FROM_STORE_DEPT_FOR_PRODUCTION')];
-      
-      $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-      })
-      ->leftJoin('designs', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-      })
-      ->leftJoin('businesses', function($join) {
-        $join->on('business_application_processes.business_id', '=', 'businesses.id');
-      })
-      ->leftJoin('businesses_details', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-    })
-    ->leftJoin('design_revision_for_prod', function ($join) {
-      $join->on('designs.id', '=', 'design_revision_for_prod.design_id');
-  })
-      // ->leftJoin('design_revision_for_prod', function($join) {
-      //   $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-      // })
-      ->leftJoin('purchase_orders', function($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-      })
-      ->where('businesses_details.id',$id)
-      // ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
-      ->where('businesses_details.is_active',true)
-      ->distinct('businesses.id')
-      // ->select(
-      //     'businesses_details.id',
-      //     'businesses_details.product_name',
-      //     'businesses_details.quantity',
-      //     'businesses_details.description',
-      //     'businesses_details.is_active',
-      //     'production.business_details_id',
-      //     'design_revision_for_prod.reject_reason_prod',
-      //     'design_revision_for_prod.id as design_revision_for_prod_id',
-      //     'designs.bom_image',
-      //     'designs.design_image',
-      //     'business_application_processes.store_material_sent_date'
-
-      // )
-      // ->get();
-
-      ->select(
-        'business_application_processes.id',
-        'businesses.id as business_id',
-        'businesses.customer_po_number',
-        'businesses.title',
-        'businesses_details.id as business_details_id',
-        'businesses_details.product_name',
-        'businesses_details.quantity',
-        'businesses_details.description',
-        'businesses.remarks',
-        DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'), // Aggregated
-        DB::raw('MAX(designs.bom_image) as bom_image'), // Aggregated
-        DB::raw('MAX(designs.design_image) as design_image'), // Aggregated
-        DB::raw('MAX(design_revision_for_prod.bom_image) as re_bom_image'), // Aggregated
-        DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image'), // Aggregated
-        DB::raw('MAX(design_revision_for_prod.remark_by_design) as remark_by_design') // Aggregated                
-    )
-    ->groupBy(
-        'business_application_processes.id',
-        'businesses.id',
-        'businesses.customer_po_number',
-        'businesses.title',
-        'businesses_details.id',
-        'businesses_details.product_name',
-        'businesses_details.quantity',
-        'businesses_details.description',
-        'businesses.remarks'
-    )
-    ->get();
-    return $data_output;
-  } catch (\Exception $e) {
-      
-      return $e;
-  }
+        return $data_output;
+    } catch (\Exception $e) {
+        return $e;
+    }
 }
+
+// public function getAllListMaterialRecievedToProductionBusinessWise($id){
+//   try {
+
+
+//       $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_BOM_PART_MATERIAL_RECIVED_FROM_STORE_DEPT_FOR_PRODUCTION')];
+      
+//       $data_output= BusinessApplicationProcesses::leftJoin('production', function($join) {
+//         $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+//       })
+//       ->leftJoin('designs', function($join) {
+//         $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+//       })
+//       ->leftJoin('businesses', function($join) {
+//         $join->on('business_application_processes.business_id', '=', 'businesses.id');
+//       })
+//       ->leftJoin('businesses_details', function($join) {
+//         $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+//     })
+//     ->leftJoin('design_revision_for_prod', function ($join) {
+//       $join->on('designs.id', '=', 'design_revision_for_prod.design_id');
+//   })
+//       // ->leftJoin('design_revision_for_prod', function($join) {
+//       //   $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+//       // })
+//       ->leftJoin('purchase_orders', function($join) {
+//         $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+//       })
+//       ->where('businesses_details.id',$id)
+//       // ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
+//       ->where('businesses_details.is_active',true)
+//       ->distinct('businesses.id')
+//       // ->select(
+//       //     'businesses_details.id',
+//       //     'businesses_details.product_name',
+//       //     'businesses_details.quantity',
+//       //     'businesses_details.description',
+//       //     'businesses_details.is_active',
+//       //     'production.business_details_id',
+//       //     'design_revision_for_prod.reject_reason_prod',
+//       //     'design_revision_for_prod.id as design_revision_for_prod_id',
+//       //     'designs.bom_image',
+//       //     'designs.design_image',
+//       //     'business_application_processes.store_material_sent_date'
+
+//       // )
+//       // ->get();
+
+//       ->select(
+//         'business_application_processes.id',
+//         'businesses.id as business_id',
+//         'businesses.customer_po_number',
+//         'businesses.title',
+//         'businesses_details.id as business_details_id',
+//         'businesses_details.product_name',
+//         'businesses_details.quantity',
+//         'businesses_details.description',
+//         'businesses.remarks',
+//         DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'), // Aggregated
+//         DB::raw('MAX(designs.bom_image) as bom_image'), // Aggregated
+//         DB::raw('MAX(designs.design_image) as design_image'), // Aggregated
+//         DB::raw('MAX(design_revision_for_prod.bom_image) as re_bom_image'), // Aggregated
+//         DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image'), // Aggregated
+//         DB::raw('MAX(design_revision_for_prod.remark_by_design) as remark_by_design') // Aggregated                
+//     )
+//     ->groupBy(
+//         'business_application_processes.id',
+//         'businesses.id',
+//         'businesses.customer_po_number',
+//         'businesses.title',
+//         'businesses_details.id',
+//         'businesses_details.product_name',
+//         'businesses_details.quantity',
+//         'businesses_details.description',
+//         'businesses.remarks'
+//     )
+//     ->get();
+//     return $data_output;
+//   } catch (\Exception $e) {
+      
+//       return $e;
+//   }
+// }
 
 // public function getAllListMaterialRecievedToProductionBusinessWise($id)
 // {
