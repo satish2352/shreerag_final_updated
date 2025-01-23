@@ -555,8 +555,9 @@ public function getAllNewRequirementBusinessWise($business_id) {
                 DB::raw('MAX(designs.design_image) as design_image'), // Aggregated
                 DB::raw('MAX(design_revision_for_prod.bom_image) as re_bom_image'), // Aggregated
                 DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image'), // Aggregated
-                DB::raw('MAX(design_revision_for_prod.remark_by_design) as remark_by_design') // Aggregated                
-            )
+                DB::raw('MAX(design_revision_for_prod.remark_by_design) as remark_by_design'), // Aggregated    
+                DB::raw('MAX(design_revision_for_prod.updated_at) as updated_at'), // Aggregated                
+                )
             ->groupBy(
                 'business_application_processes.id',
                 'businesses.id',
@@ -566,8 +567,10 @@ public function getAllNewRequirementBusinessWise($business_id) {
                 'businesses_details.product_name',
                 'businesses_details.quantity',
                 'businesses_details.description',
-                'businesses.remarks'
+                'businesses.remarks',
+                'design_revision_for_prod.updated_at',
             )
+            ->orderBy('design_revision_for_prod.updated_at', 'desc')
             ->get();
 
         return $data_output;

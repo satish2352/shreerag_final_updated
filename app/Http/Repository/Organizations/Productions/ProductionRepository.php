@@ -102,14 +102,18 @@ class ProductionRepository  {
             ];
         }
     }
-    
     public function rejectdesign($request){
         try {
+             
             $idtoedit = base64_decode($request->business_id);
-           
+          
             // $idtoedit = BusinessApplicationProcesses::where('business_details_id', $id)->first();
             $production_data = ProductionModel::where('business_details_id', $idtoedit)->first();
-            $designRevisionForProdID = DesignRevisionForProd::where('id', $production_data->id)->orderBy('id','desc')->first();
+           
+            $designRevisionForProdID = DesignRevisionForProd::where('design_id', $production_data->business_details_id)->orderBy('id','desc')->first();
+            
+        //       dd( $designRevisionForProdID);
+        //   die();
             if($designRevisionForProdID) {
 
                 $designRevisionForProdID->business_id = $production_data->business_id;
@@ -160,6 +164,63 @@ class ProductionRepository  {
             return $e;
         }
     }     
+    // public function rejectdesign($request){
+    //     try {
+    //         $idtoedit = base64_decode($request->business_id);
+           
+    //         // $idtoedit = BusinessApplicationProcesses::where('business_details_id', $id)->first();
+    //         $production_data = ProductionModel::where('business_details_id', $idtoedit)->first();
+    //         $designRevisionForProdID = DesignRevisionForProd::where('id', $production_data->id)->orderBy('id','desc')->first();
+    //         if($designRevisionForProdID) {
+
+    //             $designRevisionForProdID->business_id = $production_data->business_id;
+    //             $designRevisionForProdID->business_details_id = $production_data->business_details_id;
+    //             $designRevisionForProdID->design_id = $production_data->design_id;
+    //             $designRevisionForProdID->production_id = $production_data->business_id;
+    //             $designRevisionForProdID->production_id = $production_data->business_details_id;
+    //             $designRevisionForProdID->reject_reason_prod = $request->reject_reason_prod;
+    //             $designRevisionForProdID->remark_by_design = '';
+    //             $designRevisionForProdID->save();
+
+    //         } else {
+    //             $designRevisionForProdIDInsert = new DesignRevisionForProd();
+    //             $designRevisionForProdIDInsert->business_id = $production_data->business_id;
+    //             $designRevisionForProdIDInsert->business_details_id = $production_data->business_details_id;
+    //             $designRevisionForProdIDInsert->design_id = $production_data->design_id;
+    //             $designRevisionForProdIDInsert->production_id = $production_data->business_id;
+    //             $designRevisionForProdIDInsert->production_id = $production_data->business_details_id;
+    //             $designRevisionForProdIDInsert->reject_reason_prod = $request->reject_reason_prod;
+    //             $designRevisionForProdIDInsert->remark_by_design = '';
+    //             $designRevisionForProdIDInsert->save();
+
+    //         }
+
+    //         $business_application = BusinessApplicationProcesses::where('business_details_id', $production_data->business_details_id)->first();
+            
+    //         if ($business_application) {
+    //             $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.LIST_DESIGN_RECIEVED_FROM_PROD_DEPT_FOR_REVISED');
+    //             // $business_application->design_id = $production_data->design_id;
+    //             $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.LIST_DESIGN_RECIEVED_FROM_PROD_DEPT_FOR_REVISED');
+    //             // $business_application->production_id =  $production_data->id;
+    //             $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.DESIGN_SENT_TO_DESIGN_DEPT_FOR_REVISED');
+    //             $business_application->off_canvas_status = 13;
+    //             $business_application->save();
+
+    //              // Update admin view and notification status with the new off canvas status
+    //         $update_data_admin['off_canvas_status'] = 13;
+    //         $update_data_business['off_canvas_status'] = 13;
+    //         $update_data_admin['is_view'] = '0';
+    //         AdminView::where('business_details_id', $production_data->business_details_id)
+    //             ->update($update_data_admin);
+
+    //         NotificationStatus::where('business_details_id', $production_data->business_details_id)
+    //             ->update($update_data_business);
+    //         }
+
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }     
     // public function acceptProductionCompleted($id, $completed_quantity) {
     //     try {
     //         // Fetch the business application process record for the given business ID
