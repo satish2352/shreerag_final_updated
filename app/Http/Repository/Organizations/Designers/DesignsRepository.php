@@ -299,70 +299,138 @@ public function updateAll($request)
     }
 }
 
+    // public function updateReUploadDesign($request)
+    // {
+    //     try {
+    //         // dd($request);
+    //         // die();
+    //         $return_data = array();
+
+    //         $designRevisionForProd = DesignRevisionForProd::where('id', $request->design_revision_for_prod_id)->orderBy('id','desc')->first();
+
+    //         if($designRevisionForProd) {
+
+    //             $designRevisionForProd->remark_by_design = $request->remark_by_design;
+
+    //             $designImageName = $designRevisionForProd->id . '_' . rand(100000, 999999) . '_re_design.' . $request->design_image->getClientOriginalExtension();
+    //             $bomImageName = $designRevisionForProd->id . '_' . rand(100000, 999999) . '_re_bom.' . $request->bom_image->getClientOriginalExtension();
+                
+    //             // Update the design image and bom image fields in the DesignModel
+    //             $designRevisionForProd->design_image = $designImageName;
+    //             $designRevisionForProd->bom_image = $bomImageName;
+
+    //             $designRevisionForProd->save();
+
+    //         } 
+    
+    //         // Update BusinessApplicationProcesses if record exists
+    //         $business_application = BusinessApplicationProcesses::where('business_details_id', $designRevisionForProd->business_details_id)->first();
+
+    //         if ($business_application) {
+
+    //             // $business_application->business_id = $designRevisionForProd->business_id;
+    //             $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.DESIGN_SENT_TO_PROD_DEPT_REVISED');
+    //             // $business_application->design_id = $designRevisionForProd->design_id;
+    //             $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_REVISED');
+    //             // $business_application->production_id = $designRevisionForProd->production_id;
+    //             $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECIVED_FROM_PRODUCTION_DEPT_REVISED');
+    //             $business_application->	off_canvas_status = 14;
+    //             $business_application->save();
+
+    //               // $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
+    //     $update_data_admin['off_canvas_status'] = 14;
+    //     $update_data_business['off_canvas_status'] = 14;
+    //     $update_data_admin['is_view'] = '0';
+    //     AdminView::where('business_details_id', $business_application->business_details_id)
+    //             ->update($update_data_admin);
+    //             NotificationStatus::where('business_details_id', $business_application->business_details_id)
+    //             ->update($update_data_business);
+    //         }
+    
+    //         $return_data['designImageName'] = $designImageName;
+    //         $return_data['bomImageName'] = $bomImageName;
+    //         $return_data['last_insert_id'] = $designRevisionForProd->business_id;
+    
+    //         // Return the data
+
+    //         return $return_data;
+    //     } catch (\Exception $e) {
+            
+    //         return [
+    //             'msg' => 'Failed to update Report Incident Crowdsourcing.',
+    //             'status' => 'error',
+    //             'error' => $e->getMessage() // Return the error message for debugging purposes
+    //         ];
+    //     }
+    // }
     public function updateReUploadDesign($request)
     {
         try {
-            // dd($request);
-            // die();
-            $return_data = array();
-
-            $designRevisionForProd = DesignRevisionForProd::where('id', $request->design_revision_for_prod_id)->orderBy('id','desc')->first();
-
-            if($designRevisionForProd) {
-
-                $designRevisionForProd->remark_by_design = $request->remark_by_design;
-
-                $designImageName = $designRevisionForProd->id . '_' . rand(100000, 999999) . '_re_design.' . $request->design_image->getClientOriginalExtension();
-                $bomImageName = $designRevisionForProd->id . '_' . rand(100000, 999999) . '_re_bom.' . $request->bom_image->getClientOriginalExtension();
-                
-                // Update the design image and bom image fields in the DesignModel
-                $designRevisionForProd->design_image = $designImageName;
-                $designRevisionForProd->bom_image = $bomImageName;
-
-                $designRevisionForProd->save();
-
-            } 
+            $return_data = [];
     
-            // Update BusinessApplicationProcesses if record exists
-            $business_application = BusinessApplicationProcesses::where('business_details_id', $designRevisionForProd->business_details_id)->first();
-
-            if ($business_application) {
-
-                // $business_application->business_id = $designRevisionForProd->business_id;
-                $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.DESIGN_SENT_TO_PROD_DEPT_REVISED');
-                // $business_application->design_id = $designRevisionForProd->design_id;
-                $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_REVISED');
-                // $business_application->production_id = $designRevisionForProd->production_id;
-                $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECIVED_FROM_PRODUCTION_DEPT_REVISED');
-                $business_application->	off_canvas_status = 14;
-                $business_application->save();
-
-                  // $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
-        $update_data_admin['off_canvas_status'] = 14;
-        $update_data_business['off_canvas_status'] = 14;
-        $update_data_admin['is_view'] = '0';
-        AdminView::where('business_details_id', $business_application->business_details_id)
-                ->update($update_data_admin);
-                NotificationStatus::where('business_details_id', $business_application->business_details_id)
-                ->update($update_data_business);
+            // Retrieve the existing record based on design_revision_for_prod_id
+            $designRevisionForProd = DesignRevisionForProd::where('id', $request->design_revision_for_prod_id)
+                ->orderBy('id', 'desc')
+                ->first();
+    
+            // Check if the record exists
+            if (!$designRevisionForProd) {
+                return [
+                    'msg' => 'Design revision not found for the provided ID.',
+                    'status' => 'error',
+                ];
             }
     
+            // Update the remark field
+            $designRevisionForProd->remark_by_design = $request->remark_by_design;
+    
+            // Generate unique file names for design and BOM images
+            $designImageName = $designRevisionForProd->id . '_' . rand(100000, 999999) . '_re_design.' . $request->design_image->getClientOriginalExtension();
+            $bomImageName = $designRevisionForProd->id . '_' . rand(100000, 999999) . '_re_bom.' . $request->bom_image->getClientOriginalExtension();
+    
+            // Update the image fields
+            $designRevisionForProd->design_image = $designImageName;
+            $designRevisionForProd->bom_image = $bomImageName;
+    
+            // Save the updated record
+            $designRevisionForProd->save();
+    
+            // Update the related BusinessApplicationProcesses record if it exists
+            $businessApplication = BusinessApplicationProcesses::where('business_details_id', $designRevisionForProd->business_details_id)->first();
+            if ($businessApplication) {
+                $businessApplication->business_status_id = config('constants.HIGHER_AUTHORITY.DESIGN_SENT_TO_PROD_DEPT_REVISED');
+                $businessApplication->design_status_id = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_REVISED');
+                $businessApplication->production_status_id = config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECIVED_FROM_PRODUCTION_DEPT_REVISED');
+                $businessApplication->off_canvas_status = 14;
+                $businessApplication->save();
+    
+                // Update AdminView and NotificationStatus records
+                $updateData = [
+                    'off_canvas_status' => 14,
+                    'is_view' => '0',
+                ];
+                AdminView::where('business_details_id', $businessApplication->business_details_id)
+                    ->update($updateData);
+                NotificationStatus::where('business_details_id', $businessApplication->business_details_id)
+                    ->update($updateData);
+            }
+    
+            // Prepare return data
             $return_data['designImageName'] = $designImageName;
             $return_data['bomImageName'] = $bomImageName;
             $return_data['last_insert_id'] = $designRevisionForProd->business_id;
     
-            // Return the data
-
             return $return_data;
+    
         } catch (\Exception $e) {
-            
+            // Handle any errors during the process
             return [
-                'msg' => 'Failed to update Report Incident Crowdsourcing.',
+                'msg' => 'Failed to update the design revision.',
                 'status' => 'error',
-                'error' => $e->getMessage() // Return the error message for debugging purposes
+                'error' => $e->getMessage(), // Return the error message for debugging
             ];
         }
     }
-   
+    
 
 }
