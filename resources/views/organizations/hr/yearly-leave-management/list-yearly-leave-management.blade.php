@@ -88,6 +88,7 @@ padding-left: 20px !important;
 
                                     </thead>
                                     <tbody>
+                                       
                                         @foreach($getOutput as $data)
                                         <tr>
                                             
@@ -111,7 +112,7 @@ padding-left: 20px !important;
                                                             </button>
                                                         </a> --}}
 
-                                                        <a href="{{ route('delete-yearly-leave-management', base64_encode($data->leave_year)) }}">
+                                                        <a href="{{ route('delete-yearly-leave-management', base64_encode($data->id)) }}">
                                                             <button data-toggle="tooltip" title="Trash" class="pd-setting-ed" style="color: red; border: 1px solid;">
                                                                 <i class="fa fa-trash" aria-hidden="true"></i>
                                                             </button>

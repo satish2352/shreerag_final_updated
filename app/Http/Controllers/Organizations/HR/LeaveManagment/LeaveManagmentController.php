@@ -118,7 +118,7 @@ class LeaveManagmentController extends Controller
                     $msg = $update_data['msg'];
                     $status = $update_data['status'];
                     if ($status == 'success') {
-                        return redirect('list-yearly-leave-management')->with(compact('msg', 'status'));
+                        return redirect('hr/list-yearly-leave-management')->with(compact('msg', 'status'));
                     } else {
                         return redirect()->back()
                             ->withInput()
@@ -136,7 +136,7 @@ class LeaveManagmentController extends Controller
         try {
             $active_id = $request->active_id;
         $result = $this->service->updateOne($active_id);
-            return redirect('list-yearly-leave-management')->with('flash_message', 'Updated!');  
+            return redirect('hr/list-yearly-leave-management')->with('flash_message', 'Updated!');  
         } catch (\Exception $e) {
             return $e;
         }
@@ -146,14 +146,15 @@ class LeaveManagmentController extends Controller
     public function destroy(Request $request)
 {
     $delete_data_year = base64_decode($request->id);
+ 
     try {
         $delete_record = $this->service->deleteByYear($delete_data_year);
-
+      
         if ($delete_record) {
             $msg = $delete_record['msg'];
             $status = $delete_record['status'];
             if ($status == 'success') {
-                return redirect('list-yearly-leave-management')->with(compact('msg', 'status'));
+                return redirect('hr/list-yearly-leave-management')->with(compact('msg', 'status'));
             } else {
                 return redirect()->back()
                     ->withInput()

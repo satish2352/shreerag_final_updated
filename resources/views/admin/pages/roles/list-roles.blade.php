@@ -30,14 +30,14 @@ padding-left: 20px !important;
                     <div class="sparkline13-hd">
                         <div class="main-sparkline13-hd">
                             <h1>Department <span class="table-project-n">Data</span> Table</h1>
-                                <div class="form-group-inner login-btn-inner row">
+                                {{-- <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2" >
                                         <div class="login-horizental cancel-wp pull-left">
                                                 <a href="{{ route('add-roles') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" href="{{route('add-roles')}}">Add Roles</button></a>
                                         </div>
                                     </div>
                                 <div class="col-lg-10"></div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
 
@@ -91,7 +91,7 @@ padding-left: 20px !important;
                                             <td>
                                                 <div style="display: flex; align-items: center;">
                                                     <a href="{{route('edit-roles', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                                    <a href="{{route('delete-roles', base64_encode($data->id))}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash" aria-hidden="true"></i></button></a>
+                                                    {{-- <a href="{{route('delete-roles', base64_encode($data->id))}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash" aria-hidden="true"></i></button></a> --}}
                                                 </div>
                                             </td>
                                            </tr>

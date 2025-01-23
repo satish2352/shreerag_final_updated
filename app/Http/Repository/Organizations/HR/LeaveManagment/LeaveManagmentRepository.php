@@ -126,9 +126,10 @@ class LeaveManagmentRepository  {
     
     public function deleteByYear($leaveYear)
     {
+      
         try {
             // Find records based on leave_year
-            $records = LeaveManagement::where('leave_year', $leaveYear)->get();
+            $records = LeaveManagement::where('id', $leaveYear)->get();
     
             // Update is_deleted flag to 1 for soft delete
             foreach ($records as $record) {
