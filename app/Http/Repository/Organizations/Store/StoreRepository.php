@@ -166,15 +166,15 @@ class StoreRepository
             $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
                 })
-                ->leftJoin('designs', function($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-                })
+                // ->leftJoin('designs', function($join) {
+                //     $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+                // })
                 ->leftJoin('businesses_details', function($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
                 })
-                ->leftJoin('design_revision_for_prod', function($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-                })
+                // ->leftJoin('design_revision_for_prod', function($join) {
+                //     $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+                // })
                 // ->leftJoin('purchase_orders', function($join) {
                 //     $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
                 // })
@@ -203,8 +203,8 @@ class StoreRepository
                     'production_details.unit',
                     'production_details.quantity_minus_status',
                     'production_details.material_send_production',
-                    'designs.bom_image',
-                    'designs.design_image',
+                    // 'designs.bom_image',
+                    // 'designs.design_image',
                     'business_application_processes.store_material_sent_date'
                 )
                 ->get(); 
