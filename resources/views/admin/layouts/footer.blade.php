@@ -157,7 +157,7 @@
         }, 1000); // 1000 milliseconds = 1 second
     </script>
 
-{{-- <script>
+<script>
             
                 function fetch_new_hold(){
                     var TestVal='1';
@@ -207,8 +207,8 @@
                 $(document).ready(function(){
                     setInterval(fetch_new_hold,60000);
                 });
-        </script> --}}
-        <script>
+        </script>
+        {{-- <script>
             // Function to play notification sound
             function playNotificationSound() {
                 const audioElement = document.getElementById('notificationSound');
@@ -258,7 +258,7 @@
             $(document).ready(function() {
                 setInterval(fetch_new_hold, 60000); // Fetch notifications every 60 seconds
             });
-        </script>
+        </script> --}}
         <!-- <script>
         $(document).ready(function() {
             // var agent_id = '1';
