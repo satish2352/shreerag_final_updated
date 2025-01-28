@@ -144,16 +144,16 @@
                                                                 <input type="hidden" name="addmore[0][edit_id]"
                                                                     placeholder="Enter Description" class="form-control"
                                                                     value="{{ $item->id }}" readonly />
-                                                                <td><input type="text" name="addmore[0][part_description]"
+                                                                <td><input type="text" name="addmore[0][description]"
                                                                         placeholder="Enter Description"
                                                                         class="form-control"
-                                                                        value="{{ $item->part_description }}" readonly />
-                                                                </td>
-                                                                </td>
-                                                                <td><input type="text" name="addmore[0][description]"
-                                                                        placeholder="Enter description"
-                                                                        class="form-control"
                                                                         value="{{ $item->description }}" readonly />
+                                                                </td>
+                                                                </td>
+                                                                <td><input type="text" name="addmore[0][part_number]"
+                                                                        placeholder="Enter part_number"
+                                                                        class="form-control"
+                                                                        value="{{ $item->part_number }}" readonly />
                                                                 </td>
                                                                 <td><input type="text"
                                                                         name="addmore[0][chalan_quantity]"

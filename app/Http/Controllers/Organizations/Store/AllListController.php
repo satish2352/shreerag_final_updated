@@ -309,9 +309,8 @@ class AllListController extends Controller
             ->where('tbl_grn_po_quantity_tracking.grn_id', $grn_id)
             ->select(
                 'tbl_grn_po_quantity_tracking.*',
-                'tbl_part_item.description as part_description',
-                'purchase_order_details.description as description',
-                // 'tbl_part_item.part_number as part_number',
+                'tbl_part_item.description as description',
+                'tbl_part_item.part_number as part_number',
                 'tbl_unit.name as unit_name',
                 DB::raw('(SELECT SUM(t2.actual_quantity) 
                           FROM tbl_grn_po_quantity_tracking AS t2 
