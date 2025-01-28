@@ -191,10 +191,10 @@
                                                                 <input type="hidden" name="addmore[{{ $index }}][edit_id]"
                                                                     placeholder="Enter Description" class="form-control"
                                                                     value="{{ $item->id }}" readonly />
-                                                                <td><input type="text" name="addmore[{{ $index }}][description]"
+                                                                <td><input type="text" name="addmore[{{ $index }}][part_description]"
                                                                         placeholder="Enter Description"
                                                                         class="form-control"
-                                                                        value="{{ $item->description }}" readonly />
+                                                                        value="{{ $item->part_description }}" readonly />
                                                                 </td>
                                                                 <td><input type="text" name="addmore[{{ $index }}][part_number]"
                                                                     placeholder="Enter part_number"
@@ -312,7 +312,7 @@
             $("#dynamicTable").append(
                 '<tr><td><input type="text" name="addmore[' +
                 i +
-                '][description]" placeholder="Enter Description" class="form-control" /></td><td><input type="text" name="addmore[' +
+                '][part_description]" placeholder="Enter Description" class="form-control" /></td><td><input type="text" name="addmore[' +
                 i +
                 '][chalan_quantity]" placeholder="Enter Chalan Qty" class="form-control" /></td><td><input type="text" name="addmore[' +
                 i +
