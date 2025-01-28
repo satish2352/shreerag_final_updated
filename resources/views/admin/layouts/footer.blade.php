@@ -11,9 +11,9 @@
         </div>
     </div>
 </div>
-<audio id="notificationSound" preload="auto">
+{{-- <audio id="notificationSound" preload="auto">
     <source src="{{ asset('uploads/Notification_sound.mp3') }}" type="audio/mp3">
-</audio>
+</audio> --}}
 <script>
     $(function() {
         var currentYear = new Date().getFullYear();
