@@ -700,7 +700,7 @@
                                             </div>
                                         </div>
                                         <div class="mt-2 mb-0 text-sm">
-                                            <a href="{{ route('list-new-requirements-received-for-design') }}">
+                                            <a href="{{ route('list-revislist-material-reciveded-design') }}">
                                                 <span
                                                     class="badge badge-pill bg-soft-success text-success me-2">
                                                     <i class="fa-solid fa-arrow-right"></i> </span>

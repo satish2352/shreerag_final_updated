@@ -235,21 +235,10 @@ public function getAllNewRequirementBusinessWise($business_id) {
             ->leftJoin('businesses_details', function($join) {
               $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
           })
-            ->leftJoin('purchase_orders', function($join) {
-              $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
-            })
             ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
-            // ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
-            // ->orWhereIn('business_application_processes.store_status_id',$array_to_be_check_store)
-            // ->orWhereIn('purchase_orders.purchase_status_from_purchase',$array_to_be_check_purchase)
-            // ->orWhereIn('business_application_processes.business_status_id',$array_to_be_check_owner)
-            // ->orWhereIn('purchase_orders.quality_status_id',$array_to_be_check_quality)
-            // ->where('businesses_details.is_approved_production', 1)
-            // ->distinct('businesses.id')
             ->where('businesses.is_active',true)
             ->groupBy([
               'businesses.id', 
-              // 'businesses_details.product_name',
               'businesses.customer_po_number', 
               'businesses.remarks', 
               'businesses.is_active', 
@@ -258,7 +247,6 @@ public function getAllNewRequirementBusinessWise($business_id) {
           ])
           ->select(
               'businesses.id',
-              // 'businesses_details.product_name',
               'businesses.customer_po_number',
               'businesses.remarks',
               'businesses.is_active',
@@ -267,8 +255,6 @@ public function getAllNewRequirementBusinessWise($business_id) {
           )
           
         ->orderBy('businesses.updated_at', 'desc')->get();
-            // dd($data_output);
-            // die();
           return $data_output;
        
       } catch (\Exception $e) {

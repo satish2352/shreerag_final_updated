@@ -11,6 +11,9 @@
         </div>
     </div>
 </div>
+<audio id="notificationSound" preload="auto">
+    <source src="{{ asset('uploads/Notification_sound.mp3') }}" type="audio/mp3">
+</audio>
 <script>
     $(function() {
         var currentYear = new Date().getFullYear();
@@ -154,7 +157,7 @@
         }, 1000); // 1000 milliseconds = 1 second
     </script>
 
-<script>
+{{-- <script>
             
                 function fetch_new_hold(){
                     var TestVal='1';
@@ -204,8 +207,58 @@
                 $(document).ready(function(){
                     setInterval(fetch_new_hold,60000);
                 });
+        </script> --}}
+        <script>
+            // Function to play notification sound
+            function playNotificationSound() {
+                const audioElement = document.getElementById('notificationSound');
+                audioElement.currentTime = 0; // Reset playback to the beginning
+                audioElement.play()
+                    .catch(error => console.error("Sound play error:", error));
+            }
+        
+            function fetch_new_hold() {
+                var TestVal = '1';
+                if (TestVal !== '') {
+                    $.ajax({
+                        url: '{{ route('get-notification') }}',
+                        type: 'GET',
+                        data: { TestVal: TestVal },
+                        success: function(response) {
+                            if (response.notification_count > 0) {
+                                $('#notification-count').text(response.notification_count);
+        
+                                var notificationMessages = '';
+                                $.each(response.notifications, function(index, notification) {
+                                    var urlvar = notification.url;
+                                    if (notification.admin_count > 0) {
+                                        notificationMessages += `
+                                            <li>
+                                                <a href="${urlvar}">
+                                                    <div class="notification-content">
+                                                        <h2 style="color:#444;">${notification.message}</h2>
+                                                    </div>
+                                                </a>
+                                            </li>`;
+                                    }
+                                });
+        
+                                $('#notification-messages').html(notificationMessages);
+        
+                                // Play sound when new notifications arrive
+                                playNotificationSound();
+                            } else {
+                                $('#notification-count').text('');
+                            }
+                        }
+                    });
+                }
+            }
+        
+            $(document).ready(function() {
+                setInterval(fetch_new_hold, 60000); // Fetch notifications every 60 seconds
+            });
         </script>
-
         <!-- <script>
         $(document).ready(function() {
             // var agent_id = '1';

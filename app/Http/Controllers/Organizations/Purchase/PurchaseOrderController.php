@@ -669,6 +669,7 @@ class PurchaseOrderController extends Controller
             $vendorName = $purchaseOrder->vendor_name;
             Mail::send([], [], function ($message) use ($purchaseOrder, $finalPdfPath, $vendorName) {
                 $message->to($purchaseOrder->vendor_email)
+                     ->cc('purchase@shreeragengineering.com')
                     ->subject('Purchase Order Notification')
                     ->attach($finalPdfPath)
                     ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));

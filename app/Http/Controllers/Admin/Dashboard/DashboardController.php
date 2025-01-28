@@ -31,6 +31,7 @@ use App\Models\ {
     TransportName,
     NotificationStatus,
     RolesModel,
+    ProductionModel,
 //     Gallery,
 //     AdditionalSolutions,
 //     OurSolutions,
@@ -186,12 +187,46 @@ class DashboardController extends Controller {
         ->where('business_application_processes.production_status_id', 0) 
         ->where('business_application_processes.production_id', 0)
         ->count();
-        $business_received_for_designs = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1111)
-        ->where('production_status_id', 0)
-        ->where('is_active',1)->count();
-        $design_sent_for_production = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1113)
-        ->where('production_status_id', 1113)
-        ->where('is_active',1)->count();
+
+        // $business_received_for_designs = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1111)
+        // ->where('production_status_id', 0)
+        // ->where('is_active',1)->count();
+        $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN')];
+$business_received_for_designs= DesignModel::leftJoin('businesses', function($join) {
+                $join->on('designs.business_id', '=', 'businesses.id');
+              })
+              ->leftJoin('business_application_processes', function($join) {
+                $join->on('designs.business_id', '=', 'business_application_processes.business_id');
+              })
+              ->whereIn('business_application_processes.design_status_id',$array_to_be_check)
+              ->where('businesses.is_active',true)
+              ->distinct('businesses.id')
+             ->count();
+
+
+        // $design_sent_for_production = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1113)
+        // ->where('production_status_id', 1113)
+        // ->where('is_active',1)->count();
+        $array_to_be_check_send_production = [
+            config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN'),
+            config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_PRODUCTION'),
+            config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECIVED_FROM_PRODUCTION_DEPT_REVISED'),
+        ];
+        
+        $design_sent_for_production = ProductionModel::leftJoin('businesses', function ($join) {
+                $join->on('production.business_id', '=', 'businesses.id');
+            })
+            ->leftJoin('business_application_processes', function ($join) {
+                $join->on('production.business_id', '=', 'business_application_processes.business_id');
+            })
+            ->leftJoin('designs', function ($join) {
+                $join->on('production.business_details_id', '=', 'designs.business_id');
+            })
+            ->whereIn('business_application_processes.production_status_id', $array_to_be_check_send_production)
+            ->where('businesses.is_active', true)
+            ->selectRaw('COUNT(DISTINCT businesses.id) as total_count')
+            ->value('total_count');
+        
        
         $accepted_design_production_dept = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1114)
         ->where('production_status_id', 1114)
@@ -202,8 +237,8 @@ class DashboardController extends Controller {
         $design_recived_for_production = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1113)
         ->where('production_status_id', 1113)
         ->where('is_active',1)->count();
-        $accepted_and_sent_to_store = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1114)
-        ->where('production_status_id', 1114)
+        
+        $accepted_and_sent_to_store = BusinessApplicationProcesses::where('off_canvas_status', 15)
         ->where('is_active',1)->count();
         $rejected_design_list_sent = BusinessApplicationProcesses::where('business_status_id',1115)->where('design_status_id', 1115)
         ->where('production_status_id', 1115)
@@ -226,6 +261,8 @@ class DashboardController extends Controller {
         $material_sent_to_production = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
         ->where('production_status_id', 1119)->where('store_status_id', 1118)
         ->where('is_active',1)->count();
+
+        
         $material_for_purchase = BusinessApplicationProcesses::where('business_status_id',1123)->where('design_status_id', 1114)
         ->where('production_status_id', 1117)->where('store_status_id',1123)
         ->where('is_active',1)->count();

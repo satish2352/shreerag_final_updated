@@ -430,8 +430,8 @@
                                 </a>
                             </li>
 
-                            <li class="nav-item {{ request()->is('proddept/list-revised-design') ? 'active' : '' }}">
-                                <a href="{{ route('list-revised-design') }}">
+                            <li class="nav-item {{ request()->is('proddept/list-revislist-material-reciveded-design') ? 'active' : '' }}">
+                                <a href="{{ route('list-revislist-material-reciveded-design') }}">
                                     <i class="fa fa-list-alt icon-wrap"></i>
                                     <span class="mini-click-non">Revised Design List</span>
                                 </a>
