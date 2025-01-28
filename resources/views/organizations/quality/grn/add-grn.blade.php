@@ -196,10 +196,10 @@
                                                                         class="form-control"
                                                                         value="{{ $item->part_description }}" readonly />
                                                                 </td>
-                                                                <td><input type="text" name="addmore[{{ $index }}][part_number_item]"
-                                                                    placeholder="Enter part_number"
+                                                                <td><input type="text" name="addmore[{{ $index }}][description]"
+                                                                    placeholder="Enter description"
                                                                     class="form-control"
-                                                                    value="{{ $item->part_number_item }}" readonly />
+                                                                    value="{{ $item->description }}" readonly />
                                                             </td>
                                                                 
                                                                 <td><input type="text"

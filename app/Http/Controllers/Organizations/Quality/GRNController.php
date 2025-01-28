@@ -157,7 +157,7 @@ class GRNController extends Controller
             ->select(
                 'purchase_order_details.*',
                 'tbl_part_item.description as part_description',
-                'tbl_part_item.part_number as part_number_item',
+                // 'tbl_part_item.part_number as description',
                 'tbl_unit.name as unit_name',
                 'tbl_hsn.name as hsn_name',
                 DB::raw('(SELECT SUM(t2.actual_quantity) 
