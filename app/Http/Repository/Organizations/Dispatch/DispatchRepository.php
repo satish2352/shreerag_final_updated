@@ -39,11 +39,14 @@ if (!$dataOutput) {
 
         if ($dataOutput) {
             // Update the fields
-            $dataOutput->outdoor_no = $request->outdoor_no;
+            // $dataOutput->outdoor_no = $request->outdoor_no;
             $dataOutput->gate_entry = $request->gate_entry;
             $dataOutput->is_approve = '0';
             $dataOutput->is_active = '1';
             $dataOutput->is_deleted = '0';
+            if (isset($request['outdoor_no'])) {
+                $dataOutput->outdoor_no = $request['outdoor_no'];
+            } 
             if (isset($request['remark'])) {
                 $dataOutput->remark = $request['remark'];
             } 

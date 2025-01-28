@@ -1,16 +1,17 @@
 @extends('admin.layouts.master')
 @section('content')
-<style>
-     .sparkline13-list-new {
-        background-color: #fff;
-        padding: 22px;
-        margin-top: 72px;
-        margin-bottom: 80px;
-    }
-    .error{
-        color: red;
-    }
-</style>
+    <style>
+        .sparkline13-list-new {
+            background-color: #fff;
+            padding: 22px;
+            margin-top: 72px;
+            margin-bottom: 80px;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline13-list-new">
@@ -19,8 +20,10 @@
                         <center>
                             <h1> GRN Details</h1><br>
                             <div class="d-flex justify-content-center align-items-center">
-                                <h4 style="display: flex; justify-content: left; color: green;padding-left: 16px;">Note: First You will Add This Accepted Quantity In Inventory Department, Then Only You Can Issue Material to Production Department.</h4> 
-                                    
+                                <h4 style="display: flex; justify-content: left; color: green;padding-left: 16px;">Note:
+                                    First You will Add This Accepted Quantity In Inventory Department, Then Only You Can
+                                    Issue Material to Production Department.</h4>
+
                         </center>
                     </div>
                 </div>
@@ -100,9 +103,8 @@
                                                         <label for="po_date">GRN No. :</label>
                                                         <input type="text" class="form-control" id="grn_no"
                                                             name="grn_no" placeholder=""
-                                                            value="{{ $grn_data->grn_no_generate }}"
-                                                            readonly>
-                                                    </div> 
+                                                            value="{{ $grn_data->grn_no_generate }}" readonly>
+                                                    </div>
 
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="grn_date">GRN Date:</label>
@@ -125,40 +127,42 @@
                                                             name="po_date" placeholder="Enter PO Date"
                                                             value="{{ $purchase_order_data->created_at->format('Y-m-d') }}"
                                                             readonly>
-                                                    </div> 
+                                                    </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="bill_no">Bill No. :</label>
                                                         <input type="text" class="form-control" id="bill_no"
-                                                            name="bill_no" placeholder=""
-                                                            value="{{ $grn_data->bill_no}}"
+                                                            name="bill_no" placeholder="" value="{{ $grn_data->bill_no }}"
                                                             readonly>
-                                                    </div> 
+                                                    </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-2">
                                                         <label for="bill_date">Bill Date :</label>
                                                         <input type="date" class="form-control" id="bill_date"
                                                             name="bill_date" placeholder=""
-                                                            value="{{ $grn_data->bill_date }}"
-                                                            readonly>
-                                                    </div> 
+                                                            value="{{ $grn_data->bill_date }}" readonly>
+                                                    </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-2">
                                                         <label for="gatepass_name">Customer Name :</label>
                                                         <input type="text" class="form-control" id="gatepass_name"
                                                             name="gatepass_name" placeholder="Enter PO Date"
-                                                            value="{{ $grn_data->gatepass_name }}"
-                                                            readonly>
+                                                            value="{{ $grn_data->gatepass_name }}" readonly>
 
-                                                    </div>                                              
+                                                    </div>
                                                 </div>
 
                                                 <div style="margin-top:20px">
                                                     <table class="table table-bordered" id="dynamicTable">
                                                         <tr>
                                                             <th>Description</th>
-                                                            <th>PO Quantity</th>
-                                                            <th>Actual Quantity</th>
-                                                            <th>Accepted Quantity</th>
-                                                            <th>Rejected Quantity</th>
-                                                            {{-- <th>Action</th> --}}
+                                                            <th style="width: 100px;">Part No.</th>
+                                                            <th style="width: 100px;">PO Quantity</th>
+                                                            <th style="width: 70px;">Unit</th>
+                                                            {{-- <th style="width: 100px;">HSN</th> --}}
+                                                            <th style="width: 70px;">Rate</th>
+                                                            <th style="width: 80px;">Discount</th>
+                                                            <th style="width: 100px;">Actual Quantity</th>
+                                                            <th style="width: 100px;">Accepted Quantity</th>
+                                                            <th style="width: 100px;">Rejected Quantity</th>
+                                                            <th style="width: 100px;">Balance Quantity</th>
                                                         </tr>
                                                         @foreach ($purchase_order_details_data as $item)
                                                             <tr>
@@ -166,14 +170,42 @@
                                                                     placeholder="Enter Description" class="form-control"
                                                                     value="{{ $item->id }}" readonly />
                                                                 <td><input type="text" name="addmore[0][description]"
-                                                                        placeholder="Enter Description" class="form-control"
+                                                                        placeholder="Enter Description"
+                                                                        class="form-control"
                                                                         value="{{ $item->description }}" readonly />
                                                                 </td>
-                                                                <td><input type="text" name="addmore[0][chalan_quantity]"
-                                                                        placeholder="Enter Chalan Qty" class="form-control"
+                                                                <td><input type="text" name="addmore[0][part_number]"
+                                                                        placeholder="Enter part_number"
+                                                                        class="form-control"
+                                                                        value="{{ $item->part_number }}" readonly />
+                                                                </td>
+
+                                                                <td><input type="text"
+                                                                        name="addmore[0][chalan_quantity]"
+                                                                        placeholder="Enter Chalan Qty"
+                                                                        class="form-control"
                                                                         value="{{ $item->quantity }}" readonly />
                                                                 </td>
-                                                                <td><input type="text" name="addmore[0][actual_quantity]"
+                                                                <td><input type="text" name="addmore[0][unit_name]"
+                                                                        placeholder="Enter" class="form-control unit_name"
+                                                                        value="{{ $item->unit_name }}" readonly />
+                                                                </td>
+                                                                {{-- <td><input type="text"
+                                                                    name="addmore[0][hsn_name]"
+                                                                    placeholder="Enter"
+                                                                    class="form-control hsn_name" 
+                                                                    value="{{ $item->hsn_name }}" readonly />
+                                                            </td> --}}
+                                                                <td><input type="text" name="addmore[0][rate]"
+                                                                        placeholder="Enter" class="form-control rate"
+                                                                        value="{{ $item->rate }}" readonly />
+                                                                </td>
+                                                                <td><input type="text" name="addmore[0][discount]"
+                                                                        placeholder="Enter" class="form-control discount"
+                                                                        value="{{ $item->discount }}%" readonly />
+                                                                </td>
+                                                                <td><input type="text"
+                                                                        name="addmore[0][actual_quantity]"
                                                                         placeholder="Enter Actual Qty"
                                                                         class="form-control actual_quantity"
                                                                         value="{{ $item->actual_quantity }}" readonly />
@@ -190,6 +222,12 @@
                                                                         class="form-control rejected_quantity"
                                                                         value="{{ $item->rejected_quantity }}" readonly />
                                                                 </td>
+
+                                                                <td><input type="text"
+                                                                    name="addmore[0][remaining_quantity]"
+                                                                    placeholder="Balance Qty" value="{{ $item->remaining_quantity }}"
+                                                                    class="form-control remaining_quantity" readonly />
+                                                            </td>
                                                                 {{-- <td><button type="button" name="add" id="add"
                                                                         class="btn btn-success">Add More</button></td> --}}
                                                             </tr>
@@ -198,16 +236,16 @@
                                                 </div>
 
                                                 <div class="row">
-                                                    <div  class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="remark">Remark:</label>
                                                         <textarea class="form-control" rows="3" type="text" class="form-control" id="remark" name="remark"
-                                                            placeholder="Enter Remark" readonly>{{ $grn_data->remark }}</textarea>
+                                                            placeholder="Enter Remark" readonly>{{ $grn_data->grn_remark }}</textarea>
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="image">Signature:</label><br>
-                                                            <img src="{{ Config::get('DocumentConstant.GRN_VIEW') }}{{ $grn_data->image }}"
-                                                                style="width:150px; height:150px; background-color: aliceblue;"
-                                                                alt=" No Signature" />
+                                                        <img src="{{ Config::get('DocumentConstant.GRN_VIEW') }}{{ $grn_data->image }}"
+                                                            style="width:150px; height:150px; background-color: aliceblue;"
+                                                            alt=" No Signature" />
                                                     </div>
 
 
@@ -217,55 +255,54 @@
 
                                             </div>
                                         </form>
-                                        @if($grn_data->store_receipt_no_generate === NULL && $grn_data->store_remark === NULL)
-                                        <form action="{{ route('generate-sr-store-dept') }}" method="POST" id="addStoreRemark" enctype="multipart/form-data">
-                                            @csrf
-                                            <!-- Hidden Input for GRN ID -->
-                                            <input type="hidden" name="id" id="id" value="{{ $grn_id }}">
-                                            
-                                            <!-- Store Remark Input -->
-                                            <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="store_remark">Store Remark:</label>
-                                                <textarea
-                                                    class="form-control"
-                                                    rows="3"
-                                                    id="store_remark"
-                                                    name="store_remark"
-                                                    placeholder="Enter store remark">{{ $grn_data->store_remark }}</textarea>
-                                            </div>
-                                            
-                                            <!-- Submit Button -->
-                                            <div class="form-group col-lg-12">
-                                                <button type="submit" class="btn btn-primary">Submit</button>
-                                                <a href="{{ url()->previous() }}" class="btn btn-secondary">Cancel</a>
-                                            </div>
-                                        </form>
-                                    @else
-                                        <form action="{{ route('generate-sr-store-dept') }}" method="POST" id="addStoreRemark" enctype="multipart/form-data">
-                                            @csrf
-                                            <!-- Hidden Input for GRN ID -->
-                                            <input type="hidden" name="id" id="id" value="{{ $grn_id }}">
-                                            
-                                            <!-- Store Remark Input -->
-                                            <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="store_remark">Store Remark:</label>
-                                                <textarea
-                                                    class="form-control"
-                                                    rows="3"
-                                                    id="store_remark"
-                                                    name="store_remark"
-                                                    placeholder="Enter store remark" disabled>{{ $grn_data->store_remark }}</textarea>
-                                            </div>
-                                            
-                                            <!-- Submit Button -->
-                                            <div class="form-group col-lg-12">
-                                                <button type="submit" class="btn btn-primary" disabled>Submit</button>
-                                                <a href="{{ url()->previous() }}" class="btn btn-secondary">Cancel</a>
-                                            </div>
-                                        </form>
-                                    @endif
-                                    
-                                        
+                                        @if ($grn_data->store_receipt_no_generate === null && $grn_data->store_remark === null)
+                                            <form action="{{ route('generate-sr-store-dept') }}" method="POST"
+                                                id="addStoreRemark" enctype="multipart/form-data">
+                                                @csrf
+                                                <!-- Hidden Input for GRN ID -->
+                                                <input type="hidden" name="id" id="id"
+                                                    value="{{ $grn_id }}">
+
+                                                <!-- Store Remark Input -->
+                                                <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="store_remark">Store Remark:</label>
+                                                    <textarea class="form-control" rows="3" id="store_remark" name="store_remark"
+                                                        placeholder="Enter store remark">{{ $grn_data->store_remark }}</textarea>
+                                                </div>
+
+                                                <!-- Submit Button -->
+                                                <div class="form-group col-lg-12">
+                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                    <a href="{{ url()->previous() }}"
+                                                        class="btn btn-secondary">Cancel</a>
+                                                </div>
+                                            </form>
+                                        @else
+                                            <form action="{{ route('generate-sr-store-dept') }}" method="POST"
+                                                id="addStoreRemark" enctype="multipart/form-data">
+                                                @csrf
+                                                <!-- Hidden Input for GRN ID -->
+                                                <input type="hidden" name="id" id="id"
+                                                    value="{{ $grn_id }}">
+
+                                                <!-- Store Remark Input -->
+                                                <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="store_remark">Store Remark:</label>
+                                                    <textarea class="form-control" rows="3" id="store_remark" name="store_remark"
+                                                        placeholder="Enter store remark" disabled>{{ $grn_data->store_remark }}</textarea>
+                                                </div>
+
+                                                <!-- Submit Button -->
+                                                <div class="form-group col-lg-12">
+                                                    <button type="submit" class="btn btn-primary"
+                                                        disabled>Submit</button>
+                                                    <a href="{{ url()->previous() }}"
+                                                        class="btn btn-secondary">Cancel</a>
+                                                </div>
+                                            </form>
+                                        @endif
+
+
 
                                     </div>
                                 </div>
@@ -280,7 +317,7 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-        var i = 0;
+    var i = 0;
     </script>
     <script>
         jQuery.noConflict();
@@ -299,5 +336,5 @@
             });
         });
     </script>
-    
+
 @endsection

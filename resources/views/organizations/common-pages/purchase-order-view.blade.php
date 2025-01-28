@@ -300,9 +300,9 @@
                                         <th class="pdf-font-size" style="border: 1px solid black; padding: 5px; font-size:12px;">HSN No.</th>
                                         <th class="pdf-font-size" style="border: 1px solid black; padding: 5px; font-size:11px;">Part No.</th>
                                         <th class="pdf-font-size" style="border: 1px solid black; padding: 5px; font-size:12px;">Quantity</th>
-                                        <th class="pdf-font-size" style="border: 1px solid black; padding: 5px font-size:12px;;">Rate</th>
-                                        <th class="pdf-font-size" style="border: 1px solid black; padding: 5px font-size:12px;;">Discount</th>
-                                        <th class="pdf-font-size" style="border-top: 1px solid black;border-bottom: 1px solid black;border-left: 1px solid black; border-right: 1px solid black;  padding: 5px; text-align: right; font-size:12px;">Amount</th>
+                                        <th class="pdf-font-size" style="border: 1px solid black; padding: 5px font-size:12px;">Rate</th>
+                                        <th class="pdf-font-size" style=" width:100px; border: 1px solid black; padding: 5px font-size:12px;">Discount</th>
+                                        <th class="pdf-font-size" style="width:100px; border-top: 1px solid black;border-bottom: 1px solid black;border-left: 1px solid black; border-right: 1px solid black;  padding: 5px; text-align: right; font-size:12px;">Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -373,9 +373,7 @@
                                                 ($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * (1 + ($purchaseOrder->name / 100)) 
                                             }} </strong>
                                           <div>
-                                            @php
-                                            echo convertToWords(($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * (1 + ($purchaseOrder->name / 100)));
-                                                                                      @endphp
+
                                           </div>
                                         </td>
                                     </tr>
@@ -384,6 +382,14 @@
                                             {{-- Delivery AS PER ATTACHED DELIVERY SCHEDULE --}}
                                         </td>
                                     </tr>
+                                    <tr style="bold; font-family: 'Font Awesome 5 Free'!important; font-size:12px;">
+                                        <td colspan="8" class="no-border" style="height: 10px; padding: 5px;">
+                                            <div style="float: right; font-size:12px;"><strong>
+                                                @php echo convertToWords(($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * (1 + ($purchaseOrder->name / 100)));  @endphp
+                                              </strong></div>
+                                         </td>
+                                    </tr>
+
                                     <tr style="bold; font-family: 'Font Awesome 5 Free'!important; font-size:12px;">
                                         <td colspan="8" class="no-border" style="height: 100px; padding: 5px;">
                                             <div style="float: right; font-size:18px; font-size:12px;"><strong>For: <span style="text-transform: uppercase;">{{ $getOrganizationData->company_name }}</span></strong></div>

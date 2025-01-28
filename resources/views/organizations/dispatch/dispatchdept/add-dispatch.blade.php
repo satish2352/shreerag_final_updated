@@ -127,7 +127,7 @@
                                                 </div>
                                                 
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="outdoor_no">Outdoor No. :  <span class="text-danger">*</span></label> 
+                                                    <label for="outdoor_no">Outdoor No. (Optional) :  </label> 
                                                     <input type="text" class="form-control" id="outdoor_no" name="outdoor_no" value="" placeholder="Enter Outdoor Number" >
                                                         @if ($errors->has('outdoor_no'))
                                                         <span class="red-text"><?php echo $errors->first('outdoor_no', ':message'); ?></span>
@@ -199,9 +199,9 @@
         // Validate the form
         $("#addProductForm").validate({
             rules: {
-                outdoor_no:{
-                    required: true,
-                },
+                // outdoor_no:{
+                //     required: true,
+                // },
                 gate_entry: {
                     required: true,
                    
@@ -212,10 +212,10 @@
                     required: "Please enter the gate entry."
                     
                 },
-                gate_entry: {
-                    required: "Please enter the completed quantity."
+                // outdoor_no: {
+                //     required: "Please enter the outdoor no."
                     
-                }
+                // }
             },
             submitHandler: function (form) {
                 // Confirmation dialog before submitting the form

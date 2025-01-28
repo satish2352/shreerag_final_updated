@@ -112,7 +112,9 @@
                                                     <td>{{ ucwords($data->from_place) }}</td>
                                                     <td>{{ ucwords($data->to_place) }}</td>
                                                     <td>{{ ucwords($data->truck_no) }}</td>
-                                                    <td>{{ ucwords($data->outdoor_no) }}</td>
+                                                    <td>
+                                                        {{ $data->outdoor_no ? ucwords($data->outdoor_no) : '-' }}
+                                                    </td>
                                                     <td>{{ ucwords($data->gate_entry) }}</td>
                                                     <td>{{ ucwords($data->remark) }}</td>  
                                                     <td>{{ $data->updated_at ? $data->updated_at->format('Y-m-d') : 'N/A' }} </td>

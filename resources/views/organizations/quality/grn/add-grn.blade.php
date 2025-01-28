@@ -169,13 +169,23 @@
                                                 <div style="margin-top:20px">
                                                     <table class="table table-bordered" id="dynamicTable">
                                                         <tr>
-                                                            <th>Description</th>
-                                                            <th>PO Quantity</th>
-                                                            <th>Actual Quantity</th>
-                                                            <th>Accepted Quantity</th>
-                                                            <th>Rejected Quantity</th>
+                                                            <th style="width: 400px;">Description</th>
+                                                            <th style="width: 100px;">Part No.</th>
+                                                            <th style="width: 100px;">PO Quantity</th>
+                                                            <th style="width: 70px;">Unit</th>
+                                                            <th style="width: 100px;">HSN</th>
+                                                            <th style="width: 70px;">Rate</th>
+                                                            <th style="width: 80px;">Discount</th>
+                                                            <th style="width: 100px;">Actual Quantity</th>
+                                                            <th style="width: 100px;">Accepted Quantity</th>
+                                                            <th style="width: 100px;">Rejected Quantity</th>
+                                                            <th style="width: 100px;">Balance Quantity</th>
                                                             {{-- <th>Action</th> --}}
                                                         </tr>
+                                                        <?php
+// dd($purchase_order_details_data);
+// die();
+                                                        ?>
                                                         @foreach ($purchase_order_details_data as $index => $item)
                                                             <tr>
                                                                 <input type="hidden" name="addmore[{{ $index }}][edit_id]"
@@ -186,6 +196,12 @@
                                                                         class="form-control"
                                                                         value="{{ $item->description }}" readonly />
                                                                 </td>
+                                                                <td><input type="text" name="addmore[{{ $index }}][part_number]"
+                                                                    placeholder="Enter part_number"
+                                                                    class="form-control"
+                                                                    value="{{ $item->part_number }}" readonly />
+                                                            </td>
+                                                                
                                                                 <td><input type="text"
                                                                         name="addmore[{{ $index }}][chalan_quantity]"
                                                                         placeholder="Enter Chalan Qty"
@@ -193,20 +209,56 @@
                                                                         value="{{ $item->quantity }}" readonly />
                                                                 </td>
                                                                 <td><input type="text"
+                                                                    name="addmore[{{ $index }}][unit_name]"
+                                                                    placeholder="Enter"
+                                                                    class="form-control unit_name" 
+                                                                    value="{{ $item->unit_name }}" readonly/>
+                                                            </td>
+                                                                <td><input type="text"
+                                                                    name="addmore[{{ $index }}][hsn_name]"
+                                                                    placeholder="Enter"
+                                                                    class="form-control hsn_name" 
+                                                                    value="{{ $item->hsn_name }}" readonly />
+                                                            </td>
+                                                            <td><input type="text"
+                                                                name="addmore[{{ $index }}][rate]"
+                                                                placeholder="Enter"
+                                                                class="form-control rate" 
+                                                                value="{{ $item->rate }}" readonly />
+                                                        </td>
+                                                        <td><input type="text"
+                                                            name="addmore[{{ $index }}][discount]"
+                                                            placeholder="Enter"
+                                                            class="form-control discount" 
+                                                            value="{{ $item->discount }}%" readonly />
+                                                    </td>
+
+
+                                                                <td><input type="text"
                                                                         name="addmore[{{ $index }}][actual_quantity]"
                                                                         placeholder="Enter Actual Qty"
                                                                         class="form-control actual_quantity" />
                                                                 </td>
+                                                               
+                                                           
+                                                       
                                                                 <td><input type="text"
                                                                         name="addmore[{{ $index }}][accepted_quantity]"
                                                                         placeholder="Enter Accepted Qty"
                                                                         class="form-control accepted_quantity" />
                                                                 </td>
+                                                               
                                                                 <td><input type="text"
                                                                         name="addmore[{{ $index }}][rejected_quantity]"
                                                                         placeholder="Enter Rejected Qty"
                                                                         class="form-control rejected_quantity" readonly />
                                                                 </td>
+
+                                                                <td><input type="text"
+                                                                    name="addmore[{{ $index }}][remaining_quantity]"
+                                                                    placeholder="Enter Rejected Qty" value="{{ $item->remaining_quantity }}"
+                                                                    class="form-control remaining_quantity" readonly />
+                                                            </td>
                                                                 {{-- <td><button type="button" name="add" id="add"
                                                                         class="btn btn-success">Add More</button></td> --}}
                                                             </tr>
@@ -276,8 +328,22 @@
             $(this).parents("tr").remove();
         });
     </script>
+<script>
+    $(document).ready(function() {
+        $(document).on('keyup', '.actual_quantity, .accepted_quantity', function(e) {
+            var currentRow = $(this).closest("tr");
+            var current_row_actual_quantity = currentRow.find('.actual_quantity').val();
+            var current_row_accepted_quantity = currentRow.find('.accepted_quantity').val();
+            var new_rejected_quantity = '0';
+            if (current_row_actual_quantity != '' && current_row_accepted_quantity != '') {
+                var new_rejected_quantity = current_row_actual_quantity - current_row_accepted_quantity;
+            }
 
-    <script>
+            currentRow.find('.rejected_quantity').val(new_rejected_quantity);
+        });
+    });
+</script>
+    {{-- <script>
         $(document).ready(function() {
             $(document).on('keyup', '.actual_quantity, .accepted_quantity', function(e) {
                 var currentRow = $(this).closest("tr");
@@ -291,7 +357,33 @@
                 currentRow.find('.rejected_quantity').val(new_rejected_quantity);
             });
         });
-    </script>
+    </script> --}}
+
+   
+   {{-- <script>
+          // Handle dynamic row removal
+          $(document).on("click", ".remove-tr", function() {
+            $(this).parents("tr").remove();
+        });
+
+        // Handle calculations
+        $(document).on('keyup', '.chalan_quantity, .actual_quantity, .accepted_quantity', function() {
+            var currentRow = $(this).closest("tr");
+
+            // Get input values
+            var chalan_quantity = parseFloat(currentRow.find('.chalan_quantity').val()) || 0;
+            var actual_quantity = parseFloat(currentRow.find('.actual_quantity').val()) || 0;
+            var accepted_quantity = parseFloat(currentRow.find('.accepted_quantity').val()) || 0;
+
+            // Calculate rejected quantity and balance quantity
+            var rejected_quantity = actual_quantity - accepted_quantity;
+            var balance_quantity = chalan_quantity - actual_quantity;
+
+            // Set calculated values in the respective fields
+            currentRow.find('.rejected_quantity').val(rejected_quantity >= 0 ? rejected_quantity : 0);
+            currentRow.find('.balance_quantity').val(balance_quantity >= 0 ? balance_quantity : 0);
+        });
+    </script>  --}}
 
     <script>
         jQuery.noConflict();

@@ -86,8 +86,7 @@
                                                         <label for="po_date">GRN No. :</label>
                                                         <input type="text" class="form-control" id="grn_no"
                                                             name="grn_no" placeholder=""
-                                                            value="{{ $grn_data->grn_no_generate }}"
-                                                            readonly>
+                                                            value="{{ $grn_data->grn_no_generate }}" readonly>
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="grn_date">GRN Date:</label>
@@ -95,7 +94,7 @@
                                                             name="grn_date" placeholder="Enter GRN Date"
                                                             value="{{ $grn_data->grn_date }}" readonly>
                                                     </div>
-                                               <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="purchase_orders_id">PO No.:</label>
                                                         <input type="text" class="form-control" id="purchase_orders_id"
                                                             name="purchase_orders_id" placeholder="Enter Purchase No."
@@ -108,32 +107,36 @@
                                                             name="po_date" placeholder="Enter PO Date"
                                                             value="{{ $purchase_order_data->created_at->format('Y-m-d') }}"
                                                             readonly>
-                                                    </div>   
-                                                    
+                                                    </div>
+
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="bill_no">Bill No. :</label>
                                                         <input type="text" class="form-control" id="bill_no"
-                                                            name="bill_no" placeholder=""
-                                                            value="{{ $grn_data->bill_no}}"
+                                                            name="bill_no" placeholder="" value="{{ $grn_data->bill_no }}"
                                                             readonly>
-                                                    </div> 
+                                                    </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="bill_date">Bill Date :</label>
                                                         <input type="date" class="form-control" id="bill_date"
                                                             name="bill_date" placeholder=""
-                                                            value="{{ $grn_data->bill_date }}"
-                                                            readonly>
-                                                    </div> 
+                                                            value="{{ $grn_data->bill_date }}" readonly>
+                                                    </div>
                                                 </div>
 
                                                 <div style="margin-top:20px">
                                                     <table class="table table-bordered" id="dynamicTable">
                                                         <tr>
                                                             <th>Description</th>
-                                                            <th>PO Quantity</th>
-                                                            <th>Actual Quantity</th>
-                                                            <th>Accepted Quantity</th>
-                                                            <th>Rejected Quantity</th>
+                                                            <th style="width: 100px;">Part No.</th>
+                                                            <th style="width: 100px;">PO Quantity</th>
+                                                            <th style="width: 70px;">Unit</th>
+                                                            {{-- <th style="width: 100px;">HSN</th> --}}
+                                                            <th style="width: 70px;">Rate</th>
+                                                            <th style="width: 80px;">Discount</th>
+                                                            <th style="width: 100px;">Actual Quantity</th>
+                                                            <th style="width: 100px;">Accepted Quantity</th>
+                                                            <th style="width: 100px;">Rejected Quantity</th>
+                                                            <th style="width: 100px;">Balance Quantity</th>
                                                             {{-- <th>Action</th> --}}
                                                         </tr>
                                                         @foreach ($purchase_order_details_data as $item)
@@ -142,14 +145,42 @@
                                                                     placeholder="Enter Description" class="form-control"
                                                                     value="{{ $item->id }}" readonly />
                                                                 <td><input type="text" name="addmore[0][description]"
-                                                                        placeholder="Enter Description" class="form-control"
+                                                                        placeholder="Enter Description"
+                                                                        class="form-control"
                                                                         value="{{ $item->description }}" readonly />
                                                                 </td>
-                                                                <td><input type="text" name="addmore[0][chalan_quantity]"
-                                                                        placeholder="Enter Chalan Qty" class="form-control"
-                                                                        value="{{ $item->quantity }}" readonly />
                                                                 </td>
-                                                                <td><input type="text" name="addmore[0][actual_quantity]"
+                                                                <td><input type="text" name="addmore[0][part_number]"
+                                                                        placeholder="Enter part_number"
+                                                                        class="form-control"
+                                                                        value="{{ $item->part_number }}" readonly />
+                                                                </td>
+                                                                <td><input type="text"
+                                                                        name="addmore[0][chalan_quantity]"
+                                                                        placeholder="Enter Chalan Qty"
+                                                                        class="form-control"
+                                                                        value="{{ $item->quantity }}" readonly />
+                                                                <td><input type="text" name="addmore[0][unit_name]"
+                                                                        placeholder="Enter" class="form-control unit_name"
+                                                                        value="{{ $item->unit_name }}" readonly />
+                                                                </td>
+                                                                {{-- <td><input type="text"
+                                                                    name="addmore[0][hsn_name]"
+                                                                    placeholder="Enter"
+                                                                    class="form-control hsn_name" 
+                                                                    value="{{ $item->hsn_name }}" readonly />
+                                                            </td> --}}
+                                                                <td><input type="text" name="addmore[0][rate]"
+                                                                        placeholder="Enter" class="form-control rate"
+                                                                        value="{{ $item->rate }}" readonly />
+                                                                </td>
+                                                                <td><input type="text" name="addmore[0][discount]"
+                                                                        placeholder="Enter" class="form-control discount"
+                                                                        value="{{ $item->discount }}%" readonly />
+                                                                </td>
+
+                                                                <td><input type="text"
+                                                                        name="addmore[0][actual_quantity]"
                                                                         placeholder="Enter Actual Qty"
                                                                         class="form-control actual_quantity"
                                                                         value="{{ $item->actual_quantity }}" readonly />
@@ -166,6 +197,11 @@
                                                                         class="form-control rejected_quantity"
                                                                         value="{{ $item->rejected_quantity }}" readonly />
                                                                 </td>
+                                                                <td><input type="text"
+                                                                    name="addmore[0][remaining_quantity]"
+                                                                    placeholder="Balance Qty" value="{{ $item->remaining_quantity }}"
+                                                                    class="form-control remaining_quantity" readonly />
+                                                            </td>
                                                                 {{-- <td><button type="button" name="add" id="add"
                                                                         class="btn btn-success">Add More</button></td> --}}
                                                             </tr>
@@ -174,16 +210,16 @@
                                                 </div>
 
                                                 <div class="row">
-                                                    <div  class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="remark">Remark:</label>
                                                         <textarea class="form-control" rows="3" type="text" class="form-control" id="remark" name="remark"
-                                                            placeholder="Enter Remark" readonly>{{ $grn_data->remark }}</textarea>
+                                                            placeholder="Enter Remark" readonly>{{ $grn_data->grn_remark }}</textarea>
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="image">Signature:</label><br>
-                                                            <img src="{{ Config::get('DocumentConstant.GRN_VIEW') }}{{ $grn_data->image }}"
-                                                                style="width:150px; height:150px; background-color: aliceblue;"
-                                                                alt=" No Signature" />
+                                                        <img src="{{ Config::get('DocumentConstant.GRN_VIEW') }}{{ $grn_data->image }}"
+                                                            style="width:150px; height:150px; background-color: aliceblue;"
+                                                            alt=" No Signature" />
                                                     </div>
 
 
