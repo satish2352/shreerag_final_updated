@@ -25,8 +25,9 @@ class PurchaseOrderRepository
     public function submitBOMToOwner($request)
     {
         // $purchase_orderid = str_replace(array("-", ":"), "", date('Y-m-d') . time());
-        $purchase_orderid = str_replace(array("-", ":"), "", date('Y-m-d') . rand(10, 99));
-    
+        // $purchase_orderid = str_replace(array("-", ":"), "", date('Y-m-d') . rand(10, 99));
+        $purchase_orderid = date('Y') . mt_rand(100000, 999999);
+
         try {
             $requistition_id = base64_decode($request->requistition_id);
             $data_for_requistition = Requisition::where('id', $requistition_id)->first();
