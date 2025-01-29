@@ -308,107 +308,107 @@ class AllListController extends Controller
             
          
             $po_id = $purchase_order_data->id;
-            $purchase_order_details_data = GrnPOQuantityTracking::leftJoin('tbl_part_item', 'tbl_grn_po_quantity_tracking.part_no_id', '=', 'tbl_part_item.id')
-            ->leftJoin('purchase_order_details', 'tbl_grn_po_quantity_tracking.purchase_order_details_id', '=', 'purchase_order_details.id')
-            ->leftJoin('tbl_unit', 'tbl_grn_po_quantity_tracking.unit', '=', 'tbl_unit.id')
-            ->where('tbl_grn_po_quantity_tracking.purchase_order_id', $po_id)
-            ->where('tbl_grn_po_quantity_tracking.grn_id', $grn_id)
-            ->select(
-                'tbl_grn_po_quantity_tracking.purchase_order_id', // Add purchase_order_id to the select statement
-                'tbl_grn_po_quantity_tracking.part_no_id',
-                'tbl_grn_po_quantity_tracking.purchase_order_details_id',
-                DB::raw('MAX(tbl_grn_po_quantity_tracking.quantity) as max_quantity'),
-                DB::raw('SUM(tbl_grn_po_quantity_tracking.actual_quantity) as sum_actual_quantity'),
-                DB::raw('SUM(tbl_grn_po_quantity_tracking.accepted_quantity) as tracking_accepted_quantity'),
-                DB::raw('SUM(tbl_grn_po_quantity_tracking.rejected_quantity) as tracking_rejected_quantity'),
+            // $purchase_order_details_data = GrnPOQuantityTracking::leftJoin('tbl_part_item', 'tbl_grn_po_quantity_tracking.part_no_id', '=', 'tbl_part_item.id')
+            // ->leftJoin('purchase_order_details', 'tbl_grn_po_quantity_tracking.purchase_order_details_id', '=', 'purchase_order_details.id')
+            // ->leftJoin('tbl_unit', 'tbl_grn_po_quantity_tracking.unit', '=', 'tbl_unit.id')
+            // ->where('tbl_grn_po_quantity_tracking.purchase_order_id', $po_id)
+            // ->where('tbl_grn_po_quantity_tracking.grn_id', $grn_id)
+            // ->select(
+            //     'tbl_grn_po_quantity_tracking.purchase_order_id', // Add purchase_order_id to the select statement
+            //     'tbl_grn_po_quantity_tracking.part_no_id',
+            //     'tbl_grn_po_quantity_tracking.purchase_order_details_id',
+            //     DB::raw('MAX(tbl_grn_po_quantity_tracking.quantity) as max_quantity'),
+            //     DB::raw('SUM(tbl_grn_po_quantity_tracking.actual_quantity) as sum_actual_quantity'),
+            //     DB::raw('SUM(tbl_grn_po_quantity_tracking.accepted_quantity) as tracking_accepted_quantity'),
+            //     DB::raw('SUM(tbl_grn_po_quantity_tracking.rejected_quantity) as tracking_rejected_quantity'),
         
-                DB::raw('(SELECT SUM(t2.actual_quantity) 
-                          FROM tbl_grn_po_quantity_tracking AS t2 
-                          WHERE t2.purchase_order_id = tbl_grn_po_quantity_tracking.purchase_order_id
-                          AND t2.purchase_order_details_id = tbl_grn_po_quantity_tracking.purchase_order_details_id
-                          AND t2.part_no_id = tbl_grn_po_quantity_tracking.part_no_id) AS sum_grn_actual_quantity'),
+            //     DB::raw('(SELECT SUM(t2.actual_quantity) 
+            //               FROM tbl_grn_po_quantity_tracking AS t2 
+            //               WHERE t2.purchase_order_id = tbl_grn_po_quantity_tracking.purchase_order_id
+            //               AND t2.purchase_order_details_id = tbl_grn_po_quantity_tracking.purchase_order_details_id
+            //               AND t2.part_no_id = tbl_grn_po_quantity_tracking.part_no_id) AS sum_grn_actual_quantity'),
         
-                          DB::raw('(
-                            purchase_order_details.quantity - 
-                            (SELECT SUM(t2.actual_quantity) 
-                             FROM tbl_grn_po_quantity_tracking AS t2 
-                             WHERE t2.purchase_order_id = tbl_grn_po_quantity_tracking.purchase_order_id
-                             AND t2.purchase_order_details_id = tbl_grn_po_quantity_tracking.purchase_order_details_id
-                             AND t2.part_no_id = tbl_grn_po_quantity_tracking.part_no_id)
-                        ) AS remaining_quantity'),
+            //               DB::raw('(
+            //                 purchase_order_details.quantity - 
+            //                 (SELECT SUM(t2.actual_quantity) 
+            //                  FROM tbl_grn_po_quantity_tracking AS t2 
+            //                  WHERE t2.purchase_order_id = tbl_grn_po_quantity_tracking.purchase_order_id
+            //                  AND t2.purchase_order_details_id = tbl_grn_po_quantity_tracking.purchase_order_details_id
+            //                  AND t2.part_no_id = tbl_grn_po_quantity_tracking.part_no_id)
+            //             ) AS remaining_quantity'),
 
-                'tbl_part_item.description as part_description',
-                'tbl_part_item.part_number',
-                'tbl_unit.name as unit_name',
-                DB::raw('MAX(purchase_order_details.description) as po_description'),
-                DB::raw('MAX(purchase_order_details.rate) as po_rate'),
-                DB::raw('MAX(purchase_order_details.discount) as po_discount')
-            )
-            ->groupBy(
-                'tbl_grn_po_quantity_tracking.purchase_order_id', // Add this field to group by
-                'tbl_grn_po_quantity_tracking.part_no_id',
-                'tbl_grn_po_quantity_tracking.purchase_order_details_id',
-                'tbl_part_item.id', // Ensure part_item.id is grouped
-                'tbl_part_item.description',
-                'tbl_part_item.part_number',
-                'tbl_unit.name',
-                 'purchase_order_details.quantity'
-            )
-            ->get();
+            //     'tbl_part_item.description as part_description',
+            //     'tbl_part_item.part_number',
+            //     'tbl_unit.name as unit_name',
+            //     DB::raw('MAX(purchase_order_details.description) as po_description'),
+            //     DB::raw('MAX(purchase_order_details.rate) as po_rate'),
+            //     DB::raw('MAX(purchase_order_details.discount) as po_discount')
+            // )
+            // ->groupBy(
+            //     'tbl_grn_po_quantity_tracking.purchase_order_id', // Add this field to group by
+            //     'tbl_grn_po_quantity_tracking.part_no_id',
+            //     'tbl_grn_po_quantity_tracking.purchase_order_details_id',
+            //     'tbl_part_item.id', // Ensure part_item.id is grouped
+            //     'tbl_part_item.description',
+            //     'tbl_part_item.part_number',
+            //     'tbl_unit.name',
+            //      'purchase_order_details.quantity'
+            // )
+            // ->get();
 // dd($purchase_order_details_data);
 // die();
-    //         $purchase_order_details_data = GrnPOQuantityTracking::leftJoin('tbl_part_item as part_item_1', 'tbl_grn_po_quantity_tracking.part_no_id', '=', 'part_item_1.id')
-    // ->leftJoin('purchase_order_details', 'tbl_grn_po_quantity_tracking.purchase_order_details_id', '=', 'purchase_order_details.id')
-    // ->leftJoin('tbl_part_item as part_item_2', 'purchase_order_details.part_no_id', '=', 'part_item_2.id')
-    // ->leftJoin('tbl_unit', 'purchase_order_details.unit', '=', 'tbl_unit.id')
-    // ->where('tbl_grn_po_quantity_tracking.purchase_order_id', $po_id)
-    // ->where('tbl_grn_po_quantity_tracking.grn_id', $grn_id)
-    // ->select(
-    //     'tbl_grn_po_quantity_tracking.purchase_order_id',
-    //     'tbl_grn_po_quantity_tracking.part_no_id',
-    //     'tbl_grn_po_quantity_tracking.purchase_order_details_id',
-    //     DB::raw('MAX(tbl_grn_po_quantity_tracking.quantity) as max_quantity'),
-    //     DB::raw('SUM(tbl_grn_po_quantity_tracking.actual_quantity) as sum_actual_quantity'),
-    //     DB::raw('SUM(tbl_grn_po_quantity_tracking.accepted_quantity) as tracking_accepted_quantity'),
-    //     DB::raw('SUM(tbl_grn_po_quantity_tracking.rejected_quantity) as tracking_rejected_quantity'),
-    //     DB::raw('COALESCE(
-    //         (SELECT SUM(t2.actual_quantity) 
-    //          FROM tbl_grn_po_quantity_tracking AS t2 
-    //          WHERE t2.purchase_order_id = tbl_grn_po_quantity_tracking.purchase_order_id
-    //          AND t2.purchase_order_details_id = tbl_grn_po_quantity_tracking.purchase_order_details_id
-    //          AND t2.part_no_id = tbl_grn_po_quantity_tracking.part_no_id), 0) AS sum_grn_actual_quantity'),
-    //          DB::raw('MAX(tbl_grn_po_quantity_tracking.quantity) - 
-    //          COALESCE(
-    //              (SELECT SUM(t2.actual_quantity) 
-    //               FROM tbl_grn_po_quantity_tracking AS t2 
-    //               WHERE t2.purchase_order_id = tbl_grn_po_quantity_tracking.purchase_order_id
-    //               AND t2.purchase_order_details_id = tbl_grn_po_quantity_tracking.purchase_order_details_id
-    //               AND t2.part_no_id = tbl_grn_po_quantity_tracking.part_no_id), 0) AS remaining_quantity'),
-    //     // DB::raw('COALESCE(
-    //     //     purchase_order_details.quantity, 0) - 
-    //     //     COALESCE(
-    //     //     (SELECT SUM(t2.actual_quantity) 
-    //     //      FROM tbl_grn_po_quantity_tracking AS t2 
-    //     //      WHERE t2.purchase_order_id = tbl_grn_po_quantity_tracking.purchase_order_id
-    //     //      AND t2.purchase_order_details_id = tbl_grn_po_quantity_tracking.purchase_order_details_id
-    //     //      AND t2.part_no_id = tbl_grn_po_quantity_tracking.part_no_id), 0) AS remaining_quantity'),
-    //     'part_item_2.description as part_description',
-    //     'part_item_2.part_number',
-    //     'tbl_unit.name as unit_name',
-    //     DB::raw('MAX(purchase_order_details.description) as po_description'),
-    //     DB::raw('MAX(purchase_order_details.rate) as po_rate'),
-    //     DB::raw('MAX(purchase_order_details.discount) as po_discount')
-    // )
-    // ->groupBy(
-    //     'tbl_grn_po_quantity_tracking.purchase_order_id',
-    //     'tbl_grn_po_quantity_tracking.part_no_id',
-    //     'tbl_grn_po_quantity_tracking.purchase_order_details_id',
-    //     'part_item_2.description',
-    //     'part_item_2.part_number',
-    //     'tbl_unit.name',
-    //     'purchase_order_details.quantity'
-    // )
-    // ->get();
+            $purchase_order_details_data = GrnPOQuantityTracking::leftJoin('tbl_part_item as part_item_1', 'tbl_grn_po_quantity_tracking.part_no_id', '=', 'part_item_1.id')
+    ->leftJoin('purchase_order_details', 'tbl_grn_po_quantity_tracking.purchase_order_details_id', '=', 'purchase_order_details.id')
+    ->leftJoin('tbl_part_item as part_item_2', 'purchase_order_details.part_no_id', '=', 'part_item_2.id')
+    ->leftJoin('tbl_unit', 'purchase_order_details.unit', '=', 'tbl_unit.id')
+    ->where('tbl_grn_po_quantity_tracking.purchase_order_id', $po_id)
+    ->where('tbl_grn_po_quantity_tracking.grn_id', $grn_id)
+    ->select(
+        'tbl_grn_po_quantity_tracking.purchase_order_id',
+        'tbl_grn_po_quantity_tracking.part_no_id',
+        'tbl_grn_po_quantity_tracking.purchase_order_details_id',
+        DB::raw('MAX(tbl_grn_po_quantity_tracking.quantity) as max_quantity'),
+        DB::raw('SUM(tbl_grn_po_quantity_tracking.actual_quantity) as sum_actual_quantity'),
+        DB::raw('SUM(tbl_grn_po_quantity_tracking.accepted_quantity) as tracking_accepted_quantity'),
+        DB::raw('SUM(tbl_grn_po_quantity_tracking.rejected_quantity) as tracking_rejected_quantity'),
+        DB::raw('COALESCE(
+            (SELECT SUM(t2.actual_quantity) 
+             FROM tbl_grn_po_quantity_tracking AS t2 
+             WHERE t2.purchase_order_id = tbl_grn_po_quantity_tracking.purchase_order_id
+             AND t2.purchase_order_details_id = tbl_grn_po_quantity_tracking.purchase_order_details_id
+             AND t2.part_no_id = tbl_grn_po_quantity_tracking.part_no_id), 0) AS sum_grn_actual_quantity'),
+             DB::raw('MAX(tbl_grn_po_quantity_tracking.quantity) - 
+             COALESCE(
+                 (SELECT SUM(t2.actual_quantity) 
+                  FROM tbl_grn_po_quantity_tracking AS t2 
+                  WHERE t2.purchase_order_id = tbl_grn_po_quantity_tracking.purchase_order_id
+                  AND t2.purchase_order_details_id = tbl_grn_po_quantity_tracking.purchase_order_details_id
+                  AND t2.part_no_id = tbl_grn_po_quantity_tracking.part_no_id), 0) AS remaining_quantity'),
+        // DB::raw('COALESCE(
+        //     purchase_order_details.quantity, 0) - 
+        //     COALESCE(
+        //     (SELECT SUM(t2.actual_quantity) 
+        //      FROM tbl_grn_po_quantity_tracking AS t2 
+        //      WHERE t2.purchase_order_id = tbl_grn_po_quantity_tracking.purchase_order_id
+        //      AND t2.purchase_order_details_id = tbl_grn_po_quantity_tracking.purchase_order_details_id
+        //      AND t2.part_no_id = tbl_grn_po_quantity_tracking.part_no_id), 0) AS remaining_quantity'),
+        'part_item_2.description as part_description',
+        'part_item_2.part_number',
+        'tbl_unit.name as unit_name',
+        DB::raw('MAX(purchase_order_details.description) as po_description'),
+        DB::raw('MAX(purchase_order_details.rate) as po_rate'),
+        DB::raw('MAX(purchase_order_details.discount) as po_discount')
+    )
+    ->groupBy(
+        'tbl_grn_po_quantity_tracking.purchase_order_id',
+        'tbl_grn_po_quantity_tracking.part_no_id',
+        'tbl_grn_po_quantity_tracking.purchase_order_details_id',
+        'part_item_2.description',
+        'part_item_2.part_number',
+        'tbl_unit.name',
+        'purchase_order_details.quantity'
+    )
+    ->get();
 // dd($purchase_order_details_data);
 // die();
 
