@@ -1,340 +1,350 @@
-@extends('admin.layouts.master')
-@section('content')
-    <style>
-        .sparkline13-list-new {
-            background-color: #fff;
-            padding: 22px;
-            margin-top: 72px;
-            margin-bottom: 80px;
+<?php
+
+namespace App\Http\Controllers\Organizations\Store;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Http\Services\Organizations\Store\AllListServices;
+use Session;
+use Validator;
+use Config;
+use DB;
+use Carbon;
+use App\Models\ {
+    Business,
+    BusinessApplicationProcesses,
+    AdminView,
+    PurchaseOrdersModel,
+    PurchaseOrderDetailsModel,
+    GRNModel,
+    NotificationStatus,
+    GrnPOQuantityTracking
+
+};
+
+class AllListController extends Controller
+{ 
+    public function __construct(){
+        $this->service = new AllListServices();
+    }
+  
+    public function getAllListDesignRecievedForMaterial(Request $request){
+        try {
+            $data_output = $this->service->getAllListDesignRecievedForMaterial();
+            return view('organizations.store.list.list-accepted-design', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
         }
-
-        .error {
-            color: red;
+    } 
+    public function getAllListDesignRecievedForMaterialBusinessWise($business_id, Request $request)
+    {
+        try {
+            $data_output = $this->service->getAllListDesignRecievedForMaterialBusinessWise($business_id);
+            return view('organizations.store.list.list-accepted-design-business-wise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
         }
-    </style>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="sparkline13-list-new">
-                <div class="sparkline12-hd">
-                    <div class="main-sparkline12-hd">
-                        <center>
-                            <h1> GRN Details</h1><br>
-                            <div class="d-flex justify-content-center align-items-center">
-                                <h4 style="display: flex; justify-content: left; color: green;padding-left: 16px;">Note:
-                                    First You will Add This Accepted Quantity In Inventory Department, Then Only You Can
-                                    Issue Material to Production Department.</h4>
+    }
+    
 
-                        </center>
-                    </div>
-                </div>
-                <div class="sparkline12-graph">
-                    <div class="basic-login-form-ad">
-                        <div class="row">
-                            @if (session('msg'))
-                                <div class="alert alert-{{ session('status') }}">
-                                    {{ session('msg') }}
-                                </div>
-                            @endif
-
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                @if (Session::get('status') == 'success')
-                                    <div class="col-md-12">
-                                        <div class="alert alert-success alert-dismissible" role="alert">
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                            <strong>Success!</strong> {{ Session::get('msg') }}
-                                        </div>
-                                    </div>
-                                @endif
-
-                                @if (Session::get('status') == 'error')
-                                    <div class="col-md-12">
-                                        <div class="alert alert-danger alert-dismissible" role="alert">
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                            <strong>Error!</strong> {!! session('msg') !!}
-                                        </div>
-                                    </div>
-                                @endif
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="all-form-element-inner">
-                                        <form action="{{ route('store-grn') }}" method="POST" id="addDesignsForm"
-                                            enctype="multipart/form-data">
-                                            @csrf
-                                            <div class="form-group-inner">
-
-                                                {{-- ========================== --}}
-                                                <div class="container-fluid">
-                                                    {{-- <form 
-                                                action="{{ route('addmorePost') }}"
-                                                method="POST"> --}}
-
-                                                    {{-- @csrf --}}
-
-                                                    @if ($errors->any())
-                                                        <div class="alert alert-danger">
-
-                                                            <ul>
-
-                                                                @foreach ($errors->all() as $error)
-                                                                    <li>{{ $error }}</li>
-                                                                @endforeach
-
-                                                            </ul>
-
-                                                        </div>
-                                                    @endif
-
-                                                    @if (Session::has('success'))
-                                                        <div class="alert alert-success text-center">
-
-                                                            <a href="#" class="close" data-dismiss="alert"
-                                                                aria-label="close">×</a>
-
-                                                            <p>{{ Session::get('success') }}</p>
-
-                                                        </div>
-                                                    @endif
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="po_date">GRN No. :</label>
-                                                        <input type="text" class="form-control" id="grn_no"
-                                                            name="grn_no" placeholder=""
-                                                            value="{{ $grn_data->grn_no_generate }}" readonly>
-                                                    </div>
-
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="grn_date">GRN Date:</label>
-                                                        <input type="date" class="form-control" id="grn_date"
-                                                            name="grn_date" placeholder="Enter GRN Date"
-                                                            value="{{ $grn_data->grn_date }}" readonly>
-
-                                                    </div>
-
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="purchase_orders_id">PO No.:</label>
-                                                        <input type="text" class="form-control" id="purchase_orders_id"
-                                                            name="purchase_orders_id" placeholder="Enter Purchase No."
-                                                            value="{{ $purchase_order_data->purchase_orders_id }}" readonly>
-                                                    </div>
-
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="po_date">PO Date :</label>
-                                                        <input type="date" class="form-control" id="po_date"
-                                                            name="po_date" placeholder="Enter PO Date"
-                                                            value="{{ $purchase_order_data->created_at->format('Y-m-d') }}"
-                                                            readonly>
-                                                    </div>
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="bill_no">Bill No. :</label>
-                                                        <input type="text" class="form-control" id="bill_no"
-                                                            name="bill_no" placeholder="" value="{{ $grn_data->bill_no }}"
-                                                            readonly>
-                                                    </div>
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-2">
-                                                        <label for="bill_date">Bill Date :</label>
-                                                        <input type="date" class="form-control" id="bill_date"
-                                                            name="bill_date" placeholder=""
-                                                            value="{{ $grn_data->bill_date }}" readonly>
-                                                    </div>
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-2">
-                                                        <label for="gatepass_name">Customer Name :</label>
-                                                        <input type="text" class="form-control" id="gatepass_name"
-                                                            name="gatepass_name" placeholder="Enter PO Date"
-                                                            value="{{ $grn_data->gatepass_name }}" readonly>
-
-                                                    </div>
-                                                </div>
-
-                                                <div style="margin-top:20px">
-                                                    <table class="table table-bordered" id="dynamicTable">
-                                                        <tr>
-                                                            <th>Description</th>
-                                                            <th style="width: 100px;">Part No.</th>
-                                                            <th style="width: 100px;">PO Quantity</th>
-                                                            <th style="width: 70px;">Unit</th>
-                                                            {{-- <th style="width: 100px;">HSN</th> --}}
-                                                            <th style="width: 70px;">Rate</th>
-                                                            <th style="width: 80px;">Discount</th>
-                                                            <th style="width: 100px;">Actual Quantity</th>
-                                                            <th style="width: 100px;">Accepted Quantity</th>
-                                                            <th style="width: 100px;">Rejected Quantity</th>
-                                                            <th style="width: 100px;">Balance Quantity</th>
-                                                        </tr>
-                                                        @foreach ($purchase_order_details_data as $item)
-                                                            <tr>
-                                                                <input type="hidden" name="addmore[0][edit_id]"
-                                                                    placeholder="Enter Description" class="form-control"
-                                                                    value="{{ $item->id }}" readonly />
-                                                                <td><input type="text" name="addmore[0][part_description]"
-                                                                        placeholder="Enter Description"
-                                                                        class="form-control"
-                                                                        value="{{ $item->part_description }}" readonly />
-                                                                </td>
-                                                                <td><input type="text" name="addmore[0][po_description]"
-                                                                        placeholder="Enter description"
-                                                                        class="form-control"
-                                                                        value="{{ $item->po_description }}" readonly />
-                                                                </td>
-
-                                                                <td><input type="text"
-                                                                        name="addmore[0][chalan_quantity]"
-                                                                        placeholder="Enter Chalan Qty"
-                                                                        class="form-control"
-                                                                        value="{{ $item->max_quantity }}" readonly />
-                                                                </td>
-                                                                <td><input type="text" name="addmore[0][unit_name]"
-                                                                        placeholder="Enter" class="form-control unit_name"
-                                                                        value="{{ $item->unit_name }}" readonly />
-                                                                </td>
-                                                                {{-- <td><input type="text"
-                                                                    name="addmore[0][hsn_name]"
-                                                                    placeholder="Enter"
-                                                                    class="form-control hsn_name" 
-                                                                    value="{{ $item->hsn_name }}" readonly />
-                                                            </td> --}}
-                                                                <td><input type="text" name="addmore[0][rate]"
-                                                                        placeholder="Enter" class="form-control rate"
-                                                                        value="{{ $item->po_rate }}" readonly />
-                                                                </td>
-                                                                <td><input type="text" name="addmore[0][discount]"
-                                                                        placeholder="Enter" class="form-control discount"
-                                                                        value="{{ $item->po_discount }}%" readonly />
-                                                                </td>
-                                                                <td><input type="text"
-                                                                        name="addmore[0][actual_quantity]"
-                                                                        placeholder="Enter Actual Qty"
-                                                                        class="form-control actual_quantity"
-                                                                        value="{{ $item->sum_actual_quantity }}" readonly />
-                                                                </td>
-                                                                <td><input type="text"
-                                                                        name="addmore[0][accepted_quantity]"
-                                                                        placeholder="Enter Accepted Qty"
-                                                                        class="form-control accepted_quantity"
-                                                                        value="{{ $item->tracking_accepted_quantity }}" readonly />
-                                                                </td>
-                                                                <td><input type="text"
-                                                                        name="addmore[0][rejected_quantity]"
-                                                                        placeholder="Enter Rejected Qty"
-                                                                        class="form-control rejected_quantity"
-                                                                        value="{{ $item->tracking_rejected_quantity }}" readonly />
-                                                                </td>
-
-                                                                <td><input type="text"
-                                                                    name="addmore[0][remaining_quantity]"
-                                                                    placeholder="Balance Qty" value="{{ $item->remaining_quantity }}"
-                                                                    class="form-control remaining_quantity" readonly />
-                                                            </td>
-                                                                {{-- <td><button type="button" name="add" id="add"
-                                                                        class="btn btn-success">Add More</button></td> --}}
-                                                            </tr>
-                                                        @endforeach
-                                                    </table>
-                                                </div>
-
-                                                <div class="row">
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="remark">Remark:</label>
-                                                        <textarea class="form-control" rows="3" type="text" class="form-control" id="remark" name="remark"
-                                                            placeholder="Enter Remark" readonly>{{ $grn_data->grn_remark }}</textarea>
-                                                    </div>
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="image">Signature:</label><br>
-                                                        <img src="{{ Config::get('DocumentConstant.GRN_VIEW') }}{{ $grn_data->image }}"
-                                                            style="width:150px; height:150px; background-color: aliceblue;"
-                                                            alt=" No Signature" />
-                                                    </div>
+    public function getAllListMaterialSentToProduction(Request $request){
+        try {
+            $data_output = $this->service->getAllListMaterialSentToProduction();
+        
+            if ($data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
+                    $business_details_id = $data->id; 
+                    if (!empty($business_details_id)) {
+                        $update_data['material_received_from_store'] = '1';
+                        NotificationStatus::where('material_received_from_store', '0')
+                            ->where('business_details_id', $business_details_id)
+                            ->update($update_data);
+                    }
+                }
+            } else {
+                return view('organizations.store.list.list-material-sent-to-prod', [
+                    'data_output' => [],
+                    'message' => 'No data found for designs received for correction'
+                ]);
+            }
+        
+            return view('organizations.store.list.list-material-sent-to-prod', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
 
 
+    
+    public function getAllListMaterialSentToPurchase(){
 
-                                                </div>
+        try {
+            $data_output = $this->service->getAllListMaterialSentToPurchase();
+            return view('organizations.store.list.list-material-sent-to-purchase', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getAllListMaterialReceivedFromQuality()
+    {
+        try {
+            $data_output = $this->service->getAllListMaterialReceivedFromQuality();
+    
+            if (is_array($data_output) && count($data_output) > 0 || $data_output instanceof \Illuminate\Support\Collection && $data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
+                    $business_id = $data->id; 
+                    if (!empty($business_id)) {
+                        $update_data['received_material_to_quality'] = '1';
+                        NotificationStatus::where('received_material_to_quality', '0')
+                            ->where('id', $business_id)
+                            ->update($update_data);
+                    }
+                }
+            } else {
+                return view('organizations.store.list.list-material-received-from-quality', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
+    
+            return view('organizations.store.list.list-material-received-from-quality', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    
+  
+    public function submitFinalPurchaseOrder($id){
+        try {
+            $data_output = $this->service->getPurchaseOrderBusinessWise($id);
+           
+            return view('organizations.store.list.list-material-received-from-quality-businesswise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getAllListMaterialReceivedFromQualityPOTracking(){
 
+        try {
+            $data_output = $this->service->getAllListMaterialReceivedFromQualityPOTracking();
+          
+           // Check if $data_output is an array or a collection and handle accordingly
+           if (is_array($data_output) && count($data_output) > 0 || $data_output instanceof \Illuminate\Support\Collection && $data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
+                    $business_id = $data->id; 
+                    if (!empty($business_id)) {
+                        $update_data['received_material_to_quality'] = '1';
+                        NotificationStatus::where('received_material_to_quality', '0')
+                            ->where('id', $business_id)
+                            ->update($update_data);
+                    }
+                }
+            } else {
+                return view('organizations.store.list.list-material-received-from-quality-po-tracking', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
+            return view('organizations.store.list.list-material-received-from-quality-po-tracking', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getAllListMaterialReceivedFromQualityPOTrackingBusinessWise($id){
+        try {
+            $data_output = $this->service->getAllListMaterialReceivedFromQualityPOTrackingBusinessWise($id);
+           
+            return view('organizations.store.list.list-material-received-from-quality-businesswise-po-tracking', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getGRNDetails($purchase_orders_id,$business_details_id, $id)
+    {
+        try {
+            $idtoedit = base64_decode($purchase_orders_id);
+            $grn_id = base64_decode($id);
+            // dd($grn_id);
+            // die();
+            $purchase_order_data = PurchaseOrdersModel::where('purchase_orders_id', '=', $idtoedit)->first();
+            $grn_data = GRNModel::leftJoin('gatepass', function ($join) {
+                $join->on('grn_tbl.gatepass_id', '=', 'gatepass.id');
+            })
+            ->where('grn_tbl.purchase_orders_id', '=', $idtoedit)->where('grn_tbl.id', '=', $grn_id)
+            ->select(
+                'grn_tbl.*',
+                'gatepass.*',
+                'grn_tbl.remark as grn_remark'
+            )
+            ->first();
+            $po_id = $purchase_order_data->id;
+            // $purchase_order_details_data = GrnPOQuantityTracking::leftJoin('tbl_part_item', function ($join) {
+            //     $join->on('tbl_grn_po_quantity_tracking.part_no_id', '=', 'tbl_part_item.id');
+            // })
+            // ->leftJoin('purchase_order_details', function ($join) {
+            //     $join->on('tbl_grn_po_quantity_tracking.purchase_order_id', '=', 'purchase_order_details.purchase_id');
+            // })
+            // ->leftJoin('tbl_unit', function ($join) {
+            //     $join->on('tbl_grn_po_quantity_tracking.unit', '=', 'tbl_unit.id');
+            // })
+            // ->where('tbl_grn_po_quantity_tracking.purchase_order_id', $po_id)
+            // ->where('tbl_grn_po_quantity_tracking.grn_id', $grn_id)
+            // ->select(
+            //     'tbl_grn_po_quantity_tracking.*',
+            //     'tbl_part_item.description as description',
+            //     'tbl_part_item.part_number as part_number',
+            //     'tbl_unit.name as unit_name',
+            //     DB::raw('(SELECT SUM(t2.actual_quantity) 
+            //               FROM tbl_grn_po_quantity_tracking AS t2 
+            //               WHERE t2.purchase_order_id = tbl_grn_po_quantity_tracking.purchase_order_id
+            //               AND t2.purchase_order_details_id = tbl_grn_po_quantity_tracking.purchase_order_details_id
+            //               AND t2.part_no_id = tbl_grn_po_quantity_tracking.part_no_id
+            //              ) AS sum_actual_quantity'),
+            //     DB::raw('(tbl_grn_po_quantity_tracking.quantity - (SELECT COALESCE(SUM(t2.actual_quantity), 0) 
+            //                                                         FROM tbl_grn_po_quantity_tracking AS t2 
+            //                                                         WHERE t2.purchase_order_id = tbl_grn_po_quantity_tracking.purchase_order_id
+            //                                                         AND t2.purchase_order_details_id = tbl_grn_po_quantity_tracking.purchase_order_details_id
+            //                                                         AND t2.part_no_id = tbl_grn_po_quantity_tracking.part_no_id
+            //                                                        )) AS remaining_quantity')
+            // )
+            // ->get();
 
-                                            </div>
-                                        </form>
-                                        @if ($grn_data->store_receipt_no_generate === null && $grn_data->store_remark === null)
-                                            <form action="{{ route('generate-sr-store-dept') }}" method="POST"
-                                                id="addStoreRemark" enctype="multipart/form-data">
-                                                @csrf
-                                                <!-- Hidden Input for GRN ID -->
-                                                <input type="hidden" name="id" id="id"
-                                                    value="{{ $grn_id }}">
+            $purchase_order_details_data = GrnPOQuantityTracking::leftJoin('tbl_part_item', 'tbl_grn_po_quantity_tracking.part_no_id', '=', 'tbl_part_item.id')
+            ->leftJoin('purchase_order_details', 'tbl_grn_po_quantity_tracking.purchase_order_details_id', '=', 'purchase_order_details.id')
+            ->leftJoin('tbl_unit', 'tbl_grn_po_quantity_tracking.unit', '=', 'tbl_unit.id')
+            ->where('tbl_grn_po_quantity_tracking.purchase_order_id', $po_id)
+            ->where('tbl_grn_po_quantity_tracking.grn_id', $grn_id)
+            ->select(
+                'tbl_grn_po_quantity_tracking.part_no_id',
+                'tbl_grn_po_quantity_tracking.purchase_order_details_id',
+                DB::raw('MAX(tbl_grn_po_quantity_tracking.quantity) as max_quantity'),
+                DB::raw('SUM(tbl_grn_po_quantity_tracking.actual_quantity) as sum_actual_quantity'),
+                DB::raw('SUM(tbl_grn_po_quantity_tracking.accepted_quantity) as tracking_accepted_quantity'),
+                DB::raw('SUM(tbl_grn_po_quantity_tracking.rejected_quantity) as tracking_rejected_quantity'),
+                DB::raw('(MAX(tbl_grn_po_quantity_tracking.quantity) - SUM(tbl_grn_po_quantity_tracking.actual_quantity)) as remaining_quantity'),
+                'tbl_part_item.description as part_description',
+                'tbl_part_item.part_number',
+                'tbl_unit.name as unit_name',
+                DB::raw('MAX(purchase_order_details.description) as po_description'),
+                DB::raw('MAX(purchase_order_details.rate) as po_rate'),
+                DB::raw('MAX(purchase_order_details.discount) as po_discount'),
+            )
+            ->groupBy(
+                'tbl_grn_po_quantity_tracking.part_no_id',
+                'tbl_grn_po_quantity_tracking.purchase_order_details_id',
+                'tbl_part_item.description',
+                'tbl_part_item.part_number',
+                'tbl_unit.name'
+            )
+            ->get();
+        
+            // dd($purchase_order_details_data);
+            // die();
+            return view('organizations.store.list.list-grn', compact('purchase_order_data', 'purchase_order_details_data', 'grn_data','grn_id'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
 
-                                                <!-- Store Remark Input -->
-                                                <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="store_remark">Store Remark:</label>
-                                                    <textarea class="form-control" rows="3" id="store_remark" name="store_remark"
-                                                        placeholder="Enter store remark">{{ $grn_data->store_remark }}</textarea>
-                                                </div>
+    public function getGRNDetailsPOTracking($purchase_orders_id,$business_details_id, $id)
+    {
+        try {
+            // $purchase_number =  base64_decode($purchase_orders_id);
+            // $idtoedit = base64_decode($grn_id);
+            // $purchase_order_data = PurchaseOrdersModel::where('purchase_orders_id', '=', $purchase_number)->first();
+            // $grn_data = GRNModel::where('id', '=', $idtoedit)->first();
+            // $po_id = $grn_data->purchase_orders_id;
+            // $po_details = $grn_data->id;
+            // $purchase_order_details_data = GrnPOQuantityTracking::where('grn_id', $po_details)
+            //     ->get();
+            $idtoedit = base64_decode($purchase_orders_id);
+         
+            $grn_id = base64_decode($id);
+           
+            $purchase_order_data = PurchaseOrdersModel::where('purchase_orders_id', '=', $idtoedit)->first();
+            $grn_data = GRNModel::leftJoin('gatepass', function ($join) {
+                $join->on('grn_tbl.gatepass_id', '=', 'gatepass.id');
+            })
+            ->where('grn_tbl.purchase_orders_id', '=', $idtoedit)->where('grn_tbl.id', '=', $grn_id)
+            ->select(
+                'grn_tbl.*',
+                'gatepass.*',
+                'grn_tbl.remark as grn_remark'
+            )
+            ->first();
+            
+         
+            $po_id = $purchase_order_data->id;
+            // $purchase_order_details_data = GrnPOQuantityTracking::leftJoin('tbl_part_item', function ($join) {
+            //     $join->on('tbl_grn_po_quantity_tracking.part_no_id', '=', 'tbl_part_item.id');
+            // })
+            // ->leftJoin('tbl_unit', function ($join) {
+            //     $join->on('tbl_grn_po_quantity_tracking.unit', '=', 'tbl_unit.id');
+            // })
+            // ->where('tbl_grn_po_quantity_tracking.purchase_order_id', $po_id)
+            // ->where('tbl_grn_po_quantity_tracking.grn_id', $grn_id)
+            // ->select(
+            //     'tbl_grn_po_quantity_tracking.*',
+            //     'tbl_part_item.description as description',
+            //     'tbl_part_item.part_number as part_number',
+            //     'tbl_unit.name as unit_name',
+            //     DB::raw('(SELECT SUM(t2.actual_quantity) 
+            //               FROM tbl_grn_po_quantity_tracking AS t2 
+            //               WHERE t2.purchase_order_id = tbl_grn_po_quantity_tracking.purchase_order_id
+            //               AND t2.purchase_order_details_id = tbl_grn_po_quantity_tracking.purchase_order_details_id
+            //               AND t2.part_no_id = tbl_grn_po_quantity_tracking.part_no_id
+            //              ) AS sum_actual_quantity'),
+            //     DB::raw('(tbl_grn_po_quantity_tracking.quantity - (SELECT COALESCE(SUM(t2.actual_quantity), 0) 
+            //                                                         FROM tbl_grn_po_quantity_tracking AS t2 
+            //                                                         WHERE t2.purchase_order_id = tbl_grn_po_quantity_tracking.purchase_order_id
+            //                                                         AND t2.purchase_order_details_id = tbl_grn_po_quantity_tracking.purchase_order_details_id
+            //                                                         AND t2.part_no_id = tbl_grn_po_quantity_tracking.part_no_id
+            //                                                        )) AS remaining_quantity')
+            // )
+            // ->get();
+            $purchase_order_details_data = GrnPOQuantityTracking::leftJoin('tbl_part_item', 'tbl_grn_po_quantity_tracking.part_no_id', '=', 'tbl_part_item.id')
+            ->leftJoin('purchase_order_details', 'tbl_grn_po_quantity_tracking.purchase_order_details_id', '=', 'purchase_order_details.id')
+            ->leftJoin('tbl_unit', 'tbl_grn_po_quantity_tracking.unit', '=', 'tbl_unit.id')
+            ->where('tbl_grn_po_quantity_tracking.purchase_order_id', $po_id)
+            ->where('tbl_grn_po_quantity_tracking.grn_id', $grn_id)
+            ->select(
+                'tbl_grn_po_quantity_tracking.part_no_id',
+                'tbl_grn_po_quantity_tracking.purchase_order_details_id',
+                DB::raw('MAX(tbl_grn_po_quantity_tracking.quantity) as max_quantity'),
+                DB::raw('SUM(tbl_grn_po_quantity_tracking.actual_quantity) as sum_actual_quantity'),
+                DB::raw('SUM(tbl_grn_po_quantity_tracking.accepted_quantity) as tracking_accepted_quantity'),
+                DB::raw('SUM(tbl_grn_po_quantity_tracking.rejected_quantity) as tracking_rejected_quantity'),
+                DB::raw('(MAX(tbl_grn_po_quantity_tracking.quantity) - SUM(tbl_grn_po_quantity_tracking.actual_quantity)) as remaining_quantity'),
+                'tbl_part_item.description as part_description',
+                'tbl_part_item.part_number',
+                'tbl_unit.name as unit_name',
+                DB::raw('MAX(purchase_order_details.description) as po_description'),
+                DB::raw('MAX(purchase_order_details.rate) as po_rate'),
+                DB::raw('MAX(purchase_order_details.discount) as po_discount'),
+            )
+            ->groupBy(
+                'tbl_grn_po_quantity_tracking.part_no_id',
+                'tbl_grn_po_quantity_tracking.purchase_order_details_id',
+                'tbl_part_item.description',
+                'tbl_part_item.part_number',
+                'tbl_unit.name'
+            )
+            ->get();
+// dd($purchase_order_details_data);
+// die();
 
-                                                <!-- Submit Button -->
-                                                <div class="form-group col-lg-12">
-                                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                                    <a href="{{ url()->previous() }}"
-                                                        class="btn btn-secondary">Cancel</a>
-                                                </div>
-                                            </form>
-                                        @else
-                                            <form action="{{ route('generate-sr-store-dept') }}" method="POST"
-                                                id="addStoreRemark" enctype="multipart/form-data">
-                                                @csrf
-                                                <!-- Hidden Input for GRN ID -->
-                                                <input type="hidden" name="id" id="id"
-                                                    value="{{ $grn_id }}">
+            return view('organizations.store.list.list-grn-po-tracking', compact('purchase_order_data', 'purchase_order_details_data', 'grn_data'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getAllInprocessProductProduction(){
+        try {
+            $data_output = $this->service->getAllInprocessProductProduction();
+           
+            return view('organizations.store.list.list-material-received-from-production-inprocess', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
 
-                                                <!-- Store Remark Input -->
-                                                <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="store_remark">Store Remark:</label>
-                                                    <textarea class="form-control" rows="3" id="store_remark" name="store_remark"
-                                                        placeholder="Enter store remark" disabled>{{ $grn_data->store_remark }}</textarea>
-                                                </div>
-
-                                                <!-- Submit Button -->
-                                                <div class="form-group col-lg-12">
-                                                    <button type="submit" class="btn btn-primary"
-                                                        disabled>Submit</button>
-                                                    <a href="{{ url()->previous() }}"
-                                                        class="btn btn-secondary">Cancel</a>
-                                                </div>
-                                            </form>
-                                        @endif
-
-
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- jQuery Validation Script -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    var i = 0;
-    </script>
-    <script>
-        jQuery.noConflict();
-        jQuery(document).ready(function($) {
-            $("#addStoreRemark").validate({
-                rules: {
-                    store_remark: {
-                        required: true,
-                    },
-                },
-                messages: {
-                    store_remark: {
-                        required: "Please enter Remark.",
-                    },
-                },
-            });
-        });
-    </script>
-
-@endsection
+}
