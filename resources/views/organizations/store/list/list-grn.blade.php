@@ -169,22 +169,22 @@
                                                                 <input type="hidden" name="addmore[0][edit_id]"
                                                                     placeholder="Enter Description" class="form-control"
                                                                     value="{{ $item->id }}" readonly />
-                                                                <td><input type="text" name="addmore[0][description]"
+                                                                <td><input type="text" name="addmore[0][part_description]"
                                                                         placeholder="Enter Description"
                                                                         class="form-control"
-                                                                        value="{{ $item->description }}" readonly />
+                                                                        value="{{ $item->part_description }}" readonly />
                                                                 </td>
-                                                                <td><input type="text" name="addmore[0][part_number]"
-                                                                        placeholder="Enter part_number"
+                                                                <td><input type="text" name="addmore[0][po_description]"
+                                                                        placeholder="Enter description"
                                                                         class="form-control"
-                                                                        value="{{ $item->part_number }}" readonly />
+                                                                        value="{{ $item->po_description }}" readonly />
                                                                 </td>
 
                                                                 <td><input type="text"
                                                                         name="addmore[0][chalan_quantity]"
                                                                         placeholder="Enter Chalan Qty"
                                                                         class="form-control"
-                                                                        value="{{ $item->quantity }}" readonly />
+                                                                        value="{{ $item->max_quantity }}" readonly />
                                                                 </td>
                                                                 <td><input type="text" name="addmore[0][unit_name]"
                                                                         placeholder="Enter" class="form-control unit_name"
@@ -198,29 +198,29 @@
                                                             </td> --}}
                                                                 <td><input type="text" name="addmore[0][rate]"
                                                                         placeholder="Enter" class="form-control rate"
-                                                                        value="{{ $item->rate }}" readonly />
+                                                                        value="{{ $item->po_rate }}" readonly />
                                                                 </td>
                                                                 <td><input type="text" name="addmore[0][discount]"
                                                                         placeholder="Enter" class="form-control discount"
-                                                                        value="{{ $item->discount }}%" readonly />
+                                                                        value="{{ $item->po_discount }}%" readonly />
                                                                 </td>
                                                                 <td><input type="text"
                                                                         name="addmore[0][actual_quantity]"
                                                                         placeholder="Enter Actual Qty"
                                                                         class="form-control actual_quantity"
-                                                                        value="{{ $item->actual_quantity }}" readonly />
+                                                                        value="{{ $item->sum_actual_quantity }}" readonly />
                                                                 </td>
                                                                 <td><input type="text"
                                                                         name="addmore[0][accepted_quantity]"
                                                                         placeholder="Enter Accepted Qty"
                                                                         class="form-control accepted_quantity"
-                                                                        value="{{ $item->accepted_quantity }}" readonly />
+                                                                        value="{{ $item->tracking_accepted_quantity }}" readonly />
                                                                 </td>
                                                                 <td><input type="text"
                                                                         name="addmore[0][rejected_quantity]"
                                                                         placeholder="Enter Rejected Qty"
                                                                         class="form-control rejected_quantity"
-                                                                        value="{{ $item->rejected_quantity }}" readonly />
+                                                                        value="{{ $item->tracking_rejected_quantity }}" readonly />
                                                                 </td>
 
                                                                 <td><input type="text"
