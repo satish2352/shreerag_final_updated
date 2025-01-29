@@ -183,7 +183,7 @@
                                                                         name="addmore[0][actual_quantity]"
                                                                         placeholder="Enter Actual Qty"
                                                                         class="form-control actual_quantity"
-                                                                        value="{{ $item->max_quantity }}" readonly />
+                                                                        value="{{ $item->sum_actual_quantity }}" readonly />
                                                                 </td>
                                                                 <td><input type="text"
                                                                         name="addmore[0][accepted_quantity]"

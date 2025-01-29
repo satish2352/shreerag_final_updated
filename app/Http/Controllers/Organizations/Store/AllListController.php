@@ -355,7 +355,8 @@ class AllListController extends Controller
                  'purchase_order_details.quantity'
             )
             ->get();
-
+// dd($purchase_order_details_data);
+// die();
     //         $purchase_order_details_data = GrnPOQuantityTracking::leftJoin('tbl_part_item as part_item_1', 'tbl_grn_po_quantity_tracking.part_no_id', '=', 'part_item_1.id')
     // ->leftJoin('purchase_order_details', 'tbl_grn_po_quantity_tracking.purchase_order_details_id', '=', 'purchase_order_details.id')
     // ->leftJoin('tbl_part_item as part_item_2', 'purchase_order_details.part_no_id', '=', 'part_item_2.id')

@@ -332,13 +332,13 @@
                                             class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
                                             class="mini-click-non">Purchase Order Sent To Vendor</span></a>
                                 </li>
-                                <li
+                                {{-- <li
                                 class="nav-item {{ Request::is('list-rejected-chalan-po-wise') ? 'active' : '' }}">
                                 <a 
                                     href="{{ route('list-rejected-chalan-po-wise') }}"><i
                                         class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">PO wise Rejected Chalan List</span></a>
-                            </li>
+                            </li> --}}
                             </ul>
                         </li>
                         <li class="nav-item {{ request()->is('purchase/list-submited-po-to-vendor') ? 'active' : '' }}">
