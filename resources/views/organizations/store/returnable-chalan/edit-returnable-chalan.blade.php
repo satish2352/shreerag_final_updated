@@ -20,6 +20,10 @@
             /* Adjust font size if needed */
             /* Add any other styling as per your design */
         }
+        .readonly-select {
+        pointer-events: none;
+        opacity: 0.6; /* Looks visually "readonly" */
+    }
     </style>
 
     <div class="container-fluid">
@@ -305,7 +309,7 @@
                                                                             value="{{ $editDataNew->tbl_returnable_chalan_item_details_id }}"
                                                                             placeholder="">
                                                                         <td>
-                                                                            <select class="form-control part-no mb-2" name="part_item_id_{{ $key }}" id="" disabled  style="min-width:150px">
+                                                                            <select class="form-control part-no mb-2  readonly-select" name="part_item_id_{{ $key }}" id=""  style="min-width:150px">
                                                                                 <option value="" default>Select Item</option>
                                                                                 @foreach ($dataOutputPartItem as $data)
                                                                                 <option value="{{ $data['id'] }}"
@@ -356,7 +360,7 @@
                                                                                 name="quantity_{{ $key }}"
                                                                                 value="{{ $editDataNew->quantity }}"
                                                                                 placeholder="Enter Quantity"
-                                                                                class="form-control quantity" disabled style="min-width:100px"/>
+                                                                                class="form-control quantity  readonly-select"  style="min-width:100px"/>
                                                                                 <span class="stock-available"></span>
                                                                         </td>
                                                                         <td>
@@ -390,7 +394,7 @@
                                                                                 name="amount_{{ $key }}"
                                                                                 value="{{ $editDataNew->amount }}"
                                                                                 placeholder="0"
-                                                                                class="form-control amount"  style="min-width:100px" disabled/>
+                                                                                class="form-control amount  readonly-select"  style="min-width:100px"/>
                                                                         </td>
                                                                         <td>
                                                                             <a data-id="{{ $editDataNew->tbl_returnable_chalan_item_details_id }}"
@@ -969,8 +973,8 @@
                                 @endforeach
                             </select>
                         </td>
-                        <td><input type="text" class="form-control rate" name="addmore[${i}][rate]" placeholder="rate" /></td>
-                        <td><input type="text" class="form-control size" name="addmore[${i}][size]" placeholder="size" /></td>
+                        <td><input type="text" class="form-control rate" name="addmore[${i}][rate]" placeholder="Enter Rate" /></td>
+                        <td><input type="text" class="form-control size" name="addmore[${i}][size]" placeholder="Enter Size" /></td>
                         <td><input type="text" class="form-control amount" name="addmore[${i}][amount]" placeholder=" Amount" readonly /></td>
                         <td><a class="remove-tr delete-btn btn btn-danger m-1" title="Delete Tender" data-id="{{ $editDataNew->id }}"><i class="fas fa-archive"></i></a></td>
                     </tr>
@@ -1120,5 +1124,12 @@
 });
 });
  </script>
-
+<script>
+    function updateHiddenInput(selectElement) {
+          // Update hidden input with selected value
+          const hiddenInput = document.getElementById('hidden_' + selectElement.id);
+          hiddenInput.value = selectElement.value;
+      }
+  
+      </script>
 @endsection

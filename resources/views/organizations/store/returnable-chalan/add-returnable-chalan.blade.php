@@ -813,6 +813,7 @@
                 var rate = parseFloat($row.find('.rate').val()) || 0;
                 var total = (quantity * rate).toFixed(2);
                 $row.find('.total_amount').val(total);
+                checkStock($row); // Check stock after calculating total
             });
         });
     </script>

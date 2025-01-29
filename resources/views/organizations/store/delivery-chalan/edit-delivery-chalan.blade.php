@@ -23,6 +23,10 @@
         .red-text{
             color: red;
         }
+        .readonly-select {
+        pointer-events: none;
+        opacity: 0.6; /* Looks visually "readonly" */
+    }
     </style>
 
     <div class="container-fluid">
@@ -310,9 +314,21 @@
                                                                             value="{{ $editDataNew->tbl_delivery_chalan_item_details_id }}"
                                                                             placeholder="">
                                                                         <td>
-                                                                            <select class="form-control part_item_id mb-2"
+                                                                            <select class="form-control process_id mb-2 readonly-select"
+                                                                            name="process_id_{{ $key }}"
+                                                                            id="process_id_{{ $key }}"
+                                                                            onchange="updateHiddenInput(this)">
+                                                                        <option value="" selected>Select Process</option>
+                                                                        @foreach ($dataOutputProcessMaster as $data)
+                                                                            <option value="{{ $data['id'] }}"
+                                                                                    {{ old('process_id', $editDataNew->process_id) == $data->id ? 'selected' : '' }}>
+                                                                                {{ $data->name }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                            {{-- <select class="form-control part_item_id mb-2"
                                                                                 name="part_item_id_{{ $key }}"
-                                                                                id="" disabled>
+                                                                                id="" >
                                                                                 <option value="" default>Select Item
                                                                                 </option>
                                                                                 @foreach ($dataOutputPartItem as $data)
@@ -321,7 +337,8 @@
                                                                                         {{ $data->description }}
                                                                                     </option>
                                                                                 @endforeach
-                                                                            </select>
+                                                                            </select> --}}
+                                                                            <input type="hidden" name="hidden_process_id_{{ $key }}" id="hidden_process_id_{{ $key }}" value="{{ old('process_id', $editDataNew->process_id) }}">
                                                                         </td>
                                                                         <td>
                                                                             <input type="text"
@@ -349,9 +366,9 @@
                                                                             </select> --}}
                                                                         </td>
                                                                         <td>
-                                                                            <select class="form-control process_id mb-2"
+                                                                            <select class="form-control process_id mb-2 readonly-select"
                                                                                 name="process_id_{{ $key }}"
-                                                                                id="">
+                                                                                id="" >
                                                                                 <option value="" default>Select
                                                                                     Process</option>
                                                                                 @foreach ($dataOutputProcessMaster as $data)
@@ -367,7 +384,7 @@
                                                                                 name="quantity_{{ $key }}"
                                                                                 value="{{ $editDataNew->quantity }}"
                                                                                 placeholder="Enter Quantity"
-                                                                                class="form-control quantity" disabled/>
+                                                                                class="form-control quantity readonly-select"/>
                                                                                 <span class="stock-available"></span>
                                                                         </td>
                                                                         <td>
@@ -404,7 +421,7 @@
                                                                                 name="amount_{{ $key }}"
                                                                                 value="{{ $editDataNew->amount }}"
                                                                                 placeholder="0"
-                                                                                class="form-control amount" disabled/>
+                                                                                class="form-control amount readonly-select"/>
                                                                         </td>
                                                                         <td>
                                                                             <a data-id="{{ $editDataNew->tbl_delivery_chalan_item_details_id }}"
@@ -604,32 +621,32 @@
             }
         });
  // Function to check stock availability
- function checkStock($row) {
-            const quantity = $row.find('.quantity').val();
-            const partItemId = $row.find('select[name*="part_item_id"]').val();
-            const stockAvailableMessage = $row.find('.stock-available');
+//  function checkStock($row) {
+//             const quantity = $row.find('.quantity').val();
+//             const partItemId = $row.find('select[name*="part_item_id"]').val();
+//             const stockAvailableMessage = $row.find('.stock-available');
 
-            if (partItemId && quantity) {
-                $.ajax({
-                    url: '{{ route("check-stock-quantity") }}',
-                    type: 'GET',
-                    data: { part_item_id: partItemId, quantity: quantity },
-                    success: function (response) {
-                        if (response.status === 'error') {
-                            stockAvailableMessage.text('Insufficient stock. Available: ' + response.available_quantity)
-                                .css('color', 'red');
-                        } else {
-                            stockAvailableMessage.text('Stock is sufficient').css('color', 'green');
-                        }
-                    },
-                    error: function () {
-                        stockAvailableMessage.text('Error checking stock').css('color', 'red');
-                    }
-                });
-            } else {
-                stockAvailableMessage.text('');
-            }
-        }
+//             if (partItemId && quantity) {
+//                 $.ajax({
+//                     url: '{{ route("check-stock-quantity") }}',
+//                     type: 'GET',
+//                     data: { part_item_id: partItemId, quantity: quantity },
+//                     success: function (response) {
+//                         if (response.status === 'error') {
+//                             stockAvailableMessage.text('Insufficient stock. Available: ' + response.available_quantity)
+//                                 .css('color', 'red');
+//                         } else {
+//                             stockAvailableMessage.text('Stock is sufficient').css('color', 'green');
+//                         }
+//                     },
+//                     error: function () {
+//                         stockAvailableMessage.text('Error checking stock').css('color', 'red');
+//                     }
+//                 });
+//             } else {
+//                 stockAvailableMessage.text('');
+//             }
+//         }
         var i = {!! count($editData) !!}; // Initialize i with the number of existing rows
 
         $("#add").click(function() {
@@ -1360,5 +1377,12 @@
 });
 });
  </script>
+<script>
+  function updateHiddenInput(selectElement) {
+        // Update hidden input with selected value
+        const hiddenInput = document.getElementById('hidden_' + selectElement.id);
+        hiddenInput.value = selectElement.value;
+    }
 
+    </script>
 @endsection

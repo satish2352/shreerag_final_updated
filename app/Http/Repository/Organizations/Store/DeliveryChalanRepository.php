@@ -384,124 +384,216 @@ class DeliveryChalanRepository
 //     }
 // }
 
-    public function updateAll($request){
+    // public function updateAll($request){
        
+    //     try {
+    //         $return_data = array();
+    //         $edit_id = $request->id;
+    
+    //         $dataOutputNew = DeliveryChalan::where('id', $edit_id)->first();
+
+    //         if (!$dataOutputNew) {
+    //             return [
+    //                 'msg' => 'Delivery Chalan not found.',
+    //                 'status' => 'error',
+    //             ];
+    //         }
+
+    //         for ($i = 0; $i <= $request->design_count; $i++) {
+    //             $designDetails = DeliveryChalanItemDetails::findOrFail($request->input("design_id_" . $i));
+    //             // $designDetails = DeliveryChalanItemDetails::findOrFail($request->input("design_id_" . $i));
+    //         // $partItemId = $designDetails->part_item_id;
+
+    //         // Restore the previous quantity to stock
+    //         // $itemStock = ItemStock::where('part_item_id', $partItemId)->first();
+    //         // if ($itemStock) {
+    //         //     $itemStock->quantity += $designDetails->quantity;
+    //         //     $itemStock->save();
+    //         // }
+               
+    //             $designDetails->part_item_id = $request->input("part_item_id_" . $i);
+    //             $designDetails->hsn_id = $request->input("hsn_id_" . $i);
+    //             $designDetails->process_id = $request->input("process_id_" . $i);
+    //             $designDetails->quantity = $request->input("quantity_" . $i);
+    //             $designDetails->unit_id = $request->input("unit_id_" . $i);
+    //             $designDetails->size = $request->input("size_" . $i);
+    //             $designDetails->rate = $request->input("rate_" . $i);
+    //             $designDetails->amount = $request->input("amount_" . $i);           
+    //             $designDetails->save();
+    //         }
+           
+    //         // Update main design data
+    //         $dataOutput = DeliveryChalan::findOrFail($request->purchase_main_id);
+    //         $dataOutput->vendor_id = $request->vendor_id;
+    //         $dataOutput->tax_type = $request->tax_type;
+    //         $dataOutput->tax_id = $request->tax_id;
+    //         // $dataOutput->business_id = $request->business_id;
+    //         $dataOutput->transport_id = $request->transport_id;
+    //         $dataOutput->vehicle_id = $request->vehicle_id;
+    //         $dataOutput->customer_po_no = $request->customer_po_no;
+    //         $dataOutput->plant_id = $request->plant_id;
+    //         $dataOutput->vehicle_number = $request->vehicle_number;
+    //         $dataOutput->po_date = $request->po_date;
+
+    //     //      // Retrieve the last dc_number and increment it
+    //     // $lastChalan = DeliveryChalan::orderBy('dc_number', 'desc')->first();
+    //     // $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
+
+    //         $dataOutput->lr_number = $request->lr_number;
+    //         // $dataOutput->image = $imageName;
+    //         $dataOutput->remark = $request->remark;
+    //         if ($request->has('business_id')) {
+    //             $dataOutput->business_id = $request->business_id;
+    //         }
+    //         $dataOutput->save();
+           
+    //         // Add new design details
+    //         if ($request->has('addmore')) {
+    //             foreach ($request->addmore as $key => $item) {
+    //                 $designDetails = new DeliveryChalanItemDetails();
+              
+    //                 // Assuming 'delivery_chalan_id' is a foreign key related to 'PurchaseOrderModel'
+    //                 $designDetails->delivery_chalan_id = $request->purchase_main_id; // Set the parent design ID
+    //                 $designDetails->part_item_id = $item['part_item_id'];
+    //                 $designDetails->hsn_id = $item['hsn_id'];
+    //                 $designDetails->process_id = $item['process_id'];
+    //                 $designDetails->quantity = $item['quantity'];
+    //                 $designDetails->unit_id = $item['unit_id'];
+    //                 $designDetails->size = $item['size'];
+    //                 // $designDetails->rate = $item['rate'];
+    //                  // Check if the 'rate' field exists and is not empty, and set it
+    //                 if (!empty($item['rate'])) {
+    //                     $designDetails->rate = $item['rate'];
+    //                 } else {
+    //                     $designDetails->rate = null; // Set to null if 'rate' is missing or empty
+    //                 }
+    //                             // $rate = $request->input("rate" . $i);
+    //                 // $designDetails->rate = isset($rate) && $rate !== '' ? $rate : null;
+    //                 $designDetails->amount = $item['amount'];
+    //                 // $designDetails->actual_quantity = '0';
+    //                 // $designDetails->accepted_quantity = '0';
+    //                 // $designDetails->rejected_quantity = '0';
+                  
+    //                 $designDetails->save();
+    //                  // Deduct stock for newly added rows
+    //             $itemStock = ItemStock::where('part_item_id', $item['part_item_id'])->first();
+    //             if ($itemStock) {
+    //                 $itemStock->quantity -= $item['quantity'];
+    //                 $itemStock->save();
+    //             }
+                 
+
+    //             }
+    //         }
+            
+            
+    //         // $previousImage = $dataOutput->image;
+           
+    //         $last_insert_id = $dataOutput->id;
+
+    //         $return_data['last_insert_id'] = $last_insert_id;
+    //         // $return_data['image'] = $imageName;
+    //         // $return_data['image'] = $previousImage;
+    //         return  $return_data;
+    
+    //         // Returning success message
+    //         return [
+    //             'msg' => 'Data updated successfully.',
+    //             'status' => 'success',
+    //             'designDetails' => $request->all()
+    //         ];
+    //     } catch (\Exception $e) {
+    //         return [
+    //             'msg' => 'Failed to update data.',
+    //             'status' => 'error',
+    //             'error' => $e->getMessage()
+    //         ];
+    //     }
+    // }
+
+    public function updateAll($request) {
         try {
             $return_data = array();
             $edit_id = $request->id;
-    
+        
             $dataOutputNew = DeliveryChalan::where('id', $edit_id)->first();
-
+            
             if (!$dataOutputNew) {
                 return [
                     'msg' => 'Delivery Chalan not found.',
                     'status' => 'error',
                 ];
             }
-
-            for ($i = 0; $i <= $request->design_count; $i++) {
-                $designDetails = DeliveryChalanItemDetails::findOrFail($request->input("design_id_" . $i));
-                // $designDetails = DeliveryChalanItemDetails::findOrFail($request->input("design_id_" . $i));
-            // $partItemId = $designDetails->part_item_id;
-
-            // Restore the previous quantity to stock
-            // $itemStock = ItemStock::where('part_item_id', $partItemId)->first();
-            // if ($itemStock) {
-            //     $itemStock->quantity += $designDetails->quantity;
-            //     $itemStock->save();
-            // }
-               
-                $designDetails->part_item_id = $request->input("part_item_id_" . $i);
-                $designDetails->hsn_id = $request->input("hsn_id_" . $i);
-                $designDetails->process_id = $request->input("process_id_" . $i);
-                $designDetails->quantity = $request->input("quantity_" . $i);
-                $designDetails->unit_id = $request->input("unit_id_" . $i);
-                $designDetails->size = $request->input("size_" . $i);
-                $designDetails->rate = $request->input("rate_" . $i);
-                $designDetails->amount = $request->input("amount_" . $i);           
-                $designDetails->save();
+    
+            // Update existing rows
+            for ($i = 0; $i < $request->design_count; $i++) {
+                $designId = $request->input("design_id_" . $i);
+                // dd($designId);
+                // die();
+                if ($designId) {  // Only update if a valid design_id is passed
+                    $designDetails = DeliveryChalanItemDetails::findOrFail($designId);
+    
+                    // Update the existing design details
+                    $designDetails->part_item_id = $request->input("part_item_id_" . $i);
+                    $designDetails->hsn_id = $request->input("hsn_id_" . $i);
+                    $designDetails->process_id = $request->input("process_id_" . $i);
+                    $designDetails->quantity = $request->input("quantity_" . $i);
+                    $designDetails->unit_id = $request->input("unit_id_" . $i);
+                    $designDetails->size = $request->input("size_" . $i);
+                    $designDetails->rate = $request->input("rate_" . $i);
+                    $designDetails->amount = $request->input("amount_" . $i);
+                    $designDetails->save();
+                }
             }
-           
-            // Update main design data
+    
+            // Update main delivery chalan data
             $dataOutput = DeliveryChalan::findOrFail($request->purchase_main_id);
             $dataOutput->vendor_id = $request->vendor_id;
             $dataOutput->tax_type = $request->tax_type;
             $dataOutput->tax_id = $request->tax_id;
-            // $dataOutput->business_id = $request->business_id;
             $dataOutput->transport_id = $request->transport_id;
             $dataOutput->vehicle_id = $request->vehicle_id;
             $dataOutput->customer_po_no = $request->customer_po_no;
             $dataOutput->plant_id = $request->plant_id;
             $dataOutput->vehicle_number = $request->vehicle_number;
             $dataOutput->po_date = $request->po_date;
-
-        //      // Retrieve the last dc_number and increment it
-        // $lastChalan = DeliveryChalan::orderBy('dc_number', 'desc')->first();
-        // $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
-
             $dataOutput->lr_number = $request->lr_number;
-            // $dataOutput->image = $imageName;
             $dataOutput->remark = $request->remark;
             if ($request->has('business_id')) {
                 $dataOutput->business_id = $request->business_id;
             }
             $dataOutput->save();
-           
-            // Add new design details
+    
+            // Add new rows
             if ($request->has('addmore')) {
-                foreach ($request->addmore as $key => $item) {
+                foreach ($request->addmore as $item) {
+                    // Add new design item details
                     $designDetails = new DeliveryChalanItemDetails();
-              
-                    // Assuming 'delivery_chalan_id' is a foreign key related to 'PurchaseOrderModel'
-                    $designDetails->delivery_chalan_id = $request->purchase_main_id; // Set the parent design ID
+                    $designDetails->delivery_chalan_id = $request->purchase_main_id;
                     $designDetails->part_item_id = $item['part_item_id'];
                     $designDetails->hsn_id = $item['hsn_id'];
                     $designDetails->process_id = $item['process_id'];
                     $designDetails->quantity = $item['quantity'];
                     $designDetails->unit_id = $item['unit_id'];
                     $designDetails->size = $item['size'];
-                    // $designDetails->rate = $item['rate'];
-                     // Check if the 'rate' field exists and is not empty, and set it
-                    if (!empty($item['rate'])) {
-                        $designDetails->rate = $item['rate'];
-                    } else {
-                        $designDetails->rate = null; // Set to null if 'rate' is missing or empty
-                    }
-                                // $rate = $request->input("rate" . $i);
-                    // $designDetails->rate = isset($rate) && $rate !== '' ? $rate : null;
+                    $designDetails->rate = $item['rate'] ?? null;  // Handle empty 'rate' properly
                     $designDetails->amount = $item['amount'];
-                    // $designDetails->actual_quantity = '0';
-                    // $designDetails->accepted_quantity = '0';
-                    // $designDetails->rejected_quantity = '0';
-                  
                     $designDetails->save();
-                     // Deduct stock for newly added rows
-                $itemStock = ItemStock::where('part_item_id', $item['part_item_id'])->first();
-                if ($itemStock) {
-                    $itemStock->quantity -= $item['quantity'];
-                    $itemStock->save();
-                }
-                 
-
+    
+                    // Deduct stock for new rows
+                    $itemStock = ItemStock::where('part_item_id', $item['part_item_id'])->first();
+                    if ($itemStock) {
+                        $itemStock->quantity -= $item['quantity'];
+                        $itemStock->save();
+                    }
                 }
             }
-            
-            
-            // $previousImage = $dataOutput->image;
-           
-            $last_insert_id = $dataOutput->id;
-
-            $return_data['last_insert_id'] = $last_insert_id;
-            // $return_data['image'] = $imageName;
-            // $return_data['image'] = $previousImage;
-            return  $return_data;
     
-            // Returning success message
-            return [
-                'msg' => 'Data updated successfully.',
-                'status' => 'success',
-                'designDetails' => $request->all()
-            ];
+            $last_insert_id = $dataOutput->id;
+            $return_data['last_insert_id'] = $last_insert_id;
+    
+            return $return_data;
+    
         } catch (\Exception $e) {
             return [
                 'msg' => 'Failed to update data.',
@@ -510,6 +602,8 @@ class DeliveryChalanRepository
             ];
         }
     }
+    
+    
         public function deleteById($id){
             try {
                 $deleteDataById = DeliveryChalan::find($id);

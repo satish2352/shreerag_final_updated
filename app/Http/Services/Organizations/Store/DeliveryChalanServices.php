@@ -80,9 +80,10 @@ use Config;
     
     public function updateAll($request){
         try {
-            $return_data = $this->repo->updateAll($request);
-        //  dd($return_data);
+        //     dd($request);
         //  die();
+            $return_data = $this->repo->updateAll($request);
+         
             // $path = Config::get('DocumentConstant.DELIVERY_CHALAN_ADD');
             // if ($request->hasFile('image')) {
             //     if ($return_data['image']) {
