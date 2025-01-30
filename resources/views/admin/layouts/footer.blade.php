@@ -315,7 +315,7 @@
             }
         
             $(document).ready(function() {
-                setInterval(fetch_new_hold, 2000); // Check notifications every 60 seconds
+                setInterval(fetch_new_hold, 10000); // Check notifications every 60 seconds
             });
         </script>
         
