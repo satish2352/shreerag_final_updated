@@ -8,277 +8,293 @@ use Session;
 use Validator;
 use Config;
 use Carbon;
-use App\Models\{
+use App\Models\ {
     AdminView
-};
+}
+;
+
 class AllListController extends Controller
-{ 
-    public function __construct(){
+ {
+
+    public function __construct() {
         $this->service = new AllListServices();
     }
-  
-    public function getAllListForwardedToDesign(Request $request){
+
+    public function getAllListForwardedToDesign( Request $request ) {
         try {
             $data_output = $this->service->getAllListForwardedToDesign();
 
-            $update_data_admin['is_view'] = '1';
-            AdminView::where('off_canvas_status', 11)
-                        ->where('is_view', '0')
-                        ->update($update_data_admin);
-            return view('organizations.business.list.list-business', compact('data_output'));
-        } catch (\Exception $e) {
+            $update_data_admin[ 'is_view' ] = '1';
+            AdminView::where( 'off_canvas_status', 11 )
+            ->where( 'is_view', '0' )
+            ->update( $update_data_admin );
+            return view( 'organizations.business.list.list-business', compact( 'data_output' ) );
+        } catch ( \Exception $e ) {
             return $e;
         }
-    } 
-    
-    public function getAllListCorrectionToDesignFromProduction(Request $request){
+    }
+
+    public function getAllListCorrectionToDesignFromProduction( Request $request ) {
         try {
             $data_output = $this->service->getAllListCorrectionToDesignFromProduction();
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->business_id; 
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('business_id', $business_id)
-                            ->update($update_data);
+            if ( $data_output->isNotEmpty() ) {
+                foreach ( $data_output as $data ) {
+                    $business_id = $data->business_id;
+
+                    if ( !empty( $business_id ) ) {
+                        $update_data[ 'is_view' ] = '1';
+                        AdminView::where( 'is_view', '0' )
+                        ->where( 'business_id', $business_id )
+                        ->update( $update_data );
                     }
                 }
             } else {
-                return view('organizations.business.list.list-business-design-correction-from-prod', [
+                return view( 'organizations.business.list.list-business-design-correction-from-prod', [
                     'data_output' => [],
                     'message' => 'No data found'
-                ]);
+                ] );
             }
-        
-            return view('organizations.business.list.list-business-design-correction-from-prod', compact('data_output'));
-        } catch (\Exception $e) {
+
+            return view( 'organizations.business.list.list-business-design-correction-from-prod', compact( 'data_output' ) );
+        } catch ( \Exception $e ) {
             return $e;
         }
     }
-    
-    public function materialAskByProdToStore(Request $request){
+
+    public function materialAskByProdToStore( Request $request ) {
         try {
             $data_output = $this->service->materialAskByProdToStore();
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->business_id; 
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('business_id', $business_id)
-                            ->update($update_data);
+            if ( $data_output->isNotEmpty() ) {
+                foreach ( $data_output as $data ) {
+                    $business_id = $data->business_id;
+
+                    if ( !empty( $business_id ) ) {
+                        $update_data[ 'is_view' ] = '1';
+                        AdminView::where( 'is_view', '0' )
+                        ->where( 'business_id', $business_id )
+                        ->update( $update_data );
                     }
                 }
             } else {
-                return view('organizations.business.list.list-material-ask-by-prod-to-store', [
+                return view( 'organizations.business.list.list-material-ask-by-prod-to-store', [
                     'data_output' => [],
                     'message' => 'No data found'
-                ]);
+                ] );
             }
-            return view('organizations.business.list.list-material-ask-by-prod-to-store', compact('data_output'));
-        } catch (\Exception $e) {
+            return view( 'organizations.business.list.list-material-ask-by-prod-to-store', compact( 'data_output' ) );
+        } catch ( \Exception $e ) {
             return $e;
         }
     }
 
-    public function getAllStoreDeptSentForPurchaseMaterials(Request $request){
+    public function getAllStoreDeptSentForPurchaseMaterials( Request $request ) {
         try {
             $data_output = $this->service->getAllStoreDeptSentForPurchaseMaterials();
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->business_id; 
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('business_id', $business_id)
-                            ->update($update_data);
+            if ( $data_output->isNotEmpty() ) {
+                foreach ( $data_output as $data ) {
+                    $business_id = $data->business_id;
+
+                    if ( !empty( $business_id ) ) {
+                        $update_data[ 'is_view' ] = '1';
+                        AdminView::where( 'is_view', '0' )
+                        ->where( 'business_id', $business_id )
+                        ->update( $update_data );
                     }
                 }
             } else {
-                return view('organizations.business.list.list-material-list-from-store-to-purchase', [
+                return view( 'organizations.business.list.list-material-list-from-store-to-purchase', [
                     'data_output' => [],
                     'message' => 'No data found'
-                ]);
+                ] );
             }
-            return view('organizations.business.list.list-material-list-from-store-to-purchase', compact('data_output'));
-        } catch (\Exception $e) {
+            return view( 'organizations.business.list.list-material-list-from-store-to-purchase', compact( 'data_output' ) );
+        } catch ( \Exception $e ) {
             return $e;
         }
     }
-    
 
-    
-    public function getAllListPurchaseOrder(Request $request){
+    public function getAllListPurchaseOrder( Request $request ) {
         try {
             $data_output = $this->service->getAllListPurchaseOrder();
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->id; 
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('id', $business_id)
-                            ->update($update_data);
+            if ( $data_output->isNotEmpty() ) {
+                foreach ( $data_output as $data ) {
+                    $business_id = $data->id;
+
+                    if ( !empty( $business_id ) ) {
+                        $update_data[ 'is_view' ] = '1';
+                        AdminView::where( 'is_view', '0' )
+                        ->where( 'id', $business_id )
+                        ->update( $update_data );
                     }
                 }
             } else {
-                return view('organizations.business.list.list-purchase-order-need-to-check', [
+                return view( 'organizations.business.list.list-purchase-order-need-to-check', [
                     'data_output' => [],
                     'message' => 'No data found'
-                ]);
+                ] );
             }
-        
-            return view('organizations.business.list.list-purchase-order-need-to-check', compact('data_output'));
-        } catch (\Exception $e) {
+
+            return view( 'organizations.business.list.list-purchase-order-need-to-check', compact( 'data_output' ) );
+        } catch ( \Exception $e ) {
             return $e;
         }
     }
 
-
-    public function getAllListApprovedPurchaseOrderOwnerlogin(Request $request){
+    public function getAllListApprovedPurchaseOrderOwnerlogin( Request $request ) {
         try {
             $data_output = $this->service->getAllListApprovedPurchaseOrderOwnerlogin();
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->id; 
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('id', $business_id)
-                            ->update($update_data);
+            if ( $data_output->isNotEmpty() ) {
+                foreach ( $data_output as $data ) {
+                    $business_id = $data->id;
+
+                    if ( !empty( $business_id ) ) {
+                        $update_data[ 'is_view' ] = '1';
+                        AdminView::where( 'is_view', '0' )
+                        ->where( 'id', $business_id )
+                        ->update( $update_data );
                     }
                 }
             } else {
-                return view('organizations.business.list.list-purchase-order-approved', [
+                return view( 'organizations.business.list.list-purchase-order-approved', [
                     'data_output' => [],
                     'message' => 'No data found'
-                ]);
+                ] );
             }
-            return view('organizations.business.list.list-purchase-order-approved', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
-    public function submitFinalPurchaseOrder($id){
-        try {
-            $data_output = $this->service->getPurchaseOrderBusinessWise($id);
-            return view('organizations.business.list.list-purchase-order-approved-bussinesswise', compact('data_output'));
-        } catch (\Exception $e) {
+            return view( 'organizations.business.list.list-purchase-order-approved', compact( 'data_output' ) );
+        } catch ( \Exception $e ) {
             return $e;
         }
     }
 
-    public function getAllListRejectedPurchaseOrderOwnerlogin(Request $request){
+    public function submitFinalPurchaseOrder( $id ) {
+        try {
+            $data_output = $this->service->getPurchaseOrderBusinessWise( $id );
+            return view( 'organizations.business.list.list-purchase-order-approved-bussinesswise', compact( 'data_output' ) );
+        } catch ( \Exception $e ) {
+            return $e;
+        }
+    }
+
+    public function getAllListRejectedPurchaseOrderOwnerlogin( Request $request ) {
         try {
             $data_output = $this->service->getAllListRejectedPurchaseOrderOwnerlogin();
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->id; 
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('id', $business_id)
-                            ->update($update_data);
+            if ( $data_output->isNotEmpty() ) {
+                foreach ( $data_output as $data ) {
+                    $business_id = $data->id;
+
+                    if ( !empty( $business_id ) ) {
+                        $update_data[ 'is_view' ] = '1';
+                        AdminView::where( 'is_view', '0' )
+                        ->where( 'id', $business_id )
+                        ->update( $update_data );
                     }
                 }
             } else {
-                return view('organizations.business.list.list-purchase-order-rejected', [
+                return view( 'organizations.business.list.list-purchase-order-rejected', [
                     'data_output' => [],
                     'message' => 'No data found'
-                ]);
+                ] );
             }
-            return view('organizations.business.list.list-purchase-order-rejected', compact('data_output'));
-        } catch (\Exception $e) {
+            return view( 'organizations.business.list.list-purchase-order-rejected', compact( 'data_output' ) );
+        } catch ( \Exception $e ) {
             return $e;
         }
     }
-    public function getPurchaseOrderRejectedBusinessWise($id){
+
+    public function getPurchaseOrderRejectedBusinessWise( $id ) {
         try {
-            $data_output = $this->service->getPurchaseOrderRejectedBusinessWise($id);
-            return view('organizations.business.list.list-purchase-order-rejected-bussinesswise', compact('data_output'));
-        } catch (\Exception $e) {
+            $data_output = $this->service->getPurchaseOrderRejectedBusinessWise( $id );
+            return view( 'organizations.business.list.list-purchase-order-rejected-bussinesswise', compact( 'data_output' ) );
+        } catch ( \Exception $e ) {
             return $e;
         }
     }
-    public function listPOReceivedForApprovaTowardsOwner(Request $request){
+
+    public function listPOReceivedForApprovaTowardsOwner( Request $request ) {
         try {
             $data_output = $this->service->listPOReceivedForApprovaTowardsOwner();
-            return view('organizations.business.list.list-po-received-for-sanction-towards-owner', compact('data_output'));
-        } catch (\Exception $e) {
+            return view( 'organizations.business.list.list-po-received-for-sanction-towards-owner', compact( 'data_output' ) );
+        } catch ( \Exception $e ) {
             return $e;
         }
-    } 
-    public function listPOPaymentReleaseByVendor(Request $request){
+    }
+
+    public function listPOPaymentReleaseByVendor( Request $request ) {
         try {
             $data_output = $this->service->listPOPaymentReleaseByVendor();
-            return view('organizations.business.list.list-release-approval-payment-by-vendor', compact('data_output'));
-        } catch (\Exception $e) {
+            return view( 'organizations.business.list.list-release-approval-payment-by-vendor', compact( 'data_output' ) );
+        } catch ( \Exception $e ) {
             return $e;
         }
-    } 
-    public function loadDesignSubmittedForProduction(){
+    }
+
+    public function loadDesignSubmittedForProduction() {
         try {
             $data_output = $this->service->loadDesignSubmittedForProduction();
-             if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->business_id; 
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('business_id', $business_id)
-                            ->update($update_data);
+            if ( $data_output->isNotEmpty() ) {
+                foreach ( $data_output as $data ) {
+                    $business_id = $data->business_id;
+
+                    if ( !empty( $business_id ) ) {
+                        $update_data[ 'is_view' ] = '1';
+                        AdminView::where( 'is_view', '0' )
+                        ->where( 'business_id', $business_id )
+                        ->update( $update_data );
                     }
                 }
             } else {
-                return view('organizations.business.design.list-design-upload', [
+                return view( 'organizations.business.design.list-design-upload', [
                     'data_output' => [],
                     'message' => 'No data found'
-                ]);
+                ] );
             }
-            return view('organizations.business.design.list-design-upload', compact('data_output'));
-        } catch (\Exception $e) {
+            return view( 'organizations.business.design.list-design-upload', compact( 'data_output' ) );
+        } catch ( \Exception $e ) {
             return $e;
         }
-    }  
-    public function loadDesignSubmittedForProductionBusinessWise($business_id){
-        try {
-            $data_output = $this->service->loadDesignSubmittedForProductionBusinessWise($business_id);
-            return view('organizations.business.design.list-design-uploaded-owner-business-wise', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }  
+    }
 
-    public function getAllListSubmitedPurchaeOrderByVendorOwnerside(){
+    public function loadDesignSubmittedForProductionBusinessWise( $business_id ) {
+        try {
+            $data_output = $this->service->loadDesignSubmittedForProductionBusinessWise( $business_id );
+            return view( 'organizations.business.design.list-design-uploaded-owner-business-wise', compact( 'data_output' ) );
+        } catch ( \Exception $e ) {
+            return $e;
+        }
+    }
+
+    public function getAllListSubmitedPurchaeOrderByVendorOwnerside() {
         try {
             $data_output = $this->service->getAllListSubmitedPurchaeOrderByVendorOwnerside();
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->business_id; 
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('business_id', $business_id)
-                            ->update($update_data);
+            if ( $data_output->isNotEmpty() ) {
+                foreach ( $data_output as $data ) {
+                    $business_id = $data->business_id;
+
+                    if ( !empty( $business_id ) ) {
+                        $update_data[ 'is_view' ] = '1';
+                        AdminView::where( 'is_view', '0' )
+                        ->where( 'business_id', $business_id )
+                        ->update( $update_data );
                     }
                 }
             } else {
-                return view('organizations.business.design.list-design-upload', [
+                return view( 'organizations.business.design.list-design-upload', [
                     'data_output' => [],
                     'message' => 'No data found'
-                ]);
+                ] );
             }
-            return view('organizations.business.list.list-owner-all-po-sent-to-vendor', compact('data_output'));
-        } catch (\Exception $e) {
+            return view( 'organizations.business.list.list-owner-all-po-sent-to-vendor', compact( 'data_output' ) );
+        } catch ( \Exception $e ) {
             return $e;
         }
-    }  
+    }
+
     public function getOwnerReceivedGatePass()
-{
-    try {
-        // Fetch data from the service layer
-        $all_gatepass = $this->service->getOwnerReceivedGatePass() ?? collect(); // Ensure it's at least an empty collection
+ {
+        try {
+            // Fetch data from the service layer
+            $all_gatepass = $this->service->getOwnerReceivedGatePass() ?? collect();
+            // Ensure it's at least an empty collection
 
         // If data exists, update the `is_view` status
         if ($all_gatepass->isNotEmpty()) {
@@ -459,13 +475,10 @@ class AllListController extends Controller
                     'message' => 'No data found'
                 ]);
             }
-            return view('organizations.business.list.list-dispatch-completed', compact('data_output'));
-        } catch (\Exception $e) {
+            return view('organizations.business.list.list-dispatch-completed', compact('data_output' ) );
+        } catch ( \Exception $e ) {
             return $e;
         }
-    }  
+    }
 
-    
-
-    
 }

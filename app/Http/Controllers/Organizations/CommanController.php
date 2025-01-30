@@ -21,64 +21,6 @@ use App\Models\{
 class CommanController
 {
 
-
-
-
-    // public function getPurchaseOrderDetails($purchase_order_id)
-    // {
-    //     try {
-    //         $purchaseOrder = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
-    //         ->select(
-    //             'purchase_orders.id',
-    //             'purchase_orders.purchase_orders_id',
-    //             'purchase_orders.requisition_id', 
-    //             'purchase_orders.business_id', 
-    //             'purchase_orders.production_id', 
-    //             'purchase_orders.po_date', 
-    //             'purchase_orders.terms_condition', 
-    //             'purchase_orders.transport_dispatch', 
-    //             'purchase_orders.image', 
-    //             'purchase_orders.tax', 
-    //             'purchase_orders.invoice_date', 
-    //             'purchase_orders.payment_terms', 
-    //             'purchase_orders.discount', 
-    //             'vendors.vendor_name', 
-    //             'vendors.vendor_company_name', 
-    //             'vendors.vendor_email', 
-    //             'vendors.vendor_address', 
-    //             'vendors.gst_no', 
-    //             'vendors.quote_no', 
-    //             'purchase_orders.is_active'
-    //         )
-    //         ->first();
-    //         // Fetch related Purchase Order Details
-    //         $purchaseOrderDetails = PurchaseOrderDetailsModel::where('purchase_id', $purchaseOrder->id)
-    //             ->select(
-    //                 'purchase_id',
-    //                 'part_no',
-    //                 'description',
-    //                 // 'qc_check_remark',
-    //                 'due_date',
-    //                 'hsn_no',
-    //                 'quantity',
-    //                 'actual_quantity',
-    //                 'accepted_quantity',
-    //                 'rejected_quantity',
-    //                 'rate',
-    //                 'amount'
-    //             )
-    //             ->get();
-
-
-
-    //         return [
-    //             'purchaseOrder' => $purchaseOrder,
-    //             'purchaseOrderDetails' => $purchaseOrderDetails,
-    //         ];
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
     public function getPurchaseOrderDetails($purchase_order_id)
     {
         try {

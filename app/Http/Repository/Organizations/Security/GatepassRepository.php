@@ -16,19 +16,6 @@ use Config;
 
 class GatepassRepository
 {
-
-    // public function getAll()
-    // {
-    //     try {
-    //         $data_output = Gatepass::get();
-
-    //         return $data_output;
-    //     } catch (\Exception $e) {
-
-    //         return $e;
-    //     }
-    // }
-
     public function getAll()
 
     {

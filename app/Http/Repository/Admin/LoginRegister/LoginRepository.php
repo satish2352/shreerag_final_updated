@@ -8,28 +8,29 @@ use App\Models\ {
     User,
     RolesPermissions,
     Permissions
-};
+}
+;
 use App\dbmodel\Applicant;
 use App\SuperAdmin;
 
-
 class LoginRepository
-{
-	function __construct() {
-		
+ {
+    function __construct() {
+
     }
 
-    //For Applicant 
-    public function checkLogin($request) {
+    //For Applicant
+
+    public function checkLogin( $request ) {
         // get school description
         $data = [];
-        $data['user_details'] = User::where( [
-                                        'u_email' => $request['email'],
-                                        'is_active' =>true
-                                        ])
-                                        ->select('*')
-                                        ->first();
-       
+        $data[ 'user_details' ] = User::where( [
+            'u_email' => $request[ 'email' ],
+            'is_active' =>true
+        ] )
+        ->select( '*' )
+        ->first();
+
         return $data;
     }
 }

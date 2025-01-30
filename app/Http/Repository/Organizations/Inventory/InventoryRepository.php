@@ -56,43 +56,7 @@ class InventoryRepository  {
             return $e;
         }
     }
-    // public function addAll($request)
-    // {   
-    //     try {
-    //         // Step 1: Check if the ItemStock record with the given part_item_id already exists
-    //         $dataOutput = ItemStock::where('part_item_id', $request->part_item_id)->first();
-    
-    //         if ($dataOutput) {
-    //             // Step 2: If the record exists, update the quantity
-    //             // $dataOutput->quantity = $request->quantity;
-    //             $dataOutput->quantity += $request->quantity;
-    //         } else {
-    //             // Step 3: If the record does not exist, create a new one
-    //             $dataOutput = new ItemStock();
-    //             $dataOutput->part_item_id = $request->part_item_id;
-    //             $dataOutput->quantity = $request->quantity;
-    //         }
-    
-    //         // Save the record (either updated or new)
-    //         $dataOutput->save();
-    
-    //         // Step 4: Insert a new record into ItemStockHistory for tracking changes
-    //         $itemStockHistory = new ItemStockHistory();
-    //         $itemStockHistory->part_item_id = $dataOutput->id;  // Use the ID of the saved record
-    //         $itemStockHistory->quantity = $request->quantity;
-    //         $itemStockHistory->save();
-    
-    //         return [
-    //             'status' => 'success'
-    //         ];
-    
-    //     } catch (\Exception $e) {
-    //         return [
-    //             'msg' => $e->getMessage(),
-    //             'status' => 'error'
-    //         ];
-    //     }
-    // }
+   
     public function addAll($request)
 {
     try {
@@ -186,22 +150,6 @@ class InventoryRepository  {
     
             // Check if the ItemStock record with the given part_item_id already exists
             $itemStock = ItemStock::where('id', $request->id)->first();
-    
-            // if ($itemStock) {
-            //     // If the record exists, update the quantity
-            //     if ($itemStock->quantity === null) {
-            //         // If quantity is null, initialize it with the opening_stock plus new quantity
-            //         $itemStock->quantity = $partItem->opening_stock + $request->quantity;
-            //     } else {
-            //         // Otherwise, add the new quantity to the existing quantity
-            //         $itemStock->quantity += $request->quantity;
-            //     }
-            // } else {
-            //     // If the record does not exist, create a new one
-            //     $itemStock = new ItemStock();
-            //     $itemStock->part_item_id = $request->part_item_id;
-            //     $itemStock->quantity = $partItem->opening_stock + $request->quantity;
-            // }
     
             // Save the ItemStock record (either updated or new)
             $itemStock->quantity = $request->quantity;

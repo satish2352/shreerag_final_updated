@@ -5,24 +5,24 @@ use DB;
 use Illuminate\Support\Carbon;
 use App\Models\ {
     VehicleType
-};
+}
+;
 use Config;
 
-class VehicleTypeRepository  {
+class VehicleTypeRepository {
 
-
-    public function getAll(){
+    public function getAll() {
         try {
-          $data_output = VehicleType::get();
+            $data_output = VehicleType::get();
             return $data_output;
-        } catch (\Exception $e) {
+        } catch ( \Exception $e ) {
             return $e;
         }
     }
 
+    public function addAll( $request )
+ {
 
-    public function addAll($request)
-    {   
         try {
 
             $dataOutput = new VehicleType();
@@ -33,7 +33,7 @@ class VehicleTypeRepository  {
                 'status' => 'success'
             ];
 
-        } catch (\Exception $e) {
+        } catch ( \Exception $e ) {
             return [
                 'msg' => $e->getMessage(),
                 'status' => 'error'
@@ -41,15 +41,15 @@ class VehicleTypeRepository  {
         }
     }
 
-    public function getById($id){
-    try {
-            $dataOutputByid = VehicleType::find($id);
-            if ($dataOutputByid) {
+    public function getById( $id ) {
+        try {
+            $dataOutputByid = VehicleType::find( $id );
+            if ( $dataOutputByid ) {
                 return $dataOutputByid;
             } else {
                 return null;
             }
-        } catch (\Exception $e) {
+        } catch ( \Exception $e ) {
             return [
                 'msg' => $e,
                 'status' => 'error'
@@ -57,45 +57,44 @@ class VehicleTypeRepository  {
         }
     }
 
-      public function updateAll($request)
-{
-    try {
-        $return_data = array();
+    public function updateAll( $request )
+ {
+        try {
+            $return_data = array();
 
-        $dataOutput = VehicleType::find($request->id);
+            $dataOutput = VehicleType::find( $request->id );
 
-        if (!$dataOutput) {
+            if ( !$dataOutput ) {
+                return [
+                    'msg' => 'Update Data not found.',
+                    'status' => 'error'
+                ];
+            }
+
+            $dataOutput->name = $request->name;
+            $dataOutput->save();
+            $return_data[ 'data' ] = $dataOutput;
+            $return_data[ 'status' ] = 'success';
+
+            return $return_data;
+        } catch ( \Exception $e ) {
             return [
-                'msg' => 'Update Data not found.',
-                'status' => 'error'
+                'msg' => 'Failed to Update Data.',
+                'status' => 'error',
+                'error' => $e->getMessage()
             ];
         }
-
-        $dataOutput->name = $request->name;
-        $dataOutput->save();
-        $return_data['data'] = $dataOutput;
-        $return_data['status'] = 'success';
-
-        return $return_data;
-    } catch (\Exception $e) {
-        return [
-            'msg' => 'Failed to Update Data.',
-            'status' => 'error',
-            'error' => $e->getMessage()
-        ];
     }
-}
 
+    public function deleteById( $id ) {
+        try {
+            $deleteDataById = VehicleType::find( $id );
+            $deleteDataById->delete();
+            return $deleteDataById;
 
-
-    public function deleteById($id){
-            try {
-                $deleteDataById = VehicleType::find($id);
-                $deleteDataById->delete();
-                return $deleteDataById;
-            
-            } catch (\Exception $e) {
-                return $e;
-            }    }
+        } catch ( \Exception $e ) {
+            return $e;
+        }
+    }
 
 }

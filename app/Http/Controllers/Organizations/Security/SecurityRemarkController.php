@@ -4,24 +4,13 @@ namespace App\Http\Controllers\Organizations\Security;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-// use App\Http\Services\Organizations\Productions\ProductionServices;
 use Session;
 use Validator;
 use Config;
 use Carbon;
-// use App\Models\ {
-//     DesignModel,
-//     DesignDetailsModel
-//     };
 
 class SecurityRemarkController extends Controller
 { 
-    // public function __construct(){
-    //     $this->service = new ProductionServices();
-    // }
-
-
-
     public function index(){
         try {
             return view('organizations.security.remark.list-remark');

@@ -23,30 +23,6 @@ class VendorRepository  {
         }
     }
 
-
-// public function addAll($request)
-// {
-//     try {
-//         $dataOutput = new Business();
-//         $dataOutput->title = $request->title;
-//         $dataOutput->descriptions = $request->descriptions;
-//         $dataOutput->remarks = $request->remarks;
-      
-//         $dataOutput->save();
-
-//         return [
-//             'msg' => 'Data Added Successfully',
-//             'status' => 'success'
-//         ];
-
-//     } catch (\Exception $e) {
-//         return [
-//             'msg' => $e->getMessage(),
-//             'status' => 'error'
-//         ];
-//     }
-// }
-    
 public function addAll($request)
 {
     try {

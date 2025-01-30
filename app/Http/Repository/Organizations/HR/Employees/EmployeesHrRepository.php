@@ -46,85 +46,12 @@ class EmployeesHrRepository  {
 
 		return $data_users;
 	}
-	// public function getById($id)
-	// {
-	// 	try {
-	// 		$data_users = User::join('tbl_roles', function($join) {
-	// 			$join->on('users.role_id', '=', 'tbl_roles.id');
-	// 		})
-	// 		// ->where('users.is_active','=',true)
-	// 		->select('tbl_roles.role_name',
-	// 				'users.u_email',
-	// 				'users.f_name',
-	// 				'users.m_name',
-	// 				'users.l_name',
-	// 				'users.number',
-	// 				'users.designation',
-	// 				'users.address',
-	// 				'users.state',
-	// 				'users.city',
-	// 				'users.pincode',
-	// 				'users.id',
-	// 				'users.is_active'
-	// 			) ->orderBy('users.id', 'desc')->where('users.id', $id)->first();		
-	// 		if ($data_users) {
-	// 			return $user;
-	// 		} else {
-	// 			return null;
-	// 		}
-	// 	} catch (\Exception $e) {
-	// 		return [
-	// 			'msg' => $e->getMessage(),
-	// 			'status' => 'error'
-	// 		];
-	// 	}
-	// }
+	
     public function checkDupCredentials($request){
 		return User::where('u_email', '=', $request['u_email'])
 			// ->orWhere('u_uname','=',$request['u_uname'])
 			->select('id')->get();
 	}
-
-    // public function register($request){
-	// 	$data =array();
-	// 	// $ipAddress = getIPAddress($request);
-	// 	$user_data = new User();
-	// 	$user_data->u_email = $request['u_email'];
-	// 	// $user_data->u_uname = $request['u_uname'];
-	// 	$user_data->u_password = bcrypt($request['u_password']);
-	// 	$user_data->role_id = $request['role_id'];
-	// 	$user_data->f_name = $request['f_name'];
-	// 	$user_data->m_name = $request['m_name'];
-	// 	$user_data->l_name = $request['l_name'];
-	// 	$user_data->number = $request['number'];
-	// 	$user_data->designation = $request['designation'];
-	// 	$user_data->address = $request['address'];
-	// 	$user_data->state = $request['state'];
-	// 	$user_data->city = $request['city'];
-	// 	$user_data->pincode = $request['pincode'];
-	// 	$user_data->ip_address = 'null';
-    //     $user_data->org_id = $request->session()->get('org_id');
-	// 	$user_data->is_active = isset($request['is_active']) ? true : false;
-	// 	$user_data->save();
-
-	// 	$financial_year_leave_record = new FinancialYearLeaveRecord();
-	// 	$financial_year_leave_record->user_id = $user_data->id;
-	// 	// Add other necessary fields to FinancialYearLeaveRecord
-	// 	$financial_year_leave_record->save();
-
-	// 	$last_insert_id = $user_data->id;
-	// 	// $this->insertRolesPermissions($request, $last_insert_id);
-
-	// 	// $imageProfile = $last_insert_id .'_' . rand(100000, 999999) . '_english.' . $request->user_profile->extension();
-        
-    //     $user_detail = User::find($last_insert_id);
-    //     // $user_detail->user_profile = $imageProfile; 
-    //     $user_detail->save();
-    //     // $data['imageProfile'] =$imageProfile;
-    //     return $data;
-
-	// }
-
 	public function register($request) {
 		$data = array();
 	
@@ -253,22 +180,6 @@ class EmployeesHrRepository  {
 	}
 
     public function update($request){
-        // $ipAddress = getIPAddress($request);
-		// $user_data = User::where('id',$request['edit_id']) 
-		// 				->update([
-		// 					// 'u_uname' => $request['u_uname'],
-		// 					// 'role_id' => $request['role_id'],
-		// 					'f_name' => $request['f_name'],
-		// 					'm_name' => $request['m_name'],
-		// 					'l_name' => $request['l_name'],
-		// 					'number' => $request['number'],
-		// 					'designation' => $request['designation'],
-		// 					'address' => $request['address'],
-		// 					'state' => $request['state'],
-		// 					'city' => $request['city'],
-		// 					'pincode' => $request['pincode'],
-		// 					'is_active' => isset($request['is_active']) ? true :false,
-		// 				]);
 		$updateData = [
 			'f_name' => $request['f_name'],
 			'm_name' => $request['m_name'],
