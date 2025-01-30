@@ -315,14 +315,14 @@
                                                                             placeholder="">
                                                                         <td>
                                                                             <select class="form-control process_id mb-2 readonly-select"
-                                                                            name="process_id_{{ $key }}"
-                                                                            id="process_id_{{ $key }}"
+                                                                            name="part_item_id_{{ $key }}"
+                                                                            id="part_item_id_{{ $key }}"
                                                                             onchange="updateHiddenInput(this)">
-                                                                        <option value="" selected>Select Process</option>
-                                                                        @foreach ($dataOutputProcessMaster as $data)
+                                                                        <option value="" selected>Select Item</option>
+                                                                        @foreach ($dataOutputPartItem as $data)
                                                                             <option value="{{ $data['id'] }}"
-                                                                                    {{ old('process_id', $editDataNew->process_id) == $data->id ? 'selected' : '' }}>
-                                                                                {{ $data->name }}
+                                                                                  {{ old('part_item_id', $editDataNew->part_item_id) == $data->id ? 'selected' : '' }}>
+                                                                                        {{ $data->description }}
                                                                             </option>
                                                                         @endforeach
                                                                     </select>
@@ -366,7 +366,7 @@
                                                                             </select> --}}
                                                                         </td>
                                                                         <td>
-                                                                            <select class="form-control process_id mb-2 readonly-select"
+                                                                            <select class="form-control process_id mb-2 "
                                                                                 name="process_id_{{ $key }}"
                                                                                 id="" >
                                                                                 <option value="" default>Select
