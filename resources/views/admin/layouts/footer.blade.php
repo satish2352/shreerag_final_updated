@@ -11,9 +11,9 @@
         </div>
     </div>
 </div>
-{{-- <audio id="notificationSound" preload="auto">
+<audio id="notificationSound" preload="auto">
     <source src="{{ asset('uploads/Notification_sound.mp3') }}" type="audio/mp3">
-</audio> --}}
+</audio>
 {{-- <audio id="notificationSound" preload="auto">
     <source src="{{ asset('uploads/Notification_sound.mp3') }}" type="audio/mp3">
 </audio> --}}
@@ -208,10 +208,11 @@
 
 
                 $(document).ready(function(){
-                    setInterval(fetch_new_hold,60000);
+                    setInterval(fetch_new_hold,2000);
                 });
         </script> --}}
 
+       
         <script>
             var previousNotificationCount = 0;
         
@@ -230,37 +231,81 @@
                         type: 'GET',
                         data: { TestVal: TestVal },
                         success: function(response) {
+
                             if (response.notification_count > 0) {
-                                // Update notification count display
-                                $('#notification-count').text(response.notification_count);
-        
-                                // Check if the new count is greater than the previous count
-                                if (response.notification_count > previousNotificationCount) {
-                                    playNotificationSound();
-                                }
-        
-                                previousNotificationCount = response.notification_count; // Update previous count
-        
-                                var notificationMessages = '';
-                                $.each(response.notifications, function(index, notification) {
-                                    var urlvar = notification.url;
-                                    if (notification.admin_count > 0) {
-                                        notificationMessages += `
-                                            <li>
-                                                <a href="${urlvar}">
-                                                    <div class="notification-content">
-                                                        <h2 style="color:#444;">${notification.message}</h2>
-                                                    </div>
-                                                </a>
-                                            </li>`;
-                                    }
-                                });
-        
-                                $('#notification-messages').html(notificationMessages);
-                            } else {
-                                $('#notification-count').text('');
-                                previousNotificationCount = 0; // Reset the counter when no notifications
+                                    $('#notification-count').text(response.notification_count);
                             }
+                            if(localStorage.getItem('sound_count') =='' && response.notification_count > 0) {
+                                if (response.notification_count > 0) {
+                                    
+                                    localStorage.setItem('sound_count', response.notification_count )
+                                    // Update notification count display
+                                    $('#notification-count').text(response.notification_count);
+            
+                                    // Check if the new count is greater than the previous count
+                                    if (response.notification_count > previousNotificationCount) {
+                                        playNotificationSound();
+                                    }
+            
+                                    previousNotificationCount = response.notification_count; // Update previous count
+            
+                                    var notificationMessages = '';
+                                    $.each(response.notifications, function(index, notification) {
+                                        var urlvar = notification.url;
+                                        if (notification.admin_count > 0) {
+                                            notificationMessages += `
+                                                <li>
+                                                    <a href="${urlvar}">
+                                                        <div class="notification-content">
+                                                            <h2 style="color:#444;">${notification.message}</h2>
+                                                        </div>
+                                                    </a>
+                                                </li>`;
+                                        }
+                                    });
+            
+                                    $('#notification-messages').html(notificationMessages);
+                                } else {
+                                    $('#notification-count').text('');
+                                    previousNotificationCount = 0; // Reset the counter when no notifications
+                                } 
+                            } else if( response.notification_count > localStorage.getItem('sound_count')) {
+                                if (response.notification_count > 0) {
+                                    localStorage.setItem('sound_count', response.notification_count )
+                                    // Update notification count display
+                                    $('#notification-count').text(response.notification_count);
+            
+                                    // Check if the new count is greater than the previous count
+                                    if (response.notification_count > previousNotificationCount) {
+                                        playNotificationSound();
+                                    }
+            
+                                    previousNotificationCount = response.notification_count; // Update previous count
+            
+                                    var notificationMessages = '';
+                                    $.each(response.notifications, function(index, notification) {
+                                        var urlvar = notification.url;
+                                        if (notification.admin_count > 0) {
+                                            notificationMessages += `
+                                                <li>
+                                                    <a href="${urlvar}">
+                                                        <div class="notification-content">
+                                                            <h2 style="color:#444;">${notification.message}</h2>
+                                                        </div>
+                                                    </a>
+                                                </li>`;
+                                        }
+                                    });
+            
+                                    $('#notification-messages').html(notificationMessages);
+                                } else {
+                                    $('#notification-count').text('');
+                                    previousNotificationCount = 0; // Reset the counter when no notifications
+                                } 
+                            } 
+
+                            
+                           
                         },
                         error: function(err) {
                             console.log("Error fetching notifications:", err);
