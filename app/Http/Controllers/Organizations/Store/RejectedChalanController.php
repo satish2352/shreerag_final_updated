@@ -33,8 +33,7 @@ class RejectedChalanController extends Controller
     {
         try {
             $all_gatepass = $this->service->getAll();
-            // dd($all_gatepass);
-            // die();
+           
             return view('organizations.store.rejected-chalan.list-rejected-chalan', compact('all_gatepass'));
         } catch (\Exception $e) {
             return $e;
@@ -84,10 +83,23 @@ class RejectedChalanController extends Controller
     // die();
                 $po_id = $purchase_order_data->id;
     
-                $purchase_order_details_data = GrnPOQuantityTracking::where('purchase_order_id', $po_id)
-                    ->get();
-                // dd($gatepass_data);
-                // die();
+                // $purchase_order_details_data = GrnPOQuantityTracking::where('purchase_order_id', $po_id)
+                //     ->get();
+
+                     $purchase_order_details_data = GrnPOQuantityTracking::leftJoin('tbl_part_item', function ($join) {
+                $join->on('tbl_grn_po_quantity_tracking.part_no_id', '=', 'tbl_part_item.id');
+              })
+              ->where('tbl_grn_po_quantity_tracking.purchase_order_id', $po_id)
+              ->where('tbl_grn_po_quantity_tracking.grn_id', $rejected_id)
+                ->select(
+                'tbl_grn_po_quantity_tracking.*',
+                'tbl_part_item.description as part_description',
+                'tbl_grn_po_quantity_tracking.updated_at',
+            )
+          
+            ->get();
+            // dd($purchase_order_details_data);
+            // die();
             return view('organizations.store.rejected-chalan.add-rejected-chalan', compact('purchase_order_data', 'purchase_order_details_data', 'gatepass_data'));
         } catch (\Exception $e) {
             return $e;

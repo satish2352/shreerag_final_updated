@@ -157,7 +157,7 @@
                                                                 <td><input type="text" name="addmore[0][description]"
                                                                         placeholder="Enter Description"
                                                                         class="form-control"
-                                                                        value="{{ $item->description }}" readonly />
+                                                                        value="{{ $item->part_description }}" readonly />
                                                                 </td>
                                                                 <td><input type="text"
                                                                         name="addmore[0][chalan_quantity]"
