@@ -173,7 +173,7 @@
                                                             <th style="width: 100px;">Part No.</th>
                                                             <th style="width: 100px;">PO Quantity</th>
                                                             <th style="width: 70px;">Unit</th>
-                                                            <th style="width: 100px;">HSN</th>
+                                                            {{-- <th style="width: 100px;">HSN</th> --}}
                                                             <th style="width: 70px;">Rate</th>
                                                             <th style="width: 80px;">Discount</th>
                                                             <th style="width: 100px;">Actual Quantity</th>
@@ -213,13 +213,13 @@
                                                                     placeholder="Enter"
                                                                     class="form-control unit_name" 
                                                                     value="{{ $item->unit_name }}" readonly/>
-                                                            </td>
+                                                            {{-- </td>
                                                                 <td><input type="text"
                                                                     name="addmore[{{ $index }}][hsn_name]"
                                                                     placeholder="Enter"
                                                                     class="form-control hsn_name" 
                                                                     value="{{ $item->hsn_name }}" readonly />
-                                                            </td>
+                                                            </td> --}}
                                                             <td><input type="text"
                                                                 name="addmore[{{ $index }}][rate]"
                                                                 placeholder="Enter"

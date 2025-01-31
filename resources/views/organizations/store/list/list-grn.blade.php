@@ -11,6 +11,9 @@
         .error {
             color: red;
         }
+        .remaining_quantity{
+        background-color: #8cd9b3 !important;
+    }
     </style>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

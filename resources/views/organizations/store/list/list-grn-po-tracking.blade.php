@@ -1,5 +1,10 @@
 @extends('admin.layouts.master')
 @section('content')
+<style>
+    .remaining_quantity{
+        background-color: #8cd9b3 !important;
+    }
+    </style>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list">
