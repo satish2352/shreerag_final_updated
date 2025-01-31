@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Session;
 use App\Models\DepartmentsModel;
+use App\Models\RolesModel;
 class LoginService 
 {
 	protected $repo;
@@ -15,31 +16,79 @@ class LoginService
         $this->repo = new LoginRepository();
     }
 
-    public function checkLogin($request) {
-        $response = $this->repo->checkLogin($request);
-        $roleName = DepartmentsModel::join('tbl_employees', 'tbl_employees.department_id', '=', 'tbl_departments.id')
-                ->where('tbl_employees.email',$request->email )
-                ->select('tbl_departments.department_name')
-                ->get();    
-        $role="";
-        foreach($roleName as $name)
-        {
-            $role=$name->department_name;
-        }
-            if($response['user_details']) {
-            $password = $request['password'];
-            if (Hash::check($password, $response['user_details']['u_password'])) {
-                $request->session()->put('org_id',$response['user_details']['org_id']);
-                $request->session()->put('role_name',$role);
-                $request->session()->put('u_email',$response['user_details']['u_email']);
-                $json = ['status'=>'success','msg'=>$response['user_details'],'role_id'=>$response['user_details']['role_id']];
-            } else {
-                $json = ['status'=>'failed','msg'=>'These credentials do not match our records.'];
-            }
+    // public function checkLogin($request) {
+    //     $response = $this->repo->checkLogin($request);
+    //     $roleName = DepartmentsModel::join('users', 'users.role_id', '=', 'tbl_roles.id')
+    //             ->where('users.email',$request->email )
+    //             ->select('tbl_roles.role_name')
+    //             ->get();    
+    //     $role="";
+    //     foreach($roleName as $name)
+    //     {
+    //         $role=$name->role_name;
+    //     }
+    //         if($response['user_details']) {
+    //         $password = $request['password'];
+    //         if (Hash::check($password, $response['user_details']['u_password'])) {
+    //             $request->session()->put('org_id',$response['user_details']['org_id']);
+    //             $request->session()->put('role_name',$role);
+    //             $request->session()->put('u_email',$response['user_details']['u_email']);
+    //             $json = ['status'=>'success','msg'=>$response['user_details'],'role_id'=>$response['user_details']['role_id']];
+    //         } else {
+    //             $json = ['status'=>'failed','msg'=>'These credentials do not match our records.'];
+    //         }
             
+    //     } else {
+    //         $json = ['status'=>'failed','msg'=>'These credentials do not match our records.'];
+    //     }
+    //     return $json;
+    // }
+
+    public function checkLogin($request) {
+        // Fetch user details from the repository
+        $response = $this->repo->checkLogin($request);
+    
+        // Fetch the role of the user from the 'tbl_roles' table
+        $roleName = RolesModel::join('users', 'users.role_id', '=', 'tbl_roles.id')
+                    ->where('users.email', $request->email)
+                    ->select('tbl_roles.role_name')
+                    ->first();  // Use first() since you only expect one result
+    
+        // Check if the role was found
+        $role = $roleName ? $roleName->role_name : '';
+    
+        // Check if user details exist in the response
+        if ($response['user_details']) {
+            $password = $request['password'];
+    
+            // Verify if the provided password matches the stored hashed password
+            if (Hash::check($password, $response['user_details']['u_password'])) {
+                // Store user session information
+                $request->session()->put('org_id', $response['user_details']['org_id']);
+                $request->session()->put('role_name', $role);
+                $request->session()->put('u_email', $response['user_details']['u_email']);
+                $request->session()->put('user_id', $response['user_details']['id']);  // Store user ID for session
+    
+                // Return success response with user details and role ID
+                return [
+                    'status' => 'success',
+                    'msg' => $response['user_details'],
+                    'role_id' => $response['user_details']['role_id']
+                ];
+            } else {
+                // Password mismatch error
+                return [
+                    'status' => 'failed',
+                    'msg' => 'These credentials do not match our records.'
+                ];
+            }
         } else {
-            $json = ['status'=>'failed','msg'=>'These credentials do not match our records.'];
+            // User not found error
+            return [
+                'status' => 'failed',
+                'msg' => 'These credentials do not match our records.'
+            ];
         }
-        return $json;
     }
+    
 }

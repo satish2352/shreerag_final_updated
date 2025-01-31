@@ -97,7 +97,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::any('/organizations-delete-employees/{id}', ['as' => 'organizations-delete-employees', 'uses' => 'App\Http\Controllers\Organizations\Employees\EmployeesController@destroy']);
     Route::post('/check-email-availability', ['as' => 'check-email-availability', 'uses' => 'App\Http\Controllers\Organizations\Employees\EmployeesController@checkEmailAvailability']);
 
-    Route::group(['prefix' => 'owner'], function () {
+    Route::group(['prefix' => 'owner', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
         Route::get('/organizations-list-employees', ['as' => 'organizations-list-employees', 'uses' => 'App\Http\Controllers\Organizations\Employees\EmployeesController@index']);
     
@@ -154,7 +154,7 @@ Route::group(['middleware' => ['admin']], function () {
 
 
     });
-    Route::group(['prefix' => 'designdept'], function () {
+    Route::group(['prefix' => 'designdept', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
         //ALL List
         Route::get('/list-new-requirements-received-for-design', ['as' => 'list-new-requirements-received-for-design', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@getAllNewRequirement']);
@@ -177,7 +177,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-accept-design-by-production', ['as' => 'list-accept-design-by-production', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@acceptdesignbyProduct']);
         Route::get('/list-design-report', ['as' => 'list-design-report', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@listDesignReport']);
     });
-    Route::group(['prefix' => 'proddept'], function () {
+    Route::group(['prefix' => 'proddept', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
         Route::get('/accept-design/{id}', ['as' => 'accept-design', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@acceptdesign']);
         Route::get('/reject-design-edit/{id}', ['as' => 'reject-design-edit', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@rejectdesignedit']);
@@ -209,7 +209,7 @@ Route::group(['middleware' => ['admin']], function () {
         // Route::get('/list-final-production-completed/{id}', ['as' => 'list-final-production-completed', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllFinalProductionCompleted']);
 
     });
-    Route::group(['prefix' => 'storedept'], function () {
+    Route::group(['prefix' => 'storedept', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
     
         Route::get('/list-requistion', ['as' => 'list-requistion', 'uses' => 'App\Http\Controllers\Organizations\Store\RequistionController@index']);
@@ -330,7 +330,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/fetch-po-numbers', ['as' => 'fetch-po-numbers', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@fetchPONumbers']);
         Route::get('/get-po-numbers/{vendor_id}', ['as' => 'get-po-numbers', 'uses' => 'App\Http\Controllers\Organizations\Store\ReturnableChalanController@getPONumbers']);
     });
-    Route::group(['prefix' => 'purchase'], function () {
+    Route::group(['prefix' => 'purchase', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
         Route::get('/list-purchase', ['as' => 'list-purchase', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListMaterialReceivedForPurchase']);
     
@@ -399,7 +399,7 @@ Route::group(['middleware' => ['admin']], function () {
     
 
     });
-    Route::group(['prefix' => 'securitydept'], function () {
+    Route::group(['prefix' => 'securitydept', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
         Route::get('/search-by-po-no', ['as' => 'search-by-po-no', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@searchByPONo']);
         // Route::get('/list-purchase-order-approved-sent-to-vendor-security', ['as' => 'list-purchase-order-approved-sent-to-vendor-security', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@searchByPONo']);
@@ -417,7 +417,7 @@ Route::group(['middleware' => ['admin']], function () {
     
         Route::post('/list-all-po-number', ['as' => 'list-all-po-number', 'uses' => 'App\Http\Controllers\Organizations\Security\AllListController@getAllListMaterialRecieved']);
     });
-    Route::group(['prefix' => 'quality'], function () {
+    Route::group(['prefix' => 'quality', 'middleware' => 'admin'], function () {
 
         // ========================Quality Department Start========
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
@@ -441,7 +441,7 @@ Route::group(['middleware' => ['admin']], function () {
 
         
     });
-    Route::group(['prefix' => 'financedept'], function () {
+    Route::group(['prefix' => 'financedept', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
     
         Route::get('/forward-the-purchase-order-to-the-owner-for-sanction/{purchase_orders_id}/{business_id}', ['as' => 'forward-the-purchase-order-to-the-owner-for-sanction', 'uses' => 'App\Http\Controllers\Organizations\Finance\FinanceController@forwardPurchaseOrderToTheOwnerForSanction']);
@@ -458,7 +458,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-send-to-dispatch', ['as' => 'list-send-to-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Finance\AllListController@getAllListBusinessFianaceSendToDispatch']);
         
     });
-    Route::group(['prefix' => 'logisticsdept'], function () {
+    Route::group(['prefix' => 'logisticsdept', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
         Route::get('/list-final-production-completed-recive-to-logistics', ['as' => 'list-final-production-completed-recive-to-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\AllListController@getAllCompletedProduction']);
         Route::get('/add-logistics/{business_id}', ['as' => 'add-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\LogisticsController@addLogistics']);
@@ -482,7 +482,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::any('/update-transport-name', ['as' => 'update-transport-name', 'uses' => 'App\Http\Controllers\Organizations\Logistics\NameOfTransportController@update']);
         Route::any('/delete-transport-name/{id}', ['as' => 'delete-transport-name', 'uses' => 'App\Http\Controllers\Organizations\Logistics\NameOfTransportController@destroy']);
     });
-    Route::group(['prefix' => 'dispatchdept'], function () {
+    Route::group(['prefix' => 'dispatchdept', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
         Route::get('/list-final-production-completed-received-from-fianance', ['as' => 'list-final-production-completed-received-from-fianance', 'uses' => 'App\Http\Controllers\Organizations\Dispatch\AllListController@getAllReceivedFromFianance']);
         Route::get('/add-dispatch/{business_id}/{business_details_id}', ['as' => 'add-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Dispatch\DispatchController@addDispatch']);
@@ -496,7 +496,7 @@ Route::group(['middleware' => ['admin']], function () {
         // Route::get('/list-logistics', ['as' => 'list-logistics', 'uses' => 'App\Http\Controllers\Organizations\Logistics\AllListController@getAllLogistics']);
         // Route::get('/send-to-fianance/{id}', ['as' => 'send-to-fianance', 'uses' => 'App\Http\Controllers\Organizations\Logistics\LogisticsController@sendToFianance']);
     });
-    Route::group(['prefix' => 'hr'], function () {
+    Route::group(['prefix' => 'hr', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
         // Route::get('/hr-dashboard', ['as' => '/hr-dashboard', 'uses' => 'App\Http\Controllers\Organizations\Dashboard\DashboardController@index']);
         Route::get('/hr-list-employees', ['as' => 'hr-list-employees', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@index']);
@@ -555,7 +555,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/particular-notice-department-wise', ['as' => 'particular-notice-department-wise', 'uses' => 'App\Http\Controllers\Organizations\HR\NoticeController@departmentWiseNotice']);
 
     });
-    Route::group(['prefix' => 'cms'], function () {
+    Route::group(['prefix' => 'cms', 'middleware' => 'admin'], function () {
 
                 Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
                 Route::get('/list-vision-mission', ['as' => 'list-vision-mission', 'uses' => 'App\Http\Controllers\Admin\CMS\VisionMissionController@index']);
@@ -622,11 +622,11 @@ Route::group(['middleware' => ['admin']], function () {
 
         
     });
-    Route::group(['prefix' => 'inventory'], function () {
+    Route::group(['prefix' => 'inventory', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
     });
 
-    Route::group(['prefix' => 'employee'], function () {
+    Route::group(['prefix' => 'employee', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
         Route::any('/show-employee-profile/{id}', ['as' => 'show-employee-profile', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@showParticularDetails']);
 
