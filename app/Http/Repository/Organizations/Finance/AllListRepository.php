@@ -31,6 +31,9 @@ class AllListRepository
           $data_output = PurchaseOrdersModel::leftJoin('gatepass', function ($join) {
               $join->on('purchase_orders.purchase_orders_id', '=', 'gatepass.purchase_orders_id');
           })
+          ->leftJoin('businesses_details', function ($join) {
+            $join->on('purchase_orders.business_details_id', '=', 'businesses_details.id');
+        })
           ->leftJoin('vendors', function ($join) {
               $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
           })
@@ -44,6 +47,7 @@ class AllListRepository
           ->groupBy(
               'purchase_orders.purchase_orders_id',
               'grn_tbl.id',
+              'purchase_orders.business_details_id',
               'grn_tbl.grn_no_generate',
               'grn_tbl.store_receipt_no_generate',
               'grn_tbl.store_remark',
@@ -59,6 +63,7 @@ class AllListRepository
           ->select(
               'purchase_orders.purchase_orders_id',
               'grn_tbl.id',
+              'purchase_orders.business_details_id',
               'grn_tbl.grn_no_generate',
               'grn_tbl.store_receipt_no_generate',
               'grn_tbl.store_remark',

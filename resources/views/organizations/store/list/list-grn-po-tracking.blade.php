@@ -87,6 +87,7 @@
                                                     @endif
                                                 </div>
                                                 <div class="row">
+
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="po_date">GRN No. :</label>
                                                         <input type="text" class="form-control" id="grn_no"
@@ -125,7 +126,7 @@
                                                         <input type="date" class="form-control" id="bill_date"
                                                             name="bill_date" placeholder=""
                                                             value="{{ $grn_data->bill_date }}" readonly>
-                                                    </div>
+                                                        </div>
                                                 </div>
 
                                                 <div style="margin-top:20px">

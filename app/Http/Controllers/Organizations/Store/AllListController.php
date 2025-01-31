@@ -377,6 +377,10 @@ class AllListController extends Controller
             // $po_details = $grn_data->id;
             // $purchase_order_details_data = GrnPOQuantityTracking::where('grn_id', $po_details)
             //     ->get();
+
+$business_details = $business_details_id;
+// dd($business_details);
+// die();
             $idtoedit = base64_decode($purchase_orders_id);
          
             $grn_id = base64_decode($id);
@@ -476,7 +480,7 @@ class AllListController extends Controller
 // dd($purchase_order_details_data);
 // die();
 
-            return view('organizations.store.list.list-grn-po-tracking', compact('purchase_order_data', 'purchase_order_details_data', 'grn_data'));
+            return view('organizations.store.list.list-grn-po-tracking', compact('purchase_order_data', 'purchase_order_details_data', 'grn_data', 'business_details'));
         } catch (\Exception $e) {
             return $e;
         }

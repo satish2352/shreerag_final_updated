@@ -102,7 +102,12 @@
 
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ ucwords($data->purchase_orders_id) }}</td>
-                                                    <td>{{ ucwords($data->grn_no_generate) }}</td>
+                                                    <td>
+                                                        <a href="{{ route('list-grn-details-po-tracking', [base64_encode($data->purchase_orders_id), base64_encode($data->business_details_id), base64_encode($data->id)]) }}" style="color: blue;">
+                                                        {{ ucwords($data->grn_no_generate) }} 
+                                                    </a>
+                                               
+                                                    </td>
                                                     <td>{{ ucwords($data->store_receipt_no_generate) }}</td>
                                                     <td>{{ ucwords($data->store_remark) }}</td>
                                                     <td>{{ ucwords($data->vendor_name) }}</td>
