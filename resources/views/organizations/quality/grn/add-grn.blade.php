@@ -256,7 +256,7 @@
 
                                                                 <td><input type="text"
                                                                     name="addmore[{{ $index }}][remaining_quantity]"
-                                                                    placeholder="Enter Rejected Qty" value="{{ $item->remaining_quantity }}"
+                                                                    placeholder="0" value="{{ $item->remaining_quantity }}"
                                                                     class="form-control remaining_quantity" readonly />
                                                             </td>
                                                                 {{-- <td><button type="button" name="add" id="add"

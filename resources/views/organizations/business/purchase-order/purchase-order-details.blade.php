@@ -12,7 +12,7 @@
         &nbsp; &nbsp;
 
         <a href="{{ route('rejected-purchase-order', ['purchase_order_id' => $purchase_order_id, 'business_id' => $purchaseOrder->business_details_id]) }}"><button data-toggle="tooltip"
-            title="Rejected Purchase Order" class="reject-btn">Rejected</button></a> &nbsp;
+            title="Rejected Purchase Order" class="reject-btn">Reject</button></a> &nbsp;
     &nbsp; &nbsp;
     </div>  
     @endif

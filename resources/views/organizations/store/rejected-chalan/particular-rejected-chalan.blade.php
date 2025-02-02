@@ -196,14 +196,14 @@
                                             <td style="border: 1px solid black; padding: 5px; text-align: center;">
                                                 {{ $index + 1 }}</td>
                                                 <td style="border: 1px solid black; padding: 5px; text-align: left; width:250px;">
-                                                    {{ $item->description }}</td>
+                                                    {{ $item->part_description }}</td>
                                                 <td style="border: 1px solid black; padding: 5px; text-align: left;">
-                                                    {{ $item->quantity }}</td>
-                                            <td style="border: 1px solid black; padding: 5px;">{{ $item->actual_quantity }}
+                                                    {{ $item->max_quantity }}</td>
+                                            <td style="border: 1px solid black; padding: 5px;">{{ $item->sum_actual_quantity }}
                                             </td>
-                                            <td style="border: 1px solid black; padding: 5px;">{{ $item->accepted_quantity }}
+                                            <td style="border: 1px solid black; padding: 5px;">{{ $item->tracking_accepted_quantity }}
                                             </td>
-                                            <td style="border: 1px solid black; padding: 5px;">{{ $item->rejected_quantity }}
+                                            <td style="border: 1px solid black; padding: 5px;">{{ $item->tracking_rejected_quantity }}
                                             </td>
                                         </tr>
                                     @endforeach
