@@ -179,10 +179,46 @@
                 type: 'GET',
                 data: { TestVal: TestVal },
                 success: function(response) {
-
                     if (response.notification_count > 0) {
-                            $('#notification-count').text(response.notification_count);
-                    }
+                        $('#notification-count').text(response.notification_count);
+    var notificationMessages = '';
+    $.each(response.notifications, function(index, notification) {
+        var urlvar = notification.url;
+        if (notification.admin_count > 0) {
+            notificationMessages += `
+                <li>
+                    <a href="${urlvar}">
+                        <div class="notification-content">
+                            <h2 style="color:#444;">${notification.message}</h2>
+                        </div>
+                    </a>
+                </li>`;
+        }
+    });
+
+    // Instead of displaying the notification count, directly show the messages
+    $('#notification-messages').html(notificationMessages);
+
+
+}
+
+                    // if (response.notification_count > 0) {
+                    //         $('#notification-count').text(response.notification_count);
+                    //         var notificationMessages = '';
+                    //         $.each(response.notifications, function(index, notification) {
+                    //             var urlvar = notification.url;
+                    //             if (notification.admin_count > 0) {
+                    //                 notificationMessages += `
+                    //                     <li>
+                    //                         <a href="${urlvar}">
+                    //                             <div class="notification-content">
+                    //                                 <h2 style="color:#444;">${notification.message}</h2>
+                    //                             </div>
+                    //                         </a>
+                    //                     </li>`;
+                    //             }
+                    //         });
+                    // }
                     if(localStorage.getItem('sound_count') =='' && response.notification_count > 0) {
                         if (response.notification_count > 0) {
                             

@@ -1,5 +1,10 @@
 @extends('website.layouts.master')
 @section('content')
+<style>
+    div:where(.swal2-container) .swal2-select {
+        z-index: -1;
+    }
+    </style>
 <section>
     <div class="banrimgs">
         <img src="{{ asset('website/assets/img/banner/contact_us.png')}}" alt="">
@@ -281,7 +286,7 @@
         }
     }
   </script>
-  @if(session('sweet_success'))
+  {{-- @if(session('sweet_success'))
   <script>
       Swal.fire({
           icon: 'success',
@@ -291,8 +296,19 @@
           confirmButtonText: 'OK'
       });
   </script>
-  @endif
-  
+  @endif --}}
+  @if(session('sweet_success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: "{{ session('sweet_success') }}",
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK'
+    });
+</script>
+@endif
+
   @if(session('sweet_error'))
   <script>
       Swal.fire({

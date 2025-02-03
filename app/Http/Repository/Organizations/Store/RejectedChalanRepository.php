@@ -103,11 +103,13 @@ class RejectedChalanRepository
                 'grn_tbl.grn_date', 
                 'grn_tbl.remark', 
                 'gatepass.gatepass_name',
-                'tbl_rejected_chalan.is_active'
+                'tbl_rejected_chalan.is_active',
+                'grn_tbl.updated_at'
             )
             ->groupBy( 'tbl_rejected_chalan.id','tbl_rejected_chalan.purchase_orders_id', 'grn_tbl.po_date', 'grn_tbl.grn_date', 'grn_tbl.remark',
-            'gatepass.gatepass_name', 'tbl_rejected_chalan.is_active')
-            ->orderBy('tbl_rejected_chalan.purchase_orders_id', 'desc')
+            'gatepass.gatepass_name', 'tbl_rejected_chalan.is_active',
+            'grn_tbl.updated_at')
+            ->orderBy('grn_tbl.updated_at', 'desc')
 
             ->get();                
             return $dataOutputCategory;
