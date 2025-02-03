@@ -161,7 +161,7 @@
     </script>
 
 
-<script>
+{{-- <script>
     var previousNotificationCount = 0;
 
     function playNotificationSound() {
@@ -301,247 +301,143 @@
     $(document).ready(function() {
         setInterval(fetch_new_hold, 2000); // Check notifications every 60 seconds
     });
-</script>
-
+</script> --}}
 {{-- <script>
-            
-                function fetch_new_hold(){
-                    var TestVal='1';
-                    if (TestVal !== '') {
-                        $.ajax({
-                            url: '{{ route('get-notification') }}',
-                            type: 'GET',
-                            data: {
-                                TestVal: TestVal
-                            },
-                            // headers: {
-                            //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            // },
-                            
-                            success: function(response) {
-                                if (response.notification_count > 0) {
-                                        $('#notification-count').text(response.notification_count);
-
-                                        var notificationMessages = '';
-                                        $.each(response.notifications, function(index, notification) {
-                                        // response.notifications.forEach(function(notification) {
-                                        var urlvar=notification.url;
-                                        if(notification.admin_count > 0){        
-                                            notificationMessages += `
-                                                <li>
-                                                    <a href="${urlvar}">
-                                                        <div class="notification-content">
-                                                            <h2 style="color:#444;">${notification.message}</h2>
-                                                        </div>
-                                                    </a>
-                                                </li>`;
-                                        }    
-                                        });
-                                        // console.log(notificationMessages);
-
-                                        $('#notification-messages').html(notificationMessages);
-                                    
-                                }else{
-                                        $('#notification-count').text('');
-                                    }
-                            }
-                        });
-                    }
-                }
-
-
-                $(document).ready(function(){
-                    setInterval(fetch_new_hold,2000);
-                });
-        </script> --}}
-
-       
-        {{-- <script>
-            var previousNotificationCount = 0;
-        
-            function playNotificationSound() {
-                const sound = document.getElementById('notificationSound');
-                sound.play().catch(error => {
-                    console.log("Sound couldn't be played automatically: ", error);
-                });
-            }
-        
-            function fetch_new_hold() {
-                var TestVal = '1';
-                if (TestVal !== '') {
-                    $.ajax({
-                        url: '{{ route('get-notification') }}',
-                        type: 'GET',
-                        data: { TestVal: TestVal },
-                        success: function(response) {
-
-                            if (response.notification_count > 0) {
-                                    $('#notification-count').text(response.notification_count);
-
-                            }
-                            if(localStorage.getItem('sound_count') =='' && response.notification_count > 0) {
-                                if (response.notification_count > 0) {
-                                    
-                                    localStorage.setItem('sound_count', response.notification_count )
-                                    // Update notification count display
-                                    $('#notification-count').text(response.notification_count);
-            
-                                    // Check if the new count is greater than the previous count
-                                    if (response.notification_count > previousNotificationCount) {
-                                        playNotificationSound();
-                                    }
-            
-                                    previousNotificationCount = response.notification_count; // Update previous count
-            
-                                    var notificationMessages = '';
-                                    $.each(response.notifications, function(index, notification) {
-                                        var urlvar = notification.url;
-                                        if (notification.admin_count > 0) {
-                                             += `
-                                                <li>
-                                                    <a href="${urlvar}">
-                                                        <div class="notification-content">
-                                                            <h2 style="color:#444;">${notification.message}</h2>
-                                                        </div>
-                                                    </a>
-                                                </li>`;
-                                        }
-                                    });
-            
-                                    $('#notification-messages').html(notificationMessages);
-                                } else {
-                                    $('#notification-count').text('');
-                                    previousNotificationCount = 0; // Reset the counter when no notifications
-                                } 
-                            } else if( response.notification_count > localStorage.getItem('sound_count')) {
-                                if (response.notification_count > 0) {
-                                    localStorage.setItem('sound_count', response.notification_count )
-                                    // Update notification count display
-                                    $('#notification-count').text(response.notification_count);
-            
-                                    // Check if the new count is greater than the previous count
-                                    if (response.notification_count > previousNotificationCount) {
-                                        playNotificationSound();
-                                    }
-            
-                                    previousNotificationCount = response.notification_count; // Update previous count
-            
-                                    var notificationMessages = '';
-                                    $.each(response.notifications, function(index, notification) {
-                                        var urlvar = notification.url;
-                                        if (notification.admin_count > 0) {
-                                            notificationMessages += `
-                                                <li>
-                                                    <a href="${urlvar}">
-                                                        <div class="notification-content">
-                                                            <h2 style="color:#444;">${notification.message}</h2>
-                                                        </div>
-                                                    </a>
-                                                </li>`;
-                                        }
-                                    });notificationMessages
-            
-                                    $('#notification-messages').html(notificationMessages);
-                                } else {
-                                    $('#notification-count').text('');
-                                    previousNotificationCount = 0; // Reset the counter when no notifications
-                                } 
-                            } 
-
-                            
-                           
-                        },
-                        error: function(err) {
-                            console.log("Error fetching notifications:", err);
-                        }
-                    });
-                }
-            }
-        
-            $(document).ready(function() {
-                setInterval(fetch_new_hold, 2000); // Check notifications every 60 seconds
-            });
-        </script> --}}
-        
-        {{-- <script>
-            // Function to play notification sound
-            function playNotificationSound() {
-                const audioElement = document.getElementById('notificationSound');
-                audioElement.currentTime = 0; // Reset playback to the beginning
-                audioElement.play()
-                    .catch(error => console.error("Sound play error:", error));
-            }
-        
-            function fetch_new_hold() {
-                var TestVal = '1';
-                if (TestVal !== '') {
-                    $.ajax({
-                        url: '{{ route('get-notification') }}',
-                        type: 'GET',
-                        data: { TestVal: TestVal },
-                        success: function(response) {
-                            if (response.notification_count > 0) {
-                                $('#notification-count').text(response.notification_count);
-        
-                                var notificationMessages = '';
-                                $.each(response.notifications, function(index, notification) {
-                                    var urlvar = notification.url;
-                                    if (notification.admin_count > 0) {
-                                        notificationMessages += `
-                                            <li>
-                                                <a href="${urlvar}">
-                                                    <div class="notification-content">
-                                                        <h2 style="color:#444;">${notification.message}</h2>
-                                                    </div>
-                                                </a>
-                                            </li>`;
-                                    }
-                                });
-        
-                                $('#notification-messages').html(notificationMessages);
-        
-                                // Play sound when new notifications arrive
-                                playNotificationSound();
-                            } else {
-                                $('#notification-count').text('');
-                            }
-                        }
-                    });
-                }
-            }
-        
-            $(document).ready(function() {
-                setInterval(fetch_new_hold, 60000); // Fetch notifications every 60 seconds
-            });
-        </script> --}}
-        <!-- <script>
-        $(document).ready(function() {
-            // var agent_id = '1';
-            // if (agent_id != '') {
-                $.ajax({
-                    url: "",
-                    method: "POST",
-                    data: {
-                        agent_id: agent_id
-                    },
-                    success: function(responce) {
-                        //  console.log(responce);
-                        //  console.log('jjjjjjjjjjjjjjjjjjjj');
-                        if (responce > 0) {
-                            $('#total_notification_count').append('' + responce + '');
-                            // $('#btn_agent').prop('disabled', true)
-
-                        } else {
-                            $('#total_notification_count').html('No Enquiry');
-                            //  $('#btn_agent').prop('disabled', false)
-                        }
-                    }
-                });
-            // }
+    var previousNotificationCount = 0;
+    var userId = '{{ session('user_id') }}';
+    function playNotificationSound() {
+        const sound = document.getElementById('notificationSound');
+        sound.play().catch(error => {
+            console.log("Sound couldn't be played automatically: ", error);
         });
-        </script> -->
+    }
 
-    
+    function fetch_new_hold() {
+        var TestVal = '1';
+        if (TestVal !== '') {
+            $.ajax({
+                url: '{{ route('get-notification') }}',
+                type: 'GET',
+                data: {
+                    userId: userId
+                },
+                success: function(response) {
+                    // Always show the notification count and messages
+                    $('#notification-count').text(response.notification_count);
+
+                    var notificationMessages = '';
+                    $.each(response.notifications, function(index, notification) {
+                        var urlvar = notification.url;
+                        if (notification.admin_count > 0) {
+                            notificationMessages += `
+                            <li>
+                                <a href="${urlvar}">
+                                    <div class="notification-content">
+                                        <h2 style="color:#444;">${notification.message}</h2>
+                                    </div>
+                                </a>
+                            </li>`;
+                        }
+                    });
+
+                    $('#notification-messages').html(notificationMessages);
+                  // Debugging previousNotificationCount and response.notification_count
+                console.log('Previous Count:', previousNotificationCount);
+                console.log('Current Count:', response.notification_count);
+                    // Check if the new count is greater than the previous count
+                    if (response.notification_count > previousNotificationCount && 
+                    response.notification_count != previousNotificationCount) {
+                      
+                        if (response.notification_count > 0) {
+                            playNotificationSound();
+                        }
+                    }
+
+                    // Update previousNotificationCount
+                    previousNotificationCount = response.notification_count;
+                },
+                error: function(err) {
+                    console.log("Error fetching notifications:", err);
+                }
+            });
+        }
+    }
+
+    $(document).ready(function() {
+        fetch_new_hold(); // Fetch notifications immediately on page load
+        setInterval(fetch_new_hold, 2000); // Check notifications every 2 seconds
+    });
+</script> --}}
+
+<script>
+    var previousNotificationCount = parseInt(localStorage.getItem('previousNotificationCount')) || 0;
+    var userId = '{{ session('user_id') }}';
+
+    function playNotificationSound() {
+        const sound = document.getElementById('notificationSound');
+        sound.play().catch(error => {
+            console.log("Sound couldn't be played automatically: ", error);
+        });
+    }
+
+    function fetch_new_hold() {
+        var TestVal = '1';
+        if (TestVal !== '') {
+            $.ajax({
+                url: '{{ route('get-notification') }}',
+                type: 'GET',
+                data: {
+                    userId: userId
+                },
+                success: function(response) {
+                    // Always show the notification count and messages
+                    $('#notification-count').text(response.notification_count);
+
+                    var notificationMessages = '';
+                    $.each(response.notifications, function(index, notification) {
+                        var urlvar = notification.url;
+                        if (notification.admin_count > 0) {
+                            notificationMessages += `
+                            <li>
+                                <a href="${urlvar}">
+                                    <div class="notification-content">
+                                        <h2 style="color:#444;">${notification.message}</h2>
+                                    </div>
+                                </a>
+                            </li>`;
+                        }
+                    });
+
+                    $('#notification-messages').html(notificationMessages);
+
+                    // Debugging previousNotificationCount and response.notification_count
+                    console.log('Previous Count:', previousNotificationCount);
+                    console.log('Current Count:', response.notification_count);
+
+                    // Check if the new count is greater than the previous count
+                    if (response.notification_count > previousNotificationCount && 
+                        response.notification_count != previousNotificationCount) {
+                        if (response.notification_count > 0) {
+                            playNotificationSound();
+                        }
+                    }
+
+                    // Update previousNotificationCount and save it to localStorage
+                    previousNotificationCount = response.notification_count;
+                    localStorage.setItem('previousNotificationCount', previousNotificationCount);
+                },
+                error: function(err) {
+                    console.log("Error fetching notifications:", err);
+                }
+            });
+        }
+    }
+
+    $(document).ready(function() {
+        fetch_new_hold(); // Fetch notifications immediately on page load
+        setInterval(fetch_new_hold, 2000); // Check notifications every 2 seconds
+    });
+</script>
 
 </body>
 

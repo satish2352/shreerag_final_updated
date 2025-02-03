@@ -78,6 +78,10 @@ class Business extends Model
     {
         return $this->hasMany(ReturnableChalan::class, 'business_id');
     }
+    public function AdminView()
+    {
+        return $this->hasMany(AdminView::class, 'business_id');
+    }
     
 }
 
