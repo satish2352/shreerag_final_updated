@@ -234,6 +234,7 @@
 
                             if (response.notification_count > 0) {
                                     $('#notification-count').text(response.notification_count);
+
                             }
                             if(localStorage.getItem('sound_count') =='' && response.notification_count > 0) {
                                 if (response.notification_count > 0) {
@@ -253,7 +254,7 @@
                                     $.each(response.notifications, function(index, notification) {
                                         var urlvar = notification.url;
                                         if (notification.admin_count > 0) {
-                                            notificationMessages += `
+                                             += `
                                                 <li>
                                                     <a href="${urlvar}">
                                                         <div class="notification-content">
@@ -295,7 +296,7 @@
                                                     </a>
                                                 </li>`;
                                         }
-                                    });
+                                    });notificationMessages
             
                                     $('#notification-messages').html(notificationMessages);
                                 } else {
@@ -315,7 +316,7 @@
             }
         
             $(document).ready(function() {
-                setInterval(fetch_new_hold, 2000); // Check notifications every 60 seconds
+                setInterval(fetch_new_hold, 10000); // Check notifications every 60 seconds
             });
         </script>
         
