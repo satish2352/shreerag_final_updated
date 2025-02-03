@@ -160,6 +160,113 @@
         }, 1000); // 1000 milliseconds = 1 second
     </script>
 
+
+<script>
+    var previousNotificationCount = 0;
+
+    function playNotificationSound() {
+        const sound = document.getElementById('notificationSound');
+        sound.play().catch(error => {
+            console.log("Sound couldn't be played automatically: ", error);
+        });
+    }
+
+    function fetch_new_hold() {
+        var TestVal = '1';
+        if (TestVal !== '') {
+            $.ajax({
+                url: '{{ route('get-notification') }}',
+                type: 'GET',
+                data: { TestVal: TestVal },
+                success: function(response) {
+
+                    if (response.notification_count > 0) {
+                            $('#notification-count').text(response.notification_count);
+                    }
+                    if(localStorage.getItem('sound_count') =='' && response.notification_count > 0) {
+                        if (response.notification_count > 0) {
+                            
+                            localStorage.setItem('sound_count', response.notification_count )
+                            // Update notification count display
+                            $('#notification-count').text(response.notification_count);
+    
+                            // Check if the new count is greater than the previous count
+                            if (response.notification_count > previousNotificationCount) {
+                                playNotificationSound();
+                            }
+    
+                            previousNotificationCount = response.notification_count; // Update previous count
+    
+                            var notificationMessages = '';
+                            $.each(response.notifications, function(index, notification) {
+                                var urlvar = notification.url;
+                                if (notification.admin_count > 0) {
+                                    notificationMessages += `
+                                        <li>
+                                            <a href="${urlvar}">
+                                                <div class="notification-content">
+                                                    <h2 style="color:#444;">${notification.message}</h2>
+                                                </div>
+                                            </a>
+                                        </li>`;
+                                }
+                            });
+    
+                            $('#notification-messages').html(notificationMessages);
+                        } else {
+                            $('#notification-count').text('');
+                            previousNotificationCount = 0; // Reset the counter when no notifications
+                        } 
+                    } else if( response.notification_count > localStorage.getItem('sound_count')) {
+                        if (response.notification_count > 0) {
+                            localStorage.setItem('sound_count', response.notification_count )
+                            // Update notification count display
+                            $('#notification-count').text(response.notification_count);
+    
+                            // Check if the new count is greater than the previous count
+                            if (response.notification_count > previousNotificationCount) {
+                                playNotificationSound();
+                            }
+    
+                            previousNotificationCount = response.notification_count; // Update previous count
+    
+                            var notificationMessages = '';
+                            $.each(response.notifications, function(index, notification) {
+                                var urlvar = notification.url;
+                                if (notification.admin_count > 0) {
+                                    notificationMessages += `
+                                        <li>
+                                            <a href="${urlvar}">
+                                                <div class="notification-content">
+                                                    <h2 style="color:#444;">${notification.message}</h2>
+                                                </div>
+                                            </a>
+                                        </li>`;
+                                }
+                            });
+    
+                            $('#notification-messages').html(notificationMessages);
+                        } else {
+                            $('#notification-count').text('');
+                            previousNotificationCount = 0; // Reset the counter when no notifications
+                        } 
+                    } 
+
+                    
+                   
+                },
+                error: function(err) {
+                    console.log("Error fetching notifications:", err);
+                }
+            });
+        }
+    }
+
+    $(document).ready(function() {
+        setInterval(fetch_new_hold, 2000); // Check notifications every 60 seconds
+    });
+</script>
+
 {{-- <script>
             
                 function fetch_new_hold(){
@@ -213,7 +320,7 @@
         </script> --}}
 
        
-        <script>
+        {{-- <script>
             var previousNotificationCount = 0;
         
             function playNotificationSound() {
@@ -316,9 +423,9 @@
             }
         
             $(document).ready(function() {
-                setInterval(fetch_new_hold, 10000); // Check notifications every 60 seconds
+                setInterval(fetch_new_hold, 2000); // Check notifications every 60 seconds
             });
-        </script>
+        </script> --}}
         
         {{-- <script>
             // Function to play notification sound
