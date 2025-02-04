@@ -238,7 +238,8 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         ->where('production_status_id', 1113)
         ->where('is_active',1)->count();
         
-        $accepted_and_sent_to_store = BusinessApplicationProcesses::where('off_canvas_status', 15)
+        $accepted_and_sent_to_store = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1114)
+        ->where('production_status_id', 1114)
         ->where('is_active',1)->count();
         $rejected_design_list_sent = BusinessApplicationProcesses::where('business_status_id',1115)->where('design_status_id', 1115)
         ->where('production_status_id', 1115)
