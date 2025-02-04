@@ -637,16 +637,16 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
                     // 'url' => 'list-new-requirements-received-for-design'
                    ];
 
-                   $design_rejected_prod_dept= NotificationStatus::where('off_canvas_status',15)
-                   ->where('prod_design_accepted','0')
-                   ->select('id')
-                   ->get();
-                   $design_rejected_prod_dept_count = $design_rejected_prod_dept->count();
+                //    $design_rejected_prod_dept= NotificationStatus::where('off_canvas_status',15)
+                //    ->where('prod_design_accepted','0')
+                //    ->select('id')
+                //    ->get();
+                //    $design_rejected_prod_dept_count = $design_rejected_prod_dept->count();
 
-                   $notifications[] = ['admin_count' => $design_rejected_prod_dept_count,
-                       'message' => 'Product Department Design Accepted',
-                      'url' => $baseUrl . '/designdept/list-accept-design-by-production'
-                   ];
+                //    $notifications[] = ['admin_count' => $design_rejected_prod_dept_count,
+                //        'message' => 'Product Department Design Accepted',
+                //       'url' => $baseUrl . '/designdept/list-accept-design-by-production'
+                //    ];
 
 
                     $design_accepted_prod_dept= NotificationStatus::where('off_canvas_status',15)
@@ -718,7 +718,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
             ];
 
             $material_received_by_quality = NotificationStatus::where('off_canvas_status',27)
-            ->where('received_material_to_quality','0')
+            ->where('quality_create_grn','0')
             ->select('id')
             ->get();
             $material_received_by_quality_count = $material_received_by_quality->count();
@@ -729,13 +729,13 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
             ];
 
             $material_received_from_store = NotificationStatus::where('off_canvas_status',17)
-            ->where('material_received_from_store','0')
+            ->where('issue_material_send_req_to_store','0')
             ->select('id')
             ->get();
             $material_received_from_store_count = $material_received_from_store->count();
 
             $notifications[] = ['admin_count' => $material_received_from_store_count,
-                'message' => 'Material Received For Production',
+                'message' => 'Issue Material List Received',
                  'url' => $baseUrl . '/storedept/list-material-received-from-quality'
             ];
 
@@ -774,8 +774,20 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
                 'message' => 'Purchase Orders Sent to Owner',
                'url' => $baseUrl . '/purchase/list-purchase-orders-sent-to-owner'
             ];
+
+            $list_purchase_orders_rejected_by_owner = NotificationStatus::where('off_canvas_status',23)
+            ->where('purchase_order_is_rejected_view','0')
+            ->select('id')
+            ->get();
+            $list_purchase_orders_rejected_by_owner_count = $list_purchase_orders_rejected_by_owner->count();
+
+            $notifications[] = ['admin_count' => $list_purchase_orders_rejected_by_owner_count,
+                'message' => 'Purchase Order Rejected by Owner',
+               'url' => $baseUrl . '/purchase/list-purchase-orders-sent-to-owner'
+            ];
+
             $list_approved_purchase_orders_owner= NotificationStatus::where('off_canvas_status',24)
-            ->where('purchase_order_is_view_po','0')
+            ->where('purchase_order_is_accepted_by_view','0')
             ->select('id')
             ->get();
             $list_approved_purchase_orders_owner_count = $list_approved_purchase_orders_owner->count();
@@ -806,7 +818,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
                 'message' => 'Material Received Quality to Store Department',
                 'url' => $baseUrl . '/purchase/list-material-received-from-quality-po-tracking'
             ];
-            $count = $received_requistion_req_count + $list_purchase_orders_sent_to_owner_count + $list_approved_purchase_orders_owner_count + $po_send_to_vendor_count +  $visible_grn_material_received_store_count;
+            $count = $received_requistion_req_count + $list_purchase_orders_sent_to_owner_count + $list_approved_purchase_orders_owner_count +$list_purchase_orders_rejected_by_owner_count + $po_send_to_vendor_count +  $visible_grn_material_received_store_count;
         }
         elseif($ses_userId == '7'){ //Security Department
             $po_send_to_vendor_visible_security= NotificationStatus::where('off_canvas_status',25)
@@ -823,8 +835,8 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         }
         elseif($ses_userId == '8'){ //Quality Department
           
-            $po_material_received_by_quality= NotificationStatus::where('off_canvas_status',25)
-            ->where('quality_po_material_visible','0')
+            $po_material_received_by_quality= NotificationStatus::where('off_canvas_status',26)
+            ->where('security_create_date_pass','0')
             ->select('id')
             ->get();
             $po_material_received_by_quality_count = $po_material_received_by_quality->count();
@@ -857,6 +869,16 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
                 'message' => 'Received Logistics List',
                 'url' => $baseUrl . '/financedept/recive-logistics-list'
             ];
+            // $recived_store_to_fianance_sr_grn= NotificationStatus::where('off_canvas_status',30)
+            // ->where('prod_store_sr_gr_send_fianance','0')
+            // ->select('id')
+            // ->get();
+            // $recived_store_to_fianance_sr_grn_count = $recived_store_to_fianance_sr_grn->count();
+
+            // $notifications[] = ['admin_count' => $recived_store_to_fianance_sr_grn_count,
+            //     'message' => 'Received Logistics List',
+            //     'url' => $baseUrl . '/financedept/recive-logistics-list'
+            // ];
             $count = $recived_logistics_to_fianance_count;
         }
         elseif($ses_userId == '11'){ //logistics

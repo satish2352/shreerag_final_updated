@@ -563,12 +563,12 @@
                                     New Requirements</span></a>
                         </li>
 
-                        <li class="nav-item {{ request()->is('storedept/list-material-sent-to-prod') ? 'active' : '' }}">
+                        {{-- <li class="nav-item {{ request()->is('storedept/list-material-sent-to-prod') ? 'active' : '' }}">
                             <a href="{{ route('list-material-sent-to-prod') }}">
                                 <i class="fa big-icon fa-paper-plane icon-wrap"></i>
                                 <span class="mini-click-non">Requirements Sent To Production</span>
                             </a>
-                        </li>
+                        </li> --}}
 
                         <li class="nav-item {{ request()->is('storedept/list-material-sent-to-purchase') ? 'active' : '' }}">
                             <a href="{{ route('list-material-sent-to-purchase') }}">

@@ -169,6 +169,24 @@ class AllListController extends Controller
     public function submitFinalPurchaseOrder( $id ) {
         try {
             $data_output = $this->service->getPurchaseOrderBusinessWise( $id );
+         
+            if ( $data_output->isNotEmpty() ) {
+                foreach ( $data_output as $data ) {
+                    $business_id = $data->business_details_id;
+
+                    if ( !empty( $business_id ) ) {
+                        $update_data[ 'is_view' ] = '1';
+                        AdminView::where( 'is_view', '0' )
+                        ->where( 'business_details_id', $business_id )
+                        ->update( $update_data );
+                    }
+                }
+            } else {
+                return view( 'organizations.business.list.list-purchase-order-approved-bussinesswise', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ] );
+            }
             return view( 'organizations.business.list.list-purchase-order-approved-bussinesswise', compact( 'data_output' ) );
         } catch ( \Exception $e ) {
             return $e;
@@ -294,16 +312,13 @@ class AllListController extends Controller
         try {
             // Fetch data from the service layer
             $all_gatepass = $this->service->getOwnerReceivedGatePass() ?? collect();
-            // Ensure it's at least an empty collection
-
-        // If data exists, update the `is_view` status
         if ($all_gatepass->isNotEmpty()) {
             foreach ($all_gatepass as $data) {
-                $business_id = $data->id;
+                $business_id = $data->business_details_id;
                 if (!empty($business_id)) {
                     $update_data['is_view'] = '1';
                     AdminView::where('is_view', '0')
-                        ->where('business_id', $business_id)
+                        ->where('business_details_id', $business_id)
                         ->update($update_data);
                 }
             }
@@ -332,23 +347,6 @@ class AllListController extends Controller
     {
         try {
             $data_output = $this->service->getAllListMaterialSentFromQualityToStoreGeneratedGRN();
-           
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->id; 
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('business_details_id', $business_id)
-                            ->update($update_data);
-                    }
-                }
-            } else {
-                return view('organizations.business.list.list-owner-checked-material-sent-to-store', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
             return view('organizations.business.list.list-owner-checked-material-sent-to-store', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
@@ -358,6 +356,22 @@ class AllListController extends Controller
     {
         try {
             $data_output = $this->service->getAllListMaterialSentFromQualityToStoreGeneratedGRNBusinessWise($id);
+            if ($data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
+                    $business_id = $data->business_details_id; 
+                    if (!empty($business_id)) {
+                        $update_data['is_view'] = '1';
+                        AdminView::where('is_view', '0')
+                            ->where('business_details_id', $business_id)
+                            ->update($update_data);
+                    }
+                }
+            } else {
+                return view('organizations.business.list.list-owner-checked-material-sent-to-store-businesswise', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
             return view('organizations.business.list.list-owner-checked-material-sent-to-store-businesswise', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
@@ -386,11 +400,11 @@ class AllListController extends Controller
             $data_output = $this->service->getOwnerFinalAllCompletedProductionLogistics();
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
-                    $business_id = $data->id; 
+                    $business_id = $data->business_details_id; 
                     if (!empty($business_id)) {
                         $update_data['is_view'] = '1';
                         AdminView::where('is_view', '0')
-                            ->where('business_id', $business_id)
+                            ->where('business_details_id', $business_id)
                             ->update($update_data);
                     }
                 }
@@ -409,14 +423,13 @@ class AllListController extends Controller
     {
         try {
             $data_output = $this->service->getOwnerAllListBusinessReceivedFromLogistics();
-           
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
                     $business_id = $data->business_details_id; 
                     if (!empty($business_id)) {
                         $update_data['is_view'] = '1';
                         AdminView::where('is_view', '0')
-                            ->where('id', $business_id)
+                            ->where('business_details_id', $business_id)
                             ->update($update_data);
                     }
                 }
@@ -441,7 +454,7 @@ class AllListController extends Controller
                     if (!empty($business_id)) {
                         $update_data['is_view'] = '1';
                         AdminView::where('is_view', '0')
-                            ->where('id', $business_id)
+                            ->where('business_details_id', $business_id)
                             ->update($update_data);
                     }
                 }
@@ -461,11 +474,11 @@ class AllListController extends Controller
             $data_output = $this->service->listProductDispatchCompletedFromDispatch();
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
-                    $business_id = $data->id; 
+                    $business_id = $data->business_details_id; 
                     if (!empty($business_id)) {
                         $update_data['is_view'] = '1';
                         AdminView::where('is_view', '0')
-                            ->where('id', $business_id)
+                            ->where('business_details_id', $business_id)
                             ->update($update_data);
                     }
                 }

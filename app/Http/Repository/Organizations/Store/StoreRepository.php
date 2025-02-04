@@ -687,7 +687,7 @@ public function updateProductMaterialWiseAddNewReq($request)
         AdminView::where('business_details_id', $business_application->business_details_id)
             ->update(['off_canvas_status' => 17, 'is_view' => '0']);
         NotificationStatus::where('business_details_id', $business_application->business_details_id)
-            ->update(['off_canvas_status' => 17]);
+            ->update(['off_canvas_status' => 17, 'material_received_from_store' => '0']);
 
         // If errors occurred, return them
         if (!empty($errorMessages)) {

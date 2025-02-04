@@ -364,7 +364,7 @@ class BusinessRepository
             $update_data_admin['off_canvas_status'] = 24;
             $update_data_business['off_canvas_status'] = 24;
             $update_data_admin['is_view'] = '0';
-            $update_data_business['purchase_order_is_view_po'] = 0;
+            $update_data_business['purchase_order_is_accepted_by_view'] = 0;
             AdminView::where('business_details_id', $business_application->business_details_id)
                 ->update($update_data_admin);
                 NotificationStatus::where('business_details_id', $business_application->business_details_id)
@@ -400,7 +400,7 @@ class BusinessRepository
             $update_data_admin['off_canvas_status'] = 23;
             $update_data_business['off_canvas_status'] = 23;
             $update_data_admin['is_view'] = '0';
-            $update_data_business['purchase_order_is_view_po'] = 0;
+            $update_data_business['purchase_order_is_rejected_view'] = 0;
             AdminView::where('business_details_id', $business_application->business_details_id)
                 ->update($update_data_admin);
                 NotificationStatus::where('business_details_id', $business_application->business_details_id)
@@ -544,6 +544,7 @@ public function getPurchaseOrderBusinessWise($id)
         $data_output = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
         ->select(
             'purchase_orders.id',
+            'purchase_orders.business_details_id',
             'purchase_orders.purchase_orders_id',         
             'vendors.vendor_name', 
             'vendors.vendor_company_name', 

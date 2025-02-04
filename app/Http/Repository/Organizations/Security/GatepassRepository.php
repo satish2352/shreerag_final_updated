@@ -105,7 +105,7 @@ class GatepassRepository
     
             $update_data_business = [
                 'off_canvas_status' => 26,
-                'po_send_to_vendor_visible_security' => '0'
+                'security_create_date_pass' => '0'
             ];
     
             // Update AdminView table

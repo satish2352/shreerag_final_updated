@@ -77,7 +77,7 @@ public function getAllListMaterialRecieved(Request $request)
                 if (!empty($business_id)) {
                     $update_data['po_send_to_vendor_visible_security'] = '1';
                     NotificationStatus::where('po_send_to_vendor_visible_security', '0')
-                        ->where('id', $business_id)
+                        ->where('business_details_id', $business_id)
                         ->update($update_data);
                 }
             }

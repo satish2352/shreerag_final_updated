@@ -367,27 +367,6 @@ class AllListRepositor
   public function getPurchaseOrderBusinessWise($id)
   {
       try {
-          // $data_output = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
-          // ->select(
-          //     'purchase_orders.id',
-          //     'purchase_orders.purchase_orders_id',         
-          //     'vendors.vendor_name', 
-          //     'vendors.vendor_company_name', 
-          //     'vendors.vendor_email', 
-          //     'vendors.vendor_address', 
-          //     'vendors.contact_no', 
-          //     'vendors.gst_no', 
-          //     'purchase_orders.is_active'
-          // )
-          // ->where('purchase_orders.business_id', $id)
-          // // ->get(); 
-  
-          // // ->where('business_id', $id)
-          // ->whereNull('purchase_status_from_owner')
-          // ->orWhere('purchase_status_from_owner', config('constants.HIGHER_AUTHORITY.HALF_APPROVED_PO_FROM_PURCHASE'))
-  
-          // ->get(); // Added to execute the query and get results
-       
         $array_to_be_check = [config('constants.HIGHER_AUTHORITY.APPROVED_PO_FROM_PURCHASE')];
         $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
           $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
@@ -425,6 +404,7 @@ class AllListRepositor
             'businesses.remarks',
             'businesses.is_active',
             'production.business_id',
+            'production.business_details_id',
             // 'design_revision_for_prod.reject_reason_prod',
             // 'designs.bom_image',
             // 'designs.design_image',
@@ -943,6 +923,7 @@ public function getAllListMaterialSentFromQualityToStoreGeneratedGRNBusinessWise
         ->distinct('businesses_details.id')  
         ->select(
             'purchase_orders.id',
+            'purchase_orders.business_details_id',
             'purchase_orders.purchase_orders_id',         
             'vendors.vendor_name', 
             'vendors.vendor_company_name', 

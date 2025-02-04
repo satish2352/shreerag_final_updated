@@ -386,33 +386,32 @@ class StoreController extends Controller
 public function generateSRstoreDept(Request $request)
 {
     try {
-        // Debugging: dump and die
-        // dd($request->all());
-
-        // Validate input
         if (empty($request->id)) {
             return redirect()->back()->with('error', 'GRN ID is required.');
         }
-
-        // Fetch the existing GRN record
         $gatepass = GRNModel::where('id', $request->id)->first();
+      
         if (!$gatepass) {
             return redirect()->back()->with('error', 'GRN not found.');
         }
-
-        // Generate a unique GRN number
         $store_receipt_no_generate = str_replace(['-', ':', ' '], '', date('YmdHis'));
-
-        // Update the existing GRN entry
         $gatepass->store_remark = $request->store_remark;
         $gatepass->store_receipt_no_generate = $store_receipt_no_generate;
         $gatepass->grn_status_sanction = config('constants.STORE_DEPARTMENT.STORE_RECIEPT_GENRATED_SENT_TO_FINANCE_GRN_WISE');
-        
 
         if ($gatepass->save()) {
             return redirect('storedept/list-material-received-from-quality')
                 ->with('success', 'GRN updated successfully.');
         }
+
+        // $update_data_admin['off_canvas_status'] = 30;
+        // $update_data_business['off_canvas_status'] = 30;
+        // $update_data_admin['is_view'] = '0';
+        // $update_data_business['prod_store_sr_gr_send_fianance'] = 0;
+        // AdminView::where('business_details_id', $business_application->business_details_id)
+        //     ->update($update_data_admin);
+        //     NotificationStatus::where('business_details_id', $business_application->business_details_id)
+        //     ->update($update_data_business);
 
         return redirect()->back()->with('error', 'Failed to update GRN.');
     } catch (\Exception $e) {

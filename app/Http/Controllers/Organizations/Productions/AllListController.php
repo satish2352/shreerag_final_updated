@@ -147,26 +147,7 @@ class AllListController extends Controller
 
     public function getAllListMaterialRecievedToProduction() {
         try {
-            $data_output = $this->service->getAllListMaterialRecievedToProduction();
-
-            if ( $data_output->isNotEmpty() ) {
-                foreach ( $data_output as $data ) {
-                    $business_details_id = $data->id;
-
-                    if ( !empty( $business_details_id ) ) {
-                        $update_data[ 'material_received_from_store' ] = '1';
-                        NotificationStatus::where( 'material_received_from_store', '0' )
-                        ->where( 'business_details_id', $business_details_id )
-                        ->update( $update_data );
-                    }
-                }
-            } else {
-                return view( 'organizations.productions.product.list-recived-material', [
-                    'data_output' => [],
-                    'message' => 'No data found for designs received for correction'
-                ] );
-            }
-
+            $data_output = $this->service->getAllListMaterialRecievedToProduction();           
             return view( 'organizations.productions.product.list-recived-material', compact( 'data_output' ) );
         } catch ( \Exception $e ) {
             return $e;
@@ -176,7 +157,24 @@ class AllListController extends Controller
     public function getAllListMaterialRecievedToProductionBusinessWise( $id ) {
         try {
             $data_output = $this->service->getAllListMaterialRecievedToProductionBusinessWise( $id );
+        
+            if ( $data_output->isNotEmpty() ) {
+                foreach ( $data_output as $data ) {
+                    $business_details_id = $data->business_details_id;
 
+                    if ( !empty( $business_details_id ) ) {
+                        $update_data[ 'material_received_from_store' ] = '1';
+                        NotificationStatus::where( 'material_received_from_store', '0' )
+                        ->where( 'business_details_id', $business_details_id )
+                        ->update( $update_data );
+                    }
+                }
+            } else {
+                return view( 'organizations.productions.product.list-recived-bussinesswise', [
+                    'data_output' => [],
+                    'message' => 'No data found for designs received for correction'
+                ] );
+            }
             return view( 'organizations.productions.product.list-recived-bussinesswise', compact( 'data_output' ) );
         } catch ( \Exception $e ) {
             return $e;

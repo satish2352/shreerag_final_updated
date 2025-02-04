@@ -399,7 +399,16 @@ public function updateProductMaterial($request) {
                 }
             }
         }
+    // Update admin view and notification status with the new off canvas status
+    $update_data_admin['off_canvas_status'] = 17;
+    $update_data_business['off_canvas_status'] = 17;
+    $update_data_admin['is_view'] = '0';
+    $update_data_business['material_received_from_store'] = '0';
+    AdminView::where('business_details_id', $dataOutput_Production->business_details_id)
+        ->update($update_data_admin);
 
+    NotificationStatus::where('business_details_id', $dataOutput_Production->business_details_id)
+        ->update($update_data_business);
         return [
             'status' => 'success',
             'message' => 'Production materials updated successfully.',

@@ -81,6 +81,7 @@ class PurchaseOrderRepository
   
               NotificationStatus::where('business_details_id', $businessOutput->business_details_id)
                   ->update($update_data_business);
+                  
             foreach ($request->addmore as $index => $item) {
                 $designDetails = new PurchaseOrderDetailsModel();
                 $designDetails->purchase_id = $last_insert_id;

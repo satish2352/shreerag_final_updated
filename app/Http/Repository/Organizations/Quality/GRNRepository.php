@@ -187,7 +187,7 @@ class GRNRepository
             ->update(['off_canvas_status' => 27, 'is_view' => '0']);
 
         NotificationStatus::where('business_details_id', $business_application->business_details_id)
-            ->update(['off_canvas_status' => 27]);
+            ->update(['off_canvas_status' => 27,  'quality_create_grn' => '0']);
 
         return [
             'ImageName' => $imageName ?? null,

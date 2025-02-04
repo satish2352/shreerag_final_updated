@@ -126,6 +126,9 @@ class ProductionController extends Controller
                 'dataOutputUnitMaster'=>$dataOutputUnitMaster,
                 'id' => $id
             ] );
+
+
+            
         } catch ( \Exception $e ) {
             return redirect()->back()->with( [ 'status' => 'error', 'msg' => $e->getMessage() ] );
         }
@@ -144,8 +147,8 @@ class ProductionController extends Controller
 
         try {
             $updateData = $this->service->updateProductMaterial( $request );
-            // dd( $updateData );
-            // die();
+         
+
             if ( $updateData[ 'status' ] == 'success' ) {
                 return redirect( 'proddept/list-material-recived' )->with( [ 'status' => 'success', 'msg' => $updateData[ 'message' ] ] );
             } else {

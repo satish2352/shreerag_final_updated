@@ -102,10 +102,10 @@ padding-left: 20px !important;
                                             <td>{{ ucwords($data->description) }}</td>
                                             <td>
                                                 <div style="display: inline-block; align-items: center;">
-                                                    <a href="{{route('edit-recived-bussinesswise', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed">Edit Product</button></a>
+                                                    <a href="{{route('edit-recived-bussinesswise', $data->business_details_id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed">Edit Product</button></a>
                                                 </div>
                                                 <div style="display: inline-block; align-items: center; margin-top: 10px;">
-                                                <a href="{{route('edit-recived-bussinesswise-quantity-tracking', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed">Production Completed</button></a>
+                                                <a href="{{route('edit-recived-bussinesswise-quantity-tracking', $data->business_details_id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed">Production Completed</button></a>
                                             </div></td>
                                            </tr>
                                         @endforeach

@@ -31,6 +31,8 @@ return new class extends Migration
         $table->boolean('visible_purchase_quality_to_store')->default(0);
         $table->boolean('purchase_order_is_view_po')->default(0);
         $table->boolean('po_is_approved_owner_view')->default(0);
+        $table->boolean('purchase_order_is_rejected_view')->default(0);
+        $table->boolean('purchase_order_is_accepted_by_view')->default(0);
         $table->boolean('po_send_to_vendor')->default(0);
         $table->boolean('po_send_to_vendor_visible_security')->default(0);
         $table->boolean('quality_po_material_visible')->default(0);
@@ -42,6 +44,8 @@ return new class extends Migration
         $table->boolean('logistics_to_fianance_visible')->default(0);
         $table->boolean('fianance_to_dispatch_visible')->default(0);
         $table->boolean('dispatch_completed')->default(0);
+        $table->boolean('prod_store_sr_gr_send_fianance')->default(0);
+        $table->boolean('prod_fianance_sr_gr_send_owner')->default(0);
         // $table->boolean('quality_create_grn')->default(0);
 
         $table->string('is_deleted')->default(false);

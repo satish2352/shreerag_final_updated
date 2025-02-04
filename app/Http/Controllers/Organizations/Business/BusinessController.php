@@ -10,7 +10,7 @@ use Config;
 use Carbon;
 use Illuminate\Validation\Rule;
 use App\Models\ {
-    Business,
+    Business,AdminView
 }
 ;
 use App\Http\Controllers\Organizations\CommanController;
@@ -185,7 +185,24 @@ class BusinessController extends Controller
     public function submitFinalPurchaseOrder( $id ) {
         try {
             $data_output = $this->service->getPurchaseOrderBusinessWise( $id );
+           
+            if ( $data_output->isNotEmpty() ) {
+                foreach ( $data_output as $data ) {
+                    $business_id = $data->business_details_id;
 
+                    if ( !empty( $business_id ) ) {
+                        $update_data[ 'is_view' ] = '1';
+                        AdminView::where( 'is_view', '0' )
+                        ->where( 'business_details_id', $business_id )
+                        ->update( $update_data );
+                    }
+                }
+            } else {
+                return view( 'organizations.business.list.list-purchase-order-particular-po', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ] );
+            }
             return view( 'organizations.business.list.list-purchase-order-particular-po', compact( 'data_output' ) );
         } catch ( \Exception $e ) {
             return $e;

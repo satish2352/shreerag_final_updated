@@ -31,7 +31,24 @@ class GRNController extends Controller
     public function index()
     {
         try {
-            $all_gatepass = $this->service->getAll();           
+            $all_gatepass = $this->service->getAll();
+            if ( $all_gatepass instanceof \Illuminate\Support\Collection && $all_gatepass->isNotEmpty() ) {
+                foreach ( $all_gatepass as $data ) {
+                    $business_id = $data->business_details_id;
+
+                    if ( !empty( $business_id ) ) {
+                        $update_data[ 'security_create_date_pass' ] = '1';
+                        NotificationStatus::where( 'security_create_date_pass', '0' )
+                        ->where( 'business_details_id', $business_id )
+                        ->update( $update_data );
+                    }
+                }
+            } else {
+                return view( 'organizations.purchase.list.list-purchase-order-approved-need-to-check', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ] );
+            }       
             return view('organizations.quality.grn.list-grn', compact('all_gatepass'));
         } catch (\Exception $e) {
             return $e;
@@ -259,8 +276,7 @@ public function getBalanceQuantity(Request $request)
         ->where('tbl_grn_po_quantity_tracking.purchase_order_id', $purchaseOrderId)
         ->where('tbl_grn_po_quantity_tracking.part_no_id', $partNoId)
         ->sum('tbl_grn_po_quantity_tracking.actual_quantity');
-dd( $sumActualQuantity);
-doe();
+
         // Get the total quantity from the purchase order details
         $totalQuantity = PurchaseOrderDetailsModel::leftJoin('tbl_part_item', function ($join) {
             $join->on('purchase_order_details.part_no_id', '=', 'tbl_part_item.id');  // Updated column name
@@ -420,6 +436,23 @@ doe();
 {
     try {
         $data_output = $this->service->getAllListMaterialSentFromQualityBusinessWise($request, $id);
+        if ($data_output->isNotEmpty()) {
+            foreach ($data_output as $data) {
+                $business_id = $data->business_details_id; 
+                if (!empty($business_id)) {
+                    $update_data['quality_create_grn'] = '1';
+                    NotificationStatus::where('quality_create_grn', '0')
+                        ->where('business_details_id', $business_id)
+                        ->update($update_data);
+                }
+            }
+        } else {
+            return view('organizations.quality.list.list-checked-material-sent-to-store', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
+        }
+
         return view('organizations.quality.list.list-checked-material-sent-to-store-businesswise', compact('data_output', 'id'));
     } catch (\Exception $e) {
         \Log::error('Error in Controller: ' . $e->getMessage());

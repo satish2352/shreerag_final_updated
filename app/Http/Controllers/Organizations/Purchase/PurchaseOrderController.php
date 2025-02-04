@@ -16,7 +16,8 @@ use App\Models\{
     PartItem,
     UnitMaster,
     HSNMaster,
-    PurchaseOrderDetailsModel
+    PurchaseOrderDetailsModel,
+    NotificationStatus
 };
 use App\Http\Controllers\Organizations\CommanController;
 
@@ -108,6 +109,25 @@ class PurchaseOrderController extends Controller
         ->get();
         // dd($getOutput);
         // die();
+
+        if ( $getOutput instanceof \Illuminate\Support\Collection && $getOutput->isNotEmpty() ) {
+            foreach ( $getOutput as $data ) {
+                $business_id = $data->business_details_id;
+// dd($business_id);
+// die();
+                if ( !empty( $business_id ) ) {
+                    $update_data[ 'purchase_order_is_rejected_view' ] = '1';
+                    NotificationStatus::where( 'purchase_order_is_rejected_view', '0' )
+                    ->where( 'business_details_id', $business_id )
+                    ->update( $update_data );
+                }
+            }
+        } else {
+            return view( 'organizations.purchase.list.list-all-po-sent-to-vendor-businesswise', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ] );
+        }
                return view(
             'organizations.purchase.addpurchasedetails.list-purchase-order-rejected',
             compact(
@@ -677,7 +697,7 @@ class PurchaseOrderController extends Controller
                 $message->text("Respected $vendorName, \n\nI hope this message finds you well.\n\nWe would like to place a purchase order with your company for the following items. Please find the details of the purchase order below:\n\nThank you!");
             });
     
-            return redirect('purchase/list-purchase-order-approved-sent-to-vendor')
+            return redirect('purchase/list-submited-po-to-vendor')
                 ->with('status', 'success')
                 ->with('msg', 'Purchase order mail sent to vendor.');
     

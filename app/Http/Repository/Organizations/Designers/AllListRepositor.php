@@ -43,6 +43,7 @@ class AllListRepositor  {
           // ->where('businesses.is_active',true)
           ->groupBy(
             'businesses.id',
+            'designs.business_details_id',
             'businesses.customer_po_number',
             'businesses.title',
             'businesses_details.id',
@@ -60,6 +61,7 @@ class AllListRepositor  {
         )
         ->select(
             'businesses.id',
+            'designs.business_details_id',
             'businesses_details.id',
             'businesses.title',
             'businesses.customer_po_number',
