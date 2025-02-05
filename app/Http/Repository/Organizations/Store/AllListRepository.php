@@ -729,7 +729,7 @@ public function getPurchaseOrderBusinessWise($id)
             DB::raw('GROUP_CONCAT(DISTINCT designs.bom_image) as bom_image'),
             DB::raw('GROUP_CONCAT(DISTINCT designs.design_image) as design_image'),
             'purchase_orders.is_active',
-            'grn_tbl.updated_at'
+            'grn_tbl.id'
         )
         ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
         ->groupBy(
@@ -746,9 +746,9 @@ public function getPurchaseOrderBusinessWise($id)
             'businesses_details.product_name',
             'businesses_details.description',
             'purchase_orders.is_active',
-            'grn_tbl.updated_at'
+            'grn_tbl.id'
         )
-        ->orderBy('grn_tbl.updated_at', 'desc')
+        ->orderBy('grn_tbl.id', 'desc')
         ->get();
 
         return $data_output;
