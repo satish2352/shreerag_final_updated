@@ -676,7 +676,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
                        'url' => $baseUrl . '/designdept/list-reject-design-from-prod'
                     ];
 
-                   $count = $received_for_design + $design_rejected_prod_dept_count+ $design_accepted_prod_count + $design_rejected_prod_count;
+                   $count = $received_for_design + $design_accepted_prod_count + $design_rejected_prod_count;
         }elseif($ses_userId == '4'){ //Production Department
                     $received_prod_req = NotificationStatus::where('off_canvas_status',12)
                     ->where('prod_is_view','0')
