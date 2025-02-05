@@ -822,7 +822,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
 
             $notifications[] = ['admin_count' => $visible_grn_material_received_store_count,
                 'message' => 'Material Received Quality to Store Department',
-                'url' => $baseUrl . '/purchase/list-material-received-from-quality-po-tracking'
+                'url' => $baseUrl . '/storedept/list-material-received-from-quality-po-tracking'
             ];
             $count = $received_requistion_req_count + $list_purchase_orders_sent_to_owner_count + $list_approved_purchase_orders_owner_count +$list_purchase_orders_rejected_by_owner_count + $po_send_to_vendor_count +  $visible_grn_material_received_store_count;
         }
