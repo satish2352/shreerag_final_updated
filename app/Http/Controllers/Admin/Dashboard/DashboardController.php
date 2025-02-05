@@ -835,7 +835,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
 
             $notifications[] = ['admin_count' => $po_send_to_vendor_visible_security_count,
                 'message' => 'Search By PO No',
-                'url' => $baseUrl . '/securitydept/list-all-po-number'
+                'url' => $baseUrl . '/securitydept/search-by-po-no'
             ];
             $count = $po_send_to_vendor_visible_security_count;
         }
