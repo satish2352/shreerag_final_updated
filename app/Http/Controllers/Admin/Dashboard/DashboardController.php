@@ -742,7 +742,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
 
             $notifications[] = ['admin_count' => $material_received_from_store_count,
                 'message' => 'Issue Material List Received',
-                 'url' => $baseUrl . '/storedept/list-material-received-from-quality'
+                 'url' => $baseUrl . '/storedept/list-accepted-design-from-prod'
             ];
 
 
@@ -836,6 +836,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
             $notifications[] = ['admin_count' => $po_send_to_vendor_visible_security_count,
                 'message' => 'Search By PO No',
                 'url' => $baseUrl . '/securitydept/search-by-po-no'
+
             ];
             $count = $po_send_to_vendor_visible_security_count;
         }
