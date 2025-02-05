@@ -230,7 +230,8 @@ class AllListController extends Controller
         DB::raw('MAX(purchase_order_details.description) as po_description'),
         DB::raw('MAX(purchase_order_details.rate) as po_rate'),
         DB::raw('MAX(purchase_order_details.discount) as po_discount'),
-        'tbl_grn_po_quantity_tracking.created_at' // Add created_at to SELECT
+        'tbl_grn_po_quantity_tracking.created_at', // Add created_at to SELECT
+        'tbl_grn_po_quantity_tracking.updated_at'
     )
     ->groupBy(
         'tbl_grn_po_quantity_tracking.purchase_order_id',
@@ -241,8 +242,10 @@ class AllListController extends Controller
         'tbl_part_item.part_number',
         'tbl_unit.name',
         'purchase_order_details.quantity',
-        'tbl_grn_po_quantity_tracking.created_at' // Add created_at to GROUP BY
+        'tbl_grn_po_quantity_tracking.created_at', // Add created_at to GROUP BY
+        'tbl_grn_po_quantity_tracking.updated_at'
     )
+    ->orderBy('tbl_grn_po_quantity_tracking.updated_at', 'desc')
     ->get();
 
                 // dd($purchase_order_details_data);
