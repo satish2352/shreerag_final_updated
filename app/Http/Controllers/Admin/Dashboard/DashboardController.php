@@ -32,6 +32,8 @@ use App\Models\ {
     NotificationStatus,
     RolesModel,
     ProductionModel,
+    DeliveryChalan,
+    ReturnableChalan,
 //     Gallery,
 //     AdditionalSolutions,
 //     OurSolutions,
@@ -259,9 +261,9 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         ->where('production_status_id', 1114)->where('off_canvas_status', 15)
         ->where('is_active',1)->count();
 
-        $material_sent_to_production = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
-        ->where('production_status_id', 1119)->where('store_status_id', 1118)
-        ->where('is_active',1)->count();
+        // $material_sent_to_production = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
+        // ->where('production_status_id', 1119)->where('store_status_id', 1118)
+        // ->where('is_active',1)->count();
 
         
         $material_for_purchase = BusinessApplicationProcesses::where('business_status_id',1123)->where('design_status_id', 1114)
@@ -274,7 +276,8 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         $rejected_chalan = BusinessApplicationProcesses::where('business_status_id',1116)->where('design_status_id', 1116)
         ->where('production_status_id', 1116)
         ->where('is_active',1)->count();
-
+        $delivery_chalan = DeliveryChalan::where('is_active',1)->count();
+        $returnable_chalan = ReturnableChalan::where('is_active',1)->count();
         // $BOM_recived_for_purchase= BusinessApplicationProcesses::where('business_status_id',1123)->where('design_status_id', 1114)
         // ->where('production_status_id', 1117)->where('store_status_id',1123)
         // ->where('is_active',1)->count();
@@ -392,10 +395,12 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
          ];
          $store_dept_counts = [
             'material_need_to_sent_to_production' => $material_need_to_sent_to_production,
-            'material_sent_to_production' => $material_sent_to_production,
+            // 'material_sent_to_production' => $material_sent_to_production,
             'material_for_purchase' => $material_for_purchase,
             'material_received_from_quality' => $material_received_from_quality,
             'rejected_chalan' => $rejected_chalan,
+            'delivery_chalan' => $delivery_chalan,
+            'returnable_chalan' => $returnable_chalan,
          ];
          $purchase_dept_counts = [
             'BOM_recived_for_purchase' => $BOM_recived_for_purchase,

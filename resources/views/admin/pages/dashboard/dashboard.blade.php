@@ -808,7 +808,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-sm-6 col-12">
+                            {{-- <div class="col-xl-4 col-sm-6 col-12">
                                 <div class="card shadow border-0">
                                     <div class="card-body">
                                         <div class="row border-bottom">
@@ -837,7 +837,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-xl-4 col-sm-6 col-12">
                                 <div class="card shadow border-0">
                                     <div class="card-body">
@@ -868,8 +868,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row mt-3">
                             <div class="col-xl-4 col-sm-6 col-12">
                                 <div class="card shadow border-0">
                                     <div class="card-body">
@@ -900,6 +898,9 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row mt-3">
+                            
                             <div class="col-xl-4 col-sm-6 col-12">
                                 <div class="card shadow border-0">
                                     <div class="card-body">
@@ -920,6 +921,67 @@
                                         </div>
                                         <div class="mt-2 mb-0 text-sm">
                                             <a href="{{ route('list-rejected-chalan') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Delivery Chalan</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $store_dept_counts['delivery_chalan'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-delivery-chalan') }}">
+                                                <span
+                                                    class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2">
+                                                <span
+                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Returnable Chalan</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $store_dept_counts['returnable_chalan'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-returnable-chalan') }}">
                                                 <span
                                                     class="badge badge-pill bg-soft-success text-success me-2">
                                                     <i class="fa-solid fa-arrow-right"></i> </span>
