@@ -258,6 +258,7 @@ class ProductionRepository  {
             ->leftJoin('tbl_unit', 'pd.unit', '=', 'tbl_unit.id')
             ->where('businesses_details.id', $id)
             ->where('businesses_details.is_active', true)
+            ->where('businesses_details.is_deleted', 0)
             ->select(
                 'businesses_details.id',
                 'pd.id as pd_id',
@@ -315,6 +316,7 @@ class ProductionRepository  {
                 ->where('businesses_details.id', $id)
                 // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
                 ->where('businesses_details.is_active', true)
+                ->where('businesses_details.is_deleted', 0)
                 ->select(
                     'businesses_details.id',
                     'businesses_details.product_name',

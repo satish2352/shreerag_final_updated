@@ -45,6 +45,7 @@ class AllListRepository
               })
               ->whereIn('business_application_processes.store_status_id', $array_to_be_check)
               ->where('businesses_details.is_active', true)
+              ->where('businesses_details.is_deleted', 0)
               ->groupBy(
                   // 'businesses.id',
                   'production.business_details_id',
@@ -201,6 +202,7 @@ class AllListRepository
         // ->distinct('businesses.id')
         ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check)
         ->where('businesses.is_active', true)
+        ->where('businesses.is_deleted', 0)
         ->groupBy(
           'businesses_details.id',            // Unique identifier
           'businesses_details.product_name', // Relevant for grouping
@@ -257,6 +259,7 @@ class AllListRepository
           ->where('businesses_details.id', $id)
           ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check)
           ->where('businesses.is_active', true)
+          ->where('businesses.is_deleted', 0)
           // ->distinct('business_application_processes.id')
           ->select(
             'purchase_orders.purchase_orders_id as purchase_order_id',
@@ -313,6 +316,7 @@ class AllListRepository
          ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
          // ->distinct('businesses.id')
          ->where('businesses.is_active', true)
+         ->where('businesses.is_deleted', 0)
          // ->groupBy( 'businesses_details.id',
          // 'businesses_details.product_name','businesses_details.description',
          // 'purchase_orders.updated_at')
@@ -367,7 +371,7 @@ class AllListRepository
           ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
 
           ->where('businesses.is_active', true)
-        
+          ->where('businesses.is_deleted', 0)
           // ->distinct('business_application_processes.id')
           ->select(
             'purchase_orders.purchase_orders_id as purchase_order_id',
@@ -420,6 +424,7 @@ public function getAllListPurchaseOrderTowardsOwner(){
   ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
   ->whereNull('purchase_orders.purchase_status_from_owner')
   ->where('businesses.is_active', true)
+  ->where('businesses.is_deleted', 0)
   ->groupBy(
       'businesses_details.id',            // Unique identifier
       'businesses_details.product_name', // Relevant for grouping

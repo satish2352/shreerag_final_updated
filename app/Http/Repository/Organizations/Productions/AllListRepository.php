@@ -28,6 +28,7 @@ class AllListRepository  {
           })
           ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
           ->where('businesses.is_active', true)
+          ->where('businesses.is_deleted', 0)
           ->groupBy('businesses.id', 'businesses.customer_po_number', 'businesses.title', 'businesses.remarks', 'businesses.is_active', 'production.business_id', 'businesses.updated_at')
           ->select(
               'businesses.id',
@@ -70,6 +71,7 @@ public function getAllNewRequirementBusinessWise($business_id) {
           // ->whereNull('business_application_processes.business_details_status_id')
           ->whereNull('production.is_approved_production')
           ->where('businesses_details.is_active', true)
+          ->where('businesses_details.is_deleted', 0)
           ->distinct('businesses_details.id')
           ->select(
             'production.business_details_id',
@@ -256,6 +258,7 @@ public function getAllNewRequirementBusinessWise($business_id) {
       })
       ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
       ->where('businesses.is_active', true)
+      ->where('businesses.is_deleted', 0)
       ->groupBy(
           'businesses.id',
           'businesses_details.id',
@@ -313,6 +316,7 @@ public function getAllNewRequirementBusinessWise($business_id) {
             })
             ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
             ->where('businesses.is_active', true)
+            ->where('businesses.is_deleted', 0)
             ->select(
                 'business_application_processes.id',
                 'businesses.id as business_id',
@@ -381,6 +385,7 @@ public function getAllListMaterialRecievedToProduction()
         })
         ->where('production.production_status_quantity_tracking', 'incomplete')
         ->where('businesses.is_active', true)
+        ->where('businesses.is_deleted', 0)
         ->distinct('businesses.id')
         ->groupBy(
             'businesses.customer_po_number',
@@ -424,6 +429,7 @@ public function getAllListMaterialRecievedToProductionBusinessWise($id)
             })
             ->where('businesses_details.id', $id)
             ->where('businesses_details.is_active', true)
+            ->where('businesses.is_deleted', 0)
             ->distinct('businesses.id')
             ->select(
                 'business_application_processes.id',
@@ -608,6 +614,7 @@ public function getAllCompletedProduction() {
             ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status', $array_to_be_quantity_tracking)
             ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
             ->where('businesses.is_active', true)
+            ->where('businesses.is_deleted', 0)
             ->select(
                 'tbl_customer_product_quantity_tracking.id',
                 'businesses.customer_po_number',
@@ -674,6 +681,7 @@ public function getAllCompletedProductionSendToLogistics()
               ->WhereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status', [3001, 3002, 3003, 3004, 3005]);
       })
       ->where('businesses.is_active', true)
+      ->where('businesses.is_deleted', 0)
       ->distinct('businesses.id')
       ->groupBy(
           'tbl_customer_product_quantity_tracking.id',
@@ -752,6 +760,7 @@ public function getAllCompletedProductionSendToLogisticsProductWise($id) {
           ->where('businesses_details.id', $id)
           // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
           ->where('businesses_details.is_active', true)
+          ->where('businesses_details.is_deleted', 0)
           ->select(
               'businesses_details.id',
               'businesses_details.product_name',

@@ -124,6 +124,7 @@ public function getAllListDesignRecievedForMaterial(){
                   ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check_production);
         })
         ->where('businesses.is_active', true)
+        ->where('businesses.is_deleted', 0)
         ->distinct('businesses.id')
         ->groupBy(
             'businesses.id',
@@ -195,6 +196,7 @@ public function getAllListDesignRecievedForMaterial(){
             $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
         })
         ->where('businesses_details.business_id', $decoded_business_id)
+        ->where('businesses_details.is_deleted', 0)
         ->distinct('businesses.id')
         ->where('production.is_approved_production', 1)
         ->where(function ($query) use ($array_to_be_check, $array_to_be_check_store, $array_to_be_check_store_after_quality, $array_to_be_check_production) {
@@ -358,6 +360,7 @@ public function getAllListDesignRecievedForMaterial(){
               })
               ->whereIn('business_application_processes.store_status_id', $array_to_be_check)
               ->where('businesses.is_active', true)
+              ->where('businesses.is_deleted', 0)
               ->groupBy([
                   'businesses_details.product_name',
                   'businesses_details.description',
@@ -469,6 +472,7 @@ public function getAllListMaterialReceivedFromQuality()
             ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
             // ->whereNull('business_application_processes.store_material_sent_date')
             ->where('businesses.is_active', true)
+            ->where('businesses.is_deleted', 0)
             ->select(
                 'businesses_details.id',
                 'businesses.title',
@@ -713,6 +717,7 @@ public function getPurchaseOrderBusinessWise($id)
             $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
         })
         ->where('businesses_details.id', $id)
+        ->where('businesses.is_deleted', 0)
         ->select(
             'grn_tbl.id',
             'grn_tbl.grn_date',
@@ -786,6 +791,7 @@ public function getAllListMaterialReceivedFromQualityPOTracking()
             ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
             // ->whereNull('business_application_processes.store_material_sent_date')
             ->where('businesses.is_active', true)
+            ->where('businesses.is_deleted', 0)
             ->select(
                 'businesses_details.id',
                 'businesses.title',
@@ -954,7 +960,7 @@ public function getAllListMaterialReceivedFromQualityPOTrackingBusinessWise($id)
 
             // Optional: Filter by business ID if required
             ->where('businesses_details.id', $id)
-
+            ->where('businesses_details.is_deleted', 0)
             // Group the results by GRN ID
             ->groupBy( 'purchase_orders.purchase_orders_id','tbl_grn_po_quantity_tracking.grn_id',   'purchase_orders.business_details_id','businesses_details.product_name', 
             'businesses_details.description',)
@@ -989,6 +995,7 @@ public function getAllInprocessProductProduction()
         })
         ->where('production.store_status_quantity_tracking', 'incomplete-store')
         ->where('businesses_details.is_active', true)
+        ->where('businesses_details.is_deleted', 0)
         ->groupBy(
             'businesses_details.id',
             'businesses_details.product_name',
