@@ -39,6 +39,7 @@ class AllListRepositor
                   $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
               })
               ->where('businesses_details.is_active', true)
+              ->where('businesses_details.is_deleted', 0)
               ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
               ->groupBy(
                   'businesses.id',
@@ -101,6 +102,7 @@ class AllListRepositor
         })
         ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
         ->where('businesses.is_active', true)
+        ->where('businesses.is_deleted', 0)
         ->select(
           'businesses.id',
           'businesses.title',
@@ -154,7 +156,7 @@ class AllListRepositor
           // ->where('production.is_approved_production', NULL)
         ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
         ->where('businesses.is_active', true)
-
+        ->where('businesses.is_deleted', 0)
         ->select(
           'businesses.id',
           'businesses.customer_po_number',
@@ -213,6 +215,7 @@ class AllListRepositor
           ->whereIn('business_application_processes.business_status_id', $array_to_be_check_business)
           ->where('business_application_processes.purchase_order_id', '0')
           ->where('businesses.is_active', true)
+          ->where('businesses.is_deleted', 0)
           ->distinct('business_application_processes.business_details_id')
           
           ->select(
@@ -286,6 +289,7 @@ class AllListRepositor
         ->whereNull('purchase_orders.grn_no')
         ->whereNull('purchase_orders.store_receipt_no')
         ->where('businesses.is_active', true)
+        ->where('businesses.is_deleted', 0)
         ->select(
           'business_application_processes.purchase_order_id',
           'businesses_details.id',
@@ -340,7 +344,7 @@ class AllListRepositor
         // ->whereIn('business_application_processes.business_status_id', $array_to_be_check_business)
         // ->orWhereIn('business_application_processes.purchase_status_from_purchase', $array_to_be_check_purchase)
         ->where('businesses.is_active', true)
-
+        ->where('businesses.is_deleted', 0)
         ->select(
           'business_application_processes.purchase_order_id',
           'businesses_details.id',
@@ -394,6 +398,7 @@ class AllListRepositor
           ->where('businesses_details.id', $id)
           ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check)
           ->where('businesses.is_active', true)
+          ->where('businesses.is_deleted', 0)
           ->distinct('business_application_processes.id')
           ->select(
             'purchase_orders.purchase_orders_id as purchase_order_id',
@@ -457,7 +462,7 @@ class AllListRepositor
         // ->whereIn('business_application_processes.business_status_id', $array_to_be_check_business)
         // ->orWhereIn('business_application_processes.purchase_status_from_purchase', $array_to_be_check_purchase)
         ->where('businesses.is_active', true)
-
+        ->where('businesses.is_deleted', 0)
         ->select(
           'business_application_processes.purchase_order_id',
           'businesses_details.id',
@@ -514,6 +519,7 @@ class AllListRepositor
           // ->where('business_application_processes.off_canvas_status', 23)
          
           ->where('businesses.is_active', true)
+          ->where('businesses.is_deleted', 0)
           ->distinct('purchase_orders.purchase_orders_id')
           ->select(
             'purchase_orders.purchase_orders_id as purchase_order_id',
@@ -738,6 +744,7 @@ public function loadDesignSubmittedForProductionBusinessWise($business_id)
             ->where('businesses_details.business_id', $decoded_business_id)
             ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
             ->where('businesses_details.is_active', true)
+            ->where('businesses_details.is_deleted', 0)
             ->select(
                 'business_application_processes.id',
                 'businesses.id as business_id',
@@ -806,7 +813,7 @@ public function getAllListSubmitedPurchaeOrderByVendorOwnerside(){
           ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
 
           ->where('businesses.is_active', true)
-        
+          ->where('businesses.is_deleted', 0)
           // ->distinct('business_application_processes.id')
           ->select(
             'purchase_orders.purchase_orders_id as purchase_order_id',
@@ -886,7 +893,7 @@ public function getAllListMaterialSentFromQualityToStoreGeneratedGRN()
             ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
             // ->whereIn('purchase_orders.store_receipt_no', $array_to_be_check_new)
             ->where('businesses.is_active', true)
-
+            ->where('businesses.is_deleted', 0)
             ->distinct('businesses.id')
             ->select(
                 // 'businesses.id',
@@ -922,6 +929,7 @@ public function getAllListMaterialSentFromQualityToStoreGeneratedGRNBusinessWise
             $join->on('purchase_orders.business_details_id', '=', 'businesses_details.id');
         })
         ->distinct('businesses_details.id')  
+        ->where('businesses_details.is_deleted', 0)
         ->select(
             'purchase_orders.id',
             'purchase_orders.business_details_id',
