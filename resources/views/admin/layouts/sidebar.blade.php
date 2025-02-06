@@ -200,7 +200,7 @@
                      class="nav-item {{ request()->is('owner/recive-owner-logistics-list') ? 'active' : '' }}">
                      <a href="{{ route('recive-owner-logistics-list') }}"><i
                              class="fa fa-receipt  icon-wrap" aria-hidden="true"></i> <span
-                             class="mini-click-non">Fianance Dept Production Recevied from Logistics Dept</span></a>
+                             class="mini-click-non">Fianance Dept Production Received from Logistics Dept</span></a>
                       </li>
 
                       <li
@@ -222,12 +222,12 @@
                                     class="fa big-icon fa-times-circle icon-wrap" aria-hidden="true"></i> <span
                                     class="mini-click-non">List Rejected Chalan</span></a>
                         </li>
-                           <li
+                           {{-- <li
                             class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') ? 'active' : '' }}">
                             <a href="{{ route('list-approved-purchase-orders-owner') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-rupee-sign icon-wrap" aria-hidden="true"></i> <span
                                     class="mini-click-non">Fianance Dept Received GRN and SR</span></a>
-                        </li> 
+                        </li>  --}}
                             <li
                                 class="nav-item {{ request()->is('owner/list-po-recived-for-approval-payment') ? 'active' : '' }}">
                                 <a href="{{ route('list-po-recived-for-approval-payment') }}" aria-expanded="false"><i

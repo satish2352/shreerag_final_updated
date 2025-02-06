@@ -591,7 +591,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
                     ->get();
                 $logistics_send_to_fianance_count = $logistics_send_to_fianance->count();
                 $notifications[] = ['admin_count' => $logistics_send_to_fianance_count,
-                'message' => 'Fianance Dept Product Recevied from Logistics Dept',
+                'message' => 'Fianance Dept Product Received from Logistics Dept',
               'url' => $baseUrl . '/owner/recive-owner-logistics-list',
                 ];
 
