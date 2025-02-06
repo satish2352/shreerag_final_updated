@@ -310,6 +310,7 @@ public function getAllListDesignRecievedForMaterial(){
         
         ->whereIn('business_application_processes.store_status_id',$array_to_be_check)
         ->where('businesses.is_active',true)
+        ->where('businesses.is_deleted', 0)
         ->select(
             'businesses.id',
             'businesses.title',

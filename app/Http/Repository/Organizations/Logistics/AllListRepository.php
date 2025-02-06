@@ -45,6 +45,7 @@ public function getAllCompletedProduction(){
       // ->whereNull('business_application_processes.logistics_status_id')====hide quantity tracking
       // ->whereIn('business_application_processes.logistics_status_id',$array_to_be_check_new)
       ->where('businesses.is_active',true)
+      ->where('businesses.is_deleted', 0)
       ->distinct('businesses_details.id')
       ->select(
           'tbl_customer_product_quantity_tracking.id',
@@ -177,6 +178,7 @@ public function getAllListSendToFiananceByLogistics(){
       // ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status',$array_to_be_check)
       
       ->where('businesses.is_active',true)
+      ->where('businesses.is_deleted', 0)
       // ->distinct('businesses_details.id')
       ->select(
         'tbl_customer_product_quantity_tracking.id',

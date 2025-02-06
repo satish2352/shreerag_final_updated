@@ -48,6 +48,7 @@ public function getAllReceivedFromFianance(){
 
       // ->whereIn('bap1.dispatch_status_id',$array_to_be_check)
       ->where('businesses.is_active',true)
+      ->where('businesses.is_deleted', 0)
       // ->distinct('businesses_details.id')
 ->select(
     'tbl_customer_product_quantity_tracking.id',
@@ -127,6 +128,7 @@ public function getAllDispatch(){
       ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status',$array_to_be_quantity_tracking)
       // ->whereIn('bap1.dispatch_status_id',$array_to_be_check)
       ->where('businesses.is_active',true)
+      ->where('businesses.is_deleted', 0)
       ->select(
         'tbl_customer_product_quantity_tracking.id',
         'businesses.customer_po_number',

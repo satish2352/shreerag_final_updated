@@ -10,7 +10,9 @@ class Business extends Model
     use HasFactory;
     protected $table = 'businesses';
     protected $primaryKey = 'id';
-
+    protected $fillable = [
+        'is_deleted',
+    ];
 
     // Example relationships
     public function businessDetails()

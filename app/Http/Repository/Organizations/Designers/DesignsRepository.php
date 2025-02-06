@@ -30,6 +30,7 @@ class DesignsRepository  {
               })
               ->whereIn('business_application_processes.design_status_id',$array_to_be_check)
               ->where('businesses.is_active',true)
+              ->where('businesses.is_deleted', 0)
               ->distinct('businesses.id')
               ->select(
                   'businesses.id',
@@ -121,6 +122,7 @@ class DesignsRepository  {
               
               ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
               ->where('businesses.is_active',true)
+              ->where('businesses.is_deleted', 0)
               ->groupBy('businesses.id', 'businesses.customer_po_number', 'businesses.title', 'businesses.remarks', 'businesses.is_active', 'production.business_id')
 
               ->select(

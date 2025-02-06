@@ -678,6 +678,7 @@ class AllListRepositor
 
           ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
           ->where('businesses.is_active',true)
+          ->where('businesses.is_deleted', 0)
           ->distinct('businesses.id')
           ->groupBy('businesses.id', 'businesses.customer_po_number', 'businesses.title',
            'businesses.remarks', 'businesses.is_active', 'production.business_id', 'businesses.updated_at'
@@ -969,6 +970,7 @@ public function getOwnerAllListMaterialRecievedToProduction(){
       })
       ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
       ->where('businesses.is_active',true)
+      ->where('businesses.is_deleted', 0)
       ->distinct('businesses.id')
       ->groupBy('businesses.id','businesses.customer_po_number','businesses.title','businesses_details.id','businesses_details.product_name',
       'businesses_details.description',
@@ -1011,6 +1013,7 @@ public function getOwnerAllCompletedProduction(){
       })
       ->whereIn('bap1.production_status_id',$array_to_be_check)
       ->where('businesses.is_active',true)
+      ->where('businesses.is_deleted', 0)
       ->distinct('businesses.id')
       ->groupBy('businesses.id','businesses.customer_po_number','businesses_details.id','businesses_details.product_name',
       'businesses_details.description',
@@ -1053,6 +1056,7 @@ public function getOwnerFinalAllCompletedProductionLogistics(){
     })
     ->whereIn('bap1.production_status_id',$array_to_be_check)
     ->where('businesses.is_active',true)
+    ->where('businesses.is_deleted', 0)
     ->distinct('businesses.id')
     ->groupBy('tbl_customer_product_quantity_tracking.id','tbl_customer_product_quantity_tracking.business_id','tbl_customer_product_quantity_tracking.business_details_id','businesses.customer_po_number','businesses_details.id','businesses_details.product_name',
     'businesses_details.description',
@@ -1110,6 +1114,7 @@ public function getOwnerAllListBusinessReceivedFromLogistics(){
       config('constants.FINANCE_DEPARTMENT.LIST_LOGISTICS_RECEIVED_FROM_LOGISTICS')
   ])
   ->where('businesses.is_active', true)
+  ->where('businesses.is_deleted', 0)
   ->groupBy(
       'tbl_customer_product_quantity_tracking.id',
       'tbl_customer_product_quantity_tracking.business_id',
@@ -1187,6 +1192,7 @@ public function getOwnerAllListBusinessFianaceSendToDispatch(){
     ->whereIn('bap1.dispatch_status_id',$array_to_be_check)
     // ->whereIn('purchase_orders.store_receipt_no',$array_to_be_check_new)
     ->where('businesses.is_active',true)
+    ->where('businesses.is_deleted', 0)
     // ->distinct('businesses_details.id')
     ->groupBy(
       'tbl_customer_product_quantity_tracking.id',
@@ -1259,6 +1265,7 @@ public function listProductDispatchCompletedFromDispatch(){
       ->whereIn('bap1.dispatch_status_id',$array_to_be_check)
       // ->whereIn('purchase_orders.store_receipt_no',$array_to_be_check_new)
       ->where('businesses.is_active',true)
+      ->where('businesses.is_deleted', 0)
       ->distinct('businesses_details.id')
       ->groupBy(
         'tbl_customer_product_quantity_tracking.id','tbl_customer_product_quantity_tracking.business_id',

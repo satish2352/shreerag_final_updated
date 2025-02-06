@@ -447,6 +447,7 @@ class AllListRepository
       // ->whereIn('bap1.dispatch_status_id',$array_to_be_check)
       // ->whereIn('purchase_orders.store_receipt_no',$array_to_be_check_new)
       ->where('businesses.is_active',true)
+      ->where('businesses.is_deleted', 0)
       ->where('tbl_customer_product_quantity_tracking.fianace_list_status','Send_Dispatch')
       // ->distinct('businesses_details.id')
     ->select(

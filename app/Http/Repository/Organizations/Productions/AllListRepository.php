@@ -147,6 +147,7 @@ public function getAllNewRequirementBusinessWise($business_id) {
           })
             ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
             ->where('businesses.is_active',true)
+            ->where('businesses.is_deleted', 0)
             ->groupBy([
               'businesses.id', 
               'businesses.customer_po_number', 
@@ -208,6 +209,7 @@ public function getAllNewRequirementBusinessWise($business_id) {
           // ->orWhereIn('purchase_orders.quality_status_id',$array_to_be_check_quality)
           // ->where('businesses.is_active',true)
           ->where('businesses_details.is_active', true)
+          ->where('businesses_details.is_deleted', 0)
           ->distinct('businesses_details.id')
           // ->where('businesses.is_active',true)
           ->select(

@@ -39,6 +39,7 @@ class AllListRepositor  {
           ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
          
           ->where('businesses_details.is_active', true)
+          ->where('businesses_details.is_deleted', 0)
           ->distinct('businesses_details.id')
           // ->where('businesses.is_active',true)
           ->groupBy(
@@ -111,6 +112,7 @@ public function listDesignReport(){
         // ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
        
         ->where('businesses_details.is_active', true)
+        ->where('businesses_details.is_deleted', 0)
         ->distinct('businesses_details.id')
         // ->where('businesses.is_active',true)
        ->groupBy(

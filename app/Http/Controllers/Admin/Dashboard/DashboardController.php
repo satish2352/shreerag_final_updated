@@ -202,6 +202,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
               })
               ->whereIn('business_application_processes.design_status_id',$array_to_be_check)
               ->where('businesses.is_active',true)
+              ->where('businesses.is_deleted', 0)
               ->distinct('businesses.id')
              ->count();
 
