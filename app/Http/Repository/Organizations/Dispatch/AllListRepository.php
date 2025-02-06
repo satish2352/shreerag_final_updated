@@ -189,7 +189,7 @@ public function getAllDispatchClosedProduct()
             ->whereIn('tcqt1.quantity_tracking_status', $array_to_be_quantity_tracking)
             ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
             ->where('businesses.is_active', true)
-
+            ->where('businesses.is_deleted', 0)
             ->select(
                 'businesses_details.id as business_details_id',
                 'businesses.customer_po_number',
