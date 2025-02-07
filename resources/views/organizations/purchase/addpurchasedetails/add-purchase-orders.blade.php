@@ -32,12 +32,14 @@
 
         .select2-container .select2-selection--single {
             height: 34px !important;
+            width:100% !important;
         }
 
         .select2-container--default .select2-selection--single {
             border: 1px solid #ccc !important;
             border-radius: 0px !important;
         }
+        .
         /* Add this CSS to ensure error message visibility */
 
 .reverse-label {
@@ -236,7 +238,7 @@
                                                         <td class="reverse-label">
                                                             <select
                                                                 class="form-control mb-2 part_no_id select2"name="addmore[0][part_no_id]"
-                                                                id="" style="min-width:100px">
+                                                                id="" style="width:100%">
                                                                 <option value="" default>Select Description</option>
                                                                 @foreach ($dataOutputPartItem as $data)
                                                                     <option value="{{ $data['id'] }}">
@@ -247,11 +249,11 @@
                                                         </td>
                                                         <td>
                                                             <input class="form-control hsn_name" name="addmore[0][hsn_id]"
-                                                                type="text" style="min-width:80px" disabled>
+                                                                type="text" style="min-width:100px" disabled>
 
                                                             <input type="hidden" class="form-control hsn_id"
                                                                 name="addmore[0][hsn_id]" type="text"
-                                                                style="min-width:80px">
+                                                                style="min-width:100px">
                                                             {{-- <select class="form-control mb-2" name="addmore[0][hsn_id]"
                                                                 id="" style="min-width:100px">
                                                                 <option value="" default>Select HSN</option>
@@ -265,7 +267,7 @@
                                                         <td>
                                                             <input class="form-control description"
                                                                 name="addmore[0][description]" type="text"
-                                                                style="min-width:80px">
+                                                                style="min-width:100px">
                                                         </td>
                                                         {{-- <td>
                                         <input class="form-control due-date" placeholder="YYYY-MM-DD" name="addmore[0][due_date]" type="date"
@@ -273,7 +275,7 @@
                                     </td> --}}
                                                         <td>
                                                             <input class="form-control quantity"
-                                                                name="addmore[0][quantity]" style="width:70px"
+                                                                name="addmore[0][quantity]" style="width:100%"
                                                                 type="text">
                                                         </td>
                                                         {{-- <td>
@@ -281,7 +283,7 @@
                                     </td> --}}
                                                         <td>
                                                             <select class="form-control mb-2 unit" name="addmore[0][unit]"
-                                                                id="" style="min-width:80px">
+                                                                id="" style="min-width:100px">
                                                                 <option value="" default>Select Unit</option>
                                                                 @foreach ($dataOutputUnitMaster as $data)
                                                                     <option value="{{ $data['id'] }}">
@@ -292,11 +294,11 @@
                                                         </td>
                                                         <td>
                                                             <input class="form-control rate" name="addmore[0][rate]"
-                                                                style="width:80px" type="text">
+                                                            style="min-width:100px" type="text">
                                                         </td>
                                                         <td>
                                                             <select class="form-control discount"
-                                                                name="addmore[0][discount]" id="discount" style="min-width:80px">
+                                                                name="addmore[0][discount]" id="discount" style="min-width:100%">
                                                                 <option value="0">0 %</option>
                                                                 <option value="1">1 %</option>
                                                                 <option value="2">2 %</option>
@@ -352,7 +354,7 @@
                                                         </td>
                                                         <td>
                                                             <input class="form-control total_amount"
-                                                                name="addmore[0][amount]" readonly style="width:120px"
+                                                                name="addmore[0][amount]" readonly style="width:100%"
                                                                 type="text">
                                                         </td>
                                                         <td>
@@ -577,7 +579,7 @@
                 <input type="text" name="id" class="form-control" style="min-width:50px" readonly value="${i + 1}"> <!-- This will start numbering from 2 -->
             </td>
                       <td class="reverse-label">
-                    <select class="form-control part_no_id select2 mb-2" name="addmore[${i}][part_no_id]" id="" required>
+                    <select class="form-control part_no_id select2 mb-2" name="addmore[${i}][part_no_id]" id="" required style="width:100%">
                         <option value="" default>Select Description</option>
                         @foreach ($dataOutputPartItem as $data)
                             <option value="{{ $data['id'] }}">{{ $data['description'] }}</option>
@@ -593,11 +595,11 @@
                     </td>
                     
                     <td>
-                        <input class="form-control quantity" name="addmore[${i}][quantity]" style="width:80px" type="text" required>
+                        <input class="form-control quantity" name="addmore[${i}][quantity]" style="width:100%" type="text" required>
                     </td>
                   
                    <td>
-                             <select class="form-control mb-2 unit" name="addmore[${i}][unit]" required style="width:80px">
+                             <select class="form-control mb-2 unit" name="addmore[${i}][unit]" required style="width:100%">
                                 <option value="" default>Select Unit</option>
                                 @foreach ($dataOutputUnitMaster as $data)
                                     <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
@@ -607,7 +609,7 @@
                     
 
                     <td>
-                        <input class="form-control rate" name="addmore[${i}][rate]" style="width:80px" type="text" required>
+                        <input class="form-control rate" name="addmore[${i}][rate]" style="width:100%" type="text" required>
                     </td>
                      <td>
                                        <select class="form-control discount" name="addmore[${i}][discount]">
@@ -665,7 +667,7 @@
                                               </select>
                                     </td>
                     <td>
-                        <input class="form-control total_amount" name="addmore[${i}][amount]" readonly style="width:120px" type="text" required>
+                        <input class="form-control total_amount" name="addmore[${i}][amount]" readonly style="width:100%" type="text" required>
                     </td>
                     <td>
                         <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete" data-repeater-delete>

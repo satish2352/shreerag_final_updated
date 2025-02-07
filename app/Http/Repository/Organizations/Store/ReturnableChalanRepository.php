@@ -14,9 +14,6 @@ use Config;
 
 class ReturnableChalanRepository 
 {
-
-
-
     public function getDetailsForPurchase($id)
     {
 
@@ -53,11 +50,6 @@ class ReturnableChalanRepository
             // $dataOutput->customer_po_no = $request->customer_po_no;
             $dataOutput->save();
             $last_insert_id = $dataOutput->id;
-            // $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
-            // $finalOutput = ReturnableChalan::find($last_insert_id);
-            // $finalOutput->image = $imageName;
-            // $finalOutput->save();
-
             foreach ($request->addmore as $index => $item) {
                 $designDetails = new ReturnableChalanItemDetails();
                 $designDetails->returnable_chalan_id = $last_insert_id;
@@ -72,27 +64,22 @@ class ReturnableChalanRepository
                 $designDetails->amount = $item['amount'];
                 $designDetails->save();
 
-                 // Handle stock deduction
             $partItemId = $item['part_item_id'];
             $itemStock = ItemStock::where('part_item_id', $partItemId)->first();
 
             if ($itemStock) {
                 if ($itemStock->quantity >= $item['quantity']) {
-                    // Deduct stock
                     $itemStock->quantity -= $item['quantity'];
                     $itemStock->save();
                 } else {
-                    // Log error if not enough stock
                     throw new \Exception("Not enough stock for part item ID: " . $partItemId);
                 }
             } else {
-                // Log error if stock record not found
                 throw new \Exception("Item stock not found for part item ID: " . $partItemId);
             }
             }
            
             return [
-                // 'ImageName' => $imageName,
                 'status' => 'success'
             ];
         } catch (\Exception $e) {
@@ -103,29 +90,12 @@ class ReturnableChalanRepository
             ];
         }
     }
-
-
-    public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id) {
-        try {
-            $ReturnableChalan = ReturnableChalan::where('purchase_orders_id', $purchase_order_id)->first();
-            if ($ReturnableChalan) {
-                // $ReturnableChalan->business_status_id = config('constants.HIGHER_AUTHORITY.LIST_APPROVED_PO_SENT_TO_VENDOR_BY_PURCHASE');
-                $ReturnableChalan->purchase_order_mail_submited_to_vendor_date= date('Y-m-d');
-                $ReturnableChalan->purchase_status_from_owner = config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR');
-                $ReturnableChalan->purchase_status_from_purchase = config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR');
-                $ReturnableChalan->save();
-            }
-            return $ReturnableChalan;
-
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
     public function getById($id) {
         try {
             $designData = ReturnableChalan::leftJoin('tbl_returnable_chalan_item_details as retd1', 'tbl_returnable_chalan.id', '=', 'retd1.returnable_chalan_id')
             // leftJoin('tbl_returnable_chalan_item_details', 'tbl_returnable_chalan.id', '=', 'tbl_returnable_chalan_item_details.returnable_chalan_id')
-            ->leftJoin('tbl_hsn as hsn', 'hsn.id', '=', 'retd1.hsn_id')     
+            ->leftJoin('tbl_hsn as hsn', 'hsn.id', '=', 'retd1.hsn_id')  
+            ->where('retd1.is_deleted', 0)   
             ->select( 'retd1.*',
             'retd1.id as tbl_returnable_chalan_item_details_id',
                 
@@ -148,6 +118,7 @@ class ReturnableChalanRepository
                 'tbl_returnable_chalan.id',
                 'hsn.name as hsn_name')
                 ->where('tbl_returnable_chalan.id', $id)
+               
                 ->get();
             if ($designData->isEmpty()) {
                 return null;
@@ -164,7 +135,6 @@ class ReturnableChalanRepository
     }
     public function getPurchaseOrderDetails($id)
     {
-        
         try {
 
             $return_id = $id;
@@ -189,6 +159,7 @@ class ReturnableChalanRepository
                       'tbl_returnable_chalan.remark'
                 )
                 ->where('tbl_returnable_chalan.id', $return_id)
+                ->where('tbl_returnable_chalan.is_deleted', 0)
                 ->first();
                 // dd($purchaseOrder);
                 // die();
@@ -226,12 +197,9 @@ class ReturnableChalanRepository
     }
     
     public function updateAll($request){
-       
         try {
             $return_data = array();
             $edit_id = $request->id;
-    // dd($request);
-    // die();
             $dataOutputNew = ReturnableChalan::where('id', $edit_id)->first();
 
             if (!$dataOutputNew) {
@@ -240,15 +208,6 @@ class ReturnableChalanRepository
                     'status' => 'error',
                 ];
             }
-       
-        //   $imageName = $dataOutputNew->image; 
-
-        // if ($request->hasFile('image')) {
-        //     $imageName = $dataOutputNew->id . '_' . rand(100000, 999999) . '.' . $request->file('image')->getClientOriginalExtension();
-        //     $dataOutputNew->image = $imageName;  
-        // }
-        // $dataOutputNew->save();
-
             for ($i = 0; $i <= $request->design_count; $i++) {
                 $designDetails = ReturnableChalanItemDetails::findOrFail($request->input("design_id_" . $i));
                 $designDetails->part_item_id = $request->input("part_item_id_" . $i);
@@ -320,18 +279,11 @@ class ReturnableChalanRepository
 
                 }
             }
-            
-            
-            // $previousImage = $dataOutput->image;
-           
             $last_insert_id = $dataOutput->id;
 
             $return_data['last_insert_id'] = $last_insert_id;
-            // $return_data['image'] = $imageName;
             return  $return_data;
-    
-            // Returning success message
-            return [
+                return [
                 'msg' => 'Data updated successfully.',
                 'status' => 'success',
                 'designDetails' => $request->all()
@@ -344,89 +296,73 @@ class ReturnableChalanRepository
             ];
         }
     }
-        public function deleteById($id){
-            try {
-                $deleteDataById = ReturnableChalan::find($id);
-                if ($deleteDataById) {
-                    // if (file_exists_view(Config::get('DocumentConstant.RETURNABLE_CHALAN_ADD') . $deleteDataById->image)){
-                    //     removeImage(Config::get('DocumentConstant.RETURNABLE_CHALAN_ADD') . $deleteDataById->image);
-                    // }
-                    $deleteDataById->delete();
-                    
-                    return $deleteDataById;
-                    
-                } else {
-                    return null;
-                }
-            } catch (\Exception $e) {
-                return $e;
-            }
-    }
-        public function deleteByIdAddmore($id){
-            try {
-                $deleteDataById = ReturnableChalanItemDetails::find($id);
-                $deleteDataById->delete();
-                return $deleteDataById;
-            
-            } catch (\Exception $e) {
-                return $e;
-            }    }
-
-    // New Functions for the application list PO need to be check 
-    public function listAllApprovedPOToBeChecked($id)
-    {
-      try {
-        
-        $array_not_to_be_check = [
-          config('constants.HIGHER_AUTHORITY.LIST_PO_TO_BE_APPROVE_FROM_PURCHASE'),
-          config('constants.HIGHER_AUTHORITY.HALF_APPROVED_PO_FROM_PURCHASE')
-        
-        ];
-        $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL')];
-  
-        $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
-          $join->on('business_application_processes.business_id', '=', 'production.business_id');
-        })
-          ->leftJoin('designs', function ($join) {
-            $join->on('business_application_processes.business_id', '=', 'designs.business_id');
-          })
-          ->leftJoin('businesses', function ($join) {
-            $join->on('business_application_processes.business_id', '=', 'businesses.id');
-          })
-          ->leftJoin('design_revision_for_prod', function ($join) {
-            $join->on('business_application_processes.business_id', '=', 'design_revision_for_prod.business_id');
-          })
-          ->leftJoin('purchase_orders', function($join) {
-            $join->on('business_application_processes.business_id', '=', 'purchase_orders.business_id');
-          })
-  
-          ->where('business_application_processes.business_id', $id)
-          ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
-          ->orWhereIn('business_application_processes.business_status_id', $array_not_to_be_check)
-          ->whereNull('purchase_orders.grn_no')
-          ->whereNull('purchase_orders.store_receipt_no')
-          // ->groupBy('purchase_orders.business_id')
-          // ->groupBy('business_application_processes.purchase_order_id')
-          // ->groupBy('businesses.id')
-          ->where('businesses.is_active', true)
-          ->select(
-            'purchase_orders.purchase_orders_id as purchase_order_id',
-            'businesses.id',
-            'businesses.title',
-            'businesses.descriptions',
-            'businesses.remarks',
-            'businesses.is_active',
-            'production.business_id',
-            'design_revision_for_prod.reject_reason_prod',
-            'designs.bom_image',
-            'designs.design_image'
-          )->get();
-        return $data_output;
-      } catch (\Exception $e) {
-  
-        return $e;
-      }
-    }
+       public function deleteById($id)
+       {
+           try {
+               $deleteDataById = ReturnableChalan::find($id);
+   
+               if (!$deleteDataById) {
+                   return [
+                       'msg' => 'Delivery Chalan not found.',
+                       'status' => 'error',
+                   ];
+               }
+               $itemDetails = ReturnableChalanItemDetails::where('returnable_chalan_id', $id)->get();
+   
+               foreach ($itemDetails as $item) {
+                   $itemStock = ItemStock::where('part_item_id', $item->part_item_id)->first();
+   
+                   if ($itemStock) {
+                       $itemStock->quantity += $item->quantity;
+                       $itemStock->save();
+                   }
+                   $item->is_deleted = 1;
+                   $item->save();
+               }
+               $deleteDataById->is_deleted = 1;
+               $deleteDataById->save();
+               return [
+                   'msg' => 'Record marked as deleted and stock updated successfully.',
+                   'status' => 'success',
+               ];
+   
+           } catch (\Exception $e) {
+               return [
+                   'msg' => 'Failed to delete the record.',
+                   'status' => 'error',
+                   'error' => $e->getMessage()
+               ];
+           }
+       }
+       public function deleteByIdAddmore($id)
+       {
+           try {
+               $deleteDataById = ReturnableChalanItemDetails::where('id', $id)
+                   ->where('is_deleted', 0)
+                   ->firstOrFail();
+               $itemStock = ItemStock::where('part_item_id', $deleteDataById->part_item_id)->first();
+       
+               if ($itemStock) {
+                   $itemStock->quantity += $deleteDataById->quantity;
+                   $itemStock->save();
+               }
+       
+               $deleteDataById->is_deleted = 1;
+               $deleteDataById->save();
+       
+               return [
+                   'msg' => 'Record marked as deleted and stock updated successfully.',
+                   'status' => 'success',
+               ];
+           } catch (\Exception $e) {
+               return [
+                   'msg' => 'Failed to delete the record.',
+                   'status' => 'error',
+                   'error' => $e->getMessage()
+               ];
+           }
+       }
+   
 
 
 

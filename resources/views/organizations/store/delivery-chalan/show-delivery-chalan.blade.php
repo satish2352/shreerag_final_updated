@@ -76,7 +76,7 @@
                 width: 10px !important;
                 height: auto !important;
             }
-          
+
             .img-size {
                 width: 100px;
             }
@@ -87,11 +87,12 @@
                 font-weight: bold;
             }
         }
-        .signImage{
-    display: flex;
-    justify-content: center;
-    padding-bottom: 10px;
-   }
+
+        .signImage {
+            display: flex;
+            justify-content: center;
+            padding-bottom: 10px;
+        }
     </style>
 
     <div class="data-table-area mg-tb-15" id="printableArea">
@@ -129,15 +130,17 @@
                                 <tr>
                                     <td style="width: 56%; padding: 10px; border: 1px solid black; padding: 5px">
                                         <strong>
-                                            <p class="company-name-size" style="font-size: 20px; margin-bottom:0px;text-transform: uppercase;">
+                                            <p class="company-name-size"
+                                                style="font-size: 20px; margin-bottom:0px;text-transform: uppercase;">
                                                 {{ $getOrganizationData->company_name }}</p>
                                         </strong>
-                                       <p class="font-size-delivery"> {{ $getOrganizationData->address }}</br>
-                                        CIN No. : {{ $getOrganizationData->cin_number }}</br>
-                                        Email Id : {{ $getOrganizationData->email }},<br />
-                                        <strong>Mo No. : {{ $getOrganizationData->mobile_number }},</strong><br>
-                                        {{-- {{ $getOrganizationData->mobile_number }},</br> --}}
-                                        <strong>GST No.: {{ $getOrganizationData->gst_no }},</strong></p>
+                                        <p class="font-size-delivery"> {{ $getOrganizationData->address }}</br>
+                                            CIN No. : {{ $getOrganizationData->cin_number }}</br>
+                                            Email Id : {{ $getOrganizationData->email }},<br />
+                                            <strong>Mo No. : {{ $getOrganizationData->mobile_number }},</strong><br>
+                                            {{-- {{ $getOrganizationData->mobile_number }},</br> --}}
+                                            <strong>GST No.: {{ $getOrganizationData->gst_no }},</strong>
+                                        </p>
                                     </td>
                                     <td
                                         style="width: 44%; vertical-align: top; padding-top:0px; padding-left:0px; padding-right:0px; border: 1px solid black; ">
@@ -151,13 +154,18 @@
                                             </span>
                                         </div>
 
-                                        <p class="company-name-size" style="font-size: 20px; margin-bottom:0px; padding:20px 5px 0px 10px; text-transform: uppercase; border-top: 1px solid black;"><strong>To :
+                                        <p class="company-name-size"
+                                            style="font-size: 20px; margin-bottom:0px; padding:20px 5px 0px 10px; text-transform: uppercase; border-top: 1px solid black;">
+                                            <strong>To :
                                                 {{ $showData['purchaseOrder']->vendor_company_name }}</strong></p>
                                         <p class="font-size-delivery" style="padding-left:10px;  margin-bottom:0px;">
                                             {{ $showData['purchaseOrder']->vendor_address }}</p>
-                                            <span class="font-size-delivery" style="padding-left:10px;">Email Id : {{$showData['purchaseOrder']->vendor_email}}</span><br>
-                                            <strong> <span class="font-size-delivery" style="padding-left:10px;">Mo No. : {{$showData['purchaseOrder']->contact_no}}</span> <br>
-                                                <span class="font-size-delivery" style="padding-left:10px;"> GST No.: {{ $showData['purchaseOrder']->gst_no }}</span></strong>
+                                        <span class="font-size-delivery" style="padding-left:10px;">Email Id :
+                                            {{ $showData['purchaseOrder']->vendor_email }}</span><br>
+                                        <strong> <span class="font-size-delivery" style="padding-left:10px;">Mo No. :
+                                                {{ $showData['purchaseOrder']->contact_no }}</span> <br>
+                                            <span class="font-size-delivery" style="padding-left:10px;"> GST No.:
+                                                {{ $showData['purchaseOrder']->gst_no }}</span></strong>
                                     </td>
                                 </tr>
                             </table>
@@ -192,13 +200,20 @@
 
                                             <td style="border: 1px solid black; padding: 5px; text-align: left;">
                                                 {{ $item->size }}</td>
-                                            <td style="border: 1px solid black; padding: 5px; text-align: right;">
-                                                {{ $item->quantity }} {{ $item->name }}</td>
                                             <td style="border: 1px solid black; padding: 5px; text-align: left;">
-                                                {{ $item->rate }}</td>
-
-                                            <td style="border: 1px solid black; padding: 5px; text-align: right;">
-                                                {{ $item->amount }}</td>
+                                                {{ $item->quantity }} {{ $item->name }}</td>
+                                            {{-- <td style="border: 1px solid black; padding: 5px; text-align: left;">
+                                                {{ $item->rate }}</td> --}}
+                                                <td style="border: 1px solid black; padding: 5px; text-align: left;">
+                                                    {{ is_numeric($item->rate) ? number_format($item->rate, 2) : '-' }}
+                                                </td>
+                                                
+                                                <td style="border: 1px solid black; padding: 5px; text-align: right;">
+                                                    {{ is_numeric($item->amount) ? number_format($item->amount, 2) : '-' }}
+                                                </td>
+                                                
+                                            {{-- <td style="border: 1px solid black; padding: 5px; text-align: right;">
+                                                {{ $item->amount }}</td> --}}
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -210,11 +225,20 @@
                                         </td>
                                         <td class="no-border" colspan="3"></td>
                                         <td style="border: 1px solid black;" colspan="2">Total</td>
+                                        {{-- <td class="text-right" style="border: 1px solid black;" colspan="2">
+
+                                            {{ $showData['purchaseOrderDetails']->sum('amount') }} 
+                                        </td> --}}
+
                                         <td class="text-right" style="border: 1px solid black;" colspan="2">
-                                            {{ $showData['purchaseOrderDetails']->sum('amount') }} </td>
+                                            {{ $sum = $showData['purchaseOrderDetails']->where('amount', '!==', null)
+                                                ->filter(fn($item) => is_numeric($item->amount))
+                                                ->sum('amount') ?: '-' }}
+                                        </td>
+                                        
                                     </tr>
 
-                                    <tr style="font-family: 'Font Awesome 5 Free">
+                                    {{-- <tr style="font-family: 'Font Awesome 5 Free">
                                         @php
                                             // Get the total amount from purchase order details
                                             $totalAmount = $showData['purchaseOrderDetails']->sum('amount');
@@ -229,9 +253,7 @@
                                             // Calculate the final amount including tax
                                             $finalAmount = $totalAmount + $taxAmount;
                                         @endphp
-                                        {{-- <td class="no-border" colspan="2">
-                                                   <div><p style="font-size: 15px;"> <strong>Vehicle No.:-{{ $showData['purchaseOrder']->vehicle_number }}</strong> </p></div>
-                                                </td> --}}
+                                       
                                         <td class="no-border" colspan="6"></td>
                                         <td colspan="2" style="border: 1px solid black;" class="text-left">
                                             {{ $taxType }} {{ $showData['purchaseOrder']->tax_number }}%
@@ -239,7 +261,36 @@
                                         <td colspan="2" style="border: 1px solid black;" class="text-right">
                                             {{ number_format($taxAmount, 2) }}
                                         </td>
+                                    </tr> --}}
+
+                                    <tr style="font-family: 'Font Awesome 5 Free'">
+                                        @php
+                                            // Safely filter numeric values for amount
+                                            $totalAmount = $showData['purchaseOrderDetails']
+                                                ->filter(fn($item) => is_numeric($item->amount))
+                                                ->sum('amount') ?? 0;
+                                    
+                                            // Ensure tax percentage is numeric
+                                            $taxPercentage = is_numeric($showData['purchaseOrder']->tax_number) 
+                                                ? $showData['purchaseOrder']->tax_number 
+                                                : 0;
+                                    
+                                            $taxType = $showData['purchaseOrder']->tax_type;
+                                    
+                                            // Calculate the tax amount and final amount
+                                            $taxAmount = ($totalAmount * $taxPercentage) / 100;
+                                            $finalAmount = $totalAmount + $taxAmount;
+                                        @endphp
+                                    
+                                        <td class="no-border" colspan="6"></td>
+                                        <td colspan="2" style="border: 1px solid black;" class="text-left">
+                                            {{ $taxType }} {{ $taxPercentage }}%
+                                        </td>
+                                        <td colspan="2" style="border: 1px solid black;" class="text-right">
+                                            {{ $taxAmount > 0 ? number_format($taxAmount, 2) : '-' }}
+                                        </td>
                                     </tr>
+                                    
                                     <tr style="border-bottom: 1px solid black; font-family: 'Font Awesome 5 Free">
                                         <td class="no-border" colspan="6">
                                             <div>
@@ -259,8 +310,11 @@
                                         <td colspan="2" class="no-border">
                                         </td>
                                         <td colspan="7" class="no-border" style="padding-bottom: 40px;">
-                                            <div class="company-name-size" style="display: flex; justify-content: end; font-size:18px; text-transform: uppercase; font-family: 'Font Awesome 5 Free'; padding-top:20px;"><strong>For:
-                                            <span class="company-name-size"> {{ $getOrganizationData->company_name }}</span></strong></div>
+                                            <div class="company-name-size"
+                                                style="display: flex; justify-content: end; font-size:18px; text-transform: uppercase; font-family: 'Font Awesome 5 Free'; padding-top:20px;">
+                                                <strong>For:
+                                                    <span class="company-name-size">
+                                                        {{ $getOrganizationData->company_name }}</span></strong></div>
                                         </td>
                                     </tr>
                                     <tr style="height:80px; font-family: 'Font Awesome 5 Free">
@@ -271,7 +325,8 @@
                                             {{-- <div class="signImage">
                                                 <img style="max-width:70px; max-height:70px; margin:50px 0px 0px 20px;" src="{{ Config::get('DocumentConstant.DELIVERY_CHALAN_VIEW') . $showData['purchaseOrder']->image}}" alt="{{ strip_tags($showData['purchaseOrder']->image) }} Image" />
                                             </div> --}}
-                                            <div style="text-align: center; "> <strong>(Authorized Signatory)</strong></div>
+                                            <div style="text-align: center; "> <strong>(Authorized Signatory)</strong>
+                                            </div>
                                         </td>
                                     </tr>
                                 </tfoot>
@@ -292,36 +347,41 @@
         function printInvoice() {
             // Get the content you want to print
             var contentToPrint = document.getElementById("printableArea").innerHTML;
-    
+
             // Open a new window
             var printWindow = window.open('', '', 'height=600,width=800');
-    
+
             // Write the content to the new window with proper styles
             printWindow.document.write('<html><head><title>Print</title>');
             printWindow.document.write('<style>');
-            printWindow.document.write('body { font-family: Arial, sans-serif; margin: 0; padding: 50px; }'); // Add padding to body
+            printWindow.document.write(
+            'body { font-family: Arial, sans-serif; margin: 0; padding: 50px; }'); // Add padding to body
             printWindow.document.write('#printableArea { width: 100%; overflow: hidden; }'); // Ensure full width of content
-            printWindow.document.write('.company-name-size { font-size: 15px !important; }'); // Corrected CSS for company-name-size
-            printWindow.document.write('.font-size-delivery { font-size: 14px !important; }'); // Corrected CSS for company-name-size     
+            printWindow.document.write(
+            '.company-name-size { font-size: 15px !important; }'); // Corrected CSS for company-name-size
+            printWindow.document.write(
+            '.font-size-delivery { font-size: 14px !important; }'); // Corrected CSS for company-name-size     
             printWindow.document.write('table td {padding: 8px;}'); // Corrected CSS for company-name-size     
-            printWindow.document.write('.top-spacing {padding: 0px; width: 100%; display: flex; justify-content: space-between;}'); // Corrected CSS for company-name-size     
-            printWindow.document.write('.signImage{display: flex; justify-content: center; padding-bottom: 10px; }'); // Corrected CSS for company-name-size    
-               
+            printWindow.document.write(
+                '.top-spacing {padding: 0px; width: 100%; display: flex; justify-content: space-between;}'
+                ); // Corrected CSS for company-name-size     
+            printWindow.document.write(
+            '.signImage{display: flex; justify-content: center; padding-bottom: 10px; }'); // Corrected CSS for company-name-size    
+
             printWindow.document.write('</style>');
             printWindow.document.write('</head><body>');
             printWindow.document.write(contentToPrint);
             printWindow.document.write('</body></html>');
-    
+
             // Close the document to render
             printWindow.document.close();
             printWindow.focus();
-    
+
             // Trigger the print dialog
             printWindow.print();
-    
+
             // Close the print window after printing
             printWindow.close();
         }
     </script>
-    
 @endsection

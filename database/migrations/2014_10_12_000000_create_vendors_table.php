@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('quote_no');
             $table->string('payment_terms')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });
     }
