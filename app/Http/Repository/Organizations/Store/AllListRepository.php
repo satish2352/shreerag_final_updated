@@ -717,7 +717,7 @@ public function getPurchaseOrderBusinessWise($id)
             $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
         })
         ->where('businesses_details.id', $id)
-        ->where('businesses.is_deleted', 0)
+        ->where('businesses_details.is_deleted', 0)
         ->select(
             'grn_tbl.id',
             'grn_tbl.grn_date',

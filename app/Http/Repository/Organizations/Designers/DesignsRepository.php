@@ -236,7 +236,7 @@ public function updateAll($request)
         $production_data_details = ProductionDetails::firstOrNew(['design_id' => $dataOutputNew->id]);
         $production_data_details->business_id = $dataOutputNew->business_id;
         $production_data_details->design_id = $dataOutputNew->id;
-        $production_data_details->business_details_id = $dataOutputNew->id;
+        $production_data_details->business_details_id = $production_data->business_details_id;
         $production_data_details->production_id = $production_data->id;
         $production_data_details->material_send_production = 0;
         $production_data_details->quantity_minus_status = 'pending';
