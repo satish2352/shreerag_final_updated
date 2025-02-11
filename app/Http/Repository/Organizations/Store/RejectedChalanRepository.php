@@ -43,7 +43,7 @@ class RejectedChalanRepository
             )
             ->groupBy( 'grn_tbl.id','tbl_rejected_chalan.purchase_orders_id', 'grn_tbl.po_date', 'grn_tbl.grn_date', 'grn_tbl.remark',
             'tbl_rejected_chalan.grn_id','gatepass.gatepass_name', 'tbl_rejected_chalan.is_active')
-            ->orderBy('tbl_rejected_chalan.purchase_orders_id', 'desc')
+            ->orderBy('grn_tbl.id', 'desc')
             ->get();                
             return $dataOutputCategory;
         } catch (\Exception $e) {

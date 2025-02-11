@@ -354,7 +354,7 @@
                                                         </td>
                                                         <td>
                                                             <input class="form-control total_amount"
-                                                                name="addmore[0][amount]" readonly style="width:100%"
+                                                                name="addmore[0][amount]" readonly style="width:200px"
                                                                 type="text">
                                                         </td>
                                                         <td>
@@ -667,7 +667,7 @@
                                               </select>
                                     </td>
                     <td>
-                        <input class="form-control total_amount" name="addmore[${i}][amount]" readonly style="width:100%" type="text" required>
+                        <input class="form-control total_amount" name="addmore[${i}][amount]" readonly style="width:150px" type="text" required>
                     </td>
                     <td>
                         <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete" data-repeater-delete>
