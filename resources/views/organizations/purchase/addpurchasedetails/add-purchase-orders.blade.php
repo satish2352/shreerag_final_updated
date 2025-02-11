@@ -354,7 +354,7 @@
                                                         </td>
                                                         <td>
                                                             <input class="form-control total_amount"
-                                                                name="addmore[0][amount]" readonly style="width:200px"
+                                                                name="addmore[0][amount]" readonly style="width:150px"
                                                                 type="text">
                                                         </td>
                                                         <td>
