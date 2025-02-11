@@ -609,7 +609,7 @@
                     
 
                     <td>
-                        <input class="form-control rate" name="addmore[${i}][rate]" style="width:100px" type="text" required>
+                        <input class="form-control rate" name="addmore[${i}][rate]" style="min-width:100px" type="text" required>
                     </td>
                      <td>
                                        <select class="form-control discount" name="addmore[${i}][discount]"  style="width:80px">
