@@ -62,7 +62,7 @@ class LeaveManagmentController extends Controller
             $validation = Validator::make( $request->all(), $rules, $messages );
 
             if ( $validation->fails() ) {
-                return redirect( 'add-yearly-leave-management' )
+                return redirect( 'hr/add-yearly-leave-management' )
                 ->withInput()
                 ->withErrors( $validation );
             } else {
@@ -80,7 +80,7 @@ class LeaveManagmentController extends Controller
                 }
             }
         } catch ( Exception $e ) {
-            return redirect( 'add-yearly-leave-management' )->withInput()->with( [ 'msg' => $e->getMessage(), 'status' => 'error' ] );
+            return redirect( 'hr/add-yearly-leave-management' )->withInput()->with( [ 'msg' => $e->getMessage(), 'status' => 'error' ] );
         }
     }
 
