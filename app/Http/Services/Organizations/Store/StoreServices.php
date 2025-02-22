@@ -16,9 +16,7 @@ class StoreServices
     {
         $this->repo = new StoreRepository();
     }
-
-    public function orderAcceptedAndMaterialForwareded($id)
-    {
+    public function orderAcceptedAndMaterialForwareded($id){
         try {
             $update_data = $this->repo->orderAcceptedAndMaterialForwareded($id);
             return $update_data;
@@ -26,9 +24,7 @@ class StoreServices
             return $e;
         }
     }
-
-    public function storeRequesition($request)
-    {
+    public function storeRequesition($request){
         try {
             $last_id = $this->repo->storeRequesition($request);
             $path = Config::get('FileConstant.REQUISITION_ADD');
@@ -44,62 +40,38 @@ class StoreServices
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
-
-
-    public function genrateStoreReciptAndForwardMaterialToTheProduction($purchase_orders_id, $business_id)
-    {
+    public function genrateStoreReciptAndForwardMaterialToTheProduction($purchase_orders_id, $business_id){
         try {
             $update_data = $this->repo->genrateStoreReciptAndForwardMaterialToTheProduction($purchase_orders_id, $business_id);
         } catch (\Exception $e) {
             return $e;
         }
     }
-    public function editProductMaterialWiseAddNewReq($id) {
+    public function editProductMaterialWiseAddNewReq($id){
         try {
             $data_output = $this->repo->editProductMaterialWiseAddNewReq($id);
-        
-return $data_output;
+           return $data_output;
         } catch (\Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
-
-// public function editProductMaterialWiseAddNewReq($id)
-// {
-//     try {
-//         $data_output = $this->repo->editProductMaterialWiseAddNewReq($id);
-
-//         // Ensure the repository returns proper keys
-//         if (empty($data_output) || !isset($data_output['productDetails']) || !isset($data_output['dataGroupedById'])) {
-//             throw new \Exception('Invalid data structure returned from repository.');
-//         }
-
-//         return $data_output;
-//     } catch (\Exception $e) {
-//         return ['status' => 'error', 'msg' => $e->getMessage()];
-//     }
-// }
-
     public function updateProductMaterialWiseAddNewReq($request) {
         try {
             $result = $this->repo->updateProductMaterialWiseAddNewReq($request);
-            // dd($result);
-            // die();
             return $result;
         } catch (\Exception $e) {
             return ['status' => 'error', 'message' => $e->getMessage()];
         }
     }
-    public function editProductMaterialWiseAdd($purchase_orders_id, $business_id) {
+    public function editProductMaterialWiseAdd($purchase_orders_id, $business_id){
         try {
             $data_output = $this->repo->editProductMaterialWiseAdd($purchase_orders_id, $business_id);
-           
-return $data_output;
+           return $data_output;
         } catch (\Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
-    public function updateProductMaterialWiseAdd($request) {
+    public function updateProductMaterialWiseAdd($request){
         try {
             $result = $this->repo->updateProductMaterialWiseAdd($request);
             return $result;
@@ -107,18 +79,16 @@ return $data_output;
             return ['status' => 'error', 'message' => $e->getMessage()];
         }
     }
-
-    public function editProduct($id) {
+    public function editProduct($id){
         try {
             $data_output = $this->repo->editProduct($id);
        
-return $data_output;
+           return $data_output;
         } catch (\Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
- 
-    public function updateProductMaterial($request) {
+    public function updateProductMaterial($request){
         try {
             $result = $this->repo->updateProductMaterial($request);
             return $result;
@@ -126,6 +96,4 @@ return $data_output;
             return ['status' => 'error', 'message' => $e->getMessage()];
         }
     }
-
-
 }

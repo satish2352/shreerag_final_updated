@@ -43,23 +43,6 @@ use Config;
             return $e;
         }
     }
-
-    // public function addAll($request)
-    // {
-    //     try {
-    //         $result = $this->repo->addAll($request);
-    //         if ($result['status'] === 'success') {
-    //             return ['status' => 'success', 'msg' => 'This business send to Design Department Successfully.'];
-    //         } else {
-    //             return ['status' => 'error', 'msg' => 'Failed to Add Data.'];
-    //         }  
-    //     } catch (Exception $e) {
-    //         return ['status' => 'error', 'msg' => $e->getMessage()];
-    //     }      
-    // }
-    
-
-    
     public function listAllApprovedPOToBeChecked($id)
     {
         try {
@@ -68,10 +51,7 @@ use Config;
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
-    }
-
-
-        
+    }        
     public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id)
     {
         try {
@@ -84,8 +64,6 @@ use Config;
     public function getById($id){
         try {
             $result = $this->repo->getById($id);
-            // dd($result);
-            // die();
             return $result;
         } catch (\Exception $e) {
             return $e;
@@ -94,8 +72,6 @@ use Config;
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
-        // dd($return_data);
-        // die();
             if ($return_data) {
                 return ['status' => 'success', 'msg' => 'Purchase Order Updated Successfully.'];
             } else {

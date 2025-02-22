@@ -49,28 +49,18 @@ class BusinessRepository
                if (!$data_output) {
                    throw new \Exception('No organization found');
                }
-               
             $business_data = new Business();
             $business_data->customer_po_number = $request->customer_po_number;
             $business_data->title = $request->title;
-            // $business_data->product_name = $request->product_name;
-            // $business_data->quantity = $request->quantity;
             $business_data->remarks = $request->remarks;
             $business_data->po_validity = $request->po_validity;
-            // $business_data->hsn_number = $request->hsn_number;
             $business_data->organization_id = $data_output;
             if (isset($request['customer_payment_terms'])) {
                 $business_data->customer_payment_terms = $request['customer_payment_terms'];
             } 
-            // if (isset($request['descriptions'])) {
-            //     $business_data->descriptions = $request['descriptions'];
-            // }
             if (isset($request['customer_terms_condition'])) {
                 $business_data->customer_terms_condition = $request['customer_terms_condition'];
             }  
-            // if (isset($request['remarks'])) {
-            //     $business_data->remarks = $request['remarks'];
-            // } 
             $business_data->save();
             $last_insert_id = $business_data->id;
             // Save data into DesignDetailsModel
@@ -289,41 +279,6 @@ class BusinessRepository
                 return $e;
             }
         }
-
-//         public function deleteById($id)
-// {
-//     try {
-//         $business = Business::find($id);
-
-//         if ($business) {
-//             $business->businessDetails()->delete(); 
-//             $business->designModel()->delete(); 
-
-//             $business->businessApplicationProcesses()->delete(); 
-//             $business->designRevisionForProd()->delete(); 
-//             $business->productionModel()->delete(); 
-//             $business->productionDetails()->delete(); 
-//             $business->purchaseOrderModel()->delete(); 
-//             $business->requisition()->delete(); 
-//             $business->customerProductQuantityTracking()->delete(); 
-//             $business->deliveryChalan()->delete(); 
-//             $business->dispatch()->delete(); 
-//             $business->logistics()->delete(); 
-//             $business->notificationStatus()->delete(); 
-//             $business->returnableChalan()->delete(); 
-
-//             // Delete the main business record
-//             $business->delete();
-
-//             return true;
-//         } else {
-//             return false; // Record not found
-//         }
-//     } catch (\Exception $e) {
-//         \Log::error('Error deleting business: ' . $e->getMessage());
-//         throw $e; // Re-throw the exception to be handled by the service
-//     }
-// }
 public function deleteById($id)
 {
     try {
@@ -359,25 +314,6 @@ public function deleteById($id)
         throw $e; // Re-throw the exception to be handled by the service
     }
 }
-
-
-    // public function deleteById($id)
-    // {
-    //     try {
-    //         $deleteDataById = Business::find($id);
-    //         $business->orders()->delete(); // Delete related business details
-    //         $business->invoices()->delete(); // Delete related design models
-
-    //         if ($deleteDataById) {
-    //             $deleteDataById->delete();
-    //             return $deleteDataById;
-    //         } else {
-    //             return null;
-    //         }
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
 
     public function acceptPurchaseOrder($purchase_order_id, $business_id)
     {
@@ -495,56 +431,6 @@ public function deleteById($id)
             ];
         }
     }
-    
-    // public function acceptPurchaseOrderPaymentRelease($purchase_order_id, $business_id)
-    // {
-    //     try {
-
-    //         $purchase_order = PurchaseOrderModel::where('purchase_orders_id', $purchase_orders_id)->first();
-    //         $grn = GRNModel::where('id', $business_id)->first(); // Add first() to retrieve the model instance
-            
-    //         if ($grn && $purchase_order) {
-    //             // Update the GRN and purchase order statuses
-    //             $grn->grn_status_sanction = config('constants.FINANCE_DEPARTMENT.INVOICE_RECEIVED_FOR_BILL_APPROVAL_TO_HIGHER_AUTHORITY_GRN_WISE');
-    //             $purchase_order->purchase_orders_id = $purchase_orders_id;
-                
-    //             // Save the updated GRN and purchase order
-    //             $grn->save();
-    //             $purchase_order->save();
-    
-    //             return ['grn' => $grn, 'purchase_order' => $purchase_order];
-    //         }
-            // $business_application = BusinessApplicationProcesses::where('business_details_id', $business_id)->first();
-            // $po_count = $this->serviceCommon->getNumberOfPOCount($business_id, $purchase_order_id);
-            // if ($business_application) {
-
-            //     if($po_count > 0) {
-            //         $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.HALF_APPROVED_PO_FROM_PURCHASE');
-            //         $business_application->off_canvas_status = 24;
-            //     } else {
-            //         $business_application->off_canvas_status = 24;
-            //     }
-            //     $business_application->save();
-            // }
-            // $PurchaseOrdersData = PurchaseOrdersModel::where('purchase_orders_id', $purchase_order_id)->first();
-            // $PurchaseOrdersData->owner_po_action_date= date('Y-m-d');
-            // $PurchaseOrdersData->finanace_store_receipt_status_id = config('constants.FINANCE_DEPARTMENT.INVOICE_APPROVED_FROM_HIGHER_AUTHORITY');
-            // $PurchaseOrdersData->save();
-            // $update_data_admin['off_canvas_status'] = 24;
-            // $update_data_business['off_canvas_status'] = 24;
-            // $update_data_admin['is_view'] = '0';
-            // $update_data_business['purchase_order_is_view_po'] = 0;
-            // AdminView::where('business_details_id', $business_application->business_details_id)
-            //     ->update($update_data_admin);
-            //     NotificationStatus::where('business_details_id', $business_application->business_details_id)
-            //     ->update($update_data_business);
-            
-            // return $business_application;
-
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
     public function getPurchaseOrderDetails($purchase_order_id)
 {
     try {

@@ -64,15 +64,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -85,8 +76,10 @@
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
-                                                <th data-field="completed_quantity" data-editable="false">Completed Production</th>
-                                                <th data-field="remaining_quantity" data-editable="false">Balance Quantity </th>
+                                                <th data-field="completed_quantity" data-editable="false">Completed
+                                                    Production</th>
+                                                <th data-field="remaining_quantity" data-editable="false">Balance Quantity
+                                                </th>
                                                 <th data-field="from_place" data-editable="false">From Place</th>
                                                 <th data-field="to_place" data-editable="false">To Place</th>
                                                 <th data-field="title" data-editable="false">customer Name</th>
@@ -97,7 +90,7 @@
                                             </tr>
 
                                         </thead>
-                                       
+
                                         <tbody>
                                             @foreach ($data_output as $data)
                                                 <tr>
@@ -113,15 +106,19 @@
                                                     <td>{{ ucwords($data->truck_no) }}</td>
                                                     <td>{{ ucwords($data->transport_name) }}</td>
                                                     <td>{{ ucwords($data->vehicle_name) }}</td>
-                                                <td>
-                                                    <div style="display: flex; align-items: center;">
-                                                        <a href="{{route('add-dispatch', [base64_encode($data->id), base64_encode($data->business_details_id)])}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                                        {{-- <a href="{{route('delete-products')}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a> --}}
-                                                    </div>
-                                                </td>
-                                                   
+                                                    <td>
+                                                        <div style="display: flex; align-items: center;">
+                                                            <a
+                                                                href="{{ route('add-dispatch', [base64_encode($data->id), base64_encode($data->business_details_id)]) }}"><button
+                                                                    data-toggle="tooltip" title="Edit"
+                                                                    class="pd-setting-ed"><i class="fa fa-pencil-square-o"
+                                                                        aria-hidden="true"></i></button></a>
+                                                            {{-- <a href="{{route('delete-products')}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a> --}}
+                                                        </div>
+                                                    </td>
 
-                                               
+
+
 
 
 

@@ -16,24 +16,15 @@ class GatepassServices
     {
         $this->repo = new GatepassRepository();
     }
-
-
-    public function getAll()
-    {
+    public function getAll(){
         try {
             $data = $this->repo->getAll();
-            // dd($data);
-            // die();
-            return $data; // Add this line to return the data
+            return $data; 
         } catch (\Exception $e) {
             return $e;
         }
     }
-
-
-
-    public function addAll($request)
-    {
+    public function addAll($request){
         try {
             $last_id = $this->repo->addAll($request);
             if ($last_id) {
@@ -45,10 +36,7 @@ class GatepassServices
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
-
-
-    public function getById($id)
-    {
+    public function getById($id){
         try {
             $result = $this->repo->getById($id);
             return $result;
@@ -56,14 +44,10 @@ class GatepassServices
             return $e;
         }
     }
-
-
-    public function updateAll($request)
-    {
+    public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
-// dd($return_data);
-// die();
+
             if ($return_data) {
                 return ['status' => 'success', 'msg' => 'Data Updated Successfully.'];
             } else {
@@ -73,9 +57,7 @@ class GatepassServices
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
-
-    public function deleteById($id)
-    {
+    public function deleteById($id){
         try {
             $delete = $this->repo->deleteById($id);
             if ($delete) {

@@ -15,12 +15,10 @@ use Config;
 class DeliveryChalanRepository
 {
 
-    public function getDetailsForPurchase($id)
-    {
+    public function getDetailsForPurchase($id){
         return DeliveryChalan::where('id', '=', $id)->first();
     }
-    public function submitBOMToOwner($request)
-    {
+    public function submitBOMToOwner($request){
         try {
             $dataOutput = new DeliveryChalan();
             $dataOutput->vendor_id = $request->vendor_id;
@@ -88,14 +86,10 @@ class DeliveryChalanRepository
     public function getById($id) {
         try {
             $designData = DeliveryChalan::leftJoin('tbl_delivery_chalan_item_details as deld1', 'tbl_delivery_chalan.id', '=', 'deld1.delivery_chalan_id')
-            // leftJoin('tbl_delivery_chalan_item_details', 'tbl_delivery_chalan.id', '=', 'tbl_delivery_chalan_item_details.delivery_chalan_id')
             ->leftJoin('tbl_hsn as hsn', 'hsn.id', '=', 'deld1.hsn_id')   
             ->where('deld1.is_deleted', 0)
             ->select(  'deld1.*',
-            'deld1.id as tbl_delivery_chalan_item_details_id',
-
-            //     'tbl_delivery_chalan_item_details.*', 
-            // 'tbl_delivery_chalan_item_details.id as tbl_delivery_chalan_item_details_id', 
+            'deld1.id as tbl_delivery_chalan_item_details_id',            
                 'tbl_delivery_chalan.id as purchase_main_id', 
                 'tbl_delivery_chalan.vendor_id',
                 'tbl_delivery_chalan.transport_id', 
@@ -107,7 +101,6 @@ class DeliveryChalanRepository
                 'tbl_delivery_chalan.plant_id', 
                 'tbl_delivery_chalan.vehicle_number',
                 'tbl_delivery_chalan.remark',
-                // 'tbl_delivery_chalan.image',
                 'tbl_delivery_chalan.id',
                 'hsn.name as hsn_name')
                 ->where('tbl_delivery_chalan.id', $id)
@@ -152,7 +145,6 @@ class DeliveryChalanRepository
                     'tbl_delivery_chalan.vehicle_number',
                     'tbl_delivery_chalan.remark',
                     'tbl_delivery_chalan.dc_number',
-                    // 'tbl_delivery_chalan.image',
                     'tbl_delivery_chalan.dc_date',
                      'tbl_delivery_chalan.remark'
                 )
@@ -244,10 +236,8 @@ class DeliveryChalanRepository
             }
             $dataOutput->save();
     
-            // Add new rows
             if ($request->has('addmore')) {
                 foreach ($request->addmore as $item) {
-                    // Add new design item details
                     $designDetails = new DeliveryChalanItemDetails();
                     $designDetails->delivery_chalan_id = $request->purchase_main_id;
                     $designDetails->part_item_id = $item['part_item_id'];
@@ -256,11 +246,10 @@ class DeliveryChalanRepository
                     $designDetails->quantity = $item['quantity'];
                     $designDetails->unit_id = $item['unit_id'];
                     $designDetails->size = $item['size'];
-                    $designDetails->rate = $item['rate'] ?? null;  // Handle empty 'rate' properly
+                    $designDetails->rate = $item['rate'] ?? null;  
                     $designDetails->amount = $item['amount'];
                     $designDetails->save();
     
-                    // Deduct stock for new rows
                     $itemStock = ItemStock::where('part_item_id', $item['part_item_id'])->first();
                     if ($itemStock) {
                         $itemStock->quantity -= $item['quantity'];

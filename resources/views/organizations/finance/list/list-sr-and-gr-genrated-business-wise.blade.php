@@ -63,15 +63,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -82,7 +73,8 @@
                                             <tr>
 
                                                 <th data-field="id">ID</th>
-                                                <th data-field="purchase_order_id" data-editable="false">Purchase Order No</th>
+                                                <th data-field="purchase_order_id" data-editable="false">Purchase Order No
+                                                </th>
                                                 <th data-field="grn_no" data-editable="false">GRN No</th>
                                                 <th data-field="store_receipt_no" data-editable="false">SR No</th>
                                                 <th data-field="grn_number" data-editable="false">Client Name</th>
@@ -95,47 +87,22 @@
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ ucwords($data->purchase_orders_id	) }}</td>
+                                                    <td>{{ ucwords($data->purchase_orders_id) }}</td>
                                                     <td>{{ ucwords($data->grn_no) }}</td>
                                                     <td>{{ ucwords($data->store_receipt_no) }}</td>
                                                     <td>{{ ucwords($data->vendor_name) }}</td>
                                                     <td>{{ ucwords($data->vendor_company_name) }}</td>
-                                             
-
                                                     <td>
-                                                                                                                {{-- <div style="display: flex; align-items: center;">
-                                                            <a href="{{ route('list-accepted-grn-srn-finance', [$data->business_id, $data->purchase_orders_id]) }}">
-                                                                <button data-toggle="tooltip" title="Trash" class="pd-setting-ed">
-                                                                    Check details
-                                                                </button>
-                                                            </a>
-                                                        </div> --}}
                                                         <div style="display: flex; align-items: center;">
-                                                            <a href="{{ route('forward-the-purchase-order-to-the-owner-for-sanction', [$data->purchase_orders_id, $data->id]) }}">
-                                                                <button data-toggle="tooltip" title="Trash" class="pd-setting-ed">
+                                                            <a
+                                                                href="{{ route('forward-the-purchase-order-to-the-owner-for-sanction', [$data->purchase_orders_id, $data->id]) }}">
+                                                                <button data-toggle="tooltip" title="Trash"
+                                                                    class="pd-setting-ed">
                                                                     Check details
                                                                 </button>
                                                             </a>
                                                         </div>
-                                                        
-                                                        {{-- <div style="display: flex; align-items: center;">
-                                                            <a href="{{ route('list-accepted-grn-srn-finance', [$data->business_id, $data->purchase_orders_id]) }}">
-                                                                <button data-toggle="tooltip" title="Trash" class="pd-setting-ed">
-                                                                    Check details
-                                                                </button>
-                                                            </a>
-                                                        </div> --}}
-                                                        
-                                                        {{-- <div style="display: flex; align-items: center;">
-                                                            <a
-                                                                href="{{ route('list-accepted-grn-srn-finance', [$data->purchase_orders_id, $data->business_id]) }} "><button
-                                                                    data-toggle="tooltip" title="Trash"
-                                                                    class="pd-setting-ed">Check details</button></a>
-
-
-                                                        </div> --}}
                                                     </td>
-
                                                 </tr>
                                             @endforeach
                                         </tbody>

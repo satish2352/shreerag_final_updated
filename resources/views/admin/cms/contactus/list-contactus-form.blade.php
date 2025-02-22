@@ -9,29 +9,10 @@
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
                                 <h1>Conatct Us <span class="table-project-n">Data</span> Table</h1>
-                                {{-- <div class="form-group-inner login-btn-inner row">
-                                    <div class="col-lg-2">
-                                        <div class="login-horizental cancel-wp pull-left">
-                                            <a href="{{ route('list-contactus-form') }}"><button
-                                                    class="btn btn-sm btn-primary login-submit-cs" type="submit">Add
-                                                    Director Desk</button></a>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-10"></div>
-                                </div> --}}
                             </div>
                         </div>                       
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 @include('admin.layouts.alert')
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
@@ -86,9 +67,4 @@
         @csrf
         <input type="hidden" name="show_id" id="show_id" value="">
     </form>
-    {{-- <form method="POST" action="{{ url('/delete-contactus-form') }}" id="deleteform">
-        @csrf
-        <input type="hidden" name="delete_id" id="delete_id" value="">
-    </form> --}}
-    <!-- content-wrapper ends -->
 @endsection

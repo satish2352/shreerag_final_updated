@@ -30,12 +30,10 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Material Need To Sent To<span class="table-project-n"> Production</span> Department Business Wise</h1>
+                                <h1>Material Need To Sent To<span class="table-project-n"> Production</span> Department
+                                    Business Wise</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
-                                        {{-- <div class="login-horizental cancel-wp pull-left">
-                                                <a href="{{ route('add-design-upload') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Design</button></a>
-                                        </div> --}}
                                     </div>
                                     <div class="col-lg-10"></div>
                                 </div>
@@ -63,15 +61,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -80,11 +69,13 @@
                                         data-click-to-select="true" data-toolbar="#toolbar">
                                         <thead>
                                             <tr>
-                                                
-                                                <th data-field="id">Sr.No.</th> 
-                                                <th data-field="purchase_orders_id" data-editable="false">Purchase Order ID</th>
+
+                                                <th data-field="id">Sr.No.</th>
+                                                <th data-field="purchase_orders_id" data-editable="false">Purchase Order ID
+                                                </th>
                                                 <th data-field="client_name" data-editable="false">Client Name</th>
-                                                <th data-field="vendor_company_name" data-editable="false">Client Company Name</th>
+                                                <th data-field="vendor_company_name" data-editable="false">Client Company
+                                                    Name</th>
                                                 <th data-field="email" data-editable="false">Email</th>
                                                 <th data-field="contact_no" data-editable="false">Phone Number</th>
                                                 <th data-field="vendor_address" data-editable="false">Address</th>
@@ -93,14 +84,14 @@
                                         <tbody>
                                             @foreach ($data_output as $data)
                                                 <tr>
-                                                    
+
                                                     <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $data->purchase_orders_id }}</td>
-                                            <td>{{ $data->vendor_name }}</td>
-                                           <td>{{ $data->vendor_company_name }}</td>
-                                           <td>{{ $data->vendor_email }}</td> 
-                                           <td>{{ $data->contact_no }}</td> 
-                                           <td>{{ $data->vendor_address }}</td> 
+                                                    <td>{{ $data->purchase_orders_id }}</td>
+                                                    <td>{{ $data->vendor_name }}</td>
+                                                    <td>{{ $data->vendor_company_name }}</td>
+                                                    <td>{{ $data->vendor_email }}</td>
+                                                    <td>{{ $data->contact_no }}</td>
+                                                    <td>{{ $data->vendor_address }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

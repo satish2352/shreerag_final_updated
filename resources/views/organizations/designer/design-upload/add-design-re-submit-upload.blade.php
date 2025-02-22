@@ -67,13 +67,15 @@
                                                     @endif
                                                 </div>
 
-                                                    <input type="hidden" class="form-control" value="{{ $design_revision_for_prod_id }}"
+                                                <input type="hidden" class="form-control"
+                                                    value="{{ $design_revision_for_prod_id }}"
                                                     id="design_revision_for_prod_id" name="design_revision_for_prod_id">
-                                                    
+
 
                                                 <div class="row">
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="design_image">Upload Design Layout (upload pdf file min:1KB to max:5MB) :</label>
+                                                        <label for="design_image">Upload Design Layout (upload pdf file
+                                                            min:1KB to max:5MB) :</label>
                                                         <input type="file" class="form-control" accept="application/pdf"
                                                             id="design_image" name="design_image">
                                                         @if ($errors->has('design_image'))
@@ -81,7 +83,8 @@
                                                         @endif
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="bom_image">Upload BOM (upload excel file min : 1KB to max : 5MB) :</label>
+                                                        <label for="bom_image">Upload BOM (upload excel file min : 1KB to
+                                                            max : 5MB) :</label>
                                                         <input type="file" class="form-control" accept=".xls, .xlsx"
                                                             id="bom_image" name="bom_image">
                                                         @if ($errors->has('bom_image'))
@@ -89,14 +92,14 @@
                                                         @endif
                                                     </div>
 
-                                                             
+
                                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                         <div class="sparkline12-graph">
                                                             <div id="pwd-container1">
                                                                 <div class="form-group">
                                                                     <label for="remarks">Remark</label>
-                                                                    <textarea class="form-control" rows="3" type="text" class="form-control" id="remark_by_design" name="remark_by_design"
-                                                                        placeholder="Enter Remark">{{ old('remark_by_design') }}</textarea>
+                                                                    <textarea class="form-control" rows="3" type="text" class="form-control" id="remark_by_design"
+                                                                        name="remark_by_design" placeholder="Enter Remark">{{ old('remark_by_design') }}</textarea>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="pwstrength_viewport_progress"></span></div>
@@ -106,7 +109,7 @@
                                                     </div>
                                                 </div>
 
-        
+
 
 
                                                 <div class="login-btn-inner">
@@ -147,13 +150,13 @@
                 const extension = value.split('.').pop().toLowerCase();
                 return $.inArray(extension, param) !== -1;
             }, "Invalid file extension.");
-    
+
             // Custom validation method to check file size
             $.validator.addMethod("fileSize", function(value, element, param) {
                 const fileSizeKB = element.files[0].size / 1024;
                 return fileSizeKB >= param[0] && fileSizeKB <= param[1];
             }, "File size must be between {0} KB and {1} KB.");
-    
+
             $("#addDesignsForm").validate({
                 rules: {
                     design_image: {
@@ -191,5 +194,4 @@
             });
         });
     </script>
-    
 @endsection

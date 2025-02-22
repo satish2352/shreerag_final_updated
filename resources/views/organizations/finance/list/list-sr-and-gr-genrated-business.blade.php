@@ -63,15 +63,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -127,33 +118,7 @@
                                                                 </button>
                                                             </a>
                                                         </div>
-
-                                                        {{-- <div style="display: flex; align-items: center;">
-                                                            <a href="{{ route('list-sr-and-gr-genrated-business-wise', $data->id) }}">
-                                                                <button data-toggle="tooltip" title="Trash" class="pd-setting-ed">
-                                                                    Check details
-                                                                </button>
-                                                            </a>
-                                                        </div> --}}
-
-                                                        {{-- <div style="display: flex; align-items: center;">
-                                                            <a href="{{ route('list-accepted-grn-srn-finance', [$data->business_id, $data->purchase_orders_id]) }}">
-                                                                <button data-toggle="tooltip" title="Trash" class="pd-setting-ed">
-                                                                    Check details
-                                                                </button>
-                                                            </a>
-                                                        </div> --}}
-
-                                                        {{-- <div style="display: flex; align-items: center;">
-                                                            <a
-                                                                href="{{ route('list-accepted-grn-srn-finance', [$data->purchase_orders_id, $data->business_id]) }} "><button
-                                                                    data-toggle="tooltip" title="Trash"
-                                                                    class="pd-setting-ed">Check details</button></a>
-
-
-                                                        </div> --}}
                                                     </td>
-
                                                 </tr>
                                             @endforeach
                                         </tbody>

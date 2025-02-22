@@ -1,14 +1,15 @@
 @extends('admin.layouts.master')
 
 @section('content')
-<style>
-    .error{
-        color: red !important;
-    }
-    .red-text{
-        color: red !important;
-    }
-</style>
+    <style>
+        .error {
+            color: red !important;
+        }
+
+        .red-text {
+            color: red !important;
+        }
+    </style>
     <div class="">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list">
@@ -75,7 +76,8 @@
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6">
                                                 <div class="form-group">
-                                                    <label for="position">position </label>&nbsp<span class="red-text">*</span>
+                                                    <label for="position">position </label>&nbsp<span
+                                                        class="red-text">*</span>
                                                     <input class="form-control" name="position" id="position"
                                                         placeholder="Enter the position"
                                                         value="@if (old('position')) {{ old('position') }}@else{{ $editData->position }} @endif">
@@ -125,8 +127,8 @@
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
     <script>
         $(document).ready(function() {
             // Function to check if all input fields are filled with valid data
@@ -172,9 +174,9 @@
                         spcenotallow: true,
                     },
                     position: {
-                            required: true,
-                            spcenotallow: true,
-                        },
+                        required: true,
+                        spcenotallow: true,
+                    },
                     // image: {
                     //     required: true,
                     //     fileExtension: ["jpg", "jpeg", "png"],
@@ -188,9 +190,9 @@
                         spcenotallow: "Enter Some name",
                     },
                     position: {
-                            required: "Please enter the position.",
-                            spcenotallow: "Enter Some position",
-                        },
+                        required: "Please enter the position.",
+                        spcenotallow: "Enter Some position",
+                    },
                     // image: {
                     //     required: "Please upload an Image (jpg, jpeg, png).",
                     //     fileExtension: "Only JPG, JPEG, and PNG images are allowed.",

@@ -270,12 +270,6 @@ class RegisterRepository
 			if (isset($return_data['user_profile'])) {
 				$previousUserProfile = $update_data->user_profile;
 			}
-			// if ($request->hasFile('user_profile')) {
-			// 	$profileImage = $request->file('user_profile');
-			// 	$newImagePathOrFilename = $profileImage->store('profile_images');
-			// 	$update_data['user_profile'] = $newImagePathOrFilename;
-			// }
-
 			if (($request->number != $request->old_number) && !isset($request->u_password)) {
 				$this->sendOTPEMAIL($otp, $request);
 				info("only mobile change");

@@ -13,8 +13,6 @@ class OrganizationServices
     public function __construct(){
         $this->repo = new OrganizationRepository();
     }
-
-
     public function getAll(){
         try {
             return $this->repo->getAll();
@@ -22,13 +20,9 @@ class OrganizationServices
             return $e;
         }
     }
-
-
     public function addAll($request){
         try {
             $last_id = $this->repo->addAll($request);
-            // dd($last_id);
-            // die();
             $path = Config::get('DocumentConstant.ORGANIZATION_ADD');
             $ImageName = $last_id['ImageName'];
             uploadImage($request, 'image', $path, $ImageName);
@@ -49,7 +43,6 @@ class OrganizationServices
             return $e;
         }
     }
-
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
@@ -82,14 +75,7 @@ class OrganizationServices
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }      
     }
-
-
-   
-    // public function updateOne($id){
-    //     return $this->repo->updateOne($id);
-    // }   
-    public function deleteById($id)
-    {
+    public function deleteById($id){
         try {
             $delete = $this->repo->deleteById($id);
             if ($delete) {

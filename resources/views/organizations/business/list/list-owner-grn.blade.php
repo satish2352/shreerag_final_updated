@@ -64,15 +64,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -103,17 +94,7 @@
                                                     <td>{{ ucwords($data->gatepass_name) }}</td>
                                                     <td>{{ ucwords($data->gatepass_date) }}</td>
                                                     <td>{{ ucwords($data->gatepass_time) }}</td>
-                                                    <td>{{ ucwords($data->remark) }}</td>
-
-
-                                                    {{-- <td>
-                                                        <div style="display: flex; align-items: center;">
-                                                            <a href="{{ route('add-grn', $data->purchase_orders_id) }}"><button
-                                                                    data-toggle="tooltip" title="Edit"
-                                                                    class="pd-setting-ed"><i class="fa fa-pencil-square-o"
-                                                                        aria-hidden="true"></i></button></a>
-                                                        </div>
-                                                    </td> --}}
+                                                    <td>{{ ucwords($data->remark) }}</td>                                                  
                                                 </tr>
                                             @endforeach
 

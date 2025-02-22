@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Static Content</title>
     <style>
@@ -7,14 +8,17 @@
             border: 1px solid black;
             padding: 20px;
         }
+
         p {
             text-align: justify;
         }
+
         b {
             font-weight: bold;
         }
     </style>
 </head>
+
 <body>
     <p>
         Purchase Order<br></br>
@@ -25,13 +29,16 @@
         Seller’s (hereinafter also referred to as “Vendor(s)” or “Supplier(s)”) assent to the exact terms contained
         herein. None of the terms in the Order may be modified, added to, or superseded, except with the written
         consent of Shreerag Engineering and Auto Pvt Ltd<br></br>
-        (hereinafter also referred to as “SREAPL” or “Buyer”). It is understood by the Seller that this document goes through various changes periodically and hence they will ensure that they keep checking for the latest copy regularly and keep themselves abreast about the same.<br></br>
+        (hereinafter also referred to as “SREAPL” or “Buyer”). It is understood by the Seller that this document goes
+        through various changes periodically and hence they will ensure that they keep checking for the latest copy
+        regularly and keep themselves abreast about the same.<br></br>
         <b>1. Placing order:</b><br></br>
         Only orders in traceable form (in writing, by email only from the email ID purchase@shreeragengg.com) are
         binding. Verbal orders or orders by phone as well as changes and additions to our order shall be binding
         only if confirmed by us in traceable form. Terms at variance with our General Purchase Conditions and
         additional terms, including reservations regarding price or exchange rates, as well as deviating General
-        Conditions of Sale and Delivery of the Supplier shall be valid only if accepted by us in traceable form.<br></br>
+        Conditions of Sale and Delivery of the Supplier shall be valid only if accepted by us in traceable
+        form.<br></br>
         <b>2. Price:</b><br></br>
         The prices mentioned in this Order are the prices at which Buyer has agreed to purchase the Goods or
         Services (as applicable). No escalation in the aforesaid prices shall be binding on Buyer,
@@ -77,4 +84,5 @@
         bear the Purchase order number.<br></br>
     </p>
 </body>
+
 </html>

@@ -64,13 +64,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
 
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
@@ -81,9 +74,11 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
-                                                <th data-field="purchase_orders_id" data-editable="false">Purchase Order ID</th>
+                                                <th data-field="purchase_orders_id" data-editable="false">Purchase Order ID
+                                                </th>
                                                 <th data-field="client_name" data-editable="false">Client Name</th>
-                                                <th data-field="vendor_company_name" data-editable="false">Client Company Name</th>
+                                                <th data-field="vendor_company_name" data-editable="false">Client Company
+                                                    Name</th>
                                                 <th data-field="email" data-editable="false">Email</th>
                                                 <th data-field="contact_no" data-editable="false">Phone Number</th>
                                                 <th data-field="vendor_address" data-editable="false">Address</th>
@@ -97,17 +92,20 @@
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $data->purchase_orders_id }}</td>
-                                                     <td>{{ $data->vendor_name }}</td>
+                                                    <td>{{ $data->vendor_name }}</td>
                                                     <td>{{ $data->vendor_company_name }}</td>
-                                                    <td>{{ $data->vendor_email }}</td> 
-                                                    <td>{{ $data->contact_no }}</td> 
-                                                    <td>{{ $data->vendor_address }}</td> 
+                                                    <td>{{ $data->vendor_email }}</td>
+                                                    <td>{{ $data->contact_no }}</td>
+                                                    <td>{{ $data->vendor_address }}</td>
                                                     {{-- <td>{{ $data->status }}</td> --}}
                                                     <td>
                                                         <div style="display: inline-block; align-items: center;">
-                                                            <a href="{{ route('list-submit-final-purchase-order-particular-business', $data->purchase_orders_id) }}">
-                                                                <button data-toggle="tooltip" title="Edit" class="pd-setting-ed">
-                                                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Check Details
+                                                            <a
+                                                                href="{{ route('list-submit-final-purchase-order-particular-business', $data->purchase_orders_id) }}">
+                                                                <button data-toggle="tooltip" title="Edit"
+                                                                    class="pd-setting-ed">
+                                                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                                    Check Details
                                                                 </button>
                                                             </a>
                                                             &nbsp; &nbsp; &nbsp;

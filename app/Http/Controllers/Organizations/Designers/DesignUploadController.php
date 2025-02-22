@@ -54,23 +54,6 @@ class DesignUploadController extends Controller
     public function index(){
         try {
             $data_output = $this->service->getAll();
-
-            // if ($data_output->isNotEmpty()) {
-            //     foreach ($data_output as $data) {
-            //         $business_details_id = $data->id; 
-            //         if (!empty($business_details_id)) {
-            //             $update_data['purchase_is_view'] = '1';
-            //             NotificationStatus::where('purchase_is_view', '0')
-            //                 ->where('business_details_id', $business_details_id)
-            //                 ->update($update_data);
-            //         }
-            //     }
-            // } else {
-            //     return view('organizations.designer.design-upload.list-design-upload', [
-            //         'data_output' => [],
-            //         'message' => 'No data found for designs received for correction'
-            //     ]);
-            // }
             return view('organizations.designer.design-upload.list-design-upload', compact('data_output'));
         } catch (\Exception $e) {
             return $e;

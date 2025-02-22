@@ -47,14 +47,14 @@
                                 @endif
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="all-form-element-inner">
-                                        <form action="{{ route('update-products', 
-                                       ) }}"
+                                        <form
+                                            action="{{ route('update-products') }}"
                                             method="POST" id="editDesignsForm" enctype="multipart/form-data">
                                             @csrf
-                                           
-                                            <a
-                                             {{-- href="{{ route('add-more-data') }}" --}}
-                                            class="btn btn-sm btn-primary ml-3"> <button type="button" name="add" id="add" class="btn btn-success">Add More</button></a>
+
+                                            <a {{-- href="{{ route('add-more-data') }}" --}} class="btn btn-sm btn-primary ml-3"> <button
+                                                    type="button" name="add" id="add" class="btn btn-success">Add
+                                                    More</button></a>
 
                                             <div class="container-fluid">
                                                 @if ($errors->any())
@@ -76,89 +76,81 @@
                                                         <th>Action</th>
                                                     </tr>
                                                     {{-- @foreach ($editData as $key => $editDataNew) --}}
-                                                        <tr>
-                                                            <input type="hidden" name=""
-                                                                id="" class="form-control"
-                                                                value=""
-                                                                placeholder="">
-                                                            <td>
-                                                                <input type="text"
-                                                                    name=""
-                                                                    value=""
-                                                                    placeholder="Enter Product Name" class="form-control" />
-                                                            </td>
-                                                            <td><input type="text"
-                                                                    name=""
-                                                                    value=""
-                                                                    placeholder="Enter Product Quantity"
-                                                                    class="form-control" /></td>
-                                                            <td><input type="text"
-                                                                    name=""
-                                                                    value=""
-                                                                    placeholder="Enter Product Price"
-                                                                    class="form-control" /></td>
-                                                            <td><input type="text"
-                                                                    name=""
-                                                                    value=""
-                                                                    placeholder="Enter Product Unit" class="form-control" />
-                                                            </td>
-                                                            {{-- <td><button type="button" class="btn btn-danger remove-tr">Remove</button></td> --}}
-                                                            <td>
-                                                                
-                                                                <a data-id=""
-                                                                    class="delete-btn btn btn-danger m-1"
-                                                                    title="Delete Tender"><i
-                                                                        class="fas fa-archive"></i></a>
-                                                         
+                                                    <tr>
+                                                        <input type="hidden" name="" id=""
+                                                            class="form-control" value="" placeholder="">
+                                                        <td>
+                                                            <input type="text" name="" value=""
+                                                                placeholder="Enter Product Name" class="form-control" />
+                                                        </td>
+                                                        <td><input type="text" name="" value=""
+                                                                placeholder="Enter Product Quantity" class="form-control" />
+                                                        </td>
+                                                        <td><input type="text" name="" value=""
+                                                                placeholder="Enter Product Price" class="form-control" />
+                                                        </td>
+                                                        <td><input type="text" name="" value=""
+                                                                placeholder="Enter Product Unit" class="form-control" />
+                                                        </td>
+                                                        {{-- <td><button type="button" class="btn btn-danger remove-tr">Remove</button></td> --}}
+                                                        <td>
+
+                                                            <a data-id="" class="delete-btn btn btn-danger m-1"
+                                                                title="Delete Tender"><i class="fas fa-archive"></i></a>
 
 
-                                                                {{-- <button type="button" class="btn btn-danger remove-tr " data-row-id="{{ $editDataNew->designs_details_id }}">Remove</button> --}}
-                                                            </td>
-                                                        </tr>
+
+                                                            {{-- <button type="button" class="btn btn-danger remove-tr " data-row-id="{{ $editDataNew->designs_details_id }}">Remove</button> --}}
+                                                        </td>
+                                                    </tr>
                                                     {{-- @endforeach --}}
                                                 </table>
-                                                {{-- @foreach ($editData as $key=> $editDataNew)
-                                                @if($key == 0) --}}
-                                                    <div class="form-group-inner">
-                                                        <div class="row">
-                                                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                                                <div class="form-group">
-                                                                    <label for="english_image"> Image</label>
-                                                                    <input type="file" name="english_image" class="form-control"
-                                                                        id="english_image" accept="image/*" placeholder="image">
-                                                                    @if ($errors->has('english_image'))
-                                                                        <div class="red-text"><?php echo $errors->first('english_image', ':message'); ?>
-                                                                        </div>
-                                                                    @endif
-                                                                </div>
-                                                                <img id="english"
-                                                                    src="{{ Config::get('DocumentConstant.SLIDER_VIEW') }}{{ $slider->english_image }}"
-                                                                    class="img-fluid img-thumbnail" width="150">
-                                                                <img id="english_imgPreview" src="#" alt="pic"
-                                                                    class="img-fluid img-thumbnail" width="150" style="display:none">
+                                                {{-- @foreach ($editData as $key => $editDataNew)
+                                                @if ($key == 0) --}}
+                                                <div class="form-group-inner">
+                                                    <div class="row">
+                                                        <div class="col-lg-6 col-md-6 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="english_image"> Image</label>
+                                                                <input type="file" name="english_image"
+                                                                    class="form-control" id="english_image" accept="image/*"
+                                                                    placeholder="image">
+                                                                @if ($errors->has('english_image'))
+                                                                    <div class="red-text"><?php echo $errors->first('english_image', ':message'); ?>
+                                                                    </div>
+                                                                @endif
                                                             </div>
-                        
-                                                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                                                <div class="form-group">
-                                                                    <label for="marathi_image">छायाचित्र </label>
-                                                                    <input type="file" name="marathi_image" id="marathi_image" accept="image/*"
-                                                                        class="form-control">
-                                                                    @if ($errors->has('marathi_image'))
-                                                                        <div class="red-text"><?php echo $errors->first('marathi_image', ':message'); ?>
-                                                                        </div>
-                                                                    @endif
-                                                                </div>
-                        
-                                                                <img id="marathi"
-                                                                    src="{{ Config::get('DocumentConstant.SLIDER_VIEW') }}{{ $slider->marathi_image }}"
-                                                                    class="img-fluid img-thumbnail" width="150">
-                                                                <img id="marathi_imgPreview" src="#" alt="pic"
-                                                                    class="img-fluid img-thumbnail" width="150" style="display:none">
+                                                            <img id="english"
+                                                                src="{{ Config::get('DocumentConstant.SLIDER_VIEW') }}{{ $slider->english_image }}"
+                                                                class="img-fluid img-thumbnail" width="150">
+                                                            <img id="english_imgPreview" src="#" alt="pic"
+                                                                class="img-fluid img-thumbnail" width="150"
+                                                                style="display:none">
+                                                        </div>
+
+                                                        <div class="col-lg-6 col-md-6 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="marathi_image">छायाचित्र </label>
+                                                                <input type="file" name="marathi_image"
+                                                                    id="marathi_image" accept="image/*"
+                                                                    class="form-control">
+                                                                @if ($errors->has('marathi_image'))
+                                                                    <div class="red-text"><?php echo $errors->first('marathi_image', ':message'); ?>
+                                                                    </div>
+                                                                @endif
                                                             </div>
-                                                        </div>                                                     
+
+                                                            <img id="marathi"
+                                                                src="{{ Config::get('DocumentConstant.SLIDER_VIEW') }}{{ $slider->marathi_image }}"
+                                                                class="img-fluid img-thumbnail" width="150">
+                                                            <img id="marathi_imgPreview" src="#" alt="pic"
+                                                                class="img-fluid img-thumbnail" width="150"
+                                                                style="display:none">
+                                                        </div>
                                                     </div>
+                                                </div>
                                                 {{-- @endif --}}
-                                            {{-- @endforeach --}}
+                                                {{-- @endforeach --}}
                                                 <div class="login-btn-inner">
                                                     <div class="row">
                                                         <div class="col-lg-5"></div>
@@ -168,8 +160,9 @@
                                                                     class="btn btn-white"
                                                                     style="margin-bottom:50px">Cancel</a>
                                                                 <button class="btn btn-sm btn-primary login-submit-cs"
-                                                                    type="submit" style="margin-bottom:50px">Update Data</button>
-                                                               
+                                                                    type="submit" style="margin-bottom:50px">Update
+                                                                    Data</button>
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -194,73 +187,79 @@
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
- 
-<script>
-    // $(document).ready(function() {
-    //     var i = {!! count($editData) !!}; // Initialize i with the number of existing rows
 
-    //     $("#add").click(function() {
-    //         ++i;
+    <script>
+        // $(document).ready(function() {
+        //     var i = {!! count($editData) !!}; // Initialize i with the number of existing rows
 
-    //         $("#dynamicTable").append(
-    //             '<tr><td><input type="text" name="design_name_' + i + '" placeholder="Enter Product Name" class="form-control" /></td><td><input type="text" name="product_quantity_' + i + '" placeholder="Enter Product Quantity" class="form-control" /></td><td><input type="text" name="product_size_' + i + '" placeholder="Enter Product Price" class="form-control" /></td><td><input type="text" name="product_unit_' + i + '" placeholder="Enter Product Unit" class="form-control" /></td><td><button type="button" class="btn btn-danger remove-tr">Remove</button></td></tr>'
-    //         );
-    //     });
+        //     $("#add").click(function() {
+        //         ++i;
 
-    //     $(document).on("click", ".remove-tr", function() {
-    //         $(this).parents("tr").remove();
-    //     });
+        //         $("#dynamicTable").append(
+        //             '<tr><td><input type="text" name="design_name_' + i + '" placeholder="Enter Product Name" class="form-control" /></td><td><input type="text" name="product_quantity_' + i + '" placeholder="Enter Product Quantity" class="form-control" /></td><td><input type="text" name="product_size_' + i + '" placeholder="Enter Product Price" class="form-control" /></td><td><input type="text" name="product_unit_' + i + '" placeholder="Enter Product Unit" class="form-control" /></td><td><button type="button" class="btn btn-danger remove-tr">Remove</button></td></tr>'
+        //         );
+        //     });
 
-    //     // Hide the "Add More" button initially if needed
-    //     // $("#add").hide();
-    // });
+        //     $(document).on("click", ".remove-tr", function() {
+        //         $(this).parents("tr").remove();
+        //     });
 
-    $(document).ready(function() {
-    var i = {!! count($editData) !!}; // Initialize i with the number of existing rows
+        //     // Hide the "Add More" button initially if needed
+        //     // $("#add").hide();
+        // });
 
-    $("#add").click(function() {
-        ++i;
+        $(document).ready(function() {
+            var i = {!! count($editData) !!}; // Initialize i with the number of existing rows
 
-        $("#dynamicTable").append(
-            '<tr><td><input type="text" name="design_name_' + i + '" placeholder="Enter Product Name" class="form-control" /></td><td><input type="text" name="product_quantity_' + i + '" placeholder="Enter Product Quantity" class="form-control" /></td><td><input type="text" name="product_size_' + i + '" placeholder="Enter Product Price" class="form-control" /></td><td><input type="text" name="product_unit_' + i + '][product_unit_]" placeholder="Enter Product Unit" class="form-control" /></td><td><a class="delete-btn btn btn-danger m-1 remove-tr" title="Delete Tender"><i class="fas fa-archive"></i></a></td></tr>'
-        );
-    });
+            $("#add").click(function() {
+                ++i;
 
-    $(document).on("click", ".remove-tr", function() {
-        $(this).parents("tr").remove();
-    });
+                $("#dynamicTable").append(
+                    '<tr><td><input type="text" name="design_name_' + i +
+                    '" placeholder="Enter Product Name" class="form-control" /></td><td><input type="text" name="product_quantity_' +
+                    i +
+                    '" placeholder="Enter Product Quantity" class="form-control" /></td><td><input type="text" name="product_size_' +
+                    i +
+                    '" placeholder="Enter Product Price" class="form-control" /></td><td><input type="text" name="product_unit_' +
+                    i +
+                    '][product_unit_]" placeholder="Enter Product Unit" class="form-control" /></td><td><a class="delete-btn btn btn-danger m-1 remove-tr" title="Delete Tender"><i class="fas fa-archive"></i></a></td></tr>'
+                );
+            });
 
-    // Hide the "Add More" button initially if needed
-    // $("#add").hide();
-});
+            $(document).on("click", ".remove-tr", function() {
+                $(this).parents("tr").remove();
+            });
 
-</script>
-<script>
-    $('.delete-btn').click(function(e) {
+            // Hide the "Add More" button initially if needed
+            // $("#add").hide();
+        });
+    </script>
+    <script>
+        $('.delete-btn').click(function(e) {
 
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $("#delete_id").val($(this).attr("data-id"));
-                $("#deleteform").submit();
-            }
-        })
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $("#delete_id").val($(this).attr("data-id"));
+                    $("#deleteform").submit();
+                }
+            })
 
-    });
-</script>
-
-
+        });
+    </script>
 
 
 
-{{-- <script>
+
+
+    {{-- <script>
  $(document).on("click", ".remove-tr", function() {
     var rowId = $(this).data('row-id');
     var row = $(this).closest('tr');

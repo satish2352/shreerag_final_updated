@@ -33,9 +33,7 @@ class DirectorDeskRepository {
             $ImageName = $last_insert_id .'_' . rand( 100000, 999999 ) . '_image.' . $request->image->extension();
 
             $finalOutput = DirectorDesk::find( $last_insert_id );
-            // Assuming $request directly contains the ID
             $finalOutput->image = $ImageName;
-            // Save the image filename to the database
             $finalOutput->save();
 
             $data[ 'ImageName' ] = $ImageName;

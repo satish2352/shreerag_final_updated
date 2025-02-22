@@ -23,15 +23,6 @@
                         </div>
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 @include('admin.layouts.alert')
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
@@ -73,14 +64,10 @@
                                                             <a href="{{ route('edit-product', base64_encode($item->id)) }}"
                                                                 class="btn btn-sm btn-outline-primary m-1"
                                                                 title="Edit Slide"><i class="fas fa-pencil-alt"></i></a>
-                                                                
-                                                                <a data-id="{{ $item->id }}"
-                                                                    class="show-btn btn btn-sm btn-outline-primary m-1"
-                                                                    title="Show Slide "><i class="fas fa-eye"></i></a>
-                                                            {{-- <a  href="{{ route('show-product', base64_encode($item->id)) }} "
-                                                            data-id="{{ $item->id }}"
+
+                                                            <a data-id="{{ $item->id }}"
                                                                 class="show-btn btn btn-sm btn-outline-primary m-1"
-                                                                title="Show Slide "><i class="fas fa-eye"></i></a> --}}
+                                                                title="Show Slide "><i class="fas fa-eye"></i></a>
                                                             <a
                                                                 href="{{ route('delete-product', base64_encode($item->id)) }} "><button
                                                                     data-toggle="tooltip" title="Trash"
@@ -102,11 +89,6 @@
             </div>
         </div>
     </div>
-
-    {{-- <form method="POST" action="{{ url('/delete-product') }}" id="deleteform">
-        @csrf
-        <input type="hidden" name="delete_id" id="delete_id" value="">
-    </form> --}}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

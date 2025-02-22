@@ -2,9 +2,6 @@
 namespace App\Http\Services\Organizations\Purchase;
 use App\Http\Repository\Organizations\Purchase\VendorRepository;
 use Carbon\Carbon;
-// use App\Models\ {
-//     DesignModel
-//     };
 
 use Config;
     class VendorServices
@@ -13,8 +10,6 @@ use Config;
         public function __construct(){
         $this->repo = new VendorRepository();
     }
-
-
     public function getAll(){
         try {
             return $this->repo->getAll();
@@ -22,24 +17,19 @@ use Config;
             return $e;
         }
     }
-
-
-public function addAll($request)
-{
-    try {
-        $result = $this->repo->addAll($request);
-        if ($result['status'] === 'success') {
-            return ['status' => 'success', 'msg' => 'This business send to Design Department Successfully.'];
-        } else {
-            return ['status' => 'error', 'msg' => 'Failed to Add Data.'];
-        }  
-    } catch (Exception $e) {
-        return ['status' => 'error', 'msg' => $e->getMessage()];
-    }      
-}
-
-
-
+    public function addAll($request)
+    {
+        try {
+            $result = $this->repo->addAll($request);
+            if ($result['status'] === 'success') {
+                return ['status' => 'success', 'msg' => 'This business send to Design Department Successfully.'];
+            } else {
+                return ['status' => 'error', 'msg' => 'Failed to Add Data.'];
+            }  
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }      
+    }
     public function getById($id){
         try {
             return $this->repo->getById($id);
@@ -47,7 +37,6 @@ public function addAll($request)
             return $e;
         }
     }
-
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
@@ -60,7 +49,6 @@ public function addAll($request)
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }      
     }
-
     public function deleteById($id)
     {
         try {

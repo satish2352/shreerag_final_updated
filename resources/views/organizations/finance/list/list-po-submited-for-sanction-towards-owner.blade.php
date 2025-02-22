@@ -63,15 +63,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -80,15 +71,6 @@
                                         data-click-to-select="true" data-toolbar="#toolbar">
                                         <thead>
                                             <tr>
-
-                                                {{-- <th data-field="id">ID</th>
-                                                <th data-field="purchase_order_id" data-editable="false">Purchase Order No</th>
-                                                <th data-field="grn_no" data-editable="false">GRN No</th>
-                                                <th data-field="store_receipt_no" data-editable="false">SR No</th>
-                                                <th data-field="grn_number" data-editable="false">Title</th>
-                                                <th data-field="grn_date" data-editable="false">Description</th>
-                                                <th data-field="purchase_id" data-editable="false">Remark</th>
-                                                <th data-field="action" data-editable="false">Action</th> --}}
                                                 <th data-field="id">ID</th>
                                                 <th data-field="purchase_orders_id" data-editable="false">PO Number</th>
                                                 <th data-field="grn_no_generate" data-editable="false">GRN No.</th>
@@ -108,35 +90,16 @@
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ucwords($data->purchase_orders_id)}}</td>
-                                                    <td>{{ucwords($data->grn_no_generate)}}</td>
-                                                    <td>{{ucwords($data->store_receipt_no_generate)}}</td>
-                                                    <td>{{ucwords($data->store_remark)}}</td>
-                                                    <td>{{ucwords($data->vendor_name)}}</td>
-                                                    <td>{{ucwords($data->vendor_company_name)}}</td>
-                                                    <td>{{ucwords($data->vendor_email)}}</td>
-                                                    <td>{{ucwords($data->contact_no)}}</td>
-                                                    <td>{{ucwords($data->vendor_address)}}</td>
-                                                    <td>{{ucwords($data->gst_no)}}</td>
-                                                    {{-- <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ ucwords($data->purchase_orders_id	) }}</td>
-                                                    <td>{{ ucwords($data->grn_no) }}</td>
-                                                    <td>{{ ucwords($data->store_receipt_no) }}</td>
-                                                    <td>{{ ucwords($data->title) }}</td>
-                                                    <td>{{ ucwords($data->description) }}</td>
-                                                    <td>{{ ucwords($data->remarks) }}</td> --}}
-
-                                                    {{-- <td>
-                                                        <div style="display: flex; align-items: center;">
-                                                            <a
-                                                                href="{{ route('list-accepted-grn-srn-finance', base64_encode($data->purchase_order_id)) }} "><button
-                                                                    data-toggle="tooltip" title="Check details"
-                                                                    class="pd-setting-ed">Check details</button></a>
-
-
-                                                        </div>
-                                                    </td> --}}
-
+                                                    <td>{{ ucwords($data->purchase_orders_id) }}</td>
+                                                    <td>{{ ucwords($data->grn_no_generate) }}</td>
+                                                    <td>{{ ucwords($data->store_receipt_no_generate) }}</td>
+                                                    <td>{{ ucwords($data->store_remark) }}</td>
+                                                    <td>{{ ucwords($data->vendor_name) }}</td>
+                                                    <td>{{ ucwords($data->vendor_company_name) }}</td>
+                                                    <td>{{ ucwords($data->vendor_email) }}</td>
+                                                    <td>{{ ucwords($data->contact_no) }}</td>
+                                                    <td>{{ ucwords($data->vendor_address) }}</td>
+                                                    <td>{{ ucwords($data->gst_no) }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

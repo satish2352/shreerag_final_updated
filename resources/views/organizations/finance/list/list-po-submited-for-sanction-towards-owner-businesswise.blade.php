@@ -63,15 +63,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -82,7 +73,8 @@
                                             <tr>
 
                                                 <th data-field="id">ID</th>
-                                                <th data-field="purchase_order_id" data-editable="false">Purchase Order No</th>
+                                                <th data-field="purchase_order_id" data-editable="false">Purchase Order No
+                                                </th>
                                                 <th data-field="grn_no" data-editable="false">GRN No</th>
                                                 <th data-field="store_receipt_no" data-editable="false">SR No</th>
                                                 <th data-field="grn_number" data-editable="false">Title</th>
@@ -96,7 +88,7 @@
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ ucwords($data->purchase_order_id	) }}</td>
+                                                    <td>{{ ucwords($data->purchase_order_id) }}</td>
                                                     <td>{{ ucwords($data->grn_no) }}</td>
                                                     <td>{{ ucwords($data->store_receipt_no) }}</td>
                                                     <td>{{ ucwords($data->title) }}</td>

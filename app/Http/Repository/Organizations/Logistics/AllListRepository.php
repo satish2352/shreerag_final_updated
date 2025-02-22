@@ -37,13 +37,8 @@ public function getAllCompletedProduction(){
   ->leftJoin('production', function($join) {
     $join->on('tbl_customer_product_quantity_tracking.production_id', '=', 'production.id');
 })
-      // ->leftJoin('tbl_customer_product_quantity_tracking', function($join) {
-      //   $join->on('bap1.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id');
-      // })
       ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status',$array_to_be_quantity_tracking)
       ->whereIn('bap1.production_status_id',$array_to_be_check)
-      // ->whereNull('business_application_processes.logistics_status_id')====hide quantity tracking
-      // ->whereIn('business_application_processes.logistics_status_id',$array_to_be_check_new)
       ->where('businesses.is_active',true)
       ->where('businesses.is_deleted', 0)
       ->distinct('businesses_details.id')
@@ -107,8 +102,6 @@ public function getAllLogistics() {
           })
         
             ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status',$array_to_be_quantity_tracking)
-          // ->whereIn('bap1.logistics_status_id', $array_to_be_check)
-          // ->whereNull('bap1.dispatch_status_id')
           ->where('businesses.is_active', true)
           ->select(
             'tbl_customer_product_quantity_tracking.id',
@@ -152,7 +145,6 @@ public function getAllLogistics() {
 public function getAllListSendToFiananceByLogistics(){
   try {
   
-    // $array_to_be_check = [config('constants.LOGISTICS_DEPARTMENT.LOGISTICS_SEND_PRODUCTION_REQUEST_TO_FINANCE')];
     $array_to_be_quantity_tracking = [ config('constants.LOGISTICS_DEPARTMENT.UPDATED_COMPLETED_QUANLTITY_LOGISTICS_DEPT_SEND_TO_FIANANCE_DEPT')];
 
     $data_output = Logistics::leftJoin('tbl_customer_product_quantity_tracking', function($join) {
@@ -170,16 +162,9 @@ public function getAllListSendToFiananceByLogistics(){
         ->leftJoin('production', function($join) {
           $join->on('tbl_customer_product_quantity_tracking.production_id', '=', 'production.id');
       })
-      // ->whereNotNull('tbl_logistics.vehicle_type_id')
-      // ->whereNotNull('tbl_logistics.transport_name_id')
-      // ->whereNotNull('tbl_logistics.from_place')
-      ->where('tbl_customer_product_quantity_tracking.logistics_list_status','Send_Fianance')
-      // ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status',$array_to_be_quantity_tracking)
-      // ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status',$array_to_be_check)
-      
+      ->where('tbl_customer_product_quantity_tracking.logistics_list_status','Send_Fianance')      
       ->where('businesses.is_active',true)
       ->where('businesses.is_deleted', 0)
-      // ->distinct('businesses_details.id')
       ->select(
         'tbl_customer_product_quantity_tracking.id',
         'tbl_customer_product_quantity_tracking.business_details_id',
@@ -191,18 +176,16 @@ public function getAllListSendToFiananceByLogistics(){
         'businesses.remarks',
         'businesses.is_active',
         'tbl_customer_product_quantity_tracking.completed_quantity',
-        // DB::raw('(businesses_details.quantity - tbl_customer_product_quantity_tracking.completed_quantity) AS remaining_quantity'),
         DB::raw('(SELECT SUM(t2.completed_quantity)
         FROM tbl_customer_product_quantity_tracking AS t2
         WHERE t2.business_details_id = businesses_details.id
           AND t2.id <= tbl_customer_product_quantity_tracking.id
        ) AS cumulative_completed_quantity'),
-DB::raw('(businesses_details.quantity - (SELECT SUM(t2.completed_quantity)
+      DB::raw('(businesses_details.quantity - (SELECT SUM(t2.completed_quantity)
         FROM tbl_customer_product_quantity_tracking AS t2
         WHERE t2.business_details_id = businesses_details.id
           AND t2.id <= tbl_customer_product_quantity_tracking.id
        )) AS remaining_quantity'),
-// DB::raw('production.updated_at AS updated_at'),
         'production.business_id',
         'production.id as productionId',
         'bap1.store_material_sent_date',
@@ -214,9 +197,7 @@ DB::raw('(businesses_details.quantity - (SELECT SUM(t2.completed_quantity)
     ) 
     ->orderBy('tbl_logistics.updated_at', 'desc')
       ->get();
-     
- 
-    return $data_output;
+   return $data_output;
   } catch (\Exception $e) {
       return $e;
   }

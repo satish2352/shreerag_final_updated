@@ -2,9 +2,6 @@
 namespace App\Http\Services\Organizations\Finance;
 use App\Http\Repository\Organizations\Finance\AllListRepository;
 use Carbon\Carbon;
-// use App\Models\ {
-//     DesignModel
-//     };
 
 use Config;
 class AllListServices
@@ -15,14 +12,9 @@ class AllListServices
         $this->repo = new AllListRepository();
 
     }
-
-  
-    
     public function getAllListSRAndGRNGeanrated(){
         try {
             $data_output = $this->repo->getAllListSRAndGRNGeanrated();
-            // dd($data_output);
-            // die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -45,8 +37,6 @@ class AllListServices
             return $e;
         }
     }
-
-
     public function listPOSentForApprovaTowardsOwner(){
         try {
             $data_output = $this->repo->listPOSentForApprovaTowardsOwner();
@@ -55,9 +45,6 @@ class AllListServices
             return $e;
         }
     }
-
-      
-
     public function listPOSanctionAndNeedToDoPaymentToVendor(){
         try {
             $data_output = $this->repo->listPOSanctionAndNeedToDoPaymentToVendor();
@@ -86,24 +73,4 @@ class AllListServices
             return $e;
         }
     }
-    
-    // public function getAllListMaterialSentToPurchase(){
-    //     try {
-    //         return $this->repo->getAllListMaterialSentToPurchase();
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
-
-
-    // public function getAllListMaterialReceivedFromQuality(){
-    //     try {
-    //         return $this->repo->getAllListMaterialReceivedFromQuality();
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
-
-
-
 }

@@ -10,9 +10,6 @@ PurchaseOrderDetailsModel
 use Config;
 
 class PurchaseRepository  {
-
-
-
 public function getDetailsForPurchase($id) {
 
     return PurchaseOrderModel::where('id', '=', $id)->first();

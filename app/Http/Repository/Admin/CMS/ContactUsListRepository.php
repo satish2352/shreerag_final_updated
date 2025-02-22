@@ -3,11 +3,9 @@ namespace App\Http\Repository\Admin\CMS;
 use Illuminate\Database\QueryException;
 use DB;
 use Illuminate\Support\Carbon;
-// use Session;
 use App\Models\ {
     ContactUs
-}
-;
+};
 use Config;
 
 class ContactUsListRepository {
@@ -20,8 +18,7 @@ class ContactUsListRepository {
         }
     }
 
-    public function getById( $id )
- {
+    public function getById( $id ){
         try {
             $contactus_data = ContactUs::find( $id );
             if ( $contactus_data ) {
@@ -37,7 +34,6 @@ class ContactUsListRepository {
             ];
         }
     }
-
     public function deleteById( $id ) {
         try {
             $deleteDataById = ContactUs::find( $id );

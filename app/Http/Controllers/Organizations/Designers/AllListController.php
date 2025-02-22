@@ -21,34 +21,6 @@ class AllListController extends Controller
     public function __construct() {
         $this->service = new AllListServices();
     }
-
-    // public function acceptdesignbyProduct() {
-    //     try {
-    //         $data_output = $this->service->acceptdesignbyProduct();
-            
-    //         if ( $data_output->isNotEmpty() ) {
-    //             foreach ( $data_output as $data ) {
-
-    //                 $business_id = $data->id;
-                  
-    //                 if ( !empty( $business_id ) ) {
-    //                     $update_data[ 'designer_is_view_accepted_design' ] = '1';
-    //                     NotificationStatus::where( 'designer_is_view_accepted_design', '0' )
-    //                     ->where( 'id', $business_id )
-    //                     ->update( $update_data );
-    //                 }
-    //             }
-    //         } else {
-    //             return view( 'organizations.designer.list.list-accept-design-by-production', [
-    //                 'data_output' => [],
-    //                 'message' => 'No data found'
-    //             ] );
-    //         }
-    //         return view( 'organizations.designer.list.list-accept-design-by-production', compact( 'data_output' ) );
-    //     } catch ( \Exception $e ) {
-    //         return $e;
-    //     }
-    // }
     public function acceptdesignbyProduct() {
         try {
             $data_output = $this->service->acceptdesignbyProduct();

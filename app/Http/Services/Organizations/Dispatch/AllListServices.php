@@ -2,9 +2,6 @@
 namespace App\Http\Services\Organizations\Dispatch;
 use App\Http\Repository\Organizations\Dispatch\AllListRepository;
 use Carbon\Carbon;
-// use App\Models\ {
-//     DesignModel
-//     };
 
 use Config;
 class AllListServices

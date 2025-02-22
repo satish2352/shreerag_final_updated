@@ -55,61 +55,82 @@
                                         </div>
                                     </div>
                                 @endif
-                               
+
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="all-form-element-inner">
-                                        <form action="{{ route('update-design-upload') }}" method="POST" id="addDesignsForm" enctype="multipart/form-data">
+                                        <form action="{{ route('update-design-upload') }}" method="POST"
+                                            id="addDesignsForm" enctype="multipart/form-data">
                                             @csrf
-                                            <input type="hidden" class="form-control" value="{{ $business_details_data->id }}" id="business_id" name="business_id">
-                                        
+                                            <input type="hidden" class="form-control"
+                                                value="{{ $business_details_data->id }}" id="business_id"
+                                                name="business_id">
+
                                             <div class="form-group-inner">
                                                 <div class="row">
                                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                                         <label for="product_name">Product Name</label>
-                                                        <input type="text" class="form-control" id="product_name" name="product_name" value="{{ old('product_name', $business_details_data->product_name) }}" readonly>
+                                                        <input type="text" class="form-control" id="product_name"
+                                                            name="product_name"
+                                                            value="{{ old('product_name', $business_details_data->product_name) }}"
+                                                            readonly>
                                                     </div>
                                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                                         <label for="quantity">Quantity</label>
-                                                        <input type="text" class="form-control" id="quantity" name="quantity" value="{{ old('quantity', $business_details_data->quantity) }}" readonly>
+                                                        <input type="text" class="form-control" id="quantity"
+                                                            name="quantity"
+                                                            value="{{ old('quantity', $business_details_data->quantity) }}"
+                                                            readonly>
                                                     </div>
                                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                                         <label for="description">Description</label>
-                                                        <input type="text" class="form-control" id="description" name="description" value="{{ old('description', $business_details_data->description) }}" readonly>
+                                                        <input type="text" class="form-control" id="description"
+                                                            name="description"
+                                                            value="{{ old('description', $business_details_data->description) }}"
+                                                            readonly>
                                                     </div>
-                                                    <div  class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
-                                                        <label for="design_image">Upload Design Layout (PDF, 1KB - 5MB)   <span class="text-danger">*</span></label>  
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                        <label for="design_image">Upload Design Layout (PDF, 1KB - 5MB)
+                                                            <span class="text-danger">*</span></label>
                                                         {{-- <input type="file" class="form-control" accept="application/pdf" name="design_image"> --}}
-                                                        <input type="file" class="form-control" accept="application/pdf" name="design_image" > <!-- 5MB -->
-                                                        
-                                                        @if ($errors->has("design_image"))
-                                                            <span class="red-text">{{ $errors->first("design_image") }}</span>
+                                                        <input type="file" class="form-control" accept="application/pdf"
+                                                            name="design_image"> <!-- 5MB -->
+
+                                                        @if ($errors->has('design_image'))
+                                                            <span
+                                                                class="red-text">{{ $errors->first('design_image') }}</span>
                                                         @endif
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="bom_image">Upload BOM (Excel, 1KB - 5MB)  <span class="text-danger">*</span></label>
-                                                        <input type="file" class="form-control" accept=".xls,.xlsx" name="bom_image" > <!-- 5MB -->
-                                                    
-                                                        @if ($errors->has("bom_image"))
-                                                            <span class="red-text">{{ $errors->first("bom_image") }}</span>
+                                                        <label for="bom_image">Upload BOM (Excel, 1KB - 5MB) <span
+                                                                class="text-danger">*</span></label>
+                                                        <input type="file" class="form-control" accept=".xls,.xlsx"
+                                                            name="bom_image"> <!-- 5MB -->
+
+                                                        @if ($errors->has('bom_image'))
+                                                            <span class="red-text">{{ $errors->first('bom_image') }}</span>
                                                         @endif
                                                     </div>
-                                                    
+
                                                 </div>
                                                 <div class="login-btn-inner">
                                                     <div class="row">
                                                         <div class="col-lg-5"></div>
                                                         <div class="col-lg-7">
                                                             <div class="login-horizental cancel-wp pull-left">
-                                                                <a href="{{ route('list-design-upload') }}" class="btn btn-white" style="margin-bottom:50px">Cancel</a>
-                                                                <button class="btn btn-sm btn-primary login-submit-cs" type="submit" style="margin-bottom:50px">Save Data</button>
+                                                                <a href="{{ route('list-design-upload') }}"
+                                                                    class="btn btn-white"
+                                                                    style="margin-bottom:50px">Cancel</a>
+                                                                <button class="btn btn-sm btn-primary login-submit-cs"
+                                                                    type="submit" style="margin-bottom:50px">Save
+                                                                    Data</button>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </form>
-                                        
-                                </div>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -132,7 +153,7 @@
                 var fileSize = element.files[0].size; // Get file size in bytes
                 return this.optional(element) || (fileSize >= param.min && fileSize <= param.max);
             }, 'Invalid file size.');
-    
+
             // Initialize jQuery Validation
             $("#addDesignsForm").validate({
                 ignore: [], // Validate hidden inputs as well
@@ -140,12 +161,18 @@
                     design_image: {
                         required: true,
                         accept: "application/pdf",
-                        filesize: { min: 1024, max: 5242880 } // 1KB to 5MB
+                        filesize: {
+                            min: 1024,
+                            max: 5242880
+                        } // 1KB to 5MB
                     },
                     bom_image: {
                         required: true,
                         accept: ".xls,.xlsx",
-                        filesize: { min: 1024, max: 5242880 } // 1KB to 5MB
+                        filesize: {
+                            min: 1024,
+                            max: 5242880
+                        } // 1KB to 5MB
                     }
                 },
                 messages: {
@@ -179,17 +206,18 @@
                     });
                 }
             });
-    
+
             // Event listener for file input changes
             $(document).on('change', 'input[type="file"]', function() {
                 $(this).rules("remove"); // Remove existing rules
                 $(this).rules("add", { // Re-add rules for validation
-                    filesize: { min: 1024, max: 5242880 }, // 1KB to 5MB
+                    filesize: {
+                        min: 1024,
+                        max: 5242880
+                    }, // 1KB to 5MB
                 });
                 $(this).valid(); // Trigger validation immediately
             });
         });
     </script>
-    
-    
 @endsection

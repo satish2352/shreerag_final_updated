@@ -42,7 +42,7 @@ public function getCompletedProductList($request)
             ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
             ->where('businesses.is_active', true)
             ->where('businesses.is_deleted', 0);
-        // Apply filters
+      
         if ($request->filled('from_date') && $request->filled('to_date')) {
             $query->whereBetween('tbl_dispatch.updated_at', [$request->from_date, $request->to_date]);
         }
@@ -55,7 +55,6 @@ public function getCompletedProductList($request)
             $query->whereMonth('tbl_dispatch.updated_at', $request->month);
         }
 
-        // Clone query for data_output with proper grouping
         $data_output = $query->select(
             'businesses_details.id as business_details_id',
             'businesses.customer_po_number',
@@ -64,7 +63,7 @@ public function getCompletedProductList($request)
             'businesses_details.description',
             'businesses_details.quantity',
             DB::raw('SUM(tcqt1.completed_quantity) as total_completed_quantity'),
-            DB::raw('MAX(tbl_dispatch.updated_at) as updated_at') // Use alias for clarity
+            DB::raw('MAX(tbl_dispatch.updated_at) as updated_at') 
         )
         ->groupBy(
             'businesses_details.id',
@@ -75,10 +74,9 @@ public function getCompletedProductList($request)
             'businesses_details.quantity'
         )
         ->havingRaw('SUM(tcqt1.completed_quantity) = businesses_details.quantity')
-        ->orderBy(DB::raw('MAX(tbl_dispatch.updated_at)'), 'desc') // Use aggregate function in ORDER BY
+        ->orderBy(DB::raw('MAX(tbl_dispatch.updated_at)'), 'desc') 
         ->get();
 
-        // Calculate total count using a subquery to match data_output
         $totalCount = $query->select('businesses_details.id')
             ->groupBy(
                 'businesses_details.id',

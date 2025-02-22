@@ -20,9 +20,7 @@ use Config;
         } catch (\Exception $e) {
             return $e;
         }
-    }
-
-   
+    }   
     public function submitBOMToOwner(){
         try {
             $data = $this->repo->submitBOMToOwner();

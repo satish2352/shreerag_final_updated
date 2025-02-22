@@ -26,7 +26,6 @@ class InventoryController extends Controller
     public function __construct() {
         $this->service = new InventoryServices();
     }
-
     public function getMaterialList() {
         try {
             $getOutput = $this->service->getAll();
@@ -35,14 +34,12 @@ class InventoryController extends Controller
             return $e;
         }
     }
-
     public function add() {
         $dataOutputPartItem = PartItem::where( 'is_active', true )->get();
         return view( 'organizations.inventory.add-stock', compact(
             'dataOutputPartItem'
         ) );
     }
-
     public function store( Request $request ) {
         $rules = [
             // 'name' => 'required|max:255',
@@ -79,7 +76,6 @@ class InventoryController extends Controller
             return redirect( 'storedept/add-product-stock' )->withInput()->with( [ 'msg' => $e->getMessage(), 'status' => 'error' ] );
         }
     }
-
     public function edit( Request $request ) {
         $edit_data_id = base64_decode( $request->id );
         $editData = $this->service->getById( $edit_data_id );
@@ -88,7 +84,6 @@ class InventoryController extends Controller
         $dataOutputGroupMaster = GroupMaster::where( 'is_active', true )->get();
         return view( 'organizations.inventory.edit-stock', compact( 'editData', 'data', 'dataOutputPartItem' ) );
     }
-
     public function update( Request $request ) {
         $id = $request->edit_id;
         $rules = [
@@ -128,7 +123,6 @@ class InventoryController extends Controller
             ->with( [ 'msg' => $e->getMessage(), 'status' => 'error' ] );
         }
     }
-
     public function destroy( Request $request ) {
         $delete_data_id = base64_decode( $request->id );
         try {
@@ -148,5 +142,4 @@ class InventoryController extends Controller
             return $e;
         }
     }
-
 }

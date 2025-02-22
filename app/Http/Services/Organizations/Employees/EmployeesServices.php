@@ -13,8 +13,6 @@ class EmployeesServices
     public function __construct(){
         $this->repo = new EmployeesRepository();
     }
-
-
     public function getAll(){
         try {
             return $this->repo->getAll();
@@ -22,8 +20,6 @@ class EmployeesServices
             return $e;
         }
     }
-
-
     public function addAll($request){
         try {
             $last_id = $this->repo->addAll($request);
@@ -79,7 +75,6 @@ class EmployeesServices
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }      
     }
-
     public function deleteById($id)
     {
         try {

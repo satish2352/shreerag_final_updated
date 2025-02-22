@@ -2,7 +2,6 @@
 namespace App\Http\Services\Organizations\Purchase;
 use App\Http\Repository\Organizations\Purchase\TaxRepository;
 use Carbon\Carbon;
-
 use Config;
 class TaxServices
 {
@@ -10,8 +9,6 @@ class TaxServices
     public function __construct(){
         $this->repo = new TaxRepository();
     }
-
-
     public function getAll(){
         try {
             return $this->repo->getAll();
@@ -19,8 +16,6 @@ class TaxServices
             return $e;
         }
     }
-
-
     public function addAll($request){
       try {
           $last_id = $this->repo->addAll($request);
@@ -40,7 +35,6 @@ class TaxServices
             return $e;
         }
     }
-
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
@@ -54,15 +48,8 @@ class TaxServices
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }      
-    }
-
-
-   
-    // public function updateOne($id){
-    //     return $this->repo->updateOne($id);
-    // }   
-    public function deleteById($id)
-    {
+    }  
+    public function deleteById($id){
         try {
             $delete = $this->repo->deleteById($id);
             if ($delete) {

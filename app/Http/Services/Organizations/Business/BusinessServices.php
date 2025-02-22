@@ -3,12 +3,6 @@ namespace App\Http\Services\Organizations\Business;
 
 use App\Http\Repository\Organizations\Business\BusinessRepository;
 use Carbon\Carbon;
-
-// use App\Models\ {
-//     DesignModel
-//     }
-;
-
 use Config;
 
 class BusinessServices

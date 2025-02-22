@@ -33,9 +33,6 @@
                                 <h1>Material Ask By Production To Store</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
-                                        {{-- <div class="login-horizental cancel-wp pull-left">
-                                                <a href="{{ route('add-design-upload') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Design</button></a>
-                                        </div> --}}
                                     </div>
                                     <div class="col-lg-10"></div>
                                 </div>
@@ -63,14 +60,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
 
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
@@ -90,7 +79,8 @@
                                                 <th data-field="purchase_id" data-editable="false">Remark</th>
                                                 <th data-field="design_image" data-editable="false">Design Layout</th>
                                                 <th data-field="bom_image" data-editable="false">BOM</th>
-                                                <th data-field="re_design_image" data-editable="false">Revised Design Layout</th>
+                                                <th data-field="re_design_image" data-editable="false">Revised Design Layout
+                                                </th>
                                                 <th data-field="re_bom_image" data-editable="false">Revised BOM</th>
                                             </tr>
                                         </thead>
@@ -100,9 +90,9 @@
 
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
-                                                    <td>{{ucwords($data->product_name)}}</td>
-                                                    <td>{{ucwords($data->title)}}</td>
-                                                    <td>{{ucwords($data->quantity)}}</td>
+                                                    <td>{{ ucwords($data->product_name) }}</td>
+                                                    <td>{{ ucwords($data->title) }}</td>
+                                                    <td>{{ ucwords($data->quantity) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                     <td> <a class="img-size" target="_blank"
@@ -114,18 +104,18 @@
                                                             alt="bill of material">Click to download</a>
                                                     </td>
                                                     @if ($data->reject_reason_prod == '')
-                                                    <td>-</td>
-                                                    <td>-</td>
-                                                @else
-                                                    <td> <a class="img-size" target="_blank"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_design_image'] }}"
-                                                        alt="Design"> Click to view</a>
-                                                </td>
-                                                <td> <a class="img-size"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_bom_image'] }}"
-                                                        alt="bill of material">Click to download</a>
-                                                </td>
-                                                @endif
+                                                        <td>-</td>
+                                                        <td>-</td>
+                                                    @else
+                                                        <td> <a class="img-size" target="_blank"
+                                                                href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_design_image'] }}"
+                                                                alt="Design"> Click to view</a>
+                                                        </td>
+                                                        <td> <a class="img-size"
+                                                                href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_bom_image'] }}"
+                                                                alt="bill of material">Click to download</a>
+                                                        </td>
+                                                    @endif
                                                 </tr>
                                             @endforeach
                                         </tbody>

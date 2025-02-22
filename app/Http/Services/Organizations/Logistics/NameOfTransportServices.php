@@ -9,8 +9,6 @@ class NameOfTransportServices
     public function __construct(){
         $this->repo = new NameOfTransportRepository();
     }
-
-
     public function getAll(){
         try {
             return $this->repo->getAll();
@@ -18,8 +16,6 @@ class NameOfTransportServices
             return $e;
         }
     }
-
-
     public function addAll($request){
       try {
           $last_id = $this->repo->addAll($request);
@@ -54,12 +50,6 @@ class NameOfTransportServices
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }      
     }
-
-
-   
-    // public function updateOne($id){
-    //     return $this->repo->updateOne($id);
-    // }   
     public function deleteById($id)
     {
         try {

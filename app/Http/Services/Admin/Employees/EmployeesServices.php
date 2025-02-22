@@ -13,8 +13,6 @@ class EmployeesServices
     public function __construct(){
         $this->repo = new EmployeesRepository();
     }
-
-
     public function getAll(){
         try {
             return $this->repo->getAll();
@@ -22,8 +20,6 @@ class EmployeesServices
             return $e;
         }
     }
-
-
     public function addAll($request){
         try {
             $last_id = $this->repo->addAll($request);
@@ -47,7 +43,6 @@ class EmployeesServices
             return $e;
         }
     }
-
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
@@ -57,7 +52,6 @@ class EmployeesServices
                     if (file_exists_view(Config::get('DocumentConstant.EMPLOYEES_DELETE') . $return_data['image'])) {
                         removeImage(Config::get('DocumentConstant.EMPLOYEES_DELETE') . $return_data['image']);
                     }
-
                 }
                 if ($request->hasFile('image')) {
                     $englishImageName = $return_data['last_insert_id'] . '_' . rand(100000, 999999) . '_image.' . $request->file('image')->getClientOriginalExtension();
@@ -65,7 +59,6 @@ class EmployeesServices
                 } else {
                     
                 }                
-                // $englishImageName = $return_data['last_insert_id'] . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
                 uploadImage($request, 'image', $path, $englishImageName);
                 $slide_data = EmployeesModel::find($return_data['last_insert_id']);
                 $slide_data->emp_image = $englishImageName;
@@ -79,13 +72,7 @@ class EmployeesServices
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }      
-    }
-
-
-   
-    // public function updateOne($id){
-    //     return $this->repo->updateOne($id);
-    // }   
+    }  
     public function deleteById($emp_id)
     {
         try {

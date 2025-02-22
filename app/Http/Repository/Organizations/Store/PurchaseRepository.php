@@ -10,7 +10,6 @@ use Config;
 
 class PurchaseRepository  {
 
-
     public function getAll(){
         try {
             $data_output= PurchaseModel::get();
@@ -19,32 +18,27 @@ class PurchaseRepository  {
             return $e;
         }
     }
+    public function addAll($request){
+        try {
+            $dataOutput = new PurchaseModel();
+            $dataOutput->name = $request->name;
+            $dataOutput->email = $request->email;
+            $dataOutput->price = $request->price;
+            $dataOutput->contact=$request->contact;
+            $dataOutput->save();
 
+            return [
+                'msg' => 'Data Added Successfully',
+                'status' => 'success'
+            ];
 
-public function addAll($request)
-{
-    try {
-        $dataOutput = new PurchaseModel();
-        $dataOutput->name = $request->name;
-        $dataOutput->email = $request->email;
-        $dataOutput->price = $request->price;
-        $dataOutput->contact=$request->contact;
-        $dataOutput->save();
-
-        return [
-            'msg' => 'Data Added Successfully',
-            'status' => 'success'
-        ];
-
-    } catch (\Exception $e) {
-        return [
-            'msg' => $e->getMessage(),
-            'status' => 'error'
-        ];
+        } catch (\Exception $e) {
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error'
+            ];
+        }
     }
-}
-    
-
     public function getById($id){
     try {
             $dataOutputByid = PurchaseModel::find($id);
@@ -60,8 +54,7 @@ public function addAll($request)
             ];
         }
     }
-
-        public function updateAll($request){
+    public function updateAll($request){
         try { 
             $dataOutput = PurchaseModel::find($request->id);
             if (!$dataOutput) {
@@ -92,8 +85,6 @@ public function addAll($request)
             ];
         }
     }
-
-
     public function deleteById($id){
             try {
                 $deleteDataById = PurchaseModel::find($id);

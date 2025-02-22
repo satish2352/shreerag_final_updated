@@ -2,9 +2,6 @@
 namespace App\Http\Services\Organizations\Productions;
 use App\Http\Repository\Organizations\Productions\AllListRepository;
 use Carbon\Carbon;
-// use App\Models\ {
-//     DesignModel
-//     };
 
 use Config;
 class AllListServices
@@ -15,25 +12,6 @@ class AllListServices
         $this->repo = new AllListRepository();
 
     }
-
-    // public function getAllListDesignRecievedForCorrection(){
-    //     try {
-    //         return  $this->repo->getAllListDesignRecievedForCorrection();
-        
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // } 
-
-    // public function getAllListCorrectionToDesignFromProduction(){
-    //     try {
-    //         return $this->repo->getAllListCorrectionToDesignFromProduction();
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // } 
-
-    
     public function getAllNewRequirement(){
         try {
             $data_output = $this->repo->getAllNewRequirement();
@@ -46,13 +24,11 @@ class AllListServices
     public function getAllNewRequirementBusinessWise($business_id){
         try {
             $data_output = $this->repo->getAllNewRequirementBusinessWise($business_id);
-            // Remove debugging code
             return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
-    
     public function getAllacceptdesign(){
         try {
             $data_output = $this->repo->getAllacceptdesign();
@@ -113,8 +89,6 @@ class AllListServices
     public function getAllCompletedProduction(){
         try {
           $data_output = $this->repo->getAllCompletedProduction();
-        //   dd($data_output);
-        //   die();
           return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -132,8 +106,6 @@ class AllListServices
     public function getAllCompletedProductionSendToLogisticsProductWise($id) {
         try {
             $data_output = $this->repo->getAllCompletedProductionSendToLogisticsProductWise($id);
-        //   dd($data_output);
-        //   die();
 return $data_output;
         } catch (\Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];

@@ -64,15 +64,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -85,33 +76,29 @@
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
                                                 <th data-field="title" data-editable="false">customer Name</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
-                                                <th data-field="total_quantity" data-editable="false">Total Product Quantity</th>
-                                                <th data-field="total_completed_quantity" data-editable="false">Total Production Done Quantity</th>                                                
-                                                <th data-field="updated_at" data-editable="false">Dispatch Completed Date</th>      
+                                                <th data-field="total_quantity" data-editable="false">Total Product Quantity
+                                                </th>
+                                                <th data-field="total_completed_quantity" data-editable="false">Total
+                                                    Production Done Quantity</th>
+                                                <th data-field="updated_at" data-editable="false">Dispatch Completed Date
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($data_output as $data)
-                                              <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ ucwords($data->customer_po_number) }}</td>
-                                                <td>{{ ucwords($data->title) }}</td>
-                                                <td>{{ ucwords($data->product_name) }}</td>
-                                                <td>{{ ucwords($data->quantity) }}</td>
-                                                <td>{{ ucwords($data->total_completed_quantity) }}</td>
-                                                <td>{{ $data->last_updated_at ? $data->last_updated_at->format('Y-m-d') : 'N/A' }} </td>
-
-                                                {{-- <td>{{ ucwords($data->from_place) }}</td>
-                                                <td>{{ ucwords($data->to_place) }}</td>
-                                                <td>{{ ucwords($data->truck_no) }}</td>
-                                                <td>{{ ucwords($data->outdoor_no) }}</td>
-                                                <td>{{ ucwords($data->gate_entry) }}</td>
-                                                <td>{{ ucwords($data->remark) }}</td>
-                                            --}}
-                                              </tr>
+                                                <tr>
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ ucwords($data->customer_po_number) }}</td>
+                                                    <td>{{ ucwords($data->title) }}</td>
+                                                    <td>{{ ucwords($data->product_name) }}</td>
+                                                    <td>{{ ucwords($data->quantity) }}</td>
+                                                    <td>{{ ucwords($data->total_completed_quantity) }}</td>
+                                                    <td>{{ $data->last_updated_at ? $data->last_updated_at->format('Y-m-d') : 'N/A' }}
+                                                    </td>
+                                                </tr>
                                             @endforeach
-                                          </tbody>
-                                          
+                                        </tbody>
+
                                     </table>
                                 </div>
                             </div>

@@ -13,10 +13,6 @@ use Config;
         public function __construct(){
         $this->repo = new ProductionRepository();
     }
-
-
-
-
     public function acceptdesign($id){
         try {
            $data_output = $update_data = $this->repo->acceptdesign($id);
@@ -25,8 +21,6 @@ use Config;
             return $e;
         }
     } 
-
-
     public function rejectdesign($request) {
         try {
             $update_data = $this->repo->rejectdesign($request);
@@ -34,17 +28,7 @@ use Config;
         } catch (\Exception $e) {
             return $e;
         }
-    } 
-
-    // public function acceptProductionCompleted($id, $completed_quantity){
-    //     try {
-    //        $update_data = $this->repo->acceptProductionCompleted($id, $completed_quantity);
-       
-    //        return $update_data;
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // } 
+    }     
     public function acceptProductionCompleted($id, $completed_quantity)
 {
     try {
@@ -55,12 +39,9 @@ use Config;
         return $e;
     }
 }
-
     public function editProduct($id) {
         try {
             $data_output = $this->repo->editProduct($id);
-        //   dd($data_output);
-        //   die();
 return $data_output;
         } catch (\Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
@@ -97,7 +78,4 @@ return $data_output;
             return ['status' => 'error', 'message' => $e->getMessage()];
         }
     }
-    
-    
-    
 }

@@ -24,25 +24,15 @@ class ProductionRepository  {
     public function acceptdesign($id)
     {
         try {
-            // Fetch the business application process for the given business details ID
             $business_application = BusinessApplicationProcesses::where('business_details_id', $id)->first();
     
             if ($business_application) {
-                // Update business application statuses
                 $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
                 $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.ACCEPTED_DESIGN_BY_PRODUCTION');
                 $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION');
                 $business_application->off_canvas_status = 15;
                 $business_application->save();
-    
-                // // Update admin view for the business
-                // AdminView::where('business_id', $business_application->business_id)
-                //     ->update([
-                //         'current_department' => config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION'),
-                //         'is_view' => '0'
-                //     ]);
-                 // Update AdminView and NotificationStatus with the correct business details
-                 $update_data_admin['off_canvas_status'] = 15;
+                     $update_data_admin['off_canvas_status'] = 15;
                  $update_data_admin['is_view'] = '0';
                  $update_data_business['off_canvas_status'] = 15;
                  AdminView::where('business_id', $business_application->business_id)
@@ -59,7 +49,6 @@ class ProductionRepository  {
                 ];
             }
     
-            // Fetch and update the production model for the given business details ID
             $business = ProductionModel::where('business_details_id', $id)->first();
     
             if ($business) {
@@ -70,26 +59,7 @@ class ProductionRepository  {
                     'msg' => 'Production model not found',
                     'status' => 'error',
                 ];
-            }
-
-            
-    
-            // Fetch the design revision and design model for the business details ID
-            // $designRevisionForProdID = DesignRevisionForProd::where('business_details_id', $business_application->business_details_id)->first();
-            // $dataOutput = DesignModel::where('business_details_id', $business_application->business_details_id)->first();
-    
-            // if (!$dataOutput) {
-            //     return [
-            //         'msg' => 'Design model not found',
-            //         'status' => 'error',
-            //     ];
-            // }
-    
-            // // Update design model images
-            // $dataOutput->design_image = $designRevisionForProdID->design_image;
-            // $dataOutput->bom_image = $designRevisionForProdID->bom_image;
-            // $dataOutput->save();
-    
+            }    
             return [
                 'msg' => 'Design accepted and updated successfully',
                 'status' => 'success',

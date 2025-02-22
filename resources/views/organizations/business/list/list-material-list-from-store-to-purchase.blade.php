@@ -30,12 +30,10 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                            <h1>BOM Ask For <span class="table-project-n">Purchase By Store</span></h1>
+                                <h1>BOM Ask For <span class="table-project-n">Purchase By Store</span></h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
-                                        {{-- <div class="login-horizental cancel-wp pull-left">
-                                                <a href="{{ route('add-design-upload') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Design</button></a>
-                                        </div> --}}
+
                                     </div>
                                     <div class="col-lg-10"></div>
                                 </div>
@@ -63,15 +61,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -96,25 +85,16 @@
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
-                                                    <td>{{ucwords($data->product_name)}}</td>
+                                                    <td>{{ ucwords($data->product_name) }}</td>
                                                     {{-- <td>{{ucwords($data->title)}}</td> --}}
-                                                    <td>{{ucwords($data->quantity)}}</td>
+                                                    <td>{{ ucwords($data->quantity) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
-                                                  
+
                                                     <td> <a class="img-size"
                                                             href="{{ Config::get('FileConstant.REQUISITION_VIEW') }}{{ $data['bom_file'] }}"
-                                                            alt="bill of material" >Click to download</a>
+                                                            alt="bill of material">Click to download</a>
                                                     </td>
-
-                                                    {{-- <td>
-                                                        <div style="display: inline-block; align-items: center;">
-                                                            <a href="{{route('reject-design-edit', base64_encode($data->requistition_id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Reject</button></a> &nbsp; &nbsp; &nbsp;
-                                                            <a href="{{route('list-purchase-order', base64_encode($data->requistition_id))}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i> Accept and Send For Purchase </button></a>
-                                                        </div>
-                                                    </td> --}}
-                                                 
-
                                                 </tr>
                                             @endforeach
                                         </tbody>

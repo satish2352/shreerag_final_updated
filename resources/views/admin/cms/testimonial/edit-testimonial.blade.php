@@ -1,14 +1,15 @@
 @extends('admin.layouts.master')
 
 @section('content')
-<style>
-    .error{
-        color: red !important;
-    }
-    .red-text{
-        color: red !important;
-    }
-</style>
+    <style>
+        .error {
+            color: red !important;
+        }
+
+        .red-text {
+            color: red !important;
+        }
+    </style>
     <div class="">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list">
@@ -67,7 +68,7 @@
                                                     <input class="form-control" name="title" id="title"
                                                         placeholder="Enter the Title"
                                                         value="@if (old('title')) {{ old('title') }}@else{{ $editData->title }} @endif">
-                                                    
+
                                                     <label class="error py-2" for="title" id="title_error"></label>
                                                     @if ($errors->has('title'))
                                                         <span class="red-text"><?php echo $errors->first('title', ':message'); ?></span>
@@ -81,7 +82,7 @@
                                                     <input class="form-control" name="position" id="position"
                                                         placeholder="Enter the Position"
                                                         value="@if (old('position')) {{ old('position') }}@else{{ $editData->position }} @endif">
-                                                    
+
                                                     <label class="error py-2" for="position" id="position_error"></label>
                                                     @if ($errors->has('position'))
                                                         <span class="red-text"><?php echo $errors->first('position', ':message'); ?></span>
@@ -146,83 +147,5 @@
             </div>
         </div>
     </div>
-                {{-- <script>
-            $(document).ready(function() {
-                // Function to check if all input fields are filled with valid data
-                function checkFormValidity() {
-                    const title = $('#title').val();
-                    const position = $('#position').val();
-                    const description = $('#description textarea').val();
-                    const image = $('#image').val();                    
-                }
-                
-                // Custom validation method to check file extension
-                $.validator.addMethod("fileExtension", function(value, element, param) {
-                    // Get the file extension
-                    const extension = value.split('.').pop().toLowerCase();
-                    return $.inArray(extension, param) !== -1;
-                }, "Invalid file extension.");
 
-                // Custom validation method to check file size
-                $.validator.addMethod("fileSize", function(value, element, param) {
-                    // Convert bytes to KB
-                    const fileSizeKB = element.files[0].size / 1024;
-                    return fileSizeKB >= param[0] && fileSizeKB <= param[1];
-                }, "File size must be between {0} KB and {1} KB.");
-
-                // Update the accept attribute to validate based on file extension
-                $('#image').attr('accept', 'image/jpeg, image/png');
-
-                // Call the checkFormValidity function on input change
-                $('input, textarea, #image').on('input change', checkFormValidity);
-                $.validator.addMethod("spcenotallow", function(value, element) {
-                    if ("select" === element.nodeName.toLowerCase()) {
-                        var e = $(element).val();
-                        return e && e.length > 0;
-                    }
-                    return this.checkable(element) ? this.getLength(value, element) > 0 : value.trim().length >
-                        0;
-                }, "Enter Some Text");
-
-                // Initialize the form validation
-                $("#regForm").validate({
-                    rules: {
-                        title: {
-                            required: true,
-                            spcenotallow: true,
-                        },
-                        description: {
-                            required: true,
-                        },
-                        position: {
-                            required: true,
-                        },
-                        image: {
-                            required: true,
-                            fileExtension: ["jpg", "jpeg", "png"],
-                            fileSize: [5, 200], // Min 1KB and Max 2MB (2 * 1024 KB)
-                            imageDimensions: [50, 50, 800, 800], // Min width x height and Max width x height
-                        },
-                    },
-                    messages: {
-                        title: {
-                            required: "Please enter the Title.",
-                            spcenotallow: "Enter Some Title",
-                        },
-                        position: {
-                            required: "Please Enter the Position",
-                        },
-                        description: {
-                            required: "Please Enter the Description",
-                        },
-                        image: {
-                            required: "Please upload an Image (jpg, jpeg, png).",
-                            fileExtension: "Only JPG, JPEG, and PNG images are allowed.",
-                            fileSize: "File size must be between 10 KB and 150 KB.",
-                            imageDimensions: "Image dimensions must be between 100x100 and 800x800 pixels.",
-                        },
-                    },
-                });
-            });
-        </script>  --}}
-            @endsection
+@endsection

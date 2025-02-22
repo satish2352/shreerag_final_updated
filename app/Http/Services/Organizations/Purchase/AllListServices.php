@@ -2,10 +2,6 @@
 namespace App\Http\Services\Organizations\Purchase;
 use App\Http\Repository\Organizations\Purchase\AllListRepository;
 use Carbon\Carbon;
-// use App\Models\ {
-//     DesignModel
-//     };
-
 use Config;
 class AllListServices
 {
@@ -14,27 +10,7 @@ class AllListServices
 
         $this->repo = new AllListRepository();
 
-    }
-
-  
-    
-    // public function getAllListDesignRecievedForMaterial(){
-    //     try {
-    //         return $this->repo->getAllListDesignRecievedForMaterial();
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
-
-    // public function getAllListMaterialSentToProduction(){
-    //     try {
-    //         return $this->repo->getAllListMaterialSentToProduction();
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
-
-
+    }  
     public function getAllListMaterialReceivedForPurchase(){
         try {
             $data_output = $this->repo->getAllListMaterialReceivedForPurchase();
@@ -43,9 +19,6 @@ class AllListServices
             return $e;
         }
     }
-
-    
-
     public function getAllListApprovedPurchaseOrder(){
         try {
             $data_output = $this->repo->getAllListApprovedPurchaseOrder();
@@ -110,9 +83,4 @@ class AllListServices
             return $e;
         }
     } 
-
-   
-   
-
-
 }

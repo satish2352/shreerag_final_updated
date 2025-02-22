@@ -20,7 +20,6 @@ class VisionMissionServices
             return $e;
         }
     }
-  
     public function addAll($request){
         try {
             $last_id = $this->repo->addAll($request);
@@ -46,7 +45,6 @@ class VisionMissionServices
             return $e;
         }
     }
-
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);

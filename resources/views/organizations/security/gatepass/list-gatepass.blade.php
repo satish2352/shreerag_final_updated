@@ -102,10 +102,6 @@
                                             </tr>
 
                                         </thead>
-                                        <?php
-                                        // dd($all_gatepass);
-                                        // die();
-                                        ?>
                                         <tbody>
                                             @foreach ($all_gatepass as $data)
                                                 <tr>

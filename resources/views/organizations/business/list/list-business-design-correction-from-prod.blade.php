@@ -64,15 +64,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -89,9 +80,6 @@
                                                 <th data-field="reject_reason" data-editable="false">Reject Reason</th>
                                                 <th data-field="design_image" data-editable="false">Design Layout</th>
                                                 <th data-field="bom_image" data-editable="false">BOM</th>
-                                                {{-- <th data-field="design_image" data-editable="false">Design Layout</th>
-                                                <th data-field="bom_image" data-editable="false">BOM</th>                                                                                                                           
-                                                <th data-field="reject_reason_prod" data-editable="false">Remark By Production Department</th>  --}}
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -99,35 +87,21 @@
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ucwords($data->customer_po_number)}}</td>
-                                                    <td>{{ucwords($data->product_name)}}</td>
-                                                    <td>{{ucwords($data->quantity)}}</td>
-                                                    <td>{{ucwords($data->description)}}</td>
+                                                    <td>{{ ucwords($data->customer_po_number) }}</td>
+                                                    <td>{{ ucwords($data->product_name) }}</td>
+                                                    <td>{{ ucwords($data->quantity) }}</td>
+                                                    <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->reject_reason_prod) }}</td>
-                                                    {{-- <td> <img class="img-size"
-                                                            href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
-                                                            alt="No Image" />
-                                                    </td>
-                                                    <td> <img class="img-size"
-                                                            href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                            alt="No Image" />
-                                                    </td> --}}
+
                                                     <td> <a class="img-size" target="_blank"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
-                                                        alt="Design"> Click to view</a>
-                                                </td>
-                                                <td> <a class="img-size"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                        alt="bill of material" >Click to download</a>
-                                                </td>
-                                                {{-- <td> <a class="img-size" target="_blank"
-                                                    href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_design_image'] }}"
-                                                    alt="Design"> Click to view</a>
-                                            </td>
-                                            <td> <a class="img-size"
-                                                    href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_bom_image'] }}"
-                                                    alt="bill of material" >Click to download</a>
-                                            </td> --}}
+                                                            href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
+                                                            alt="Design"> Click to view</a>
+                                                    </td>
+                                                    <td> <a class="img-size"
+                                                            href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
+                                                            alt="bill of material">Click to download</a>
+                                                    </td>
+
                                                 </tr>
                                             @endforeach
                                         </tbody>

@@ -14,10 +14,6 @@ class RegisterServices
 {
 
 	protected $repo;
-
-    /**
-     * TopicService constructor.
-     */
     public function __construct() {
         $this->repo = new RegisterRepository();
     }
@@ -26,21 +22,6 @@ class RegisterServices
         $data_users = $this->repo->getUsersList();
         return $data_users;
     }
-
-    // public function register($request) {
-    //    // $academicYear = 1;
-    //     $chk_dup = $this->repo->checkDupCredentials($request);
-    //     if(sizeof($chk_dup)>0)
-    //     {
-    //         return ['status'=>'failed','msg'=>'Registration Failed. The name has already been taken.'];
-    //     }
-    //     else
-    //     {
-    //         $user_register_id = $this->repo->register($request);
-    //         return ['status'=>'success','msg'=>'User Data Added Successful.'];
-    //     }
-    // }
-
     public function register($request){
         try {
 
@@ -53,7 +34,6 @@ class RegisterServices
             {
                 $last_id = $this->repo->register($request);
                 $path = Config::get('DocumentConstant.USER_PROFILE_ADD');
-                //"\all_web_data\images\home\slides\\"."\\";
                 $userProfile = $last_id . '_english.' . $request->user_profile->getClientOriginalExtension();
                 uploadImage($request, 'user_profile', $path, $userProfile);
              
@@ -174,17 +154,5 @@ class RegisterServices
     public function updateOne($id){
         return $this->repo->updateOne($id);
     }
-    //  public function verifyOtp($otp){
-    //     $user = User::where('otp_number', $otp)->first();
-    //     if ($user) {
-    //         // Clear OTP after successful verification
-    //         $user->otp_number = null;
-    //         $user->save();
-
-    //         return true; // Valid OTP
-    //     }
-
-    //     return false; // Invalid OTP
-    // }
 
 }

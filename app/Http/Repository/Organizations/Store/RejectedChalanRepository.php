@@ -151,23 +151,6 @@ class RejectedChalanRepository
             'tbl_rejected_chalan.remark', 'tbl_rejected_chalan.grn_id','gatepass.gatepass_name', 'tbl_rejected_chalan.is_active')
             ->orderBy('tbl_rejected_chalan.purchase_orders_id', 'desc')
             ->get();  
-
-
-
-            // $dataOutputCategory = RejectedChalan::join('grn_tbl', 'grn_tbl.purchase_orders_id', '=', 'tbl_rejected_chalan.purchase_orders_id')
-            // ->select(
-            //     'tbl_rejected_chalan.id',
-            //     'tbl_rejected_chalan.purchase_orders_id',
-            //     'grn_tbl.po_date', 
-            //     'grn_tbl.grn_date', 
-            //     'grn_tbl.remark', 
-            //     'tbl_rejected_chalan.is_active'
-            // )
-            // ->groupBy( 'tbl_rejected_chalan.id','tbl_rejected_chalan.purchase_orders_id', 'grn_tbl.po_date', 'grn_tbl.grn_date', 'grn_tbl.remark', 'tbl_rejected_chalan.is_active')
-            // ->orderBy('tbl_rejected_chalan.purchase_orders_id', 'desc')
-            // ->where('tbl_rejected_chalan.id', $id) 
-            // ->where('tbl_rejected_chalan.chalan_no', '<>', '') 
-            // ->get();                
             return $dataOutputCategory;
         } catch (\Exception $e) {
             return $e;

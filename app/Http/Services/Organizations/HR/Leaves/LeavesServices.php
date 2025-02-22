@@ -13,8 +13,6 @@ class LeavesServices
     public function __construct(){
         $this->repo = new LeavesRepository();
     }
-
-
     public function getAll(){
         try {
             return $this->repo->getAll();
@@ -50,10 +48,6 @@ class LeavesServices
             return $e;
         }
     }
-
-   
-    
-
     public function addAll($request){
         try {
             $last_id = $this->repo->addAll($request);
@@ -67,14 +61,6 @@ class LeavesServices
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }      
     }
-    // public function getById($id){
-    //     try {
-    //         return $this->repo->getById($id);
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
-
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);

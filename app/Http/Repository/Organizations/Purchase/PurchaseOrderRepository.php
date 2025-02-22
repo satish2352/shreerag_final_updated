@@ -24,8 +24,7 @@ class PurchaseOrderRepository
   
     public function submitBOMToOwner($request)
     {
-        // $purchase_orderid = str_replace(array("-", ":"), "", date('Y-m-d') . time());
-        // $purchase_orderid = str_replace(array("-", ":"), "", date('Y-m-d') . rand(10, 99));
+       
         $purchase_orderid = date('Y') . mt_rand(100000, 999999);
 
         try {
@@ -59,9 +58,7 @@ class PurchaseOrderRepository
             if ($request->has('quote_no')) {
                 $dataOutput->quote_no = $request->quote_no;
             }
-            // if ($request->has('discount')) {
-            //     $dataOutput->discount = $request->discount;
-            // }
+           
             $dataOutput->save();
             $last_insert_id = $dataOutput->id;
             $businessOutput = BusinessApplicationProcesses::where('business_details_id', $data_for_requistition->business_details_id)->firstOrFail();
@@ -151,14 +148,6 @@ class PurchaseOrderRepository
     }
     public function getById($id) {
         try {
-            // $designData = PurchaseOrdersModel::leftJoin('purchase_order_details', 'purchase_orders.id', '=', 'purchase_order_details.purchase_id')
-            // ->leftJoin('purchase_order_details', 'tbl_hsn.id', '=', 'purchase_order_details.hsn_id')
-            // ->select('purchase_order_details.*', 'purchase_order_details.id as purchase_order_details_id', 'purchase_orders.id as purchase_main_id', 'purchase_orders.vendor_id', 'purchase_orders.quote_no','purchase_orders.contact_person_name','purchase_orders.contact_person_number', 'purchase_orders.tax_type',
-            //  'purchase_orders.tax_id','purchase_orders.invoice_date','purchase_orders.note', 
-            //   'purchase_orders.payment_terms', 'purchase_orders.transport_dispatch')
-            //     ->where('purchase_orders.purchase_orders_id', $id)
-            //     ->get();
-
             $designData = PurchaseOrdersModel::leftJoin('purchase_order_details as pod1', 'purchase_orders.id', '=', 'pod1.purchase_id')
             ->leftJoin('tbl_hsn as hsn', 'hsn.id', '=', 'pod1.hsn_id')
             ->select(

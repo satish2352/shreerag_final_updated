@@ -1,14 +1,15 @@
 @extends('admin.layouts.master')
 
 @section('content')
-<style>
-    .error{
-        color: red !important;
-    }
-    .red-text{
-        color: red !important;
-    }
-</style>
+    <style>
+        .error {
+            color: red !important;
+        }
+
+        .red-text {
+            color: red !important;
+        }
+    </style>
     <div class="">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list">
@@ -54,7 +55,9 @@
                                                     class="red-text">*</span>
                                                 <span class="summernote1">
                                                     <textarea class="form-control" name="vision_description" id="description" placeholder="Enter the Vision Description">
-                                                @if (old('vision_description')){{old('vision_description') }}@else{{ $editData->vision_description }}@endif
+                                                @if (old('vision_description'))
+{{ old('vision_description') }}@else{{ $editData->vision_description }}
+@endif
                                         </textarea>
                                                 </span>
                                                 @if ($errors->has('vision_description'))
@@ -68,7 +71,9 @@
                                                     class="red-text">*</span>
                                                 <span class="summernote1">
                                                     <textarea class="form-control" name="mission_description" id="description1" placeholder="Enter the Mission Description">
-                                                @if (old('mission_description')){{old('mission_description') }}@else{{ $editData->mission_description }}@endif
+                                                @if (old('mission_description'))
+{{ old('mission_description') }}@else{{ $editData->mission_description }}
+@endif
                                         </textarea>
                                                 </span>
                                                 @if ($errors->has('mission_description'))
@@ -187,14 +192,16 @@
                         fileExtension: ["jpg", "jpeg", "png"],
                         fileSize: [150, 1048], // Min 1KB and Max 2MB (2 * 1024 KB)
                         imageDimensions: [300, 300, 1000,
-                        1000], // Min width x height and Max width x height
+                            1000
+                        ], // Min width x height and Max width x height
                     },
                     english_image_new: {
                         required: true,
                         fileExtension: ["jpg", "jpeg", "png"],
                         fileSize: [150, 1048], // Min 1KB and Max 2MB (2 * 1024 KB)
                         imageDimensions: [300, 300, 1000,
-                        1000], // Min width x height and Max width x height
+                            1000
+                        ], // Min width x height and Max width x height
                     },
                 },
                 messages: {

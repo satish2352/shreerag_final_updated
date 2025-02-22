@@ -65,17 +65,13 @@ class NoticeServices
                     if (file_exists_view(Config::get('DocumentConstant.NOTICE_DELETE') . $return_data['image'])) {
                         removeImage(Config::get('DocumentConstant.NOTICE_DELETE') . $return_data['image']);
                     }
-
                 }
                 if ($request->hasFile('image')) {
                     $englishImageName = $return_data['last_insert_id'] . '_' . rand(100000, 999999) . '_pdf.' . $request->file('image')->extension();
-                    
-                    // Rest of your code...
-                } else {
+                 } else {
                     // Handle the case where 'image' key is not present in the request.
                     // For example, you might want to skip the file handling or return an error message.
                 }                
-                // $englishImageName = $return_data['last_insert_id'] . '_' . rand(100000, 999999) . '_image.' . $request->image->extension();
                 uploadImage($request, 'image', $path, $englishImageName);
                 $aboutus_data = Notice::find($return_data['last_insert_id']);
                 $aboutus_data->image = $englishImageName;
@@ -95,8 +91,7 @@ class NoticeServices
         return $this->repo->updateOne($id);
     }   
   
-    public function deleteById($id)
-    {
+    public function deleteById($id){
         try {
             $delete = $this->repo->deleteById($id);
             if ($delete) {

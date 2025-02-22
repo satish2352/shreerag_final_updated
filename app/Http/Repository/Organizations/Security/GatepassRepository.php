@@ -150,9 +150,6 @@ class GatepassRepository
     {
 
         try {
-// dd($request);
-// die();
-            // Update main design data
             $dataOutput = Gatepass::findOrFail($request->id);
             $dataOutput->purchase_orders_id = $request->purchase_orders_id;
             $dataOutput->gatepass_name = $request->gatepass_name;
@@ -206,11 +203,7 @@ class GatepassRepository
             $deleteDataById = Gatepass::find($id);
 
             if ($deleteDataById) {
-                // if (file_exists_view(Config::get('FileConstant.STORE_RECEIPT_DELETE') . $deleteDataById->image)){
-                //     removeImage(Config::get('FileConstant.STORE_RECEIPT_DELETE') . $deleteDataById->image);
-                // }
                 $deleteDataById->delete();
-
                 return $deleteDataById;
             } else {
                 return null;

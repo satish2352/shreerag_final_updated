@@ -34,13 +34,7 @@
                             <div class="main-sparkline13-hd">
                                 <h1>All <span class="table-project-n">Business</span></h1>
                                 <div class="form-group-inner login-btn-inner row">
-                                   
-                                        {{-- <div class="col-lg-2">
-                                            <div class="login-horizental cancel-wp pull-left">
-                                                    <a href="{{ route('add-employees') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" href="{{route('add-organizations')}}">Add Employees</button></a>
-                                            </div>
-                                        </div> --}}
-                                        <div class="col-lg-10"></div>
+                                    <div class="col-lg-10"></div>
                                 </div>
                             </div>
                         </div>
@@ -66,15 +60,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 <div class="table-responsive">
                                     <input type="hidden" class="form-control" id="business_id" name="business_id">
 
@@ -104,13 +89,14 @@
 
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
-                                                    <td>{{ucwords($data->title)}}</td>
-                                                    <td>{{ucwords($data->product_name)}}</td>
-                                                    <td>{{ucwords($data->quantity)}}</td>
-                                                    <td>{{ucwords($data->rate)}}</td>
+                                                    <td>{{ ucwords($data->title) }}</td>
+                                                    <td>{{ ucwords($data->product_name) }}</td>
+                                                    <td>{{ ucwords($data->quantity) }}</td>
+                                                    <td>{{ ucwords($data->rate) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
-                                                    <td> {{  $data->created_at ?  $data->created_at->format('Y-m-d') : 'N/A' }}</td>
+                                                    <td> {{ $data->created_at ? $data->created_at->format('Y-m-d') : 'N/A' }}
+                                                    </td>
 
 
                                                 </tr>

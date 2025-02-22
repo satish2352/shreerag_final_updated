@@ -34,14 +34,14 @@
                                 <h1>Purchase Order Submited by Vendor</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
-                                        
+
                                     </div>
                                     <div class="col-lg-10"></div>
                                 </div>
                             </div>
                         </div>
 
-                      
+
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
@@ -61,9 +61,11 @@
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="grn_date" data-editable="false">Description</th>
 
-                                                <th data-field="purchase_orders_id" data-editable="false">Purchase Order ID</th>
+                                                <th data-field="purchase_orders_id" data-editable="false">Purchase Order ID
+                                                </th>
                                                 <th data-field="client_name" data-editable="false">Client Name</th>
-                                                <th data-field="vendor_company_name" data-editable="false">Client Company Name</th>
+                                                <th data-field="vendor_company_name" data-editable="false">Client Company
+                                                    Name</th>
                                                 <th data-field="email" data-editable="false">Email</th>
                                                 <th data-field="contact_no" data-editable="false">Phone Number</th>
                                                 {{-- <th data-field="vendor_address" data-editable="false">Address</th>                                      --}}
@@ -75,7 +77,6 @@
 
                                         <tbody>
                                             @foreach ($data_output as $data)
-                                            
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
@@ -85,9 +86,9 @@
                                                     <td>{{ ucwords($data['description']) }}</td>
                                                     <td>{{ $data->purchase_order_id }}</td>
                                                     <td>{{ $data->vendor_name }}</td>
-                                                   <td>{{ $data->vendor_company_name }}</td>
-                                                   <td>{{ $data->vendor_email }}</td> 
-                                                   <td>{{ $data->contact_no }}</td> 
+                                                    <td>{{ $data->vendor_company_name }}</td>
+                                                    <td>{{ $data->vendor_email }}</td>
+                                                    <td>{{ $data->contact_no }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

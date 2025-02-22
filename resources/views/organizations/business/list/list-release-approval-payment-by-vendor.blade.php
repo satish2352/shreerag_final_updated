@@ -63,15 +63,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -97,39 +88,21 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            
+
                                             @foreach ($data_output as $data)
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ucwords($data->purchase_orders_id)}}</td>
-                                                    <td>{{ucwords($data->grn_no_generate)}}</td>
-                                                    <td>{{ucwords($data->store_receipt_no_generate)}}</td>
-                                                    <td>{{ucwords($data->store_remark)}}</td>
-                                                    <td>{{ucwords($data->vendor_name)}}</td>
-                                                    <td>{{ucwords($data->vendor_company_name)}}</td>
-                                                    <td>{{ucwords($data->vendor_email)}}</td>
-                                                    <td>{{ucwords($data->contact_no)}}</td>
-                                                    <td>{{ucwords($data->vendor_address)}}</td>
-                                                    <td>{{ucwords($data->gst_no)}}</td>
-                                                    {{-- <td>{{ ucwords($data->purchase_orders_id) }}</td>
-                                                    <td>{{ ucwords($data->grn_no) }}</td>
-                                                    <td>{{ ucwords($data->store_receipt_no) }}</td>
-                                                    <td>{{ ucwords($data->title) }}</td>
-                                                    <td>{{ ucwords($data->descriptions) }}</td>
-                                                    <td>{{ ucwords($data->remarks) }} ok Satish</td> --}}
-
-                                                    {{-- <td>
-                                                        <div style="display: flex; align-items: center;">
-                                                            <a
-                                                                href="{{ route('accept-purchase-order-payment-release', [$data->purchase_orders_id, $data->id]) }} "><button
-                                                                    data-toggle="tooltip" title="Check details"
-                                                                    class="pd-setting-ed">Accept</button></a>
-
-
-                                                        </div>
-                                                    </td> --}}
-
+                                                    <td>{{ ucwords($data->purchase_orders_id) }}</td>
+                                                    <td>{{ ucwords($data->grn_no_generate) }}</td>
+                                                    <td>{{ ucwords($data->store_receipt_no_generate) }}</td>
+                                                    <td>{{ ucwords($data->store_remark) }}</td>
+                                                    <td>{{ ucwords($data->vendor_name) }}</td>
+                                                    <td>{{ ucwords($data->vendor_company_name) }}</td>
+                                                    <td>{{ ucwords($data->vendor_email) }}</td>
+                                                    <td>{{ ucwords($data->contact_no) }}</td>
+                                                    <td>{{ ucwords($data->vendor_address) }}</td>
+                                                    <td>{{ ucwords($data->gst_no) }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

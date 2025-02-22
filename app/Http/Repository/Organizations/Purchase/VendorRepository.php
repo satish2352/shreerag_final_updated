@@ -35,24 +35,7 @@ public function addAll($request)
         $vendor_data->quote_no = $request->quote_no;
         $vendor_data->payment_terms = $request->payment_terms;
         $vendor_data->vendor_address = $request->vendor_address;
-		// $project_data->is_active = isset($request['is_active']) ? true : false;
         $vendor_data->save();
-        // $design_data = new DesignModel();
-        // $design_data->id=$vendor_data->id;
-        // $design_data->design_image='';
-        // $design_data->bom_image='';
-        // $design_data->save();
-
-
-        // $business_application = new BusinessApplicationProcesses();
-        // $business_application->business_id =$business_data->id;
-        // $business_application->business_status_id =config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
-        // $business_application->design_id =$design_data->id;
-        // $business_application->design_status_id =config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN');
-        // $business_application->production_id ='0';
-        // $business_application->production_status_id ='0';
-        // $business_application->save();
-
         return [
             'msg' => 'This business send to Design Department Successfully',
             'status' => 'success'

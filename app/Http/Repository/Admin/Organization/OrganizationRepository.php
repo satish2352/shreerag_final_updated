@@ -139,47 +139,6 @@ class organizationRepository {
             ];
         }
     }
-    // public function updateOne( $id ) {
-    //     try {
-    //         $updateOutput = OrganizationModel::find( $id );
-    // Assuming $request directly contains the ID
-
-    //         if ( $updateOutput ) {
-    //             $active =  $updateOutput->is_active;
-    //             if ( $active == '1' ) {
-    //                 OrganizationModel::where( 'id', $id )
-    //                 ->update( [
-    //                     'is_active' => '0'
-    // ] );
-
-    //             } else {
-    //                 OrganizationModel::where( 'id', $id )
-    //                 ->update( [
-    //                     'is_active' => '1'
-    // ] );
-
-    //             }
-
-    //             return [
-    //                 'msg' => 'Slide updated successfully.',
-    //                 'status' => 'success'
-    // ];
-
-    //         } else {
-    //             return [
-    //                 'msg' => 'Data not found.',
-    //                 'status' => 'error'
-    // ];
-    //         }
-
-    //     } catch ( \Exception $e ) {
-    //         return [
-    //             'msg' => 'Failed to Update Data.',
-    //             'status' => 'error'
-    // ];
-    //     }
-    // }
-
     public function deleteById( $id ) {
         try {
             $deleteDataById = OrganizationModel::find( $id );

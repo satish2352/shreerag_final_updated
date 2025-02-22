@@ -16,29 +16,23 @@ class ReturnableChalanRepository
 {
     public function getDetailsForPurchase($id)
     {
-
         return ReturnableChalan::where('id', '=', $id)->first();
-
     }
     public function submitBOMToOwner($request)
     {
         try {
             $dataOutput = new ReturnableChalan();
            $dataOutput->vendor_id = $request->vendor_id;
-        //   $dataOutput->business_id = $request->business_id;
             $dataOutput->transport_id = $request->transport_id;
             $dataOutput->vehicle_id = $request->vehicle_id;
-            // $dataOutput->customer_po_no = $request->customer_po_no;
             $dataOutput->plant_id = $request->plant_id;
             $dataOutput->tax_id = $request->tax_id;
             $dataOutput->tax_type = $request->tax_type;
             $dataOutput->vehicle_number = $request->vehicle_number;
             $dataOutput->po_date = $request->po_date;
-            // $dataOutput->image = 'null';
             $dataOutput->dc_date = now();
-                 // Retrieve the last dc_number and increment it
-        $lastChalan = ReturnableChalan::orderBy('dc_number', 'desc')->first();
-        $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
+            $lastChalan = ReturnableChalan::orderBy('dc_number', 'desc')->first();
+            $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
             $dataOutput->lr_number = $request->lr_number;
             $dataOutput->remark = $request->remark;
             if ($request->has('business_id')) {
@@ -47,7 +41,6 @@ class ReturnableChalanRepository
             if ($request->has('customer_po_no')) {
                 $dataOutput->customer_po_no = $request->customer_po_no;
             }
-            // $dataOutput->customer_po_no = $request->customer_po_no;
             $dataOutput->save();
             $last_insert_id = $dataOutput->id;
             foreach ($request->addmore as $index => $item) {
@@ -59,7 +52,6 @@ class ReturnableChalanRepository
                 $designDetails->hsn_id = $item['hsn_id'];
                 $designDetails->quantity = $item['quantity'];
                 $designDetails->size = $item['size'];
-                // $designDetails->rate = $item['rate'];
                 $designDetails->rate = isset($item['rate']) && $item['rate'] !== '' ? $item['rate'] : null; // Handle optional rate
                 $designDetails->amount = $item['amount'];
                 $designDetails->save();

@@ -9,8 +9,6 @@ class HSNServices
     public function __construct(){
         $this->repo = new HSNRepository();
     }
-
-
     public function getAll(){
         try {
             return $this->repo->getAll();
@@ -18,8 +16,6 @@ class HSNServices
             return $e;
         }
     }
-
-
     public function addAll($request){
       try {
           $last_id = $this->repo->addAll($request);
@@ -39,12 +35,9 @@ class HSNServices
             return $e;
         }
     }
-
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
-            
-      
             if ($return_data) {
                 return ['status' => 'success', 'msg' => 'Data Updated Successfully.'];
             } else {
@@ -54,12 +47,6 @@ class HSNServices
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }      
     }
-
-
-   
-    // public function updateOne($id){
-    //     return $this->repo->updateOne($id);
-    // }   
     public function deleteById($id)
     {
         try {

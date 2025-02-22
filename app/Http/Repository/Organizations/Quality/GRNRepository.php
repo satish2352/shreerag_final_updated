@@ -144,14 +144,6 @@ class GRNRepository
             $grnPoTracking->is_active = true;
             $grnPoTracking->save();
         }
-
-        // Handle image upload
-        // if ($request->hasFile('image')) {
-        //     $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
-        //     $request->image->move(public_path('uploads/grn_images'), $imageName);
-        //     $dataOutput->image = $imageName;
-        //     $dataOutput->save();
-        // }
         if ($request->hasFile('image')) {
                             $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();
                             $finalOutput = GRNModel::find($last_insert_id);

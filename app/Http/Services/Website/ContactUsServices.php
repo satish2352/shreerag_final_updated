@@ -1,26 +1,16 @@
 <?php
 namespace App\Http\Services\Website;
-
 use App\Http\Repository\Website\ContactUsRepository;
-
-// use App\Marquee;
 use Carbon\Carbon;
-
 
 class ContactUsServices
 {
-
 	protected $repo;
-
-    /**
-     * TopicService constructor.
-     */
     public function __construct()
     {
         $this->repo = new ContactUsRepository();
     }
-    public function addAll($request)
-    {
+    public function addAll($request){
         try {
             $add_contact = $this->repo->addAll($request);
             if ($add_contact) {

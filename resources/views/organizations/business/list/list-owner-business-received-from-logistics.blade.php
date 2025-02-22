@@ -64,15 +64,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -85,7 +76,8 @@
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="quantity" data-editable="false">Actual Quantity</th>
-                                                <th data-field="completed_quantity" data-editable="false">Production Completed Quantity</th>
+                                                <th data-field="completed_quantity" data-editable="false">Production
+                                                    Completed Quantity</th>
                                                 <th data-field="truck_no" data-editable="false">Truck Number</th>
                                                 <th data-field="from_place" data-editable="false">From Place</th>
                                                 <th data-field="to_place" data-editable="false">To Place</th>
@@ -111,24 +103,6 @@
                                                     <td>{{ ucwords($data->truck_no) }}</td>
                                                     <td>{{ ucwords($data->transport_name) }}</td>
                                                     <td>{{ ucwords($data->vehicle_name) }}</td>
-
-                                                    
-                                                {{-- <td>
-                                                    <a href="{{ route('send-to-dispatch', base64_encode($data->id)) }}"
-                                                        onclick="return confirmAccept('{{ route('send-to-dispatch', base64_encode($data->id)) }}')"
-                                                        class="pd-setting-ed"
-                                                        data-toggle="tooltip"
-                                                        title="Send">
-                                                        <button><i class="fa fa-check" aria-hidden="true"></i> Send to Dispatch </button>
-                                                    </a>
-                                                </td> --}}
-
-                                                   
-
-                                               
-
-
-
                                                 </tr>
                                             @endforeach
                                         </tbody>

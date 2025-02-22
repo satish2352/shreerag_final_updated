@@ -13,7 +13,6 @@ use Config;
         public function __construct(){
         $this->repo = new DeliveryChalanRepository();
     }
-
     public function getDetailsForPurchase($id){
         try {
             $data = $this->repo->getDetailsForPurchase($id);
@@ -21,7 +20,6 @@ use Config;
             return $e;
         }
     }
-
     public function getAll(){
         try {
             return $this->repo->getAll();
@@ -52,8 +50,7 @@ use Config;
             return $e;
         }
     }
-    public function getPurchaseOrderDetails($id)
-    {
+    public function getPurchaseOrderDetails($id){
         try {
             $result = $this->repo->getPurchaseOrderDetails($id);
             return $result;
@@ -97,5 +94,4 @@ use Config;
             return ['status' => 'error', 'msg' => $e->getMessage()];
         } 
     }
-    
 }

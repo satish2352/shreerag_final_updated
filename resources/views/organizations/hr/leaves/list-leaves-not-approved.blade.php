@@ -55,14 +55,6 @@
 
                     <div class="sparkline13-graph">
                         <div class="datatable-dashv1-list custom-datatable-overright">
-                            {{-- <div id="toolbar">
-                                <select class="form-control">
-                                    <option value="">Export Basic</option>
-                                    <option value="all">Export All</option>
-                                    <option value="selected">Export Selected</option>
-                                </select>
-                            </div> --}}
-
                             <div class="table-responsive">
                                 <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                     data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -107,10 +99,6 @@
                                                         border: 1px solid;">
                                                         <i class="fa fa-check" aria-hidden="true"></i>
                                                     </button>
-                                                    {{-- <button data-id="{{ $data->id }}" data-action="notapprove" data-toggle="tooltip" title="Not Approve" class="notapprove-btn pd-setting-ed" style="color: red;
-                                                        border: 1px solid;">
-                                                        <i class="fa fa-times" aria-hidden="true"></i>
-                                                    </button> --}}
                                                 </div>
                                             </td>
                                         </tr>

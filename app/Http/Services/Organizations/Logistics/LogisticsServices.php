@@ -12,20 +12,6 @@ class LogisticsServices
         $this->repo = new LogisticsRepository();
 
     }
-    // public function storeLogistics(Request $request)
-    // {
-    //     try {
-    //         $data = $this->repo->storeLogistics($request);
-            
-    //         if ($data) {
-    //             return ['status' => 'success', 'msg' => 'Rejected Chalan Added Successfully.'];
-    //         } else {
-    //             return ['status' => 'error', 'msg' => 'Rejected Chalan Not Added.'];
-    //         }
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
     public function storeLogistics($request)
     {
         try {

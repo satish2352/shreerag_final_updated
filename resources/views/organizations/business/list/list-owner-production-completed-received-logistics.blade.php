@@ -64,15 +64,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -85,12 +76,9 @@
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="quantity" data-editable="false">Actual Quantity</th>
-                                                <th data-field="completed_quantity" data-editable="false">Production Completed Quantity</th>
+                                                <th data-field="completed_quantity" data-editable="false">Production
+                                                    Completed Quantity</th>
                                                 <th data-field="description" data-editable="false">Description</th>
-
-                                                
-                                                {{-- <th data-field="title" data-editable="false">customer Name</th> --}}
-                                                {{-- <th data-field="" data-editable="false">Action</th> --}}
                                             </tr>
 
                                         </thead>
@@ -103,26 +91,6 @@
                                                     <td>{{ ucwords($data->quantity) }}</td>
                                                     <td>{{ ucwords($data->completed_quantity) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
-                                                  
-                                                  
-                                                   
-                                                   
-                                                   
-                                                   
-                                                    {{-- <td>{{ ucwords($data->title) }}</td> --}}
-                                                    
-                                                {{-- <td>
-                                                    <div style="display: flex; align-items: center;">
-                                                        <a href="{{route('add-logistics', $data->id)}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                                    </div>
-                                                </td> --}}
-
-                                                   
-
-                                               
-
-
-
                                                 </tr>
                                             @endforeach
                                         </tbody>

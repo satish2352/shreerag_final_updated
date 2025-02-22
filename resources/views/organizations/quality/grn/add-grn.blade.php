@@ -182,10 +182,6 @@
                                                             <th style="width: 100px;">Balance Quantity</th>
                                                             {{-- <th>Action</th> --}}
                                                         </tr>
-                                                        <?php
-// dd($purchase_order_details_data);
-// die();
-                                                        ?>
                                                         @foreach ($purchase_order_details_data as $index => $item)
                                                             <tr>
                                                                 <input type="hidden" name="addmore[{{ $index }}][edit_id]"

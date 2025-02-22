@@ -23,20 +23,14 @@
                         </div>
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
+
                                 @include('admin.layouts.alert')
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
-                                    data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
-                                    data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true"
-                                    data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true"
-                                    data-toolbar="#toolbar">
+                                        data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
+                                        data-key-events="true" data-show-toggle="true" data-resizable="true"
+                                        data-cookie="true" data-cookie-id-table="saveId" data-show-export="true"
+                                        data-click-to-select="true" data-toolbar="#toolbar">
                                         <thead>
                                             <tr>
                                                 <th>Sr. No.</th>
@@ -80,7 +74,8 @@
                                                                 class="show-btn btn btn-sm btn-outline-primary m-1"
                                                                 title="Show Slide "><i class="fas fa-eye"></i></a>
 
-                                                                <a href="{{ route('delete-testimonial', base64_encode($item->id)) }} "><button
+                                                            <a
+                                                                href="{{ route('delete-testimonial', base64_encode($item->id)) }} "><button
                                                                     data-toggle="tooltip" title="Trash"
                                                                     class="pd-setting-ed"><i class="fa fa-trash"
                                                                         aria-hidden="true"></i></button></a>

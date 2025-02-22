@@ -12,19 +12,17 @@ use Config;
 class PurchaseServices {
     protected $repo;
 
-    public function __construct() {
+    public function __construct(){
         $this->repo = new PurchaseRepository();
     }
-
-    public function getAll() {
+    public function getAll(){
         try {
             return $this->repo->getAll();
         } catch ( \Exception $e ) {
             return $e;
         }
     }
-
-    public function addAll( $request ) {
+    public function addAll( $request ){
         try {
             $result = $this->repo->addAll( $request );
             if ( $result[ 'status' ] === 'success' ) {
@@ -38,16 +36,14 @@ class PurchaseServices {
         }
 
     }
-
-    public function getById( $id ) {
+    public function getById( $id ){
         try {
             return $this->repo->getById( $id );
         } catch ( \Exception $e ) {
             return $e;
         }
     }
-
-    public function updateAll( $request ) {
+    public function updateAll( $request ){
         try {
             $return_data = $this->repo->updateAll( $request );
             if ( $return_data ) {
@@ -61,8 +57,7 @@ class PurchaseServices {
         }
 
     }
-
-    public function deleteById( $id ) {
+    public function deleteById( $id ){
         try {
             $delete = $this->repo->deleteById( $id );
             if ( $delete ) {

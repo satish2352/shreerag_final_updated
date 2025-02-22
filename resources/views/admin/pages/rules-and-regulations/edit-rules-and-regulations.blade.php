@@ -50,8 +50,8 @@
                                             </ul>
                                         </div>
                                     @endif
-                                    <form class="forms-sample" action="{{ route('update-rules-regulations') }}" method="post"
-                                        id="regForm" enctype="multipart/form-data">
+                                    <form class="forms-sample" action="{{ route('update-rules-regulations') }}"
+                                        method="post" id="regForm" enctype="multipart/form-data">
                                         @csrf
                                         <div class="row">
                                             <div class="col-lg-6 col-md-6 col-sm-6">

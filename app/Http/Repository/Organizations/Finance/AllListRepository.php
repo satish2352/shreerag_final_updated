@@ -156,9 +156,6 @@ class AllListRepository
           'businesses_details.product_name',
           'businesses_details.description',
           'businesses_details.quantity',
-            // 'production.id as productionId',
-            // 'business_application_processes.store_material_sent_date',
-            // 'tbl_logistics.business_details_id',
             'production.business_id',
             'design_revision_for_prod.reject_reason_prod',
             'designs.bom_image',
@@ -180,8 +177,6 @@ class AllListRepository
   public function listPOSentForApprovaTowardsOwner()
   {
       try {
-          // $array_to_be_check = [config('constants.FINANCE_DEPARTMENT.LIST_STORE_RECIEPT_AND_GRN_RECEIVED_FROM_STORE_DEAPRTMENT')];
-          // $array_not_to_be_check = [config('constants.FINANCE_DEPARTMENT.INVOICE_SENT_FOR_BILL_APPROVAL_TO_HIGHER_AUTHORITY')];
              $array_to_be_check = [config('constants.FINANCE_DEPARTMENT.INVOICE_SENT_FOR_BILL_APPROVAL_TO_HIGHER_AUTHORITY_PARTICULAR_GRN_WISE')];
 
           $data_output = PurchaseOrdersModel::leftJoin('gatepass', function ($join) {
@@ -365,11 +360,8 @@ class AllListRepository
             ->leftJoin('production', function($join) {
               $join->on('tbl_customer_product_quantity_tracking.production_id', '=', 'production.id');
           })
-            // ->leftJoin('tbl_customer_product_quantity_tracking as tcqt2', function($join) {
-            //     $join->on('bap1.business_details_id', '=', 'tcqt2.business_details_id');
-            // })
+           
             ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status', $array_to_be_quantity_tracking)
-            // ->whereIn('bap1.logistics_status_id', $array_to_be_check)
             ->where('businesses.is_active', true)
             ->select(
               'tbl_customer_product_quantity_tracking.id',
@@ -442,10 +434,6 @@ class AllListRepository
   ->leftJoin('production', function($join) {
     $join->on('tbl_customer_product_quantity_tracking.production_id', '=', 'production.id');
 })
-    // ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status',$array_to_be_quantity_tracking)
-
-      // ->whereIn('bap1.dispatch_status_id',$array_to_be_check)
-      // ->whereIn('purchase_orders.store_receipt_no',$array_to_be_check_new)
       ->where('businesses.is_active',true)
       ->where('businesses.is_deleted', 0)
       ->where('tbl_customer_product_quantity_tracking.fianace_list_status','Send_Dispatch')

@@ -9,8 +9,6 @@ class ProcessServices
     public function __construct(){
         $this->repo = new ProcessRepository();
     }
-
-
     public function getAll(){
         try {
             return $this->repo->getAll();
@@ -18,8 +16,6 @@ class ProcessServices
             return $e;
         }
     }
-
-
     public function addAll($request){
       try {
           $last_id = $this->repo->addAll($request);
@@ -39,7 +35,6 @@ class ProcessServices
             return $e;
         }
     }
-
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
@@ -54,12 +49,6 @@ class ProcessServices
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }      
     }
-
-
-   
-    // public function updateOne($id){
-    //     return $this->repo->updateOne($id);
-    // }   
     public function deleteById($id)
     {
         try {

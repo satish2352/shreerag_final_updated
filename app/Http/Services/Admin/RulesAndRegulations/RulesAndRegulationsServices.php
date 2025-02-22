@@ -39,7 +39,6 @@ class RulesAndRegulationsServices
             return $e;
         }
     }
-
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
@@ -56,7 +55,6 @@ class RulesAndRegulationsServices
     public function updateOne($id){
         return $this->repo->updateOne($id);
     }   
-  
     public function deleteById($id)
     {
         try {

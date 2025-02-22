@@ -113,23 +113,12 @@ class EmployeesHrRepository  {
 			->select('id', 'role_name')
 			->get()
 			->toArray();
-		// $data_users['permissions'] = Permissions::where('is_active', true)
-		// 	->select('id', 'route_name', 'permission_name', 'url')
-		// 	->get()
-		// 	->toArray();
-
 			$data_users_data = User::join('tbl_roles', function ($join) {
 				$join->on('users.role_id', '=', 'tbl_roles.id');
 			})
-			// ->join('roles_permissions', function($join) {
-			// 	$join->on('users.id', '=', 'roles_permissions.user_id');
-			// })
 			->where('users.id', '=', base64_decode($reuest->edit_id))
-			// ->where('roles_permissions.is_active','=',true)
-			// ->where('users.is_active','=',true)
 			->select(
 				'tbl_roles.id as role_id',
-				// 'users.u_uname',
 				'users.u_password',
 				'users.u_email',
 				'users.f_name',
@@ -149,14 +138,8 @@ class EmployeesHrRepository  {
 	      $data_users_data = User::join('tbl_roles', function($join) {
 						$join->on('users.role_id', '=', 'tbl_roles.id');
 					})
-					// ->join('roles_permissions', function($join) {
-					// 	$join->on('users.id', '=', 'roles_permissions.user_id');
-					// })
 					->where('users.id','=',base64_decode($reuest->edit_id))
-					// ->where('roles_permissions.is_active','=',true)
-					// ->where('users.is_active','=',true)
 					->select('tbl_roles.id as role_id',
-							// 'users.u_uname',
 							'users.u_password',
 							'users.u_email',
 							'users.f_name',

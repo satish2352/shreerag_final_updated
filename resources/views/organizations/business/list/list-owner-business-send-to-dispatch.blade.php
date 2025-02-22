@@ -64,15 +64,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -82,11 +73,13 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
-                                                <th data-field="customer_po_number" data-editable="false">Customer PO Number</th>
+                                                <th data-field="customer_po_number" data-editable="false">Customer PO Number
+                                                </th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="description" data-editable="false">Description</th>
                                                 <th data-field="quantity" data-editable="false">Actual Quantity</th>
-                                                <th data-field="completed_quantity" data-editable="false">Production Completed Quantity</th>
+                                                <th data-field="completed_quantity" data-editable="false">Production
+                                                    Completed Quantity</th>
                                                 <th data-field="truck_no" data-editable="false">Truck Number</th>
                                                 <th data-field="from_place" data-editable="false">From Place</th>
                                                 <th data-field="to_place" data-editable="false">To Place</th>
@@ -94,7 +87,7 @@
                                                 <th data-field="truck_no" data-editable="false">Truck Number</th>
                                                 <th data-field="transport_name" data-editable="false">Transport Name</th>
                                                 <th data-field="vehicle_name" data-editable="false">Vehicle Name</th>
-                                                
+
                                             </tr>
 
                                         </thead>
@@ -115,9 +108,9 @@
                                                     <td>{{ ucwords($data->transport_name) }}</td>
                                                     <td>{{ ucwords($data->vehicle_name) }}</td>
 
-                                                   
 
-                                               
+
+
 
 
 

@@ -34,11 +34,6 @@
                                 <h1>Gatepass <span class="table-project-n">Data</span> Table</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
-                                        {{-- <div class="login-horizental cancel-wp pull-left">
-                                            <a href="{{ route('add-gatepass') }}"><button
-                                                    class="btn btn-sm btn-primary login-submit-cs" type="submit">Add Gate
-                                                    Pass</button></a>
-                                        </div> --}}
                                     </div>
                                     <div class="col-lg-10"></div>
                                 </div>
@@ -66,15 +61,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -107,7 +93,7 @@
                                                     <td>{{ ucwords($data->gatepass_time) }}</td>
                                                     <td>{{ ucwords($data->remark) }}</td>
                                                 </tr>
-                                                @empty
+                                            @empty
                                                 <tr>
                                                     <td colspan="6" class="text-center">No Gate Pass Data Found</td>
                                                 </tr>

@@ -317,14 +317,12 @@ class AllListRepository
          // ->distinct('businesses.id')
          ->where('businesses.is_active', true)
          ->where('businesses.is_deleted', 0)
-         // ->groupBy( 'businesses_details.id',
-         // 'businesses_details.product_name','businesses_details.description',
-         // 'purchase_orders.updated_at')
+       
          ->groupBy(
-          'businesses_details.id',            // Unique identifier
-          'businesses_details.product_name', // Relevant for grouping
-          'businesses_details.description',  // Relevant for grouping
-          'businesses.title'                 // Relevant for grouping
+          'businesses_details.id',            
+          'businesses_details.product_name', 
+          'businesses_details.description',  
+          'businesses.title'                 
       )
       ->select(
           'businesses_details.id',
@@ -426,10 +424,10 @@ public function getAllListPurchaseOrderTowardsOwner(){
   ->where('businesses.is_active', true)
   ->where('businesses.is_deleted', 0)
   ->groupBy(
-      'businesses_details.id',            // Unique identifier
-      'businesses_details.product_name', // Relevant for grouping
-      'businesses_details.description',  // Relevant for grouping
-      'businesses.title'                 // Relevant for grouping
+      'businesses_details.id',            
+      'businesses_details.product_name', 
+      'businesses_details.description',  
+      'businesses.title'                 
   )
   ->select(
       'businesses_details.id',

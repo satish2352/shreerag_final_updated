@@ -64,15 +64,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -93,10 +84,6 @@
                                                 <th data-field="truck_no" data-editable="false">Truck Number</th>
                                                 <th data-field="transport_name" data-editable="false">Transport Name</th>
                                                 <th data-field="vehicle_name" data-editable="false">Vehicle Name</th>
-                                                {{-- <th data-field="store_material_sent_date" data-editable="false">Matrial Recieved Date</th> --}}
-                                                {{-- <th data-field="design_image" data-editable="false">Design Layout</th>
-                                                <th data-field="bom_image" data-editable="false">BOM</th> --}}
-                                                
                                             </tr>
 
                                         </thead>
@@ -115,24 +102,6 @@
                                                     <td>{{ ucwords($data->truck_no) }}</td>
                                                     <td>{{ ucwords($data->transport_name) }}</td>
                                                     <td>{{ ucwords($data->vehicle_name) }}</td>
-                                                    {{-- <td>{{ ucwords($data->remarks) }}</td> --}}
-                                                    {{-- <td>{{ ucwords($data->store_material_sent_date) }}</td> --}}
-                                                    {{-- <td> <a class="img-size" target="_blank"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
-                                                        alt="Design"> Click to view</a>
-                                                </td>
-                                                <td> <a class="img-size"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                        alt="bill of material" >Click to download</a>
-                                                </td> --}}
-                                               
-
-                                                   
-
-                                               
-
-
-
                                                 </tr>
                                             @endforeach
                                         </tbody>

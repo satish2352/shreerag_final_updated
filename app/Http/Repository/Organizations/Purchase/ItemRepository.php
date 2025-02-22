@@ -104,9 +104,6 @@ class ItemRepository  {
     }
     public function getById($id) {
         try {
-            // Debugging: Confirm the received ID
-            // dd($id);
-    
             $dataOutputByid = PartItem::leftJoin('tbl_unit', 'tbl_part_item.unit_id', '=', 'tbl_unit.id')
                 ->leftJoin('tbl_hsn', 'tbl_part_item.hsn_id', '=', 'tbl_hsn.id')
                 ->leftJoin('tbl_group_master', 'tbl_part_item.group_type_id', '=', 'tbl_group_master.id')
@@ -129,10 +126,7 @@ class ItemRepository  {
                 )
                 ->where('tbl_part_item.id', $id)
                 ->first();
-    
-            // dd($dataOutputByid); // Debug the output of the query
-    
-            return $dataOutputByid ?: null;
+                return $dataOutputByid ?: null;
     
         } catch (\Exception $e) {
             return [

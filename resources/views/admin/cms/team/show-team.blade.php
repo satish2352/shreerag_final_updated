@@ -17,32 +17,32 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="row">
-                                    <div class="row ">
-                                        <div class="col-lg-3 col-md-3 col-sm-3 padding-col-left">
-                                            <label>Name :</label>
-                                        </div>
-                                        <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($showData->name) }}</label>
-                                        </div>
+                                <div class="row ">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-col-left">
+                                        <label>Name :</label>
                                     </div>
-                                    <div class="row ">
-                                        <div class="col-lg-3 col-md-3 col-sm-3 padding-col-left">
-                                            <label>Position :</label>
-                                        </div>
-                                        <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($showData->position) }}</label>
-                                        </div>
+                                    <div class="col-lg-8 col-md-8 col-sm-8">
+                                        <label>{{ strip_tags($showData->name) }}</label>
                                     </div>
-                                    <div class="row ">
-                                        <div class="col-lg-3 col-md-3 col-sm-3 padding-col-left">
-                                            <label> Image :</label>
-                                        </div>
-                                        <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <img src="{{ Config::get('DocumentConstant.TEAM_VIEW') }}{{ $showData->image }}"
-                                                style="width:150px; height:150px; background-color: aliceblue;"
-                                                alt=" {{ strip_tags($showData['name']) }} Image" />
-                                        </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-col-left">
+                                        <label>Position :</label>
                                     </div>
+                                    <div class="col-lg-8 col-md-8 col-sm-8">
+                                        <label>{{ strip_tags($showData->position) }}</label>
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 padding-col-left">
+                                        <label> Image :</label>
+                                    </div>
+                                    <div class="col-lg-8 col-md-8 col-sm-8">
+                                        <img src="{{ Config::get('DocumentConstant.TEAM_VIEW') }}{{ $showData->image }}"
+                                            style="width:150px; height:150px; background-color: aliceblue;"
+                                            alt=" {{ strip_tags($showData['name']) }} Image" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

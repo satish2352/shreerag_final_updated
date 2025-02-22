@@ -57,9 +57,7 @@ class ProductsServices
                 }
                 if ($request->hasFile('image')) {
                     $englishImageName = $return_data['last_insert_id'] . '_' . rand(100000, 999999) . '_image.' . $request->file('image')->extension();
-                    
-                    // Rest of your code...
-                } else {
+                  } else {
                     // Handle the case where 'image' key is not present in the request.
                     // For example, you might want to skip the file handling or return an error message.
                 }                
