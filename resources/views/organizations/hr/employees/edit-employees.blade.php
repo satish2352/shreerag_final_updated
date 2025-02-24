@@ -165,7 +165,7 @@
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6">
                                                 <div class="form-group">
-                                                    <label for="u_password">Password</label>
+                                                    <label for="u_password">Change Password</label>
                                                     <input type="password" class="password form-control mb-2" name="u_password"
                                                         id="u_password" placeholder=""
                                                         value="@if (old('u_password')) {{ old('u_password') }} @endif">
