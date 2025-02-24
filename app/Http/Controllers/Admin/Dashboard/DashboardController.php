@@ -228,40 +228,41 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
             })
             ->whereIn('business_application_processes.production_status_id', $array_to_be_check_send_production)
             ->where('businesses.is_active', true)
+            ->where('businesses.is_deleted', 0)
             ->selectRaw('COUNT(DISTINCT businesses.id) as total_count')
             ->value('total_count');
         
        
         $accepted_design_production_dept = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1114)
         ->where('production_status_id', 1114)
-        ->where('is_active',1)->count();
+        ->where('is_active',1)->where('is_deleted', 0)->count();
         $rejected_design_production_dept = BusinessApplicationProcesses::where('business_status_id',1115)->where('design_status_id', 1115)
         ->where('production_status_id', 1115)
-        ->where('is_active',1)->count();
+        ->where('is_active',1)->where('is_deleted', 0)->count();
         $design_recived_for_production = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1113)
         ->where('production_status_id', 1113)
-        ->where('is_active',1)->count();
+        ->where('is_active',1)->where('is_deleted', 0)->count();
         
         $accepted_and_sent_to_store = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1114)
         ->where('production_status_id', 1114)
-        ->where('is_active',1)->count();
+        ->where('is_active',1)->where('is_deleted', 0)->count();
         $rejected_design_list_sent = BusinessApplicationProcesses::where('business_status_id',1115)->where('design_status_id', 1115)
         ->where('production_status_id', 1115)
-        ->where('is_active',1)->count();
+        ->where('is_active',1)->where('is_deleted', 0)->count();
         $corected_design_list_recived = BusinessApplicationProcesses::where('business_status_id',1116)->where('design_status_id', 1116)
         ->where('production_status_id', 1116)
-        ->where('is_active',1)->count();
+        ->where('is_active',1)->where('is_deleted', 0)->count();
 
         $material_received_for_production = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
         ->where('production_status_id', 1119)->where('store_status_id', 1123)->where('off_canvas_status', 17)
-        ->where('is_active',1)->count();
+        ->where('is_active',1)->where('is_deleted', 0)->count();
         $production_completed_prod_dept = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
         ->where('production_status_id', 1121)->where('store_status_id', 1123)->where('off_canvas_status', 18)
-        ->where('is_active',1)->count();
+        ->where('is_active',1)->where('is_deleted', 0)->count();
 
         $material_need_to_sent_to_production = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1114)
         ->where('production_status_id', 1114)->where('off_canvas_status', 15)
-        ->where('is_active',1)->count();
+        ->where('is_active',1)->where('is_deleted', 0)->count();
 
         // $material_sent_to_production = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
         // ->where('production_status_id', 1119)->where('store_status_id', 1118)
@@ -270,57 +271,57 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         
         $material_for_purchase = BusinessApplicationProcesses::where('business_status_id',1123)->where('design_status_id', 1114)
         ->where('production_status_id', 1117)->where('store_status_id',1123)
-        ->where('is_active',1)->count();
+        ->where('is_active',1)->where('is_deleted', 0)->count();
         $material_received_from_quality = BusinessApplicationProcesses::where('business_status_id',1127)->where('design_status_id', 1114)
         ->where('production_status_id', 1117)->where('store_status_id',1123)
-        ->where('is_active',1)->count();
+        ->where('is_active',1)->where('is_deleted', 0)->count();
 
         $rejected_chalan = BusinessApplicationProcesses::where('business_status_id',1116)->where('design_status_id', 1116)
         ->where('production_status_id', 1116)
-        ->where('is_active',1)->count();
-        $delivery_chalan = DeliveryChalan::where('is_active',1)->count();
-        $returnable_chalan = ReturnableChalan::where('is_active',1)->count();
+        ->where('is_active',1)->where('is_deleted', 0)->count();
+        $delivery_chalan = DeliveryChalan::where('is_active',1)->where('is_deleted', 0)->count();
+        $returnable_chalan = ReturnableChalan::where('is_active',1)->where('is_deleted', 0)->count();
         // $BOM_recived_for_purchase= BusinessApplicationProcesses::where('business_status_id',1123)->where('design_status_id', 1114)
         // ->where('production_status_id', 1117)->where('store_status_id',1123)
         // ->where('is_active',1)->count();
         
         $BOM_recived_for_purchase= PurchaseOrderModel::where('is_active',1)->count();
-        $vendor_list = Vendors::where('is_active',1)->count();
-        $tax = Tax::where('is_active',1)->count();
-        $part_item = PartItem::where('is_active',1)->count();
+        $vendor_list = Vendors::where('is_active',1)->where('is_deleted', 0)->count();
+        $tax = Tax::where('is_active',1)->where('is_deleted', 0)->count();
+        $part_item = PartItem::where('is_active',1)->where('is_deleted', 0)->count();
         $purchase_order_approved = PurchaseOrderModel::where('purchase_status_from_owner',1127)->where('purchase_status_from_purchase',1126)
-        ->where('is_active',1)->count();
+        ->where('is_active',1)->where('is_deleted', 0)->count();
         $purchase_order_submited_by_vendor =PurchaseOrderModel::where('purchase_status_from_owner',1129)->where('purchase_status_from_purchase',1129)
-        ->where('is_active',1)->count();
+        ->where('is_active',1)->where('is_deleted', 0)->count();
      
-        $get_pass = Gatepass::where('is_active',1)->count();
+        $get_pass = Gatepass::where('is_active',1)->where('is_deleted', 0)->count();
       
 
         // $GRN_genration= PurchaseOrderModel::where('purchase_status_from_owner',1129)->where('purchase_status_from_purchase',1129)
         // ->where('security_status_id',1132)->where('quality_status_id', null)->where('is_active',1)->count();
         $GRN_genration= PurchaseOrderModel::where('purchase_status_from_owner',1129)->where('purchase_status_from_purchase',1129)
-        ->where('quality_status_id', null)->where('is_active',1)->count();
+        ->where('quality_status_id', null)->where('is_active',1)->where('is_deleted', 0)->count();
         $material_need_to_sent_to_store = PurchaseOrderModel::where('purchase_status_from_owner',1129)->where('purchase_status_from_purchase',1129)
-        ->where('security_status_id',1132)->where('quality_status_id', 1134)->where('is_active',1)->count();
-        $rejected_chalan_po_wise = RejectedChalan::where('chalan_no', '!=', '')->where('is_active', 1)->where('is_deleted', 0)->count();
+        ->where('security_status_id',1132)->where('quality_status_id', 1134)->where('is_active',1)->where('is_deleted', 0)->count();
+        $rejected_chalan_po_wise = RejectedChalan::where('chalan_no', '!=', '')->where('is_active', 1)->where('is_deleted', 0)->where('is_deleted', 0)->count();
 
         $dispatch_received_from_finance= BusinessApplicationProcesses::where('logistics_status_id', 1146)->where('off_canvas_status',21)
         ->where('dispatch_status_id', 1147)
-        ->where('is_active',1)->count();
+        ->where('is_active',1)->where('is_deleted', 0)->count();
         $dispatch_completed = BusinessApplicationProcesses::where('logistics_status_id', 1146)->where('off_canvas_status',22)
         ->where('dispatch_status_id', 1148)
-        ->where('is_active',1)->count();
+        ->where('is_active',1)->where('is_deleted', 0)->count();
 
         $material_need_to_sent_to_production_inventory = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1114)
         ->where('production_status_id', 1114)->where('off_canvas_status', 15)
-        ->where('is_active',1)->count();
-        $part_item_inventory = PartItem::where('is_active',1)->count();
+        ->where('is_active',1)->where('is_deleted', 0)->count();
+        $part_item_inventory = PartItem::where('is_active',1)->where('is_deleted', 0)->count();
         $leave_request= Leaves::where(['is_active' => 1, 'is_approved' => 0])->count();
         $accepted_leave_request = Leaves::where(['is_active' => 1, 'is_approved' => 2])->count();
         $rejected__leave_request = Leaves::where(['is_active' => 1, 'is_approved' => 1])->count();
-        $total_employee= User::where('is_active',1)->count();
-        $total_leaves_type= LeaveManagement::where('is_active',1)->count();
-        $total_notice= Notice::where('is_active',1)->count();
+        $total_employee= User::where('is_active',1)->where('is_deleted', 0)->count();
+        $total_leaves_type= LeaveManagement::where('is_active',1)->where('is_deleted', 0)->count();
+        $total_notice= Notice::where('is_active',1)->where('is_deleted', 0)->count();
 
         $ses_userId = session()->get('user_id');
 
