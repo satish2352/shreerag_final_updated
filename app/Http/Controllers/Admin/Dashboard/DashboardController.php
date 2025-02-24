@@ -189,6 +189,7 @@ class DashboardController extends Controller {
         })
         ->where('business_application_processes.production_status_id', 0) 
         ->where('business_application_processes.production_id', 0)
+        ->where('businesses.is_deleted', 0)
         ->count();
 
         // $business_received_for_designs = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1111)
@@ -235,33 +236,42 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
        
         $accepted_design_production_dept = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1114)
         ->where('production_status_id', 1114)
+        ->where('is_deleted', 0)
         ->where('is_active',1)->count();
         $rejected_design_production_dept = BusinessApplicationProcesses::where('business_status_id',1115)->where('design_status_id', 1115)
         ->where('production_status_id', 1115)
+        ->where('is_deleted', 0)
         ->where('is_active',1)->count();
         $design_recived_for_production = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1113)
         ->where('production_status_id', 1113)
+        ->where('is_deleted', 0)
         ->where('is_active',1)->count();
         
         $accepted_and_sent_to_store = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1114)
         ->where('production_status_id', 1114)
+        ->where('is_deleted', 0)
         ->where('is_active',1)->count();
         $rejected_design_list_sent = BusinessApplicationProcesses::where('business_status_id',1115)->where('design_status_id', 1115)
         ->where('production_status_id', 1115)
+        ->where('is_deleted', 0)
         ->where('is_active',1)->count();
         $corected_design_list_recived = BusinessApplicationProcesses::where('business_status_id',1116)->where('design_status_id', 1116)
         ->where('production_status_id', 1116)
+        ->where('is_deleted', 0)
         ->where('is_active',1)->count();
 
         $material_received_for_production = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
         ->where('production_status_id', 1119)->where('store_status_id', 1123)->where('off_canvas_status', 17)
+        ->where('is_deleted', 0)
         ->where('is_active',1)->count();
         $production_completed_prod_dept = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
         ->where('production_status_id', 1121)->where('store_status_id', 1123)->where('off_canvas_status', 18)
+        ->where('is_deleted', 0)
         ->where('is_active',1)->count();
 
         $material_need_to_sent_to_production = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1114)
         ->where('production_status_id', 1114)->where('off_canvas_status', 15)
+        ->where('is_deleted', 0)
         ->where('is_active',1)->count();
 
         // $material_sent_to_production = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
