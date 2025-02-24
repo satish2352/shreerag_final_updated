@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('organization_id'); 
             $table->unsignedBigInteger('employee_id');
             $table->unsignedBigInteger('leave_type_id');
+            $table->string('other_employee_name');
             $table->string('leave_start_date');
             $table->string('leave_end_date');
             $table->string('leave_day');

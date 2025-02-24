@@ -56,8 +56,19 @@
                                         @csrf
                                         <div class="form-group-inner">
                                             <div class="row">
-
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="form-group">
+                                                        <label for="other_employee_name">Full Name <span class="text-danger">*</span></label>
+                                                        <input type="text" class="form-control" name="other_employee_name"
+                                                            id="other_employee_name" placeholder="" value="{{ old('other_employee_name') }}"
+                                                            oninput="this.value = this.value.replace(/[^a-zA-Z\s.]/g, '').replace(/(\..*)\./g, '$1');">
+                                                        @if ($errors->has('other_employee_name'))
+                                                            <span class="red-text"><?php echo $errors->first('other_employee_name', ':message'); ?></span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="form-group">
                                                     <div class="form-select-list">
                                                         <label for="leave_type_id">Select Leave Type <span
                                                                 class="text-danger">*</span></label>&nbsp
@@ -79,8 +90,10 @@
                                                             <span class="red-text"><?php echo $errors->first('leave_type_id', ':message'); ?></span>
                                                         @endif
                                                     </div>
+                                                    </div>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="form-group">
                                                     <div class="form-select-list">
                                                         <label for="leave_day">Select Leave Day <span
                                                                 class="text-danger">*</span></label>
@@ -92,8 +105,10 @@
 
                                                         </select>
                                                     </div>
+                                                    </div>
                                                 </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="form-group">
                                                     <label for="leave_start_date">Start Date <span
                                                             class="text-danger">*</span></label>
                                                     <div class="calendar-icon">
@@ -101,9 +116,11 @@
                                                             id="leave_start_date" name="leave_start_date"
                                                             placeholder="Enter Start Date">
                                                     </div>
+                                                    </div>
                                                 </div>
 
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="form-group">
                                                     <label for="leave_end_date">End Date <span
                                                             class="text-danger">*</span></label>
                                                     <div class="calendar-icon">
@@ -111,7 +128,8 @@
                                                             name="leave_end_date" placeholder="Enter End Date">
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                     <label for="name">Reason <span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" id="reason" name="reason"
                                                         placeholder="Enter reason">
@@ -192,6 +210,9 @@
 
             $("#addForm").validate({
                 rules: {
+                    other_employee_name: {
+                        required: true,
+                    },
                     leave_type_id: {
                         required: true,
                     },
@@ -214,6 +235,9 @@
                     },
                 },
                 messages: {
+                    other_employee_name: {
+                        required: "Please enter full name",
+                    },
                     leave_type_id: {
                         required: "Please select leave type.",
                     },

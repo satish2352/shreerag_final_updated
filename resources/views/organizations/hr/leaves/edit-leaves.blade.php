@@ -69,6 +69,19 @@
                                             <div class="row">
                                                 <div class="col-lg-6 col-md-6 col-sm-6">
                                                     <div class="form-group">
+                                                        <label for="other_employee_name">First Name <span
+                                                            class="text-danger">*</span></label>
+                                                        <input type="text" class="form-control mb-2" name="other_employee_name"
+                                                            id="other_employee_name" placeholder=""
+                                                            value="{{ $editData->other_employee_name }}"
+                                                            oninput="this.value = this.value.replace(/[^a-zA-Z\s.]/g, '').replace(/(\..*)\./g, '$1');">
+                                                        @if ($errors->has('other_employee_name'))
+                                                            <span class="red-text"><?php echo $errors->first('other_employee_name', ':message'); ?></span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                                    <div class="form-group">
                                                         <label for="leave_type_id">Select Leave Type <span
                                                                 class="text-danger">*</span></label>
                                                         <select class="form-control" id="leave_type_id" name="leave_type_id"
@@ -206,6 +219,9 @@
 
             $("#addForm").validate({
                 rules: {
+                    other_employee_name: {
+                        required: true,
+                    },
                     leave_type_id: {
                         required: true,
                     },
@@ -228,6 +244,9 @@
                     },
                 },
                 messages: {
+                    other_employee_name: {
+                        required: "Please enter full name",
+                    },
                     leave_type_id: {
                         required: "Please select leave type.",
                     },

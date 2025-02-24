@@ -74,8 +74,7 @@
                                         </div> --}}
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <h4 style="font-family: 'Font Awesome 5 Free'!important;">Full Name :
-                                    {{ $user_detail->f_name }} {{ $user_detail->m_name }}
-                                    {{ $user_detail->l_name }}</h4>
+                                    {{ $user_detail->other_employee_name }} </h4>
                             </div>
                         </div>
                         <div class="row " style="padding-left:10px;">
@@ -105,7 +104,16 @@
                             <div class="col-lg-12 col-md-12 col-sm-12"
                                 style="font-family: 'Font Awesome 5 Free'!important;">
                                 <label><strong>Leave Day</strong> :</label>
-                                <label>{{ strip_tags($user_detail->leave_day) }}</label>
+                                <label>
+                                    @if ($user_detail->leave_day == 'half_day')
+                                    Half Day
+                                @elseif($user_detail->leave_day == 'full_day')
+                                    Full Day
+                                @else
+                                    Unknown Status
+                                @endif
+                                
+                                </label>
                             </div>
                         </div>
 

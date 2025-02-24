@@ -80,7 +80,7 @@
                                         @foreach($getOutput as $data)
                                         <tr>
                                             <td>{{ $data->id }}</td>
-                                            <td>{{ucwords($data->f_name)}} {{ucwords($data->m_name)}} {{ucwords($data->l_name)}}</td>
+                                            <td>{{ ucwords($data->other_employee_name) }}</td>
                                             <td>{{ ucwords($data->role_name) }}</td>
                                             <td>{{ ucwords($data->u_email) }}</td>
                                             <td>{{ ucwords($data->leave_start_date) }}</td>

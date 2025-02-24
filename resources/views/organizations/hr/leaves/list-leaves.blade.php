@@ -76,6 +76,8 @@
                                             <tr>
 
                                                 <th data-field="id">ID</th>
+                                                <th data-field="other_employee_name" data-editable="false">Employee Name
+                                                </th>
                                                 <th data-field="leave_start_date" data-editable="false">Leave start Date
                                                 </th>
                                                 <th data-field="leave_end_date" data-editable="false">Leave End Date</th>
@@ -93,6 +95,7 @@
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ ucwords($data->other_employee_name) }}</td>
                                                     <td>{{ ucwords($data->leave_start_date) }}</td>
                                                     <td>{{ ucwords($data->leave_end_date) }}</td>
                                                     <td>

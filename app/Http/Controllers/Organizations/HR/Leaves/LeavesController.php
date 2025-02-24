@@ -87,81 +87,6 @@ class LeavesController extends Controller
             return $e;
         }
     }
-
-    // public function updateLabourStatusApproved(Request $request) {
-    //     try {
-          
-    //         $leaves_id = $request->input('active_id');
-
-           
-    //         $action = $request->input('action');
-    
-    //         $validator = Validator::make($request->all(), [
-    //             'active_id' => 'required|exists:tbl_leaves,id',
-    //             'action' => 'required|in:approve,notapprove',
-    //         ]);
-    
-    //         if ($validator->fails()) {
-    //             return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 422);
-    //         }
-    
-    //         $leaves = Leaves::find($leaves_id);
-    
-    //         if ($action === 'approve') {
-    //             if ($leaves->is_approved === 1) {
-    //                 return response()->json(['status' => 'false', 'message' => 'Leaves record is already approved'], 200);
-    //             }
-    //             $leaves->is_approved = 1;
-    //         } else {
-    //             $leaves->is_approved = 2; 
-    //         }
-    
-    //         $leaves->save();
-    
-    //         return redirect('list-leaves-approvedby-hr')->with('status', 'success')->with('msg', 'Leave status updated successfully');
-    //     } catch (\Exception $e) {
-    //         return response()->json(['status' => 'false', 'message' => 'Update failed', 'error' => $e->getMessage()], 500);
-    //     }
-    // }
-
-
-    // public function updateLabourStatusNotApproved(Request $request) {
-    //     try {
-          
-    //         $leaves_id = $request->input('active_id');
-
-           
-    //         $action = $request->input('action');
-    
-    //         $validator = Validator::make($request->all(), [
-    //             'active_id' => 'required|exists:tbl_leaves,id',
-    //             'action' => 'required|in:approve,notapprove',
-    //         ]);
-    
-    //         if ($validator->fails()) {
-    //             return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 422);
-    //         }
-    
-    //         $leaves = Leaves::find($leaves_id);
-    
-    //         if ($action === 'notapprove') {
-    //             if ($leaves->is_approved === 2) {
-    //                 return response()->json(['status' => 'false', 'message' => 'Leaves record is already approved'], 200);
-    //             }
-    //             $leaves->is_approved = 2;
-    //         } else {
-    //             $leaves->is_approved = 1; 
-    //         }
-    
-    //         $leaves->save();
-    
-    //         return redirect('list-leaves-not-approvedby-hr')->with('status', 'success')->with('msg', 'Leave status updated successfully');
-    //     } catch (\Exception $e) {
-    //         return response()->json(['status' => 'false', 'message' => 'Update failed', 'error' => $e->getMessage()], 500);
-    //     }
-    // }
-
-
     public function updateLabourStatus(Request $request) {
         try {
             $leaves_id = $request->input('active_id');
@@ -198,30 +123,17 @@ class LeavesController extends Controller
 
                 } elseif($leaves->is_approved === '1') {
                     $leaves->is_approved = '2';
-
-                //     $financialRecord = FinancialYearLeaveRecord::where('tbl_financial_year_leave_record.user_id', $employeeId)
-                //     ->where('tbl_financial_year_leave_record.leave_type_name', $leaveType)
-                //    ->first();
-                //     if ($financialRecord) {
-                //         $financialRecord->leave_balance -= $leaves->leave_count;
-                //         $financialRecord->save();
-                //     }
-
-                    // return response()->json(['status' => 'false', 'message' => 'Leaves record is already approved'], 200);
-                                
                 }
             } elseif ($action === 'notapprove') {
                 if ($leaves->is_approved === '0') {
                     $leaves->is_approved = '1'; // Update status to not approved
                 } elseif($leaves->is_approved === '2') {
                     $leaves->is_approved = '1';
-                    // return response()->json(['status' => 'false', 'message' => 'Leaves record is already not approved'], 200);
                 }
             }
     
             $leaves->save();
     
-            // Redirect based on the action
             if ($action === 'approve') {
                 return redirect('hr/list-leaves-approvedby-hr')->with('status', 'success')->with('msg', 'Leave status updated successfully');
             } elseif ($action === 'notapprove') {
@@ -231,51 +143,12 @@ class LeavesController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Update failed', 'error' => $e->getMessage()], 500);
         }
     }
-    
-    // public function updateLabourStatusNotApproved(Request $request) {
-    //     try {
-          
-    //         $leaves_id = $request->input('active_id');
-
-           
-    //         $action = $request->input('action');
-    
-    //         $validator = Validator::make($request->all(), [
-    //             'active_id' => 'required|exists:tbl_leaves,id',
-    //             'action' => 'required|in:approve,notapprove',
-    //         ]);
-    
-    //         if ($validator->fails()) {
-    //             return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 422);
-    //         }
-    
-    //         $leaves = Leaves::find($leaves_id);
-    
-    //         if ($action === 'notapprove') {
-    //             if ($leaves->is_approved === 1) {
-    //                 return response()->json(['status' => 'false', 'message' => 'Leaves record is already approved'], 200);
-    //             }
-    //             $leaves->is_approved = 1;
-    //         } else {
-    //             $leaves->is_approved = 0; // or whatever status denotes "Not Approved"
-    //         }
-    
-    //         $leaves->save();
-    
-    //         return redirect('list-leaves-acceptedby-hr')->with('status', 'success')->with('msg', 'Leave status updated successfully');
-    //     } catch (\Exception $e) {
-    //         return response()->json(['status' => 'false', 'message' => 'Update failed', 'error' => $e->getMessage()], 500);
-    //     }
-    // }
-    
-    
     public function add(){
         $leaveManagment = LeaveManagement::where('is_active', true)->where('is_deleted', 0)
         ->select('id','name')
         ->get()
         ->toArray();
             $dept=DepartmentsModel::get();
-            // $roles=RolesModel::get();
         return view('organizations.hr.leaves.add-leaves',compact('dept','leaveManagment'));
     }
 
@@ -365,50 +238,7 @@ class LeavesController extends Controller
           } catch (Exception $e) {
               return redirect('hr/add-leaves')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
           }
-      }
-
-
-    //   public function checkDates(Request $request)
-    //   {
-    //       $exists = Leaves::table('leaves')
-    //           ->where('leave_start_date', $request->leave_start_date)
-    //           ->orWhere('leave_end_date', $request->leave_end_date)
-    //           ->exists();
-      
-    //       return response()->json(['exists' => $exists]);
-    //   }
-    // public function checkDates(Request $request)
-    // {
-    //     $request->validate([
-    //         'leave_start_date' => 'required|date',
-    //         'leave_end_date' => 'required|date|after_or_equal:leave_start_date',
-    //     ]);
-    
-    //     $existingLeave = Leaves::where(function ($query) use ($request) {
-    //         $query->where('is_approved', 0)
-    //             ->whereBetween('leave_start_date', [$request->leave_start_date, $request->leave_end_date])
-    //             ->orWhereBetween('leave_end_date', [$request->leave_start_date, $request->leave_end_date])
-    //             ->orWhere(function ($query) use ($request) {
-    //                 $query->where('leave_start_date', '<=', $request->leave_start_date)
-    //                     ->where('leave_end_date', '>=', $request->leave_end_date);
-    //             });
-    //     })->first();
-    
-    //     if ($existingLeave) {
-    //         return response()->json([
-    //             'message' => 'Leave request overlaps with an existing request and is not approved.',
-    //             'leave' => $existingLeave,
-    //             'status' => 'overlap'
-    //         ], 400);
-    //     }
-    
-    //     return response()->json([
-    //         'message' => 'Leave request does not overlap with existing requests.',
-    //         'status' => 'not_overlap'
-    //     ], 200);
-    // }
-    
-    
+      }    
     public function checkDates(Request $request)
     {
         $request->validate([
