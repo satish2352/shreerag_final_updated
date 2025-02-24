@@ -35,28 +35,15 @@ class LeavesController extends Controller
             return $e;
         }
     }  
-    // public function getAllLeavesRequest(){
-    //     try {
-    //         $getOutput = $this->service->getAllLeavesRequest();
+    public function getAllLeavesRequest(){
+        try {
+            $getOutput = $this->service->getAllLeavesRequest();
           
-    //         return view('organizations.hr.leaves.list-leaves-accepted', compact('getOutput'));
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // } 
-
-    public function getAllLeavesRequest()
-{
-    try {
-        $getOutput = $this->service->getAllLeavesRequest();
-        return view('organizations.hr.leaves.list-leaves-accepted', compact('getOutput'));
-    } catch (\Exception $e) {
-        \Log::error('Error in LeavesController: ' . $e->getMessage());
-        return redirect()->back()->with('error', 'Something went wrong!');
-    }
-}
-
-    
+            return view('organizations.hr.leaves.list-leaves-accepted', compact('getOutput'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
     public function show(Request $request){
         try {
             $data_id = base64_decode($request->id);
@@ -251,7 +238,8 @@ class LeavesController extends Controller
           } catch (Exception $e) {
               return redirect('hr/add-leaves')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
           }
-      }    
+      }
+    
     public function checkDates(Request $request)
     {
         $request->validate([
