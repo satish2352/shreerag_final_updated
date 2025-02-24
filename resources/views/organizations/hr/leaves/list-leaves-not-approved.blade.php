@@ -27,7 +27,7 @@
                 <div class="sparkline13-list">
                     <div class="sparkline13-hd">
                         <div class="main-sparkline13-hd">
-                            <h1>Not Approved Leaves <span class="table-project-n">Data</span> Table</h1>
+                            <h1>Not Approved Leave <span class="table-project-n">Data</span> Table</h1>
                             <div class="form-group-inner login-btn-inner row">
                                 <div class="col-lg-10"></div>
                             </div>

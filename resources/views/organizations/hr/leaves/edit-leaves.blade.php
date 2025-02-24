@@ -19,7 +19,7 @@
                 <div class="sparkline12-hd">
                     <div class="main-sparkline12-hd">
                         <center>
-                            <h1>Edit Leaves Data</h1>
+                            <h1>Edit Leave Data</h1>
                         </center>
                     </div>
                 </div>
@@ -90,11 +90,11 @@
 
                                                 <div class="col-lg-6 col-md-6 col-sm-6">
                                                     <div class="form-select-list">
-                                                        <label for="leave_day">Select Leaves Day <span
+                                                        <label for="leave_day">Select Leave Day <span
                                                                 class="text-danger">*</span></label>
                                                         <select class="form-control custom-select-value" name="leave_day"
                                                             id="leave_day">
-                                                            <option value="">Select Leaves Day</option>
+                                                            <option value="">Select Leave Day</option>
                                                             <option value="full_day"
                                                                 {{ $editData->leave_day == 'full_day' ? 'selected' : '' }}>
                                                                 Full Day</option>

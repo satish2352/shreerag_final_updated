@@ -59,11 +59,11 @@
 
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                     <div class="form-select-list">
-                                                        <label for="leave_type_id">Select Leaves Type <span
+                                                        <label for="leave_type_id">Select Leave Type <span
                                                                 class="text-danger">*</span></label>&nbsp
                                                         <select class="form-control" id="leave_type_id" name="leave_type_id"
                                                             onchange="myFunction(this.value)">
-                                                            <option value="">Select</option>
+                                                            <option value="">Select Leave Type</option>
                                                             @foreach ($leaveManagment as $leaveType)
                                                                 @if (old('leave_type_id') == $leaveType['id'])
                                                                     <option value="{{ $leaveType['id'] }}" selected>
@@ -82,11 +82,11 @@
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                     <div class="form-select-list">
-                                                        <label for="leave_day">Select Leaves Day <span
+                                                        <label for="leave_day">Select Leave Day <span
                                                                 class="text-danger">*</span></label>
                                                         <select class="form-control custom-select-value" name="leave_day"
                                                             id="leave_day">
-                                                            <option value="">Select Leaves Day</option>
+                                                            <option value="">Select Leave Day</option>
                                                             <option value="full_day">Full Day</option>
                                                             <option value="half_day">Half Day</option>
 
