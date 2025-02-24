@@ -335,13 +335,13 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         $material_need_to_sent_to_production_inventory = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1114)
         ->where('production_status_id', 1114)->where('off_canvas_status', 15)
         ->where('is_active',1)->count();
-        $part_item_inventory = PartItem::where('is_active',1)->count();
-        $leave_request= Leaves::where(['is_active' => 1, 'is_approved' => 0])->count();
-        $accepted_leave_request = Leaves::where(['is_active' => 1, 'is_approved' => 2])->count();
-        $rejected__leave_request = Leaves::where(['is_active' => 1, 'is_approved' => 1])->count();
-        $total_employee= User::where('is_active',1)->count();
-        $total_leaves_type= LeaveManagement::where('is_active',1)->count();
-        $total_notice= Notice::where('is_active',1)->count();
+        $part_item_inventory = PartItem::where('is_active',1)->where('is_deleted',0)->count();
+        $leave_request= Leaves::where(['is_active' => 1, 'is_approved' => 0])->where('is_deleted',0)->count();
+        $accepted_leave_request = Leaves::where(['is_active' => 1, 'is_approved' => 2])->where('is_deleted',0)->count();
+        $rejected__leave_request = Leaves::where(['is_active' => 1, 'is_approved' => 1])->where('is_deleted',0)->count();
+        $total_employee= User::where('is_active',1)->where('is_deleted',0)->count();
+        $total_leaves_type= LeaveManagement::where('is_active',1)->where('is_deleted',0)->count();
+        $total_notice= Notice::where('is_active',1)->where('is_deleted',0)->count();
 
         $ses_userId = session()->get('user_id');
 
@@ -351,6 +351,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         ->where('users.id', $ses_userId)
         ->where('tbl_leaves.is_active', 1)
         ->where('tbl_leaves.is_approved', 0)
+        ->where('tbl_leaves.is_deleted', 0)
         ->count();
         $employee_accepted_leave_request = Leaves::leftJoin('users', function($join) {
             $join->on('tbl_leaves.employee_id', '=', 'users.id');
@@ -358,6 +359,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         ->where('users.id', $ses_userId)
         ->where('tbl_leaves.is_active', 1)
         ->where('tbl_leaves.is_approved', 2)
+        ->where('tbl_leaves.is_deleted', 0)
         ->count();
         $employee_rejected_leave_request = Leaves::leftJoin('users', function($join) {
             $join->on('tbl_leaves.employee_id', '=', 'users.id');
@@ -365,9 +367,10 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         ->where('users.id', $ses_userId)
         ->where('tbl_leaves.is_active', 1)
         ->where('tbl_leaves.is_approved', 1)
+        ->where('tbl_leaves.is_deleted', 0)
         ->count();
         // $employee_leave_type= LeaveManagement::where('is_active',1)->get();
-        $employee_leave_type = LeaveManagement::where('is_active', 1)
+        $employee_leave_type = LeaveManagement::where('is_active', 1) ->where('is_deleted', 0)
         ->select('name', 'leave_count') 
         ->get();
 
