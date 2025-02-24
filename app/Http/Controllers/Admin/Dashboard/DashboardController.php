@@ -59,16 +59,16 @@ class DashboardController extends Controller {
     try {
       
         // Get the counts
-        $department_count = RolesModel::where('is_active', 1)->count(); 
+        $department_count = RolesModel::where('is_active', 1)->where('is_deleted', 0)->count(); 
         $user_active_count= User::leftJoin('tbl_roles', function ($join) {
             $join->on('users.role_id', '=', 'tbl_roles.id');
         })
         ->where('users.is_active', 1)
         ->where('users.id', '>', 1)
         ->count(); 
-        $active_count = Business::where('is_active', 1)->count(); 
-        $business_details_count = BusinessDetails::where('is_active', 1)->count(); 
-        $product_completed_count = BusinessApplicationProcesses::where('is_active', 1)
+        $active_count = Business::where('is_active', 1)->where('is_deleted', 0)->count(); 
+        $business_details_count = BusinessDetails::where('is_active', 1)->where('is_deleted', 0)->count(); 
+        $product_completed_count = BusinessApplicationProcesses::where('is_active', 1)->where('is_deleted', 0)
             ->where('dispatch_status_id', 1148)
             ->count();
         // $product_completed_count = BusinessApplicationProcesses::where('is_active', 1)
@@ -81,7 +81,7 @@ class DashboardController extends Controller {
         
       
 
-        $business_inprocess_count = BusinessApplicationProcesses::where('is_active', 1)
+        $business_inprocess_count = BusinessApplicationProcesses::where('is_active', 1)->where('is_deleted', 0)
         ->where(function($query) {
             $query->orWhere('business_status_id', 1118)
                 ->orWhere('design_status_id', 1114)
@@ -96,7 +96,7 @@ class DashboardController extends Controller {
         })
         ->count();
     
-        $product_inprocess_count = BusinessApplicationProcesses::where('is_active', 1)
+        $product_inprocess_count = BusinessApplicationProcesses::where('is_active', 1)->where('is_deleted', 0)
         ->where(function($query) {
             $query->orWhere('business_status_id', 1118)
                 ->orWhere('design_status_id', 1114)
@@ -146,9 +146,9 @@ class DashboardController extends Controller {
             ->get()
             ->groupBy('customer_po_number'); 
             // ->groupBy('businesses.customer_po_number'); 
-                $product_count = Products::where('is_active', 1)->count();
-        $testimonial_count = Testimonial::where('is_active', 1)->count();
-        $product_services_count = ProductServices::where('is_active', 1)->count();
+                $product_count = Products::where('is_active', 1)->where('is_deleted', 0)->count();
+        $testimonial_count = Testimonial::where('is_active', 1)->where('is_deleted', 0)->count();
+        $product_services_count = ProductServices::where('is_active', 1)->where('is_deleted', 0)->count();
         $team_count = Team::where('is_active',1)->count();
         $contact_us_count = ContactUs::where('is_active',1)->count();
         $vision_mission_count = VisionMission::where('is_active',1)->count();
@@ -302,7 +302,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         ->where('quality_status_id', null)->where('is_active',1)->count();
         $material_need_to_sent_to_store = PurchaseOrderModel::where('purchase_status_from_owner',1129)->where('purchase_status_from_purchase',1129)
         ->where('security_status_id',1132)->where('quality_status_id', 1134)->where('is_active',1)->count();
-        $rejected_chalan_po_wise = RejectedChalan::where('chalan_no', '!=', '')->where('is_active', 1)->count();
+        $rejected_chalan_po_wise = RejectedChalan::where('chalan_no', '!=', '')->where('is_active', 1)->where('is_deleted', 0)->count();
 
         $dispatch_received_from_finance= BusinessApplicationProcesses::where('logistics_status_id', 1146)->where('off_canvas_status',21)
         ->where('dispatch_status_id', 1147)
@@ -346,7 +346,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         ->where('tbl_leaves.is_approved', 1)
         ->count();
         // $employee_leave_type= LeaveManagement::where('is_active',1)->get();
-        $employee_leave_type = LeaveManagement::where('is_active', 1)
+        $employee_leave_type = LeaveManagement::where('is_active', 1)->where('is_deleted', 0)
         ->select('name', 'leave_count') 
         ->get();
 
