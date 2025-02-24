@@ -105,7 +105,7 @@
 
                                                                         @if ($item->id > 14)
                                                                         <a href="{{ route('delete-users', base64_encode($item->id)) }}">
-                                                                            <button data-toggle="tooltip" title="Delete" class="pd-setting-ed">
+                                                                            <button data-toggle="tooltip" title="Delete" class="pd-setting-ed delete-btn">
                                                                                 <i class="fa fa-trash" aria-hidden="true"></i>
                                                                             </button>
                                                                         </a>
@@ -136,8 +136,34 @@
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>   
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $(document).ready(function() {
+            $(".delete-btn").click(function(e) {
+                e.preventDefault();
+                var deleteUrl = "{{ route('delete-users', ':id') }}";
+                var userId = $(this).data('id');
+                deleteUrl = deleteUrl.replace(':id', userId);
+
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "This action cannot be undone!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirect to delete route
+                        window.location.href = deleteUrl;
+                    }
+                });
+            });
+        });
+    </script>
     <script>
         $('.show-btn').click(function(e) {
             alert('hii');

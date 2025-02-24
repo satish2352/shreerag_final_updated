@@ -16,6 +16,7 @@ class EmployeesHrRepository  {
             $data_output= EmployeesModel::with(['role', 'department'])
                         ->where('organization_id', session()->get('org_id'))
                         ->orderBy('updated_at', 'desc')
+						->where('is_deleted', 0)
                         ->get();
             return $data_output;
         } catch (\Exception $e) {
@@ -41,7 +42,8 @@ class EmployeesHrRepository  {
 								'users.pincode',
 								'users.id',
 								'users.is_active'
-							) ->orderBy('users.id', 'desc')->get();
+							)->where('users.is_deleted', 0)
+							->orderBy('users.id', 'desc')->get();
 							// ->toArray();
 
 		return $data_users;
@@ -187,21 +189,39 @@ class EmployeesHrRepository  {
 		return $request->edit_id;
 	}
 
-	public function deleteById($id){
-		try {   
-			$deleteDataById = User::find($id);
+	// public function deleteById($id){
+	// 	try {   
+	// 		$deleteDataById = User::find($id);
 			
-			if ($deleteDataById) {
-				$deleteDataById->delete();
-				return $deleteDataById;
-			} else {
-				return null;
-			}
-		} catch (\Exception $e) {
-			return $e;
-		}
-	}
-
+	// 		if ($deleteDataById) {
+	// 			$deleteDataById->delete();
+	// 			return $deleteDataById;
+	// 		} else {
+	// 			return null;
+	// 		}
+	// 	} catch (\Exception $e) {
+	// 		return $e;
+	// 	}
+	// }
+	public function deleteById($id)
+    {
+        $record = User::find($id); // Replace `User` with your actual model
+    
+        if ($record) {
+            $record->is_deleted = 1; // Mark the record as deleted
+            $record->save();
+    
+            return [
+                'msg' => 'User deleted successfully!',
+                'status' => 'success'
+            ];
+        }
+    
+        return [
+            'msg' => 'User not found!',
+            'status' => 'error'
+        ];
+    }
 	public function getById($id){
 		try {
 			
