@@ -4,7 +4,13 @@
         label {
             margin-top: 20px;
         }
-
+        .password-toggle {
+            cursor: pointer;
+            position: absolute;
+            top: 68%;
+            right: 20px;
+            transform: translateY(-50%);
+        }
         label.error {
             color: red;
             /* Change 'red' to your desired text color */
@@ -157,6 +163,41 @@
                                                     @endif
                                                 </div>
                                             </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="u_password">Password</label>
+                                                    <input type="password" class="password form-control mb-2" name="u_password"
+                                                        id="u_password" placeholder=""
+                                                        value="@if (old('u_password')) {{ old('u_password') }} @endif">
+        
+                                                    @if ($errors->has('u_password'))
+                                                        <span class="red-text"><?php echo $errors->first('u_password', ':message'); ?></span>
+                                                    @endif
+                                                    <span id="togglePassword" class="togglePpassword password-toggle"
+                                                        onclick="togglePasswordVisibility()">
+                                                        <i class="fa fa-eye-slash"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="password_confirmation">Confirm Password</label>
+                                                    <input type="password" class="password_confirmation form-control mb-2"
+                                                        id="password_confirmation" name="password_confirmation"
+                                                        value="@if (old('password_confirmation')) {{ old('password_confirmation') }} @endif">
+        
+                                                    <span id="password-error" class="error-message red-text"></span>
+                                                    @if ($errors->has('password_confirmation'))
+                                                        <span class="red-text"><?php echo $errors->first('password_confirmation', ':message'); ?></span>
+                                                    @endif
+                                                    <span id="toggleConfirmPassword"
+                                                        class="toggleConfirmPpassword password-toggle"
+                                                        onclick="toggleConfirmPasswordVisibility()">
+                                                        <i class="fa fa-eye-slash"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+
                                             <div class="col-lg-6 col-md-6 col-sm-6">
                                                 <div class="form-group">
                                                     <label for="designation">Designation</label>&nbsp<span
@@ -518,7 +559,68 @@
             });
         });
     </script>
+<script>
+    $(document).ready(function() {
+        $('.password_confirmation').on('input', function() {
+            var password = $('.u_password').val();
+            var confirmPassword = $(this).val();
+            var errorSpan = $('.password-error');
 
+            if (password !== confirmPassword) {
+                errorSpan.text('Password does not match.');
+            } else {
+                errorSpan.text('');
+            }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('#password_confirmation').on('input', function() {
+            var password = $('#u_password').val();
+            var confirmPassword = $(this).val();
+            var errorSpan = $('#password-error');
 
+            if (password !== confirmPassword) {
+                errorSpan.text('Password does not match.');
+            } else {
+                errorSpan.text('');
+            }
+        });
+    });
+</script>
+<script>
+    function togglePasswordVisibility() {
+        var passwordInput = document.getElementsByClassName("password")[0];
+        var toggleIcon = document.querySelector(".togglePpassword i");
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleIcon.classList.remove("fa-eye-slash");
+            toggleIcon.classList.add("fa-eye");
+        } else {
+            passwordInput.type = "password";
+            toggleIcon.classList.remove("fa-eye");
+            toggleIcon.classList.add("fa-eye-slash");
+        }
+    }
+</script>
+<script>
+    function toggleConfirmPasswordVisibility() {
+        var passwordInput = document.getElementsByClassName("password_confirmation")[0];
+
+        var toggleIcon = document.querySelector(".toggleConfirmPpassword i");
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleIcon.classList.remove("fa-eye-slash");
+            toggleIcon.classList.add("fa-eye");
+        } else {
+            passwordInput.type = "password";
+            toggleIcon.classList.remove("fa-eye");
+            toggleIcon.classList.add("fa-eye-slash");
+        }
+    }
+</script>
 
 @endsection

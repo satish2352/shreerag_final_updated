@@ -99,7 +99,7 @@
                                                     <div class="calendar-icon">
                                                         <input type="text" class="form-control custom-select-value"
                                                             id="leave_start_date" name="leave_start_date"
-                                                            placeholder="Enter foundation date">
+                                                            placeholder="Enter Start Date">
                                                     </div>
                                                 </div>
 
@@ -108,7 +108,7 @@
                                                             class="text-danger">*</span></label>
                                                     <div class="calendar-icon">
                                                         <input type="text" class="form-control" id="leave_end_date"
-                                                            name="leave_end_date" placeholder="Enter foundation date">
+                                                            name="leave_end_date" placeholder="Enter End Date">
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">

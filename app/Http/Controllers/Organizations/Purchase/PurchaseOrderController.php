@@ -61,8 +61,7 @@ class PurchaseOrderController extends Controller
             )
         ->orderBy('purchase_orders.updated_at', 'desc')
         ->get();
-        // dd($getOutput);
-        // die();
+       
                return view(
             'organizations.purchase.addpurchasedetails.list-purchase-orders',
             compact(

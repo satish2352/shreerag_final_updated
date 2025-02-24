@@ -173,6 +173,7 @@ class EmployeesHrRepository  {
 			'state' => $request['state'],
 			'city' => $request['city'],
 			'pincode' => $request['pincode'],
+			'u_password' => bcrypt($request['u_password']),
 			'is_active' => isset($request['is_active']) ? true : false,
 		];
 	
