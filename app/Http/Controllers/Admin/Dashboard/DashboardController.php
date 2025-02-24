@@ -260,7 +260,10 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         ->where('is_deleted', 0)
         ->where('is_active',1)->count();
 
-        $material_received_for_production = BusinessApplicationProcesses::leftJoin('production', function($join) {
+        $material_received_for_production = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
+            $join->on('business_application_processes.business_id', '=', 'businesses.id');
+        })
+            ->leftJoin('production', function($join) {
             $join->on('business_application_processes.business_id', '=', 'production.business_id');
           })
           ->where('business_application_processes.off_canvas_status', 17)
