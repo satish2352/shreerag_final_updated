@@ -103,8 +103,8 @@
                                                                         aria-hidden="true"></i></button></a>
 
 
-                                                                        @if ($loop->iteration > 14)
-                                                                        <a href="{{ route('delete-users', $item->id) }}">
+                                                                        @if ($item->id > 14)
+                                                                        <a href="{{ route('delete-users', base64_encode($item->id)) }}">
                                                                             <button data-toggle="tooltip" title="Delete" class="pd-setting-ed">
                                                                                 <i class="fa fa-trash" aria-hidden="true"></i>
                                                                             </button>
