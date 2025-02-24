@@ -101,8 +101,22 @@ padding-left: 20px !important;
                                             <td>{{ $data->remaining_quantity }}</td>
                                             <td>{{ ucwords($data->description) }}</td>
                                             <td>
-                                                <div style="display: inline-block; align-items: center;">
+                                                {{-- <div style="display: inline-block; align-items: center;">
                                                     <a href="{{route('edit-recived-bussinesswise', $data->business_details_id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed">Edit Product</button></a>
+                                                </div> --}}
+
+                                                <div style="display: inline-block; align-items: center;">
+                                                    @if ($data->quantity = $data->completed_production)
+                                                        <a href="{{ route('edit-recived-inprocess-production-material', $data->id) }}">
+                                                            <button data-toggle="tooltip" title="Edit Product" class="pd-setting-ed">
+                                                                <i class="fa fa-check" aria-hidden="true"></i> Edit Product
+                                                            </button>
+                                                        </a>
+                                                    @else
+                                                        <button data-toggle="tooltip" title="Production Completed" class="pd-setting-ed" disabled>
+                                                            <i class="fa fa-check" aria-hidden="true"></i> Edit Product
+                                                        </button>
+                                                    @endif
                                                 </div>
                                                 <div style="display: inline-block; align-items: center; margin-top: 10px;">
                                                 <a href="{{route('edit-recived-bussinesswise-quantity-tracking', $data->business_details_id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed">Production Completed</button></a>

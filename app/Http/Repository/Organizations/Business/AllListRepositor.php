@@ -769,7 +769,8 @@ public function loadDesignSubmittedForProductionBusinessWise($business_id)
                 'businesses.remarks'
             )
             ->get();
-
+// dd($data_output);
+// die();
         return $data_output;
     } catch (\Exception $e) {
         return $e;

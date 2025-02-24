@@ -80,6 +80,7 @@ class LeavesRepository {
         try {
 
             $data_output = Leaves::join( 'users', 'tbl_leaves.employee_id', '=', 'users.id' )
+            ->join('tbl_roles', 'users.role_id', '=', 'tbl_roles.id') 
             ->join( 'tbl_leave_management', 'tbl_leaves.leave_type_id', '=', 'tbl_leave_management.id' )
             ->where( 'tbl_leaves.organization_id', session()->get( 'org_id' ) )
             ->where( 'tbl_leaves.is_approved', 0 )
@@ -89,6 +90,8 @@ class LeavesRepository {
                 'users.f_name',
                 'users.m_name',
                 'users.l_name',
+                'users.role_id',
+                'tbl_roles.role_name',
                 'tbl_leaves.leave_start_date',
                 'tbl_leaves.employee_id',
                 'tbl_leaves.leave_end_date',
@@ -112,6 +115,7 @@ class LeavesRepository {
     public function getAllNotApprovedRequest() {
         try {
             $data_output = Leaves::join( 'users', 'tbl_leaves.employee_id', '=', 'users.id' )
+            ->join('tbl_roles', 'users.role_id', '=', 'tbl_roles.id') 
             ->join( 'tbl_leave_management', 'tbl_leaves.leave_type_id', '=', 'tbl_leave_management.id' )
             ->where( 'organization_id', session()->get( 'org_id' ) )
             ->where( 'is_approved', 1 )
@@ -121,6 +125,8 @@ class LeavesRepository {
                 'users.f_name',
                 'users.m_name',
                 'users.l_name',
+                'users.role_id',
+                'tbl_roles.role_name',
                 'tbl_leaves.leave_start_date',
                 'tbl_leaves.employee_id',
                 'tbl_leaves.leave_end_date',
@@ -142,6 +148,7 @@ class LeavesRepository {
     public function getAllApprovedRequest() {
         try {
             $data_output = Leaves::join( 'users', 'tbl_leaves.employee_id', '=', 'users.id' )
+            ->join('tbl_roles', 'users.role_id', '=', 'tbl_roles.id') 
             ->join( 'tbl_leave_management', 'tbl_leaves.leave_type_id', '=', 'tbl_leave_management.id' )
             ->where( 'organization_id', session()->get( 'org_id' ) )
             ->where( 'is_approved', 2 )
@@ -151,6 +158,8 @@ class LeavesRepository {
                 'users.f_name',
                 'users.m_name',
                 'users.l_name',
+                'users.role_id',
+                'tbl_roles.role_name',
                 'tbl_leaves.leave_start_date',
                 'tbl_leaves.employee_id',
                 'tbl_leaves.leave_end_date',

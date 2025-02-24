@@ -130,11 +130,13 @@
                                                 
                                                 <th data-field="id">Sr.No.</th> 
                                                 <th data-field="purchase_orders_id" data-editable="false">Purchase Order ID</th>
+                                                <th data-field="grn" data-editable="false">GRN</th>
                                                 <th data-field="client_name" data-editable="false">Client Name</th>
                                                 <th data-field="vendor_company_name" data-editable="false">Client Company Name</th>
                                                 <th data-field="email" data-editable="false">Email</th>
                                                 <th data-field="contact_no" data-editable="false">Phone Number</th>
                                                 <th data-field="vendor_address" data-editable="false">Address</th>
+                                               
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -143,11 +145,19 @@
                                                     
                                                     <td>{{ $loop->iteration }}</td>
                                             <td>{{ $data->purchase_orders_id }}</td>
+                                            <td>
+                                                <div style="display: flex; align-items: center;">
+                                                    <a href="{{ route('list-grn-details-po-tracking', [base64_encode($data->purchase_orders_id), base64_encode($data->business_details_id), base64_encode($data->grn_id)]) }}">
+                                                        <button data-toggle="tooltip" title="GRN Details" class="pd-setting-ed">GRN Details</button>
+                                                    </a>
+                                                </div>
+                                            </td>
                                             <td>{{ $data->vendor_name }}</td>
                                            <td>{{ $data->vendor_company_name }}</td>
                                            <td>{{ $data->vendor_email }}</td> 
                                            <td>{{ $data->contact_no }}</td> 
                                            <td>{{ $data->vendor_address }}</td> 
+                                           
                                                 </tr>
                                             @endforeach
                                         </tbody>

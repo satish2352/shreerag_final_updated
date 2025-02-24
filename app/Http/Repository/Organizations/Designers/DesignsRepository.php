@@ -304,18 +304,31 @@ public function updateAll($request)
     public function updateReUploadDesign($request)
     {
         try {
-            // dd($request);
-            // die();
             $return_data = array();
-
+            $edit_id = $request->design_revision_for_prod_id;
+            $dataOutputNew = DesignRevisionForProd::where('id', $edit_id)->first();
+            if (!$dataOutputNew) {
+                return [
+                    'msg' => 'Design not found.',
+                    'status' => 'error',
+                ];
+            }
+            $businessDetails = BusinessDetails::where('id', $dataOutputNew->business_details_id)->first();
+            if (!$businessDetails) {
+                return [
+                    'msg' => 'Business details not found.',
+                    'status' => 'error',
+                ];
+            }
+            $productName = $businessDetails->product_name;
+            $formattedProductName = str_replace(' ', '_', $productName);
             $designRevisionForProd = DesignRevisionForProd::where('id', $request->design_revision_for_prod_id)->orderBy('id','desc')->first();
-
             if($designRevisionForProd) {
 
                 $designRevisionForProd->remark_by_design = $request->remark_by_design;
 
-                $designImageName = $designRevisionForProd->id . '_' . rand(100000, 999999) . '_re_design.' . $request->design_image->getClientOriginalExtension();
-                $bomImageName = $designRevisionForProd->id . '_' . rand(100000, 999999) . '_re_bom.' . $request->bom_image->getClientOriginalExtension();
+                $designImageName = $designRevisionForProd->id . '_'. $formattedProductName . '_' . rand(100000, 999999) . '_re_design.' . $request->design_image->getClientOriginalExtension();
+                $bomImageName = $designRevisionForProd->id . '_'. $formattedProductName . '_' . rand(100000, 999999) . '_re_bom.' . $request->bom_image->getClientOriginalExtension();
                 
                 // Update the design image and bom image fields in the DesignModel
                 $designRevisionForProd->design_image = $designImageName;

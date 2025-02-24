@@ -84,7 +84,31 @@ class Business extends Model
     {
         return $this->hasMany(AdminView::class, 'business_id');
     }
-    
+    // ===========
+    // public function gatepass()
+    // {
+    //     return $this->hasMany(Gatepass::class, 'business_details_id');
+    // }
+
+    // public function grnModel()
+    // {
+    //     return $this->hasMany(GRNModel::class, 'purchase_orders_id');
+    // }
+
+    // public function purchaseOrderDetailsModel()
+    // {
+    //     return $this->hasMany(PurchaseOrderDetailsModel::class, 'purchase_orders_id');
+    // }
+
+    // public function grnPOQuantityTracking()
+    // {
+    //     return $this->hasMany(GrnPOQuantityTracking::class, 'purchase_orders_id');
+    // }
+
+    // public function rejectedChalan()
+    // {
+    //     return $this->hasMany(RejectedChalan::class, 'purchase_orders_id');
+    // }
 }
 
 

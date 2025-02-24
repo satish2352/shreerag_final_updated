@@ -133,6 +133,7 @@ class DashboardController extends Controller {
                 $join->on('business_application_processes.business_details_id', '=', 'gatepass.business_details_id');
             })
             ->where('businesses.is_active', 1)
+            ->where('businesses.is_deleted', 0)
             ->select('businesses.customer_po_number','businesses.title','businesses_details.product_name',
             'business_application_processes.business_status_id','businesses.updated_at', 'business_application_processes.design_status_id',
              'business_application_processes.production_status_id', 'business_application_processes.store_status_id','purchase_orders.purchase_status_from_purchase',

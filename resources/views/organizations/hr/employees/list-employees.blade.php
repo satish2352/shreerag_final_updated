@@ -102,11 +102,23 @@
                                                                     class="pd-setting-ed"><i class="fa fa-pencil-square-o"
                                                                         aria-hidden="true"></i></button></a>
 
-                                                            <a
+
+                                                                        @if ($loop->iteration > 14)
+                                                                        <a href="{{ route('delete-users', base64_encode($item->id)) }}">
+                                                                            <button data-toggle="tooltip" title="Delete" class="pd-setting-ed">
+                                                                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                                                            </button>
+                                                                        </a>
+                                                                    @else
+                                                                        <button data-toggle="tooltip" title="Delete (Disabled)" class="pd-setting-ed" disabled>
+                                                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                                                        </button>
+                                                                    @endif
+                                                            {{-- <a
                                                                 href="{{ route('delete-users', base64_encode($item->id)) }} "><button
                                                                     data-toggle="tooltip" title="Trash"
                                                                     class="pd-setting-ed"><i class="fa fa-trash"
-                                                                        aria-hidden="true"></i></button></a>
+                                                                        aria-hidden="true"></i></button></a> --}}
                                                         </div>
                                                     </td>
                                                 </tr>

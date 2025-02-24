@@ -64,8 +64,9 @@
                                     <thead>
                                         <tr>
                                             <th data-field="id">ID</th>
+                                            <th data-field="employee_id" data-editable="false">Employee Name</th>
+                                            <th data-field="department" data-editable="false">Department</th>
                                             <th data-field="u_email" data-editable="false">Email</th>
-                                            <th data-field="employee_id" data-editable="false">Employee Id</th>
                                             <th data-field="leave_start_date" data-editable="false">Leave Start Date</th>
                                             <th data-field="leave_end_date" data-editable="false">Leave End Date</th>
                                             <th data-field="leave_day" data-editable="false">Leave Day</th>
@@ -79,7 +80,8 @@
                                         @foreach($getOutput as $data)
                                         <tr>
                                             <td>{{ $data->id }}</td>
-                                            <td>{{ ucwords($data->employee_id) }}({{ucwords($data->f_name)}}{{ucwords($data->m_name)}}{{ucwords($data->l_name)}})</td>
+                                            <td>{{ucwords($data->f_name)}} {{ucwords($data->m_name)}} {{ucwords($data->l_name)}}</td>
+                                            <td>{{ ucwords($data->role_name) }}</td>
                                             <td>{{ ucwords($data->u_email) }}</td>
                                             <td>{{ ucwords($data->leave_start_date) }}</td>
                                             <td>{{ ucwords($data->leave_end_date) }}</td>
