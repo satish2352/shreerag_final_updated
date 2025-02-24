@@ -175,6 +175,7 @@ public function getAllListDesignRecievedForCorrection() {
           })
           ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
           ->where('businesses.is_active', true)
+          ->where('businesses.is_deleted', 0)
           ->select(
             'businesses.id',
             'businesses_details.id',
