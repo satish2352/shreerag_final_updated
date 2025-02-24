@@ -264,6 +264,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
             $join->on('business_application_processes.business_id', '=', 'production.business_id');
           })
           ->where('business_application_processes.off_canvas_status', 17)
+          ->where('production.production_status_quantity_tracking', 'incomplete')
         //     ->where('business_status_id',1118)->where('design_status_id', 1114)
         // ->where('production_status_id', 1119)->where('store_status_id', 1123)->where('off_canvas_status', 17)
         ->where('business_application_processes.is_deleted', 0)
