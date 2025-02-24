@@ -35,15 +35,29 @@ class LeavesController extends Controller
             return $e;
         }
     }  
+    // public function getAllLeavesRequest(){
+    //     try {
+    //         $getOutput = $this->service->getAllLeavesRequest();
+          
+    //         return view('organizations.hr.leaves.list-leaves-accepted', compact('getOutput'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // } 
+
     public function getAllLeavesRequest(){
         try {
             $getOutput = $this->service->getAllLeavesRequest();
-          
+            
+            // Debugging: Dump and Die to check the structure
+            dd($getOutput);
+            
             return view('organizations.hr.leaves.list-leaves-accepted', compact('getOutput'));
         } catch (\Exception $e) {
             return $e;
         }
-    } 
+    }
+    
     public function show(Request $request){
         try {
             $data_id = base64_decode($request->id);

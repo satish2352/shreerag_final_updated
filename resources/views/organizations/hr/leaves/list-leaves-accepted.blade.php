@@ -78,6 +78,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <?php
+                                            // dd($getOutput);
+                                            // die();
+                                            ?>
                                             @foreach ($getOutput as $data)
                                                 <tr>
                                                     <td>{{ $data->id }}</td>
