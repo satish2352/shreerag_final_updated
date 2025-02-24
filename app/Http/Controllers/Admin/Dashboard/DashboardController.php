@@ -68,9 +68,13 @@ class DashboardController extends Controller {
         ->count(); 
         $active_count = Business::where('is_active', 1)->where('is_deleted', 0)->count(); 
         $business_details_count = BusinessDetails::where('is_active', 1)->where('is_deleted', 0)->count(); 
-        $product_completed_count = BusinessApplicationProcesses::where('is_active', 1)->where('is_deleted', 0)
-            ->where('dispatch_status_id', 1148)
-            ->count();
+        $product_completed_count = BusinessApplicationProcesses::leftJoin('tbl_customer_product_quantity_tracking', function ($join) {
+            $join->on('business_application_processes.business_id', '=', 'tbl_customer_product_quantity_tracking.business_id');
+        })
+         ->where('business_application_processes.is_active', 1)->where('business_application_processes.is_deleted', 0)
+         ->where('business_application_processes.dispatch_status_id', 1148)
+         ->where('tbl_customer_product_quantity_tracking.quantity_tracking_status', 3005)
+         ->count();
         // $product_completed_count = BusinessApplicationProcesses::where('is_active', 1)
         //     ->where('dispatch_status_id', 1148)
         //     ->count();
