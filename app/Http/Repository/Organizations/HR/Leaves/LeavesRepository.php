@@ -2,6 +2,8 @@
 namespace App\Http\Repository\Organizations\HR\Leaves;
 use Illuminate\Database\QueryException;
 use DB;
+use Illuminate\Support\Facades\Log;
+
 use Illuminate\Support\Carbon;
 use App\Models\ {
 
