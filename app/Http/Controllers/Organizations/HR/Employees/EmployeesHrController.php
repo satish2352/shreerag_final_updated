@@ -158,7 +158,6 @@ class EmployeesHrController extends Controller
     public function update( Request $request ) {
         // $user_data = $this->service->editUsers( $request );
         // return view( 'admin.pages.users.users-list', compact( 'user_data' ) );
-
         $rules = [
             // 'u_email' => 'required',
             // 'u_uname' => 'required',
