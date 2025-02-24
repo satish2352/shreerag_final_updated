@@ -32,6 +32,7 @@ return new class extends Migration
             $table->string('ip_address')->nullable();
             $table->rememberToken();
             $table->boolean('is_active')->default(true);
+            $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });
     }

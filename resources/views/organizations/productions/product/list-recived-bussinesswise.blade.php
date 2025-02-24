@@ -19,6 +19,9 @@ padding-left: 20px !important;
     font-size: 14px;
     text-align: left;
 }
+.btncolor{
+    color: gray !important;
+}
 </style>
 
 <div class="data-table-area mg-tb-15">
@@ -91,6 +94,10 @@ padding-left: 20px !important;
                                     </thead>
                                   
                                     <tbody>
+                                        <?php
+// dd($data_output);
+// die();
+                                        ?>
                                         @foreach($data_output as $data)
                                         <tr>
                                             
@@ -106,21 +113,27 @@ padding-left: 20px !important;
                                                 </div> --}}
 
                                                 <div style="display: inline-block; align-items: center;">
-                                                    @if ($data->quantity = $data->completed_production)
-                                                        <a href="{{ route('edit-recived-inprocess-production-material', $data->id) }}">
-                                                            <button data-toggle="tooltip" title="Edit Product" class="pd-setting-ed">
-                                                                <i class="fa fa-check" aria-hidden="true"></i> Edit Product
-                                                            </button>
-                                                        </a>
-                                                    @else
-                                                        <button data-toggle="tooltip" title="Production Completed" class="pd-setting-ed" disabled>
+                                                    @if ($data->remaining_quantity == '0')
+                                                     <button data-toggle="tooltip" title="Production Completed" class="pd-setting-ed btncolor" disabled>
                                                             <i class="fa fa-check" aria-hidden="true"></i> Edit Product
                                                         </button>
+                                                        <div style="display: inline-block; align-items: center; margin-top: 10px;" >
+                                                            <a href="{{route('edit-recived-bussinesswise-quantity-tracking', $data->business_details_id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed btncolor" disabled>Production Completed</button></a>
+                                                        </div>
+                                                    @else
+                                                    <a href="{{ route('edit-recived-inprocess-production-material', $data->id) }}">
+                                                        <button data-toggle="tooltip" title="Edit Product" class="pd-setting-ed">
+                                                            <i class="fa fa-check" aria-hidden="true"></i> Edit Product
+                                                        </button>
+                                                    </a>
+
+                                                    <div style="display: inline-block; align-items: center; margin-top: 10px;">
+                                                        <a href="{{route('edit-recived-bussinesswise-quantity-tracking', $data->business_details_id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed">Production Completed</button></a>
+                                                    </div>
                                                     @endif
                                                 </div>
-                                                <div style="display: inline-block; align-items: center; margin-top: 10px;">
-                                                <a href="{{route('edit-recived-bussinesswise-quantity-tracking', $data->business_details_id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed">Production Completed</button></a>
-                                            </div></td>
+                                                
+                                                </td>
                                            </tr>
                                         @endforeach
                                     </tbody>

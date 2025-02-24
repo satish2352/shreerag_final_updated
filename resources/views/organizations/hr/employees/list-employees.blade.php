@@ -22,6 +22,9 @@
             font-size: 14px;
             text-align: left;
         }
+        .btn-colour{
+            color: gray !important;
+        }
     </style>
 
     <div class="data-table-area mg-tb-15">
@@ -110,7 +113,7 @@
                                                                             </button>
                                                                         </a>
                                                                     @else
-                                                                        <button data-toggle="tooltip" title="Delete (Disabled)" class="pd-setting-ed" disabled>
+                                                                        <button data-toggle="tooltip" title="Delete (Disabled)" class="pd-setting-ed btn-colour" disabled>
                                                                             <i class="fa fa-trash" aria-hidden="true"></i>
                                                                         </button>
                                                                     @endif
@@ -137,7 +140,6 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>   
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         $(document).ready(function() {
