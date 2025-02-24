@@ -270,7 +270,7 @@ class LeavesController extends Controller
     
     
     public function add(){
-        $leaveManagment = LeaveManagement::where('is_active', true)
+        $leaveManagment = LeaveManagement::where('is_active', true)->where('is_deleted', 0)
         ->select('id','name')
         ->get()
         ->toArray();
@@ -444,7 +444,7 @@ class LeavesController extends Controller
     }
     
   public function edit(Request $request){
-    $leaveManagment = LeaveManagement::where('is_active', true)
+    $leaveManagment = LeaveManagement::where('is_active', true)->where('is_deleted', 0)
     ->select('id','name')
     ->get()
     ->toArray();
