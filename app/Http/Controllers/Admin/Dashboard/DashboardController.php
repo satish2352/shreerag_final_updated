@@ -272,7 +272,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         // ->where('production_status_id', 1119)->where('store_status_id', 1123)->where('off_canvas_status', 17)
         ->where('business_application_processes.is_deleted', 0)
         ->where('business_application_processes.is_active',1)
-        ->distinct('businesses.id')
+
         ->count();
         $production_completed_prod_dept = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
         ->where('production_status_id', 1121)->where('store_status_id', 1123)->where('off_canvas_status', 18)
