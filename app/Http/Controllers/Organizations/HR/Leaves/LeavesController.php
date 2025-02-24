@@ -45,18 +45,17 @@ class LeavesController extends Controller
     //     }
     // } 
 
-    public function getAllLeavesRequest(){
-        try {
-            $getOutput = $this->service->getAllLeavesRequest();
-            
-            // Debugging: Dump and Die to check the structure
-            dd($getOutput);
-            
-            return view('organizations.hr.leaves.list-leaves-accepted', compact('getOutput'));
-        } catch (\Exception $e) {
-            return $e;
-        }
+    public function getAllLeavesRequest()
+{
+    try {
+        $getOutput = $this->service->getAllLeavesRequest();
+        return view('organizations.hr.leaves.list-leaves-accepted', compact('getOutput'));
+    } catch (\Exception $e) {
+        \Log::error('Error in LeavesController: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Something went wrong!');
     }
+}
+
     
     public function show(Request $request){
         try {
