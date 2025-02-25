@@ -268,7 +268,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
           })
           ->where('business_application_processes.off_canvas_status', 17)
           ->where('production.production_status_quantity_tracking', 'incomplete')
-        ->where('business_application_processes.is_deleted', 0)
+        ->where('businesses.is_deleted', 0)
         ->where('business_application_processes.is_active',1)
 
         ->count();

@@ -671,7 +671,7 @@
                         <span class="stock-available"></span>
                     </td>
                     <td>
-                        <input class="form-control" name="addmore[${i}][rate]" type="text">
+                        <input class="form-control rate" name="addmore[${i}][rate]" type="text">
                     </td>
                     <td>
                         <input class="form-control size" name="addmore[${i}][size]" type="text" required>
@@ -696,14 +696,16 @@
                 });
 
                 // Recalculate the total amount when quantity or rate changes
-                $(document).on('keyup', '.quantity, .rate', function() {
-                    var $row = $(this).closest('tr');
-                    var quantity = $row.find('.quantity').val();
-                    var rate = $row.find('.rate').val();
-                    var totalAmount = (parseFloat(quantity) * parseFloat(rate)).toFixed(2);
-                    $row.find('.total_amount').val(totalAmount);
-                    checkStock($row); // Check stock after calculating total
-                });
+               // Recalculate the total amount when quantity or rate changes
+$(document).on('keyup', '.quantity, .rate', function() {
+    var $row = $(this).closest('tr');
+    var quantity = parseFloat($row.find('.quantity').val()) || 0;
+    var rate = parseFloat($row.find('.rate').val()) || 0;
+    var totalAmount = (quantity * rate).toFixed(2);
+    $row.find('.total_amount').val(totalAmount);
+    checkStock($row); // Check stock after calculating total
+});
+
 
                 // Initialize validation for the newly added row
                 function initializeValidation(row) {
