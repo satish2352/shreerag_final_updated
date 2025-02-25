@@ -15,7 +15,10 @@ use App\Models\{
     BusinessDetails,
     AdminView,
     NotificationStatus,
-    GRNModel
+    GRNModel,
+    Gatepass,
+    GrnPOQuantityTracking,
+    RejectedChalan
 };
 use Config;
 use App\Http\Controllers\Organizations\CommanController;
@@ -292,7 +295,7 @@ public function deleteById($id)
             $business->designRevisionForProd()->update(['is_deleted' => 1]);
             $business->productionModel()->update(['is_deleted' => 1]);
             $business->productionDetails()->update(['is_deleted' => 1]);
-            $business->purchaseOrderModel()->update(['is_deleted' => 1]);
+            $business->PurchaseOrdersModel()->update(['is_deleted' => 1]);
             $business->requisition()->update(['is_deleted' => 1]);
             $business->customerProductQuantityTracking()->update(['is_deleted' => 1]);
             $business->deliveryChalan()->update(['is_deleted' => 1]);
@@ -302,6 +305,30 @@ public function deleteById($id)
             $business->returnableChalan()->update(['is_deleted' => 1]);
             $business->AdminView()->update(['is_deleted' => 1]);
             
+             // Soft delete all related purchaseOrderDetails via purchaseOrderModel
+            //  foreach ($business->PurchaseOrdersModel as $purchaseOrder) {
+            //     $purchaseOrder->purchaseOrderDetails()->update(['is_deleted' => 1]);
+            // }
+ // Fetch all business details related to the business
+ $businessDetails = $business->businessDetails;
+
+ foreach ($businessDetails as $businessDetail) {
+     // Update is_deleted in purchase_orders based on business_details_id
+     $purchaseOrders = PurchaseOrdersModel::where('business_details_id', $businessDetail->id)->get();
+     foreach ($purchaseOrders as $purchaseOrder) {
+         $purchaseOrder->update(['is_deleted' => 1]);
+
+         // Update is_deleted for all gatepass related to purchase_orders_id
+         Gatepass::where('purchase_orders_id', $purchaseOrder->purchase_orders_id)->update(['is_deleted' => 1]);
+         GRNModel::where('purchase_orders_id', $purchaseOrder->purchase_orders_id)->update(['is_deleted' => 1]);
+         GrnPOQuantityTracking::where('purchase_order_id', $purchaseOrder->id)->update(['is_deleted' => 1]);
+         RejectedChalan::where('purchase_orders_id', $purchaseOrder->purchase_orders_id)->update(['is_deleted' => 1]);
+
+         // Update is_deleted for all purchase_order_details related to purchase_orders_id
+         $purchaseOrder->purchaseOrderDetails()->update(['is_deleted' => 1]);
+     }
+ }
+           
             // Update the main business record status to `is_deleted`
             $business->update(['is_deleted' => 1]);
 

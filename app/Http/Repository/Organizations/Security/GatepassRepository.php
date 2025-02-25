@@ -35,7 +35,7 @@ class GatepassRepository
                 'purchase_orders.quality_status_id', // Replace with the fields you need from purchase_orders
 
             )
-
+            ->where('gatepass.is_deleted', 0)
             ->orderBy('gatepass.updated_at', 'asc') // Sorting by gatepass table's updated_at
 
             ->get();

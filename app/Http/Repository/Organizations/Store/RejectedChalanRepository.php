@@ -30,6 +30,7 @@ class RejectedChalanRepository
             ->leftJoin('gatepass', function ($join) {
                 $join->on('grn_tbl.gatepass_id', '=', 'gatepass.id');
             })
+            ->where('tbl_rejected_chalan.is_deleted', 0) 
             ->where('tbl_rejected_chalan.chalan_no','') 
             ->select(
                 'grn_tbl.id',
@@ -95,6 +96,7 @@ class RejectedChalanRepository
             ->leftJoin('gatepass', function ($join) {
                 $join->on('grn_tbl.gatepass_id', '=', 'gatepass.id');
             })
+            ->where('tbl_rejected_chalan.is_deleted', 0) 
             ->where('tbl_rejected_chalan.chalan_no', '<>', '') 
             ->select(
                 'tbl_rejected_chalan.id',
