@@ -278,7 +278,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         ->leftJoin('businesses', function($join) {
             $join->on('tbl_customer_product_quantity_tracking.business_id', '=', 'businesses.id');
         })
-        ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status', 3001)
+        ->where('tbl_customer_product_quantity_tracking.quantity_tracking_status', 3001)
         ->where('businesses.is_active', true)
         ->where('businesses.is_deleted', 0)
         ->count();
