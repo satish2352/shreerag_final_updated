@@ -393,14 +393,76 @@ public function getAllListMaterialRecievedToProduction()
         return $e;
     }
 }
+// public function getAllListMaterialRecievedToProductionBusinessWise($id)
+// {
+//     try {
+//         $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_BOM_PART_MATERIAL_RECIVED_FROM_STORE_DEPT_FOR_PRODUCTION')];
+
+//         $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+//             $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+//         })
+//             ->leftJoin('businesses', function ($join) {
+//                 $join->on('business_application_processes.business_id', '=', 'businesses.id');
+//             })
+//             ->leftJoin('businesses_details', function ($join) {
+//                 $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+//             })
+//             ->leftJoin('tbl_customer_product_quantity_tracking', 'business_application_processes.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id')
+//             ->leftJoin('purchase_orders', function ($join) {
+//                 $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+//             })
+//             ->where('businesses_details.id', $id)
+//             ->where('businesses_details.is_active', true)
+//             ->where('businesses.is_deleted', 0)
+//             ->distinct('businesses.id')
+//             ->select(
+//                 'business_application_processes.id',
+//                 'businesses.id as business_id',
+//                 'businesses.customer_po_number',
+//                 'businesses.title',
+//                 'businesses_details.id as business_details_id',
+//                 'businesses_details.product_name',
+//                 'businesses_details.quantity',
+//                 'businesses_details.description',
+//                 'businesses.remarks',
+//                 DB::raw('(SELECT SUM(t2.completed_quantity)
+//                           FROM tbl_customer_product_quantity_tracking AS t2
+//                           WHERE t2.business_details_id = businesses_details.id
+//                             AND t2.id <= tbl_customer_product_quantity_tracking.id
+//                          ) AS cumulative_completed_quantity'),
+//                 DB::raw('(businesses_details.quantity - (SELECT SUM(t2.completed_quantity)
+//                           FROM tbl_customer_product_quantity_tracking AS t2
+//                           WHERE t2.business_details_id = businesses_details.id
+//                             AND t2.id <= tbl_customer_product_quantity_tracking.id
+//                          )) AS remaining_quantity'),
+//                 'production.updated_at'
+//             )
+//             ->groupBy(
+//                 'business_application_processes.id',
+//                 'businesses.id',
+//                 'businesses.customer_po_number',
+//                 'businesses.title',
+//                 'businesses_details.id',
+//                 'businesses_details.product_name',
+//                 'businesses_details.quantity',
+//                 'businesses_details.description',
+//                 'businesses.remarks',
+//                 'tbl_customer_product_quantity_tracking.id', // Added to resolve the issue
+//             'production.updated_at'
+//                 )
+//             ->get();
+
+//         return $data_output;
+//     } catch (\Exception $e) {
+//         return $e;
+//     }
+// }
 public function getAllListMaterialRecievedToProductionBusinessWise($id)
 {
     try {
-        $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_BOM_PART_MATERIAL_RECIVED_FROM_STORE_DEPT_FOR_PRODUCTION')];
-
         $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
-            $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-        })
+                $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+            })
             ->leftJoin('businesses', function ($join) {
                 $join->on('business_application_processes.business_id', '=', 'businesses.id');
             })
@@ -414,7 +476,6 @@ public function getAllListMaterialRecievedToProductionBusinessWise($id)
             ->where('businesses_details.id', $id)
             ->where('businesses_details.is_active', true)
             ->where('businesses.is_deleted', 0)
-            ->distinct('businesses.id')
             ->select(
                 'business_application_processes.id',
                 'businesses.id as business_id',
@@ -427,14 +488,13 @@ public function getAllListMaterialRecievedToProductionBusinessWise($id)
                 'businesses.remarks',
                 DB::raw('(SELECT SUM(t2.completed_quantity)
                           FROM tbl_customer_product_quantity_tracking AS t2
-                          WHERE t2.business_details_id = businesses_details.id
-                            AND t2.id <= tbl_customer_product_quantity_tracking.id
-                         ) AS cumulative_completed_quantity'),
-                DB::raw('(businesses_details.quantity - (SELECT SUM(t2.completed_quantity)
+                          WHERE t2.business_details_id = businesses_details.id) 
+                          AS completed_quantity'),
+                DB::raw('(businesses_details.quantity - 
+                          (SELECT SUM(t2.completed_quantity)
                           FROM tbl_customer_product_quantity_tracking AS t2
-                          WHERE t2.business_details_id = businesses_details.id
-                            AND t2.id <= tbl_customer_product_quantity_tracking.id
-                         )) AS remaining_quantity'),
+                          WHERE t2.business_details_id = businesses_details.id)) 
+                          AS remaining_quantity'),
                 'production.updated_at'
             )
             ->groupBy(
@@ -447,17 +507,16 @@ public function getAllListMaterialRecievedToProductionBusinessWise($id)
                 'businesses_details.quantity',
                 'businesses_details.description',
                 'businesses.remarks',
-                'tbl_customer_product_quantity_tracking.id', // Added to resolve the issue
-            'production.updated_at'
-                )
+                'production.updated_at'
+            )
             ->get();
-// dd($data_output);
-// die();
+
         return $data_output;
     } catch (\Exception $e) {
         return $e;
     }
 }
+
 public function getAllCompletedProduction() {
     try {
         $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
@@ -489,7 +548,8 @@ public function getAllCompletedProduction() {
                           WHERE t2.business_details_id = businesses_details.id
                             AND t2.id <= tbl_customer_product_quantity_tracking.id
                          )) AS remaining_quantity'),
-                DB::raw('production.updated_at AS updated_at')
+                DB::raw('production.updated_at AS updated_at'),
+                DB::raw('tbl_customer_product_quantity_tracking.updated_at AS tracking_updated_at')
             )
             ->orderBy('updated_at', 'desc')
             ->get();

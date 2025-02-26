@@ -94,48 +94,49 @@ padding-left: 20px !important;
                                     </thead>
                                   
                                     <tbody>
-                                        <?php
-// dd($data_output);
-// die();
-                                        ?>
                                         @foreach($data_output as $data)
-                                        <tr>
-                                            
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ucwords($data->product_name)}}</td>
-                                            <td>{{ucwords($data->quantity)}}</td>
-                                            <td>{{ ucwords($data->cumulative_completed_quantity) }}</td>
-                                            <td>{{ $data->remaining_quantity }}</td>
-                                            <td>{{ ucwords($data->description) }}</td>
-                                            <td>
-                                                {{-- <div style="display: inline-block; align-items: center;">
-                                                    <a href="{{route('edit-recived-bussinesswise', $data->business_details_id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed">Edit Product</button></a>
-                                                </div> --}}
+    @php
+        $disableButton = ($data->completed_quantity >= $data->quantity);
+    @endphp
 
-                                                <div style="display: inline-block; align-items: center;">
-                                                    @if ($data->remaining_quantity == '0')
-                                                     <button data-toggle="tooltip" title="Production Completed" class="pd-setting-ed btncolor" disabled>
-                                                            <i class="fa fa-check" aria-hidden="true"></i> Edit Product
-                                                        </button>
-                                                        <div style="display: inline-block; align-items: center; margin-top: 10px;" >
-                                                            <a href="{{route('edit-recived-bussinesswise-quantity-tracking', $data->business_details_id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed btncolor" disabled>Production Completed</button></a>
-                                                        </div>
-                                                    @else
-                                                    <a href="{{ route('edit-recived-inprocess-production-material', $data->id) }}">
-                                                        <button data-toggle="tooltip" title="Edit Product" class="pd-setting-ed">
-                                                            <i class="fa fa-check" aria-hidden="true"></i> Edit Product
-                                                        </button>
-                                                    </a>
+    <tr>
+        <td>{{ $loop->iteration }}</td>
+        <td>{{ ucwords($data->product_name) }}</td>
+        <td>{{ $data->quantity }}</td>
+        <td>{{ $data->completed_quantity }}</td>
+        <td>{{ $data->remaining_quantity }}</td>
+        <td>{{ ucwords($data->description) }}</td>
+        <td>
+            <div style="display: inline-block; align-items: center;">
+                @if ($disableButton)
+                    <button data-toggle="tooltip" title="Production Completed" class="pd-setting-ed btncolor" disabled>
+                        <i class="fa fa-check" aria-hidden="true"></i> Edit Product
+                    </button>
+                    <div style="display: inline-block; align-items: center; margin-top: 10px;">
+                        <a href="{{ route('edit-recived-bussinesswise-quantity-tracking', $data->business_details_id) }}">
+                            <button data-toggle="tooltip" title="View Details" class="pd-setting-ed btncolor" disabled>
+                                Production Completed
+                            </button>
+                        </a>
+                    </div>
+                @else
+                    <a href="{{ route('edit-recived-inprocess-production-material', $data->id) }}">
+                        <button data-toggle="tooltip" title="Edit Product" class="pd-setting-ed">
+                            <i class="fa fa-check" aria-hidden="true"></i> Edit Product
+                        </button>
+                    </a>
+                    <div style="display: inline-block; align-items: center; margin-top: 10px;">
+                        <a href="{{ route('edit-recived-bussinesswise-quantity-tracking', $data->business_details_id) }}">
+                            <button data-toggle="tooltip" title="View Details" class="pd-setting-ed">View Details</button>
+                        </a>
+                    </div>
+                @endif
+            </div>
+        </td>
+    </tr>
+@endforeach
 
-                                                    <div style="display: inline-block; align-items: center; margin-top: 10px;">
-                                                        <a href="{{route('edit-recived-bussinesswise-quantity-tracking', $data->business_details_id)}}"><button data-toggle="tooltip" title="View Details" class="pd-setting-ed">Production Completed</button></a>
-                                                    </div>
-                                                    @endif
-                                                </div>
-                                                
-                                                </td>
-                                           </tr>
-                                        @endforeach
+                                       
                                     </tbody>
                                 </table>
                             </div>

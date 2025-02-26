@@ -73,18 +73,26 @@ class AllListServices
             return $e;
         }
     }
-
     public function getAllListMaterialRecievedToProductionBusinessWise($id)
     {
         try {
-            $data_output = $this->repo->getAllListMaterialRecievedToProductionBusinessWise($id);
-    
-            return $data_output;
-
+            return $this->repo->getAllListMaterialRecievedToProductionBusinessWise($id);
         } catch (\Exception $e) {
             return $e;
         }
     }
+    
+    // public function getAllListMaterialRecievedToProductionBusinessWise($id)
+    // {
+    //     try {
+    //         $data_output = $this->repo->getAllListMaterialRecievedToProductionBusinessWise($id);
+    
+    //         return $data_output;
+
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
 
     public function getAllCompletedProduction(){
         try {

@@ -153,33 +153,58 @@ class AllListController extends Controller
             return $e;
         }
     }
-
-    public function getAllListMaterialRecievedToProductionBusinessWise( $id ) {
+    public function getAllListMaterialRecievedToProductionBusinessWise($id)
+    {
         try {
-            $data_output = $this->service->getAllListMaterialRecievedToProductionBusinessWise( $id );
-        
-            if ( $data_output->isNotEmpty() ) {
-                foreach ( $data_output as $data ) {
-                    $business_details_id = $data->business_details_id;
-
-                    if ( !empty( $business_details_id ) ) {
-                        $update_data[ 'material_received_from_store' ] = '1';
-                        NotificationStatus::where( 'material_received_from_store', '0' )
-                        ->where( 'business_details_id', $business_details_id )
-                        ->update( $update_data );
+            $data_output = $this->service->getAllListMaterialRecievedToProductionBusinessWise($id);
+    
+            if ($data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
+                    if (!empty($data->business_details_id)) {
+                        NotificationStatus::where('material_received_from_store', '0')
+                            ->where('business_details_id', $data->business_details_id)
+                            ->update(['material_received_from_store' => '1']);
                     }
                 }
             } else {
-                return view( 'organizations.productions.product.list-recived-bussinesswise', [
+                return view('organizations.productions.product.list-recived-bussinesswise', [
                     'data_output' => [],
                     'message' => 'No data found for designs received for correction'
-                ] );
+                ]);
             }
-            return view( 'organizations.productions.product.list-recived-bussinesswise', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
+    
+            return view('organizations.productions.product.list-recived-bussinesswise', compact('data_output'));
+        } catch (\Exception $e) {
             return $e;
         }
     }
+    
+    // public function getAllListMaterialRecievedToProductionBusinessWise( $id ) {
+    //     try {
+    //         $data_output = $this->service->getAllListMaterialRecievedToProductionBusinessWise( $id );
+        
+    //         if ( $data_output->isNotEmpty() ) {
+    //             foreach ( $data_output as $data ) {
+    //                 $business_details_id = $data->business_details_id;
+
+    //                 if ( !empty( $business_details_id ) ) {
+    //                     $update_data[ 'material_received_from_store' ] = '1';
+    //                     NotificationStatus::where( 'material_received_from_store', '0' )
+    //                     ->where( 'business_details_id', $business_details_id )
+    //                     ->update( $update_data );
+    //                 }
+    //             }
+    //         } else {
+    //             return view( 'organizations.productions.product.list-recived-bussinesswise', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found for designs received for correction'
+    //             ] );
+    //         }
+    //         return view( 'organizations.productions.product.list-recived-bussinesswise', compact( 'data_output' ) );
+    //     } catch ( \Exception $e ) {
+    //         return $e;
+    //     }
+    // }
 
     public function getAllCompletedProduction() {
         try {
