@@ -330,16 +330,32 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         ->where('is_active',1)->count();
      
         $get_pass = Gatepass::where('is_active',1)->count();
-      
+        $GRN_genration= Gatepass::where('gatepass.po_tracking_status', 4001)->where('is_active',1)->where('is_deleted',1)->count();
 
-        // $GRN_genration= PurchaseOrderModel::where('purchase_status_from_owner',1129)->where('purchase_status_from_purchase',1129)
-        // ->where('security_status_id',1132)->where('quality_status_id', null)->where('is_active',1)->count();
-        $GRN_genration= PurchaseOrderModel::where('purchase_status_from_owner',1129)->where('purchase_status_from_purchase',1129)
+        
+        PurchaseOrderModel::where('purchase_status_from_owner',1129)->where('purchase_status_from_purchase',1129)
         ->where('quality_status_id', null)->where('is_active',1)->count();
-        $material_need_to_sent_to_store = PurchaseOrderModel::where('purchase_status_from_owner',1129)->where('purchase_status_from_purchase',1129)
-        ->where('security_status_id',1132)->where('quality_status_id', 1134)->where('is_active',1)->count();
-        $rejected_chalan_po_wise = RejectedChalan::where('chalan_no', '!=', '')->where('is_active', 1)->where('is_deleted', 0)->count();
 
+        $material_need_to_sent_to_store = BusinessApplicationProcesses::leftJoin('purchase_orders', function($join) {
+            $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+          })
+            ->leftJoin('businesses', function ($join) {
+                $join->on('business_application_processes.business_id', '=', 'businesses.id');
+            })
+            ->where('purchase_orders.quality_status_id', 1134)
+            ->where('businesses.is_active', true)
+            ->where('businesses.is_deleted', 0)
+            ->count();         
+        $rejected_chalan_po_wise = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
+            $join->on('business_application_processes.business_id', '=', 'businesses.id');
+        })
+        ->leftJoin('purchase_orders', function($join) {
+            $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+          })
+          ->where('purchase_orders.quality_status_id', 1134)
+          ->where('businesses.is_deleted', 0)
+           ->where('businesses.is_active', true)
+           ->count(); 
         $dispatch_received_from_finance= BusinessApplicationProcesses::where('logistics_status_id', 1146)->where('off_canvas_status',21)
         ->where('dispatch_status_id', 1147)
         ->where('is_active',1)->count();
