@@ -9,7 +9,7 @@
                         </div>
 
                         <div class="col-sm-6 col-12 text-sm-end">
-                            <div class="mx-n1">
+                            {{-- <div class="mx-n1">
                                 <a href="#" class="btn  btn-sm btn-primary mx-1"
                                     type="button" data-bs-toggle="offcanvas"
                                     data-bs-target="#offcanvasRight"
@@ -19,7 +19,7 @@
                                     </span>
 
                                 </a>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -353,9 +353,9 @@
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
             aria-label="Close"></button>
     </div>
-    <div class="offcanvas-body">
+    {{-- <div class="offcanvas-body">
         <div class="accordion" id="accordionExample">
-            {{-- @foreach ($return_data['data_output_offcanvas'] as $po_number => $grouped_data)
+            @foreach ($return_data['data_output_offcanvas'] as $po_number => $grouped_data)
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="heading{{ $loop->index }}">
                         <button class="accordion-button" type="button"
@@ -438,9 +438,9 @@
                         </div>
                     </div>
                 </div>
-            @endforeach --}}
+            @endforeach
         </div>
-    </div>
+    </div> --}}
     
     {{-- <div class="offcanvas-body">
         <div class="accordion" id="accordionExample">

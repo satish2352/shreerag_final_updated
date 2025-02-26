@@ -40,6 +40,8 @@ Route::get('/register', ['as' => 'register', 'uses' => 'App\Http\Controllers\Adm
 Route::group(['middleware' => ['admin']], function () {   
      Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
     Route::get('/get-notification', ['as' => 'get-notification', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@getNotification']);
+    Route::get('/get-offcanvas-data', ['as' => 'get-offcanvas-data', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@getOffcanvas']);
+
     // Route::get('/forms', ['as' => 'forms', 'uses' => 'App\Http\Controllers\Admin\Forms\FormsController@index']);
     Route::get('/admin-log-out', ['as' => 'log-out', 'uses' => 'App\Http\Controllers\Admin\LoginRegister\LoginController@logout']);
 
