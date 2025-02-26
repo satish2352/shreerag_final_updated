@@ -1042,7 +1042,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 mb-0 text-sm">
-                                                    <a href="{{ route('list-rejected-chalan-po-wise') }}">
+                                                    <a href="{{ route('list-rejected-chalan-updated') }}">
                                                         <span class="badge badge-pill bg-soft-success text-success me-2">
                                                             <i class="fa-solid fa-arrow-right"></i> </span>
                                                         <span class="text-nowrap text-xs text-muted">View
