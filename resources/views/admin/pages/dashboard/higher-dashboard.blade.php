@@ -355,7 +355,7 @@
     </div>
     <div class="offcanvas-body">
         <div class="accordion" id="accordionExample">
-            @foreach ($return_data['data_output_offcanvas'] as $po_number => $grouped_data)
+            {{-- @foreach ($return_data['data_output_offcanvas'] as $po_number => $grouped_data)
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="heading{{ $loop->index }}">
                         <button class="accordion-button" type="button"
@@ -438,7 +438,7 @@
                         </div>
                     </div>
                 </div>
-            @endforeach
+            @endforeach --}}
         </div>
     </div>
     

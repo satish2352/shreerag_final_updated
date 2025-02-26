@@ -95,45 +95,45 @@ class DashboardController extends Controller {
                 ->orWhere('logistics_status_id', 1145);
         })
             ->count();
-        $data_output_offcanvas = BusinessApplicationProcesses::leftJoin('businesses', 'business_application_processes.business_id', '=', 'businesses.id')
-    ->leftJoin('businesses_details', 'business_application_processes.business_details_id', '=', 'businesses_details.id')
-    ->leftJoin('designs', 'business_application_processes.business_details_id', '=', 'designs.business_details_id')
-    ->leftJoin('design_revision_for_prod', 'business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id')
-    ->leftJoin('purchase_orders', 'business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id')
-    ->leftJoin('tbl_customer_product_quantity_tracking', 'business_application_processes.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id')
-    ->leftJoin('gatepass', 'business_application_processes.business_details_id', '=', 'gatepass.business_details_id')
-    ->where('businesses.is_active', 1)
-    ->where('businesses.is_deleted', 0)
-    ->select(
-        'businesses.customer_po_number', 
-        'businesses.title', 
-        'businesses_details.product_name',
-        'business_application_processes.business_status_id',
-        'businesses.updated_at', 
-        'business_application_processes.design_status_id',
-        'business_application_processes.production_status_id', 
-        'business_application_processes.store_status_id',
-        'purchase_orders.purchase_status_from_purchase',
-        'purchase_orders.finanace_store_receipt_status_id', 
-        'purchase_orders.purchase_status_from_owner',
-        'purchase_orders.security_status_id', 
-        'purchase_orders.quality_status_id', 
-        'purchase_orders.finanace_store_receipt_status_id',
-        'business_application_processes.logistics_status_id', 
-        'business_application_processes.dispatch_status_id',
-        'design_revision_for_prod.reject_reason_prod',
-        'designs.design_image', 
-        'designs.bom_image',
-        'business_application_processes.off_canvas_status', 
-        'tbl_customer_product_quantity_tracking.quantity_tracking_status', 
-        'tbl_customer_product_quantity_tracking.completed_quantity', 
-        'gatepass.po_tracking_status', 
-        'gatepass.tracking_id', 
-        'purchase_orders.purchase_orders_id'
-    )
-    ->orderBy('businesses.updated_at', 'desc')
-    ->get()
-    ->groupBy('customer_po_number');
+    //     $data_output_offcanvas = BusinessApplicationProcesses::leftJoin('businesses', 'business_application_processes.business_id', '=', 'businesses.id')
+    // ->leftJoin('businesses_details', 'business_application_processes.business_details_id', '=', 'businesses_details.id')
+    // ->leftJoin('designs', 'business_application_processes.business_details_id', '=', 'designs.business_details_id')
+    // ->leftJoin('design_revision_for_prod', 'business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id')
+    // ->leftJoin('purchase_orders', 'business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id')
+    // ->leftJoin('tbl_customer_product_quantity_tracking', 'business_application_processes.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id')
+    // ->leftJoin('gatepass', 'business_application_processes.business_details_id', '=', 'gatepass.business_details_id')
+    // ->where('businesses.is_active', 1)
+    // ->where('businesses.is_deleted', 0)
+    // ->select(
+    //     'businesses.customer_po_number', 
+    //     'businesses.title', 
+    //     'businesses_details.product_name',
+    //     'business_application_processes.business_status_id',
+    //     'businesses.updated_at', 
+    //     'business_application_processes.design_status_id',
+    //     'business_application_processes.production_status_id', 
+    //     'business_application_processes.store_status_id',
+    //     'purchase_orders.purchase_status_from_purchase',
+    //     'purchase_orders.finanace_store_receipt_status_id', 
+    //     'purchase_orders.purchase_status_from_owner',
+    //     'purchase_orders.security_status_id', 
+    //     'purchase_orders.quality_status_id', 
+    //     'purchase_orders.finanace_store_receipt_status_id',
+    //     'business_application_processes.logistics_status_id', 
+    //     'business_application_processes.dispatch_status_id',
+    //     'design_revision_for_prod.reject_reason_prod',
+    //     'designs.design_image', 
+    //     'designs.bom_image',
+    //     'business_application_processes.off_canvas_status', 
+    //     'tbl_customer_product_quantity_tracking.quantity_tracking_status', 
+    //     'tbl_customer_product_quantity_tracking.completed_quantity', 
+    //     'gatepass.po_tracking_status', 
+    //     'gatepass.tracking_id', 
+    //     'purchase_orders.purchase_orders_id'
+    // )
+    // ->orderBy('businesses.updated_at', 'desc')
+    // ->get()
+    // ->groupBy('customer_po_number');
 
                 $product_count = Products::where('is_active', 1)->where('is_deleted', 0)->count();
     // end owner========================
@@ -405,7 +405,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
             'product_completed' => $product_completed_count,
             'business_inprocess' => $business_inprocess_count,
             'product_inprocess' => $product_inprocess_count,
-            'data_output_offcanvas' => $data_output_offcanvas,
+            // 'data_output_offcanvas' => $data_output_offcanvas,
             'product_count'=>$product_count,
             
         ];
