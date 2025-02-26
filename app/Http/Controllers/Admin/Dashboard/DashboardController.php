@@ -34,15 +34,8 @@ use App\Models\ {
     ProductionModel,
     DeliveryChalan,
     ReturnableChalan,
-//     Gallery,
-//     AdditionalSolutions,
-//     OurSolutions,
-//     ResourcesAndInsights,
-//     WebsiteContactDetails,
-//     AboutUsContact,
-//     ContactUs,
-//     Subcribers
     BusinessDetails,
+    Logistics
 
 };
 use Validator;
@@ -330,6 +323,17 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         $dispatch_completed = BusinessApplicationProcesses::where('logistics_status_id', 1146)->where('off_canvas_status',22)
         ->where('dispatch_status_id', 1148)
         ->where('is_active',1)->count();
+
+        $dispatch_completed = Logistics::leftJoin('tbl_customer_product_quantity_tracking', function($join) {
+            $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_customer_product_quantity_tracking.id');
+        })
+        ->leftJoin('businesses', function($join) {
+            $join->on('tbl_logistics.business_id', '=', 'businesses.id');
+        })
+        ->where('tbl_customer_product_quantity_tracking.quantity_tracking_status',3005)
+        ->where('businesses.is_active',true)
+        ->where('businesses.is_deleted', 0)->count();
+   
 
         $material_need_to_sent_to_production_inventory = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1114)
         ->where('production_status_id', 1114)->where('off_canvas_status', 15)
@@ -644,6 +648,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
                 ->select('id')
                     ->get();
                 $dispatch_completed_count = $dispatch_completed->count();
+
                 $notifications[] = ['admin_count' => $dispatch_completed_count,
                 'message' => 'Dispatch Dept Production Dispatch Completed',
                'url' => $baseUrl . '/owner/list-product-dispatch-completed',
