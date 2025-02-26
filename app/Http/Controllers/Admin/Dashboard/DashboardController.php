@@ -180,14 +180,20 @@ class DashboardController extends Controller {
           $transport_name_count = TransportName::where('is_active',1)->count();
           $logistics_send_by_finance_received_fianance_count = BusinessApplicationProcesses::where('logistics_status_id', 1146)->where('off_canvas_status',20)
           ->where('is_active',1)->count();
-          $fianance_send_to_dispatch_count = BusinessApplicationProcesses::where('logistics_status_id', 1146)->where('off_canvas_status',21)
-          ->where('dispatch_status_id', 1147)
-          ->where('is_active',1)->count();
-
-
-
-
-
+          $fianance_send_to_dispatch_count = CustomerProductQuantityTracking::leftJoin('tbl_logistics', function($join) {
+            $join->on('tbl_customer_product_quantity_tracking.id', '=', 'tbl_logistics.quantity_tracking_id');
+        })
+        ->leftJoin('businesses', function($join) {
+            $join->on('tbl_customer_product_quantity_tracking.business_id', '=', 'businesses.id');
+        })
+          
+        ->where('businesses.is_active',true)
+        ->where('businesses.is_deleted', 0)
+        ->where('tbl_customer_product_quantity_tracking.fianace_list_status','Send_Dispatch')
+        ->count();
+        //   BusinessApplicationProcesses::where('logistics_status_id', 1146)->where('off_canvas_status',21)
+        //   ->where('dispatch_status_id', 1147)
+        //   ->where('is_active',1)->count();
           $business_received_for_designs = DesignModel::leftJoin('businesses', function($join) {
             $join->on('designs.business_id', '=', 'businesses.id');
         })
