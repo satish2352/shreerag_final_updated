@@ -156,8 +156,16 @@ class DashboardController extends Controller {
         ->count();
         $logistics_list_count = BusinessApplicationProcesses::where('logistics_status_id', 1145)->where('off_canvas_status',19)
         ->where('is_active',1)->count();
-        $logistics_send_by_finance_count = BusinessApplicationProcesses::where('logistics_status_id', 1146)->where('off_canvas_status',20)
-        ->where('is_active',1)->count();
+        $logistics_send_by_finance_count =Logistics::leftJoin('tbl_customer_product_quantity_tracking', function($join) {
+            $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_customer_product_quantity_tracking.id');
+        })
+          ->leftJoin('businesses', function($join) {
+                  $join->on('tbl_logistics.business_id', '=', 'businesses.id');
+              }) 
+              ->where('tbl_customer_product_quantity_tracking.logistics_list_status','Send_Fianance')      
+              ->where('businesses.is_active',true)
+              ->where('businesses.is_deleted', 0)
+             ->count();
       
           $vehicle_type_count = VehicleType::where('is_active',1)->count();
           $transport_name_count = TransportName::where('is_active',1)->count();
