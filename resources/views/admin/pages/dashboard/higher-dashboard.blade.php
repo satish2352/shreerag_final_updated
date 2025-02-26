@@ -371,6 +371,95 @@
                         aria-labelledby="heading{{ $loop->index }}"
                         data-bs-parent="#accordionExample">
                         <div class="accordion-body"
+                            style="overflow-y: auto; max-height: 80vh; padding-bottom: 20px;">
+                            <ul class="list-unstyled">
+                                @foreach ($grouped_data as $data)
+                                    <li class="right-side"
+                                        style="color:#{{ str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) . str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) . str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) }};">
+                                        <b>{{ $data->product_name }}</b> :
+                                        @switch(true)
+                                            @case($data->quantity_tracking_status == 3005)
+                                                Dispatch Department Product Dispatch Completed Quantity {{ $data->completed_quantity }}
+                                                @break
+                                            @case($data->quantity_tracking_status == 3004)
+                                                Finance Department sent to Dispatch Department {{ $data->completed_quantity }}
+                                                @break
+                                            @case($data->quantity_tracking_status == 3003)
+                                                Finance Department Received from Logistics Department Quantity {{ $data->completed_quantity }}
+                                                @break
+                                            @case($data->quantity_tracking_status == 3002)
+                                                Logistics Department Submitted Form {{ $data->completed_quantity }}
+                                                @break
+                                            @case($data->quantity_tracking_status == 3001)
+                                                Production Department Completed Production and Received Logistics Department Quantity {{ $data->completed_quantity }}
+                                                @break
+                                            @case($data->po_tracking_status == 4003)
+                                                Store Department forward to Production Department
+                                                @break
+                                            @case($data->po_tracking_status == 4002)
+                                                Quality Department (Generated GRN) and Store Department Material Received PO {{ $data->purchase_orders_id }} & {{ $data->tracking_id }} time
+                                                @break
+                                            @case($data->po_tracking_status == 4001)
+                                                Security Department Received Material and PO {{ $data->purchase_orders_id }} also Generated Gate Pass {{ $data->tracking_id }} time
+                                                @break
+                                            @case($data->off_canvas_status == 25)
+                                                Purchase Department PO {{ $data->purchase_orders_id }} Send to Vendor
+                                                @break
+                                            @case($data->off_canvas_status == 24)
+                                                Purchase Department Approved Owner
+                                                @break
+                                            @case($data->off_canvas_status == 23)
+                                                Purchase Department
+                                                @break
+                                            @case($data->off_canvas_status == 16)
+                                                Store Department submitted requisition form
+                                                @break
+                                            @case($data->off_canvas_status == 15)
+                                                Accepted Production Department and send to store Department
+                                                @break
+                                            @case($data->off_canvas_status == 14)
+                                                Corrected Design Submitted to Production Department
+                                                @break
+                                            @case($data->off_canvas_status == 13)
+                                                Rejected Design in Production Department
+                                                @break
+                                            @case($data->off_canvas_status == 12)
+                                                Design Department Submitted Design and Received Production Department
+                                                @break
+                                            @case($data->off_canvas_status == 11)
+                                                Business Department Request sent to Design Department
+                                                @break
+                                            @default
+                                                Unknown Department
+                                        @endswitch
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+    
+    {{-- <div class="offcanvas-body">
+        <div class="accordion" id="accordionExample">
+            @foreach ($return_data['data_output_offcanvas'] as $po_number => $grouped_data)
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{ $loop->index }}">
+                        <button class="accordion-button" type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapse{{ $loop->index }}"
+                            aria-expanded="true"
+                            aria-controls="collapse{{ $loop->index }}">
+                            {{ $po_number }} - {{ $grouped_data->first()->title }}
+                        </button>
+                    </h2>
+                    <div id="collapse{{ $loop->index }}"
+                        class="accordion-collapse collapse"
+                        aria-labelledby="heading{{ $loop->index }}"
+                        data-bs-parent="#accordionExample">
+                        <div class="accordion-body"
                             style="overflow: scroll; height: 100vh; padding-bottom:400px;">
                             <div>
                                 <ul
@@ -418,21 +507,12 @@
                                                 Purchase Department
                                             @elseif($data->off_canvas_status == 16)
                                                 Store Department submitted requistion form
-
-                                                {{-- @elseif($data->business_status_id == 1115 &&
-                            $data->design_status_id == 1115 &&
-                            $data->production_status_id == 1115)
-                            Production Department Rejected Design and Received Design Department --}}
                                             @elseif($data->off_canvas_status == 15)
                                                 Accepted Production Department and send to store
                                                 Department
                                             @elseif($data->off_canvas_status == 14)
                                                 Corrected Design Submitted to Production
                                                 Department
-                                                {{-- @elseif($data->off_canvas_status == 14 && $data->business_status_id == 1115 || $data->business_status_id == 1126 &&
-                            $data->design_status_id == 1115 &&
-                            $data->production_status_id == 1115 && $data->reject_reason_prod == "")
-                            Corrected Design Submitted to Production Department --}}
                                             @elseif($data->off_canvas_status == 13)
                                                 Rejected Design in Production Department
                                             @elseif($data->off_canvas_status == 12)
@@ -454,5 +534,5 @@
                 </div>
             @endforeach
         </div>
-    </div>
+    </div> --}}
 </div>

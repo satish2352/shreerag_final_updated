@@ -207,11 +207,11 @@
                             $role = session()->get('role_id');
                         @endphp
                         @if ($role == config('constants.ROLE_ID.HR'))
-                        @include('admin.pages.dashboard.hr-dashboard')
+                        {{-- @include('admin.pages.dashboard.hr-dashboard') --}}
                         @elseif ($role == config('constants.ROLE_ID.SUPER'))
-                        @include('admin.pages.dashboard.super-dashboard')
+                        {{-- @include('admin.pages.dashboard.super-dashboard') --}}
                         @elseif ($role == config('constants.ROLE_ID.DESIGNER'))
-                            <div class="analysis-progrebar-area mg-b-15">
+                            {{-- <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-4 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -334,9 +334,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         @elseif ($role == config('constants.ROLE_ID.PRODUCTION'))
-                            <div class="analysis-progrebar-area mg-b-15">
+                            {{-- <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-4 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -524,9 +524,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         @elseif ($role == config('constants.ROLE_ID.STORE'))
-                            <div class="analysis-progrebar-area mg-b-15">
+                            {{-- <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-4 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -557,36 +557,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {{-- <div class="col-xl-4 col-sm-6 col-12">
-                                <div class="card shadow border-0">
-                                    <div class="card-body">
-                                        <div class="row border-bottom">
-                                            <div class="col mb-2">
-                                                <span
-                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Sent To Production</span>
-                                                <span
-                                                    class="h5 font-bold mb-0">{{ $store_dept_counts['material_sent_to_production'] }}</span>
-                                            </div>
-                                            <div class="col-auto">
-                                                <div
-                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                    <i class="fa-solid fa-paint-brush"></i>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="mt-2 mb-0 text-sm">
-                                            <a href="{{ route('list-material-sent-to-prod') }}">
-                                                <span
-                                                    class="badge badge-pill bg-soft-success text-success me-2">
-                                                    <i class="fa-solid fa-arrow-right"></i> </span>
-                                                <span class="text-nowrap text-xs text-muted">View
-                                                    Details</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> --}}
+                                   
                                     <div class="col-xl-4 col-sm-6 col-12">
                                         <div class="card shadow border-0">
                                             <div class="card-body">
@@ -742,9 +713,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         @elseif ($role == config('constants.ROLE_ID.PURCHASE'))
-                            <div class="analysis-progrebar-area mg-b-15">
+                            {{-- <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-4 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -924,9 +895,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         @elseif ($role == config('constants.ROLE_ID.SECURITY'))
-                            <div class="analysis-progrebar-area mg-b-15">
+                            {{-- <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-4 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -958,9 +929,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         @elseif ($role == config('constants.ROLE_ID.QUALITY'))
-                            <div class="analysis-progrebar-area mg-b-15">
+                            {{-- <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-4 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -1058,9 +1029,9 @@
 
 
                                 </div>
-                            </div>
+                            </div> --}}
                         @elseif ($role == config('constants.ROLE_ID.LOGISTICS'))
-                            <div class="analysis-progrebar-area mg-b-15">
+                            {{-- <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-4 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -1215,9 +1186,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         @elseif ($role == config('constants.ROLE_ID.FINANCE'))
-                            <div class="analysis-progrebar-area mg-b-15">
+                            {{-- <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-4 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -1370,9 +1341,9 @@
 
 
                                 </div>
-                            </div>
+                            </div> --}}
                         @elseif ($role == config('constants.ROLE_ID.INVENTORY'))
-                            <div class="analysis-progrebar-area mg-b-15">
+                            {{-- <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-4 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -1433,41 +1404,10 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    {{-- <div class="col-xl-4 col-sm-6 col-12">
-                                <div class="card shadow border-0">
-                                    <div class="card-body">
-                                        <div class="row border-bottom">
-                                            <div class="col mb-2">
-                                                <span
-                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Production Department send material list</span>
-                                                <span
-                                                    class="h5 font-bold mb-0">{{ $logistics_counts['production_completed_prod_dept_logisitics'] }}</span>
-                                            </div>
-                                            <div class="col-auto">
-                                                <div
-                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                    <i class="fa-solid fa-paint-brush"></i>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="mt-2 mb-0 text-sm">
-                                            <a href="{{ route('list-product-inprocess-received-from-production') }}">
-                                                <span
-                                                    class="badge badge-pill bg-soft-success text-success me-2">
-                                                    <i class="fa-solid fa-arrow-right"></i> </span>
-                                                <span class="text-nowrap text-xs text-muted">View
-                                                    Details</span>
-                                            </a>
-                                        </div>
-                                    </div>
                                 </div>
                             </div> --}}
-                                </div>
-                            </div>
                         @elseif ($role == config('constants.ROLE_ID.DISPATCH'))
-                            <div class="analysis-progrebar-area mg-b-15">
+                            {{-- <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-4 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -1531,9 +1471,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         @elseif ($role == config('constants.ROLE_ID.EMPOLYEE'))
-                            <div class="analysis-progrebar-area mg-b-15">
+                            {{-- <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-6 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -1629,7 +1569,7 @@
                                     </div>
 
                                 </div>
-                            </div>
+                            </div> --}}
                         @elseif ($role == config('constants.ROLE_ID.CMS'))
                             <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">

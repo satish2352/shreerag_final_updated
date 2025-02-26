@@ -54,6 +54,8 @@ class DashboardController extends Controller {
       
         // Get the counts
         $department_count = RolesModel::where('is_active', 1)->where('is_deleted', 0)->count(); 
+
+        // start owner====================
         $user_active_count= User::leftJoin('tbl_roles', function ($join) {
             $join->on('users.role_id', '=', 'tbl_roles.id');
         })
@@ -65,26 +67,18 @@ class DashboardController extends Controller {
         $product_completed_count = BusinessApplicationProcesses::where('is_active', 1)->where('is_deleted', 0)
             ->where('dispatch_status_id', 1148)
             ->count();
-        // $product_completed_count = BusinessApplicationProcesses::where('is_active', 1)
-        //     ->where('dispatch_status_id', 1148)
-        //     ->count();
+     
         $business_completed_count = BusinessApplicationProcesses::where('business_application_processes.is_active', 1)
         ->join('businesses_details', 'business_application_processes.business_details_id', '=', 'businesses_details.id')
         ->where('business_application_processes.dispatch_status_id', 1140)
         ->count();
-        
-      
-
         $business_inprocess_count = BusinessApplicationProcesses::where('is_active', 1)->where('is_deleted', 0)
         ->where(function($query) {
             $query->orWhere('business_status_id', 1118)
                 ->orWhere('design_status_id', 1114)
                 ->orWhere('production_status_id', 1121)
                 ->orWhere('store_status_id', 1123)
-                // ->orWhere('purchase_status_from_owner', 1129)
                 ->orWhere('purchase_status_from_purchase', 1129)
-                // ->orWhere('finanace_store_receipt_status_id', 1136)
-                // ->orWhere('security_status_id', 1132)
                 ->orWhere('quality_status_id', 1134)
                 ->orWhere('logistics_status_id', 1145);
         })
@@ -96,51 +90,54 @@ class DashboardController extends Controller {
                 ->orWhere('design_status_id', 1114)
                 ->orWhere('production_status_id', 1121)
                 ->orWhere('store_status_id', 1123)
-                // ->orWhere('purchase_status_from_owner', 1129)
                 ->orWhere('purchase_status_from_purchase', 1129)
-                // ->orWhere('finanace_store_receipt_status_id', 1136)
-                // ->orWhere('security_status_id', 1132)
                 ->orWhere('quality_status_id', 1134)
                 ->orWhere('logistics_status_id', 1145);
         })
             ->count();
+        $data_output_offcanvas = BusinessApplicationProcesses::leftJoin('businesses', 'business_application_processes.business_id', '=', 'businesses.id')
+    ->leftJoin('businesses_details', 'business_application_processes.business_details_id', '=', 'businesses_details.id')
+    ->leftJoin('designs', 'business_application_processes.business_details_id', '=', 'designs.business_details_id')
+    ->leftJoin('design_revision_for_prod', 'business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id')
+    ->leftJoin('purchase_orders', 'business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id')
+    ->leftJoin('tbl_customer_product_quantity_tracking', 'business_application_processes.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id')
+    ->leftJoin('gatepass', 'business_application_processes.business_details_id', '=', 'gatepass.business_details_id')
+    ->where('businesses.is_active', 1)
+    ->where('businesses.is_deleted', 0)
+    ->select(
+        'businesses.customer_po_number', 
+        'businesses.title', 
+        'businesses_details.product_name',
+        'business_application_processes.business_status_id',
+        'businesses.updated_at', 
+        'business_application_processes.design_status_id',
+        'business_application_processes.production_status_id', 
+        'business_application_processes.store_status_id',
+        'purchase_orders.purchase_status_from_purchase',
+        'purchase_orders.finanace_store_receipt_status_id', 
+        'purchase_orders.purchase_status_from_owner',
+        'purchase_orders.security_status_id', 
+        'purchase_orders.quality_status_id', 
+        'purchase_orders.finanace_store_receipt_status_id',
+        'business_application_processes.logistics_status_id', 
+        'business_application_processes.dispatch_status_id',
+        'design_revision_for_prod.reject_reason_prod',
+        'designs.design_image', 
+        'designs.bom_image',
+        'business_application_processes.off_canvas_status', 
+        'tbl_customer_product_quantity_tracking.quantity_tracking_status', 
+        'tbl_customer_product_quantity_tracking.completed_quantity', 
+        'gatepass.po_tracking_status', 
+        'gatepass.tracking_id', 
+        'purchase_orders.purchase_orders_id'
+    )
+    ->orderBy('businesses.updated_at', 'desc')
+    ->get()
+    ->groupBy('customer_po_number');
 
-        $data_output_offcanvas = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
-                $join->on('business_application_processes.business_id', '=', 'businesses.id');
-            })
-            ->leftJoin('businesses_details', function ($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-            })
-            ->leftJoin('designs', function($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-              })
-              ->leftJoin('design_revision_for_prod', function($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-              })
-            ->leftJoin('purchase_orders', function ($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-            })
-            ->leftJoin('tbl_customer_product_quantity_tracking', function ($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id');
-            })
-            ->leftJoin('gatepass', function ($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'gatepass.business_details_id');
-            })
-            ->where('businesses.is_active', 1)
-            ->where('businesses.is_deleted', 0)
-            ->select('businesses.customer_po_number','businesses.title','businesses_details.product_name',
-            'business_application_processes.business_status_id','businesses.updated_at', 'business_application_processes.design_status_id',
-             'business_application_processes.production_status_id', 'business_application_processes.store_status_id','purchase_orders.purchase_status_from_purchase',
-             'purchase_orders.finanace_store_receipt_status_id', 'purchase_orders.purchase_status_from_owner',
-             'purchase_orders.security_status_id', 'purchase_orders.quality_status_id', 'purchase_orders.finanace_store_receipt_status_id',
-             'business_application_processes.logistics_status_id', 'business_application_processes.dispatch_status_id',
-             'design_revision_for_prod.reject_reason_prod','designs.design_image','designs.bom_image','designs.design_image','business_application_processes.off_canvas_status', 'tbl_customer_product_quantity_tracking.quantity_tracking_status', 'tbl_customer_product_quantity_tracking.completed_quantity', 'gatepass.po_tracking_status', 'gatepass.tracking_id', 'purchase_orders.purchase_orders_id') // Adjust if you need more fields
-            ->orderBy('businesses.updated_at', 'desc')
-           
-            ->get()
-            ->groupBy('customer_po_number'); 
-            // ->groupBy('businesses.customer_po_number'); 
                 $product_count = Products::where('is_active', 1)->where('is_deleted', 0)->count();
+    // end owner========================
+
         $testimonial_count = Testimonial::where('is_active', 1)->where('is_deleted', 0)->count();
         $product_services_count = ProductServices::where('is_active', 1)->where('is_deleted', 0)->count();
         $team_count = Team::where('is_active',1)->count();
@@ -154,15 +151,9 @@ class DashboardController extends Controller {
             $join->on('tbl_customer_product_quantity_tracking.business_id', '=', 'businesses.id');
         })
         ->where('tbl_customer_product_quantity_tracking.quantity_tracking_status',3001)
-    //   ->whereIn('bap1.production_status_id',$array_to_be_check)
       ->where('businesses.is_active',true)
       ->where('businesses.is_deleted', 0)
       ->count();
-        // BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
-        // ->where('off_canvas_status', 18)
-        // ->leftJoin('tbl_customer_product_quantity_tracking', 'business_application_processes.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id')
-        // ->where('tbl_customer_product_quantity_tracking.quantity_tracking_status', 3001)
-        // ->count();
         $logistics_list_count = BusinessApplicationProcesses::where('logistics_status_id', 1145)->where('off_canvas_status',19)
         ->where('is_active',1)->count();
         $logistics_send_by_finance_count =Logistics::leftJoin('tbl_customer_product_quantity_tracking', function($join) {
@@ -191,9 +182,6 @@ class DashboardController extends Controller {
         ->where('businesses.is_deleted', 0)
         ->where('tbl_customer_product_quantity_tracking.fianace_list_status','Send_Dispatch')
         ->count();
-        //   BusinessApplicationProcesses::where('logistics_status_id', 1146)->where('off_canvas_status',21)
-        //   ->where('dispatch_status_id', 1147)
-        //   ->where('is_active',1)->count();
           $business_received_for_designs = DesignModel::leftJoin('businesses', function($join) {
             $join->on('designs.business_id', '=', 'businesses.id');
         })
@@ -206,11 +194,7 @@ class DashboardController extends Controller {
         ->where('business_application_processes.production_status_id', 0) 
         ->where('business_application_processes.production_id', 0)
         ->where('businesses.is_deleted', 0)
-        ->count();
-
-        // $business_received_for_designs = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1111)
-        // ->where('production_status_id', 0)
-        // ->where('is_active',1)->count();
+        ->count();      
         $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN')];
 $business_received_for_designs= DesignModel::leftJoin('businesses', function($join) {
                 $join->on('designs.business_id', '=', 'businesses.id');
@@ -298,28 +282,25 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         ->where('production_status_id', 1114)->where('off_canvas_status', 15)
         ->where('is_deleted', 0)
         ->where('is_active',1)->count();
-
-        // $material_sent_to_production = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
-        // ->where('production_status_id', 1119)->where('store_status_id', 1118)
-        // ->where('is_active',1)->count();
-
-        
         $material_for_purchase = BusinessApplicationProcesses::where('business_status_id',1123)->where('design_status_id', 1114)
         ->where('production_status_id', 1117)->where('store_status_id',1123)
         ->where('is_active',1)->count();
-        $material_received_from_quality = BusinessApplicationProcesses::where('business_status_id',1127)->where('design_status_id', 1114)
-        ->where('production_status_id', 1117)->where('store_status_id',1123)
-        ->where('is_active',1)->count();
+        $material_received_from_quality =BusinessApplicationProcesses::leftJoin('purchase_orders', function ($join) {
+            $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+        })
+        ->leftJoin('businesses', function ($join) {
+            $join->on('business_application_processes.business_id', '=', 'businesses.id');
+        })
+        ->where('purchase_orders.quality_status_id', 1134)
+        ->where('businesses.is_active', true)
+        ->where('businesses.is_deleted', 0)
+        ->count();
 
         $rejected_chalan = BusinessApplicationProcesses::where('business_status_id',1116)->where('design_status_id', 1116)
         ->where('production_status_id', 1116)
         ->where('is_active',1)->count();
         $delivery_chalan = DeliveryChalan::where('is_active',1)->count();
         $returnable_chalan = ReturnableChalan::where('is_active',1)->count();
-        // $BOM_recived_for_purchase= BusinessApplicationProcesses::where('business_status_id',1123)->where('design_status_id', 1114)
-        // ->where('production_status_id', 1117)->where('store_status_id',1123)
-        // ->where('is_active',1)->count();
-        
         $BOM_recived_for_purchase= PurchaseOrderModel::where('is_active',1)->count();
         $vendor_list = Vendors::where('is_active',1)->count();
         $tax = Tax::where('is_active',1)->count();
