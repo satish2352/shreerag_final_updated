@@ -36,7 +36,8 @@ use App\Models\ {
     ReturnableChalan,
     BusinessDetails,
     Logistics,
-    CustomerProductQuantityTracking
+    CustomerProductQuantityTracking,
+    PurchaseOrdersModel
 
 };
 use Validator;
@@ -144,16 +145,46 @@ class DashboardController extends Controller {
         $contact_us_count = ContactUs::where('is_active',1)->count();
         $vision_mission_count = VisionMission::where('is_active',1)->count();
         $director_desk_count = DirectorDesk::where('is_active',1)->count();
-        $production_completed_prod_dept_logisitics = CustomerProductQuantityTracking::leftJoin('tbl_logistics', function($join) {
-            $join->on('tbl_customer_product_quantity_tracking.id', '=', 'tbl_logistics.quantity_tracking_id');
+        $need_to_check_for_payment =PurchaseOrdersModel:: leftJoin('grn_tbl', function ($join) {
+            $join->on('purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id');
         })
-        ->leftJoin('businesses', function($join) {
-            $join->on('tbl_customer_product_quantity_tracking.business_id', '=', 'businesses.id');
+        ->where('grn_tbl.grn_status_sanction', 6000)
+        ->whereNotNull('grn_tbl.grn_no_generate')
+        ->whereNotNull('grn_tbl.store_receipt_no_generate')
+        ->whereNotNull('grn_tbl.store_remark')
+          ->where('grn_tbl.is_active', 1)
+          ->where('grn_tbl.is_deleted', 0)
+          ->count();
+        $production_completed_prod_dept_logisitics =PurchaseOrdersModel:: leftJoin('grn_tbl', function ($join) {
+            $join->on('purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id');
         })
-        ->where('tbl_customer_product_quantity_tracking.quantity_tracking_status',3001)
-      ->where('businesses.is_active',true)
-      ->where('businesses.is_deleted', 0)
-      ->count();
+        ->where('grn_tbl.grn_status_sanction', 6001)
+          ->whereNotNull('grn_tbl.grn_no_generate')
+          ->whereNotNull('grn_tbl.store_receipt_no_generate')
+          ->whereNotNull('grn_tbl.store_remark')
+          ->where('grn_tbl.is_active', 1)
+          ->where('grn_tbl.is_deleted', 0)
+          ->count();
+        $po_pyament_need_to_release=PurchaseOrdersModel:: leftJoin('grn_tbl', function ($join) {
+            $join->on('purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id');
+        })
+        ->where('grn_tbl.grn_status_sanction', 6003)
+          ->whereNotNull('grn_tbl.grn_no_generate')
+          ->whereNotNull('grn_tbl.store_receipt_no_generate')
+          ->whereNotNull('grn_tbl.store_remark')
+          ->where('grn_tbl.is_active', 1)
+          ->where('grn_tbl.is_deleted', 0)
+          ->count();
+    //     CustomerProductQuantityTracking::leftJoin('tbl_logistics', function($join) {
+    //         $join->on('tbl_customer_product_quantity_tracking.id', '=', 'tbl_logistics.quantity_tracking_id');
+    //     })
+    //     ->leftJoin('businesses', function($join) {
+    //         $join->on('tbl_customer_product_quantity_tracking.business_id', '=', 'businesses.id');
+    //     })
+    //     ->where('tbl_customer_product_quantity_tracking.quantity_tracking_status',3001)
+    //   ->where('businesses.is_active',true)
+    //   ->where('businesses.is_deleted', 0)
+     
         $logistics_list_count = BusinessApplicationProcesses::where('logistics_status_id', 1145)->where('off_canvas_status',19)
         ->where('is_active',1)->count();
         $logistics_send_by_finance_count =Logistics::leftJoin('tbl_customer_product_quantity_tracking', function($join) {
@@ -474,7 +505,9 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
             'rejected_chalan_po_wise' => $rejected_chalan_po_wise,
          ];
          $logistics_counts = [
+            'need_to_check_for_payment'=> $need_to_check_for_payment,
             'production_completed_prod_dept_logisitics' => $production_completed_prod_dept_logisitics,
+            'po_pyament_need_to_release' => $po_pyament_need_to_release,
             'logistics_list_count' => $logistics_list_count,
             'logistics_send_by_finance_count' => $logistics_send_by_finance_count,
             'vehicle_type_count' => $vehicle_type_count,

@@ -1227,7 +1227,7 @@
                                                         <span class="h6 font-semibold text-muted text-sm d-block mb-2">Need
                                                             to check for Payment</span>
                                                         <span
-                                                            class="h5 font-bold mb-0">{{ $logistics_counts['production_completed_prod_dept_logisitics'] }}</span>
+                                                            class="h5 font-bold mb-0">{{ $logistics_counts['need_to_check_for_payment'] }}</span>
                                                     </div>
                                                     <div class="col-auto">
                                                         <div
@@ -1285,7 +1285,7 @@
                                                         <span class="h6 font-semibold text-muted text-sm d-block mb-2">PO
                                                             Pyament Need To Release</span>
                                                         <span
-                                                            class="h5 font-bold mb-0">{{ $logistics_counts['production_completed_prod_dept_logisitics'] }}</span>
+                                                            class="h5 font-bold mb-0">{{ $logistics_counts['po_pyament_need_to_release'] }}</span>
                                                     </div>
                                                     <div class="col-auto">
                                                         <div
