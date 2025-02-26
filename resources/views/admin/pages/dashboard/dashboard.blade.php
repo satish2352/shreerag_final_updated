@@ -207,11 +207,11 @@
                             $role = session()->get('role_id');
                         @endphp
                         @if ($role == config('constants.ROLE_ID.HR'))
-                        {{-- @include('admin.pages.dashboard.hr-dashboard') --}}
+                        @include('admin.pages.dashboard.hr-dashboard')
                         @elseif ($role == config('constants.ROLE_ID.SUPER'))
-                        {{-- @include('admin.pages.dashboard.super-dashboard') --}}
+                        @include('admin.pages.dashboard.super-dashboard')
                         @elseif ($role == config('constants.ROLE_ID.DESIGNER'))
-                            {{-- <div class="analysis-progrebar-area mg-b-15">
+                            <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-4 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -334,9 +334,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div> --}}
+                            </div>
                         @elseif ($role == config('constants.ROLE_ID.PRODUCTION'))
-                            {{-- <div class="analysis-progrebar-area mg-b-15">
+                            <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-4 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -524,9 +524,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div> --}}
+                            </div>
                         @elseif ($role == config('constants.ROLE_ID.STORE'))
-                            {{-- <div class="analysis-progrebar-area mg-b-15">
+                            <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-4 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -713,9 +713,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div> --}}
+                            </div>
                         @elseif ($role == config('constants.ROLE_ID.PURCHASE'))
-                            {{-- <div class="analysis-progrebar-area mg-b-15">
+                            <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-4 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -895,9 +895,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div> --}}
+                            </div>
                         @elseif ($role == config('constants.ROLE_ID.SECURITY'))
-                            {{-- <div class="analysis-progrebar-area mg-b-15">
+                            <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-4 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -929,9 +929,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div> --}}
+                            </div>
                         @elseif ($role == config('constants.ROLE_ID.QUALITY'))
-                            {{-- <div class="analysis-progrebar-area mg-b-15">
+                            <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-4 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -1029,9 +1029,9 @@
 
 
                                 </div>
-                            </div> --}}
+                            </div>
                         @elseif ($role == config('constants.ROLE_ID.LOGISTICS'))
-                            {{-- <div class="analysis-progrebar-area mg-b-15">
+                            <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-4 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -1186,9 +1186,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div> --}}
+                            </div>
                         @elseif ($role == config('constants.ROLE_ID.FINANCE'))
-                            {{-- <div class="analysis-progrebar-area mg-b-15">
+                            <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-4 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -1341,9 +1341,9 @@
 
 
                                 </div>
-                            </div> --}}
+                            </div>
                         @elseif ($role == config('constants.ROLE_ID.INVENTORY'))
-                            {{-- <div class="analysis-progrebar-area mg-b-15">
+                            <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-4 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -1405,9 +1405,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div> --}}
+                            </div>
                         @elseif ($role == config('constants.ROLE_ID.DISPATCH'))
-                            {{-- <div class="analysis-progrebar-area mg-b-15">
+                            <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-4 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -1471,9 +1471,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div> --}}
+                            </div>
                         @elseif ($role == config('constants.ROLE_ID.EMPOLYEE'))
-                            {{-- <div class="analysis-progrebar-area mg-b-15">
+                            <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
                                     <div class="col-xl-6 col-sm-6 col-12">
                                         <div class="card shadow border-0">
@@ -1569,7 +1569,7 @@
                                     </div>
 
                                 </div>
-                            </div> --}}
+                            </div>
                         @elseif ($role == config('constants.ROLE_ID.CMS'))
                             <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
