@@ -35,7 +35,8 @@ use App\Models\ {
     DeliveryChalan,
     ReturnableChalan,
     BusinessDetails,
-    Logistics
+    Logistics,
+    CustomerProductQuantityTracking
 
 };
 use Validator;
@@ -146,14 +147,22 @@ class DashboardController extends Controller {
         $contact_us_count = ContactUs::where('is_active',1)->count();
         $vision_mission_count = VisionMission::where('is_active',1)->count();
         $director_desk_count = DirectorDesk::where('is_active',1)->count();
-        // $production_completed_prod_dept_logisitics = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
-        // ->where('production_status_id', 1119)->where('store_status_id', 1123)->where('off_canvas_status', 17)
-        // ->where('is_active',1)->count();
-        $production_completed_prod_dept_logisitics = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
-        ->where('off_canvas_status', 18)
-        ->leftJoin('tbl_customer_product_quantity_tracking', 'business_application_processes.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id')
-        ->where('tbl_customer_product_quantity_tracking.quantity_tracking_status', 3001)
-        ->count();
+        $production_completed_prod_dept_logisitics = CustomerProductQuantityTracking::leftJoin('tbl_logistics', function($join) {
+            $join->on('tbl_customer_product_quantity_tracking.id', '=', 'tbl_logistics.quantity_tracking_id');
+        })
+        ->leftJoin('businesses', function($join) {
+            $join->on('tbl_customer_product_quantity_tracking.business_id', '=', 'businesses.id');
+        })
+        ->where('tbl_customer_product_quantity_tracking.quantity_tracking_status',3001)
+    //   ->whereIn('bap1.production_status_id',$array_to_be_check)
+      ->where('businesses.is_active',true)
+      ->where('businesses.is_deleted', 0)
+      ->count();
+        // BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
+        // ->where('off_canvas_status', 18)
+        // ->leftJoin('tbl_customer_product_quantity_tracking', 'business_application_processes.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id')
+        // ->where('tbl_customer_product_quantity_tracking.quantity_tracking_status', 3001)
+        // ->count();
         $logistics_list_count = BusinessApplicationProcesses::where('logistics_status_id', 1145)->where('off_canvas_status',19)
         ->where('is_active',1)->count();
         $logistics_send_by_finance_count =Logistics::leftJoin('tbl_customer_product_quantity_tracking', function($join) {
