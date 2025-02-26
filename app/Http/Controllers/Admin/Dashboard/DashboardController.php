@@ -330,12 +330,11 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         ->where('is_active',1)->count();
      
         $get_pass = Gatepass::where('is_active',1)->count();
-        $GRN_genration= Gatepass::where('gatepass.po_tracking_status', 4001)->where('is_active',1)->where('is_deleted',1)->count();
-
-        
-        PurchaseOrderModel::where('purchase_status_from_owner',1129)->where('purchase_status_from_purchase',1129)
-        ->where('quality_status_id', null)->where('is_active',1)->count();
-
+        // $GRN_genration= Gatepass::where('gatepass.po_tracking_status', 4001)->where('is_active',1)->where('is_deleted',1)->count();
+        $GRN_genration= Gatepass::leftJoin('purchase_orders', function ($join) {
+            $join->on('gatepass.purchase_orders_id', '=', 'purchase_orders.purchase_orders_id');
+        })
+        ->where('gatepass.po_tracking_status', 4001)->where('gatepass.is_active',1)->where('gatepass.is_deleted',0)->count();
         $material_need_to_sent_to_store = BusinessApplicationProcesses::leftJoin('purchase_orders', function($join) {
             $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
           })
