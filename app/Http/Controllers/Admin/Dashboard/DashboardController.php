@@ -238,8 +238,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         ->where('production_status_id', 1114)
         ->where('is_deleted', 0)
         ->where('is_active',1)->count();
-        $rejected_design_production_dept = BusinessApplicationProcesses::where('business_status_id',1115)->where('design_status_id', 1115)
-        ->where('production_status_id', 1115)
+        $rejected_design_production_dept = BusinessApplicationProcesses::where('production_status_id', 1115)
         ->where('is_deleted', 0)
         ->where('is_active',1)->count();
         $design_recived_for_production = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1113)
@@ -273,11 +272,16 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
 
         ->count();
       
-        $production_completed_prod_dept = BusinessApplicationProcesses::where('business_status_id',1118)->where('design_status_id', 1114)
-        ->where('production_status_id', 1121)->where('store_status_id', 1123)->where('off_canvas_status', 18)
-        ->where('is_deleted', 0)
-        ->where('is_active',1)->count();
-
+        $production_completed_prod_dept = CustomerProductQuantityTracking::leftJoin('tbl_logistics', function($join) {
+            $join->on('tbl_customer_product_quantity_tracking.id', '=', 'tbl_logistics.quantity_tracking_id');
+        })
+        ->leftJoin('businesses', function($join) {
+            $join->on('tbl_customer_product_quantity_tracking.business_id', '=', 'businesses.id');
+        })
+        ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status', 3001)
+        ->where('businesses.is_active', true)
+        ->where('businesses.is_deleted', 0)
+        ->count();
         $material_need_to_sent_to_production = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1114)
         ->where('production_status_id', 1114)->where('off_canvas_status', 15)
         ->where('is_deleted', 0)
@@ -316,8 +320,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         $purchase_order_submited_by_vendor =PurchaseOrderModel::where('purchase_status_from_owner',1129)->where('purchase_status_from_purchase',1129)
         ->where('is_active',1)->count();
      
-        $get_pass = Gatepass::where('is_active',1)->count();
-        // $GRN_genration= Gatepass::where('gatepass.po_tracking_status', 4001)->where('is_active',1)->where('is_deleted',1)->count();
+        $get_pass = Gatepass::where('is_active',1)->where('is_deleted',0)->count();
         $GRN_genration= Gatepass::leftJoin('purchase_orders', function ($join) {
             $join->on('gatepass.purchase_orders_id', '=', 'purchase_orders.purchase_orders_id');
         })
