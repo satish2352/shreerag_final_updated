@@ -347,7 +347,7 @@
                                                                         <td>
                                                                             <select class="form-control process_id mb-2" name="process_id_{{ $key }}" id=""  style="min-width:100px">
                                                                                 <option value="" default>Select Process</option>
-                                                                                @foreach ($dataOutputHSNMaster as $data)
+                                                                                @foreach ($dataOutputProcessMaster as $data)
                                                                                 <option value="{{ $data['id'] }}"
                                                                                     {{ old('process_id', $editDataNew->process_id) == $data->id ? 'selected' : '' }}>
                                                                                     {{ $data->name }}
