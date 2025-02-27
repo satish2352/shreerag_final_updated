@@ -1282,8 +1282,8 @@
                                             <div class="card-body">
                                                 <div class="row border-bottom">
                                                     <div class="col mb-2">
-                                                        <span class="h6 font-semibold text-muted text-sm d-block mb-2">PO
-                                                            Pyament Need To Release</span>
+                                                        <span class="h6 font-semibold text-muted text-sm d-block mb-2">PO Payment Release to Vendor
+                                                            By Fianance</span>
                                                         <span
                                                             class="h5 font-bold mb-0">{{ $logistics_counts['po_pyament_need_to_release'] }}</span>
                                                     </div>
@@ -1297,7 +1297,7 @@
                                                 </div>
                                                 <div class="mt-2 mb-0 text-sm">
                                                     <a
-                                                        href="{{ route('list-po-sanction-and-need-to-do-payment-to-vendor') }}">
+                                                        href="{{ route('list-release-approval-payment-by-vendor') }}">
                                                         <span class="badge badge-pill bg-soft-success text-success me-2">
                                                             <i class="fa-solid fa-arrow-right"></i> </span>
                                                         <span class="text-nowrap text-xs text-muted">View
