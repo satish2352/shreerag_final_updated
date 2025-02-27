@@ -343,7 +343,6 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
           ->where('production.production_status_quantity_tracking', 'incomplete')
         ->where('businesses.is_deleted', 0)
         ->where('business_application_processes.is_active',1)
-
         ->count();
       
         $production_completed_prod_dept = CustomerProductQuantityTracking::leftJoin('tbl_logistics', function($join) {
