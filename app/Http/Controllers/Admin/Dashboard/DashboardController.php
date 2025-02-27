@@ -290,7 +290,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         ->leftJoin('design_revision_for_prod', function ($join) {
             $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
         })
-        ->whereIn('business_application_processes.production_status_id', 1115)
+        ->where('business_application_processes.production_status_id', 1115)
         ->where('businesses.is_active', true)
         ->where('businesses.is_deleted', 0)
         ->count();
