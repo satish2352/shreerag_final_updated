@@ -163,6 +163,7 @@ class ReturnableChalanRepository
                 ->join('tbl_process_master', 'tbl_process_master.id', '=', 'tbl_returnable_chalan_item_details.process_id')
                 ->join('tbl_hsn', 'tbl_hsn.id', '=', 'tbl_returnable_chalan_item_details.hsn_id')
                 ->where('returnable_chalan_id', $purchaseOrder->id)
+                ->where('tbl_returnable_chalan_item_details.is_deleted', 0)
                 ->select(
                     'tbl_returnable_chalan_item_details.part_item_id',
                      'tbl_part_item.description',
@@ -177,6 +178,7 @@ class ReturnableChalanRepository
                      'tbl_returnable_chalan_item_details.rate',
                      'tbl_returnable_chalan_item_details.size',
                      'tbl_returnable_chalan_item_details.amount',
+                     
                 )
                 ->get();
             return [
