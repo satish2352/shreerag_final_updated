@@ -20,7 +20,7 @@
 
                                 </a>
                             </div> --}}
-                            <div class="mx-n1">
+                            {{-- <div class="mx-n1">
                                 <a href="#" class="btn btn-sm btn-primary mx-1 load-offcanvas-data" 
                                     type="button" data-bs-toggle="offcanvas" 
                                     data-bs-target="#offcanvasRight"
@@ -29,7 +29,7 @@
                                         <i class="fa-solid fa-bars"></i>
                                     </span>
                                 </a>
-                            </div> 
+                            </div>  --}}
                         </div>
                     </div>
                 </div>
@@ -454,7 +454,7 @@
     
    
 </div> --}}
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
+{{-- <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
     aria-labelledby="offcanvasRightLabel">
     <div class="offcanvas-header">
         <h5 id="offcanvasRightLabel">Customer PO List</h5>
@@ -588,4 +588,4 @@
     }
 });
 
-</script>
+</script> --}}
