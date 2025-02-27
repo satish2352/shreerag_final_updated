@@ -61,6 +61,7 @@ class DashboardController extends Controller {
             $join->on('users.role_id', '=', 'tbl_roles.id');
         })
         ->where('users.is_active', 1)
+        ->where('users.is_deleted', 0)
         ->where('users.id', '>', 1)
         ->count(); 
         $active_count = Business::where('is_active', 1)->where('is_deleted', 0)->count(); 
