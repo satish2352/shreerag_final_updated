@@ -179,7 +179,7 @@
                                 </div>
                                 <div class="mt-2 mb-0 text-sm">
                                     <a
-                                        href="{{ route('list-dispatch-final-product-close') }}">
+                                        href="{{ route('list-product-dispatch-completed') }}">
                                         <span
                                             class="badge badge-pill bg-soft-success text-success me-2">
                                             <i class="fa-solid fa-arrow-right"></i> </span>

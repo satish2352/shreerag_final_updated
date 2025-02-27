@@ -65,10 +65,15 @@ class DashboardController extends Controller {
         ->count(); 
         $active_count = Business::where('is_active', 1)->where('is_deleted', 0)->count(); 
         $business_details_count = BusinessDetails::where('is_active', 1)->where('is_deleted', 0)->count(); 
-        $product_completed_count = BusinessApplicationProcesses::where('is_active', 1)->where('is_deleted', 0)
-            ->where('dispatch_status_id', 1148)
-            ->count();
-     
+        $product_completed_count =  Logistics::leftJoin('tbl_customer_product_quantity_tracking', function($join) {
+            $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_customer_product_quantity_tracking.id');
+        })
+        ->leftJoin('businesses', function($join) {
+            $join->on('tbl_logistics.business_id', '=', 'businesses.id');
+        })
+        ->where('tbl_customer_product_quantity_tracking.quantity_tracking_status',3005)
+        ->where('businesses.is_active',true)
+        ->where('businesses.is_deleted', 0)->count();
         $business_completed_count = BusinessApplicationProcesses::where('business_application_processes.is_active', 1)
         ->join('businesses_details', 'business_application_processes.business_details_id', '=', 'businesses_details.id')
         ->where('business_application_processes.dispatch_status_id', 1140)
@@ -377,9 +382,9 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         $dispatch_received_from_finance= BusinessApplicationProcesses::where('logistics_status_id', 1146)->where('off_canvas_status',21)
         ->where('dispatch_status_id', 1147)
         ->where('is_active',1)->count();
-        $dispatch_completed = BusinessApplicationProcesses::where('logistics_status_id', 1146)->where('off_canvas_status',22)
-        ->where('dispatch_status_id', 1148)
-        ->where('is_active',1)->count();
+        // $dispatch_completed = BusinessApplicationProcesses::where('logistics_status_id', 1146)->where('off_canvas_status',22)
+        // ->where('dispatch_status_id', 1148)
+        // ->where('is_active',1)->count();
 
         $dispatch_completed = Logistics::leftJoin('tbl_customer_product_quantity_tracking', function($join) {
             $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_customer_product_quantity_tracking.id');
