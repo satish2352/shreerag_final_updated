@@ -527,7 +527,7 @@ public function getAllCompletedProduction() {
             ->leftJoin('businesses', 'business_application_processes.business_id', '=', 'businesses.id')
             ->leftJoin('businesses_details', 'business_application_processes.business_details_id', '=', 'businesses_details.id')
             ->leftJoin('tbl_customer_product_quantity_tracking', 'business_application_processes.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id')
-            ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status', $array_to_be_quantity_tracking)
+            // ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status', $array_to_be_quantity_tracking)
             ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
             ->where('businesses.is_active', true)
             ->where('businesses.is_deleted', 0)

@@ -69,56 +69,56 @@
                         </div>
                         <div style="display: flex;justify-content: center;">
                             <h3 style="font-family: 'Font Awesome 5 Free'!important; ">Leave Application Form</h3>
-
                         </div>
-                        <div class="row " style="padding-left:10px;">
-                            <div class="col-lg-4 col-md-4 col-sm-4">
+                        <div class="w-75">
+                        <div class="row print-row" style="padding-left:10px;">
+                            <div class="col-lg-4 col-md-4 col-sm-4 left-side">
                                 <h4 style="font-family: 'Font Awesome 5 Free'!important;">Full Name :</h4>
                             </div>
-                            <div class="col-lg-8 col-md-8 col-sm-8">
+                            <div class="col-lg-8 col-md-8 col-sm-8 right-side">
                                 <h4 style="font-family: 'Font Awesome 5 Free'!important;">
                                     {{ $user_detail->other_employee_name }} </h4>
                             </div>
                         </div>
-                        <div class="row " style="padding-left:10px;">
-                            <div class="col-lg-4 col-md-4 col-sm-4">
+                        <div class="row print-row" style="padding-left:10px;">
+                            <div class="col-lg-4 col-md-4 col-sm-4 left-side">
                                 <h4 style="font-family: 'Font Awesome 5 Free'!important;"><strong>Email Id</strong> :
                                     </h4>
                             </div>
-                            <div class="col-lg-8 col-md-8 col-sm-8">
+                            <div class="col-lg-8 col-md-8 col-sm-8 right-side">
                                 <h4 style="font-family: 'Font Awesome 5 Free'!important;">
                                     {{ strip_tags($user_detail->u_email) }}</h4>
                             </div>
                         </div>
-                        <div class="row " style="padding-left:10px;">
-                            <div class="col-lg-4 col-md-4 col-sm-4"
+                        <div class="row print-row" style="padding-left:10px;">
+                            <div class="col-lg-4 col-md-4 col-sm-4 left-side"
                                 style="font-family: 'Font Awesome 5 Free'!important;">
                                 <h4><strong>From Date</strong> :</h4>
                               
                             </div>
-                            <div class="col-lg-8 col-md-8 col-sm-8">
+                            <div class="col-lg-8 col-md-8 col-sm-8 right-side">
                                 <h4 style="font-family: 'Font Awesome 5 Free'!important;">
                                     {{ strip_tags($user_detail->leave_start_date) }}</h4>
                             </div>
                         </div>
-                        <div class="row " style="padding-left:10px;">
-                            <div class="col-lg-4 col-md-4 col-sm-4"
+                        <div class="row print-row" style="padding-left:10px;">
+                            <div class="col-lg-4 col-md-4 col-sm-4 left-side"
                             style="font-family: 'Font Awesome 5 Free'!important;">
                                 <h4><strong>To Date</strong> :</h4>
                             </div>
-                            <div class="col-lg-8 col-md-8 col-sm-8">
+                            <div class="col-lg-8 col-md-8 col-sm-8 right-side">
                                 <h4 style="font-family: 'Font Awesome 5 Free'!important;">
                                     {{ strip_tags($user_detail->leave_end_date) }}</h4>
                             </div>
                         </div>
-                        <div class="row " style="padding-left:10px;">
-                            <div class="col-lg-4 col-md-4 col-sm-4"
+                        <div class="row print-row" style="padding-left:10px;">
+                            <div class="col-lg-4 col-md-4 col-sm-4 left-side"
                                 style="font-family: 'Font Awesome 5 Free'!important;">
                                 <h4><strong>Leave Day</strong> :</h4>
                                
                             </div>
 
-                            <div class="col-lg-8 col-md-8 col-sm-8">
+                            <div class="col-lg-8 col-md-8 col-sm-8 right-side">
                                 <h4 style="font-family: 'Font Awesome 5 Free'!important;">
                                     <h4>
                                         @if ($user_detail->leave_day == 'half_day')
@@ -132,39 +132,37 @@
                                     </h4></h4>
                             </div>
                         </div>
-
-
-                        <div class="row " style="padding-left:10px;">
-                            <div class="col-lg-4 col-md-4 col-sm-4"
+                        <div class="row print-row" style="padding-left:10px;">
+                            <div class="col-lg-4 col-md-4 col-sm-4 left-side"
                             style="font-family: 'Font Awesome 5 Free'!important;">
                                 <h4><strong>Leave Count</strong> :</h4>
                             </div>
-                            <div class="col-lg-8 col-md-8 col-sm-8">
+                            <div class="col-lg-8 col-md-8 col-sm-8 right-side">
                                 <h4 style="font-family: 'Font Awesome 5 Free'!important;">
                                     {{ strip_tags($user_detail->leave_count) }}</h4>
                             </div>
                         </div>
-                        <div class="row " style="padding-left:10px;">
-                            <div class="col-lg-4 col-md-4 col-sm-4"
+                        <div class="row print-row" style="padding-left:10px;">
+                            <div class="col-lg-4 col-md-4 col-sm-4 left-side"
                                 style="font-family: 'Font Awesome 5 Free'!important;">
                                 <h4><strong>Leave Type Name</strong> :</h4>
                             </div>
-                            <div class="col-lg-8 col-md-8 col-sm-8">
+                            <div class="col-lg-8 col-md-8 col-sm-8 right-side">
                                 <h4 style="font-family: 'Font Awesome 5 Free'!important;">
                                     {{ strip_tags($user_detail->leave_type_name) }}</h4>
                             </div>
                         </div>
-                        <div class="row " style="padding-left:10px;">
-                            <div class="col-lg-4 col-md-4 col-sm-4"
+                        <div class="row print-row" style="padding-left:10px;">
+                            <div class="col-lg-4 col-md-4 col-sm-4 left-side"
                             style="font-family: 'Font Awesome 5 Free'!important;">
                                 <h4><strong>Reason</strong> :</h4>
                             </div>
-                            <div class="col-lg-8 col-md-8 col-sm-8">
+                            <div class="col-lg-8 col-md-8 col-sm-8 right-side">
                                 <h4 style="font-family: 'Font Awesome 5 Free'!important;">
                                     {{ strip_tags($user_detail->reason) }}</h4>
                             </div>
                         </div>
-
+                        </div>
 
                     </div>
                     <a><button data-toggle="tooltip" onclick="printInvoice()" title="Employee Details"
@@ -227,6 +225,31 @@
         padding: 20px;
         margin: 10px;
         }
+         .print-container {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+    }
+.left-side{
+width:40%;
+}
+.right-side{
+width:60%;
+}
+    .label {
+        width: 40%;
+        font-weight: bold;
+    }
+
+    .value {
+        width: 60%;
+    }
+
+    /* Optional: Ensure proper alignment */
+    .print-row {
+        display: flex;
+        width: 100%;
+    }
         #printableArea {
             width: 100%;
             overflow: hidden;

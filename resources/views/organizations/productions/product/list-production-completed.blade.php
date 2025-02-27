@@ -82,7 +82,9 @@
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ \Carbon\Carbon::parse($data->tracking_updated_at)->format('d-m-Y h:i A') }}</td>
+                                                    <td>{{ $data->tracking_updated_at ? $data->tracking_updated_at->format('d-m-Y h:i A') : 'N/A' }}</td>
+
+                                                    {{-- <td>{{ \Carbon\Carbon::parse($data->tracking_updated_at)->format('d-m-Y h:i A') }}</td> --}}
                                                     <td>{{ $data->customer_po_number }}</td>
                                                     <td>{{ $data->product_name }}</td>
                                                     <td>{{ $data->description }}</td>
