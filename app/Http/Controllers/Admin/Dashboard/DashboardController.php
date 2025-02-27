@@ -275,9 +275,29 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         ->where('production_status_id', 1114)
         ->where('is_deleted', 0)
         ->where('is_active',1)->count();
-        $rejected_design_production_dept = BusinessApplicationProcesses::where('production_status_id', 1115)
-        ->where('is_deleted', 0)
-        ->where('is_active',1)->count();
+        $rejected_design_production_dept = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+            $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+        })
+        ->leftJoin('designs', function ($join) {
+            $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+        })
+        ->leftJoin('businesses_details', function ($join) {
+            $join->on('production.business_details_id', '=', 'businesses_details.id');
+        })
+        ->leftJoin('businesses', function ($join) {
+            $join->on('business_application_processes.business_id', '=', 'businesses.id');
+        })
+        ->leftJoin('design_revision_for_prod', function ($join) {
+            $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+        })
+        ->whereIn('business_application_processes.production_status_id', 1115)
+        ->where('businesses.is_active', true)
+        ->where('businesses.is_deleted', 0)
+        ->count();
+        
+        // BusinessApplicationProcesses::where('production_status_id', 1115)
+        // ->where('is_deleted', 0)
+        // ->where('is_active',1)->count();
         $design_recived_for_production = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1113)
         ->where('production_status_id', 1113)
         ->where('is_deleted', 0)
