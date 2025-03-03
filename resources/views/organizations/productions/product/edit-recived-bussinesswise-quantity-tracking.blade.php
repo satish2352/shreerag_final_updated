@@ -76,7 +76,7 @@
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="completed_quantity"> Completed Production :</label>
-                                                    <input type="text" class="form-control" id="completed_quantity" name="completed_quantity" value="{{ $productDetails->completed_quantity }}" placeholder="Enter Quantity" readonly>
+                                                    <input type="text" class="form-control" name="completed_quantity" value="{{ $productDetails->completed_quantity }}" placeholder="Enter Quantity" readonly>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="remaining_quantity"> Balance Quantity :</label>
