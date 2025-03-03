@@ -20,7 +20,16 @@
 
                                 </a>
                             </div> --}}
-                          
+                            {{-- <div class="mx-n1">
+                                <a href="#" class="btn btn-sm btn-primary mx-1 load-offcanvas-data" 
+                                    type="button" data-bs-toggle="offcanvas" 
+                                    data-bs-target="#offcanvasRight"
+                                    aria-controls="offcanvasRight">
+                                    <span class="p-1">
+                                        <i class="fa-solid fa-bars"></i>
+                                    </span>
+                                </a>
+                            </div>  --}}
                         </div>
                     </div>
                 </div>
@@ -445,3 +454,133 @@
     
    
 </div> --}}
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
+    aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasRightLabel">Customer PO List</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <!-- Loading Spinner -->
+        <div id="loadingIndicator" style="display: none; text-align: center;">
+            <i class="fa fa-spinner fa-spin fa-3x"></i>
+        </div>
+
+        <!-- Dynamic Data will be loaded here -->
+        <div id="offcanvasContent"></div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        let page = 1;
+        let isLoading = false; // Prevent multiple AJAX calls
+        let hasMorePages = true; // Track if more pages exist
+    
+        function loadOffcanvasData() {
+            if (isLoading || !hasMorePages) return; // Stop loading if already in progress or no more pages
+    
+            let offcanvasContent = $('#offcanvasContent');
+            let loadingIndicator = $('#loadingIndicator');
+    
+            isLoading = true; // Prevent duplicate calls
+            loadingIndicator.show();
+    
+            $.ajax({
+                url: "{{ route('get-offcanvas-data') }}?page=" + page,
+                type: "GET",
+                dataType: "json",
+                success: function(response) {
+                    loadingIndicator.hide();
+                    isLoading = false; // Allow next requests
+    
+                    if (response && Object.keys(response).length > 0) {
+                        let contentHtml = '';
+    
+                        $.each(response, function(po_number, grouped_data) {
+                            let firstItem = grouped_data[0];
+    
+                            contentHtml += `
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading${po_number}">
+                                        <button class="accordion-button" type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#collapse${po_number}"
+                                            aria-expanded="true"
+                                            aria-controls="collapse${po_number}">
+                                            ${po_number} - ${firstItem.title}
+                                        </button>
+                                    </h2>
+                                    <div id="collapse${po_number}" class="accordion-collapse collapse"
+                                        aria-labelledby="heading${po_number}"
+                                        data-bs-parent="#accordionExample">
+                                        <div class="accordion-body" style="overflow-y: auto; max-height: 80vh; padding-bottom: 20px;">
+                                            <ul class="list-unstyled">`;
+    
+                            $.each(grouped_data, function(index, data) {
+                                let statusMessage = getStatusMessage(data);
+                                contentHtml += `<li class="right-side"
+                                        style="color:#{{ str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) . str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) . str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) }};"><b>${data.product_name}</b> : ${statusMessage}</li>`;
+                            });
+    
+                            contentHtml += `</ul></div></div></div>`;
+                        });
+    
+                        offcanvasContent.append(contentHtml);
+    
+                        // Check if more pages exist
+                        hasMorePages = response.next_page_url !== null;
+                        if (hasMorePages) {
+                            page++; // Increment page for next request
+                        }
+                    } else {
+                        hasMorePages = false; // No more pages exist
+                    }
+                },
+                error: function(xhr, status, error) {
+                    loadingIndicator.hide();
+                    isLoading = false; // Reset loading state
+                    offcanvasContent.append('<p class="text-danger">Error loading data. Please try again.</p>');
+                }
+            });
+        }
+    
+        // Detect scrolling to bottom and load more data
+        $('#offcanvasRight').on('scroll', function() {
+            if (!isLoading && hasMorePages) {
+                let scrollBottom = $(this).scrollTop() + $(this).innerHeight();
+                let scrollThreshold = this.scrollHeight - 50; // Load more slightly before reaching bottom
+                if (scrollBottom >= scrollThreshold) {
+                    loadOffcanvasData();
+                }
+            }
+        });
+    
+        // Initial load
+        loadOffcanvasData();
+    
+        function getStatusMessage(data) {
+            let statusMessages = {
+                3005: `Dispatch Department Product Dispatch Completed Quantity ${data.completed_quantity}`,
+                3004: `Finance Department sent to Dispatch Department ${data.completed_quantity}`,
+                3003: `Finance Department Received from Logistics Department Quantity ${data.completed_quantity}`,
+                3002: `Logistics Department Submitted Form ${data.completed_quantity}`,
+                3001: `Production Department Completed Production and Received Logistics Department Quantity ${data.completed_quantity}`,
+                4003: `Store Department forward to Production Department`,
+                4002: `Quality Department (Generated GRN) and Store Department Material Received PO ${data.purchase_orders_id} & ${data.tracking_id} time`,
+                4001: `Security Department Received Material and PO ${data.purchase_orders_id} also Generated Gate Pass ${data.tracking_id} time`,
+                25: `Purchase Department PO ${data.purchase_orders_id} Send to Vendor`,
+                24: `Purchase Department Approved Owner`,
+                23: `Purchase Department`,
+                16: `Store Department submitted requisition form`,
+                15: `Accepted Production Department and send to store Department`,
+                14: `Corrected Design Submitted to Production Department`,
+                13: `Rejected Design in Production Department`,
+                12: `Design Department Submitted Design and Received Production Department`,
+                11: `Business Department Request sent to Design Department`
+            };
+            return statusMessages[data.off_canvas_status] || "Unknown Department";
+        }
+    });
+    </script>
+    

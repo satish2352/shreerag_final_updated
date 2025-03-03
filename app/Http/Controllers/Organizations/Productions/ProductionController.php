@@ -19,9 +19,7 @@ use App\Models\ {
 
 class ProductionController extends Controller
  {
-
     private $listapi;
-
     public function __construct( AllListController $listapi ) {
         $this->service = new ProductionServices();
         $this->listapiservice = new AllListController();
@@ -67,10 +65,6 @@ class ProductionController extends Controller
                 'dataOutputPartItem' => $dataOutputPartItem,
                 'id' => $id
             ] );
-
-            // Redirect to the specified URL without passing the array
-
-            // return redirect( 'proddept/list-final-production-completed' )->with( 'status', $update_data );
         } catch ( \Exception $e ) {
             return $e;
         }
@@ -91,72 +85,68 @@ class ProductionController extends Controller
             return redirect()->back()->with( 'error', 'An error occurred: ' . $e->getMessage() );
         }
     }
-
-    public function destroyAddmoreStoreItem( Request $request )
- {
-
-        $delete_data_id = $request->delete_id;
-        // Get the delete ID from the request
-
+    public function editProduct($id) {
         try {
-            $delete_record = $this->service->destroyAddmoreStoreItem( $delete_data_id );
-            if ( $delete_record ) {
-                $msg = $delete_record[ 'msg' ];
-                $status = $delete_record[ 'status' ];
-                if ( $status == 'success' ) {
-                    return redirect( 'proddept/list-material-recived' )->with( compact( 'msg', 'status' ) );
-                } else {
-                    return redirect()->back()->withInput()->with( compact( 'msg', 'status' ) );
-                }
-            }
-        } catch ( \Exception $e ) {
-            return $e;
-        }
-    }
-
-    public function editProduct( $id ) {
-        try {
-            $editData = $this->service->editProduct( $id );
-            $dataOutputPartItem = PartItem::where( 'is_active', true )->get();
-            $dataOutputUnitMaster = UnitMaster::where( 'is_active', true )->get();
-            return view( 'organizations.productions.product.edit-recived-bussinesswise', [
-                'productDetails' => $editData[ 'productDetails' ],
-                'dataGroupedById' => $editData[ 'dataGroupedById' ],
+            $editData = $this->service->editProduct($id);
+            $dataOutputPartItem = PartItem::where('is_active', true)->get();
+            // $dataOutputUser = User::where('is_active', true)->get();
+            $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
+            return view('organizations.productions.product.edit-recived-inprocess-production-material', [
+                'productDetails' => $editData['productDetails'],
+                'dataGroupedById' => $editData['dataGroupedById'],
                 'dataOutputPartItem' => $dataOutputPartItem,
                 'dataOutputUnitMaster'=>$dataOutputUnitMaster,
+                // 'dataOutputUser'=>$dataOutputUser,
                 'id' => $id
-            ] );
-
-
-            
-        } catch ( \Exception $e ) {
-            return redirect()->back()->with( [ 'status' => 'error', 'msg' => $e->getMessage() ] );
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
         }
     }
-
-    public function updateProductMaterial( Request $request ) {
-        $rules = [];
-
-        $messages = [];
-
-        $validation = Validator::make( $request->all(), $rules, $messages );
-
-        if ( $validation->fails() ) {
-            return redirect()->back()->withInput()->withErrors( $validation );
+    public function updateProductMaterial(Request $request) {
+        $rules = [
+        ];
+        
+        $messages = [
+        ];
+        
+        $validation = Validator::make($request->all(), $rules, $messages);
+        
+        if ($validation->fails()) {
+            return redirect()->back()->withInput()->withErrors($validation);
         }
-
+    
         try {
-            $updateData = $this->service->updateProductMaterial( $request );
-         
-
-            if ( $updateData[ 'status' ] == 'success' ) {
-                return redirect( 'proddept/list-material-recived' )->with( [ 'status' => 'success', 'msg' => $updateData[ 'message' ] ] );
+            $updateData = $this->service->updateProductMaterial($request);
+    
+            if ($updateData['status'] == 'success') {
+                return redirect('proddept/list-material-recived')->with(['status' => 'success', 'msg' => $updateData['message']]);
             } else {
-                return redirect()->back()->withInput()->with( [ 'status' => 'error', 'msg' => $updateData[ 'message' ] ] );
+                return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $updateData['message']]);
             }
-        } catch ( \Exception $e ) {
-            return redirect()->back()->withInput()->with( [ 'status' => 'error', 'msg' => $e->getMessage() ] );
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $e->getMessage()]);
         }
     }
-
+    public function destroyAddmoreStoreItem( Request $request )
+    {
+   
+           $delete_data_id = $request->delete_id;
+           // Get the delete ID from the request
+   
+           try {
+               $delete_record = $this->service->destroyAddmoreStoreItem( $delete_data_id );
+               if ( $delete_record ) {
+                   $msg = $delete_record[ 'msg' ];
+                   $status = $delete_record[ 'status' ];
+                   if ( $status == 'success' ) {
+                       return redirect( 'proddept/list-material-recived' )->with( compact( 'msg', 'status' ) );
+                   } else {
+                       return redirect()->back()->withInput()->with( compact( 'msg', 'status' ) );
+                   }
+               }
+           } catch ( \Exception $e ) {
+               return $e;
+           }
+       }
 }

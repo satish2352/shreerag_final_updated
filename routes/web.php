@@ -194,17 +194,18 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-accept-design-business-wise/{business_id}', ['as' => 'list-accept-design-business-wise', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@acceptdesignlistBusinessWise']);
         Route::get('/list-reject-design', ['as' => 'list-reject-design', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@rejectdesignlist']);
         Route::get('/list-revislist-material-reciveded-design', ['as' => 'list-revislist-material-reciveded-design', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@reviseddesignlist']);
+      
         Route::get('/list-material-recived', ['as' => 'list-material-recived', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllListMaterialRecievedToProduction']);
-    
         Route::get('/list-final-purchase-order-production/{id}', ['as' => 'list-final-purchase-order-production', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllListMaterialRecievedToProductionBusinessWise']);
-
+        Route::get('/edit-recived-inprocess-production-material/{id}', ['as' => 'edit-recived-inprocess-production-material', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@editProduct']);
+        Route::post('/update-recived-inprocess-production-material/{id}', ['as' => 'update-recived-inprocess-production-material', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@updateProductMaterial']);
+        Route::post('/delete-addmore-production-material-item', ['as' => 'delete-addmore-production-material-item', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@destroyAddmoreStoreItem']);
         Route::post('/update-final-production-completed-status/{id}', ['as' => 'update-final-production-completed-status', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@acceptProductionCompleted']);
-        Route::get('/edit-recived-bussinesswise/{id}', ['as' => 'edit-recived-bussinesswise', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@editProduct']);
-        Route::post('/update-production/{id}', ['as' => 'update-production', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@updateProductMaterial']);
+
         Route::get('/list-final-production-completed', ['as' => 'list-final-production-completed', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllCompletedProduction']);
         Route::get('/list-final-prod-completed-send-to-logistics-tracking', ['as' => 'list-final-prod-completed-send-to-logistics-tracking', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllCompletedProductionSendToLogistics']);
         Route::get('/list-final-prod-completed-send-to-logistics-tracking-product-wise/{id}', ['as' => 'list-final-prod-completed-send-to-logistics-tracking-product-wise', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllCompletedProductionSendToLogisticsProductWise']);
-        Route::post('/delete-addmore-store-item', ['as' => 'delete-addmore-store-item', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@destroyAddmoreStoreItem']);
+
 
         Route::get('/edit-recived-bussinesswise-quantity-tracking/{id}', ['as' => 'edit-recived-bussinesswise-quantity-tracking', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@editProductQuantityTracking']);
 
@@ -248,7 +249,8 @@ Route::group(['middleware' => ['admin']], function () {
 
         Route::get('/edit-material-list-bom-wise-new-req/{id}', ['as' => 'edit-material-list-bom-wise-new-req', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@editProductMaterialWiseAddNewReq']);
         Route::post('/update-material-list-bom-wise-new-req/{id}', ['as' => 'update-material-list-bom-wise-new-req', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@updateProductMaterialWiseAddNewReq']);
-     
+        Route::post('/deleted-addmore-store-material-item', ['as' => 'deleted-addmore-store-material-item', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@destroyAddmoreStoreItem']);
+
         Route::get('/check-stock-quantity', ['as' => 'check-stock-quantity', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@checkStockQuantity']);
 
         // Route::get('/check-stock-quantity', [YourController::class, 'checkStockQuantity'])->name('check-stock-quantity');
@@ -258,8 +260,7 @@ Route::group(['middleware' => ['admin']], function () {
         // Route::post('/update-material-list-bom-wise/{id}', ['as' => 'update-material-list-bom-wise', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@updateProductMaterialWiseAdd']);
 
         Route::get('/list-product-inprocess-received-from-production', ['as' => 'list-product-inprocess-received-from-production', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllInprocessProductProduction']);
-        Route::get('/edit-recived-inprocess-production-material/{id}', ['as' => 'edit-recived-inprocess-production-material', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@editProduct']);
-        Route::post('/update-recived-inprocess-production-material/{id}', ['as' => 'update-recived-inprocess-production-material', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@updateProductMaterial']);
+
    
         Route::any('/list-unit', ['as' => 'list-unit', 'uses' => 'App\Http\Controllers\Organizations\Master\UnitController@index']);
         Route::any('/add-unit', ['as' => 'add-unit', 'uses' => 'App\Http\Controllers\Organizations\Master\UnitController@add']);

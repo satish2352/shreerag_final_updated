@@ -39,14 +39,6 @@ use Config;
         return $e;
     }
 }
-    public function editProduct($id) {
-        try {
-            $data_output = $this->repo->editProduct($id);
-return $data_output;
-        } catch (\Exception $e) {
-            return ['status' => 'error', 'msg' => $e->getMessage()];
-        }
-    }
     public function destroyAddmoreStoreItem($id)
     {
         try {
@@ -69,10 +61,18 @@ return $data_output;
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
-    public function updateProductMaterial($request) {
+    public function editProduct($id){
+        try {
+            $data_output = $this->repo->editProduct($id);
+       
+           return $data_output;
+        } catch (\Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
+    }
+    public function updateProductMaterial($request){
         try {
             $result = $this->repo->updateProductMaterial($request);
-            
             return $result;
         } catch (\Exception $e) {
             return ['status' => 'error', 'message' => $e->getMessage()];

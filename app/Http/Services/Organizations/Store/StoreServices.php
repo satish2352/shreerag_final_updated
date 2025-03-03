@@ -79,21 +79,17 @@ class StoreServices
             return ['status' => 'error', 'message' => $e->getMessage()];
         }
     }
-    public function editProduct($id){
+    public function destroyAddmoreStoreItem($id)
+    {
         try {
-            $data_output = $this->repo->editProduct($id);
-       
-           return $data_output;
-        } catch (\Exception $e) {
+            $delete = $this->repo->destroyAddmoreStoreItem($id);
+            if ($delete) {
+                return ['status' => 'success', 'msg' => 'Deleted Successfully.'];
+            } else {
+                return ['status' => 'error', 'msg' => ' Not Deleted.'];
+            }  
+        } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
-        }
-    }
-    public function updateProductMaterial($request){
-        try {
-            $result = $this->repo->updateProductMaterial($request);
-            return $result;
-        } catch (\Exception $e) {
-            return ['status' => 'error', 'message' => $e->getMessage()];
-        }
+        } 
     }
 }

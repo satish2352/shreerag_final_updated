@@ -207,57 +207,6 @@ class ProductionRepository  {
             return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
-    
-    public function editProduct($id) {
-        try {
-            $array_to_be_check = [
-                config('constants.PRODUCTION_DEPARTMENT.LIST_BOM_PART_MATERIAL_RECIVED_FROM_STORE_DEPT_FOR_PRODUCTION')
-            ];
-    
-            // Fetch all related data
-
-            $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function ($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-            })
-            ->leftJoin('businesses_details', function ($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-            })
-            ->leftJoin('production_details as pd', function ($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'pd.business_details_id');
-            })
-            ->leftJoin('tbl_unit', 'pd.unit', '=', 'tbl_unit.id')
-            ->where('businesses_details.id', $id)
-            ->where('businesses_details.is_active', true)
-            ->where('businesses_details.is_deleted', 0)
-            ->select(
-                'businesses_details.id',
-                'pd.id as pd_id',
-                'businesses_details.product_name',
-                'businesses_details.description',
-                'pd.part_item_id',
-                'pd.quantity',
-                'pd.unit',
-                'tbl_unit.name as unit_name',
-                'pd.business_details_id',
-                'pd.material_send_production',
-                'business_application_processes.store_material_sent_date'
-            )
-            ->distinct()
-            ->get();
-            $productDetails = $dataOutputByid->first(); // Assuming the first entry contains the product details
-            $dataGroupedById = $dataOutputByid->groupBy('business_details_id');
-    
-            return [
-                'productDetails' => $productDetails,
-                'dataGroupedById' => $dataGroupedById
-            ];
-        } catch (\Exception $e) {
-            return [
-                'status' => 'error',
-                'msg' => $e->getMessage()
-            ];
-        }
-    }
     public function editProductQuantityTracking($id) {
         try {
             $array_to_be_check = [
@@ -319,81 +268,181 @@ class ProductionRepository  {
             ];
         }
     }
+  
+     public function editProduct($id){
+            try {
+                if (!$id) {
+                    return [
+                        'status' => 'error',
+                        'msg' => 'Invalid product ID.'
+                    ];
+                }
+                $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+                        $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+                    })
+                    ->leftJoin('designs', function ($join) {
+                        $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+                    })
+                    ->leftJoin('businesses_details', function ($join) {
+                        $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+                    })
+                    ->leftJoin('design_revision_for_prod', function ($join) {
+                        $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+                    })
+                    ->leftJoin('purchase_orders', function ($join) {
+                        $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+                    })
+                    ->leftJoin('production_details as pd', function ($join) {
+                        $join->on('business_application_processes.business_details_id', '=', 'pd.business_details_id');
+                    })
+                    ->leftJoin('tbl_unit', 'pd.unit', '=', 'tbl_unit.id')
+                    ->where('businesses_details.id', $id)
+                    ->where('businesses_details.is_active', true)
+                    ->where('pd.is_deleted', 0)
+                    ->select(
+                        'businesses_details.id',
+                        'pd.id as pd_id',
+                        'businesses_details.product_name',
+                        'businesses_details.description',
+                        'pd.part_item_id',
+                        'pd.quantity',
+                        'pd.unit',
+                        'tbl_unit.name as unit_name',
+                        'pd.business_details_id',
+                        'pd.material_send_production',
+                        'designs.bom_image',
+                        'designs.design_image',
+                        'business_application_processes.store_material_sent_date'
+                    )
+                    ->get();
+
+                // Extract product details
+                $productDetails = $dataOutputByid->first();
+
+                // Group data by business_details_id
+                $dataGroupedById = $dataOutputByid->groupBy('business_details_id');
+
+                return [
+                    'status' => 'success',
+                    'productDetails' => $productDetails,
+                    'dataGroupedById' => $dataGroupedById
+                ];
+            } catch (\Exception $e) {
+                // Log the error for debugging
+                \Log::error('Error in editProduct: ' . $e->getMessage(), [
+                    'id' => $id,
+                    'trace' => $e->getTraceAsString()
+                ]);
+
+                return [
+                    'status' => 'error',
+                    'msg' => 'Failed to fetch product details. Please try again.'
+                ];
+        }
+    }
+    public function updateProductMaterial($request) {
+        try {
+            $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $request->business_details_id)->firstOrFail();
+            
+            $errorMessages = []; // Array to hold error messages
+    
+            // Loop through the addmore array and update or create new ProductionDetails
+            foreach ($request->addmore as $item) {
+                // First, check if part_item_id already exists with material_send_production == 0
+                $existingDetail = ProductionDetails::where('business_details_id', $request->business_details_id)
+                    ->where('part_item_id', $item['part_no_id'])
+                    ->where('material_send_production', 0)
+                    ->where('quantity_minus_status', 'pending')
+                    ->first();
+                   
+                    if ($existingDetail) {
+                   
+                    $existingDetail->part_item_id = $item['part_no_id'];
+                    $existingDetail->quantity = $item['quantity'];
+                    $existingDetail->unit = $item['unit'];
+                    $existingDetail->material_send_production = '0';
+                    $existingDetail->quantity_minus_status = 'pending';
+                    $existingDetail->save();
+                } else {
+                    $dataOutput = new ProductionDetails();
+                $dataOutput->part_item_id = $item['part_no_id'];
+                $dataOutput->quantity = $item['quantity'];
+                $dataOutput->unit = $item['unit'];
+                $dataOutput->quantity_minus_status = 'pending';
+                $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
+                $dataOutput->business_id = $dataOutput_ProductionDetails->business_id;
+                $dataOutput->design_id = $dataOutput_ProductionDetails->design_id;
+                $dataOutput->business_details_id = $dataOutput_ProductionDetails->business_details_id;
+                $dataOutput->production_id = $dataOutput_ProductionDetails->production_id;
+                
+                $dataOutput->save();
+                // if ($dataOutput->material_send_production == 1) {
+                //     $itemStock = ItemStock::where('part_item_id', $item['part_no_id'])->first();
+                //     if ($itemStock) {
+                //         if ($itemStock->quantity >= $item['quantity']) {
+                //             $itemStock->quantity -= $item['quantity'];
+                //             $itemStock->save();
+                //         } else {
+                //             $errorMessages[] = "Not enough stock for part item ID: " . $item['part_no_id'];
+                //         }
+                //     } else {
+                //         $errorMessages[] = "Item stock not found for part item ID: " . $item['part_no_id'];
+                //     }
+                // }
+            }
+        }
+            if (!empty($errorMessages)) {
+                return [
+                    'status' => 'error',
+                    'errors' => $errorMessages 
+                ];
+            }
+            $businessOutput = BusinessApplicationProcesses::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)
+                ->firstOrFail();
+            $businessOutput->product_production_inprocess_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_INPROCESS_FOR_PRODUCTION');
+            $businessOutput->save();
+    
+            return [
+                'status' => 'success',
+                'message' => 'Production materials updated successfully.',
+                'updated_details' => $request->all()
+            ];
+    
+        } catch (\Exception $e) {
+            return [
+                'status' => 'error',
+                'error' => $e->getMessage() 
+            ];
+        }
+    }
+
     public function destroyAddmoreStoreItem($id){
         try {
             $deleteDataById = ProductionDetails::find($id);
-            // dd($deleteDataById);
-            // die();
-            $deleteDataById->delete();
-            return $deleteDataById;
-        
-        } catch (\Exception $e) {
-            return $e;
-        }    }
-public function updateProductMaterial($request) {
-    try {
-        // Fetch existing production details based on the business_details_id
-        $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $request->business_details_id)->get();
-
-        $dataOutput_Production = ProductionModel::where('business_details_id', $request->business_details_id)->firstOrFail();
-        $dataOutput_Production->store_status_quantity_tracking = 'incomplete-store';
-        $dataOutput_Production->save();
-
-        foreach ($request->addmore as $item) {
-            if (isset($item['part_item_id']) && !empty($item['part_item_id'])) {
-                if (isset($item['id']) && $item['id'] != '') {
-                    // Update existing record
-                    $dataOutput = ProductionDetails::find($item['id']);
-                    if ($dataOutput) {
-                        $dataOutput->part_item_id = $item['part_item_id'];
-                        $dataOutput->quantity = $item['quantity'] ?? 0;
-                        $dataOutput->unit = $item['unit'] ?? '';
-                        $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
-                        $dataOutput->save();
-
-                       
-                    }
-                } else {
-                    // Create new ProductionDetails record for each row
-                    $newRow = new ProductionDetails();
-                    $newRow->part_item_id = $item['part_item_id'];
-                    $newRow->quantity = $item['quantity'] ?? 0;
-                    $newRow->unit = $item['unit'] ?? '';
-                    $newRow->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
-                    $newRow->quantity_minus_status = 'pending';
-                    // Set the necessary relationships
-                    $newRow->business_id = $dataOutput_ProductionDetails->first()->business_id ?? null;
-                    $newRow->design_id = $dataOutput_ProductionDetails->first()->design_id ?? null;
-                    $newRow->business_details_id = $request->business_details_id;
-                    $newRow->production_id = $dataOutput_ProductionDetails->first()->production_id ?? null;
-
-                    $newRow->save();
-                }
+    
+            if ($deleteDataById) {
+                // Perform a soft delete by setting is_deleted = 1
+                $deleteDataById->is_deleted = 1;
+                $deleteDataById->save();
+                
+                return [
+                    'status' => 'success',
+                    'message' => 'Record marked as deleted successfully.',
+                    'data' => $deleteDataById
+                ];
+            } else {
+                return [
+                    'status' => 'error',
+                    'message' => 'Record not found.'
+                ];
             }
-        }
-    // Update admin view and notification status with the new off canvas status
-    $update_data_admin['off_canvas_status'] = 17;
-    $update_data_business['off_canvas_status'] = 17;
-    $update_data_admin['is_view'] = '0';
-    $update_data_business['material_received_from_store'] = '0';
-    AdminView::where('business_details_id', $dataOutput_Production->business_details_id)
-        ->update($update_data_admin);
-
-    NotificationStatus::where('business_details_id', $dataOutput_Production->business_details_id)
-        ->update($update_data_business);
-        return [
-            'status' => 'success',
-            'message' => 'Production materials updated successfully.',
-            'updated_details' => $request->all()
-        ];
-    } catch (\Exception $e) {
-        return [
-            'status' => 'error',
-            'message' => 'Failed to update production materials.',
-            'error' => $e->getMessage()
-        ];
+    
+        } catch (\Exception $e) {
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ];
+        }    
     }
-}
-
     
 }

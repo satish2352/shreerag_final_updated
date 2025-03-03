@@ -27,14 +27,6 @@ class AllListController extends Controller
     public function getAllNewRequirement( Request $request ) {
         try {
             $data_output = $this->service->getAllNewRequirement();
-            //    $first_business_id = optional( $data_output->first() )->id;
-            //     if ( $first_business_id ) {
-            //     $update_data[ 'prod_is_view' ] = '1';
-            //     NotificationStatus::where( 'prod_is_view', '0' )
-            //         ->where( 'business_id', $first_business_id )
-            //         ->update( $update_data );
-            // }
-
             return view( 'organizations.productions.product.list_design_received_for_production', compact( 'data_output' ) );
         } catch ( \Exception $e ) {
             return $e;
@@ -178,34 +170,6 @@ class AllListController extends Controller
             return $e;
         }
     }
-    
-    // public function getAllListMaterialRecievedToProductionBusinessWise( $id ) {
-    //     try {
-    //         $data_output = $this->service->getAllListMaterialRecievedToProductionBusinessWise( $id );
-        
-    //         if ( $data_output->isNotEmpty() ) {
-    //             foreach ( $data_output as $data ) {
-    //                 $business_details_id = $data->business_details_id;
-
-    //                 if ( !empty( $business_details_id ) ) {
-    //                     $update_data[ 'material_received_from_store' ] = '1';
-    //                     NotificationStatus::where( 'material_received_from_store', '0' )
-    //                     ->where( 'business_details_id', $business_details_id )
-    //                     ->update( $update_data );
-    //                 }
-    //             }
-    //         } else {
-    //             return view( 'organizations.productions.product.list-recived-bussinesswise', [
-    //                 'data_output' => [],
-    //                 'message' => 'No data found for designs received for correction'
-    //             ] );
-    //         }
-    //         return view( 'organizations.productions.product.list-recived-bussinesswise', compact( 'data_output' ) );
-    //     } catch ( \Exception $e ) {
-    //         return $e;
-    //     }
-    // }
-
     public function getAllCompletedProduction() {
         try {
             $data_output = $this->service->getAllCompletedProduction();

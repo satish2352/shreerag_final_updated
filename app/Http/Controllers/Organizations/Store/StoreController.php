@@ -299,126 +299,63 @@ class StoreController extends Controller
             return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $e->getMessage()]);
         }
     }
-    
-    public function editProduct($id) {
+    public function generateSRstoreDept(Request $request)
+    {
         try {
-            $editData = $this->service->editProduct($id);
-            $dataOutputPartItem = PartItem::where('is_active', true)->get();
-            // $dataOutputUser = User::where('is_active', true)->get();
-            $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
-            return view('organizations.store.list.edit-recived-inprocess-production-material', [
-                'productDetails' => $editData['productDetails'],
-                'dataGroupedById' => $editData['dataGroupedById'],
-                'dataOutputPartItem' => $dataOutputPartItem,
-                'dataOutputUnitMaster'=>$dataOutputUnitMaster,
-                // 'dataOutputUser'=>$dataOutputUser,
-                'id' => $id
-            ]);
-        } catch (\Exception $e) {
-            return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
-        }
-    }
-        
-    public function updateProductMaterial(Request $request) {
-        $rules = [
-        ];
-        
-        $messages = [
-        ];
-        
-        $validation = Validator::make($request->all(), $rules, $messages);
-        
-        if ($validation->fails()) {
-            return redirect()->back()->withInput()->withErrors($validation);
-        }
-    
-        try {
-            $updateData = $this->service->updateProductMaterial($request);
-    
-            if ($updateData['status'] == 'success') {
-                return redirect('storedept/list-product-inprocess-received-from-production')->with(['status' => 'success', 'msg' => $updateData['message']]);
-            } else {
-                return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $updateData['message']]);
+            if (empty($request->id)) {
+                return redirect()->back()->with('error', 'GRN ID is required.');
             }
+            $gatepass = GRNModel::where('id', $request->id)->first();
+        
+            if (!$gatepass) {
+                return redirect()->back()->with('error', 'GRN not found.');
+            }
+            $store_receipt_no_generate = str_replace(['-', ':', ' '], '', date('YmdHis'));
+            $gatepass->store_remark = $request->store_remark;
+            $gatepass->store_receipt_no_generate = $store_receipt_no_generate;
+            $gatepass->grn_status_sanction = config('constants.STORE_DEPARTMENT.STORE_RECIEPT_GENRATED_SENT_TO_FINANCE_GRN_WISE');
+
+            if ($gatepass->save()) {
+                return redirect('storedept/list-material-received-from-quality')
+                    ->with('success', 'GRN updated successfully.');
+            }
+
+            // $update_data_admin['off_canvas_status'] = 30;
+            // $update_data_business['off_canvas_status'] = 30;
+            // $update_data_admin['is_view'] = '0';
+            // $update_data_business['prod_store_sr_gr_send_fianance'] = 0;
+            // AdminView::where('business_details_id', $business_application->business_details_id)
+            //     ->update($update_data_admin);
+            //     NotificationStatus::where('business_details_id', $business_application->business_details_id)
+            //     ->update($update_data_business);
+
+            return redirect()->back()->with('error', 'Failed to update GRN.');
         } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+            // Log the exception
+            \Log::error('Error in storeGRN: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'An error occurred while updating GRN.');
         }
     }
-//     public function generateSRstoreDept($request)
-// {
-//     try {
-//         dd($request);
-//         die();
-//         // Validate input
-//         if (empty($request->id)) {
-//             return redirect()->back()->with('error', 'GRN ID is required.');
-//         }
-
-//         // Fetch the existing GRN record
-//         $gatepass = GRNModel::where('id', $request->id)->first();
-//         dd($gatepass);
-//         die();
-//         if (!$gatepass) {
-//             return redirect()->back()->with('error', 'GRN not found.');
-//         }
-
-//         // Generate a unique GRN number
-//         $store_receipt_no_generate = 'GRN' . str_replace(['-', ':', ' '], '', date('YmdHis'));
-
-//         // Update the existing GRN entry
-//         $gatepass->store_remark = $request->store_remark;
-//         $gatepass->store_receipt_no_generate = $store_receipt_no_generate;
-
-//         if ($gatepass->save()) {
-//             return redirect('storedept/list-material-received-from-quality')
-//                 ->with('success', 'GRN updated successfully.');
-//         }
-
-//         return redirect()->back()->with('error', 'Failed to update GRN.');
-//     } catch (\Exception $e) {
-//         // Log the exception
-//         \Log::error('Error in storeGRN: ' . $e->getMessage());
-
-//         return redirect()->back()->with('error', 'An error occurred while updating GRN.');
-//     }
-// }
-
-public function generateSRstoreDept(Request $request)
-{
-    try {
-        if (empty($request->id)) {
-            return redirect()->back()->with('error', 'GRN ID is required.');
-        }
-        $gatepass = GRNModel::where('id', $request->id)->first();
-      
-        if (!$gatepass) {
-            return redirect()->back()->with('error', 'GRN not found.');
-        }
-        $store_receipt_no_generate = str_replace(['-', ':', ' '], '', date('YmdHis'));
-        $gatepass->store_remark = $request->store_remark;
-        $gatepass->store_receipt_no_generate = $store_receipt_no_generate;
-        $gatepass->grn_status_sanction = config('constants.STORE_DEPARTMENT.STORE_RECIEPT_GENRATED_SENT_TO_FINANCE_GRN_WISE');
-
-        if ($gatepass->save()) {
-            return redirect('storedept/list-material-received-from-quality')
-                ->with('success', 'GRN updated successfully.');
-        }
-
-        // $update_data_admin['off_canvas_status'] = 30;
-        // $update_data_business['off_canvas_status'] = 30;
-        // $update_data_admin['is_view'] = '0';
-        // $update_data_business['prod_store_sr_gr_send_fianance'] = 0;
-        // AdminView::where('business_details_id', $business_application->business_details_id)
-        //     ->update($update_data_admin);
-        //     NotificationStatus::where('business_details_id', $business_application->business_details_id)
-        //     ->update($update_data_business);
-
-        return redirect()->back()->with('error', 'Failed to update GRN.');
-    } catch (\Exception $e) {
-        // Log the exception
-        \Log::error('Error in storeGRN: ' . $e->getMessage());
-
-        return redirect()->back()->with('error', 'An error occurred while updating GRN.');
-    }
-}
+    public function destroyAddmoreStoreItem( Request $request )
+    {
+   
+           $delete_data_id = $request->delete_id;
+           // Get the delete ID from the request
+   
+           try {
+               $delete_record = $this->service->destroyAddmoreStoreItem( $delete_data_id );
+               if ( $delete_record ) {
+                   $msg = $delete_record[ 'msg' ];
+                   $status = $delete_record[ 'status' ];
+                   if ( $status == 'success' ) {
+                       return redirect( 'storedept/list-accepted-design-from-prod' )->with( compact( 'msg', 'status' ) );
+                   } else {
+                       return redirect()->back()->withInput()->with( compact( 'msg', 'status' ) );
+                   }
+               }
+           } catch ( \Exception $e ) {
+               return $e;
+           }
+       }
 }
