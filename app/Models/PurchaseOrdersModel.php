@@ -15,4 +15,14 @@ class PurchaseOrdersModel extends Model
         'email','gst_number','payment_terms',
         'invoice_date','items','note','total','status'
     ];
+
+    public function PurchaseOrdersModel()
+    {
+        return $this->belongsTo(Business::class, 'business_id');
+    }
+
+    public function purchaseOrderDetails()
+    {
+        return $this->hasMany(PurchaseOrderDetailsModel::class, 'purchase_id', 'id');
+    }
 }

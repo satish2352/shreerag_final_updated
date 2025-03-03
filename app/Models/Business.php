@@ -42,9 +42,9 @@ class Business extends Model
         return $this->hasMany(ProductionDetails::class, 'business_id');
     }
 
-    public function purchaseOrderModel()
+    public function PurchaseOrdersModel()
     {
-        return $this->hasMany(PurchaseOrderModel::class, 'business_id');
+        return $this->hasMany(PurchaseOrdersModel::class, 'business_id');
     }
     public function requisition()
     {
