@@ -76,7 +76,9 @@ class AllListServices
     public function getAllListMaterialRecievedToProductionBusinessWise($id)
     {
         try {
-            return $this->repo->getAllListMaterialRecievedToProductionBusinessWise($id);
+            $data_output = $this->repo->getAllListMaterialRecievedToProductionBusinessWise($id);
+            
+            return $data_output;
         } catch (\Exception $e) {
             return $e;
         }

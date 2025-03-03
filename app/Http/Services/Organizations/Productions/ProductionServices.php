@@ -55,7 +55,8 @@ use Config;
     public function editProductQuantityTracking($id) {
         try {
             $data_output = $this->repo->editProductQuantityTracking($id);
-       
+    //    dd($data_output);
+    //    die();
 return $data_output;
         } catch (\Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];

@@ -12,6 +12,12 @@
             /* Adjust font size if needed */
             /* Add any other styling as per your design */
         }
+        .month{
+            display: grid !important;
+        }
+        .year                                                                                                   {
+            display: grid !important;
+        } 
     </style>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

@@ -232,10 +232,12 @@ class ProductionRepository  {
                 ->leftJoin('production_details', function($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
                 })
+                ->leftJoin('tbl_customer_product_quantity_tracking', 'business_application_processes.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id')
                 ->where('businesses_details.id', $id)
                 // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
                 ->where('businesses_details.is_active', true)
                 ->where('businesses_details.is_deleted', 0)
+                
                 ->select(
                     'businesses_details.id',
                     'businesses_details.product_name',
@@ -249,7 +251,17 @@ class ProductionRepository  {
                     'production_details.material_send_production',
                     'designs.bom_image',
                     'designs.design_image',
-                    'business_application_processes.store_material_sent_date'
+                    'business_application_processes.store_material_sent_date',
+                    DB::raw('(SELECT SUM(t2.completed_quantity)
+                    FROM tbl_customer_product_quantity_tracking AS t2
+                    WHERE t2.business_details_id = businesses_details.id) 
+                    AS completed_quantity'),
+          DB::raw('(businesses_details.quantity - 
+                    (SELECT SUM(t2.completed_quantity)
+                    FROM tbl_customer_product_quantity_tracking AS t2
+                    WHERE t2.business_details_id = businesses_details.id)) 
+                    AS remaining_quantity'),
+          'production.updated_at'
                 )
                 ->get(); 
     
@@ -269,6 +281,66 @@ class ProductionRepository  {
         }
     }
   
+
+    public function getAllListMaterialRecievedToProductionBusinessWise($id)
+{
+    try {
+        $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+            })
+            ->leftJoin('businesses', function ($join) {
+                $join->on('business_application_processes.business_id', '=', 'businesses.id');
+            })
+            ->leftJoin('businesses_details', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+            })
+            ->leftJoin('tbl_customer_product_quantity_tracking', 'business_application_processes.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id')
+            ->leftJoin('purchase_orders', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+            })
+            ->where('businesses_details.id', $id)
+            ->where('businesses_details.is_active', true)
+            ->where('businesses.is_deleted', 0)
+            ->select(
+                'business_application_processes.id',
+                'businesses.id as business_id',
+                'businesses.customer_po_number',
+                'businesses.title',
+                'businesses_details.id as business_details_id',
+                'businesses_details.product_name',
+                'businesses_details.quantity',
+                'businesses_details.description',
+                'businesses.remarks',
+                DB::raw('(SELECT SUM(t2.completed_quantity)
+                          FROM tbl_customer_product_quantity_tracking AS t2
+                          WHERE t2.business_details_id = businesses_details.id) 
+                          AS completed_quantity'),
+                DB::raw('(businesses_details.quantity - 
+                          (SELECT SUM(t2.completed_quantity)
+                          FROM tbl_customer_product_quantity_tracking AS t2
+                          WHERE t2.business_details_id = businesses_details.id)) 
+                          AS remaining_quantity'),
+                'production.updated_at'
+            )
+            ->groupBy(
+                'business_application_processes.id',
+                'businesses.id',
+                'businesses.customer_po_number',
+                'businesses.title',
+                'businesses_details.id',
+                'businesses_details.product_name',
+                'businesses_details.quantity',
+                'businesses_details.description',
+                'businesses.remarks',
+                'production.updated_at'
+            )
+            ->get();
+
+        return $data_output;
+    } catch (\Exception $e) {
+        return $e;
+    }
+}
      public function editProduct($id){
             try {
                 if (!$id) {

@@ -74,9 +74,16 @@
                                                     <label for="quantity">Actual Quantity :</label>
                                                     <input type="text" class="form-control" id="quantity" name="quantity" value="{{ $productDetails->quantity }}" placeholder="Enter Quantity" readonly>
                                                 </div>
-                                             
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="completed_quantity">Completed Quantity <span
+                                                    <label for="completed_quantity"> Completed Production :</label>
+                                                    <input type="text" class="form-control" id="completed_quantity" name="completed_quantity" value="{{ $productDetails->completed_quantity }}" placeholder="Enter Quantity" readonly>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="remaining_quantity"> Balance Quantity :</label>
+                                                    <input type="text" class="form-control" id="remaining_quantity" name="remaining_quantity" value="{{ $productDetails->remaining_quantity }}" placeholder="Enter Quantity" readonly>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <label for="completed_quantity">Complete Quantity <span
                                                         class="red-text">*</span> : </label>
                                                     <input type="text" class="form-control" id="completed_quantity" name="completed_quantity" value="" placeholder="Enter Completed Quantity" >
                                                 </div>
