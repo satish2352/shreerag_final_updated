@@ -102,45 +102,45 @@ class DashboardController extends Controller {
                 ->orWhere('logistics_status_id', 1145);
         })
             ->count();
-    //     $data_output_offcanvas = BusinessApplicationProcesses::leftJoin('businesses', 'business_application_processes.business_id', '=', 'businesses.id')
-    // ->leftJoin('businesses_details', 'business_application_processes.business_details_id', '=', 'businesses_details.id')
-    // ->leftJoin('designs', 'business_application_processes.business_details_id', '=', 'designs.business_details_id')
-    // ->leftJoin('design_revision_for_prod', 'business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id')
-    // ->leftJoin('purchase_orders', 'business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id')
-    // ->leftJoin('tbl_customer_product_quantity_tracking', 'business_application_processes.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id')
-    // ->leftJoin('gatepass', 'business_application_processes.business_details_id', '=', 'gatepass.business_details_id')
-    // ->where('businesses.is_active', 1)
-    // ->where('businesses.is_deleted', 0)
-    // ->select(
-    //     'businesses.customer_po_number', 
-    //     'businesses.title', 
-    //     'businesses_details.product_name',
-    //     'business_application_processes.business_status_id',
-    //     'businesses.updated_at', 
-    //     'business_application_processes.design_status_id',
-    //     'business_application_processes.production_status_id', 
-    //     'business_application_processes.store_status_id',
-    //     'purchase_orders.purchase_status_from_purchase',
-    //     'purchase_orders.finanace_store_receipt_status_id', 
-    //     'purchase_orders.purchase_status_from_owner',
-    //     'purchase_orders.security_status_id', 
-    //     'purchase_orders.quality_status_id', 
-    //     'purchase_orders.finanace_store_receipt_status_id',
-    //     'business_application_processes.logistics_status_id', 
-    //     'business_application_processes.dispatch_status_id',
-    //     'design_revision_for_prod.reject_reason_prod',
-    //     'designs.design_image', 
-    //     'designs.bom_image',
-    //     'business_application_processes.off_canvas_status', 
-    //     'tbl_customer_product_quantity_tracking.quantity_tracking_status', 
-    //     'tbl_customer_product_quantity_tracking.completed_quantity', 
-    //     'gatepass.po_tracking_status', 
-    //     'gatepass.tracking_id', 
-    //     'purchase_orders.purchase_orders_id'
-    // )
-    // ->orderBy('businesses.updated_at', 'desc')
-    // ->get()
-    // ->groupBy('customer_po_number');
+        $offcanvas = BusinessApplicationProcesses::leftJoin('businesses', 'business_application_processes.business_id', '=', 'businesses.id')
+    ->leftJoin('businesses_details', 'business_application_processes.business_details_id', '=', 'businesses_details.id')
+    ->leftJoin('designs', 'business_application_processes.business_details_id', '=', 'designs.business_details_id')
+    ->leftJoin('design_revision_for_prod', 'business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id')
+    ->leftJoin('purchase_orders', 'business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id')
+    ->leftJoin('tbl_customer_product_quantity_tracking', 'business_application_processes.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id')
+    ->leftJoin('gatepass', 'business_application_processes.business_details_id', '=', 'gatepass.business_details_id')
+    ->where('businesses.is_active', 1)
+    ->where('businesses.is_deleted', 0)
+    ->select(
+        'businesses.customer_po_number', 
+        'businesses.title', 
+        'businesses_details.product_name',
+        'business_application_processes.business_status_id',
+        'businesses.updated_at', 
+        'business_application_processes.design_status_id',
+        'business_application_processes.production_status_id', 
+        'business_application_processes.store_status_id',
+        'purchase_orders.purchase_status_from_purchase',
+        'purchase_orders.finanace_store_receipt_status_id', 
+        'purchase_orders.purchase_status_from_owner',
+        'purchase_orders.security_status_id', 
+        'purchase_orders.quality_status_id', 
+        'purchase_orders.finanace_store_receipt_status_id',
+        'business_application_processes.logistics_status_id', 
+        'business_application_processes.dispatch_status_id',
+        'design_revision_for_prod.reject_reason_prod',
+        'designs.design_image', 
+        'designs.bom_image',
+        'business_application_processes.off_canvas_status', 
+        'tbl_customer_product_quantity_tracking.quantity_tracking_status', 
+        'tbl_customer_product_quantity_tracking.completed_quantity', 
+        'gatepass.po_tracking_status', 
+        'gatepass.tracking_id', 
+        'purchase_orders.purchase_orders_id'
+    )
+    ->orderBy('businesses.updated_at', 'desc')
+    ->get()
+    ->groupBy('customer_po_number');
 
                 $product_count = Products::where('is_active', 1)->where('is_deleted', 0)->count();
     // end owner========================
@@ -491,6 +491,9 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
             'product_count'=>$product_count,
             
         ];
+        $offcanvas = [
+            'offcanvas' => $offcanvas,
+        ];
         $department_count =[
             'department_total_count' => $department_count,
         ];
@@ -586,7 +589,8 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
             'employee_rejected_leave_request' => $employee_rejected_leave_request,
         ];
 
-        return view('admin.pages.dashboard.dashboard', ['return_data' => $counts,'department_count' =>$department_count, 'cms_counts' =>$cms_counts, 'logistics_counts'=>$logistics_counts, 'design_dept_counts'=>$design_dept_counts,
+        
+        return view('admin.pages.dashboard.dashboard', ['return_data' => $counts,'offcanvas' => $offcanvas,'department_count' =>$department_count, 'cms_counts' =>$cms_counts, 'logistics_counts'=>$logistics_counts, 'design_dept_counts'=>$design_dept_counts,
     'production_dept_counts'=>$production_dept_counts, 'store_dept_counts'=>$store_dept_counts,
 'purchase_dept_counts'=>$purchase_dept_counts, 'secuirty_dept_counts'=>$secuirty_dept_counts, 'quality_dept_counts'=>$quality_dept_counts,'fianance_counts'=>$fianance_counts,
 'inventory_dept_counts'=>$inventory_dept_counts,'dispatch_counts'=>$dispatch_counts, 'hr_counts'=>$hr_counts, 'employee_counts'=>$employee_counts, 'employee_leave_type'=>$employee_leave_type ]);

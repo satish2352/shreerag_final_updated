@@ -9,7 +9,7 @@
                         </div>
 
                         <div class="col-sm-6 col-12 text-sm-end">
-                            {{-- <div class="mx-n1">
+                            <div class="mx-n1">
                                 <a href="#" class="btn  btn-sm btn-primary mx-1"
                                     type="button" data-bs-toggle="offcanvas"
                                     data-bs-target="#offcanvasRight"
@@ -19,7 +19,7 @@
                                     </span>
 
                                 </a>
-                            </div> --}}
+                            </div>
                             {{-- <div class="mx-n1">
                                 <a href="#" class="btn btn-sm btn-primary mx-1 load-offcanvas-data" 
                                     type="button" data-bs-toggle="offcanvas" 
@@ -356,7 +356,7 @@
 
     </div>
 </div>
-{{-- <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
     aria-labelledby="offcanvasRightLabel">
     <div class="offcanvas-header">
         <h5 id="offcanvasRightLabel">Customer PO List</h5>
@@ -365,7 +365,11 @@
     </div>
     <div class="offcanvas-body">
         <div class="accordion" id="accordionExample">
-            @foreach ($return_data['data_output_offcanvas'] as $po_number => $grouped_data)
+            <?php
+// dd($offcanvas['offcanvas']);
+// die();
+            ?>
+            @foreach ($offcanvas['offcanvas'] as $po_number => $grouped_data)
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="heading{{ $loop->index }}">
                         <button class="accordion-button" type="button"
@@ -453,8 +457,8 @@
     </div>
     
    
-</div> --}}
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
+</div>
+{{-- <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
     aria-labelledby="offcanvasRightLabel">
     <div class="offcanvas-header">
         <h5 id="offcanvasRightLabel">Customer PO List</h5>
@@ -583,4 +587,159 @@
         }
     });
     </script>
-    
+     --}}
+
+     {{-- <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
+    aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasRightLabel">Customer PO List</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <!-- Loading Spinner -->
+        <div id="loadingIndicator" style="display: none; text-align: center;">
+            <i class="fa fa-spinner fa-spin fa-3x"></i>
+        </div>
+
+        <!-- Dynamic Data will be loaded here -->
+        <div id="offcanvasContent"></div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+    let page = 1;
+    let isLoading = false; // Prevent multiple AJAX calls
+    let hasMorePages = true; // Track if more pages exist
+
+    function loadOffcanvasData() {
+        if (isLoading || !hasMorePages) return; // Stop loading if already in progress or no more pages
+
+        let offcanvasContent = $('#offcanvasContent');
+        let loadingIndicator = $('#loadingIndicator');
+
+        isLoading = true; // Prevent duplicate calls
+        loadingIndicator.show();
+
+        $.ajax({
+            url: "{{ route('get-offcanvas-data') }}?page=" + page,
+            type: "GET",
+            dataType: "json",
+            success: function(response) {
+                // console.log(response);
+                // alert(JSON.stringify(response)); 
+                loadingIndicator.hide();
+                isLoading = false; // Allow next requests
+
+                if (response && Object.keys(response).length > 0) {
+                    let contentHtml = '';
+
+                    // Loop through each PO number and its grouped data
+                    // Object.entries(response).forEach(([po_number, grouped_data], index) => {
+                    //     let firstItem = grouped_data[0];
+
+        // **Sort PO numbers in descending order**
+        let sortedPOs = Object.keys(response).sort((a, b) => b - a);
+
+sortedPOs.forEach((po_number, index) => {
+    let grouped_data = response[po_number];
+
+    // **Sort items inside each PO number by created_at or another field (if needed)**
+    grouped_data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+    let firstItem = grouped_data[0];
+
+                        contentHtml += `
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading${index}">
+                                    <button class="accordion-button" type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapse${index}"
+                                        aria-expanded="true"
+                                        aria-controls="collapse${index}">
+                                        ${po_number} - ${firstItem.title}
+                                    </button>
+                                </h2>
+                                <div id="collapse${index}" class="accordion-collapse collapse"
+                                    aria-labelledby="heading${index}"
+                                    data-bs-parent="#accordionExample">
+                                    <div class="accordion-body" style="overflow-y: auto; max-height: 80vh; padding-bottom: 20px;">
+                                        <ul class="list-unstyled">`;
+
+                        // Inner loop to iterate over grouped data
+                        grouped_data.forEach(data => {
+                            let statusMessage = getStatusMessage(data);
+                            let randomColor = generateRandomColor(); // Function to generate random color
+
+                            contentHtml += `<li class="right-side" style="color:#${randomColor};">
+                                <b>${data.product_name}</b> : ${statusMessage}
+                            </li>`;
+                        });
+
+                        contentHtml += `</ul></div></div></div>`;
+                    });
+
+                    offcanvasContent.append(contentHtml);
+
+                    // Check if more pages exist
+                    hasMorePages = response.next_page_url !== null;
+                    if (hasMorePages) {
+                        page++; // Increment page for next request
+                    }
+                } else {
+                    hasMorePages = false; // No more pages exist
+                }
+            },
+            error: function(xhr, status, error) {
+                loadingIndicator.hide();
+                isLoading = false; // Reset loading state
+                offcanvasContent.append('<p class="text-danger">Error loading data. Please try again.</p>');
+            }
+        });
+    }
+
+    // Detect scrolling to bottom and load more data
+    $('#offcanvasRight').on('scroll', function() {
+        if (!isLoading && hasMorePages) {
+            let scrollBottom = $(this).scrollTop() + $(this).innerHeight();
+            let scrollThreshold = this.scrollHeight - 50; // Load more slightly before reaching bottom
+            if (scrollBottom >= scrollThreshold) {
+                loadOffcanvasData();
+            }
+        }
+    });
+
+    // Initial load
+    loadOffcanvasData();
+
+    // Function to generate status message
+    function getStatusMessage(data) {
+        let statusMessages = {
+            3005: `Dispatch Department Product Dispatch Completed Quantity ${data.completed_quantity}`,
+            3004: `Finance Department sent to Dispatch Department ${data.completed_quantity}`,
+            3003: `Finance Department Received from Logistics Department Quantity ${data.completed_quantity}`,
+            3002: `Logistics Department Submitted Form ${data.completed_quantity}`,
+            3001: `Production Department Completed Production and Received Logistics Department Quantity ${data.completed_quantity}`,
+            4003: `Store Department forward to Production Department`,
+            4002: `Quality Department (Generated GRN) and Store Department Material Received PO ${data.purchase_orders_id} & ${data.tracking_id} time`,
+            4001: `Security Department Received Material and PO ${data.purchase_orders_id} also Generated Gate Pass ${data.tracking_id} time`,
+            25: `Purchase Department PO ${data.purchase_orders_id} Send to Vendor`,
+            24: `Purchase Department Approved Owner`,
+            23: `Purchase Department`,
+            16: `Store Department submitted requisition form`,
+            15: `Accepted Production Department and send to Store Department`,
+            14: `Corrected Design Submitted to Production Department`,
+            13: `Rejected Design in Production Department`,
+            12: `Design Department Submitted Design and Received Production Department`,
+            11: `Business Department Request sent to Design Department`
+        };
+        return statusMessages[data.off_canvas_status] || "Unknown Department";
+    }
+
+    // Function to generate a random hex color
+    function generateRandomColor() {
+        return Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+    }
+});
+
+</script> --}}

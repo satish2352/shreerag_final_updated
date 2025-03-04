@@ -75,6 +75,7 @@
                                                 <th>Description</th>
                                                 <th>Quantity</th>
                                                 <th>Completed Production</th>
+                                                <th>Total Completed Production</th>
                                                 <th>Balance Quantity</th>
                                             </tr>
                                         </thead>
@@ -87,6 +88,7 @@
                                                     <td>{{ $data->product_name }}</td>
                                                     <td>{{ $data->description }}</td>
                                                     <td>{{ $data->quantity }}</td>
+                                                    <td><b>{{ $data->completed_quantity }}</b></td>
                                                     <td>{{ $data->cumulative_completed_quantity }}</td>
                                                     <td>{{ $data->remaining_quantity }}</td>
                                                 </tr>
