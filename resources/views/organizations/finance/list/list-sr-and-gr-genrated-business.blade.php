@@ -80,10 +80,11 @@
                                                 <th data-field="vendor_name" data-editable="false">Vendor Name</th>
 
                                                 <th data-field="vendor_email" data-editable="false">Vendor Email Id</th>
-                                                <th data-field="vendor_name" data-editable="false">Vendor Name</th>
+                                                {{-- <th data-field="vendor_name" data-editable="false">Vendor Name</th> --}}
                                                 <th data-field="contact_no" data-editable="false">Vendor Contact No</th>
-                                                <th data-field="vendor_address" data-editable="false">Vendor Address</th>
+                                                <th data-field="vendor_company_name" data-editable="false">Vendor Company Name</th>
                                                 <th data-field="gst_no" data-editable="false">GST No.</th>
+                                                <th data-field="vendor_address" data-editable="false">Vendor Address</th>
                                                 <th data-field="action" data-editable="false">Action</th>
                                             </tr>
                                         </thead>
@@ -102,11 +103,12 @@
                                                     <td>{{ ucwords($data->store_receipt_no_generate) }}</td>
                                                     <td>{{ ucwords($data->store_remark) }}</td>
                                                     <td>{{ ucwords($data->vendor_name) }}</td>
-                                                    <td>{{ ucwords($data->vendor_company_name) }}</td>
                                                     <td>{{ ucwords($data->vendor_email) }}</td>
                                                     <td>{{ ucwords($data->contact_no) }}</td>
-                                                    <td>{{ ucwords($data->vendor_address) }}</td>
+                                                    <td>{{ ucwords($data->vendor_company_name) }}</td>
                                                     <td>{{ ucwords($data->gst_no) }}</td>
+                                                    <td>{{ ucwords($data->vendor_address) }}</td>
+                                                   
                                                     <td>
 
                                                         <div style="display: flex; align-items: center;">

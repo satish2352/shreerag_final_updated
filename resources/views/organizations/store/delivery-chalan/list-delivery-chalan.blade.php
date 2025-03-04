@@ -91,6 +91,8 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="#">#</th>
+                                                <th data-field="updated_at" data-editable="false">Date</th>
+                                                <th data-field="dc_number" data-editable="false">DC No.</th>
                                                 <th data-field="customer_po_number" data-editable="false"> PO Number</th>
                                                 <th data-field="customer_po_no" data-editable="false">Customer PO Number
                                                 </th>
@@ -110,6 +112,8 @@
 
                                                     <td>{{ $loop->iteration }}</td>
                                                     {{-- <td>{{ucwords($data->customer_po_number)}}</td> --}}
+                                                    <td>{{ucwords($data->updated_at)}}</td>
+                                                    <td>{{ucwords($data->dc_number)}}</td>
                                                     <td>
                                                         {{ $data->customer_po_number ? ucwords($data->customer_po_number) : 'N/A' }}
                                                     </td>

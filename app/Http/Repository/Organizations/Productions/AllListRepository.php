@@ -552,7 +552,7 @@ public function getAllCompletedProduction() {
                 DB::raw('tbl_customer_product_quantity_tracking.updated_at AS tracking_updated_at'),
                 DB::raw('tbl_customer_product_quantity_tracking.completed_quantity AS completed_quantity')
             )
-            ->orderBy('updated_at', 'desc')
+            ->orderBy('tbl_customer_product_quantity_tracking.updated_at', 'desc')
             ->get();
 
         return $data_output;

@@ -107,12 +107,6 @@
                                                         value=" @if (old('truck_no')) {{ old('truck_no') }}@else{{ $editData->truck_no }} @endif" readonly>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="truck_no">Truck Number:  <span class="text-danger">*</span></label>
-                                                    <input class="form-control" name="truck_no" id="truck_no"
-                                                        placeholder="Enter the customer po number"
-                                                        value=" @if (old('truck_no')) {{ old('truck_no') }}@else{{ $editData->truck_no }} @endif" readonly>
-                                                </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="vehicle_type">Vehicle Type: <span class="text-danger">*</span></label>
                                                     <input class="form-control" name="vehicle_type" id="vehicle_type"
                                                            placeholder="Enter Vehicle Type"

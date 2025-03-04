@@ -31,7 +31,9 @@ class InventoryRepository  {
         ->leftJoin('tbl_group_master', function ($join) {
             $join->on('tbl_part_item.group_type_id', '=', 'tbl_group_master.id');
         })
-        
+        ->leftJoin('tbl_rack_master', function ($join) {
+            $join->on('tbl_part_item.rack_id', '=', 'tbl_rack_master.id');
+        })
         ->select(
             'tbl_item_stock.id',
             'tbl_part_item.id',
@@ -46,6 +48,8 @@ class InventoryRepository  {
             'tbl_part_item.hsn_id',
             'tbl_hsn.name as hsn_name',
             'tbl_part_item.group_type_id',
+            'tbl_part_item.rack_id',
+            'tbl_rack_master.name as rack_name',
             'tbl_group_master.name as group_name',
         )
         // ->whereNotNull('tbl_item_stock.quantity')

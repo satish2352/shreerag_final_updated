@@ -73,10 +73,10 @@
                                                 <th>PO Number</th>
                                                 <th>Product Name</th>
                                                 <th>Description</th>
-                                                <th>Quantity</th>
+                                                <th>PO Quantity</th>
                                                 <th>Completed Production</th>
-                                                <th>Total Completed Production</th>
                                                 <th>Balance Quantity</th>
+                                                <th>Total Completed Production</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -89,8 +89,8 @@
                                                     <td>{{ $data->description }}</td>
                                                     <td>{{ $data->quantity }}</td>
                                                     <td><b>{{ $data->completed_quantity }}</b></td>
-                                                    <td>{{ $data->cumulative_completed_quantity }}</td>
                                                     <td>{{ $data->remaining_quantity }}</td>
+                                                    <td>{{ $data->cumulative_completed_quantity }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

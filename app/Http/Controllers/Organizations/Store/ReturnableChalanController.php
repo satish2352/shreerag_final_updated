@@ -53,7 +53,7 @@ class ReturnableChalanController extends Controller
           ->where('tbl_returnable_chalan.is_deleted', 0)
         ->select('tbl_returnable_chalan.id','tbl_returnable_chalan.vendor_id','tbl_returnable_chalan.transport_id',
         'tbl_returnable_chalan.business_id','tbl_returnable_chalan.vehicle_id','vendors.vendor_name'
-        ,'purchase_orders.purchase_orders_id','tbl_transport_name.name as transport_name','tbl_vehicle_type.name as vehicle_name','tbl_returnable_chalan.customer_po_no'
+        ,'tbl_returnable_chalan.dc_number','tbl_returnable_chalan.updated_at','purchase_orders.purchase_orders_id','tbl_transport_name.name as transport_name','tbl_vehicle_type.name as vehicle_name','tbl_returnable_chalan.customer_po_no'
         )->orderBy('tbl_returnable_chalan.updated_at', 'desc')
         ->get();        
         return view(
