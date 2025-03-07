@@ -169,6 +169,9 @@ class StoreController extends Controller
     //         ]);
     //     }
     // }
+
+
+    
     public function checkStockQuantity(Request $request)
 {
     try {
@@ -188,8 +191,7 @@ class StoreController extends Controller
 
         // Fetch part item from the database
         $partItem = ItemStock::find($partItemId);
-// dd($partItem);
-// die();
+
         if (!$partItem) {
             return response()->json([
                 'status' => 'error',
