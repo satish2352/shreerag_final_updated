@@ -14,6 +14,13 @@ class ProductServices
     {
         $this->repo = new ProductServicesRepository();
     } 
+    public function getAllProductLimit(){
+        try {
+            return $this->repo->getAllProductLimit();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    } 
     public function getAllProduct(){
         try {
             return $this->repo->getAllProduct();
@@ -21,6 +28,7 @@ class ProductServices
             return $e;
         }
     } 
+    
     public function getAllServices(){
         try {
             return $this->repo->getAllServices();

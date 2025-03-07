@@ -138,7 +138,7 @@
         <div class="container">
             <div class="row">
                 
-                @if (empty($data_output_product))
+                @if (empty($data_output_product_limit))
                 <div class="container">
                     <div class="row d-flex justify-content-center">
                         <h3 class="d-flex justify-content-center" style="color: #00000">No Data Found For
@@ -146,7 +146,7 @@
                     </div>
                 </div>
             @else
-                @foreach ($data_output_product as $product)
+                @foreach ($data_output_product_limit as $product)
                 <div class="col-lg-4 col-md-4 col-sm-6 mb-20 p-4">
                     <div class="team-2-each card relative border shadow-3">
                     <div class="product_img text-center">

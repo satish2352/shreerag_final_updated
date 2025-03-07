@@ -18,9 +18,11 @@ class PagesController extends Controller
     public function index()
  {
         try {
+            
+            $data_output_product_limit = $this->service->getAllProductLimit();
             $data_output_product = $this->service->getAllProduct();
             $data_output_testimonial = $this->service_index->getAllTestimonial();
-            return view( 'website.pages.index', compact( 'data_output_product', 'data_output_testimonial' ) );
+            return view( 'website.pages.index', compact('data_output_product_limit', 'data_output_product', 'data_output_testimonial' ) );
 
         } catch ( \Exception $e ) {
             return $e;
