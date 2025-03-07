@@ -227,12 +227,29 @@
     }
 
     let rowCount = purchaseOrderTable.find("tbody tr").length;
+
+    // Function to check stock availability
+
     function checkStock($row) {
     const quantity = $row.find('.quantity').val();
     const partItemId = $row.find('select[name*="part_item_id"]').val();
     const materialSendProduction = $row.find('input[name*="material_send_production"]').is(':checked') ? 1 : 0;
-    const quantityMinusStatus = $row.find('input[name*="quantity_minus_status"]').val();
+    const quantityMinusStatus = $row.find('input[name*="quantity_minus_status"]').val(); // Ensure this is captured correctly
+
     const stockAvailableMessage = $row.find('.stock-available');
+
+    console.log("Checking stock for:", {
+        part_item_id: partItemId,
+        quantity: quantity,
+        material_send_production: materialSendProduction,
+        quantity_minus_status: quantityMinusStatus
+    });
+
+    if (materialSendProduction === 1 && quantityMinusStatus === 'done') {
+        console.log("Stock check skipped (Already processed)");
+        stockAvailableMessage.text('Stock check skipped').css('color', 'blue');
+        return;
+    }
 
     if (partItemId && quantity) {
         $.ajax({
@@ -261,7 +278,6 @@
     }
 }
 
-    // Function to check stock availability
     // function checkStock($row) {
     //     const quantity = $row.find('.quantity').val();
     //     const partItemId = $row.find('select[name*="part_item_id"]').val();

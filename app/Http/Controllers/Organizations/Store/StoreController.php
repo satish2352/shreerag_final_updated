@@ -169,17 +169,80 @@ class StoreController extends Controller
     //         ]);
     //     }
     // }
+//     public function checkStockQuantity(Request $request)
+// {
+//     try {
+//         $partItemId = $request->input('part_item_id');
+//         $quantity = $request->input('quantity');
 
+//         // Log incoming values for debugging
+//         \Log::info('Checking stock quantity', ['part_item_id' => $partItemId, 'quantity' => $quantity]);
 
-    
-    public function checkStockQuantity(Request $request)
+//         // Validate inputs
+//         if (!$partItemId || !$quantity) {
+//             return response()->json([
+//                 'status' => 'error',
+//                 'message' => 'Invalid inputs. Please provide both part_item_id and quantity.',
+//             ], 400);
+//         }
+
+//         // Fetch part item from the database
+//         $partItem = ItemStock::find($partItemId);
+// // dd($partItem);
+// // die();
+//         if (!$partItem) {
+//             return response()->json([
+//                 'status' => 'error',
+//                 'message' => 'Part Item not found',
+//             ], 404);
+//         }
+
+//         // Get the available quantity
+//         $availableQuantity = $partItem->quantity ?? 0; // Ensure it's not null
+
+//         if ($quantity > $availableQuantity) {
+//             return response()->json([
+//                 'status' => 'error',
+//                 'available_quantity' => $availableQuantity,
+//                 'message' => 'Insufficient stock',
+//             ]);
+//         }
+
+//         // Sufficient stock
+//         return response()->json([
+//             'status' => 'success',
+//             'available_quantity' => $availableQuantity,
+//         ]);
+//     } catch (\Exception $e) {
+//         \Log::error('Error in checkStockQuantity:', ['error' => $e->getMessage()]);
+//         return response()->json([
+//             'status' => 'error',
+//             'message' => 'Internal Server Error',
+//         ], 500);
+//     }
+// }
+public function checkStockQuantity(Request $request)
 {
     try {
         $partItemId = $request->input('part_item_id');
         $quantity = $request->input('quantity');
+        $materialSendProduction = $request->input('material_send_production');
+        $quantityMinusStatus = $request->input('quantity_minus_status');
 
-        // Log incoming values for debugging
-        \Log::info('Checking stock quantity', ['part_item_id' => $partItemId, 'quantity' => $quantity]);
+        \Log::info('Checking stock quantity', [
+            'part_item_id' => $partItemId,
+            'quantity' => $quantity,
+            'material_send_production' => $materialSendProduction,
+            'quantity_minus_status' => $quantityMinusStatus
+        ]);
+
+        // If already processed, SKIP checking stock
+        if ($materialSendProduction == 1 && $quantityMinusStatus == 'done') {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Stock check skipped (already processed)',
+            ]);
+        }
 
         // Validate inputs
         if (!$partItemId || !$quantity) {
@@ -189,7 +252,7 @@ class StoreController extends Controller
             ], 400);
         }
 
-        // Fetch part item from the database
+        // Fetch the part item stock
         $partItem = ItemStock::find($partItemId);
 
         if (!$partItem) {
@@ -200,7 +263,7 @@ class StoreController extends Controller
         }
 
         // Get the available quantity
-        $availableQuantity = $partItem->quantity ?? 0; // Ensure it's not null
+        $availableQuantity = $partItem->quantity ?? 0;
 
         if ($quantity > $availableQuantity) {
             return response()->json([
