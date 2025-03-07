@@ -48,7 +48,7 @@
                             <img src="{{ Config::get('DocumentConstant.PRODUCT_VIEW') }}{{ $product['image'] }}" alt="">            
                         </div>
                         <div class="team-info transition-4">
-                            <h3 class="ml-30">
+                            <h3 class="ml-30" style="font-size:20px;">
                             <a 
                            
                             data-id="{{ $product['id'] }}"
