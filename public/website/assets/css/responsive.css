@@ -164,10 +164,10 @@
     } */
  
     .pfonts{
-        height: 8pc;
+        /* height: 8pc; */
         opacity: 67%;
         color: #fff;
-        font-size: 21px;
+        font-size: 17px !important;
            /* padding-right: 95px!important;
         padding-left: 100px !important; */
      
@@ -391,7 +391,7 @@
     .pfonts{
         opacity: 67%;
         color: #fff;
-        font-size: 20px;
+        font-size: 17px !important;
         padding-right: 1px;
         padding-left: 1px;
     }
@@ -1732,7 +1732,7 @@ Custom media queries
  }
 
  /* iPad Air */
- @
+ 
 
  @media only screen and (min-width: 576px) and (max-width: 1024px){
     #ddimg1{

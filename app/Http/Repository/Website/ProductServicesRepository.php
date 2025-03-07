@@ -17,7 +17,9 @@ class ProductServicesRepository  {
 
     public function getAllProduct(){
         try {
-            $data_output = Products::where('is_active','=',true);
+            $data_output = Products::where('is_active','=',true) ->where('is_deleted', 0)
+            ->limit(6)
+            ->get();
             $data_output =  $data_output->select('id','title','description', 'image');
             $data_output =  $data_output->orderBy('updated_at', 'desc')->get()->toArray();
             return  $data_output;
