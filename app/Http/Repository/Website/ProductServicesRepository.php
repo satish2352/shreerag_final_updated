@@ -51,7 +51,6 @@ public function getAllProduct()
             ->where('is_deleted', 0)
             ->select('id', 'title', 'description', 'image')
             ->orderBy('updated_at', 'desc')
-            ->limit(6)
             ->get()
             ->toArray(); // Convert to array if needed
 

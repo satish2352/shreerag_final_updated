@@ -78,46 +78,45 @@
                     </div>
                 </div>
             </div> --}}
-            <div class="row align-items-md-center  paddiall4">
+            <div class="row  paddiall4">
                 <div class="col-lg-4 z-5 text-center text-lg-left wow fadeIn">
                     <div class="exp-cta pr-50 pr-lg-00 servicetext">
-                        <h2 class="white text-center d-flex justify-content-center f-700 ">
-                            <span class="fontsize30 fs-1 mr-20">01</span>
-                            WOODWORKING
+                        <h2 class="white text-left d-flex justify-content-left f-700 " style="font-size:20px;">
+                            <span class=" fs-1 mr-20">01</span>
+                            Research and development.
                             <span class="green"></span>
                         </h2>
                         <p
                             class="white1 pfonts mb-55 mb-md-30  mt-30  f-500 pr-md-00  bigfont text-justify">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. stiae exercitationem debitis enim
-                            quaerat.</p>
+                            Introducing and developing new concepts with the latest technology and bringing quality products to the customers. From concept to creation, we guide your project at every stage of the product development journey. Our platform connects you with experienced professionals and leverages cutting-edge technology to help you launch innovative, market-ready products efficiently and cost-effectively.</p>
                         <!-- <a href="contact-us.html" class="btn btn-square">Contact us<i class="fas fa-long-arrow-alt-right ml-20"></i></a> -->
                     </div>
                 </div>
                 <div class="col-lg-4 z-5 text-center text-lg-left wow fadeIn ">
                     <div class="exp-cta pr-50 pr-lg-00 servicetext">
-                        <h2 class="white f-700 text-center d-flex justify-content-center f-700 ">
-                            <span class="fontsize30 fs-1 mr-20">02</span>
-                            METALWORKING
+                        <h2 class="white text-left d-flex justify-content-left f-700" style="font-size:20px;">
+                            <span class=" fs-1 mr-20">02</span>
+                            Product designing, Prototyping & Testing.
 
                         </h2>
                         <p
                             class="white1 pfonts mb-55 mb-md-30 mt-30 xxl-pr f-500 pr-md-00 bigfont text-justify">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. stiae exercitationem debitis enim
-                            quaerat</p>
+                            We are specialists in the development of technically-challenging useful and innovative physical real-world products. Our design and engineering team finds creative solutions to technical challenges, allowing your product to meet marketing, regulatory and user requirements with reasonable manufacturing cost and quality expectations by eliminating risk, executing design, and accelerating your path-to-volume production with prototyping. The technique we use depends on the quality, time and functional requirements for the part.</p>
                         <!-- <a href="contact-us.html" class="btn btn-square">Contact us<i class="fas fa-long-arrow-alt-right ml-20"></i></a> -->
                     </div>
                 </div>
                 <div class="col-lg-4 z-5 text-center text-lg-left wow fadeIn">
                     <div class="exp-cta pr-50 pr-lg-00 servicetext ">
-                        <h2 class="white f-700 text-center d-flex justify-content-center f-700 ">
-                            <span class="fontsize30 fs-1 mr-20">03</span>
-                            WOODWORKING
+                        <h2 class="white text-left d-flex justify-content-left f-700" style="font-size:20px;">
+                            <span class=" fs-1 mr-20">03</span>
+                            Engineering & Manufacturing with timely delivery.
                             <span class="green"></span>
                         </h2>
                         <p
                             class="white1 pfonts mb-55 mb-md-15 mt-30 f-500 pr-md-00 bigfont text-justify">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. stiae exercitationem debitis enim
-                            quaerat.</p>
+                            Before moving into high volume production, it is important to make sure everything is set.
+Alpha Production Intent Prototypes mimic your volume manufacturing process and allow engineers, regulators, and users to carefully assess the quality and function of your product
+We provide you with Alpha prototypes so you can move into high-volume production with confidence. Then the high volume production with timely delivery is given</p>
                         <!-- <a href="contact-us.html" class="btn btn-square">Contact us<i class="fas fa-long-arrow-alt-right ml-20"></i></a> -->
                     </div>
                 </div>
