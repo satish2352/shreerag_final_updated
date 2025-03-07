@@ -190,8 +190,8 @@
                     
                     <div class="col-lg-4 col-xx-3 z-5 text-center text-lg-left wow fadeIn">
                         <div class="exp-cta pr-50 pr-lg-00 servicetext">
-                            <h2 class="white text-center d-flex justify-content-center hptext1  f-700 mb-10">
-                                <span class="fontsize30 f-900 fs-1   mr-20">01</span>
+                            <h2 class="white text-left d-flex justify-content-left hptext1  f-700 mb-10" style="font-size:20px;">
+                                <span class=" f-900 fs-1   mr-20">01</span>
                                <span> Research and development.</span>
                                 <span class="green"></span>
                             </h2>
@@ -201,8 +201,8 @@
                     </div>
                     <div class="col-lg-4 z-5 col-xxl-3 text-center text-lg-left wow fadeIn">
                         <div class="exp-cta pr-50 pr-lg-00 servicetext">
-                            <h2 class="white f-700 text-center d-flex  justify-content-center hptext1  mb-10">
-                                <span class="fontsize30 f-900  fs-1 mr-20">02</span>
+                            <h2 class="white f-700 text-left d-flex  justify-content-left hptext1  mb-10" style="font-size:20px;">
+                                <span class="f-900  fs-1 mr-20">02</span>
                                 Product designing, Prototyping & Testing.
     
                             </h2>
@@ -212,8 +212,8 @@
                     </div>
                     <div class="col-lg-4 col-xxl-3  z-5 text-center text-lg-left wow fadeIn">
                         <div class="exp-cta pr-50 pr-lg-00 servicetext">
-                            <h2 class="white text-center d-flex justify-content-center hptext1 f-700 mb-10">
-                                <span class="fontsize30 f-900  fs-1 mr-20">03</span>
+                            <h2 class="white text-left d-flex justify-content-left hptext1 f-700 mb-10" style="font-size:20px;">
+                                <span class=" f-900  fs-1 mr-20">03</span>
                                 Engineering & Manufacturing with timely delivery.
                                 <span class="green"></span>
                             </h2>
