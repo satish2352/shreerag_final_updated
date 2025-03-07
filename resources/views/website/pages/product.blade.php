@@ -92,7 +92,7 @@
     </section>
   
 </section>
-{{-- <script src="{{ asset('js/vendor/jquery-1.11.3.min.js') }}"></script> --}}
+<script src="{{ asset('js/vendor/jquery-1.11.3.min.js') }}"></script>
 <script>
     $('.show-btn').click(function(e) {
         $("#show_id").val($(this).attr("data-id"));
