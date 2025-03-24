@@ -108,7 +108,26 @@
                                                     @endif
                                                 </div>
                                             </div>
-
+                                            <?php
+// dd($dataRackMaster);
+// die();
+                                            ?>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
+                                                <div class="form-group">
+                                                    <label for="rack_id">Rack Number (optional)</label>
+                                                    <select class="form-control" name="rack_id" id="rack_id">
+                                                        <option value="" default>Select Rack Number</option>
+                                                        @foreach ($dataRackMaster as $rack)
+                                                            <option value="{{ $rack->id }}" {{ old('rack_id', $editData->rack_id) == $rack->id ? 'selected' : '' }}>
+                                                                {{ $rack->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('rack_id'))
+                                                        <span class="red-text">{{ $errors->first('rack_id') }}</span>
+                                                    @endif
+                                                </div>
+                                            </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
                                                 <label for="basic_rate">Basic Rate <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" value="{{ old('basic_rate', $editData->basic_rate) }}" id="basic_rate" name="basic_rate" placeholder="Enter basic rate">

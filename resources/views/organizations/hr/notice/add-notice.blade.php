@@ -8,6 +8,15 @@
     .form-control{
         color: black !important;
     }
+  
+    .dropdown-menu {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    .dropdown-toggle {
+        width: 100%;
+        text-align: left;
+    }
     </style>
                             <div class="container-fluid">
                                 <div class="row">
@@ -54,19 +63,49 @@
                             <form class="forms-sample" action="{{ route('add-notice') }}" method="POST"
                                 enctype="multipart/form-data" id="regForm">
                                 @csrf
+                                <?php
+// dd($dept);
+// die();
+                                ?>
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label for="departments">Select Departments</label>
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Select Departments
+                                            </button>
+                                    
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding: 10px;">
+                                                <div class="form-check">
+                                                    <input type="checkbox" id="selectAll" value="all" class="form-check-input">
+                                                    <label for="selectAll" class="form-check-label"><b>All Departments</b></label>
+                                                </div>
+                                                <hr>
+                                    
+                                                @foreach($departments as $department)
+                                                    <div class="form-check">
+                                                        <input type="checkbox" name="department_id[]" value="{{ $department->id }}" class="form-check-input">
+                                                        <label class="form-check-label">{{ $department->department_name }}</label>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    
+                                    {{-- <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label for="company_id">Select Department <span class="text-danger">*</span></label>
                                             <select class="form-control custom-select-value" name="department_id" id="department_id">
-                                                <ul class="dropdown-menu ">
+                                                <ul class="">
                                                     <option value="">Select Department</option>
                                                     @foreach($dept as $datas)
                                                     <option value="{{$datas->id}}">{{ucfirst($datas->department_name)}}</option>
                                                     @endforeach
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label for="title">Title <span class="text-danger">*</span></label>
@@ -78,6 +117,8 @@
                                             @endif
                                         </div>
                                     </div>
+                                </div>
+                                    <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group" id="summernote_id">
                                             <label for="description">Description <span class="text-danger">*</span></label>
@@ -129,79 +170,86 @@
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
 <script>
-    $(document).ready(function() {
-        // Function to check if all input fields are filled with valid data
-        function checkFormValidity() {
-            const department_id = $('#department_id').val();
-            const title = $('#title').val();
-            const description = $('#description').val();
-            const image = $('#image').val();                    
-        }
-        
-        // Custom validation method to check file extension
-        $.validator.addMethod("fileExtension", function(value, element, param) {
-            // Get the file extension
-            const extension = value.split('.').pop().toLowerCase();
-            return $.inArray(extension, param) !== -1;
-        }, "Invalid file extension.");
+  $(document).ready(function() {
+    // Custom validation rule to ensure at least one department is selected
+    $.validator.addMethod("atLeastOneDepartment", function(value, element) {
+        return $("input[name='department_id[]']:checked").length > 0;
+    }, "Please select at least one department.");
 
-        // Custom validation method to check file size
-        $.validator.addMethod("fileSize", function(value, element, param) {
-            // Convert bytes to KB
-            const fileSizeKB = element.files[0].size / 1024;
-            return fileSizeKB >= param[0] && fileSizeKB <= param[1];
-        }, "File size must be between {0} KB and {1} KB.");
-
-        // Update the accept attribute to validate based on file extension
-        $('#image').attr('accept', 'application/pdf');
-
-        // Call the checkFormValidity function on input change
-        $('input, textarea, #image').on('input change', checkFormValidity);
-        $.validator.addMethod("spcenotallow", function(value, element) {
-            if ("select" === element.nodeName.toLowerCase()) {
-                var e = $(element).val();
-                return e && e.length > 0;
+    // Initialize form validation
+    $("#regForm").validate({
+        rules: {
+            "department_id[]": {
+                atLeastOneDepartment: true
+            },
+            title: {
+                required: true
+            },
+            description: {
+                required: true
+            },
+            image: {
+                required: true,
+                fileExtension: ["pdf"],
+                fileSize: [50, 1048] // Min 50KB, Max 1MB
             }
-            return this.checkable(element) ? this.getLength(value, element) > 0 : value.trim().length >
-                0;
-        }, "Enter Some Text");
+        },
+        messages: {
+            title: {
+                required: "Please select a title."
+            },
+            description: {
+                required: "Please enter a description."
+            },
+            image: {
+                required: "Please upload a PDF file.",
+                fileExtension: "Only PDF files are allowed.",
+                fileSize: "File size must be between 50 KB and 1 MB."
+            },
+            "department_id[]": {
+                atLeastOneDepartment: "Please select at least one department."
+            }
+        },
+        errorPlacement: function(error, element) {
+            if (element.attr("name") === "department_id[]") {
+                error.insertAfter($(".dropdown")); // Show error below the dropdown
+            } else {
+                error.insertAfter(element);
+            }
+        }
+    });
 
-        // Initialize the form validation
-        $("#regForm").validate({
-            rules: {
-                department_id: {
-                    required: true,
-                },
-                title: {
-                    required: true,
-                },
-                description: {
-                    required: true,
-                },
-                image: {
-                    required: true,
-                    fileExtension: ["pdf"],
-                    fileSize: [50, 1048], // Min 1KB and Max 2MB (2 * 1024 KB)
-                    // imageDimensions: [200, 200, 1000, 1000], // Min width x height and Max width x height
-                },
-            },
-            messages: {
-                department_id: {
-                    required: "Please slect deparment name",
-                },
-                title: {
-                    required: "Please Select Title Name",
-                },
-                description: {
-                    required: "Please Enter the Description",
-                },
-                image: {
-                    required: "Please upload an pdf.",
-                    fileExtension: "Only pdf are allowed.",
-                    fileSize: "File size must be between 50 KB and 1048 KB.",
-                    // imageDimensions: "Image dimensions must be between 200x200 and 1000x1000 pixels.",
-                },
-            },
+    // "Select All" functionality
+    $("#selectAll").change(function() {
+        $("input[name='department_id[]']").prop("checked", $(this).prop("checked"));
+    });
+
+    $("input[name='department_id[]']").change(function() {
+        if (!$(this).prop("checked")) {
+            $("#selectAll").prop("checked", false);
+        }
+    });
+
+    // Ensure dropdown remains open after a click (Bootstrap fix)
+    $('.dropdown-menu input').click(function(e) {
+        e.stopPropagation();
+    });
+});
+
+</script>
+<script>
+    // "Select All" functionality
+    document.getElementById('selectAll').addEventListener('change', function () {
+        const checkboxes = document.querySelectorAll('input[name="department_id[]"]');
+        checkboxes.forEach(cb => cb.checked = this.checked);
+    });
+
+    // Auto-check "Select All" if all departments are manually selected
+    const departmentCheckboxes = document.querySelectorAll('input[name="department_id[]"]');
+    departmentCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            const allChecked = Array.from(departmentCheckboxes).every(cb => cb.checked);
+            document.getElementById('selectAll').checked = allChecked;
         });
     });
 </script>

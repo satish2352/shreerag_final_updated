@@ -57,7 +57,7 @@
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="all-form-element-inner">
                                         <form action="{{ route('store-grn') }}" method="POST" id="addDesignsForm"
-                                            enctype="multipart/form-data">
+                                            enctype="multipart/form-data" autocomplete="off">
                                             @csrf
                                             <input type="hidden" name="id" id=""
                                             class="form-control" value="{{ $gatepassId->id }}"

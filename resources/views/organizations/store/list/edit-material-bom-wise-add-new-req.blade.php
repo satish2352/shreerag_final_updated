@@ -278,32 +278,7 @@
     }
 }
 
-    // function checkStock($row) {
-    //     const quantity = $row.find('.quantity').val();
-    //     const partItemId = $row.find('select[name*="part_item_id"]').val();
-    //     const stockAvailableMessage = $row.find('.stock-available');
-
-    //     if (partItemId && quantity) {
-    //         $.ajax({
-    //             url: '{{ route("check-stock-quantity") }}',
-    //             type: 'GET',
-    //             data: { part_item_id: partItemId, quantity: quantity },
-    //             success: function (response) {
-    //                 if (response.status === 'error') {
-    //                     stockAvailableMessage.text('Insufficient stock. Available: ' + response.available_quantity)
-    //                         .css('color', 'red');
-    //                 } else {
-    //                     stockAvailableMessage.text('Stock is sufficient').css('color', 'green');
-    //                 }
-    //             },
-    //             error: function () {
-    //                 stockAvailableMessage.text('Error checking stock').css('color', 'red');
-    //             }
-    //         });
-    //     } else {
-    //         stockAvailableMessage.text('');
-    //     }
-    // }
+   
 
     // Add new row functionality
     $("#add_more_btn").click(function () {

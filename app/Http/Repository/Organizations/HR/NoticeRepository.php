@@ -60,37 +60,78 @@ class NoticeRepository {
         }
     }
 
-    public function addAll( $request ) {
+    // public function addAll( $request ) {
+    //     try {
+    //         $data = array();
+    //         $dataOutput = new Notice();
+
+    //         $dataOutput->department_id = $request[ 'department_id' ];
+    //         $dataOutput->title = $request[ 'title' ];
+    //         $dataOutput->description = $request[ 'description' ];
+    //         $dataOutput->save();
+
+    //         $last_insert_id = $dataOutput->id;
+
+    //         $ImageName = $last_insert_id .'_' . rand( 100000, 999999 ) . '_pdf.' . $request->image->extension();
+
+    //         $finalOutput = Notice::find( $last_insert_id );
+    //         // Assuming $request directly contains the ID
+    //         $finalOutput->image = $ImageName;
+    //         // Save the image filename to the database
+    //         $finalOutput->save();
+
+    //         $data[ 'ImageName' ] = $ImageName;
+    //         return $data;
+
+    //     } catch ( \Exception $e ) {
+    //         return [
+    //             'msg' => $e,
+    //             'status' => 'error'
+    //         ];
+    //     }
+    // }
+    // public function addAll($request, $department_id) {
+    //     try {
+    //         $data = ['ImageName' => null];
+    //         $dataOutput = new Notice();
+    
+    //         $dataOutput->department_id = $department_id;  // Use department from loop
+    //         $dataOutput->title = $request['title'];
+    //         $dataOutput->description = $request['description'];
+    //         $dataOutput->save();
+    
+    //         $last_insert_id = $dataOutput->id;
+    
+    //         $ImageName = $last_insert_id . '_' . rand(100000, 999999) . '_pdf.' . $request->image->extension();
+    
+    //         $finalOutput = Notice::find($last_insert_id);
+    //         $finalOutput->image = $ImageName;
+    //         $finalOutput->save();
+    
+    //         $data['ImageName'] = $ImageName;
+    //         return $data;
+    
+    //     } catch (\Exception $e) {
+    //         return ['msg' => $e->getMessage(), 'status' => 'error', 'ImageName' => null];
+    //     }
+    // }
+    
+    public function addAll($request, $department_id, $ImageName = null) {
         try {
-            $data = array();
             $dataOutput = new Notice();
-
-            $dataOutput->department_id = $request[ 'department_id' ];
-            $dataOutput->title = $request[ 'title' ];
-            $dataOutput->description = $request[ 'description' ];
+            $dataOutput->department_id = $department_id;
+            $dataOutput->title = $request['title'];
+            $dataOutput->description = $request['description'];
+            $dataOutput->image = $ImageName;  // Reuse the same file
             $dataOutput->save();
-
-            $last_insert_id = $dataOutput->id;
-
-            $ImageName = $last_insert_id .'_' . rand( 100000, 999999 ) . '_pdf.' . $request->image->extension();
-
-            $finalOutput = Notice::find( $last_insert_id );
-            // Assuming $request directly contains the ID
-            $finalOutput->image = $ImageName;
-            // Save the image filename to the database
-            $finalOutput->save();
-
-            $data[ 'ImageName' ] = $ImageName;
-            return $data;
-
-        } catch ( \Exception $e ) {
-            return [
-                'msg' => $e,
-                'status' => 'error'
-            ];
+    
+            return $dataOutput->id;
+        } catch (\Exception $e) {
+            return ['msg' => $e->getMessage(), 'status' => 'error'];
         }
     }
-
+    
+    
     public function getById( $id ) {
         try {
             $data_output = Notice::join( 'tbl_departments', 'tbl_departments.id', '=', 'tbl_notice.department_id' )

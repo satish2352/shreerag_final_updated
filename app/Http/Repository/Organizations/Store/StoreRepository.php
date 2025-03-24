@@ -257,6 +257,10 @@ public function updateProductMaterialWiseAddNewReq($request)
                 // Use `dd` to stop execution and inspect the data
                 // dd("Second Iteration Data", $item);
             }
+
+            $quantity_minus_status = isset($item['quantity_minus_status']) ? $item['quantity_minus_status'] : null;
+            $material_send_production = isset($item['material_send_production']) ? $item['material_send_production'] : null;
+
             $existingEntry = ProductionDetails::where('business_details_id', $business_application->business_details_id)
             ->where('quantity_minus_status','pending')
             // ->where('part_item_id',$item['part_item_id'])
