@@ -300,7 +300,7 @@ public function usersLeavesDetails($id)
                 $join->on('users.id', '=', 'tbl_leaves.employee_id')
                     ->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
                     ->where('tbl_leaves.is_approved', 2)
-					->where('tbl_leaves.is_deleted', 1);
+					->where('tbl_leave_management.is_deleted', 0);
             })
             ->where('users.id', $id)
             ->where('tbl_leave_management.is_active', 1)
