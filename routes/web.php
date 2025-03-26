@@ -516,6 +516,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::post('/update-users', ['as' => 'update-users', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@update']);
         Route::any('/delete-users/{id}', ['as' => 'delete-users', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@destroy']);
         Route::any('/show-users/{id}', ['as' => 'show-users', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@show']);
+        Route::any('/users-leaves-details/{id}', ['as' => 'users-leaves-details', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@usersLeavesDetails']);
 
         Route::get('/cities', ['as' => 'cities', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@getCities']);
         Route::get('/states', ['as' => 'states', 'uses' => 'App\Http\Controllers\Organizations\HR\Employees\EmployeesHrController@getState']);

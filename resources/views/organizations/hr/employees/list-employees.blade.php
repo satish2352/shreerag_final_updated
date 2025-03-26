@@ -81,7 +81,7 @@
                                                 <th>Sr. No.</th>
                                                 <th>Name</th>
                                                 <th>Department</th>
-                                                {{-- <th>Status</th> --}}
+                                                <th>Leave Details</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -93,6 +93,16 @@
                                                         ({{ $item->u_email }})
                                                     </td>
                                                     <td>{{ $item->role_name }}</td>
+
+                                                    <td>
+                                                        <div style="display: flex; align-items: center;">
+                                                            <a href="{{ route('users-leaves-details', base64_encode($item->id)) }} "><button
+                                                                    data-toggle="tooltip" title="Trash"
+                                                                    class="pd-setting-ed"><i class="fa fa-eye"
+                                                                        aria-hidden="true"></i></button></a>
+                                                        </div>
+                                                        
+                                                    </td>
                                                     <td class="d-flex">
                                                         <div style="display: flex; align-items: center;">
                                                             <a href="{{ route('show-users', base64_encode($item->id)) }} "><button
@@ -173,8 +183,19 @@
             $("#showform").submit();
         })
     </script>
+     <script>
+        $('.leavesdetails-btn').click(function(e) {
+            alert('hii');
+            $("#leavesdetails_id").val($(this).attr("data-id"));
+            $("#leavesdetailsform").submit();
+        })
+    </script>
     <form method="POST" action="{{ url('/show-users') }}" id="showform">
         @csrf
         <input type="hidden" name="show_id" id="show_id" value="">
+    </form>
+    <form method="POST" action="{{ url('/users-leaves-details') }}" id="leavesdetailsform">
+        @csrf
+        <input type="hidden" name="leavesdetails_id" id="leavesdetails_id" value="">
     </form>
 @endsection

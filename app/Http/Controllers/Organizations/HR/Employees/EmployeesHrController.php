@@ -251,7 +251,18 @@ class EmployeesHrController extends Controller
             return $e;
         }
     }
+    public function usersLeavesDetails( Request $request ) {
+        try {
+            $data_id = base64_decode( $request->id );
 
+            $user_detail = $this->service->usersLeavesDetails( $data_id );
+
+            return view( 'organizations.hr.employees.employees-leaves-details', compact( 'user_detail' ) );
+        } catch ( \Exception $e ) {
+            return $e;
+        }
+    }
+    
     public function showParticularDetails( Request $request ) {
         try {
             $id = Auth::user()->id;

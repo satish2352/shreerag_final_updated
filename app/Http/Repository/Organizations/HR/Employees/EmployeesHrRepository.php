@@ -244,6 +244,99 @@ class EmployeesHrRepository  {
 			];
 		}
 	}
+
+// public function usersLeavesDetails($id)
+// {
+//     try {
+//         $user = User::leftJoin('tbl_roles', 'tbl_roles.id', '=', 'users.role_id')
+//             ->leftJoin('tbl_area as state_user', 'users.state', '=', 'state_user.location_id')
+//             ->leftJoin('tbl_area as city_user', 'users.city', '=', 'city_user.location_id')
+//             ->leftJoin('tbl_leaves', 'users.id', '=', 'tbl_leaves.employee_id')
+//             ->leftJoin('tbl_leave_management', 'tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
+//             ->where('users.id', $id)
+// 			->where('tbl_leaves.is_approved', 2)
+//             ->select(
+//                 'users.f_name', 
+//                 'users.m_name', 
+//                 'users.l_name',
+//                 'tbl_roles.role_name',
+//                 'tbl_leave_management.name as leave_type_name',
+//                 'tbl_leave_management.leave_count',
+//                 DB::raw('SUM(tbl_leaves.leave_count) as total_leaves_taken'),
+//                 DB::raw('tbl_leave_management.leave_count - SUM(tbl_leaves.leave_count) as remaining_leaves'),
+//                 DB::raw('MONTHNAME(STR_TO_DATE(tbl_leaves.leave_end_date, "%m/%d/%Y")) as month_name')
+//             )
+//             ->groupBy(
+//                 'users.f_name', 
+//                 'users.m_name', 
+//                 'users.l_name',
+//                 'tbl_roles.role_name', 
+//                 'tbl_leave_management.id',
+//                 'tbl_leave_management.name',
+//                 'tbl_leave_management.leave_count',
+//                 DB::raw('MONTHNAME(STR_TO_DATE(tbl_leaves.leave_end_date, "%m/%d/%Y"))')
+//             )
+//             ->orderBy('month_name', 'asc')
+//             ->get();
+
+//         return $user->isNotEmpty() ? $user : null;
+
+//     } catch (\Exception $e) {
+//         return [
+//             'msg' => $e->getMessage(),
+//             'status' => 'error'
+//         ];
+//     }
+// }
+
+public function usersLeavesDetails($id)
+{
+    try {
+        $user = User::leftJoin('tbl_roles', 'tbl_roles.id', '=', 'users.role_id')
+            ->leftJoin('tbl_area as state_user', 'users.state', '=', 'state_user.location_id')
+            ->leftJoin('tbl_area as city_user', 'users.city', '=', 'city_user.location_id')
+            ->crossJoin('tbl_leave_management') 
+            ->leftJoin('tbl_leaves', function($join) use ($id) {
+                $join->on('users.id', '=', 'tbl_leaves.employee_id')
+                    ->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
+                    ->where('tbl_leaves.is_approved', 2);
+            })
+            ->where('users.id', $id)
+            ->where('tbl_leave_management.is_active', 1)
+            ->select(
+                'users.f_name',
+                'users.m_name',
+                'users.l_name',
+                'tbl_roles.role_name',
+                'tbl_leave_management.name as leave_type_name',
+                'tbl_leave_management.leave_count',
+                DB::raw('COALESCE(SUM(tbl_leaves.leave_count), 0) as total_leaves_taken'),
+                DB::raw('tbl_leave_management.leave_count - COALESCE(SUM(tbl_leaves.leave_count), 0) as remaining_leaves'),
+                DB::raw('IFNULL(MONTHNAME(MIN(STR_TO_DATE(tbl_leaves.leave_end_date, "%m/%d/%Y"))), "-") as month_name')
+            )
+            ->groupBy(
+                'users.f_name',
+                'users.m_name',
+                'users.l_name',
+                'tbl_roles.role_name',
+                'tbl_leave_management.id',
+                'tbl_leave_management.name',
+                'tbl_leave_management.leave_count'
+            )
+            ->orderBy('month_name', 'asc')
+            ->get();
+
+        return $user->isNotEmpty() ? $user : null;
+
+    } catch (\Exception $e) {
+        return [
+            'msg' => $e->getMessage(),
+            'status' => 'error'
+        ];
+    }
+}
+
+
 	public function showParticularDetails($id){
 		try {
 			
