@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 // use App\Http\Services\DashboardServices;
+use DB;
 use App\Models\ {
     User,
     Business,
@@ -142,15 +143,15 @@ class DashboardController extends Controller {
     ->get()
     ->groupBy('customer_po_number');
 
-                $product_count = Products::where('is_active', 1)->where('is_deleted', 0)->count();
+                // $product_count = Products::where('is_active', 1)->where('is_deleted', 0)->count();
     // end owner========================
 
-        $testimonial_count = Testimonial::where('is_active', 1)->where('is_deleted', 0)->count();
-        $product_services_count = ProductServices::where('is_active', 1)->where('is_deleted', 0)->count();
-        $team_count = Team::where('is_active',1)->count();
-        $contact_us_count = ContactUs::where('is_active',1)->count();
-        $vision_mission_count = VisionMission::where('is_active',1)->count();
-        $director_desk_count = DirectorDesk::where('is_active',1)->count();
+        // $testimonial_count = Testimonial::where('is_active', 1)->where('is_deleted', 0)->count();
+        // $product_services_count = ProductServices::where('is_active', 1)->where('is_deleted', 0)->count();
+        // $team_count = Team::where('is_active',1)->count();
+        // $contact_us_count = ContactUs::where('is_active',1)->count();
+        // $vision_mission_count = VisionMission::where('is_active',1)->count();
+        // $director_desk_count = DirectorDesk::where('is_active',1)->count();
         $need_to_check_for_payment =PurchaseOrdersModel:: leftJoin('grn_tbl', function ($join) {
             $join->on('purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id');
         })
@@ -455,6 +456,29 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         ->where('tbl_leaves.is_approved', 0)
         ->where('tbl_leaves.is_deleted', 0)
         ->count();
+
+
+        $user_leaves_status = User::crossJoin('tbl_leave_management') 
+        ->leftJoin('tbl_leaves', function($join) use ($ses_userId) {
+            $join->on('users.id', '=', 'tbl_leaves.employee_id')
+                ->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
+                ->where('tbl_leaves.is_approved', 2);
+        })
+        ->where('users.id', $ses_userId)
+        ->where('tbl_leave_management.is_active', 1)
+        ->where('tbl_leave_management.is_deleted', 0)
+        ->select(
+            'tbl_leave_management.name as leave_type_name',
+            'tbl_leave_management.leave_count',
+            DB::raw('COALESCE(SUM(tbl_leaves.leave_count), 0) as total_leaves_taken'),
+            DB::raw('tbl_leave_management.leave_count - COALESCE(SUM(tbl_leaves.leave_count), 0) as remaining_leaves'),
+        )
+        ->groupBy(
+            'tbl_leave_management.id',
+            'tbl_leave_management.name',
+            'tbl_leave_management.leave_count'
+        )
+        ->get();
         $employee_accepted_leave_request = Leaves::leftJoin('users', function($join) {
             $join->on('tbl_leaves.employee_id', '=', 'users.id');
         })
@@ -488,7 +512,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
             'business_inprocess' => $business_inprocess_count,
             'product_inprocess' => $product_inprocess_count,
             // 'data_output_offcanvas' => $data_output_offcanvas,
-            'product_count'=>$product_count,
+            // 'product_count'=>$product_count,
             
         ];
         $offcanvas = [
@@ -498,16 +522,16 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
             'department_total_count' => $department_count,
         ];
           
-          $cms_counts = [
-            'product_count' => $product_count,
-            'testimonial_count' => $testimonial_count,
-            'product_services_count' => $product_services_count,
-            'vision_mission_count' => $vision_mission_count,
-            'director_desk_count' => $director_desk_count,
-            'team_count' => $team_count,
-            'contact_us_count' => $contact_us_count,
+        //   $cms_counts = [
+        //     'product_count' => $product_count,
+        //     'testimonial_count' => $testimonial_count,
+        //     'product_services_count' => $product_services_count,
+        //     'vision_mission_count' => $vision_mission_count,
+        //     'director_desk_count' => $director_desk_count,
+        //     'team_count' => $team_count,
+        //     'contact_us_count' => $contact_us_count,
             
-        ];
+        // ];
          $design_dept_counts = [
             'business_received_for_designs' => $business_received_for_designs,
             // 'business_design_send_to_product' => $business_design_send_to_product,
@@ -587,10 +611,12 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
             'employee_leave_request' => $employee_leave_request,
             'employee_accepted_leave_request' => $employee_accepted_leave_request,
             'employee_rejected_leave_request' => $employee_rejected_leave_request,
+            'user_leaves_status' => $user_leaves_status,
+            
         ];
 
         
-        return view('admin.pages.dashboard.dashboard', ['return_data' => $counts,'offcanvas' => $offcanvas,'department_count' =>$department_count, 'cms_counts' =>$cms_counts, 'logistics_counts'=>$logistics_counts, 'design_dept_counts'=>$design_dept_counts,
+        return view('admin.pages.dashboard.dashboard', ['return_data' => $counts,'offcanvas' => $offcanvas,'department_count' =>$department_count, 'logistics_counts'=>$logistics_counts, 'design_dept_counts'=>$design_dept_counts,
     'production_dept_counts'=>$production_dept_counts, 'store_dept_counts'=>$store_dept_counts,
 'purchase_dept_counts'=>$purchase_dept_counts, 'secuirty_dept_counts'=>$secuirty_dept_counts, 'quality_dept_counts'=>$quality_dept_counts,'fianance_counts'=>$fianance_counts,
 'inventory_dept_counts'=>$inventory_dept_counts,'dispatch_counts'=>$dispatch_counts, 'hr_counts'=>$hr_counts, 'employee_counts'=>$employee_counts, 'employee_leave_type'=>$employee_leave_type ]);

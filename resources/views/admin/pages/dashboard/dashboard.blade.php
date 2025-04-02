@@ -1596,9 +1596,72 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                    <div class="col-lg-6 col-md-6 mb-4"  >
+                                        <div class="col-lg-9 col-md-9">
+                                        <canvas id="leaveStatusChart" width="500" height="500"></canvas>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+
+                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>                            
+                            <script>
+                                // Get context from canvas
+                                const ctx = document.getElementById('leaveStatusChart').getContext('2d');
+                            
+                                // Parse PHP data into JS
+                                const leaveData = @json($employee_counts['user_leaves_status']);
+                            
+                                // Extracting the data
+                                const leaveTypes = leaveData.map(item => item.leave_type_name);
+                                const leaveCount = leaveData.map(item => parseInt(item.leave_count));
+                                const takenLeaves = leaveData.map(item => parseInt(item.total_leaves_taken) || 0);
+                                const remainingLeaves = leaveData.map(item => parseInt(item.remaining_leaves) || 0);
+                                // Define datasets
+                                const datasets = [
+                                    {
+                                        label: 'Total Leaves',
+                                        data: leaveCount,
+                                        backgroundColor: '#2d4e59',
+                                        hoverOffset: 4
+                                    },
+                                    {
+                                        label: 'Taken Leaves',
+                                        data: takenLeaves,
+                                        backgroundColor: '#33b78c',
+                                        hoverOffset: 4
+                                    },
+                                    {
+                                        label: 'Balanced Leaves',
+                                        data: remainingLeaves,
+                                        backgroundColor: '#199cc2',
+                                        hoverOffset: 4
+                                    }
+                                ];
+                            
+                                // Create the chart
+                                new Chart(ctx, {
+                                    type: 'pie',
+                                    data: {
+                                        labels: leaveTypes,
+                                        datasets: datasets
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        plugins: {
+                                            legend: {
+                                                position: 'top',
+                                            },
+                                            title: {
+                                                display: true,
+                                                text: 'Leave Status Breakdown'
+                                            }
+                                        }
+                                    }
+                                });
+                            </script>
+                            
+
                         @elseif ($role == config('constants.ROLE_ID.CMS'))
                             <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
@@ -1808,44 +1871,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <canvas id="myPieChart11" width="400" height="400"></canvas>
-                                    </div>
+                                
                                 </div>
                             </div>
-                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                            <script>
-                                // Step 2: Create Pie Chart using JavaScript
-                                const ctx = document.getElementById('myPieChart11').getContext('2d');
-
-                                // Getting PHP data into JavaScript
-                                const cmsCounts = @json($cms_counts);
-
-                                const myPieChart = new Chart(ctx, {
-                                    type: 'pie',
-                                    data: {
-                                        labels: Object.keys(cmsCounts), // Dynamically set the labels
-                                        datasets: [{
-                                            data: Object.values(cmsCounts), // Dynamically set the data values
-                                            backgroundColor: ['#243772', '#2b4288', '#3755ae', '#516ec8', '#778fd4', '#9eafe0',
-                                                '#c5cfed'
-                                            ], // Add more colors if needed
-                                        }]
-                                    },
-                                    options: {
-                                        responsive: true,
-                                        plugins: {
-                                            legend: {
-                                                position: 'top',
-                                            },
-                                            title: {
-                                                display: true,
-                                                text: 'CMS Counts Distribution'
-                                            }
-                                        }
-                                    }
-                                });
-                            </script>
+                        
                         @elseif ($role == config('constants.ROLE_ID.HIGHER_AUTHORITY'))
                         @include('admin.pages.dashboard.higher-dashboard')
                         @endif
