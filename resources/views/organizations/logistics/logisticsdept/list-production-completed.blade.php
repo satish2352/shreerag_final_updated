@@ -73,15 +73,15 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
+                                                <th data-field="tracking_updated_at" data-editable="false">Completed Date</th>
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
-                                                <th data-field="quantity" data-editable="false">Quantity</th>
-                                                <th data-field="completed_quantity" data-editable="false">Completed
-                                                    Production</th>
-                                                <th data-field="remaining_quantity" data-editable="false">Balance Quantity
-                                                </th>
+                                                <th data-field="quantity" data-editable="false">PO Quantity</th>
+                                                <th data-field="completed_quantity" data-editable="false">Completed Production</th>
+                                                <th data-field="remaining_quantity" data-editable="false">Balance Quantity</th>
+                                                <th data-field="cumulative_completed_quantity" data-editable="false">Total Completed Production</th>
 
-                                                <th data-field="updated_at" data-editable="false">Date</th>
+                                                {{-- <th data-field="updated_at" data-editable="false">Date</th> --}}
                                                 <th data-field="remark" data-editable="false">Remark</th>
                                                 <th data-field="title" data-editable="false">customer Name</th>
 
@@ -101,13 +101,15 @@
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ \Carbon\Carbon::parse($data->tracking_updated_at)->format('d-m-Y h:i A') }}</td>
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
-                                                    <td>{{ ucwords($data->quantity) }}</td>
-                                                    <td>{{ $data->cumulative_completed_quantity }}</td>
+                                                    <td>{{ ucwords($data->quantity) }}</td>                                                   
+                                                    <td><strong>{{ $data->completed_quantity }}</strong></td>
                                                     <td>{{ $data->remaining_quantity }}</td>
-                                                    <td>{{ $data->updated_at ? $data->updated_at->format('Y-m-d') : 'N/A' }}
-                                                    </td>
+                                                    <td>{{ ucwords($data->cumulative_completed_quantity) }}</td>
+                                                    {{-- <td>{{ $data->updated_at ? $data->updated_at->format('Y-m-d') : 'N/A' }}
+                                                    </td> --}}
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                     <td>{{ ucwords($data->title) }}</td>
 

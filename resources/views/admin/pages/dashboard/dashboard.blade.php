@@ -205,7 +205,6 @@
                     <div class="sparkline14-list">
                         @php
                             $role = session()->get('role_id');
-
                             $allowedRoles = [
                             config('constants.ROLE_ID.HR'),
                             config('constants.ROLE_ID.DESIGNER'),

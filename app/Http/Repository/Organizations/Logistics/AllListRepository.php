@@ -64,6 +64,9 @@ DB::raw('(businesses_details.quantity - (SELECT SUM(t2.completed_quantity)
           WHERE t2.business_details_id = businesses_details.id
             AND t2.id <= tbl_customer_product_quantity_tracking.id
          )) AS remaining_quantity'),
+         DB::raw('production.updated_at AS updated_at'),
+         DB::raw('tbl_customer_product_quantity_tracking.updated_at AS tracking_updated_at'),
+         DB::raw('tbl_customer_product_quantity_tracking.completed_quantity AS completed_quantity'),
 // DB::raw('production.updated_at AS updated_at'),
           'production.business_id',
           'production.id as productionId',
