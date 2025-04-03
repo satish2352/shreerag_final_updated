@@ -143,15 +143,15 @@ class DashboardController extends Controller {
     ->get()
     ->groupBy('customer_po_number');
 
-                // $product_count = Products::where('is_active', 1)->where('is_deleted', 0)->count();
+                $product_count = Products::where('is_active', 1)->where('is_deleted', 0)->count();
     // end owner========================
 
-        // $testimonial_count = Testimonial::where('is_active', 1)->where('is_deleted', 0)->count();
-        // $product_services_count = ProductServices::where('is_active', 1)->where('is_deleted', 0)->count();
-        // $team_count = Team::where('is_active',1)->count();
-        // $contact_us_count = ContactUs::where('is_active',1)->count();
-        // $vision_mission_count = VisionMission::where('is_active',1)->count();
-        // $director_desk_count = DirectorDesk::where('is_active',1)->count();
+        $testimonial_count = Testimonial::where('is_active', 1)->where('is_deleted', 0)->count();
+        $product_services_count = ProductServices::where('is_active', 1)->where('is_deleted', 0)->count();
+        $team_count = Team::where('is_active',1)->count();
+        $contact_us_count = ContactUs::where('is_active',1)->count();
+        $vision_mission_count = VisionMission::where('is_active',1)->count();
+        $director_desk_count = DirectorDesk::where('is_active',1)->count();
         $need_to_check_for_payment =PurchaseOrdersModel:: leftJoin('grn_tbl', function ($join) {
             $join->on('purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id');
         })
@@ -540,16 +540,16 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
             'department_total_count' => $department_count,
         ];
           
-        //   $cms_counts = [
-        //     'product_count' => $product_count,
-        //     'testimonial_count' => $testimonial_count,
-        //     'product_services_count' => $product_services_count,
-        //     'vision_mission_count' => $vision_mission_count,
-        //     'director_desk_count' => $director_desk_count,
-        //     'team_count' => $team_count,
-        //     'contact_us_count' => $contact_us_count,
+          $cms_counts = [
+            'product_count' => $product_count,
+            'testimonial_count' => $testimonial_count,
+            'product_services_count' => $product_services_count,
+            'vision_mission_count' => $vision_mission_count,
+            'director_desk_count' => $director_desk_count,
+            'team_count' => $team_count,
+            'contact_us_count' => $contact_us_count,
             
-        // ];
+        ];
          $design_dept_counts = [
             'business_received_for_designs' => $business_received_for_designs,
             // 'business_design_send_to_product' => $business_design_send_to_product,
@@ -635,7 +635,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
 
         
         return view('admin.pages.dashboard.dashboard', ['return_data' => $counts,'offcanvas' => $offcanvas,'department_count' =>$department_count, 'logistics_counts'=>$logistics_counts, 'design_dept_counts'=>$design_dept_counts,
-    'production_dept_counts'=>$production_dept_counts, 'store_dept_counts'=>$store_dept_counts,
+    'production_dept_counts'=>$production_dept_counts, 'store_dept_counts'=>$store_dept_counts, 'cms_counts'=>$cms_counts,
 'purchase_dept_counts'=>$purchase_dept_counts, 'secuirty_dept_counts'=>$secuirty_dept_counts, 'quality_dept_counts'=>$quality_dept_counts,'fianance_counts'=>$fianance_counts,
 'inventory_dept_counts'=>$inventory_dept_counts,'dispatch_counts'=>$dispatch_counts, 'hr_counts'=>$hr_counts, 'employee_counts'=>$employee_counts, 'employee_leave_type'=>$employee_leave_type ]);
     } catch (\Exception $e) {
@@ -1066,6 +1066,19 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
             //     'url' => $baseUrl . '/financedept/recive-logistics-list'
             // ];
             $count = $recived_logistics_to_fianance_count;
+        }
+        elseif($ses_userId == '10'){
+            $leave_notification= Leaves::where('notification_read_status','0')
+            ->where('is_approved','0')
+            ->select('id')
+            ->get();
+            $leave_notification_count = $leave_notification->count();
+
+            $notifications[] = ['admin_count' => $leave_notification_count,
+                'message' => 'Leave Request for Approval',
+                'url' => $baseUrl . '/hr/list-leaves-acceptedby-hr'
+            ];
+            $count = $leave_notification_count; 
         }
         elseif($ses_userId == '11'){ //logistics
             $production_completed_by_product_dept= NotificationStatus::where('off_canvas_status',18)

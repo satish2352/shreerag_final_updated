@@ -38,7 +38,26 @@ class LeavesController extends Controller
     public function getAllLeavesRequest(){
         try {
             $getOutput = $this->service->getAllLeavesRequest();
-          
+
+            if ( $getOutput->isNotEmpty() ) {
+                foreach ( $getOutput as $data ) {
+                    $user_id = $data->id;
+
+                    if ( !empty( $user_id ) ) {
+                        $update_data[ 'notification_read_status' ] = '1';
+                        Leaves::where( 'notification_read_status', '0' )
+                        ->where( 'id', $user_id )
+                        ->update( $update_data );
+                    }
+                }
+            } else {
+                return view( 'organizations.logistics.logisticsdept.list-production-completed', [
+                    'getOutput' => [],
+                    'message' => 'No data found for designs received for correction'
+                ] );
+            }
+
+
             return view('organizations.hr.leaves.list-leaves-accepted', compact('getOutput'));
         } catch (\Exception $e) {
             return $e;

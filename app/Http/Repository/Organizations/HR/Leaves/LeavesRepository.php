@@ -236,21 +236,6 @@ class LeavesRepository {
             } else {
                 // For half-day leave, count the days between start and end date
                 $leaveDaysCount = $leaveEndDate->diffInDays( $leaveStartDate ) ;
-                // Include the start day
-
-                // if ( $leaveStartDate->format( 'H:i:s' ) > '12:00:00' ) {
-                //     // If start time is after 12:00 PM, it's a half-day leave for the first day
-            //     $leaveDaysCount -= 0.5;
-            // }
-            // if ($leaveEndDate->format('H:i:s') < '12:00:00') {
-            //     // If end time is before 12:00 PM, it's a half-day leave for the last day
-                //     $leaveDaysCount -= 0.5;
-                // }
-
-                // Ensure that if there are two half-days, they count as one full day
-                // if ( $leaveDaysCount < 1 ) {
-                //     $leaveDaysCount = 1;
-                // }
             }
 
             $dataOutput->leave_count = $leaveDaysCount;
@@ -260,7 +245,9 @@ class LeavesRepository {
             $last_insert_id = $dataOutput->id;
             $finalOutput = Leaves::find( $last_insert_id );
             $finalOutput->save();
-
+            $update_data_admin[ 'notification_read_status' ] = '0';
+            Leaves::where( 'employee_id', $dataOutput->employee_id )
+            ->update( $update_data_admin );
             return [
                 'status' => 'success'
             ];
