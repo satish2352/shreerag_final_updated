@@ -35,8 +35,8 @@
                                                         aria-hidden="true"></i> Profile</a></li>
                                             <li class=""><a href="#reviews"><i class="fa fa-file-image-o"
                                                         aria-hidden="true"></i> Pictures</a></li>
-                                            <li class=""><a href="#INFORMATION"><i class="fa fa-commenting"
-                                                        aria-hidden="true"></i> Employeees</a></li>
+                                            {{-- <li class=""><a href="#INFORMATION"><i class="fa fa-commenting"
+                                                        aria-hidden="true"></i> Employeees</a></li> --}}
                                         </ul>
                                         <div id="myTabContent" class="tab-content custom-product-edit">
                                             <div class="product-tab-list tab-pane fade active in" id="description">
