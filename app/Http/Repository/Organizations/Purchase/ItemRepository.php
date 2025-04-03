@@ -139,20 +139,13 @@ class ItemRepository  {
     public function updateAll($request)
     {
         try {
-            // Fetch the part item by ID
-            $dataOutput = PartItem::find($request->part_item_id);
-            // dd($dataOutput);
-            // die();
-    
-            // Check if the record exists
+            $dataOutput = PartItem::find($request->part_item_id);    
             if (!$dataOutput) {
                 return [
                     'msg' => 'Update Data not found.',
                     'status' => 'error'
                 ];
             }
-    
-            // Update the fields
             $dataOutput->part_number = $request->part_number;
             $dataOutput->description = $request->description;
             $dataOutput->unit_id = $request->unit_id;

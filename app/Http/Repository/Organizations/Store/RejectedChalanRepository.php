@@ -62,11 +62,7 @@ class RejectedChalanRepository
     {
         try {
            $grn_id = $request->id;
-        //    dd($grn_id);
-        //    die();
-            // Find existing record
             $dataOutput = RejectedChalan::where('tbl_rejected_chalan.id', $grn_id)->first();
-        
             $dataOutput->purchase_orders_id = $request->purchase_orders_id;
             $dataOutput->grn_id = $dataOutput->grn_id;
             $dataOutput->chalan_no = $request->chalan_no;

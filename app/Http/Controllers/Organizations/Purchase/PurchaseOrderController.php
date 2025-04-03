@@ -106,14 +106,9 @@ class PurchaseOrderController extends Controller
             )
         ->orderBy('purchase_orders.updated_at', 'desc')
         ->get();
-        // dd($getOutput);
-        // die();
-
         if ( $getOutput instanceof \Illuminate\Support\Collection && $getOutput->isNotEmpty() ) {
             foreach ( $getOutput as $data ) {
                 $business_id = $data->business_details_id;
-// dd($business_id);
-// die();
                 if ( !empty( $business_id ) ) {
                     $update_data[ 'purchase_order_is_rejected_view' ] = '1';
                     NotificationStatus::where( 'purchase_order_is_rejected_view', '0' )

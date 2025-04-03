@@ -15,8 +15,6 @@ class AllListServices
     public function acceptdesignbyProduct(){
         try {
             $data_output = $this->repo->acceptdesignbyProduct();
-        //   dd($data_output);
-        //   die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -35,8 +33,6 @@ class AllListServices
     public function getAllListDesignRecievedForCorrection(){
         try {
             $data_output =  $this->repo->getAllListDesignRecievedForCorrection();
-        //   dd($data_output);
-        //   die();
            return $data_output;
         } catch (\Exception $e) {
             return $e;

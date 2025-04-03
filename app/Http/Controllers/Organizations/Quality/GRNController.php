@@ -63,68 +63,6 @@ class GRNController extends Controller
            $gatepass_id = base64_decode($id);
             $purchase_order_data = PurchaseOrdersModel::where('purchase_orders_id', '=', $purchase_ordersId)->first();
             $po_id = $purchase_order_data->id;
-            // $purchase_order_details_data = PurchaseOrderDetailsModel::leftJoin('tbl_part_item', function ($join) {
-            //     $join->on('purchase_order_details.part_no_id', '=', 'tbl_part_item.id');
-            //   })
-            //   ->leftJoin('tbl_hsn', function ($join) {
-            //     $join->on('purchase_order_details.hsn_id', '=', 'tbl_hsn.id');
-            //   })
-            //   ->leftJoin('tbl_unit', function ($join) {
-            //     $join->on('purchase_order_details.unit', '=', 'tbl_unit.id');
-            //   })
-            //   ->leftJoin('tbl_grn_po_quantity_tracking AS t', 't.part_no_id', '=', 'tbl_part_item.id')
-            // ->where('purchase_order_details.purchase_id', $po_id)
-            // ->select(
-            //     'purchase_order_details.*',
-            //     'tbl_part_item.description as part_description',
-            //     'tbl_part_item.part_number as part_number',
-            //     'tbl_unit.name as unit_name',
-            //     'tbl_hsn.name as hsn_name',
-
-            //     DB::raw('(SELECT SUM(t2.actual_quantity) 
-            //     FROM tbl_grn_po_quantity_tracking AS t2 
-            //     WHERE t2.part_no_id = tbl_part_item.id
-            // ) AS sum_actual_quantity'),
-            // DB::raw('(purchase_order_details.quantity - 
-            //     (SELECT COALESCE(SUM(t2.actual_quantity), 0) 
-            //      FROM tbl_grn_po_quantity_tracking AS t2 
-            //      WHERE t2.part_no_id = tbl_part_item.id
-            //     )
-            // ) AS remaining_quantity')
-            // )
-            //     ->get();
-            // $purchase_order_details_data = PurchaseOrderDetailsModel::leftJoin('tbl_part_item', function ($join) {
-            //     $join->on('purchase_order_details.part_no_id', '=', 'tbl_part_item.id');
-            //   })
-            //   ->leftJoin('tbl_hsn', function ($join) {
-            //     $join->on('purchase_order_details.hsn_id', '=', 'tbl_hsn.id');
-            //   })
-            //   ->leftJoin('tbl_unit', function ($join) {
-            //     $join->on('purchase_order_details.unit', '=', 'tbl_unit.id');
-            //   })
-            //   ->leftJoin('tbl_grn_po_quantity_tracking AS t', 't.part_no_id', '=', 'tbl_part_item.id')
-            //   ->where('purchase_order_details.purchase_id', $po_id)
-            //   ->select(
-            //     'purchase_order_details.*',
-            //     'tbl_part_item.description as part_description',
-            //     'tbl_part_item.part_number as part_number',
-            //     'tbl_unit.name as unit_name',
-            //     'tbl_hsn.name as hsn_name',
-            //     DB::raw('(SELECT SUM(t2.actual_quantity) 
-            //               FROM tbl_grn_po_quantity_tracking AS t2 
-            //               WHERE t2.part_no_id = tbl_part_item.id
-            //              ) AS sum_actual_quantity'),
-            //     DB::raw('(purchase_order_details.quantity - 
-            //               (SELECT COALESCE(SUM(t2.actual_quantity), 0) 
-            //                FROM tbl_grn_po_quantity_tracking AS t2 
-            //                WHERE t2.part_no_id = tbl_part_item.id
-            //               )
-            //              ) AS remaining_quantity')
-            //   )
-            // //   ->groupBy(
-               
-            // //   )
-            //   ->get();
             $purchase_order_details_data = PurchaseOrderDetailsModel::leftJoin('tbl_part_item', function ($join) {
                 $join->on('purchase_order_details.part_no_id', '=', 'tbl_part_item.id');
             })
@@ -179,12 +117,7 @@ class GRNController extends Controller
                 'tbl_unit.name',
                 'tbl_hsn.name'
             )
-            ->get();
-
-        
-        
-// dd($purchase_order_details_data);
-// die();
+            ->get();        
        $gatepassId = Gatepass::select('gatepass.id', 'gatepass.gatepass_name')
     ->where('gatepass.id', $gatepass_id) // Specify the table for clarity
     ->first();
@@ -193,76 +126,6 @@ class GRNController extends Controller
             return $e;
         }
     }
-//     public function getBalanceQuantity(Request $request)
-//     {
-//         $purchaseOrderId = $request->input('purchase_order_id');
-//         $partNoId = $request->input('description');
-// //    dd($partNoId);
-// //    die();
-//         try {
-           
-//             $sumActualQuantity = GrnPOQuantityTracking::where('purchase_order_id', $purchaseOrderId)
-//                 ->where('description', $partNoId)
-//                 ->sum('actual_quantity');
-
-//             // $totalQuantity = PurchaseOrderDetailsModel::table('purchase_order_details')
-//             //     ->where('purchase_order_id', $purchaseOrderId)
-//             //     ->where('part_no_id', $partNoId)
-//             //     ->value('quantity');
-//             $totalQuantity = PurchaseOrderDetailsModel::where('purchase_order_id', $purchaseOrderId)
-//             ->where('part_no_id', $partNoId)
-//             ->value('quantity');
-        
-//             // Calculate balance quantity
-//             $balanceQuantity = $totalQuantity - $sumActualQuantity;
-    
-//             // Return the result as JSON
-//             return response()->json([
-//                 'balance_quantity' => $balanceQuantity >= 0 ? $balanceQuantity : 0,
-//             ], 200);
-//         } catch (\Exception $e) {
-//             return response()->json([
-//                 'error' => $e->getMessage(),
-//             ], 500);
-//         }
-//     }
-
-// public function getBalanceQuantity(Request $request)
-// {
-//     $purchaseOrderId = $request->input('purchase_order_id');
-//     $partNoId = $request->input('part_no_id');
-
-//     try {
-//         // Calculate the sum of actual quantities
-//         $sumActualQuantity = GrnPOQuantityTracking::leftJoin('tbl_part_item', function ($join) {
-//             $join->on('purchase_order_details.part_no_id', '=', 'tbl_part_item.id');
-//           })
-//         ->where('purchase_order_id', $purchaseOrderId)
-        
-//             ->where('tbl_grn_po_quantity_tracking.part_no_id', $partNoId)
-//             ->sum('tbl_grn_po_quantity_tracking.actual_quantity');
-
-//         // Get the total quantity from the purchase order details
-//         $totalQuantity = PurchaseOrderDetailsModel::leftJoin('tbl_part_item', function ($join) {
-//             $join->on('purchase_order_details.part_no_id', '=', 'tbl_part_item.id');
-//           })
-//         ->where('purchase_order_details.purchase_id', $purchaseOrderId)
-//             ->where('purchase_order_detailspart_no_id', $partNoId)
-//             ->value('purchase_order_details.quantity');
-
-//         // Calculate balance quantity
-//         $balanceQuantity = $totalQuantity - $sumActualQuantity;
-
-//         // Return the result as JSON
-//         return response()->json([
-//             'balance_quantity' => $balanceQuantity >= 0 ? $balanceQuantity : 0,
-//         ], 200);
-//     } catch (\Exception $e) {
-//         return response()->json([
-//             'error' => $e->getMessage(),
-//         ], 500);
-//     }
-// }
 public function getBalanceQuantity(Request $request)
 {
     $purchaseOrderId = $request->input('purchase_order_id');

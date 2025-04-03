@@ -396,8 +396,7 @@ class ReturnableChalanController extends Controller
             } 
             
             public function destroyAddmore(Request $request)
-{
-    // dd($request); // Inspect the request data to see if delete_id is being passed
+      {
     $delete_data_id = $request->delete_id; // Get the delete ID from the request
     try {
         $delete_record = $this->service->deleteByIdAddmore($delete_data_id);

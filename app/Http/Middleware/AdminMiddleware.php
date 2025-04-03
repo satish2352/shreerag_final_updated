@@ -12,15 +12,9 @@ class AdminMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-
-
     public function handle($request, Closure $next)
     {
-     
         if ($request->session()->get('user_id')) {
-            // dd($request->session()->get('user_id'));
-            // die();
-            //$request->session()->get('role_name')
             return $next($request);
         } else {
             return redirect(route("login"));

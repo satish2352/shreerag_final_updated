@@ -365,10 +365,6 @@
     </div>
     <div class="offcanvas-body">
         <div class="accordion" id="accordionExample">
-            <?php
-// dd($offcanvas['offcanvas']);
-// die();
-            ?>
             @foreach ($offcanvas['offcanvas'] as $po_number => $grouped_data)
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="heading{{ $loop->index }}">

@@ -108,10 +108,6 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            <?php
-// dd($dataRackMaster);
-// die();
-                                            ?>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
                                                 <div class="form-group">
                                                     <label for="rack_id">Rack Number (optional)</label>

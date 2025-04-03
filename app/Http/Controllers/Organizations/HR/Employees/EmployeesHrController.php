@@ -150,8 +150,6 @@ class EmployeesHrController extends Controller
 
     public function editUsers( Request $request ) {
         $user_data = $this->service->editUsers( $request );
-        // dd($user_data );
-        // die();
         return view( 'organizations.hr.employees.edit-employees', compact( 'user_data' ) );
     }
 

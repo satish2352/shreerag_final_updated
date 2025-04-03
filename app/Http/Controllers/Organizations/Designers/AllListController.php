@@ -28,8 +28,6 @@ class AllListController extends Controller
             if ($data_output->isNotEmpty()) {
                 // Collect all IDs for updating
                 $business_ids = $data_output->pluck('business_details_id')->all();
-                // dd($business_ids);
-                // die();
                 if (!empty($business_ids)) {
                     $update_data = ['designer_is_view_accepted_design' => '1'];
     

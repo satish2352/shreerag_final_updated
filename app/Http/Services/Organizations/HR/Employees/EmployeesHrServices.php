@@ -88,8 +88,6 @@ class EmployeesHrServices
     public function usersLeavesDetails($id){
         try {
             $data_users =  $this->repo->usersLeavesDetails($id);
-        //    dd($data_users);
-        //    die();
             return  $data_users; 
         } catch (\Exception $e) {
             return $e;

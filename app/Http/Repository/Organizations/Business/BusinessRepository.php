@@ -411,23 +411,9 @@ public function deleteById($id)
             // Retrieve the purchase order and GRN models
             $purchase_order = PurchaseOrdersModel::where('purchase_orders_id', $purchase_order_id)->first();
             $grn_update = GRNModel::where('id', $business_id)->first(); // Ensure you're fetching the correct GRN based on the business_id
-//  dd( $grn);
-//  die();
-            // Check if both the purchase order and GRN exist
-            if ($grn_update) {
-
-                // dd($grn);
-                // die();
-                // Update the GRN and purchase order statuses
+            if ($grn_update) {               
                 $grn_update->grn_status_sanction = config('constants.HIGHER_AUTHORITY.INVOICE_RECEIVED_FOR_BILL_APPROVAL_TO_HIGHER_AUTHORITY_GRN_WISE');
-                // $purchase_order->purchase_order_status = 'updated_status'; // Replace 'updated_status' with the actual status
-    
-                // Save the updated GRN and purchase order
-               
                 $grn_update->save();
-                
-                // $purchase_order->save();
-    
                 return [
                     'status' => 'success',
                     'message' => 'GRN and Purchase Order updated successfully.',

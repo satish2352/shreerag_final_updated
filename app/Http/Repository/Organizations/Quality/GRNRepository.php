@@ -55,23 +55,15 @@ class GRNRepository
     public function storeGRN($request)
 {
     try {
-        // Check if the gatepass exists
         $gatepass = Gatepass::where('id', $request->id)->first();
-        // dd($gatepass);
-        // die();
         if (!$gatepass) {
             return [
                 'msg' => 'Gatepass not found.',
                 'status' => 'error'
             ];
         }
-
-        // Generate a unique GRN number
         $grn_no_generate = str_replace(array("-", ":"), "", date('Y-m-d') . time());
-
-        // Fetch purchase orders details
         $purchase_orders_details = PurchaseOrderModel::where('purchase_orders_id', $request->purchase_orders_id)->first();
-
         if (!$purchase_orders_details) {
             return [
                 'msg' => 'Purchase order not found.',

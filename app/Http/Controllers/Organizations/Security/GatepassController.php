@@ -191,8 +191,6 @@ class GatepassController extends Controller
                      'purchase_orders.note'
                    
                 )->get();
-                dd($data);
-                die();
             $purchaseOrder = $data->first();
             $purchaseOrderDetails = $data;
  

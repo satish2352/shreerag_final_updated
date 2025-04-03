@@ -153,8 +153,6 @@ class ReturnableChalanRepository
                 ->where('tbl_returnable_chalan.id', $return_id)
                 ->where('tbl_returnable_chalan.is_deleted', 0)
                 ->first();
-                // dd($purchaseOrder);
-                // die();
             if (!$purchaseOrder) {
                 throw new \Exception('Purchase order not found.');
             }

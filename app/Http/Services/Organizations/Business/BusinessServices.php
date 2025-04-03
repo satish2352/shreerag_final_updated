@@ -102,8 +102,6 @@ class BusinessServices
     {
         try {
             $rejectedPurchaseOrder = $this->repo->rejectedPurchaseOrder($id, $business_id);
-    //   dd($rejectedPurchaseOrder);
-    //   die();
             return $rejectedPurchaseOrder;
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
@@ -123,8 +121,6 @@ class BusinessServices
     {
         try {
             $acceptPurchaseOrderPaymentRelease = $this->repo->acceptPurchaseOrderPaymentRelease($id, $business_id);
-        //  dd($acceptPurchaseOrderPaymentRelease);
-        //  die();
             return $acceptPurchaseOrderPaymentRelease;
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];

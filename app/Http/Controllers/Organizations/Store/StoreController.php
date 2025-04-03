@@ -103,124 +103,6 @@ class StoreController extends Controller
             return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
         }
     }
-    // public function editProductMaterialWiseAddNewReq($id)
-    // {
-    //     try {
-    //         $editData = $this->service->editProductMaterialWiseAddNewReq($id);
-    
-    //         // Check if the returned data has an error
-    //         if (isset($editData['status']) && $editData['status'] === 'error') {
-    //             return redirect()->back()->with(['status' => 'error', 'msg' => $editData['msg']]);
-    //         }
-    
-    //         $dataOutputPartItem = PartItem::where('is_active', true)->get();
-    //         $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
-    
-    //         return view('organizations.store.list.edit-material-bom-wise-add-new-req', [
-    //             'productDetails' => $editData['productDetails'],
-    //             'dataGroupedById' => $editData['dataGroupedById'],
-    //             'dataOutputPartItem' => $dataOutputPartItem,
-    //             'dataOutputUnitMaster' => $dataOutputUnitMaster,
-    //             'id' => $id,
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
-    //     }
-    // }
-    
-    // public function checkStockQuantity(Request $request)
-    // {
-    //     $partItemId = $request->input('part_item_id');
-   
-    //     $quantity = $request->input('quantity');
-    
-    //     // Fetch part item from the database
-    //     $partItem = ItemStock::find($partItemId);
-    //     dd($partItem);
-    //     die();
-    //     if (!$partItem) {
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => 'Part Item not found'
-    //         ]);
-    //     }
-    
-    //     // Get the available quantity for the part item
-    //     $availableQuantity = $partItem->quantity; // Assuming the field is named `quantity`
-    
-    //     if ($availableQuantity === null) {
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'available_quantity' => 0
-    //         ]);
-    //     }
-    
-    //     if ($quantity > $availableQuantity) {
-    //         // If the requested quantity exceeds the available stock
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'available_quantity' => $availableQuantity
-    //         ]);
-    //     } else {
-    //         // If stock is sufficient
-    //         return response()->json([
-    //             'status' => 'success',
-    //             'available_quantity' => $availableQuantity
-    //         ]);
-    //     }
-    // }
-//     public function checkStockQuantity(Request $request)
-// {
-//     try {
-//         $partItemId = $request->input('part_item_id');
-//         $quantity = $request->input('quantity');
-
-//         // Log incoming values for debugging
-//         \Log::info('Checking stock quantity', ['part_item_id' => $partItemId, 'quantity' => $quantity]);
-
-//         // Validate inputs
-//         if (!$partItemId || !$quantity) {
-//             return response()->json([
-//                 'status' => 'error',
-//                 'message' => 'Invalid inputs. Please provide both part_item_id and quantity.',
-//             ], 400);
-//         }
-
-//         // Fetch part item from the database
-//         $partItem = ItemStock::find($partItemId);
-// // dd($partItem);
-// // die();
-//         if (!$partItem) {
-//             return response()->json([
-//                 'status' => 'error',
-//                 'message' => 'Part Item not found',
-//             ], 404);
-//         }
-
-//         // Get the available quantity
-//         $availableQuantity = $partItem->quantity ?? 0; // Ensure it's not null
-
-//         if ($quantity > $availableQuantity) {
-//             return response()->json([
-//                 'status' => 'error',
-//                 'available_quantity' => $availableQuantity,
-//                 'message' => 'Insufficient stock',
-//             ]);
-//         }
-
-//         // Sufficient stock
-//         return response()->json([
-//             'status' => 'success',
-//             'available_quantity' => $availableQuantity,
-//         ]);
-//     } catch (\Exception $e) {
-//         \Log::error('Error in checkStockQuantity:', ['error' => $e->getMessage()]);
-//         return response()->json([
-//             'status' => 'error',
-//             'message' => 'Internal Server Error',
-//         ], 500);
-//     }
-// }
 public function checkStockQuantity(Request $request)
 {
     try {
@@ -319,12 +201,7 @@ public function checkStockQuantity(Request $request)
             $purchase_orders_id = base64_decode($purchase_orders_id);
             
             $business_id = base64_decode($business_id);
-            // dd($business_id);
-            // die();
-            $editData = $this->service->editProductMaterialWiseAdd($purchase_orders_id, $business_id);
-           
-            // dd($editData);
-            // die();
+            $editData = $this->service->editProductMaterialWiseAdd($purchase_orders_id, $business_id);          
             $dataOutputPartItem = PartItem::where('is_active', true)->get();
             $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
             return view('organizations.store.list.edit-material-bom-wise-add', [
@@ -384,16 +261,6 @@ public function checkStockQuantity(Request $request)
                 return redirect('storedept/list-material-received-from-quality')
                     ->with('success', 'GRN updated successfully.');
             }
-
-            // $update_data_admin['off_canvas_status'] = 30;
-            // $update_data_business['off_canvas_status'] = 30;
-            // $update_data_admin['is_view'] = '0';
-            // $update_data_business['prod_store_sr_gr_send_fianance'] = 0;
-            // AdminView::where('business_details_id', $business_application->business_details_id)
-            //     ->update($update_data_admin);
-            //     NotificationStatus::where('business_details_id', $business_application->business_details_id)
-            //     ->update($update_data_business);
-
             return redirect()->back()->with('error', 'Failed to update GRN.');
         } catch (\Exception $e) {
             // Log the exception

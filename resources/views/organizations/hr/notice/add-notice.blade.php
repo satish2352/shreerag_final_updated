@@ -63,10 +63,6 @@
                             <form class="forms-sample" action="{{ route('add-notice') }}" method="POST"
                                 enctype="multipart/form-data" id="regForm">
                                 @csrf
-                                <?php
-// dd($dept);
-// die();
-                                ?>
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                     <div class="form-group">

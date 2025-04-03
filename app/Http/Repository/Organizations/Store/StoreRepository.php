@@ -158,38 +158,16 @@ class StoreRepository
     public function editProductMaterialWiseAddNewReq($id) {
         try {
             $id = base64_decode($id); 
-            // $purchase_orders_id = $purchase_orders_id;
-            // dd($purchase_orders_id);
-            // die();
-            // $business_id = $business_id;
-            // Fetch all related data
             $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
                 })
-                // ->leftJoin('designs', function($join) {
-                //     $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-                // })
                 ->leftJoin('businesses_details', function($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
                 })
-                // ->leftJoin('design_revision_for_prod', function($join) {
-                //     $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-                // })
-                // ->leftJoin('purchase_orders', function($join) {
-                //     $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-                // })
                 ->leftJoin('production_details', function($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
                 })
-                // ->leftJoin('grn_tbl', function($join) {
-                //     $join->on('purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id');
-                // })
-                // ->leftJoin('gatepass', function($join) {
-                //     $join->on('grn_tbl.gatepass_id', '=', 'gatepass.id');
-                // })
                 ->where('businesses_details.id', $id)
-                // ->where('purchase_orders.purchase_orders_id', $purchase_orders_id)
-                // ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
                 ->where('businesses_details.is_active', true)
                 ->where('production_details.is_deleted', 0)
                 ->select(
@@ -204,14 +182,9 @@ class StoreRepository
                     'production_details.unit',
                     'production_details.quantity_minus_status',
                     'production_details.material_send_production',
-                    // 'designs.bom_image',
-                    // 'designs.design_image',
                     'business_application_processes.store_material_sent_date'
                 )
                 ->get(); 
-                // dd($dataOutputByid);
-                // die();
-            // Extract product details and data for table
             $productDetails = $dataOutputByid->first(); // Assuming the first entry contains the product details
             $dataGroupedById = $dataOutputByid->groupBy('business_details_id');
     
@@ -247,15 +220,13 @@ public function updateProductMaterialWiseAddNewReq($request)
             ];
         }
 
-        $errorMessages = []; // To hold errors for stock validation
-    //  dd($request->addmore);
+        $errorMessages = []; 
+
         foreach ($request->addmore as $index => $item) {
             
             \Log::info("Iteration: $index", ['item' => $item]);
             
             if ($index == 4) {
-                // Use `dd` to stop execution and inspect the data
-                // dd("Second Iteration Data", $item);
             }
 
             $quantity_minus_status = isset($item['quantity_minus_status']) ? $item['quantity_minus_status'] : null;
@@ -263,12 +234,9 @@ public function updateProductMaterialWiseAddNewReq($request)
 
             $existingEntry = ProductionDetails::where('business_details_id', $business_application->business_details_id)
             ->where('quantity_minus_status','pending')
-            // ->where('part_item_id',$item['part_item_id'])
             ->where('material_send_production',0)  
                 ->first();
-            //   dd($existingEntry);
             if ($existingEntry) {
-                // dd('jjjjjjjjjjjjjj');
              if($item['quantity_minus_status'] =='pending' && $item['quantity_minus_status'] !='done'){
                 // if ($existingEntry->quantity_minus_status == 'pending' && $existingEntry->material_send_production == '0') {
                     $existingEntry->part_item_id = $item['part_item_id'];
@@ -285,8 +253,6 @@ public function updateProductMaterialWiseAddNewReq($request)
                 if ($itemStock->quantity >= $existingEntry->quantity && 
                 $existingEntry->material_send_production == 0 &&
                 $existingEntry->quantity_minus_status == 'pending') {
-                    // dd($existingEntry->quantity);
-                    // Deduct stock and update statuses
                     $itemStock->quantity -= $existingEntry->quantity ;
                     $itemStock->save();
 
@@ -316,9 +282,7 @@ public function updateProductMaterialWiseAddNewReq($request)
 
         }
             } else{
-// dd($item['quantity_minus_status']);
                 if($item['material_send_production'] == 1 && !array_key_exists('quantity_minus_status', $item)){
-// dd('eeeeeeelllllll');
                 // If no matching record exists, create a new entry
                 $newEntry = new ProductionDetails();
                 $newEntry->part_item_id = $item['part_item_id'];
@@ -330,12 +294,7 @@ public function updateProductMaterialWiseAddNewReq($request)
                 $newEntry->design_id = $dataOutput_ProductionDetails->design_id;
                 $newEntry->business_details_id = $dataOutput_ProductionDetails->business_details_id;
                 $newEntry->production_id = $dataOutput_ProductionDetails->production_id;
-                // dd($newEntry);
-                // die();
                 $newEntry->save();
-                // dd($item['quantity_minus_status']);
-                
-                    // Handle stock and quantity deduction
                     $partItemId = $newEntry->part_item_id;
             $itemStock = ItemStock::where('part_item_id', $partItemId)->first();
 

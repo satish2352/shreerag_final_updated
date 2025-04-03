@@ -67,26 +67,7 @@ class RejectedChalanController extends Controller
                     'grn_tbl.grn_date'
                 )
                 ->first();
-
-
-
-
-                // $grn_data = GRNModel::leftJoin('gatepass', function ($join) {
-                //     $join->on('grn_tbl.gatepass_id', '=', 'gatepass.id');
-                // })
-                // ->where('grn_tbl.purchase_orders_id', '=', $idtoedit)->where('grn_tbl.id', '=', $grn_id)
-                // ->select(
-                //     'grn_tbl.*',
-                //     'gatepass.*'
-                // )
-                // ->first();
-    //           dd($grn_data);
-    // die();
-                $po_id = $purchase_order_data->id;
-    
-                // $purchase_order_details_data = GrnPOQuantityTracking::where('purchase_order_id', $po_id)
-                //     ->get();
-
+                $po_id = $purchase_order_data->id;              
                      $purchase_order_details_data = GrnPOQuantityTracking::leftJoin('tbl_part_item', function ($join) {
                 $join->on('tbl_grn_po_quantity_tracking.part_no_id', '=', 'tbl_part_item.id');
               })
@@ -99,8 +80,6 @@ class RejectedChalanController extends Controller
             )
           
             ->get();
-            // dd($purchase_order_details_data);
-            // die();
             return view('organizations.store.rejected-chalan.add-rejected-chalan', compact('purchase_order_data', 'purchase_order_details_data', 'gatepass_data'));
         } catch (\Exception $e) {
             return $e;
@@ -163,7 +142,6 @@ class RejectedChalanController extends Controller
             $id = base64_decode($id);
       
             $purchase_orders_id = base64_decode($purchase_orders_id);
-            // dd($purchase_orders_id);
             $all_gatepass = $this->service->getAllRejectedChalanDetailsList($purchase_orders_id, $id);
 
             $purchase_order_data = PurchaseOrdersModel::where('purchase_orders_id', '=', $purchase_orders_id)->first();
