@@ -181,5 +181,9 @@
                 </div>
             </div>
         </div>
+        @if (!empty($employee_counts['user_leaves_status']))
+        @include('admin.pages.dashboard.leave-chart', ['leaveData' => $employee_counts['user_leaves_status']])
+        @endif
     </div>
+   
 </div>

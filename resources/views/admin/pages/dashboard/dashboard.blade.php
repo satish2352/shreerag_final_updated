@@ -205,9 +205,25 @@
                     <div class="sparkline14-list">
                         @php
                             $role = session()->get('role_id');
+
+                            $allowedRoles = [
+                            config('constants.ROLE_ID.HR'),
+                            config('constants.ROLE_ID.DESIGNER'),
+                            config('constants.ROLE_ID.PRODUCTION'),
+                            config('constants.ROLE_ID.STORE'),
+                            config('constants.ROLE_ID.PURCHASE'),
+                            config('constants.ROLE_ID.SECURITY'),
+                            config('constants.ROLE_ID.QUALITY'),
+                            config('constants.ROLE_ID.LOGISTICS'),
+                            config('constants.ROLE_ID.FINANCE'),
+                            config('constants.ROLE_ID.DISPATCH'),
+                            config('constants.ROLE_ID.EMPOLYEE')
+
+                        ];
                         @endphp
                         @if ($role == config('constants.ROLE_ID.HR'))
                         @include('admin.pages.dashboard.hr-dashboard')
+                     
                         @elseif ($role == config('constants.ROLE_ID.SUPER'))
                         @include('admin.pages.dashboard.super-dashboard')
                         @elseif ($role == config('constants.ROLE_ID.DESIGNER'))
@@ -333,8 +349,14 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    @if (!empty($employee_counts['user_leaves_status']))
+                                    @include('admin.pages.dashboard.leave-chart', ['leaveData' => $employee_counts['user_leaves_status']])
+                                    @endif
+                                        @php $department_leaves = $employee_counts['user_leaves_status'][$role] ?? []; @endphp
                                 </div>
                             </div>
+                         
                         @elseif ($role == config('constants.ROLE_ID.PRODUCTION'))
                             <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
@@ -523,6 +545,10 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @if (!empty($employee_counts['user_leaves_status']))
+                                    @include('admin.pages.dashboard.leave-chart', ['leaveData' => $employee_counts['user_leaves_status']])
+                                    @endif
+                                        @php $department_leaves = $employee_counts['user_leaves_status'][$role] ?? []; @endphp
                                 </div>
                             </div>
                         @elseif ($role == config('constants.ROLE_ID.STORE'))
@@ -741,8 +767,12 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @if (!empty($employee_counts['user_leaves_status']))
+                                    @include('admin.pages.dashboard.leave-chart', ['leaveData' => $employee_counts['user_leaves_status']])
+                                    @endif
                                 </div>
                             </div>
+                          
                         @elseif ($role == config('constants.ROLE_ID.PURCHASE'))
                             <div class="analysis-progrebar-area mg-b-15">
                                 <div class="row">
@@ -923,6 +953,9 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @if (!empty($employee_counts['user_leaves_status']))
+                                    @include('admin.pages.dashboard.leave-chart', ['leaveData' => $employee_counts['user_leaves_status']])
+                                    @endif
                                 </div>
                             </div>
                         @elseif ($role == config('constants.ROLE_ID.SECURITY'))
@@ -957,6 +990,9 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @if (!empty($employee_counts['user_leaves_status']))
+                                    @include('admin.pages.dashboard.leave-chart', ['leaveData' => $employee_counts['user_leaves_status']])
+                                    @endif
                                 </div>
                             </div>
                         @elseif ($role == config('constants.ROLE_ID.QUALITY'))
@@ -1052,11 +1088,9 @@
                                             </div>
                                         </div>
                                     </div>
-
-
-
-
-
+                                    @if (!empty($employee_counts['user_leaves_status']))
+                                    @include('admin.pages.dashboard.leave-chart', ['leaveData' => $employee_counts['user_leaves_status']])
+                                    @endif
                                 </div>
                             </div>
                         @elseif ($role == config('constants.ROLE_ID.LOGISTICS'))
@@ -1214,6 +1248,9 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @if (!empty($employee_counts['user_leaves_status']))
+                                    @include('admin.pages.dashboard.leave-chart', ['leaveData' => $employee_counts['user_leaves_status']])
+                                    @endif
                                 </div>
                             </div>
                         @elseif ($role == config('constants.ROLE_ID.FINANCE'))
@@ -1367,8 +1404,9 @@
                                             </div>
                                         </div>
                                     </div>
-
-
+                                    @if (!empty($employee_counts['user_leaves_status']))
+                                    @include('admin.pages.dashboard.leave-chart', ['leaveData' => $employee_counts['user_leaves_status']])
+                                    @endif
                                 </div>
                             </div>
                         @elseif ($role == config('constants.ROLE_ID.INVENTORY'))
@@ -1499,6 +1537,9 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @if (!empty($employee_counts['user_leaves_status']))
+                                    @include('admin.pages.dashboard.leave-chart', ['leaveData' => $employee_counts['user_leaves_status']])
+                                    @endif
                                 </div>
                             </div>
                         @elseif ($role == config('constants.ROLE_ID.EMPOLYEE'))
@@ -1596,15 +1637,18 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6 col-md-6 mb-4"  >
+                                    {{-- <div class="col-lg-6 col-md-6 mb-4"  >
                                         <div class="col-lg-9 col-md-9">
                                         <canvas id="leaveStatusChart" width="500" height="500"></canvas>
                                         </div>
-                                    </div>
+                                    </div> --}}
+                                    @if (!empty($employee_counts['user_leaves_status']))
+                                    @include('admin.pages.dashboard.leave-chart', ['leaveData' => $employee_counts['user_leaves_status']])
+                                    @endif
                                 </div>
                             </div>
 
-                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>                            
+                            {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>                            
                             <script>
                                 // Get context from canvas
                                 const ctx = document.getElementById('leaveStatusChart').getContext('2d');
@@ -1659,7 +1703,7 @@
                                         }
                                     }
                                 });
-                            </script>
+                            </script> --}}
                             
 
                         @elseif ($role == config('constants.ROLE_ID.CMS'))
@@ -1879,7 +1923,71 @@
                         @include('admin.pages.dashboard.higher-dashboard')
                         @endif
 
-
+                        {{-- <div class="col-lg-6 col-md-6 mb-4">
+                            <h4>{{ ucfirst(strtolower($role)) }} Leave Status</h4>
+                            <div class="col-lg-9 col-md-9">
+                                <canvas id="leaveStatusChart-{{ $role }}" width="500" height="500"></canvas>
+                            </div>
+                        </div>
+                        
+                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                        
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                const leaveData = @json($employee_counts['user_leaves_status']);
+                                
+                                if (leaveData.length > 0) {
+                                    const ctx = document.getElementById('leaveStatusChart-{{ $role }}').getContext('2d');
+                        
+                                    const leaveTypes = leaveData.map(item => item.leave_type_name);
+                                    const leaveCount = leaveData.map(item => parseInt(item.leave_count));
+                                    const takenLeaves = leaveData.map(item => parseInt(item.total_leaves_taken) || 0);
+                                    const remainingLeaves = leaveData.map(item => parseInt(item.remaining_leaves) || 0);
+                        
+                                    new Chart(ctx, {
+                                        type: 'pie',
+                                        data: {
+                                            labels: leaveTypes,
+                                            datasets: [
+                                                {
+                                                    label: 'Total Leaves',
+                                                    data: leaveCount,
+                                                    backgroundColor: '#2d4e59',
+                                                    hoverOffset: 4
+                                                },
+                                                {
+                                                    label: 'Taken Leaves',
+                                                    data: takenLeaves,
+                                                    backgroundColor: '#33b78c',
+                                                    hoverOffset: 4
+                                                },
+                                                {
+                                                    label: 'Balanced Leaves',
+                                                    data: remainingLeaves,
+                                                    backgroundColor: '#199cc2',
+                                                    hoverOffset: 4
+                                                }
+                                            ]
+                                        },
+                                        options: {
+                                            responsive: true,
+                                            plugins: {
+                                                legend: {
+                                                    position: 'top',
+                                                },
+                                                title: {
+                                                    display: true,
+                                                    text: '{{ ucfirst(strtolower($role)) }} Leave Status Breakdown'
+                                                }
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    document.getElementById('leaveStatusChart-{{ $role }}').parentElement.innerHTML = "<p>No leave data available for your department.</p>";
+                                }
+                            });
+                        </script> --}}
+                        
                     </div>
                 </div>
             </div>

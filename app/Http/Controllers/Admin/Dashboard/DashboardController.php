@@ -458,27 +458,45 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         ->count();
 
 
-        $user_leaves_status = User::crossJoin('tbl_leave_management') 
-        ->leftJoin('tbl_leaves', function($join) use ($ses_userId) {
-            $join->on('users.id', '=', 'tbl_leaves.employee_id')
-                ->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
-                ->where('tbl_leaves.is_approved', 2);
-        })
-        ->where('users.id', $ses_userId)
-        ->where('tbl_leave_management.is_active', 1)
-        ->where('tbl_leave_management.is_deleted', 0)
-        ->select(
-            'tbl_leave_management.name as leave_type_name',
-            'tbl_leave_management.leave_count',
-            DB::raw('COALESCE(SUM(tbl_leaves.leave_count), 0) as total_leaves_taken'),
-            DB::raw('tbl_leave_management.leave_count - COALESCE(SUM(tbl_leaves.leave_count), 0) as remaining_leaves'),
-        )
-        ->groupBy(
-            'tbl_leave_management.id',
-            'tbl_leave_management.name',
-            'tbl_leave_management.leave_count'
-        )
-        ->get();
+        // $user_leaves_status = User::crossJoin('tbl_leave_management') 
+        // ->leftJoin('tbl_leaves', function($join) use ($ses_userId) {
+        //     $join->on('users.id', '=', 'tbl_leaves.employee_id')
+        //         ->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
+        //         ->where('tbl_leaves.is_approved', 2);
+        // })
+        // ->where('users.id', $ses_userId)
+        // ->where('tbl_leave_management.is_active', 1)
+        // ->where('tbl_leave_management.is_deleted', 0)
+        // ->select(
+        //     'tbl_leave_management.name as leave_type_name',
+        //     'tbl_leave_management.leave_count',
+        //     DB::raw('COALESCE(SUM(tbl_leaves.leave_count), 0) as total_leaves_taken'),
+        //     DB::raw('tbl_leave_management.leave_count - COALESCE(SUM(tbl_leaves.leave_count), 0) as remaining_leaves'),
+        // )
+        // ->groupBy(
+        //     'tbl_leave_management.id',
+        //     'tbl_leave_management.name',
+        //     'tbl_leave_management.leave_count'
+        // )
+        // ->get();
+        $user_leaves_status = DB::table('tbl_leave_management')
+    ->leftJoin('tbl_leaves', function($join) use ($ses_userId) {
+        $join->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
+            ->where('tbl_leaves.employee_id', $ses_userId)
+            ->where('tbl_leaves.is_approved', 2);
+    })
+    ->where('tbl_leave_management.is_active', 1)
+    ->where('tbl_leave_management.is_deleted', 0)
+    ->select(
+        'tbl_leave_management.name as leave_type_name',
+        'tbl_leave_management.leave_count',
+        DB::raw('COALESCE(SUM(tbl_leaves.leave_count), 0) as total_leaves_taken'),
+        DB::raw('tbl_leave_management.leave_count - COALESCE(SUM(tbl_leaves.leave_count), 0) as remaining_leaves')
+    )
+    ->groupBy('tbl_leave_management.id', 'tbl_leave_management.name', 'tbl_leave_management.leave_count')
+    ->get();
+// dd($user_leaves_status);
+// die();
         $employee_accepted_leave_request = Leaves::leftJoin('users', function($join) {
             $join->on('tbl_leaves.employee_id', '=', 'users.id');
         })
