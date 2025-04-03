@@ -817,8 +817,12 @@
                     </li>                    -->
                     @endif
                     @if (session()->get('user_id'))
-                    @if (session()->get('role_id') != config('constants.ROLE_ID.CMS'))
-                        <li class="nav-item">
+                    {{-- @if (session()->get('role_id') != config('constants.ROLE_ID.CMS')) --}}
+                    @if (
+                        session()->get('role_id') != config('constants.ROLE_ID.CMS') &&
+                        session()->get('role_id') != config('constants.ROLE_ID.SUPER')
+                    )
+                    <li class="nav-item">
                             <a class="nav-item" href="{{ route('list-leaves') }}" aria-expanded="false">
                                 <i class="fa big-icon fa-paper-plane icon-wrap"></i>
                                 <span class="mini-click-non">Leaves Request</span>
@@ -905,7 +909,10 @@
                                     <div class="header-right-info">
                                         <ul class="nav navbar-nav mai-top-nav header-right-menu">
 
-                                            @if (session()->get('role_id') != config('constants.ROLE_ID.CMS'))
+                                            @if (
+                                                session()->get('role_id') != config('constants.ROLE_ID.CMS') &&
+                                                session()->get('role_id') != config('constants.ROLE_ID.SUPER')
+                                            )
                                             <li class="nav-item">
                                                 <a href="#" data-toggle="dropdown" role="button"
                                                     aria-expanded="false" class="nav-link dropdown-toggle"><i
