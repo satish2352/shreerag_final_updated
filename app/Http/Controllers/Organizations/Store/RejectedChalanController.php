@@ -149,8 +149,10 @@ class RejectedChalanController extends Controller
             $purchase_order_details_data = GrnPOQuantityTracking::leftJoin('tbl_part_item', 'tbl_grn_po_quantity_tracking.part_no_id', '=', 'tbl_part_item.id')
             ->leftJoin('purchase_order_details', 'tbl_grn_po_quantity_tracking.purchase_order_details_id', '=', 'purchase_order_details.id')
             ->leftJoin('tbl_unit', 'tbl_grn_po_quantity_tracking.unit', '=', 'tbl_unit.id')
+            ->leftJoin('tbl_rejected_chalan', 'tbl_grn_po_quantity_tracking.grn_id', '=', 'tbl_rejected_chalan.grn_id')
             ->where('tbl_grn_po_quantity_tracking.purchase_order_id', $po_id)
-            ->where('tbl_grn_po_quantity_tracking.grn_id', $id)
+            // ->where('tbl_grn_po_quantity_tracking.grn_id', $id)
+            ->where('tbl_rejected_chalan.id', $id)
             ->select(
                 'tbl_grn_po_quantity_tracking.purchase_order_id', 
                 'tbl_grn_po_quantity_tracking.part_no_id',
