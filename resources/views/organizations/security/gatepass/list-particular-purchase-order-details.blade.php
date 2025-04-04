@@ -186,29 +186,6 @@
                 <div class="sparkline13-list-new border-page" id="printableArea" style="padding: 10px; box-sizing: border-box;">
                     <div style="border: 1px solid black; width: 100%;">
                         <div style="border-bottom: 1px solid black; padding-bottom: 10px;">
-                            {{-- <div style="display: flex; align-items: center; justify-content: space-between; width:100%;">
-                                <div class="logo-size" style="width: 10%; text-align: left;">
-                                    <img 
-                                        src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}" 
-                                        alt="no image" 
-                                        style="width: 100px; padding: 10px;" 
-                                    />
-                                </div>
-                                <div class="middle-size" style="width: 80%; text-align: center;">
-                                    <span class="font-family-page" style="font-size: 20px; font-weight: bold; text-transform: uppercase; font-family: 'Font Awesome 5 Free'!important;">
-                                        {{ $getOrganizationData->company_name }}
-                                    </span>
-
-                                    <div style="text-align: center; margin-top: 5px;">
-                                        <span class="font-family-page header-size" style="font-size: 12px; font-family: 'Font Awesome 5 Free'!important;">
-                                            {{ $getOrganizationData->address }}, CIN {{$getOrganizationData->cin_number}} 
-                                            <br>Phone No.:{{ $getOrganizationData->mobile_number }}, Email Id : {{ $getOrganizationData->email }}
-                                            <br>GST No : {{$getOrganizationData->gst_no}}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="last-size" style="width: 10%;"></div>
-                            </div> --}}
                             <table style="width: 100%;">
                                 <tr>
                                     <!-- Left Side: Logo -->
@@ -246,29 +223,8 @@
                                     <td style="width: 10%;"></td>
                                 </tr>
                             </table>
-                            
                         </div>
-
-
-
                             <div class="d-flex justify-content-center align-items-center font-family-page" style="font-size: 20px; font-weight: bold; text-align:center;border-bottom: 1px solid black;font-family: 'Font Awesome 5 Free'!important;">PURCHASE ORDER</div>
-                            {{-- <div  style="display: flex; justify-content: space-between; padding:10px; ">
-                                <div style="width:60%;">
-                                    <div style="font-weight: bold; font-family: 'Font Awesome 5 Free'!important; font-size:13px;">To, {{ $purchaseOrder->vendor_company_name }}</div>
-                                    <div style="font-family: 'Font Awesome 5 Free'!important; font-size:13px;">{{ $purchaseOrder->vendor_address }}</div>
-                                    <div style="font-family: 'Font Awesome 5 Free'!important; font-size:13px;">GST No. : {{ $purchaseOrder->gst_no }}</div>
-                                    <div style="font-family: 'Font Awesome 5 Free'!important; font-size:13px;">Mo. No. : {{ $purchaseOrder->contact_no }}</div>
-                                    <div style="font-family: 'Font Awesome 5 Free'!important; font-size:13px;">Email Id : {{ $purchaseOrder->vendor_email }}</div>                                   
-                                </div>
-                                <div style="width:40%;display: grid;justify-content: end; font-family: 'Font Awesome 5 Free'!important;">
-                                    <div style="font-size:13px;"><b>PO. No.: {{ $purchaseOrder->purchase_orders_id }}</b></div>
-                                    <div style="font-size:13px;">Date: {{ $purchaseOrder->created_at ? $purchaseOrder->created_at->format('Y-m-d') : 'N/A' }}</div>
-                                    <div style="font-size:13px;">Quote Ref No. : {{ $purchaseOrder->quote_no }}</div>
-                                    <div style="font-size:13px;">Payment Terms : {{ $purchaseOrder->payment_terms }} DAYS</div>
-                                    <div style="font-size:13px;">Our Contact Person : {{ $purchaseOrder->contact_person_name }}</div>
-                                    <div style="font-size:13px;">Our Contact Person No.: {{ $purchaseOrder->contact_person_number }}</div>
-                                </div>
-                            </div> --}}
                             <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 13px;">
                                 <tr>
                                     <!-- Left Side Content -->
@@ -332,14 +288,6 @@
                                         <td style="border: 1px solid black;"><b>Sub Total</b></td>
                                         <td style="border-top: 1px solid black;border-bottom: 1px solid black;border-left: 1px solid black; border-right: none;  padding: 5px; text-align: right;" class="text-right"><b>{{ $purchaseOrderDetails->sum('amount') }}</b></td>
                                     </tr>
-                                    {{-- <tr style="bold; font-family: 'Font Awesome 5 Free'!important;">
-                                        <td class="no-border" colspan="3"></td>
-                                        <td class="no-border" colspan="3"></td>
-                                        <td style="border: 1px solid black;"><b>Discount Amount</b></td>
-                                        <td class="text-right" style="border: 1px solid black; text-align:right;">
-                                            {{ $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100) }} <!-- Discount Amount -->
-                                        </td>
-                                    </tr> --}}
                                     <tr style="bold; font-family: 'Font Awesome 5 Free'!important; font-size:12px;">
                                         <td class="no-border" colspan="6"></td>
                                         <td style="border: 1px solid black;"><b>Freight</b></td>
@@ -348,11 +296,6 @@
                                     <tr style="bold; font-family: 'Font Awesome 5 Free'!important; font-size:12px;">
                                         <td class="no-border" colspan="6"></td>
                                         <td style="border: 1px solid black;"><b>{{ $purchaseOrder->tax_type }} {{ $item->tax_name }}%</b></td>
-                                        {{-- <td style="border-top: 1px solid black;border-bottom:1px solid black;border-left:1px solid black; border-right:none;padding:5px; text-align:right;" class="text-right">
-                                            {{ 
-                                                ($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * ($purchaseOrder->name / 100) 
-                                            }} 
-                                        </td> --}}
                                         <td style="border-top: 1px solid black;border-bottom:1px solid black;border-left:1px solid black; border-right:none;padding:5px; text-align:right;" class="text-right">
                                            <b> {{ 
                                                 $purchaseOrderDetails->sum('amount') * ($purchaseOrder->tax_name / 100) 
@@ -371,16 +314,6 @@
                                         </td>
                                         <td class="no-border" colspan="1"></td>
                                         <td style="border: 1px solid black;"><strong>Net Total (Including {{ $purchaseOrder->tax_type }})</strong></td>
-                                        {{-- <td style="border-top: 1px solid black;border-bottom:1px solid black;border-left:1px solid black; border-right:none;padding:5px; text-align:right;" class="text-right">
-                                            <strong>  {{ 
-                                                ($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * (1 + ($purchaseOrder->tax_name / 100)) 
-                                            }} </strong>
-                                          <div>
-                                            @php
-                                            echo convertToWords(($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * (1 + ($purchaseOrder->tax_name / 100)));
-                                                                                      @endphp
-                                          </div>
-                                        </td> --}}
                                         <td style="border-top: 1px solid black; border-bottom:1px solid black; border-left:1px solid black; border-right:none; padding:5px; text-align:right;" class="text-right">
                                             <strong>  
                                                 {{ 
@@ -534,77 +467,4 @@
                 printWindow.close();
             }
         </script>
-        
-        {{-- <script>
-            function printInvoice() {
-                var contentToPrint = document.getElementById("printableArea").innerHTML;
-                var printWindow = window.open('', '', 'height=auto,width=auto');
-                printWindow.document.write('<html><head><title>Print Invoice</title>');
-                printWindow.document.write('<style>');
-                printWindow.document.write(`
-                    @media print {
-                        body {
-                            font-family: Arial, sans-serif;
-                            margin: 0;
-                            padding: 0;
-                        }
-                        .logo-size {
-                            width: 10%;
-                        }
-                        .middle-size {
-                            width: 80%;
-                        }
-                        .last-size {
-                            width: 10%;
-                        }
-                        .header-size {
-                            font-size: 13px;
-                        }
-                        #printableArea {
-                            width: 100%;
-                            margin: 0px;
-                            padding: 20px 20px 10px 20px;
-                            border-right: 1px solid black;
-                            box-sizing: border-box;
-                        }
-                        table {
-                            width: 100%;
-                            border-collapse: collapse;
-                            margin: 0;
-                        }
-                        th, td {
-                            padding: 5px;
-                            text-align: left;
-                            word-wrap: break-word;
-                        }
-                        th {
-                            background-color: #f2f2f2;
-                        }
-                        @page {
-                            size: A4;
-                            margin: 0;
-                        }
-                        html, body {
-                            width: 100%;
-                            height: 100%;
-                            margin: 0;
-                            padding: 0;
-                        }
-                        .print-button {
-                            display: none;
-                        }
-                    }
-                `);
-                printWindow.document.write('</style>');
-                printWindow.document.write('</head><body>');
-                printWindow.document.write('<div id="printableArea">');
-                printWindow.document.write(contentToPrint);
-                printWindow.document.write('</div>');
-                printWindow.document.write('</body></html>');
-                printWindow.document.close();
-                printWindow.focus();
-                printWindow.print();
-                printWindow.close();
-            }
-        </script> --}}
 @endsection

@@ -191,25 +191,6 @@
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
  
 <script>
-    // $(document).ready(function() {
-    //     var i = {!! count($editData) !!}; // Initialize i with the number of existing rows
-
-    //     $("#add").click(function() {
-    //         ++i;
-
-    //         $("#dynamicTable").append(
-    //             '<tr><td><input type="text" name="design_name_' + i + '" placeholder="Enter Product Name" class="form-control" /></td><td><input type="text" name="product_quantity_' + i + '" placeholder="Enter Product Quantity" class="form-control" /></td><td><input type="text" name="product_size_' + i + '" placeholder="Enter Product Price" class="form-control" /></td><td><input type="text" name="product_unit_' + i + '" placeholder="Enter Product Unit" class="form-control" /></td><td><button type="button" class="btn btn-danger remove-tr">Remove</button></td></tr>'
-    //         );
-    //     });
-
-    //     $(document).on("click", ".remove-tr", function() {
-    //         $(this).parents("tr").remove();
-    //     });
-
-    //     // Hide the "Add More" button initially if needed
-    //     // $("#add").hide();
-    // });
-
     $(document).ready(function() {
     var i = {!! count($editData) !!}; // Initialize i with the number of existing rows
 
@@ -223,10 +204,7 @@
 
     $(document).on("click", ".remove-tr", function() {
         $(this).parents("tr").remove();
-    });
-
-    // Hide the "Add More" button initially if needed
-    // $("#add").hide();
+    });    
 });
 
 </script>
@@ -250,32 +228,4 @@
 
     });
 </script>
-
-
-
-
-
-{{-- <script>
- $(document).on("click", ".remove-tr", function() {
-    var rowId = $(this).data('row-id');
-    var row = $(this).closest('tr');
-    alert(rowId);
-    $.ajax({
-    url: '/remove-design-details/' + rowId,
-    type: 'DELETE',
-    data: {
-        _token: '{{ csrf_token() }}'
-    },
-    success: function(response) {
-        row.remove();
-        alert(response.msg);
-    },
-    error: function(xhr, status, error) {
-        console.error(xhr.responseText);
-        alert('Error occurred. Please check console for details.');
-    }
-});
-});
-
-</script> --}}
 @endsection

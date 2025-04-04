@@ -102,15 +102,7 @@
                                         </div>
                                     </form>
                                     <div class="sparkline13-list" style="margin-top: 0px !important;">
-                                        <div class="datatable-dashv1-list custom-datatable-overright">
-                                            {{-- <div id="toolbar">
-                                                <select class="form-control">
-                                                    <option value="">Export Basic</option>
-                                                    <option value="all">Export All</option>
-                                                    <option value="selected">Export Selected</option>
-                                                </select>
-                                            </div> --}}
-            
+                                        <div class="datatable-dashv1-list custom-datatable-overright">            
                                     <div class="table-responsive" style="background-color: #fff;">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"

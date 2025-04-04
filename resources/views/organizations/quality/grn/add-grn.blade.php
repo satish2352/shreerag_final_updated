@@ -339,56 +339,11 @@
         });
     });
 </script>
-    {{-- <script>
-        $(document).ready(function() {
-            $(document).on('keyup', '.actual_quantity, .accepted_quantity', function(e) {
-                var currentRow = $(this).closest("tr");
-                var current_row_actual_quantity = currentRow.find('.actual_quantity').val();
-                var current_row_accepted_quantity = currentRow.find('.accepted_quantity').val();
-                var new_rejected_quantity = '0';
-                if (current_row_actual_quantity != '' && current_row_accepted_quantity != '') {
-                    var new_rejected_quantity = current_row_actual_quantity - current_row_accepted_quantity;
-                }
-
-                currentRow.find('.rejected_quantity').val(new_rejected_quantity);
-            });
-        });
-    </script> --}}
-
-   
-   {{-- <script>
-          // Handle dynamic row removal
-          $(document).on("click", ".remove-tr", function() {
-            $(this).parents("tr").remove();
-        });
-
-        // Handle calculations
-        $(document).on('keyup', '.chalan_quantity, .actual_quantity, .accepted_quantity', function() {
-            var currentRow = $(this).closest("tr");
-
-            // Get input values
-            var chalan_quantity = parseFloat(currentRow.find('.chalan_quantity').val()) || 0;
-            var actual_quantity = parseFloat(currentRow.find('.actual_quantity').val()) || 0;
-            var accepted_quantity = parseFloat(currentRow.find('.accepted_quantity').val()) || 0;
-
-            // Calculate rejected quantity and balance quantity
-            var rejected_quantity = actual_quantity - accepted_quantity;
-            var balance_quantity = chalan_quantity - actual_quantity;
-
-            // Set calculated values in the respective fields
-            currentRow.find('.rejected_quantity').val(rejected_quantity >= 0 ? rejected_quantity : 0);
-            currentRow.find('.balance_quantity').val(balance_quantity >= 0 ? balance_quantity : 0);
-        });
-    </script>  --}}
-
     <script>
         jQuery.noConflict();
         jQuery(document).ready(function($) {
             $("#addDesignsForm").validate({
                 rules: {
-                    // grn_number: {
-                    //     required: true,
-                    // },
                     grn_date: {
                         required: true,
                     },
@@ -437,9 +392,6 @@
                     },
                 },
                 messages: {
-                    // grn_number: {
-                    //     required: "Please Enter GRN Number.",
-                    // },
                     grn_date: {
                         required: "Please Select GRN Date.",
                     },
