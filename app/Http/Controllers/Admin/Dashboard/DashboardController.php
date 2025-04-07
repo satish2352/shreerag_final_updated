@@ -123,7 +123,7 @@ class DashboardController extends Controller {
     ->get()
     ->groupBy('customer_po_number');
 
-                $product_count = Products::where('is_active', 1)->where('is_deleted', 0)->count();
+    $product_count = Products::where('is_active', 1)->where('is_deleted', 0)->count();
     // end owner========================
 
         $testimonial_count = Testimonial::where('is_active', 1)->where('is_deleted', 0)->count();
@@ -161,17 +161,7 @@ class DashboardController extends Controller {
           ->whereNotNull('grn_tbl.store_remark')
           ->where('grn_tbl.is_active', 1)
           ->where('grn_tbl.is_deleted', 0)
-          ->count();
-    //     CustomerProductQuantityTracking::leftJoin('tbl_logistics', function($join) {
-    //         $join->on('tbl_customer_product_quantity_tracking.id', '=', 'tbl_logistics.quantity_tracking_id');
-    //     })
-    //     ->leftJoin('businesses', function($join) {
-    //         $join->on('tbl_customer_product_quantity_tracking.business_id', '=', 'businesses.id');
-    //     })
-    //     ->where('tbl_customer_product_quantity_tracking.quantity_tracking_status',3001)
-    //   ->where('businesses.is_active',true)
-    //   ->where('businesses.is_deleted', 0)
-     
+          ->count();     
         $logistics_list_count = BusinessApplicationProcesses::where('logistics_status_id', 1145)->where('off_canvas_status',19)
         ->where('is_active',1)->count();
         $logistics_send_by_finance_count =Logistics::leftJoin('tbl_customer_product_quantity_tracking', function($join) {
@@ -200,21 +190,8 @@ class DashboardController extends Controller {
         ->where('businesses.is_deleted', 0)
         ->where('tbl_customer_product_quantity_tracking.fianace_list_status','Send_Dispatch')
         ->count();
-          $business_received_for_designs = DesignModel::leftJoin('businesses', function($join) {
-            $join->on('designs.business_id', '=', 'businesses.id');
-        })
-        ->leftJoin('businesses_details', function($join) {
-            $join->on('designs.business_details_id', '=', 'businesses_details.id');
-        })
-        ->leftJoin('business_application_processes', function($join) {
-            $join->on('designs.business_details_id', '=', 'business_application_processes.business_details_id');
-        })
-        ->where('business_application_processes.production_status_id', 0) 
-        ->where('business_application_processes.production_id', 0)
-        ->where('businesses.is_deleted', 0)
-        ->count();      
         $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN')];
-$business_received_for_designs= DesignModel::leftJoin('businesses', function($join) {
+         $business_received_for_designs= DesignModel::leftJoin('businesses', function($join) {
                 $join->on('designs.business_id', '=', 'businesses.id');
               })
               ->leftJoin('business_application_processes', function($join) {
@@ -224,12 +201,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
               ->where('businesses.is_active',true)
               ->where('businesses.is_deleted', 0)
               ->distinct('businesses.id')
-             ->count();
-
-
-        // $design_sent_for_production = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1113)
-        // ->where('production_status_id', 1113)
-        // ->where('is_active',1)->count();
+             ->count();      
         $array_to_be_check_send_production = [
             config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN'),
             config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_PRODUCTION'),
@@ -499,7 +471,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         // $progressPercentage = min(100, max(0, $directorDeskCount));
 
 
-        $counts = [
+        $owner_counts = [
             'user_active_count' => $user_active_count,
             'active_businesses' => $active_count,
             'business_details' => $business_details_count,
@@ -507,8 +479,6 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
             'product_completed' => $product_completed_count,
             'business_inprocess' => $business_inprocess_count,
             'product_inprocess' => $product_inprocess_count,
-            // 'data_output_offcanvas' => $data_output_offcanvas,
-            // 'product_count'=>$product_count,
             
         ];
         $offcanvas = [
@@ -612,7 +582,7 @@ $business_received_for_designs= DesignModel::leftJoin('businesses', function($jo
         ];
 
         
-        return view('admin.pages.dashboard.dashboard', ['return_data' => $counts,'offcanvas' => $offcanvas,'department_count' =>$department_count, 'logistics_counts'=>$logistics_counts, 'design_dept_counts'=>$design_dept_counts,
+        return view('admin.pages.dashboard.dashboard', ['return_data' => $owner_counts,'offcanvas' => $offcanvas,'department_count' =>$department_count, 'logistics_counts'=>$logistics_counts, 'design_dept_counts'=>$design_dept_counts,
     'production_dept_counts'=>$production_dept_counts, 'store_dept_counts'=>$store_dept_counts, 'cms_counts'=>$cms_counts,
 'purchase_dept_counts'=>$purchase_dept_counts, 'secuirty_dept_counts'=>$secuirty_dept_counts, 'quality_dept_counts'=>$quality_dept_counts,'fianance_counts'=>$fianance_counts,
 'inventory_dept_counts'=>$inventory_dept_counts,'dispatch_counts'=>$dispatch_counts, 'hr_counts'=>$hr_counts, 'employee_counts'=>$employee_counts, 'employee_leave_type'=>$employee_leave_type ]);
