@@ -439,7 +439,10 @@
                         </ul>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.SECURITY'))
-                        <li>
+                    <li class="nav-item {{ request()->is('securitydept/dashboard') ? 'active' : '' }}">
+                        <a href="{{ route('dashboard') }}"><i class="fa big-icon fa-envelope icon-wrap"
+                                aria-hidden="true"></i> <span class="mini-click-non">Dashboard</span></a>
+                    </li>
                         <li class="nav-item {{ request()->is('search-by-po-no') ? 'active' : '' }}">
                             <a href="{{ route('search-by-po-no') }}">
                                 <i class="fa fa-search icon-wrap"></i>
@@ -844,7 +847,7 @@
                         </li>
                     @endif
                 @endif
-                
+
                 
                     {{-- @if (session()->get('user_id'))
                         <li class="nav-item">
