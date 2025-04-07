@@ -293,8 +293,6 @@ public function usersLeavesDetails($id)
 {
     try {
         $user = User::leftJoin('tbl_roles', 'tbl_roles.id', '=', 'users.role_id')
-            ->leftJoin('tbl_area as state_user', 'users.state', '=', 'state_user.location_id')
-            ->leftJoin('tbl_area as city_user', 'users.city', '=', 'city_user.location_id')
             ->crossJoin('tbl_leave_management') 
             ->leftJoin('tbl_leaves', function($join) use ($id) {
                 $join->on('users.id', '=', 'tbl_leaves.employee_id')
