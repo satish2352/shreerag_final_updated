@@ -106,8 +106,6 @@ class ItemController extends Controller
         $edit_data_id = base64_decode( $request->id );
 
         $editData = $this->service->getById( $edit_data_id );
-        // dd( $editData );
-        // die();
         $data = OrganizationModel::orderby( 'updated_at', 'desc' )->get();
         $dataOutputUnitMaster = UnitMaster::where( 'is_active', true )->get();
         $dataOutputHSNMaster = HSNMaster::where( 'is_active', true )->get();

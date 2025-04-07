@@ -168,9 +168,6 @@ class PurchaseOrderRepository
             )
             ->where('purchase_orders.purchase_orders_id', $id)
             ->get();
-
-            //    dd( $designData);
-            //    die();
             if ($designData->isEmpty()) {
                 return null;
             } else {

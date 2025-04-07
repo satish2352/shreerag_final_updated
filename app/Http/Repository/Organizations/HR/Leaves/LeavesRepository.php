@@ -75,8 +75,6 @@ class LeavesRepository {
             ->orderBy( 'tbl_leaves.updated_at', 'desc' )
             ->where( 'tbl_leaves.id', $id )
             ->first();
-            // dd( $data_output );
-            // die();
             if ( $data_output ) {
                 return $data_output;
             } else {

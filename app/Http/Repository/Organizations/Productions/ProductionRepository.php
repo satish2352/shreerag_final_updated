@@ -81,9 +81,6 @@ class ProductionRepository  {
             $production_data = ProductionModel::where('business_details_id', $idtoedit)->first();
            
             $designRevisionForProdID = DesignRevisionForProd::where('design_id', $production_data->business_details_id)->orderBy('id','desc')->first();
-            
-        //       dd( $designRevisionForProdID);
-        //   die();
             if($designRevisionForProdID) {
 
                 $designRevisionForProdID->business_id = $production_data->business_id;

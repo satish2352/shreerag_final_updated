@@ -89,10 +89,7 @@ class organizationRepository {
     }
 
     public function updateAll( $request ) {
-        try {
-
-            // dd( $request );
-            // die();
+        try {            
             $return_data = array();
 
             $dataOutput = OrganizationModel::find( $request->id );
