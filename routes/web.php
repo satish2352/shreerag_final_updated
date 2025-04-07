@@ -101,6 +101,8 @@ Route::group(['middleware' => ['admin']], function () {
 
     Route::group(['prefix' => 'owner', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
+        Route::get('/get-offcanvas', ['as' => 'get-offcanvas', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@getOffcanvas']);
+        
         Route::get('/organizations-list-employees', ['as' => 'organizations-list-employees', 'uses' => 'App\Http\Controllers\Organizations\Employees\EmployeesController@index']);
     
         Route::get('/list-business', ['as' => 'list-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@index']);

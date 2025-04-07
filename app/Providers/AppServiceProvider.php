@@ -3,17 +3,15 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Models\
-{
-EmployeesModel,User
-}; // Replace YourModel with the actual model you are using
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use App\Models\User;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
-     *
-     * @return void
      */
     public function register()
     {
@@ -22,36 +20,31 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
-    // public function boot()
-    // {
-    //     view()->composer('*', function ($view) {
-    //         //  $dashboard = User::join('tbl_employees', 'users.u_email', '=', 'tbl_employees.email')
-    //         //     ->where('users.role_id', session()->get('role_id'))
-    //         //     ->select('users.role_id', 'tbl_employees.department_id', 'tbl_employees.employee_name', 'tbl_employees.email')
-    //         //     ->get();
-    //         $dashboard=EmployeesModel::where('email',session()->get('u_email'))->get();
-    //         $view->with('dashboard', $dashboard);
-
-    //         View::share('id', Auth::user()->id ?? null); // Share `$id` globally
-
-    //     });
-    // }
     public function boot()
     {
         view()->composer('*', function ($view) {
-            // Fetch the dashboard data based on the session email
-            $dashboard = EmployeesModel::where('email', session()->get('u_email'))->get();
+            $email = session()->get('u_email');
 
-            // Pass the dashboard data to all views
-            $view->with('dashboard', $dashboard);
+            if ($email) {  // ✅ Check if email exists in session before caching
+                // Cache the dashboard data for 10 minutes
+                $dashboard = Cache::remember("dashboard_{$email}", 600, function () use ($email) {
+                    return User::where('u_email', $email)->get();
+                });
 
-            // Share the user ID globally, if authenticated
-            $id = auth()->check() ? auth()->user()->id : null;
-            view()->share('id', $id);
+                $view->with('dashboard', $dashboard);
+
+                // Share the user ID globally, caching it as well
+                $id = Cache::remember("user_id_{$email}", 600, function () {
+                    return Auth::check() ? Auth::id() : null;
+                });
+
+                View::share('id', $id);
+            } else {
+                // If session email is null, send empty data
+                $view->with('dashboard', collect([]));  // Empty collection
+                View::share('id', null);
+            }
         });
     }
-
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin\LoginRegister;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Services\Admin\LoginRegister\LoginService;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Auth;
 use Session;
 use Validator;
 use PDO;
@@ -84,14 +86,27 @@ class LoginController extends Controller
         }
     }
     
-    
     public function logout(Request $request)
     {
- 
-        $request->session()->flush();
-
-        $request->session()->regenerate();
-
-        return redirect('/login' );
+        $email = session()->get('u_email');
+    
+        if ($email) {
+            Cache::forget("dashboard_{$email}");
+            Cache::forget("user_id_{$email}");
         }
+    
+        Auth::logout();
+        session()->flush();
+    
+        return redirect('/login');
+    }
+    // public function logout(Request $request)
+    // {
+ 
+    //     $request->session()->flush();
+
+    //     $request->session()->regenerate();
+
+    //     return redirect('/login' );
+    //     }
     }
