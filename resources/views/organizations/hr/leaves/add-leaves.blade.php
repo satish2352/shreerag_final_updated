@@ -185,7 +185,7 @@
             $('#leave_start_date, #leave_end_date').datepicker({
                 dateFormat: 'yy-mm-dd',
                 minDate: 0, // Disable past dates from today
-                beforeShowDay: disablePastDates
+                // beforeShowDay: disablePastDates
             });
         });
     </script>
