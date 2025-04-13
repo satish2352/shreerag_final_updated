@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Providers;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
@@ -46,5 +46,6 @@ class AppServiceProvider extends ServiceProvider
                 View::share('id', null);
             }
         });
+        DB::statement("SET time_zone = '+05:30'"); // For Asia/Kolkata
     }
 }

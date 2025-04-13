@@ -69,8 +69,8 @@ return [
     |
     */
 
-    'timezone' => env('APP_TIMEZONE', 'UTC'),
-
+    // 'timezone' => env('APP_TIMEZONE', 'UTC'),
+    'timezone' => 'Asia/Kolkata', // or your preferred timezone
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
