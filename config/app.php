@@ -164,7 +164,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
-
+        Barryvdh\DomPDF\ServiceProvider::class,
         /*
          * Package Service Providers...
          */
@@ -193,6 +193,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
       'NoCaptcha' => Anhskohbo\NoCaptcha\Facades\NoCaptcha::class,
+      'PDF' => Barryvdh\DomPDF\Facade::class,
     ])->toArray(),
 
 ];
