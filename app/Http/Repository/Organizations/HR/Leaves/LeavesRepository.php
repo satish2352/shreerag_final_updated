@@ -154,12 +154,15 @@ class LeavesRepository {
 {
     try {
         $ses_userId = session()->get('user_id');
+        $current_year = date('Y');
 
+        
         // Use a single query to fetch leave details along with summary
         $leave_data = DB::table('tbl_leaves')
             ->join('users', 'tbl_leaves.employee_id', '=', 'users.id')
             ->join('tbl_leave_management', 'tbl_leaves.leave_type_id', '=', 'tbl_leave_management.id')
             ->where('tbl_leaves.id', $id)
+            ->where('tbl_leave_management.leave_year', $current_year)
             ->select(
                 'tbl_leaves.id',
                 'users.u_email',
