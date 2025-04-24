@@ -193,6 +193,7 @@ class LeavesRepository {
             })
             ->where('tbl_leave_management.is_active', 1)
             ->where('tbl_leave_management.is_deleted', 0)
+            ->where('tbl_leave_management.leave_year', $current_year)
             ->select(
                 'tbl_leave_management.name as leave_type_name',
                 'tbl_leave_management.leave_count',
