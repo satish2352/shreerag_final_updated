@@ -21,7 +21,7 @@
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex justify-content-center">
 
-                <div class="" style="background-color: #fff; padding:25px;">
+                <div class="" style="background-color: #fff; padding:25px; margin-bottom: 100px;">
 
 
                     <div class="col-12 " id="printableArea" style="border: 1px solid black;">
