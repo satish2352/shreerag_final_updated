@@ -22,7 +22,8 @@ class LeavesServices
     }
     public function getById($id){
         try {
-            return $this->repo->getById($id);
+            $data_output = $this->repo->getById($id);
+            return $data_output;
         } catch (\Exception $e) {
             return $e;
         }

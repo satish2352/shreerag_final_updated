@@ -63,10 +63,10 @@ class LeavesController extends Controller
             return $e;
         }
     } 
-    public function show(Request $request){
+    public function show(Request $request)
+    {
         try {
             $data_id = base64_decode($request->id);
-          
             $user_detail = $this->service->getById($data_id);
             $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
             return view('organizations.hr.leaves.show-leaves', compact('user_detail', 'getOrganizationData'));
@@ -74,6 +74,7 @@ class LeavesController extends Controller
             return $e;
         }
     }
+    
 
     public function getAllNotApprovedRequest(){
         try {

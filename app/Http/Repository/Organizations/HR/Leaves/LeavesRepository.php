@@ -44,50 +44,108 @@ class LeavesRepository {
         }
     }
 
-    public function getById( $id ) {
+    // public function getById( $id ) {
+    //     try {
+    //         $data_output = Leaves::join( 'users', 'tbl_leaves.employee_id', '=', 'users.id' )
+    //         ->join( 'tbl_leave_management', 'tbl_leaves.leave_type_id', '=', 'tbl_leave_management.id' )
+    //         ->where( 'tbl_leaves.organization_id', session()->get( 'org_id' ) )
+    //         ->where( 'tbl_leaves.is_approved', 0 )
+    //         ->select(
+    //             'tbl_leaves.id',
+    //             'users.u_email',
+    //             'users.f_name',
+    //             'users.m_name',
+    //             'users.l_name',
+    //             'tbl_leaves.leave_start_date',
+    //             'tbl_leaves.other_employee_name',
+    //             'tbl_leaves.employee_id',
+    //             'tbl_leaves.leave_end_date',
+    //             'tbl_leaves.leave_day',
+    //             // 'tbl_leaves.leave_count',
+    //             DB::raw("STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y') as leave_start_date"),
+    //             'tbl_leaves.employee_id',
+    //             DB::raw("STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y') as leave_end_date"),
+    //             'tbl_leaves.leave_day',
+    //             DB::raw("DATEDIFF(STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y'), STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y')) + 1 as leave_count"),
+    //             'tbl_leaves.leave_type_id',
+    //             'tbl_leave_management.name as leave_type_name',
+    //             'tbl_leaves.reason',
+    //             'tbl_leaves.is_approved'
+    //         )
+    //         ->orderBy( 'tbl_leaves.updated_at', 'desc' )
+    //         ->where( 'tbl_leaves.id', $id )
+    //         ->first();
+    //         if ( $data_output ) {
+    //             return $data_output;
+    //         } else {
+    //             return null;
+    //         }
+    //     } catch ( \Exception $e ) {
+    //         return [
+    //             'msg' => $e,
+    //             'status' => 'error'
+    //         ];
+    //     }
+    // }
+    public function getById($id)
+    {
         try {
-            $data_output = Leaves::join( 'users', 'tbl_leaves.employee_id', '=', 'users.id' )
-            ->join( 'tbl_leave_management', 'tbl_leaves.leave_type_id', '=', 'tbl_leave_management.id' )
-            ->where( 'tbl_leaves.organization_id', session()->get( 'org_id' ) )
-            ->where( 'tbl_leaves.is_approved', 0 )
-            ->select(
-                'tbl_leaves.id',
-                'users.u_email',
-                'users.f_name',
-                'users.m_name',
-                'users.l_name',
-                'tbl_leaves.leave_start_date',
-                'tbl_leaves.other_employee_name',
-                'tbl_leaves.employee_id',
-                'tbl_leaves.leave_end_date',
-                'tbl_leaves.leave_day',
-                // 'tbl_leaves.leave_count',
-                DB::raw("STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y') as leave_start_date"),
-                'tbl_leaves.employee_id',
-                DB::raw("STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y') as leave_end_date"),
-                'tbl_leaves.leave_day',
-                DB::raw("DATEDIFF(STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y'), STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y')) + 1 as leave_count"),
-                'tbl_leaves.leave_type_id',
-                'tbl_leave_management.name as leave_type_name',
-                'tbl_leaves.reason',
-                'tbl_leaves.is_approved'
-            )
-            ->orderBy( 'tbl_leaves.updated_at', 'desc' )
-            ->where( 'tbl_leaves.id', $id )
-            ->first();
-            if ( $data_output ) {
-                return $data_output;
+            $ses_userId = session()->get('user_id');
+    
+            $leave_details = DB::table('tbl_leaves')
+                ->leftJoin('users', 'tbl_leaves.employee_id', '=', 'users.id')
+                ->leftJoin('tbl_leave_management', 'tbl_leaves.leave_type_id', '=', 'tbl_leave_management.id')
+                ->where('tbl_leaves.id', $id)
+                ->select(
+                    'tbl_leaves.id',
+                    'users.u_email',
+                    DB::raw("CONCAT(users.f_name, ' ', users.m_name, ' ', users.l_name) as full_name"),
+                    'tbl_leaves.leave_start_date',
+                    'tbl_leaves.leave_end_date',
+                    'tbl_leaves.leave_day',
+                    'tbl_leaves.other_employee_name',
+                    'tbl_leaves.leave_type_id',
+                    'tbl_leave_management.name as leave_type_name',
+                    'tbl_leaves.reason',
+                    'tbl_leaves.is_approved',
+                    DB::raw("DATEDIFF(tbl_leaves.leave_end_date, tbl_leaves.leave_start_date) + 1 as leave_count")
+                )
+                ->first();
+    
+            $leave_summary = DB::table('tbl_leave_management')
+                ->leftJoin('tbl_leaves', function ($join) use ($ses_userId) {
+                    $join->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
+                        ->where('tbl_leaves.employee_id', $ses_userId)
+                        ->where('tbl_leaves.is_approved', 2);
+                })
+                ->where('tbl_leave_management.is_active', 1)
+                ->where('tbl_leave_management.is_deleted', 0)
+                ->select(
+                    'tbl_leave_management.name as leave_type_name',
+                    'tbl_leave_management.leave_count',
+                    DB::raw('COALESCE(SUM(tbl_leaves.leave_count), 0) as total_leaves_taken'),
+                    DB::raw('(tbl_leave_management.leave_count - COALESCE(SUM(tbl_leaves.leave_count), 0)) as remaining_leaves')
+                )
+                ->groupBy('tbl_leave_management.id', 'tbl_leave_management.name', 'tbl_leave_management.leave_count')
+                ->get();
+    
+            if ($leave_details) {
+                return [
+                    'leave_details' => $leave_details,
+                    'leave_summary' => $leave_summary
+                ];
             } else {
                 return null;
             }
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             return [
-                'msg' => $e,
+                'msg' => $e->getMessage(),
                 'status' => 'error'
             ];
         }
     }
-
+    
+    
     public function getAllLeavesRequest() {
         try {
 

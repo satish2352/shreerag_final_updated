@@ -77,7 +77,7 @@
                             </div>
                             <div class="col-lg-8 col-md-8 col-sm-8 right-side">
                                 <h4 style="font-family: 'Font Awesome 5 Free'!important;">
-                                    {{ $user_detail->other_employee_name }} </h4>
+                                    {{ $user_detail['leave_details']->other_employee_name }} </h4>
                             </div>
                         </div>
                         <div class="row print-row" style="padding-left:10px;">
@@ -87,7 +87,7 @@
                             </div>
                             <div class="col-lg-8 col-md-8 col-sm-8 right-side">
                                 <h4 style="font-family: 'Font Awesome 5 Free'!important;">
-                                    {{ strip_tags($user_detail->u_email) }}</h4>
+                                    {{ strip_tags($user_detail['leave_details']->u_email) }}</h4>
                             </div>
                         </div>
                         <div class="row print-row" style="padding-left:10px;">
@@ -98,7 +98,7 @@
                             </div>
                             <div class="col-lg-8 col-md-8 col-sm-8 right-side">
                                 <h4 style="font-family: 'Font Awesome 5 Free'!important;">
-                                    {{ strip_tags($user_detail->leave_start_date) }}</h4>
+                                    {{ strip_tags($user_detail['leave_details']->leave_start_date) }}</h4>
                             </div>
                         </div>
                         <div class="row print-row" style="padding-left:10px;">
@@ -108,7 +108,7 @@
                             </div>
                             <div class="col-lg-8 col-md-8 col-sm-8 right-side">
                                 <h4 style="font-family: 'Font Awesome 5 Free'!important;">
-                                    {{ strip_tags($user_detail->leave_end_date) }}</h4>
+                                    {{ strip_tags($user_detail['leave_details']->leave_end_date) }}</h4>
                             </div>
                         </div>
                         <div class="row print-row" style="padding-left:10px;">
@@ -121,9 +121,9 @@
                             <div class="col-lg-8 col-md-8 col-sm-8 right-side">
                                 <h4 style="font-family: 'Font Awesome 5 Free'!important;">
                                     <h4>
-                                        @if ($user_detail->leave_day == 'half_day')
+                                        @if ($user_detail['leave_details']->leave_day == 'half_day')
                                             Half Day
-                                        @elseif($user_detail->leave_day == 'full_day')
+                                        @elseif($user_detail['leave_details']->leave_day == 'full_day')
                                             Full Day
                                         @else
                                             Unknown Status
@@ -139,7 +139,7 @@
                             </div>
                             <div class="col-lg-8 col-md-8 col-sm-8 right-side">
                                 <h4 style="font-family: 'Font Awesome 5 Free'!important;">
-                                    {{ strip_tags($user_detail->leave_count) }}</h4>
+                                    {{ strip_tags($user_detail['leave_details']->leave_count) }}</h4>
                             </div>
                         </div>
                         <div class="row print-row" style="padding-left:10px;">
@@ -149,7 +149,7 @@
                             </div>
                             <div class="col-lg-8 col-md-8 col-sm-8 right-side">
                                 <h4 style="font-family: 'Font Awesome 5 Free'!important;">
-                                    {{ strip_tags($user_detail->leave_type_name) }}</h4>
+                                    {{ strip_tags($user_detail['leave_details']->leave_type_name) }}</h4>
                             </div>
                         </div>
                         <div class="row print-row" style="padding-left:10px;">
@@ -159,52 +159,53 @@
                             </div>
                             <div class="col-lg-8 col-md-8 col-sm-8 right-side">
                                 <h4 style="font-family: 'Font Awesome 5 Free'!important;">
-                                    {{ strip_tags($user_detail->reason) }}</h4>
+                                    {{ strip_tags($user_detail['leave_details']->reason) }}</h4>
                             </div>
                         </div>
+                    <div class=" fix-bottom ">
+                        <div class="row print-row" style="padding-left:10px;">
+                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Font Awesome 5 Free'!important;">
+                                <span><strong>Leave Type</strong></span>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Font Awesome 5 Free'!important;">
+                                <span><strong>Total Leave Count</strong></span>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Font Awesome 5 Free'!important;">
+                                <span><strong>Total Leaves Taken</strong></span>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Font Awesome 5 Free'!important;">
+                                <span><strong>Remaining Leaves</strong></span>
+                            </div>
                         </div>
-
+                        
+                        @foreach($user_detail['leave_summary'] as $leave)
+                        <div class="row print-row" style="padding-left:10px;">
+                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Font Awesome 5 Free'!important;">
+                                <span>{{ $leave->leave_type_name }}</span>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Font Awesome 5 Free'!important;">
+                                <span>{{ $leave->leave_count }}</span>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Font Awesome 5 Free'!important;">
+                                <span>{{ $leave->total_leaves_taken }}</span>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Font Awesome 5 Free'!important;">
+                                <span>{{ $leave->remaining_leaves }}</span>
+                            </div>
+                        </div>
+                        @endforeach
                     </div>
+                        </div>
+                      
+                    </div>
+                   
                     <a><button data-toggle="tooltip" onclick="printInvoice()" title="Employee Details"
                             class="btn btn-primary print-btn m-4 print-button" style="margin-top: 20px;">Print</button></a>
                 </div>
             </div>
         </div>
         <script>
-            // function printInvoice() {
-            //     // Get the content you want to print
-            //     var contentToPrint = document.getElementById("printableArea").innerHTML;
-
-            //     // Open a new window
-            //     var printWindow = window.open('', '', 'height=600,width=800');
-
-            //     // Write the content to the new window with proper styles
-            //     printWindow.document.write('<html><head><title>Print</title>');
-            //     printWindow.document.write('<style>');
-            //     printWindow.document.write(
-            //         'body { font-family: Arial, sans-serif; margin: 0; padding: 10px; font-size:30px; font-family: fangsong; border: 1px solid black;}'
-            //     ); // Add padding to body
-            //     printWindow.document.write(
-            //         '#printableArea { width: 100%; overflow: hidden;  }'); // Ensure full width of content
-            //     printWindow.document.write('.borderpage { border: 1px solid black; }'); // Corrected CSS for company-name-size
-
-            //     printWindow.document.write('</style>');
-            //     printWindow.document.write('</head><body>');
-            //     printWindow.document.write(contentToPrint);
-            //     printWindow.document.write('</body></html>');
-
-            //     // Close the document to render
-            //     printWindow.document.close();
-            //     printWindow.focus();
-
-            //     // Trigger the print dialog
-            //     printWindow.print();
-
-            //     // Close the print window after printing
-            //     printWindow.close();
-            // }
-
-            function printInvoice() {
+                      function printInvoice() {
     var contentToPrint = document.getElementById("printableArea").innerHTML;
 
     var printWindow = window.open('', '', 'height=600,width=800');
@@ -216,60 +217,64 @@
 
     printWindow.document.write('<style>');
     printWindow.document.write(`
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 20px;
-            font-size: 14px;
-             border: 2px solid black;
+       body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        padding: 20px;
+        font-size: 14px;
+        border: 2px solid black;
         padding: 20px;
         margin: 10px;
-        }
-         .print-container {
+    }
+    .print-container {
         width: 100%;
         display: flex;
         flex-wrap: wrap;
     }
-.left-side{
-width:40%;
-}
-.right-side{
-width:60%;
-}
+    .left-side {
+        width: 40%;
+    }
+    .right-side {
+        width: 60%;
+    }
     .label {
         width: 40%;
         font-weight: bold;
     }
-
     .value {
         width: 60%;
     }
-
     /* Optional: Ensure proper alignment */
     .print-row {
         display: flex;
         width: 100%;
     }
-        #printableArea {
-            width: 100%;
-            overflow: hidden;
-            padding: 20px;
-            border: 1px solid black;
-        }
-        h3, h4, h4 {
-            font-family: Arial, sans-serif;
-        }
-        .row {
-            display: flex;
-            margin-bottom: 10px;
-        }
-        .col-lg-4 {
-            font-weight: bold;
-        }
-        img {
-            max-width: 100px;
-            height: auto;
-        }
+    #printableArea {
+        width: 100%;
+        overflow: hidden;
+        padding: 20px;
+        border: 1px solid black;
+    }
+    h3, h4, h4 {
+        font-family: Arial, sans-serif;
+    }
+    .row {
+        display: flex;
+        margin-bottom: 10px;
+    }
+    .col-lg-4 {
+        font-weight: bold;
+    }
+    img {
+        max-width: 100px;
+        height: auto;
+    }    
+       
+       .fix-bottom{
+         position: fixed;
+            bottom: 0;
+            width: 100%;}
+    
     `);
     printWindow.document.write('</style>');
     printWindow.document.write('</head><body>');
