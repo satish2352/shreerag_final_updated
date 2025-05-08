@@ -85,7 +85,7 @@ class DashboardAlfController extends Controller
             }
             
             $machine_name = $machinData->machine_name;
-            \DB::enableQueryLog(); // Enable query log
+            // \DB::enableQueryLog(); // Enable query log
 
             $results = DashboardDailyModel::where([
                                 'plant_id'     => $plant_id,
@@ -100,7 +100,7 @@ class DashboardAlfController extends Controller
                             ->whereBetween('trigger_time_from', [$start_time, $end_time])
                             ->whereBetween('trigger_time_to', [$start_time, $end_time])
                             ->get();
-                            dd(\DB::getQueryLog()); // Show results of log
+                            // dd(\DB::getQueryLog()); // Show results of log
 
                 // Assume $results is your collection
             $grouped = $results->groupBy(function ($item) {
