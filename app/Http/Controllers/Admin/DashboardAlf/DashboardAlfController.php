@@ -22,6 +22,7 @@ class DashboardAlfController extends Controller
 
             $dateInput = $request->dateInput ?? '';
             $dateInputTo = $request->dateInput_todate ?? '';
+            
             $shift_id = $request->shift_id ? $request->shift_id : 'A-SH';
 
             $toDate = '';
@@ -92,10 +93,13 @@ class DashboardAlfController extends Controller
                                 'shift_id'     => $shift_id,
                                 // 'date_from'    => date('Y-m-d', strtotime($start_time)) ,
                                 // 'date_to'      => date('Y-m-d', strtotime($end_time)) ,
-                                'trigger_time_from'   => $start_time,
-                                'trigger_time_to'     => $end_time,
+                                // 'trigger_time_from'   => $start_time,
+                                // 'trigger_time_to'     => $end_time,
                                 'machine_name'     => $machine_name,
-                            ])->get();
+                            ])
+                            ->whereBetween('trigger_time_from', [$start_time, $end_time])
+                            ->whereBetween('trigger_time_to', [$start_time, $end_time])
+                            ->get();
                             dd(\DB::getQueryLog()); // Show results of log
 
                 // Assume $results is your collection
