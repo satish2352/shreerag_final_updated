@@ -28,7 +28,7 @@ class DashboardAlfDailyDataController extends Controller
     public function dailyCroneJob(Request $request,$plant_id = null, $dept_id = null, $pd_id = null)
     {   
 
-
+        try {
 
           // Satish Code
 
@@ -367,6 +367,11 @@ class DashboardAlfDailyDataController extends Controller
          // Move to the next day
          $startDate->modify('+1 day');
      }
+
+    } catch (\Exception $e) {
+
+        return $e->getMessage();
+    }
 
     }
   

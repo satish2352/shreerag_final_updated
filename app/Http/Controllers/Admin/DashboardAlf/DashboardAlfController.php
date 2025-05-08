@@ -108,10 +108,10 @@ class DashboardAlfController extends Controller
                         $item->plant_id,
                         $item->dept_id,
                         $item->shift_id,
-                        $item->date_from,
-                        $item->date_to,
-                        $item->trigger_time_from,
-                        $item->trigger_time_to,
+                        // $item->date_from,
+                        // $item->date_to,
+                        // $item->trigger_time_from,
+                        // $item->trigger_time_to,
                         $item->machine_name,
                         $item->part_number
                     ]);
