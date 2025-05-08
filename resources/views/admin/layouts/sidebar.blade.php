@@ -47,6 +47,33 @@
 
                     @if (session()->get('role_id') == config('constants.ROLE_ID.HIGHER_AUTHORITY'))
                         <ul class="sidebar-menu" id="nav-accordion">
+                            <li class="nav-item {{ request()->is('owner/dailyCroneJob') ? 'active' : '' }}">
+                                <a title="Inbox" href="{{ route('/dailyCroneJob') }}"><i
+                                        class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                        class="mini-sub-pro">Alf dailyCroneJob</span></a>
+                            </li>
+
+                            <li class="nav-item {{ request()->is('owner/dashboardalf') ? 'active' : '' }}">
+                                <a title="Inbox" href="{{ route('/dashboardalf') }}"><i
+                                        class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                        class="mini-sub-pro">Alf Dashboard</span></a>
+                            </li>
+
+                            <li class="nav-item {{ request()->is('owner/dashboardsumago') ? 'active' : '' }}">
+                                <a title="Inbox" href="{{ route('/dashboardsumago') }}"><i
+                                        class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                        class="mini-sub-pro">Alf Dashboard Sumago</span></a>
+                            </li>
+
+                            
+
+                            
+                            <li class="nav-item {{ request()->is('owner/dashboardsumagograph') ? 'active' : '' }}">
+                                <a title="Inbox" href="{{ route('/dashboardsumagograph') }}"><i
+                                        class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span
+                                        class="mini-sub-pro">Alf Graph Sumago</span></a>
+                            </li>
+
                             <li class="nav-item {{ request()->is('owner/organizations-list-employees') ? 'active' : '' }}">
                                 <a title="Inbox" href="{{ route('organizations-list-employees') }}"><i
                                         class="fa fa-inbox sub-icon-mg" aria-hidden="true"></i> <span

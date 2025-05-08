@@ -159,6 +159,17 @@ Route::group(['middleware' => ['admin']], function () {
     });
     
     Route::group(['prefix' => 'owner'], function () {
+        Route::get('/dailyCroneJob', ['as' => '/dailyCroneJob', 'uses' => 'App\Http\Controllers\Admin\DashboardAlf\DashboardAlfDailyDataController@dailyCroneJob']);
+        Route::get('/dashboardalf', ['as' => '/dashboardalf', 'uses' => 'App\Http\Controllers\Admin\DashboardAlf\DashboardAlfController@spmAnalysis']);
+        Route::post('/dashboardalf', ['as' => '/dashboardalf', 'uses' => 'App\Http\Controllers\Admin\DashboardAlf\DashboardAlfController@spmAnalysis']);
+
+        
+
+        Route::get('/dashboardsumago', ['as' => '/dashboardsumago', 'uses' => 'App\Http\Controllers\Admin\DashboardAlf\DashboardAlfSumagoController@spmAnalysis']);
+        Route::post('/dashboardsumago', ['as' => '/dashboardsumago', 'uses' => 'App\Http\Controllers\Admin\DashboardAlf\DashboardAlfSumagoController@spmAnalysis']);
+        Route::get('/dashboardsumagograph', ['as' => '/dashboardsumagograph', 'uses' => 'App\Http\Controllers\Admin\DashboardAlf\SumagoGraphController@showGraph']);
+        // Route::post('/dashboardsumagograph', ['as' => '/dashboardsumagograph', 'uses' => 'App\Http\Controllers\Admin\DashboardAlf\SumagoGraphController@showGraph']);
+        
         Route::get('/organizations-list-employees', ['as' => 'organizations-list-employees', 'uses' => 'App\Http\Controllers\Organizations\Employees\EmployeesController@index']);
     
         Route::get('/list-business', ['as' => 'list-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@index']);
