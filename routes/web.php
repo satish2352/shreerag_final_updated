@@ -168,6 +168,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/dashboardsumago', ['as' => '/dashboardsumago', 'uses' => 'App\Http\Controllers\Admin\DashboardAlf\DashboardAlfSumagoController@spmAnalysis']);
         Route::post('/dashboardsumago', ['as' => '/dashboardsumago', 'uses' => 'App\Http\Controllers\Admin\DashboardAlf\DashboardAlfSumagoController@spmAnalysis']);
         Route::get('/dashboardsumagograph', ['as' => '/dashboardsumagograph', 'uses' => 'App\Http\Controllers\Admin\DashboardAlf\SumagoGraphController@showGraph']);
+        Route::post('/dashboardsumagograph', ['as' => '/dashboardsumagograph', 'uses' => 'App\Http\Controllers\Admin\DashboardAlf\SumagoGraphController@showGraph']);
         // Route::post('/dashboardsumagograph', ['as' => '/dashboardsumagograph', 'uses' => 'App\Http\Controllers\Admin\DashboardAlf\SumagoGraphController@showGraph']);
         
         Route::get('/organizations-list-employees', ['as' => 'organizations-list-employees', 'uses' => 'App\Http\Controllers\Organizations\Employees\EmployeesController@index']);

@@ -4,6 +4,11 @@ namespace App\Http\Controllers\Admin\DashboardAlf;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Alf\ShiftModel; 
+use App\Models\Alf\MachineModel;
+use App\Models\Alf\DashboardDailyModel;
+
+
 
 class SumagoGraphController extends Controller
 {
@@ -207,32 +212,86 @@ class SumagoGraphController extends Controller
 
     public function showGraph(Request $request)
     {
-        $tableName = 'div_pp08_digital_partitioned';
-
+        
+        $tableName = 'div_pp06_digital_partitioned';
         // Get fromDate and toDate from request or default to current date
         $manualDate = date('Y-m-d');
-        $fromDateInput = $request->input('fromDate') ?? $manualDate;
-        $toDateInput = $request->input('toDate') ?? $manualDate;
+        $dateInput = $request->input('fromDate') ? $request->input('fromDate'): $manualDate;
+        $dateInputTo = $request->input('toDate') ? $request->input('toDate') :$manualDate;
 
         // Create full datetime boundaries
-        $fromDateTime = $fromDateInput . ' 00:00:00';
-        $toDateTime = $toDateInput . ' 23:59:59';
+        $plant_id = '25';
 
-        // Check if same date to decide hourly or daily aggregation
-        if ($fromDateInput === $toDateInput) {
-            // Group by HOUR for single-day data
-            // $data = DB::table($tableName)
-            //     ->selectRaw('HOUR(TriggerTime) as time_unit, AVG(cola_Actual_Strokes) as avg_strokes, AVG(cold_RunTime) as avg_run_time, AVG(cold_IdleTime) as avg_idle_time')
-            //     ->whereBetween('TriggerTime', [$fromDateTime, $toDateTime])
-            //     ->groupBy(DB::raw('HOUR(TriggerTime)'))
-            //     ->orderBy(DB::raw('HOUR(TriggerTime)'))
-            //     ->get();
+        $dept_id = '78';
+        $shiftsMaster = ShiftModel::where('plant_id',$plant_id)->get();
+        $machine = MachineModel::where(['plant_id'=>$plant_id,'dept_id'=>$dept_id,'iot_on_off'=>'ON'])->get();
+
+        // $sql_table_name_from_user = $request->sql_table_name_from_user;
+        // if($sql_table_name_from_user==null) {
+        //     $machinData = MachineModel::where(['plant_id'=>$plant_id,'dept_id'=>$dept_id,'iot_on_off'=>'ON'])->first();
+        //     $sql_table_name_from_user = $machinData->sql_table_name_from_user;
+        // }  else {
+        //     $machinData = MachineModel::where(['sql_table_name'=>$request->sql_table_name_from_user, 'plant_id'=>$plant_id,'dept_id'=>$dept_id,'iot_on_off'=>'ON'])->orderBy('machine_name','ASC')->first();
+        //     $sql_table_name_from_user = $request->sql_table_name_from_user;
+        // }
+        
+
+        $shift_id = $request->shift_id ? $request->shift_id : 'A-SH';
+
+        $toDate = '';
+        $todayDate = '';
+        if(!empty($dateInput)) {
+            $todayDate = $dateInput;
+        } else {
+            $todayDate = date('Y-m-d');
+        }
+
+        if(!empty($dateInputTo)) {
+            $toDate = $dateInputTo;
+        } else {
+            $toDate = date('Y-m-d');
+        }
+
+        $start_time = "$todayDate 07:00:01";
+        $end_time = date("Y-m-d", strtotime($toDate . " +1 day")) . " 06:59:59";
+
+        if (!empty($shift_id)) {
+            $shiftMaster = ShiftModel::where('shift_id', $shift_id)->first();
+
+            if ($shiftMaster && $shiftMaster->from_time_new && $shiftMaster->to_time_new) {
+                $start_time = $todayDate . ' ' . $shiftMaster->from_time_new;
+
+                // दोन्ही टाइम्स चे स्ट्रॉ टाईम मध्ये कन्व्हर्ट करा
+                $from = strtotime($shiftMaster->from_time_new);
+                $to = strtotime($shiftMaster->to_time_new);
+
+                if ($to <= $from) {
+                    // जर to_time_new हे from_time_new पेक्षा लहान किंवा समान असेल, म्हणजेच शिफ्ट दुसऱ्या दिवशी संपते
+                    $end_time = date("Y-m-d", strtotime($toDate . " +1 day")) . ' ' . $shiftMaster->to_time_new;
+                } else {
+                    // शिफ्ट त्याच दिवशी संपते
+                    $end_time = $toDate . ' ' . $shiftMaster->to_time_new;
+                }
+            }
+        }
 
 
+        $sql_table_name_from_user = $request->sql_table_name_from_user;
+        if($sql_table_name_from_user==null) {
+            $machinData = MachineModel::where(['plant_id'=>$plant_id,'dept_id'=>$dept_id,'iot_on_off'=>'ON'])->first();
+            $sql_table_name_from_user = $machinData->sql_table_name_from_user;
+        } else {
+            $machinData = MachineModel::where(['sql_table_name'=>$request->sql_table_name_from_user, 'plant_id'=>$plant_id,'dept_id'=>$dept_id,'iot_on_off'=>'ON'])->orderBy('machine_name','ASC')->first();
+            $sql_table_name_from_user = $request->sql_table_name_from_user;
+        }
+        
+        $machine_name = $machinData->machine_name;
+
+        if(($todayDate == $toDate) && ($todayDate == date('Y-m-d'))) {
             $data = DB::table($tableName)
                     ->selectRaw('HOUR(TriggerTime) as time_unit, AVG(cola_Actual_Strokes) as avg_strokes, AVG(cold_RunTime) as avg_run_time, AVG(cold_IdleTime) as avg_idle_time')
-                    ->whereBetween('TriggerTime', [$fromDateTime, $toDateTime])
-                    ->whereNotIn('cola_Loss_NumberCode', [17, 18])
+                    ->whereBetween('TriggerTime', [$start_time, $end_time])
+                    // ->whereNotIn('cola_Loss_NumberCode', [17, 18])
                     ->where('cola_Actual_Strokes', '>', 0)
                     ->where('cola_IoT_NumberCode', '>', 0)
                     ->groupBy(DB::raw('HOUR(TriggerTime)'))
@@ -240,21 +299,71 @@ class SumagoGraphController extends Controller
                     ->get();
 
 
-            // Format hours into AM/PM labels
             $labels = $data->pluck('time_unit')->map(function ($hour) {
-                return date('g A', mktime($hour, 0));
-            })->toArray();
+                        $start = date('g A', mktime($hour, 0));
+                        $end = date('g A', mktime($hour + 1, 0));
+                        return "$start to $end";
+                    })->toArray();
+
+        } elseif ($todayDate === $toDate) {
+            $data = DB::table($tableName)
+                    ->selectRaw('HOUR(TriggerTime) as time_unit, AVG(cola_Actual_Strokes) as avg_strokes, AVG(cold_RunTime) as avg_run_time, AVG(cold_IdleTime) as avg_idle_time')
+                    ->whereBetween('TriggerTime', [$start_time, $end_time])
+                    // ->whereNotIn('cola_Loss_NumberCode', [17, 18])
+                    ->where('cola_Actual_Strokes', '>', 0)
+                    ->where('cola_IoT_NumberCode', '>', 0)
+                    ->groupBy(DB::raw('HOUR(TriggerTime)'))
+                    ->orderBy(DB::raw('HOUR(TriggerTime)'))
+                    ->get();
+
+            // $data = DashboardDailyModel::where([
+            //             'plant_id'     => $plant_id,
+            //             'dept_id'      => $dept_id,
+            //             'shift_id'     => $shift_id,
+            //             'machine_name'     => $machine_name,
+            //         ])
+            //         ->selectRaw('HOUR(trigger_time_from) as time_unit, AVG(actual_stoke) as avg_strokes, AVG(run_time) as avg_run_time, AVG(idle_time) as avg_idle_time')
+            //         ->whereBetween('trigger_time_from', [$start_time, $end_time])
+            //         ->whereBetween('trigger_time_to', [$start_time, $end_time])
+            //         ->groupBy(DB::raw('HOUR(trigger_time_from)'))
+            //         ->orderBy(DB::raw('HOUR(trigger_time_from)'))
+            //         ->get();
+
+            // $labels = $data->pluck('time_unit')->map(function ($hour) {
+            //     return date('g A', mktime($hour, 0));
+            // })->toArray();
+
+            $labels = $data->pluck('time_unit')->map(function ($hour) {
+                        $start = date('g A', mktime($hour, 0));
+                        $end = date('g A', mktime($hour + 1, 0));
+                        return "$start to $end";
+                    })->toArray();
         } else {
-            // Group by DATE for multi-day range
             $data = DB::table($tableName)
                 ->selectRaw('DATE(TriggerTime) as time_unit, AVG(cola_Actual_Strokes) as avg_strokes, AVG(cold_RunTime) as avg_run_time, AVG(cold_IdleTime) as avg_idle_time')
-                ->whereBetween('TriggerTime', [$fromDateTime, $toDateTime])
+                ->whereBetween('TriggerTime', [$start_time, $end_time])
                 ->groupBy(DB::raw('DATE(TriggerTime)'))
                 ->orderBy(DB::raw('DATE(TriggerTime)'))
                 ->get();
-
-            // Use full date as label
+            
+                
             $labels = $data->pluck('time_unit')->toArray();
+
+
+            //  $data = DashboardDailyModel::where([
+            //             'plant_id'     => $plant_id,
+            //             'dept_id'      => $dept_id,
+            //             'shift_id'     => $shift_id,
+            //             'machine_name'     => $machine_name,
+            //         ])
+            //         ->selectRaw('HOUR(trigger_time_from) as time_unit, AVG(actual_stoke) as avg_strokes, AVG(run_time) as avg_run_time, AVG(idle_time) as avg_idle_time')
+            //         ->whereBetween('trigger_time_from', [$start_time, $end_time])
+            //         ->whereBetween('trigger_time_to', [$start_time, $end_time])
+            //         // ->groupBy(DB::raw('HOUR(trigger_time_from)'))
+            //         // ->orderBy(DB::raw('HOUR(trigger_time_from)'))
+            //         ->get();
+
+            //         dd($data);
         }
 
         // Build dataset
@@ -265,7 +374,132 @@ class SumagoGraphController extends Controller
             'avg_idle_time' => $data->pluck('avg_idle_time')->toArray(),
         ];
 
-        return view('admin.pages.alf.graph', compact('dailyDataSet'));
+
+
+        if(($todayDate == $toDate) && ($todayDate == date('Y-m-d'))) {
+            $dataBreak = DB::table($tableName)
+                        ->selectRaw('HOUR(TriggerTime) as time_unit, AVG(cola_Loss_NumberCode) as avg_break_time')
+                        ->whereBetween('TriggerTime', [$start_time, $end_time])
+                        ->whereIn('cola_Loss_NumberCode', [17, 18])
+                        ->where('cola_Actual_Strokes', '>', 0)
+                        ->where('cola_IoT_NumberCode', '>', 0)
+                        ->groupBy(DB::raw('HOUR(TriggerTime)'))
+                        ->orderBy(DB::raw('HOUR(TriggerTime)'))
+                        ->get();
+
+            $labelsBreak = $dataBreak->pluck('time_unit')->map(function ($hour) {
+                $start = date('g A', mktime($hour, 0));
+                $end = date('g A', mktime($hour + 1, 0));
+                return "$start to $end";
+            })->toArray();
+
+        } elseif ($todayDate === $toDate) {
+
+            $dataBreak = DB::table($tableName)
+                        ->selectRaw('HOUR(TriggerTime) as time_unit, AVG(cola_Loss_NumberCode) as avg_break_time')
+                        ->whereBetween('TriggerTime', [$start_time, $end_time])
+                        ->whereIn('cola_Loss_NumberCode', [17, 18])
+                        ->where('cola_Actual_Strokes', '>', 0)
+                        ->where('cola_IoT_NumberCode', '>', 0)
+                        ->groupBy(DB::raw('HOUR(TriggerTime)'))
+                        ->orderBy(DB::raw('HOUR(TriggerTime)'))
+                        ->get();
+
+            // $labelsBreak = $dataBreak->pluck('time_unit')->map(function ($hour) {
+            //     return date('g A', mktime($hour, 0));
+            // })->toArray();
+
+            $labelsBreak = $dataBreak->pluck('time_unit')->map(function ($hour) {
+                $start = date('g A', mktime($hour, 0));
+                $end = date('g A', mktime($hour + 1, 0));
+                return "$start to $end";
+            })->toArray();
+        } else {
+            $dataBreak = DB::table($tableName)
+            ->selectRaw('DATE(TriggerTime) as time_unit, AVG(cola_Loss_NumberCode) as avg_break_time')
+                ->whereBetween('TriggerTime', [$start_time, $end_time])
+                ->whereIn('cola_Loss_NumberCode', [17, 18])
+                ->where('cola_Actual_Strokes', '>', 0)
+                ->where('cola_IoT_NumberCode', '>', 0)
+                ->groupBy(DB::raw('DATE(TriggerTime)'))
+                ->orderBy(DB::raw('DATE(TriggerTime)'))
+                ->get();
+
+            $labelsBreak = $dataBreak->pluck('time_unit')->toArray();
+        }
+
+        $dailyDataSetBreak = [
+            'labels' => $labelsBreak,
+            'avg_break' => $dataBreak->pluck('avg_break_time')->toArray(),
+        ];
+
+        
+        
+
+        if(($todayDate == $toDate) && ($todayDate == date('Y-m-d'))) {
+            $dataWithoutBreak = DB::table($tableName)
+                            ->selectRaw('HOUR(TriggerTime) as time_unit, AVG(cola_Loss_NumberCode) as avg_without_break_time')
+                            ->whereBetween('TriggerTime', [$start_time, $end_time])
+                            ->whereNotIn('cola_Loss_NumberCode', [17, 18])
+                            ->where('cola_Actual_Strokes', '>', 0)
+                            ->where('cola_IoT_NumberCode', '>', 0)
+                            ->groupBy(DB::raw('HOUR(TriggerTime)'))
+                            ->orderBy(DB::raw('HOUR(TriggerTime)'))
+                            ->get();
+
+
+
+            $labelsWithoutBreak = $dataWithoutBreak->pluck('time_unit')->map(function ($hour) {
+                                $start = date('g A', mktime($hour, 0));
+                                $end = date('g A', mktime($hour + 1, 0));
+                                return "$start to $end";
+                            })->toArray();
+        
+        
+        } elseif ($todayDate === $toDate) {
+
+            $dataWithoutBreak = DB::table($tableName)
+                        ->selectRaw('HOUR(TriggerTime) as time_unit, AVG(cola_Loss_NumberCode) as avg_without_break_time')
+                        ->whereBetween('TriggerTime', [$start_time, $end_time])
+                        ->whereNotIn('cola_Loss_NumberCode', [17, 18])
+                        ->where('cola_Actual_Strokes', '>', 0)
+                        ->where('cola_IoT_NumberCode', '>', 0)
+                        ->groupBy(DB::raw('HOUR(TriggerTime)'))
+                        ->orderBy(DB::raw('HOUR(TriggerTime)'))
+                        ->get();
+
+            // $labelsWithoutBreak = $dataWithoutBreak->pluck('time_unit')->map(function ($hour) {
+            //     return date('g A', mktime($hour, 0));
+            // })->toArray();
+
+            $labelsWithoutBreak = $dataWithoutBreak->pluck('time_unit')->map(function ($hour) {
+                $start = date('g A', mktime($hour, 0));
+                $end = date('g A', mktime($hour + 1, 0));
+                return "$start to $end";
+            })->toArray();
+
+        } else {
+            $dataWithoutBreak = DB::table($tableName)
+                ->selectRaw('DATE(TriggerTime) as time_unit, AVG(cola_Loss_NumberCode) as avg_without_break_time')
+                ->whereBetween('TriggerTime', [$start_time, $end_time])
+                ->whereNotIn('cola_Loss_NumberCode', [17, 18])
+                ->where('cola_Actual_Strokes', '>', 0)
+                ->where('cola_IoT_NumberCode', '>', 0)
+                ->groupBy(DB::raw('DATE(TriggerTime)'))
+                ->orderBy(DB::raw('DATE(TriggerTime)'))
+                ->get();
+
+            $labelsWithoutBreak = $dataWithoutBreak->pluck('time_unit')->toArray();
+        }
+
+        $dailyDataSetWithoutBreak = [
+            'labels' => $labelsWithoutBreak,
+            'avg_without_break' => $dataWithoutBreak->pluck('avg_without_break_time')->toArray(),
+        ];
+
+        // dd($dailyDataSetWithoutBreak);
+        // return view('admin.pages.alf.graph', compact('dailyDataSet'));
+        return view('admin.pages.alf.graph', compact('dailyDataSet', 'dailyDataSetBreak', 'dailyDataSetWithoutBreak',  'shiftsMaster','plant_id','shift_id','dept_id','machine','sql_table_name_from_user','todayDate','toDate'));
     }
 
 
