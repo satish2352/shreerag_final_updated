@@ -23,7 +23,7 @@ class DashboardAlfController extends Controller
             $dateInput = $request->dateInput ?? '';
             $dateInputTo = $request->dateInput_todate ?? '';
             
-            $shift_id = $request->shift_id ? $request->shift_id :'' ;
+            $shift_id = $request->shift_id ;
             // $shift_id = $request->shift_id ? $request->shift_id : 'A-SH';
 
             $toDate = '';
@@ -97,7 +97,7 @@ class DashboardAlfController extends Controller
                                 // 'trigger_time_to'     => $end_time,
                                 'machine_name'     => $machine_name,
                             ]);
-            if($shift_id !='') {
+            if($shift_id) {
                 $results =$results->where('shift_id',$shift_id);
             }
             $results =$results->whereBetween('trigger_time_from', [$start_time, $end_time])
@@ -106,33 +106,18 @@ class DashboardAlfController extends Controller
                             // dd(\DB::getQueryLog()); // Show results of log
 
                 // Assume $results is your collection
-            $grouped = $results->groupBy(function ($item) use ($shift_id) {
-                    // return implode('|', [
-                    //     $item->plant_id,
-                    //     $item->dept_id,
-                    //     $item->shift_id,
-                    //     // $item->date_from,
-                    //     // $item->date_to,
-                    //     // $item->trigger_time_from,
-                    //     // $item->trigger_time_to,
-                    //     $item->machine_name,
-                    //     $item->part_number
-                    // ]);
-
-
-                    $keyParts = [
+            $grouped = $results->groupBy(function ($item) {
+                    return implode('|', [
                         $item->plant_id,
                         $item->dept_id,
+                        $item->shift_id,
+                        // $item->date_from,
+                        // $item->date_to,
+                        // $item->trigger_time_from,
+                        // $item->trigger_time_to,
                         $item->machine_name,
                         $item->part_number
-                    ];
-                
-                    if ($shift_id !='') {
-                        array_splice($keyParts, 2, 0, $item->shift_id); // Insert shift_id at 3rd position if needed
-                    }
-                
-                    return implode('|', $keyParts);
-
+                    ]);
                 });
 
                 $averaged = $grouped->map(function ($items, $groupKey) {
