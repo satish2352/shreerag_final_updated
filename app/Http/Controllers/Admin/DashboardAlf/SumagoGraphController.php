@@ -213,7 +213,7 @@ class SumagoGraphController extends Controller
     public function showGraph(Request $request)
     {
         
-        $tableName = 'div_pp06_digital_partitioned';
+        $tableName = 'div_pp08_digital_partitioned';
         // Get fromDate and toDate from request or default to current date
         $manualDate = date('Y-m-d');
         $dateInput = $request->input('fromDate') ? $request->input('fromDate'): $manualDate;
