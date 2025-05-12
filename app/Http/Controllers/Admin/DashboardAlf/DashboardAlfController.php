@@ -130,15 +130,15 @@ class DashboardAlfController extends Controller
                             'part_number' => $items->first()->part_number,
                     
                             // Convert to numeric before averaging if needed
-                            'actual_stoke' => $items->avg(fn($i) => (float)$i->actual_stoke),
-                            'run_time' => $items->avg(fn($i) => (float)$i->run_time),
-                            'load_unload_time' => $items->avg(fn($i) => (float)$i->load_unload_time),
-                            'idle_time' =>$items->avg(fn($i) => (float)$i->idle_time),
-                            'std_spm' => $items->avg(fn($i) => (float)$i->std_spm),
-                            'run_spm' => $items->avg(fn($i) => (float)$i->run_spm),
-                            'actual_spm' => $items->avg(fn($i) => (float)$i->actual_spm),
-                            'running_variance' => $items->avg(fn($i) => (float)$i->running_variance),
-                            'avg_variance' => $items->avg(fn($i) => (float)$i->avg_variance),
+                            'actual_stoke' => round($items->avg(fn($i) => (float)$i->actual_stoke), 2),
+                            'run_time' => round($items->avg(fn($i) => (float)$i->run_time), 2),
+                            'load_unload_time' => round($items->avg(fn($i) => (float)$i->load_unload_time), 2),
+                            'idle_time' =>round($items->avg(fn($i) => (float)$i->idle_time), 2),
+                            'std_spm' => round($items->avg(fn($i) => (float)$i->std_spm), 2),
+                            'run_spm' => round($items->avg(fn($i) => (float)$i->run_spm), 2),
+                            'actual_spm' => round($items->avg(fn($i) => (float)$i->actual_spm), 2),
+                            'running_variance' => round($items->avg(fn($i) => (float)$i->running_variance), 2),
+                            'avg_variance' => round($items->avg(fn($i) => (float)$i->avg_variance), 2),
 
                         ];
                 })->values();
