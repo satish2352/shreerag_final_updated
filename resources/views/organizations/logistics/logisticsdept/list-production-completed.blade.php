@@ -79,12 +79,12 @@
                                                 <th data-field="quantity" data-editable="false">PO Quantity</th>
                                                 <th data-field="completed_quantity" data-editable="false">Completed Production</th>
                                                 <th data-field="remaining_quantity" data-editable="false">Balance Quantity</th>
-                                                <th data-field="cumulative_completed_quantity" data-editable="false">Total Completed Production</th>
+                                              
 
                                                 {{-- <th data-field="updated_at" data-editable="false">Date</th> --}}
                                                 <th data-field="remark" data-editable="false">Remark</th>
                                                 <th data-field="title" data-editable="false">customer Name</th>
-
+                                                 <th data-field="cumulative_completed_quantity" data-editable="false">Total Completed Production</th>
                                                 {{-- <th data-field="vendor_company_name" data-editable="false">Vendor company Name</th>
                                                 <th data-field="vendor_email" data-editable="false">Vendor Email</th>
                                                 <th data-field="contact_no" data-editable="false">Vendor Contact Number</th>
@@ -107,12 +107,12 @@
                                                     <td>{{ ucwords($data->quantity) }}</td>                                                   
                                                     <td><strong>{{ $data->completed_quantity }}</strong></td>
                                                     <td>{{ $data->remaining_quantity }}</td>
-                                                    <td>{{ ucwords($data->cumulative_completed_quantity) }}</td>
+                                                   
                                                     {{-- <td>{{ $data->updated_at ? $data->updated_at->format('Y-m-d') : 'N/A' }}
                                                     </td> --}}
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                     <td>{{ ucwords($data->title) }}</td>
-
+                                                     <td>{{ ucwords($data->cumulative_completed_quantity) }}</td>
                                                     {{-- <td>{{ ucwords($data->vendor_company_name) }}</td>
                                                     <td>{{ ucwords($data->vendor_email) }}</td>
                                                     <td>{{ ucwords($data->contact_no) }}</td>

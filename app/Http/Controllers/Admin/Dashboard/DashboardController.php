@@ -833,7 +833,7 @@ class DashboardController extends Controller {
                     $material_received_for_production_by_store_count = $material_received_for_production_by_store->count();
 
                     $notifications[] = ['admin_count' => $material_received_for_production_by_store_count,
-                        'message' => 'Material Received For Production',
+                        'message' => 'Tracking Material',
                         'url' => $baseUrl . '/proddept/list-material-recived'
                     ];
                     $count = $received_design_in_prod + $revised_received_design_count + $material_received_for_production_by_store_count;

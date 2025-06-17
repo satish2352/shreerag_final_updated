@@ -418,7 +418,7 @@
                                 class="nav-item {{ request()->is('proddept/list-material-recived') ? 'active' : '' }}">
                                 <a href="{{ route('list-material-recived') }}">
                                     <i class="fa fa-box   icon-wrap"></i>
-                                    <span class="mini-click-non">Material Received For Production</span>
+                                    <span class="mini-click-non">Tracking Material</span>
                                 </a>
                             </li>
                             <li
@@ -743,7 +743,7 @@
                             class="nav-item {{ request()->is('list-send-to-fianance-by-logistics') ? 'active' : '' }}">
                             <a href="{{ route('list-send-to-fianance-by-logistics') }}">
                                 <i class="fa big-icon fa-paper-plane icon-wrap"></i>
-                                <span class="mini-click-non">Submited by Fianance</span>
+                                <span class="mini-click-non">Submited to Fianance</span>
                             </a>
                         </li>
                         <li>
