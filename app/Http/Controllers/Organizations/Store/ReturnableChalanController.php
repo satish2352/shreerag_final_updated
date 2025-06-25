@@ -308,7 +308,7 @@ class ReturnableChalanController extends Controller
                     // 'business_id' => 'nullable|exists:purchase_orders,id',
                     // 'customer_po_no' => 'nullable|string|max:255',
                     'plant_id' => 'required|string|max:255',
-                    'tax_type' => 'required|string|in:GST',
+                    'tax_type' => 'required|string',
                     'tax_id' => 'required|exists:tbl_tax,id',
                     'vehicle_number' => 'required|string',
                     'po_date' => 'required',
