@@ -44,7 +44,7 @@ class BusinessController extends Controller
     public function store( Request $request ) {
         $rules = [
             'title' => 'required|string|max:255',
-            // 'product_name' => 'required',
+            'project_name' => 'required',
             'customer_po_number' => 'required|unique:businesses|string|min:10|max:16',
             // 'quantity' => 'required',
             'po_validity' => 'required',
@@ -58,7 +58,7 @@ class BusinessController extends Controller
             'title.required' => 'The customer name is required.',
             'title.string' => 'The customer name must be a valid string.',
             'title.max' => 'The customer name must not exceed 255 characters.',
-            // 'product_name.required' => 'The product name is required.',
+            'product_name.required' => 'The project name is required.',
             'customer_po_number.required' => 'The customer po number is required.',
             'customer_po_number.min' => 'The customer po number must be at least 10 characters.',
             'customer_po_number.max' => 'The customer po number must not exceed 16 characters.',

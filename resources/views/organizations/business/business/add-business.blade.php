@@ -69,6 +69,16 @@
                                                         @csrf
                                                         <div class="form-group-inner">
                                                             <div>
+                                                                   <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                    <label for="project_name">Project Name : <span
+                                                                            class="text-danger">*</span></label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="project_name" value="{{ old('project_name') }}"
+                                                                        name="project_name" placeholder="Enter project Name">
+                                                                    @if ($errors->has('project_name'))
+                                                                        <span class="red-text"><?php echo $errors->first('project_name', ':message'); ?></span>
+                                                                    @endif
+                                                                </div>
                                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                                     <label for="customer_po_number">Customer PO Number :
                                                                         <span class="text-danger">*</span></label>

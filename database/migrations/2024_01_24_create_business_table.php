@@ -17,7 +17,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('organization_id');
             $table->string('customer_po_number');
-            // $table->string('product_name');
+            $table->string('project_name');
             $table->string('title');
             // $table->text('descriptions')->nullable();
             // $table->string('quantity');

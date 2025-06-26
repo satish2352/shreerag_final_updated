@@ -26,13 +26,7 @@ class AllListRepositor
       try {
           $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN')];
   
-          $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
-                  $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-              })
-              ->leftJoin('designs', function ($join) {
-                  $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-              })
-              ->leftJoin('businesses', function ($join) {
+          $data_output = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
                   $join->on('business_application_processes.business_id', '=', 'businesses.id');
               })
               ->leftJoin('businesses_details', function ($join) {
@@ -43,6 +37,7 @@ class AllListRepositor
               ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
               ->groupBy(
                   'businesses.id',
+                  'businesses.project_name',
                   'businesses.customer_po_number',
                   'businesses.title',
                   'businesses_details.id',
@@ -56,6 +51,7 @@ class AllListRepositor
               )
               ->select(
                   'businesses.id',
+                    'businesses.project_name',
                   'businesses_details.id',
                   'businesses.title',
                   'businesses.customer_po_number',

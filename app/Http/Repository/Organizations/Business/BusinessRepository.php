@@ -54,6 +54,7 @@ class BusinessRepository
                }
             $business_data = new Business();
             $business_data->customer_po_number = $request->customer_po_number;
+            $business_data->project_name = $request->project_name;
             $business_data->title = $request->title;
             $business_data->remarks = $request->remarks;
             $business_data->po_validity = $request->po_validity;
@@ -198,6 +199,7 @@ class BusinessRepository
             $dataOutput = Business::findOrFail($request->business_main_id);
             $dataOutput->customer_po_number = $request->customer_po_number;
             $dataOutput->title = $request->title;
+             $dataOutput->project_name = $request->project_name;
             $dataOutput->po_validity = $request->po_validity;
             $dataOutput->remarks = $request->remarks;
     

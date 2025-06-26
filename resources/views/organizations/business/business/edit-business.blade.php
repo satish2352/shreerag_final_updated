@@ -66,6 +66,15 @@
                                                 @foreach ($editData as $key => $editDataNew)
                                                     @if ($key == 0)
                                                         <div class="row">
+                                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                <label for="project_name">PO Number : <span
+                                                                        class="text-danger">*</span></label>
+                                                                <input class="form-control" name="project_name"
+                                                                    id="project_name"
+                                                                    placeholder="Enter the customer po number"
+                                                                    value="@if (old('project_name')) {{ trim(old('project_name')) }}@else{{ trim($editDataNew->customer_po_number) }} @endif">
+                                                            </div>
+
                                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                                 <label for="customer_po_number">PO Number : <span
                                                                         class="text-danger">*</span></label>
