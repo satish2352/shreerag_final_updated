@@ -57,8 +57,10 @@ public function getCompletedProductList($request)
 
         $data_output = $query->select(
             'businesses_details.id as business_details_id',
+            'businesses.project_name',
             'businesses.customer_po_number',
             'businesses.title',
+            'businesses.created_at',
             'businesses_details.product_name',
             'businesses_details.description',
             'businesses_details.quantity',
@@ -67,8 +69,10 @@ public function getCompletedProductList($request)
         )
         ->groupBy(
             'businesses_details.id',
+            'businesses.project_name',
             'businesses.customer_po_number',
             'businesses.title',
+            'businesses.created_at',
             'businesses_details.product_name',
             'businesses_details.description',
             'businesses_details.quantity'

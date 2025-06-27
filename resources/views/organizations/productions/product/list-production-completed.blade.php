@@ -70,6 +70,7 @@
                                             <tr>
                                                 <th>Sr. No.</th>
                                                 <th data-field="tracking_updated_at" data-editable="false">Completed Date</th>
+                                                <th>Project Name</th>
                                                 <th>PO Number</th>
                                                 <th>Product Name</th>
                                                 <th>Description</th>
@@ -84,6 +85,7 @@
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ \Carbon\Carbon::parse($data->tracking_updated_at)->format('d-m-Y h:i A') }}</td>
+                                                    <td>{{ $data->project_name }}</td>
                                                     <td>{{ $data->customer_po_number }}</td>
                                                     <td>{{ $data->product_name }}</td>
                                                     <td>{{ $data->description }}</td>

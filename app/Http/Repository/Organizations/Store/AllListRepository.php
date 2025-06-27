@@ -40,19 +40,23 @@ class AllListRepository  {
             ->distinct('businesses.id')
             ->groupBy(
                 'businesses.id',
+                'businesses.project_name',
                 'businesses.customer_po_number',
                 'businesses.remarks',
                 'businesses.is_active',
                 'production.business_id',
-                'businesses.updated_at'
+                'businesses.updated_at',
+                'businesses.created_at'
             )
             ->select(
                 'businesses.id',
+                'businesses.project_name',
                 'businesses.customer_po_number',
                 'businesses.remarks',
                 'businesses.is_active',
                 'production.business_id',
-                'businesses.updated_at'
+                'businesses.updated_at',
+                'businesses.created_at'
             )
             ->orderBy('businesses.updated_at', 'desc')
             ->get();
@@ -216,6 +220,7 @@ class AllListRepository  {
                 ->selectRaw("
                     MAX(businesses.id) as business_id,
                     MAX(businesses.customer_po_number) as customer_po_number,
+                    MAX(businesses.project_name) as customer_project_name,
                     businesses_details.product_name,
                     MAX(businesses.title) as title,
                     businesses_details.description,
@@ -228,7 +233,8 @@ class AllListRepository  {
                     MAX(designs.bom_image) as bom_image,
                     MAX(designs.design_image) as design_image,
                     MAX(requisition.bom_file) as bom_file,
-                    MAX(businesses.updated_at) as updated_at
+                    MAX(businesses.updated_at) as updated_at,
+                    MAX(businesses.created_at) as created_at
                 ")
                 ->orderBy('updated_at', 'desc')
                 ->get();

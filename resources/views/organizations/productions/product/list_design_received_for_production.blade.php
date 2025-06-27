@@ -88,6 +88,8 @@ button.pd-setting-ed {
                                         <tr>
                                             
                                             <th data-field="id">ID</th>   
+                                            <th data-field="date" data-editable="false">Sent Date</th>
+                                            <th data-field="project_name" data-editable="false">Project Name</th>
                                             <th data-field="customer_po_number" data-editable="false">PO Number</th>
                                             {{-- <th data-field="product_name" data-editable="false">Product Name</th> --}}
                                             {{-- <th data-field="title" data-editable="false">Name</th> --}}
@@ -109,6 +111,9 @@ button.pd-setting-ed {
                                         <tr>
                                             
                                             <td>{{ $loop->iteration }}</td>
+                                            <td> {{ $data->created_at ? $data->created_at->format('Y-m-d') : 'N/A' }}
+                                                    </td>
+                                            <td>{{ ucwords($data->project_name) }}</td>
                                             <td>{{ ucwords($data->customer_po_number) }}</td>
                                             {{-- <td>{{ucwords($data->product_name)}}</td> --}}
                                             {{-- <td>{{ucwords($data->title)}}</td> --}}

@@ -102,12 +102,14 @@ class AllListRepositor
         ->select(
           'businesses.id',
           'businesses.title',
+          'businesses.project_name',
           'businesses.customer_po_number',
           'businesses_details.product_name',
           'businesses_details.quantity',
           'businesses_details.description',
           'businesses.remarks',
           'businesses.is_active',
+          'businesses.created_at',
           'production.business_id',
           'design_revision_for_prod.reject_reason_prod',
           'designs.bom_image',
@@ -151,6 +153,7 @@ class AllListRepositor
         ->where('businesses.is_deleted', 0)
         ->select(
           'businesses.id',
+          'businesses.project_name',
           'businesses.customer_po_number',
           'businesses_details.product_name',
           'businesses.title',
@@ -158,6 +161,7 @@ class AllListRepositor
           'businesses_details.quantity',
           'businesses.remarks',
           'businesses.is_active',
+          'businesses.created_at',
           'production.business_id',
           'production.id as productionId',
           'design_revision_for_prod.reject_reason_prod',
@@ -212,10 +216,12 @@ class AllListRepositor
           
           ->select(
               'businesses.id',
+              'businesses.project_name',
               'businesses.customer_po_number',
               'businesses.title',
               'businesses.remarks',
               'businesses.is_active',
+              'businesses.created_at',
               'production.business_id',
               'production.id as productionId',
               'design_revision_for_prod.reject_reason_prod',
@@ -678,12 +684,13 @@ class AllListRepositor
           ->where('businesses.is_active',true)
           ->where('businesses.is_deleted', 0)
           ->distinct('businesses.id')
-          ->groupBy('businesses.id', 'businesses.customer_po_number', 'businesses.title',
-           'businesses.remarks', 'businesses.is_active', 'production.business_id', 'businesses.updated_at'
+          ->groupBy('businesses.id', 'businesses.project_name','businesses.customer_po_number', 'businesses.title',
+           'businesses.remarks', 'businesses.is_active', 'production.business_id', 'businesses.updated_at', 'businesses.created_at'
            )
            
           ->select(
               'businesses.id',
+              'businesses.project_name',
               'businesses.customer_po_number',
               // 'businesses.product_name',
               // 'businesses.title',
@@ -697,7 +704,8 @@ class AllListRepositor
               // 'designs.business_id',
               'production.business_id',
               'businesses.updated_at',
-             'businesses.updated_at'
+             'businesses.updated_at',
+             'businesses.created_at'
           )->orderBy('businesses.updated_at', 'desc')->get();
 
 
@@ -971,7 +979,7 @@ public function getOwnerAllListMaterialRecievedToProduction(){
       ->where('businesses.is_active',true)
       ->where('businesses.is_deleted', 0)
       ->distinct('businesses.id')
-      ->groupBy('businesses.id','businesses.customer_po_number','businesses.title','businesses_details.id','businesses_details.product_name',
+      ->groupBy('businesses.id','businesses.project_name','businesses.customer_po_number','businesses.created_at','businesses.title','businesses_details.id','businesses_details.product_name',
       'businesses_details.description',
       'businesses_details.quantity',
       'businesses_details.rate',
@@ -981,7 +989,9 @@ public function getOwnerAllListMaterialRecievedToProduction(){
            'businesses.id',
           'businesses_details.id',
           'businesses.title',
+          'businesses.project_name',
           'businesses.customer_po_number',
+          'businesses.created_at',
           'businesses_details.product_name',
           'businesses_details.description',
           'businesses_details.quantity',
@@ -1014,7 +1024,7 @@ public function getOwnerAllCompletedProduction(){
       ->where('businesses.is_active',true)
       ->where('businesses.is_deleted', 0)
       ->distinct('businesses.id')
-      ->groupBy('businesses.id','businesses.customer_po_number','businesses_details.id','businesses_details.product_name',
+      ->groupBy('businesses.id','businesses.project_name','businesses.customer_po_number','businesses.created_at','businesses_details.id','businesses_details.product_name',
       'businesses_details.description',
       'businesses_details.quantity',
       'businesses_details.rate',
@@ -1022,6 +1032,8 @@ public function getOwnerAllCompletedProduction(){
       'tbl_customer_product_quantity_tracking.updated_at'
       )
       ->select(
+          'businesses.project_name',
+          'businesses.created_at',
           'businesses.customer_po_number',
           'businesses_details.product_name',
           'businesses_details.description',
@@ -1057,7 +1069,7 @@ public function getOwnerFinalAllCompletedProductionLogistics(){
     ->where('businesses.is_active',true)
     ->where('businesses.is_deleted', 0)
     ->distinct('businesses.id')
-    ->groupBy('tbl_customer_product_quantity_tracking.id','tbl_customer_product_quantity_tracking.business_id','tbl_customer_product_quantity_tracking.business_details_id','businesses.customer_po_number','businesses_details.id','businesses_details.product_name',
+    ->groupBy('tbl_customer_product_quantity_tracking.id','tbl_customer_product_quantity_tracking.business_id','tbl_customer_product_quantity_tracking.business_details_id','businesses.project_name','businesses.customer_po_number','businesses.created_at','businesses_details.id','businesses_details.product_name',
     'businesses_details.description',
     'businesses_details.quantity',
     'businesses_details.rate',
@@ -1067,7 +1079,9 @@ public function getOwnerFinalAllCompletedProductionLogistics(){
     ->select(
       'tbl_customer_product_quantity_tracking.id','tbl_customer_product_quantity_tracking.business_id',
       'tbl_customer_product_quantity_tracking.business_details_id',
+        'businesses.project_name',
         'businesses.customer_po_number',
+        'businesses.created_at',
         'businesses_details.product_name',
         'businesses_details.description',
         'businesses_details.quantity',
@@ -1118,7 +1132,9 @@ public function getOwnerAllListBusinessReceivedFromLogistics(){
       'tbl_customer_product_quantity_tracking.id',
       'tbl_customer_product_quantity_tracking.business_id',
       'tbl_customer_product_quantity_tracking.business_details_id',
+      'businesses.project_name',
       'businesses.customer_po_number',
+      'businesses.created_at',
       'businesses.title',
       'businesses_details.product_name',
       'businesses_details.description',
@@ -1136,7 +1152,9 @@ public function getOwnerAllListBusinessReceivedFromLogistics(){
       'tbl_customer_product_quantity_tracking.id',
       'tbl_customer_product_quantity_tracking.business_id',
       'tbl_customer_product_quantity_tracking.business_details_id',
+      'businesses.project_name',
       'businesses.customer_po_number',
+      'businesses.created_at',
       'businesses.title',
       'businesses_details.product_name',
       'businesses_details.description',
@@ -1197,8 +1215,10 @@ public function getOwnerAllListBusinessFianaceSendToDispatch(){
       'tbl_customer_product_quantity_tracking.id',
       'tbl_customer_product_quantity_tracking.business_id',
       'tbl_customer_product_quantity_tracking.business_details_id',
+      'businesses.project_name',
       'businesses.customer_po_number',
       'businesses.title',
+      'businesses.created_at',
       'businesses_details.product_name',
       'businesses_details.description',
       'businesses_details.quantity',
@@ -1215,8 +1235,10 @@ public function getOwnerAllListBusinessFianaceSendToDispatch(){
       'tbl_customer_product_quantity_tracking.id',
       'tbl_customer_product_quantity_tracking.business_id',
       'tbl_customer_product_quantity_tracking.business_details_id',
+      'businesses.project_name',
       'businesses.customer_po_number',
       'businesses.title',
+      'businesses.created_at',
       'businesses_details.product_name',
       'businesses_details.description',
       'businesses_details.quantity',
@@ -1269,8 +1291,10 @@ public function listProductDispatchCompletedFromDispatch(){
       ->groupBy(
         'tbl_customer_product_quantity_tracking.id','tbl_customer_product_quantity_tracking.business_id',
       'tbl_customer_product_quantity_tracking.business_details_id',
+        'businesses.project_name',
         'businesses.customer_po_number',
         'businesses.title',
+        'businesses.created_at',
         'businesses_details.product_name',
         'businesses_details.quantity',
         'businesses_details.description',
@@ -1287,8 +1311,10 @@ public function listProductDispatchCompletedFromDispatch(){
       ->select(
        'tbl_customer_product_quantity_tracking.id','tbl_customer_product_quantity_tracking.business_id',
       'tbl_customer_product_quantity_tracking.business_details_id',
+        'businesses.project_name',
         'businesses.customer_po_number',
         'businesses.title',
+        'businesses.created_at',
         'businesses_details.product_name',
         'businesses_details.description',
         'businesses_details.quantity',
