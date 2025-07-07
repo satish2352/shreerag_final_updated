@@ -125,6 +125,18 @@
                                                 <span class="red-text">{{ $errors->first('opening_stock') }}</span>
                                                 @endif
                                             </div>
+                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
+                                                                <div class="form-group">
+                                                                    <label for="image">Image </label>&nbsp<span
+                                                                        class="red-text">*</span><br>
+                                                                    <input type="file" name="image" id="image"
+                                                                        accept="image/*" value="{{ old('image') }}"
+                                                                        class="form-control mb-2">
+                                                                    @if ($errors->has('image'))
+                                                                        <span class="red-text"><?php echo $errors->first('image', ':message'); ?></span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
                                         </div>
 
                                         <div class="login-btn-inner">

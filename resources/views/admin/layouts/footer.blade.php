@@ -228,7 +228,17 @@
         setInterval(fetch_new_hold, 2000); // Check notifications every 2 seconds
     });
 </script>
+<script>
+document.getElementById('exportPdf').addEventListener('click', () => {
+    document.getElementById('export_type').value = 1;
+    document.getElementById('filterForm').submit();
+});
 
+document.getElementById('exportExcel').addEventListener('click', () => {
+    document.getElementById('export_type').value = 2;
+    document.getElementById('filterForm').submit();
+});
+    </script>
 </body>
 
 </html>

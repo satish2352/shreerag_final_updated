@@ -78,6 +78,10 @@ return [
     'RETURNABLE_CHALAN_DELETE'=>"/all_web_data/images/returnable_chalan/",
     'RETURNABLE_CHALAN_ADD'=>'/all_web_data/images/returnable_chalan/',
 
+     'PART_ITEM_VIEW'=> env("FILE_VIEW").'/all_web_data/images/part_item/',
+    'PART_ITEM_DELETE'=>"/all_web_data/images/part_item/",
+    'PART_ITEM_ADD'=>'/all_web_data/images/part_item/',
+
     'ROLE_ID' => [
         'SUPER'             => 111,
         'HIGHER_AUTHORITY'  => 1,

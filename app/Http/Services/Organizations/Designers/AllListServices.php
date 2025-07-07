@@ -20,16 +20,6 @@ class AllListServices
             return $e;
         }
     }
-    public function listDesignReport(){
-        try {
-            $data_output = $this->repo->listDesignReport();
-          
-            return $data_output;
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
-
     public function getAllListDesignRecievedForCorrection(){
         try {
             $data_output =  $this->repo->getAllListDesignRecievedForCorrection();

@@ -493,5 +493,5 @@ class AllListController extends Controller
             return $e;
         }
     }
-
+  
 }

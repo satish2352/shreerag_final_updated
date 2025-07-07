@@ -1,0 +1,288 @@
+<!-- Static Table Start -->
+@extends('admin.layouts.master')
+@section('content')
+    <style>
+        .fixed-table-loading {
+            display: none;
+        }
+
+        #table thead th {
+            white-space: nowrap;
+        }
+
+        #table thead th {
+            width: 300px !important;
+            padding-right: 49px !important;
+            padding-left: 20px !important;
+        }
+
+        .custom-datatable-overright table tbody tr td {
+            padding-left: 19px !important;
+            padding-right: 5px !important;
+            font-size: 14px;
+            text-align: left;
+        }
+    </style>
+    <div class="data-table-area mg-tb-15">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="sparkline13-list">
+                        <div class="sparkline13-hd">
+                            <div class="main-sparkline13-hd">
+                                <h1>Material Need To Sent To<span class="table-project-n"> Production</span> Department</h1>
+                                <div class="form-group-inner login-btn-inner row">
+                                    <div class="col-lg-2">
+                                        {{-- <div class="login-horizental cancel-wp pull-left">
+                                                <a href="{{ route('add-design-upload') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Design</button></a>
+                                        </div> --}}
+                                    </div>
+                                    <div class="col-lg-10"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (Session::get('status') == 'success')
+                            <div class="alert alert-success alert-success-style1">
+                                <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
+                                    <span class="icon-sc-cl" aria-hidden="true">&times;</span>
+                                </button>
+                                {{-- <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i> --}}
+                                <p><strong>Success!</strong> {{ Session::get('msg') }}</p>
+                            </div>
+                        @endif
+                        @if (Session::get('status') == 'error')
+                            <div class="alert alert-danger alert-mg-b alert-success-style4">
+                                <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
+                                    <span class="icon-sc-cl" aria-hidden="true">&times;</span>
+                                </button>
+                                <i class="fa fa-times adminpro-danger-error admin-check-pro" aria-hidden="true"></i>
+                                <p><strong>Danger!</strong> {{ Session::get('msg') }}</p>
+                            </div>
+                        @endif
+
+                        <div class="sparkline13-graph">
+                            <div class="datatable-dashv1-list custom-datatable-overright">
+
+                                <form id="filterForm" method="GET" action="{{ route('list-design-report') }}">
+    <input type="hidden" name="export_type" id="export_type" />
+      
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label>Project Name</label>
+                <select class="form-control select2" name="project_name">
+                    <option value="">All Projects</option>
+                    @foreach($getProjectName as $id => $name)
+                        <option value="{{ $id }}">{{ $name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label>From Date</label>
+                <input type="date" name="from_date" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <label>To Date</label>
+                <input type="date" name="to_date" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <label>Year</label>
+                <select name="year" class="form-control">
+                    <option value="">All</option>
+                    @for ($i = now()->year; $i >= 2010; $i--)
+                        <option value="{{ $i }}">{{ $i }}</option>
+                    @endfor
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label>Month</label>
+                <select name="month" class="form-control">
+                    <option value="">All</option>
+                    @foreach (range(1, 12) as $m)
+                        <option value="{{ $m }}">{{ date('F', mktime(0, 0, 0, $m, 1)) }}</option>
+                    @endforeach
+                </select>
+            </div>
+            
+        </div>
+
+        {{-- 🔹 Search and Export --}}
+        <div class="row mb-2">
+            <div class="col-md-6 d-flex justify-content-center">
+               
+                <button type="submit" class="btn btn-primary" style="background-color: #175ca2;}">Filter</button>
+            
+            </div>
+            <div class="col-md-6 text-end d-flex" >
+                <input type="text" class="form-control d-flex align-self-center" id="searchKeyword" style="margin-right: 23px;" placeholder="Search...">
+    <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="float: right;">
+            <i class="fa fa-download"></i> Export
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+            <li><a class="dropdown-item" href="#" id="exportExcel">Export to Excel</a></li>
+            <li><a class="dropdown-item" href="#" id="exportPdf">Export to PDF</a></li>
+        </ul>
+    </div>
+</div>
+            {{-- <div class="col-md-8 text-end">
+                <button type="button" class="btn btn-success" id="exportExcel">Export Excel</button>
+                <button type="button" class="btn btn-danger" id="exportPdf">Export PDF</button>
+            </div> --}}
+        </div>
+    </form>
+
+    
+                                
+                                   {{-- 🔹 Table --}}
+    <div class="table-responsive">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+
+                                                <th data-field="id">ID</th>
+                                                <th data-field="po_number" data-editable="false">PO Number</th>
+                                                {{-- <th data-field="grn_date" data-editable="false">Description</th> --}}
+                                                <th data-field="purchase_id" data-editable="false">Remark</th>
+                                                <th data-field="product_name" data-editable="false">Product Name</th>
+                                                {{-- <th data-field="title" data-editable="false">Name</th> --}}
+                                                <th data-field="quantity" data-editable="false">Quantity</th>
+                                                <th data-field="grn_date" data-editable="false">Description</th>
+                                                {{-- <th data-field="purchase_id" data-editable="false">Remark</th>                                          --}}
+                                                <th data-field="design_image" data-editable="false">Design Layout</th>
+                                                <th data-field="bom_image" data-editable="false">BOM</th>
+                                                <th data-field="re_design_image" data-editable="false">Revised Design Layout
+                                                </th>
+                                                <th data-field="re_bom_image" data-editable="false">Revised BOM</th>
+
+                                            </tr>
+    </thead>
+    <tbody id="reportBody">
+        <tr><td colspan="6">Loading...</td></tr>
+    </tbody>
+</table>
+
+<div class="pagination-wrapper">
+    <div id="paginationInfo"></div>
+    <ul class="pagination" id="paginationLinks"></ul>
+</div>
+
+    </div>
+
+    {{-- 🔹 Pagination --}}
+    <div class="pagination-wrapper">
+        <div id="paginationInfo"></div>
+        <ul class="pagination" id="paginationLinks"></ul>
+    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+let currentPage = 1, pageSize = 10;
+
+function fetchReport(reset = false) {
+    if (reset) currentPage = 1;
+
+    const form = document.getElementById('filterForm');
+    const formData = new FormData(form);
+    formData.append('pageSize', pageSize);
+    formData.append('currentPage', currentPage);
+    formData.append('search', document.getElementById('searchKeyword').value);
+
+    const params = new URLSearchParams();
+    formData.forEach((val, key) => params.append(key, val));
+
+    fetch(`{{ route('design-ajax') }}?${params.toString()}`)
+        .then(res => res.json())
+        .then(res => {
+            const tbody = document.getElementById('reportBody');
+            const pagLinks = document.getElementById('paginationLinks');
+            const pagInfo = document.getElementById('paginationInfo');
+
+            if (res.status) {
+               const rows = res.data.map((item, i) => {
+    const designImage = item.design_image
+        ? `<a class="img-size" target="_blank" href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}${item.design_image}">Click to view</a>`
+        : '-';
+
+    const bomImage = item.bom_image
+        ? `<a class="img-size" target="_blank" href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}${item.bom_image}">Click to download</a>`
+        : '-';
+
+    const reDesignImage = item.reject_reason_prod && item.re_design_image
+        ? `<a class="img-size" target="_blank" href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}${item.re_design_image}">Click to view</a>`
+        : '-';
+
+    const reBomImage = item.reject_reason_prod && item.re_bom_image
+        ? `<a class="img-size" target="_blank" href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}${item.re_bom_image}">Click to download</a>`
+        : '-';
+
+    return `
+        <tr>
+            <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
+            <td>${item.customer_po_number || '-'}</td>
+            <td>${item.remark || '-'}</td>
+            <td>${item.product_name || '-'}</td>
+            <td>${item.quantity || '-'}</td>
+            <td>${item.description || '-'}</td>
+            <td>${designImage}</td>
+            <td>${bomImage}</td>
+            <td>${reDesignImage}</td>
+            <td>${reBomImage}</td>
+        </tr>
+    `;
+}).join('');
+                tbody.innerHTML = rows || '<tr><td colspan="6">No records found.</td></tr>';
+
+                // Pagination
+                let pagHtml = '', totalPages = res.pagination.totalPages;
+                let start = Math.max(1, currentPage - 2), end = Math.min(totalPages, start + 4);
+
+                if (start > 1) pagHtml += `<li><a class="page-link" onclick="goToPage(1)">1</a></li><li>...</li>`;
+                for (let i = start; i <= end; i++) {
+                    pagHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+                                    <a class="page-link" onclick="goToPage(${i})">${i}</a>
+                                </li>`;
+                }
+                if (end < totalPages) pagHtml += `<li>...</li><li><a class="page-link" onclick="goToPage(${totalPages})">${totalPages}</a></li>`;
+
+                pagLinks.innerHTML = pagHtml;
+                pagInfo.innerHTML = `Showing ${res.pagination.from} to ${res.pagination.to} of ${res.pagination.totalItems}`;
+            } else {
+                tbody.innerHTML = '<tr><td colspan="6">Failed to fetch data.</td></tr>';
+            }
+        });
+}
+
+function goToPage(page) {
+    currentPage = page;
+    fetchReport();
+}
+
+document.getElementById('filterForm').addEventListener('submit', e => {
+    e.preventDefault();
+    fetchReport(true);
+});
+
+document.getElementById('searchKeyword').addEventListener('input', () => fetchReport(true));
+
+document.getElementById('exportPdf').addEventListener('click', () => {
+    document.getElementById('export_type').value = 1;
+    document.getElementById('filterForm').submit();
+});
+
+document.getElementById('exportExcel').addEventListener('click', () => {
+    document.getElementById('export_type').value = 2;
+    document.getElementById('filterForm').submit();
+});
+
+// Initial load
+fetchReport(true);
+</script>
+@endsection
+

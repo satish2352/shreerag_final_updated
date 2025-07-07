@@ -36,8 +36,10 @@ class ItemRepository  {
             'tbl_part_item.part_number',
             'tbl_part_item.basic_rate',
             'tbl_part_item.opening_stock',
+            'tbl_part_item.image',
             'tbl_part_item.description',
             'tbl_part_item.extra_description',
+            'tbl_part_item.image',
             'tbl_part_item.unit_id',
             'tbl_unit.name',
             'tbl_part_item.hsn_id',
@@ -54,54 +56,117 @@ class ItemRepository  {
         }
     }
 
+public function addAll($request)
+{   
+    try {
+        $dataOutput = new PartItem();
+        $dataOutput->part_number = $request->part_number;
+        $dataOutput->description = $request->description;
+        $dataOutput->unit_id = $request->unit_id;
+        $dataOutput->hsn_id = $request->hsn_id;
+        $dataOutput->group_type_id = $request->group_type_id;
+        $dataOutput->basic_rate = $request->basic_rate;
+        $dataOutput->opening_stock = $request->opening_stock;
 
-    public function addAll($request)
-    {   
-        try {
-            // Create a new PartItem record
-            $dataOutput = new PartItem();
-            $dataOutput->part_number = $request->part_number;
-            $dataOutput->description = $request->description;
-            $dataOutput->unit_id = $request->unit_id;
-            $dataOutput->hsn_id = $request->hsn_id;
-            $dataOutput->group_type_id = $request->group_type_id;
-            $dataOutput->basic_rate = $request->basic_rate;
-            $dataOutput->opening_stock = $request->opening_stock;
-            if ($request->has('rack_id')) {
-                $dataOutput->rack_id = $request->rack_id;
-            }
-            if ($request->has('extra_description')) {
-                $dataOutput->extra_description = $request->extra_description;
-            }
+        if ($request->has('rack_id')) {
+            $dataOutput->rack_id = $request->rack_id;
+        }
+        if ($request->has('extra_description')) {
+            $dataOutput->extra_description = $request->extra_description;
+        }
+
+        $dataOutput->save();
+
+        $last_insert_id = $dataOutput->id;
+
+        // Create unique image name
+        $ImageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->extension();
+
+        // Update image name in the record
+        $finalOutput = PartItem::find($last_insert_id);
+        $finalOutput->image = $ImageName;
+        $finalOutput->save();
+
+        // Insert into ItemStock
+        $itemStock = new ItemStock();
+        $itemStock->part_item_id = $last_insert_id;
+        $itemStock->quantity = $dataOutput->opening_stock;
+        $itemStock->save();
+
+        // Insert into ItemStockHistory
+        $itemStockHistory = new ItemStockHistory();
+        $itemStockHistory->part_item_id = $last_insert_id;
+        $itemStockHistory->quantity = $dataOutput->opening_stock;
+        $itemStockHistory->save();
+
+        // Return both status and ImageName
+        return [
+            'status' => 'success',
+            'ImageName' => $ImageName
+        ];
+
+    } catch (\Exception $e) {
+        return [
+            'status' => 'error',
+            'msg' => $e->getMessage()
+        ];
+    }
+}
+
+    // public function addAll($request)
+    // {   
+    //     try {
+    //         // Create a new PartItem record
+    //         $dataOutput = new PartItem();
+    //         $dataOutput->part_number = $request->part_number;
+    //         $dataOutput->description = $request->description;
+    //         $dataOutput->unit_id = $request->unit_id;
+    //         $dataOutput->hsn_id = $request->hsn_id;
+    //         $dataOutput->group_type_id = $request->group_type_id;
+    //         $dataOutput->basic_rate = $request->basic_rate;
+    //         $dataOutput->opening_stock = $request->opening_stock;
+    //         if ($request->has('rack_id')) {
+    //             $dataOutput->rack_id = $request->rack_id;
+    //         }
+    //         if ($request->has('extra_description')) {
+    //             $dataOutput->extra_description = $request->extra_description;
+    //         }
            
     
-            $dataOutput->save();
+    //         $dataOutput->save();
     
-            // Retrieve the last inserted ID
-            $last_insert_id = $dataOutput->id;
-   
-            // Insert new record into ItemStock
-            $itemStock = new ItemStock();
-            $itemStock->part_item_id = $last_insert_id;
-            $itemStock->quantity = $dataOutput->opening_stock;
-            $itemStock->save();
-            // Insert new record into ItemStockHistory
-            $itemStockHistory = new ItemStockHistory();
-            $itemStockHistory->part_item_id = $last_insert_id;
-            $itemStockHistory->quantity = $dataOutput->opening_stock;
-            $itemStockHistory->save();
+    //         // Retrieve the last inserted ID
+    //         $last_insert_id = $dataOutput->id;
+    //          $last_insert_id = $dataOutput->id;
+
+    //         $ImageName = $last_insert_id .'_' . rand( 100000, 999999 ) . '_image.' . $request->image->extension();
+
+    //         $finalOutput = PartItem::find( $last_insert_id );
+    //         // Assuming $request directly contains the ID
+    //         $finalOutput->image = $ImageName;
+          
+    //         // Insert new record into ItemStock
+    //         $itemStock = new ItemStock();
+    //         $itemStock->part_item_id = $last_insert_id;
+    //         $itemStock->quantity = $dataOutput->opening_stock;
+    //         $itemStock->save();
+    //         // Insert new record into ItemStockHistory
+    //         $itemStockHistory = new ItemStockHistory();
+    //         $itemStockHistory->part_item_id = $last_insert_id;
+    //         $itemStockHistory->quantity = $dataOutput->opening_stock;
+    //         $itemStockHistory->save();
          
-            return [
-                'status' => 'success'
-            ];
+    //         return [
+    //             'status' => 'success'
+    //         ];
     
-        } catch (\Exception $e) {
-            return [
-                'msg' => $e->getMessage(),
-                'status' => 'error'
-            ];
-        }
-    }
+    //     } catch (\Exception $e) {
+    //         return [
+    //             'msg' => $e->getMessage(),
+    //             'status' => 'error'
+    //         ];
+    //     }
+    // }
     public function getById($id) {
         try {
             $dataOutputByid = PartItem::leftJoin('tbl_unit', 'tbl_part_item.unit_id', '=', 'tbl_unit.id')
@@ -113,6 +178,7 @@ class ItemRepository  {
                     'tbl_part_item.part_number',
                     'tbl_part_item.basic_rate',
                     'tbl_part_item.opening_stock',
+                     'tbl_part_item.image',
                     'tbl_part_item.description',
                     'tbl_part_item.extra_description',
                     'tbl_unit.id as unit_id',
@@ -136,56 +202,107 @@ class ItemRepository  {
         }
     }
     
-    public function updateAll($request)
-    {
-        try {
-            $dataOutput = PartItem::find($request->part_item_id);    
-            if (!$dataOutput) {
-                return [
-                    'msg' => 'Update Data not found.',
-                    'status' => 'error'
-                ];
-            }
-            $dataOutput->part_number = $request->part_number;
-            $dataOutput->description = $request->description;
-            $dataOutput->unit_id = $request->unit_id;
-            $dataOutput->hsn_id = $request->hsn_id;
-            $dataOutput->group_type_id = $request->group_type_id;
-            $dataOutput->basic_rate = $request->basic_rate;
+    // public function updateAll($request)
+    // {
+    //     try {
+    //         $dataOutput = PartItem::find($request->part_item_id);    
+    //         if (!$dataOutput) {
+    //             return [
+    //                 'msg' => 'Update Data not found.',
+    //                 'status' => 'error'
+    //             ];
+    //         }
+    //         $dataOutput->part_number = $request->part_number;
+    //         $dataOutput->description = $request->description;
+    //         $dataOutput->unit_id = $request->unit_id;
+    //         $dataOutput->hsn_id = $request->hsn_id;
+    //         $dataOutput->group_type_id = $request->group_type_id;
+    //         $dataOutput->basic_rate = $request->basic_rate;
     
-            // Update opening_stock if provided
-            if ($request->filled('opening_stock')) {
-                $dataOutput->opening_stock = $request->opening_stock;
-            }
+    //         // Update opening_stock if provided
+    //         if ($request->filled('opening_stock')) {
+    //             $dataOutput->opening_stock = $request->opening_stock;
+    //         }
     
-            // Update rack_id if provided
-            if ($request->filled('rack_id')) {
-                $dataOutput->rack_id = $request->rack_id;
-            }
+    //         // Update rack_id if provided
+    //         if ($request->filled('rack_id')) {
+    //             $dataOutput->rack_id = $request->rack_id;
+    //         }
     
-            // Update extra_description if provided
-            if ($request->filled('extra_description')) {
-                $dataOutput->extra_description = $request->extra_description;
-            }
+    //         // Update extra_description if provided
+    //         if ($request->filled('extra_description')) {
+    //             $dataOutput->extra_description = $request->extra_description;
+    //         }
     
-            // Save the updated record
-            $dataOutput->save();
+    //         // Save the updated record
+    //         $dataOutput->save();
+    //          $last_insert_id = $dataOutput->id;
+    //         $return_data[ 'last_insert_id' ] = $last_insert_id;
+    //         $return_data[ 'image' ] = $previousEnglishImage;
+    //         // Return success response
+    //         return [
+    //             'data' => $dataOutput,
+    //             'status' => 'success',
+    //         ];
+    //     } catch (\Exception $e) {
+    //         // Return error response
+    //         return [
+    //             'msg' => 'Failed to Update Data.',
+    //             'status' => 'error',
+    //             'error' => $e->getMessage()
+    //         ];
+    //     }
+    // }
     
-            // Return success response
+public function updateAll($request)
+{
+    try {
+        $dataOutput = PartItem::find($request->part_item_id);    
+        if (!$dataOutput) {
             return [
-                'data' => $dataOutput,
-                'status' => 'success',
-            ];
-        } catch (\Exception $e) {
-            // Return error response
-            return [
-                'msg' => 'Failed to Update Data.',
-                'status' => 'error',
-                'error' => $e->getMessage()
+                'msg' => 'Update Data not found.',
+                'status' => 'error'
             ];
         }
+
+        $previousEnglishImage = $dataOutput->image; // store existing image name
+
+        $dataOutput->part_number = $request->part_number;
+        $dataOutput->description = $request->description;
+        $dataOutput->unit_id = $request->unit_id;
+        $dataOutput->hsn_id = $request->hsn_id;
+        $dataOutput->group_type_id = $request->group_type_id;
+        $dataOutput->basic_rate = $request->basic_rate;
+
+        if ($request->filled('opening_stock')) {
+            $dataOutput->opening_stock = $request->opening_stock;
+        }
+
+        if ($request->filled('rack_id')) {
+            $dataOutput->rack_id = $request->rack_id;
+        }
+
+        if ($request->filled('extra_description')) {
+            $dataOutput->extra_description = $request->extra_description;
+        }
+
+        $dataOutput->save();
+
+        return [
+            'last_insert_id' => $dataOutput->id,
+            'image' => $previousEnglishImage,
+            'data' => $dataOutput,
+            'status' => 'success',
+            'msg' => 'Data Updated Successfully'
+        ];
+    } catch (\Exception $e) {
+        return [
+            'msg' => 'Failed to Update Data.',
+            'status' => 'error',
+            'error' => $e->getMessage()
+        ];
     }
-    
+}
 
     public function deleteById($id){
             try {

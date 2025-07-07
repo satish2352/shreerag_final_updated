@@ -29,5 +29,15 @@ class ReportServices
         } catch (\Exception $e) {
             return $e;
         }
-    }    
+    }   
+      public function listDesignReport($request){
+        try {
+            $data_output = $this->repo->listDesignReport($request);
+          
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    
 }

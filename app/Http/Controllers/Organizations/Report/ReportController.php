@@ -8,6 +8,10 @@ use Session;
 use Validator;
 use Config;
 use Carbon;
+use App\Models\ {
+    Business
+}
+;
 
 class ReportController extends Controller
 { 
@@ -28,5 +32,47 @@ public function getCompletedProductList(Request $request)
         return $e;
     }
 }
+ public function listDesignReport( Request $request ) {
+        try {
+            $data = $this->service->listDesignReport($request);
+       
+          $getProjectName = Business::whereNotNull('project_name')
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->pluck('project_name', 'id');
+            return view( 'organizations.report.list-accept-design-by-production', compact( 'data','getProjectName' ) );
+        } catch ( \Exception $e ) {
+            return $e;
+        }
+    }
+   public function listDesignReportAjax(Request $request)
+    {
+        try {
+            $data = $this->service->listDesignReport($request);
+
+            // PDF Export
+            if ($request->filled('export_type') && $request->export_type == 1) {
+                $pdf = Pdf::loadView('exports.design_report', ['data' => $data['data']])
+                    ->setPaper('a3', 'landscape'); // <-- Landscape
+
+                return $pdf->download('DesignReport.pdf');
+            }
+
+            // Excel Export
+            if ($request->filled('export_type') && $request->export_type == 2) {
+                return Excel::download(new DesignReportExport($data['data']), 'DesignReport.xlsx');
+            }
+
+            // Normal AJAX response
+            return response()->json([
+                'status' => true,
+                'data' => $data['data'],
+                'pagination' => $data['pagination']
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+        }
+    }
 
 }

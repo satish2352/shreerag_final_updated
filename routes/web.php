@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
-
+use App\Http\Controllers\Organizations\Purchase\AllListController;
+use App\Http\Controllers\Organizations\Report\ReportController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -133,7 +134,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-owner-final-production-completed-recive-to-logistics', ['as' => 'list-owner-final-production-completed-recive-to-logistics', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getOwnerFinalAllCompletedProductionLogistics']);
         Route::get('/recive-owner-logistics-list', ['as' => 'recive-owner-logistics-list', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getOwnerAllListBusinessReceivedFromLogistics']);
         Route::get('/list-owner-send-to-dispatch', ['as' => 'list-owner-send-to-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getOwnerAllListBusinessFianaceSendToDispatch']);
-    
+
         Route::get('/list-product-completed-report', ['as' => 'list-product-completed-report', 'uses' => 'App\Http\Controllers\Organizations\Report\ReportController@getCompletedProductList']);
 
 
@@ -159,7 +160,9 @@ Route::group(['middleware' => ['admin']], function () {
         //ALL List
         Route::get('/list-reject-design-from-prod', ['as' => 'list-reject-design-from-prod', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@getAllListDesignRecievedForCorrection']);
         Route::get('/list-accept-design-by-production', ['as' => 'list-accept-design-by-production', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@acceptdesignbyProduct']);
-        Route::get('/list-design-report', ['as' => 'list-design-report', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@listDesignReport']);
+        // Route::get('/list-design-report', ['as' => 'list-design-report', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@listDesignReport']);
+          Route::get('/list-design-report', [ReportController::class, 'listDesignReport'])->name('list-design-report');
+    Route::get('/design-ajax', [ReportController::class, 'listDesignReportAjax'])->name('design-ajax');
     });
     Route::group(['prefix' => 'proddept', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
@@ -317,11 +320,22 @@ Route::group(['middleware' => ['admin']], function () {
     Route::group(['prefix' => 'purchase', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
         Route::get('/list-purchase', ['as' => 'list-purchase', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getAllListMaterialReceivedForPurchase']);
-    
-    
+        // Route::get('/purchase-report', ['as' => 'purchase-report', 'uses' => 'App\Http\Controllers\Organizations\Purchase\AllListController@getPurchaseReport']);
+
+        // 🔹 Route for Blade view with filters
+    Route::get('/purchase-report', [AllListController::class, 'getPurchaseReport'])->name('purchase-report');
+
+    // 🔹 Route for AJAX data loading
+    Route::get('/ajax', [AllListController::class, 'getPurchaseReportAjax'])->name('ajax');
+
         // Route::get('/submit-bom-to-owner/{id}', ['as' => 'submit-bom-to-owner', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseController@submitBOMToOwner']);
     
-    
+     Route::get('/party-report', [AllListController::class, 'getPurchasePartyReport'])->name('party-report');
+    Route::get('/party-ajax', [AllListController::class, 'getPurchasePartyReportAjax'])->name('party-ajax');
+
+    Route::get('/follow-up-report', [AllListController::class, 'FollowUpReport'])->name('follow-up-report');
+    Route::get('/follow-up-report-ajax', [AllListController::class, 'FollowUpReportAjax'])->name('follow-up-report-ajax');
+
         Route::get('/list-purchase-order/{requistition_id}/{business_details_id}', ['as' => 'list-purchase-order', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@index']);
         Route::get('/list-purchase-order-rejected', ['as' => 'list-purchase-order-rejected', 'uses' => 'App\Http\Controllers\Organizations\Purchase\PurchaseOrderController@rejectedPurchaseOrder']);
 

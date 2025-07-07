@@ -339,6 +339,28 @@
                                 <span class="mini-click-non">Material Received PO Tracking</span>
                             </a>
                         </li>
+
+                            <li class="{{ Request::is('purchase-report') ? 'active' : '' }}">
+                            <a class="has-arrow" href="{{ route('purchase-report') }}" aria-expanded="false"><i
+                                    class="fa big-icon fa-file-invoice icon-wrap"></i> <span
+                                    class="mini-click-non">Report</span></a>
+                            <ul class="submenu-angle" aria-expanded="false">
+                                <li class="nav-item {{ Request::is('purchase-report') ? 'active' : '' }}"><a
+                                        href="{{ route('purchase-report') }}"><i
+                                            class="fa big-icon fa-list-check icon-wrap" aria-hidden="true"></i> <span
+                                            class="mini-click-non">Purchase Report</span></a></li>
+
+                                      <li class="nav-item {{ Request::is('party-report') ? 'active' : '' }}"><a
+                                        href="{{ route('party-report') }}"><i
+                                            class="fa big-icon fa-list-check icon-wrap" aria-hidden="true"></i> <span
+                                            class="mini-click-non">Party Wise Report</span></a></li>     
+                                      <li class="nav-item {{ Request::is('follow-up-report') ? 'active' : '' }}"><a
+                                        href="{{ route('follow-up-report') }}"><i
+                                            class="fa big-icon fa-list-check icon-wrap" aria-hidden="true"></i> <span
+                                            class="mini-click-non">Follow Up Report</span></a></li>       
+                                
+                            </ul>
+                        </li>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.DESIGNER'))
                         <li class="nav-item {{ request()->is('designdept/dashboard') ? 'active' : '' }}">
@@ -376,6 +398,19 @@
                                 <span class="mini-click-non">Design Report List</span>
                             </a>
                         </li>
+                           {{-- <li class="{{ Request::is('design-report') ? 'active' : '' }}">
+                            <a class="has-arrow" href="{{ route('design-report') }}" aria-expanded="false"><i
+                                    class="fa big-icon fa-file-invoice icon-wrap"></i> <span
+                                    class="mini-click-non">Report</span></a>
+                            <ul class="submenu-angle" aria-expanded="false">
+                                <li class="nav-item {{ Request::is('design-report') ? 'active' : '' }}"><a
+                                        href="{{ route('design-report') }}"><i
+                                            class="fa big-icon fa-list-check icon-wrap" aria-hidden="true"></i> <span
+                                            class="mini-click-non">Design Report</span></a></li>
+                                
+                            </ul>
+                        </li> --}}
+
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.PRODUCTION'))
                         <ul class="sidebar-menu">

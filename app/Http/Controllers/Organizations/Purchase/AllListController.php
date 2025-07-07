@@ -4,6 +4,13 @@ namespace App\Http\Controllers\Organizations\Purchase;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Services\Organizations\Purchase\AllListServices;
+// use App\Http\Controllers\Organizations\Purchase\PDF;
+use App\Http\Controllers\Exports\PurchaseReportExport;
+use App\Http\Controllers\Exports\PurchasePartyReportExport;
+use App\Http\Controllers\Exports\FollowUpReportExport;
+
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 use Session;
 use Validator;
 use Config;
@@ -12,7 +19,8 @@ use App\Models\ {
     Business,
     BusinessApplicationProcesses,
     AdminView,
-    NotificationStatus
+    NotificationStatus,
+    Vendors
 
 }
 ;
@@ -183,5 +191,167 @@ class AllListController extends Controller
             ] );
         }
     }
+
+    public function getPurchaseReport(Request $request)
+    {
+        $getProjectName = Business::whereNotNull('project_name')
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->pluck('project_name', 'id');
+
+        // 🔹 If export is requested
+        if ($request->filled('export_type')) {
+            $data = $this->service->getPurchaseReport($request)['data'];
+
+            if ($request->export_type == 1) {
+                $pdf = Pdf::loadView('exports.purchase-report-pdf', ['data' => $data]);
+                return $pdf->download('purchase_report.pdf');
+            }
+
+            if ($request->export_type == 2) {
+                return Excel::download(new PurchaseReportExport($data), 'purchase_report.xlsx');
+            }
+        }
+
+        // 🔹 Normal view load
+        return view('organizations.report.purchase-report', compact('getProjectName'));
+    }
+    public function getPurchaseReportAjax(Request $request)
+    {
+        try {
+            $data = $this->service->getPurchaseReport($request);
+
+            // PDF Export
+            if ($request->filled('export_type') && $request->export_type == 1) {
+                $pdf = Pdf::loadView('exports.purchase_report', ['data' => $data['data']])
+                    ->setPaper('a3', 'landscape'); // <-- Landscape
+
+                return $pdf->download('PurchaseReport.pdf');
+            }
+
+            // Excel Export
+            if ($request->filled('export_type') && $request->export_type == 2) {
+                return Excel::download(new PurchaseReportExport($data['data']), 'PurchaseReport.xlsx');
+            }
+
+            // Normal AJAX response
+            return response()->json([
+                'status' => true,
+                'data' => $data['data'],
+                'pagination' => $data['pagination']
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
+public function getPurchasePartyReport(Request $request)
+{
+    $getVendorName = Vendors::whereNotNull('vendor_name')
+        ->where('is_deleted', 0)
+        ->where('is_active', 1)
+        ->pluck('vendor_name', 'id');
+
+    if ($request->filled('export_type')) {
+        $data = $this->service->getPurchasePartyReport($request)['data'];
+
+        if ($request->export_type == 1) {
+            $pdf = Pdf::loadView('exports.party-wise-report', ['data' => $data])
+                ->setPaper('a3', 'landscape');
+            return $pdf->download('party-wise-report.pdf');
+        }
+
+        if ($request->export_type == 2) {
+            return Excel::download(new PurchasePartyReportExport($data), 'party-wise-report.xlsx');
+        }
+    }
+
+    return view('organizations.report.party-wise-report', compact('getVendorName'));
+}
+
+public function getPurchasePartyReportAjax(Request $request)
+{
+    try {
+        $response = $this->service->getPurchasePartyReport($request);
+
+        if (isset($response['status']) && $response['status'] === false) {
+            return response()->json([
+                'status' => false,
+                'message' => $response['message']
+            ]);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => $response['data'],
+            'pagination' => $response['pagination']
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['status' => false, 'message' => $e->getMessage()]);
+    }
+}
+public function FollowUpReport(Request $request)
+{
+    // dd($request);
+    // die();
+    $getVendorName = Vendors::whereNotNull('vendor_name')
+        ->where('is_deleted', 0)
+        ->where('is_active', 1)
+        ->pluck('vendor_name', 'id');
+
+    if ($request->filled('export_type')) {
+        $data = $this->service->getPurchasePartyReport($request)['data'];
+
+        if ($request->export_type == 1) {
+            $pdf = Pdf::loadView('exports.follow-up-report', ['data' => $data])
+                ->setPaper('a3', 'landscape');
+            return $pdf->download('follow-up-report.pdf');
+        }
+
+        if ($request->export_type == 2) {
+            return Excel::download(new FollowUpReportExport($data), 'follow-up-report.xlsx');
+        }
+    }
+
+    return view('organizations.report.follow-up-report', compact('getVendorName'));
+}
+
+public function FollowUpReportAjax(Request $request)
+{
+    try {
+        $response = $this->service->getFollowUpReport($request);
+
+        if (isset($response['status']) && $response['status'] === false) {
+            return response()->json([
+                'status' => false,
+                'message' => $response['message']
+            ]);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => $response['data'],
+            'pagination' => $response['pagination']
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['status' => false, 'message' => $e->getMessage()]);
+    }
+
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+ 
 
 }

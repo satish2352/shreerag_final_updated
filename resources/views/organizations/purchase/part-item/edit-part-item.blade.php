@@ -124,6 +124,23 @@
                                                     @endif
                                                 </div>
                                             </div>
+                                              <div class="col-lg-6 col-md-6 col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="image"> Image</label>
+                                                    <input type="file" name="image" class="form-control" id="image"
+                                                        accept="image/*" placeholder="image">
+
+                                                </div>
+                                                <img id="english"
+                                                    src="{{ Config::get('DocumentConstant.PART_ITEM_VIEW') }}{{ $editData->image }}"
+                                                    class="img-fluid img-thumbnail" width="150">
+                                                <img id="english_imgPreview" src="#" alt="pic"
+                                                    class="img-fluid img-thumbnail" width="150" style="display:none">
+                                                @if ($errors->has('image'))
+                                                    <div class="red-text"><?php echo $errors->first('image', ':message'); ?>
+                                                    </div>
+                                                @endif
+                                            </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
                                                 <label for="basic_rate">Basic Rate <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" value="{{ old('basic_rate', $editData->basic_rate) }}" id="basic_rate" name="basic_rate" placeholder="Enter basic rate">

@@ -83,4 +83,42 @@ class AllListServices
             return $e;
         }
     } 
+    //   public function getPurchaseReport($request){
+    //     try {
+    //         $data_output = $this->repo->getPurchaseReport($request);
+          
+    //         return $data_output;
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // } 
+  public function getPurchaseReport($request)
+{
+    try {
+        return $this->repo->getPurchaseReport($request);
+    } catch (\Exception $e) {
+        return ['status' => false, 'message' => $e->getMessage()];
+    }
+}
+
+public function getPurchasePartyReport($request)
+{
+    try {
+        return $this->repo->getPurchasePartyReport($request);
+    } catch (\Exception $e) {
+        return ['status' => false, 'message' => $e->getMessage()];
+    }
+}
+public function getFollowUpReport($request)
+{
+    try {
+       $data_output =$this->repo->getFollowUpReport($request);
+    //    dd($data_output);
+    //    die();
+       return $data_output;
+    } catch (\Exception $e) {
+        return ['status' => false, 'message' => $e->getMessage()];
+    }
+}
+
 }

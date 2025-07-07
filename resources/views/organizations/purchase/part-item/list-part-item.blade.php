@@ -87,6 +87,7 @@ padding-left: 20px !important;
                                             <th data-field="rack_id" data-editable="false">Rack Number</th>
                                             <th data-field="basic_rate" data-editable="false">Basic Rate</th>
                                             <th data-field="opening_stock" data-editable="false">Open Stock</th>
+                                            <th data-field="image" data-editable="false">Image</th>
                                             <th data-field="action">Action</th>
                                         </tr>
                                     </thead>
@@ -103,7 +104,10 @@ padding-left: 20px !important;
                                             <td>{{ucwords($data->rack_name)}}</td>
                                             <td>{{ucwords($data->basic_rate)}}</td>
                                             <td>{{ucwords($data->opening_stock)}}</td>
-                                          
+                                             <td> <img class="img-size"
+                                                            src="{{ Config::get('DocumentConstant.PART_ITEM_VIEW') }}{{ $data->image }}"
+                                                            alt=" {{ strip_tags($data['title']) }} Image" />
+                                                    </td>
                                             <td>
                                                 <div style="display: flex; align-items: center;">
                                                     <a href="{{route('edit-part-item', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
