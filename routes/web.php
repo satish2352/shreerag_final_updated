@@ -155,14 +155,27 @@ Route::group(['middleware' => ['admin']], function () {
     
         Route::get('/add-re-upload-design/{id}', ['as' => 'add-re-upload-design', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@addReUploadDesing']);
         Route::post('/update-re-design-upload', ['as' => 'update-re-design-upload', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@updateReUploadDesign']);
-    
+   
     
         //ALL List
         Route::get('/list-reject-design-from-prod', ['as' => 'list-reject-design-from-prod', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@getAllListDesignRecievedForCorrection']);
         Route::get('/list-accept-design-by-production', ['as' => 'list-accept-design-by-production', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@acceptdesignbyProduct']);
         // Route::get('/list-design-report', ['as' => 'list-design-report', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@listDesignReport']);
-          Route::get('/list-design-report', [ReportController::class, 'listDesignReport'])->name('list-design-report');
-    Route::get('/design-ajax', [ReportController::class, 'listDesignReportAjax'])->name('design-ajax');
+        Route::get('/list-design-report', [ReportController::class, 'listDesignReport'])->name('list-design-report');
+        Route::get('/design-ajax', [ReportController::class, 'listDesignReportAjax'])->name('design-ajax');
+
+         Route::get('/list-consumption-report', [ReportController::class, 'listConsumptionReport'])->name('list-consumption-report');
+        Route::get('/consumption-ajax', [ReportController::class, 'listConsumptionReportAjax'])->name('consumption-ajax');
+        // Route::get('/list-consumption/{business_details_id}', ['as' => 'list-consumption', 'uses' => 'App\Http\Controllers\Organizations\Report\ReportController@getConsumptionMaterialList']);
+
+          Route::get('/list-consumption/{id}', [ReportController::class, 'getConsumptionMaterialList'])->name('list-consumption');
+        Route::get('/get-products-by-project/{id}', [ReportController::class, 'getProductsByProject']);
+
+        Route::get('/list-items-stock-report', [ReportController::class, 'listItemStockReport'])->name('list-items-stock-report');
+        Route::get('/items-stock-ajax', [ReportController::class, 'listItemStockReportAjax'])->name('items-stock-ajax');
+
+         Route::get('/list-logistics-report', [ReportController::class, 'listLogisticsReport'])->name('list-logistics-report');
+        Route::get('/logistics-ajax', [ReportController::class, 'listLogisticsReportAjax'])->name('logistics-ajax');
     });
     Route::group(['prefix' => 'proddept', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
@@ -194,7 +207,8 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/edit-recived-bussinesswise-quantity-tracking/{id}', ['as' => 'edit-recived-bussinesswise-quantity-tracking', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@editProductQuantityTracking']);
 
         // Route::get('/list-final-production-completed/{id}', ['as' => 'list-final-production-completed', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllFinalProductionCompleted']);
-
+  Route::get('/list-production-report', [ReportController::class, 'getProductionReport'])->name('list-production-report');
+    Route::get('/production-report-ajax', [ReportController::class, 'getProductionReportAjax'])->name('production-report-ajax');
     });
     Route::group(['prefix' => 'storedept', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
@@ -412,8 +426,9 @@ Route::group(['middleware' => ['admin']], function () {
 
         Route::get('/add-gatepass-with-po/{id}', ['as' => 'add-gatepass-with-po', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@addGatePassWithPO']);
         Route::post('/store-gatepass', ['as' => 'store-gatepass', 'uses' => 'App\Http\Controllers\Organizations\Security\GatepassController@store']);
-    
         Route::post('/list-all-po-number', ['as' => 'list-all-po-number', 'uses' => 'App\Http\Controllers\Organizations\Security\AllListController@getAllListMaterialRecieved']);
+        Route::get('/security-report', [ReportController::class, 'getSecurityReport'])->name('security-report');
+        Route::get('/security-report-ajax', [ReportController::class, 'getSecurityReportAjax'])->name('security-report-ajax');
     });
     Route::group(['prefix' => 'quality', 'middleware' => 'admin'], function () {
 
@@ -436,7 +451,8 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-material-sent-to-quality-businesswise/{id}', ['as' => 'list-material-sent-to-quality-businesswise', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@getAllListMaterialSentFromQualityBusinessWise']);
 
         Route::get('/list-rejected-chalan-po-wise', ['as' => 'list-rejected-chalan-po-wise', 'uses' => 'App\Http\Controllers\Organizations\Quality\GRNController@getAllListMaterialSentFromQuality']);
-
+        Route::get('/grn-report', [ReportController::class, 'getGRNReport'])->name('grn-report');
+        Route::get('/grn-report-ajax', [ReportController::class, 'getGRNReportAjax'])->name('grn-report-ajax');
         
     });
     Route::group(['prefix' => 'financedept', 'middleware' => 'admin'], function () {

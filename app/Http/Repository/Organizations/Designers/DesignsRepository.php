@@ -34,9 +34,11 @@ class DesignsRepository  {
               ->distinct('businesses.id')
               ->select(
                   'businesses.id',
+                  'businesses.project_name',
                   'businesses.customer_po_number',
                 //   'businesses.product_name',
                   'businesses.title',
+                  'businesses.created_at',
                 //   'businesses.descriptions',
                 //   'businesses.quantity',
                 //   'businesses.descriptions',
@@ -127,6 +129,7 @@ class DesignsRepository  {
 
               ->select(
                   'businesses.id',
+                  'businesses.project_name',
                   'businesses.customer_po_number',
                 //   'businesses.product_name',
                 //   'businesses.title',
@@ -134,6 +137,7 @@ class DesignsRepository  {
                 //   'businesses.quantity',
                   'businesses.remarks',
                   'businesses.is_active',
+                  'businesses.created_at',
                   'production.business_id',
                   'businesses.updated_at'
                 //   'designs.id',
@@ -146,10 +150,12 @@ class DesignsRepository  {
               ->distinct()
               ->groupBy(
                   'businesses.id',
+                  'businesses.project_name',
                   'businesses.customer_po_number',
                   'businesses.title',
                   'businesses.remarks',
                   'businesses.is_active',
+                  'businesses.created_at',
                   'designs.id',
                   'designs.design_image',
                   'designs.bom_image',

@@ -239,6 +239,23 @@ document.getElementById('exportExcel').addEventListener('click', () => {
     document.getElementById('filterForm').submit();
 });
     </script>
+
+    <script>
+        document.getElementById('resetFilters').addEventListener('click', () => {
+    // Reset form fields
+    document.getElementById('filterForm').reset();
+
+    // Clear search input explicitly
+    document.getElementById('searchKeyword').value = '';
+
+    // Reset page number
+    currentPage = 1;
+
+    // Fetch all unfiltered data
+    fetchReport(true);
+});
+
+    </script>
 </body>
 
 </html>

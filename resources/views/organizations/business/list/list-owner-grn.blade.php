@@ -74,6 +74,7 @@
                                             <tr>
 
                                                 <th data-field="id">ID</th>
+                                                <th data-field="project_name" data-editable="false">Project Name</th>
                                                 <th data-field="purchase_id" data-editable="false">PO Number</th>
                                                 <th data-field="name" data-editable="false">Name</th>
                                                 <th data-field="date" data-editable="false">Date</th>
@@ -90,6 +91,7 @@
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ $data->project_name}}</td>
                                                     <td>{{ $data->purchase_orders_id}}</td>
                                                     <td>{{ ucwords($data->gatepass_name) }}</td>
                                                     <td>{{ ucwords($data->gatepass_date) }}</td>

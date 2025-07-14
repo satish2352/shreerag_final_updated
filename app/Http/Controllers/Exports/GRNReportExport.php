@@ -3,7 +3,7 @@ namespace App\Http\Controllers\Exports;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class DesignReportExport implements FromCollection, WithHeadings
+class GRNReportExport implements FromCollection, WithHeadings
 {
     protected $data;
 
@@ -17,8 +17,8 @@ class DesignReportExport implements FromCollection, WithHeadings
         return $this->data->map(function ($item) {
             return [
                 $item['updated_at'],
-                 $item['production_status_id'],
-                $item['project_name'],
+                //  $item['production_status_id'],
+                // $item['project_name'],
                 // $item['customer_po_number'],
                 // $item['product_name'],
                 // $item['description'],
@@ -30,8 +30,8 @@ class DesignReportExport implements FromCollection, WithHeadings
     {
         return [
             'Date',
-            'Status',
-            'Project Name',
+            // 'Status',
+            // 'Project Name',
             // 'Customer PO Number',
             // 'Product Name',
             // 'Description',

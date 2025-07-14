@@ -19,6 +19,7 @@ class GatepassServices
     public function getAll(){
         try {
             $data = $this->repo->getAll();
+            
             return $data; 
         } catch (\Exception $e) {
             return $e;

@@ -29,13 +29,15 @@ class AllListRepository  {
           ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
           ->where('businesses.is_active', true)
           ->where('businesses.is_deleted', 0)
-          ->groupBy('businesses.id', 'businesses.customer_po_number', 'businesses.title', 'businesses.remarks', 'businesses.is_active', 'production.business_id', 'businesses.updated_at')
+          ->groupBy('businesses.id', 'businesses.project_name', 'businesses.customer_po_number', 'businesses.created_at' ,'businesses.title', 'businesses.remarks', 'businesses.is_active', 'production.business_id', 'businesses.updated_at')
           ->select(
               'businesses.id',
+              'businesses.project_name',
               'businesses.customer_po_number',
               'businesses.title',
               'businesses.remarks',
               'businesses.is_active',
+              'businesses.created_at',
               'production.business_id',
               'businesses.updated_at'
           )->orderBy('businesses.updated_at', 'desc')
@@ -148,17 +150,21 @@ public function getAllNewRequirementBusinessWise($business_id) {
             ->where('businesses.is_deleted', 0)
             ->groupBy([
               'businesses.id', 
+              'businesses.project_name', 
               'businesses.customer_po_number', 
               'businesses.remarks', 
               'businesses.is_active', 
+              'businesses.created_at', 
               'production.business_id', 
               'businesses.updated_at'
           ])
           ->select(
               'businesses.id',
+              'businesses.project_name',
               'businesses.customer_po_number',
               'businesses.remarks',
               'businesses.is_active',
+              'businesses.created_at',
               'production.business_id',
               'businesses.updated_at'
           )
@@ -246,7 +252,9 @@ public function getAllNewRequirementBusinessWise($business_id) {
       ->groupBy(
           'businesses.id',
           'businesses_details.id',
+          'businesses.project_name',
           'businesses.customer_po_number',
+          'businesses.created_at',
           'businesses_details.product_name',
           'businesses_details.description',
           'businesses_details.quantity',
@@ -259,7 +267,9 @@ public function getAllNewRequirementBusinessWise($business_id) {
       ->select(
           'businesses.id',
           'businesses_details.id',
+          'businesses.project_name',
           'businesses.customer_po_number',
+          'businesses.created_at',
           'businesses_details.product_name',
           'businesses_details.description',
           'businesses_details.quantity',
@@ -304,8 +314,10 @@ public function getAllNewRequirementBusinessWise($business_id) {
             ->select(
                 'business_application_processes.id',
                 'businesses.id as business_id',
+                'businesses.project_name',
                 'businesses.customer_po_number',
                 'businesses.title',
+                'businesses.created_at',
                 'businesses_details.id as business_details_id',
                 'businesses_details.product_name',
                 'businesses_details.quantity',
@@ -322,8 +334,10 @@ public function getAllNewRequirementBusinessWise($business_id) {
             ->groupBy(
                 'business_application_processes.id',
                 'businesses.id',
+                'businesses.project_name',
                 'businesses.customer_po_number',
                 'businesses.title',
+                'businesses.created_at',
                 'businesses_details.id',
                 'businesses_details.product_name',
                 'businesses_details.quantity',
@@ -372,17 +386,21 @@ public function getAllListMaterialRecievedToProduction()
         ->where('businesses.is_deleted', 0)
         ->distinct('businesses.id')
         ->groupBy(
+            'businesses.project_name',
             'businesses.customer_po_number',
             'businesses.title',
+            'businesses.created_at',
             'businesses_details.id',
             'businesses_details.product_name',
             'businesses_details.description'
         )
         ->select(
             'businesses_details.id',
+            'businesses.project_name',
             'businesses.customer_po_number',
             'businesses_details.product_name',
             'businesses.title',
+            'businesses.created_at',
             DB::raw('MAX(production.updated_at) as last_updated_at') // Use MAX aggregate function
         )
         ->orderBy('last_updated_at', 'desc')
@@ -533,6 +551,7 @@ public function getAllCompletedProduction() {
             ->where('businesses.is_deleted', 0)
             ->select(
                 'tbl_customer_product_quantity_tracking.id',
+                'businesses.project_name',
                 'businesses.customer_po_number',
                 'businesses_details.id as business_details_id',
                 'businesses_details.product_name',
@@ -601,7 +620,9 @@ public function getAllCompletedProductionSendToLogistics()
       ->groupBy(
           'tbl_customer_product_quantity_tracking.id',
           'businesses_details.id',
+          'businesses.project_name',
           'businesses.customer_po_number',
+          'businesses.created_at',
           'businesses_details.product_name',
           'businesses_details.description',
           'businesses_details.quantity',
@@ -611,7 +632,9 @@ public function getAllCompletedProductionSendToLogistics()
       )
       ->select(
         'tbl_customer_product_quantity_tracking.id',
+          'businesses.project_name',
           'businesses.customer_po_number',
+          'businesses.created_at',
           'businesses_details.id',
           'businesses_details.product_name',
           'businesses_details.description',

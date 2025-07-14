@@ -3,7 +3,7 @@ namespace App\Http\Controllers\Exports;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class DesignReportExport implements FromCollection, WithHeadings
+class SecurityReportExport implements FromCollection, WithHeadings
 {
     protected $data;
 

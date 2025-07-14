@@ -54,6 +54,8 @@ public function getAllReceivedFromFianance(){
     'tbl_customer_product_quantity_tracking.id',
     'tbl_customer_product_quantity_tracking.business_details_id',
     'businesses.title',
+    'businesses.project_name',
+    'businesses.created_at',
     'businesses.customer_po_number',
     'businesses_details.product_name',
     'businesses.title',
@@ -131,6 +133,8 @@ public function getAllDispatch(){
       ->where('businesses.is_deleted', 0)
       ->select(
         'tbl_customer_product_quantity_tracking.id',
+        'businesses.project_name',
+        'businesses.created_at',
         'businesses.customer_po_number',
         'businesses.title',
         'businesses_details.product_name',
@@ -192,8 +196,10 @@ public function getAllDispatchClosedProduct()
             ->where('businesses.is_deleted', 0)
             ->select(
                 'businesses_details.id as business_details_id',
+                'businesses.project_name',
                 'businesses.customer_po_number',
                 'businesses.title',
+                'businesses.created_at',
                 'businesses_details.product_name',
                 'businesses_details.description',
                 'businesses_details.quantity',
@@ -203,8 +209,10 @@ public function getAllDispatchClosedProduct()
 
             ->groupBy(
                 'businesses_details.id',
+                'businesses.project_name',
                 'businesses.customer_po_number',
                 'businesses.title',
+                'businesses.created_at',
                 'businesses_details.product_name',
                 'businesses_details.description',
                 'businesses_details.quantity'

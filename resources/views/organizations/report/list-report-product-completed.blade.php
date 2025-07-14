@@ -36,25 +36,7 @@
                             <div class="main-sparkline13-hd">
                                 <h1>Product Completed List</h1>
                             </div>
-                        </div>
-
-                        @if (Session::get('status') == 'success')
-                            <div class="alert alert-success alert-success-style1">
-                                <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
-                                    <span class="icon-sc-cl" aria-hidden="true">&times;</span>
-                                </button>
-                                <p><strong>Success!</strong> {{ Session::get('msg') }}</p>
-                            </div>
-                        @endif
-                        @if (Session::get('status') == 'error')
-                            <div class="alert alert-danger alert-mg-b alert-success-style4">
-                                <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
-                                    <span class="icon-sc-cl" aria-hidden="true">&times;</span>
-                                </button>
-                                <i class="fa fa-times adminpro-danger-error admin-check-pro" aria-hidden="true"></i>
-                                <p><strong>Danger!</strong> {{ Session::get('msg') }}</p>
-                            </div>
-                        @endif
+                        </div>                      
                           <form method="GET" action="{{ route('list-product-completed-report') }}">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -112,6 +94,8 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
+                                                <th data-field="date" data-editable="false">Sent Date</th>
+                                                <th data-field="project_name" data-editable="false">Project Name</th>
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
                                                 <th data-field="title" data-editable="false">customer Name</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
@@ -124,6 +108,9 @@
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
+                                                    <td> {{ $data->created_at ? $data->created_at->format('Y-m-d') : 'N/A' }}
+                                                    </td>
+                                                    <td>{{ ucwords($data->project_name) }}</td>
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
                                                     <td>{{ ucwords($data->title) }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>

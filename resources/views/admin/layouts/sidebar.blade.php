@@ -253,6 +253,9 @@
                                     <li><a href="{{ route('list-product-completed-report') }}"><i
                                                 class="fa fa-check-circle icon-wrap" aria-hidden="true"></i> <span
                                                 class="mini-click-non">List Product Completed</span></a></li>
+                                    <li><a href="{{ route('list-consumption-report') }}"><i
+                                                class="fa fa-check-circle icon-wrap" aria-hidden="true"></i> <span
+                                                class="mini-click-non">List Consumption</span></a></li>
                                 </ul>
                             </li>
                             </li>
@@ -395,7 +398,7 @@
                         <li class="nav-item {{ request()->is('designdept/list-design-report*') ? 'active' : '' }}">
                             <a href="{{ route('list-design-report') }}">
                                 <i class="fa fa-check-circle icon-wrap"></i>
-                                <span class="mini-click-non">Design Report List</span>
+                                <span class="mini-click-non">Design Report </span>
                             </a>
                         </li>
                            {{-- <li class="{{ Request::is('design-report') ? 'active' : '' }}">
@@ -471,6 +474,12 @@
                                     <span class="mini-click-non">Tracking Of Send Material To Logistics Dept</span>
                                 </a>
                             </li>
+                             <li class="nav-item {{ request()->is('proddept/list-production-report*') ? 'active' : '' }}">
+                            <a href="{{ route('list-production-report') }}">
+                                <i class="fa fa-check-circle icon-wrap"></i>
+                                <span class="mini-click-non">Production Report </span>
+                            </a>
+                        </li>
                         </ul>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.SECURITY'))
@@ -494,6 +503,12 @@
                                 aria-expanded="false"><i class="fa big-icon fa-id-badge icon-wrap"></i> <span
                                     class="mini-click-non">Closed PO List</span></a></li>
 
+                        </li>
+                      <li class="nav-item {{ request()->is('security-report*') ? 'active' : '' }}">
+                            <a href="{{ route('security-report') }}">
+                                <i class="fa fa-check-circle icon-wrap"></i>
+                                <span class="mini-click-non">Security Report </span>
+                            </a>
                         </li>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.QUALITY'))
@@ -529,6 +544,13 @@
                             <a href="{{ route('list-material-received-from-quality-po-tracking') }}">
                                 <i class="fa fa-clipboard-list icon-wrap"></i>
                                 <span class="mini-click-non">GRN List</span>
+                            </a>
+                        </li>
+
+                          <li class="nav-item {{ request()->is('grn-report*') ? 'active' : '' }}">
+                            <a href="{{ route('grn-report') }}">
+                                <i class="fa fa-check-circle icon-wrap"></i>
+                                <span class="mini-click-non">GRN Report </span>
                             </a>
                         </li>
                     @endif
@@ -790,6 +812,12 @@
                             <a class="" href="{{ route('list-transport-name') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-truck icon-wrap"></i> <span class="mini-click-non">Transport
                                     Name</span></a>
+                        </li>
+                        <li class="nav-item {{ request()->is('list-logistics-report*') ? 'active' : '' }}">
+                            <a href="{{ route('list-logistics-report') }}">
+                                <i class="fa fa-check-circle icon-wrap"></i>
+                                <span class="mini-click-non">Logistics Report </span>
+                            </a>
                         </li>
                     @endif
 

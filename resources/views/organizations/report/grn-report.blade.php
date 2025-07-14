@@ -30,35 +30,37 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Material Need To Sent To<span class="table-project-n"> Production</span> Department</h1>
+                                <h1>GRN Report</h1>
                               
                             </div>
                         </div>
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
 
-       <form id="filterForm" method="GET" action="{{ route('design-ajax') }}" target="_blank">
+       <form id="filterForm" method="GET" action="{{ route('grn-report') }}" target="_blank">
 
     <input type="hidden" name="export_type" id="export_type" />
       
         <div class="row mb-3">
             <div class="col-md-3">
-                <label>Project Name</label>
-                <select class="form-control select2" name="project_name">
-                    <option value="">All Projects</option>
+                <label>Vendor Name</label>
+                <select class="form-control select2" name="vendor_name">
+                    <option value="">All Vendors</option>
                     @foreach($getProjectName as $id => $name)
                         <option value="{{ $id }}">{{ $name }}</option>
                     @endforeach
                 </select>
             </div>
-               <div class="col-md-3">
-              <label>Status</label>
-            <select name="production_status_id" class="form-control" id="production_status_id">
-                <option value="">Select Status</option>
-                <option value="1115,1121,1117">Accepted</option>
-                <option value="1114">Rejected</option>
-            </select>
-        </div>
+                <div class="col-md-2">
+                <label>PO Number</label>
+                <select class="form-control select2" name="purchase_orders_id">
+                    <option value="">All PO Numbers</option>
+                   @foreach($getPurchaseOrder as $id => $name)
+    <option value="{{ $id }}">{{ $name }}</option>
+@endforeach
+
+                </select>
+            </div>
          <div class="col-md-3">
                 <label>Year</label>
                 <select name="year" class="form-control">
@@ -132,25 +134,13 @@
     <thead>
       <tr>
 
-                                                <th data-field="id">ID</th>
+                                                 <th data-field="id">ID</th>
                                                  <th data-field="updated_at" data-editable="false">Date</th>
-                                                  <th data-field="status" data-editable="false">Status</th>
-                                                 <th data-field="po_number" data-editable="false">Project Name</th>
-                                                <th data-field="po_number" data-editable="false">PO Number</th>
-                                                {{-- <th data-field="grn_date" data-editable="false">Description</th> --}}
-                                                <th data-field="purchase_id" data-editable="false">Remark</th>
-                                                <th data-field="product_name" data-editable="false">Product Name</th>
-                                                {{-- <th data-field="title" data-editable="false">Name</th> --}}
-                                                <th data-field="quantity" data-editable="false">Quantity</th>
-                                                <th data-field="grn_date" data-editable="false">Description</th>
-                                                {{-- <th data-field="purchase_id" data-editable="false">Remark</th>                                          --}}
-                                                <th data-field="design_image" data-editable="false">Design Layout</th>
-                                                <th data-field="bom_image" data-editable="false">BOM</th>
-                                                <th data-field="re_design_image" data-editable="false">Revised Design Layout
-                                                </th>
-                                                <th data-field="re_bom_image" data-editable="false">Revised BOM</th>
-                                                 <th data-field="reject_reason_prod" data-editable="false">Rejected Reason</th>
-                                                  <th data-field="remark_by_design" data-editable="false">Design Remark</th>
+                                                <th data-field="purchase_orders_id" data-editable="false">PO Number</th>
+                                                <th data-field="grn_no_generate" data-editable="false">GRN Number</th>
+                                                <th data-field="vendor_name" data-editable="false">Vendor Name</th>
+                                                <th data-field="vendor_company_name" data-editable="false">Vendor Company Name</th>
+                                                {{-- <th data-field="grn" data-editable="false">GRN</th> --}}
                                             </tr>
     </thead>
     <tbody id="reportBody">
@@ -199,7 +189,7 @@ function fetchReport(reset = false) {
     const params = new URLSearchParams();
     formData.forEach((val, key) => params.append(key, val));
 
-    fetch(`{{ route('design-ajax') }}?${params.toString()}`)
+    fetch(`{{ route('grn-report-ajax') }}?${params.toString()}`)
         .then(res => res.json())
         .then(res => {
             const tbody = document.getElementById('reportBody');
@@ -207,42 +197,20 @@ function fetchReport(reset = false) {
             const pagInfo = document.getElementById('paginationInfo');
 
             if (res.status) {
+                console.log(res,"resresresresres");
+                
                 document.getElementById('totalCount').innerText = res.pagination.totalItems || 0;
                const rows = res.data.map((item, i) => {
-    const designImage = item.design_image
-        ? `<a class="img-size" target="_blank" href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}${item.design_image}">Click to view</a>`
-        : '-';
-
-    const bomImage = item.bom_image
-        ? `<a class="img-size" target="_blank" href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}${item.bom_image}">Click to download</a>`
-        : '-';
-
-    const reDesignImage = item.reject_reason_prod && item.re_design_image
-        ? `<a class="img-size" target="_blank" href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}${item.re_design_image}">Click to view</a>`
-        : '-';
-
-    const reBomImage = item.reject_reason_prod && item.re_bom_image
-        ? `<a class="img-size" target="_blank" href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}${item.re_bom_image}">Click to download</a>`
-        : '-';
-
+   
     return `
         <tr>
             <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
             <td>${item.updated_at ? new Date(item.updated_at).toLocaleDateString('en-IN') : '-'}</td>
-            <td>${getStatusLabel(item.production_status_id)}</td>
-            <td>${item.project_name || '-'}</td>
-            <td>${item.customer_po_number || '-'}</td>
-            <td>${item.remark || '-'}</td>
-            <td>${item.product_name || '-'}</td>
-            <td>${item.quantity || '-'}</td>
-            <td>${item.description || '-'}</td>
-            <td>${item.reject_reason_prod || '-'}</td>
-            <td>${item.remark_by_design || '-'}</td>
-            
-            <td>${designImage}</td>
-            <td>${bomImage}</td>
-            <td>${reDesignImage}</td>
-            <td>${reBomImage}</td>
+            <td>${item.purchase_orders_id}</td>
+            <td>${item.grn_no_generate || '-'}</td>
+            <td>${item.vendor_name || '-'}</td>
+             <td>${item.vendor_company_name || '-'}</td>
+           
         </tr>
     `;
 }).join('');
