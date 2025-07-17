@@ -102,7 +102,7 @@
         <div class="row mb-2">
             <div class="col-md-6 d-flex justify-content-center">
                
-                <button type="submit" class="btn btn-primary" style="background-color: #175ca2;}">Filter</button>
+                <button type="submit" class="btn btn-primary filterbg">Filter</button>
              <button type="button" class="btn btn-secondary ms-2" id="resetFilters" style="margin-left: 10px;">
         Reset
     </button>

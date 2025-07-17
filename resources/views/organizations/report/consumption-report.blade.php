@@ -37,9 +37,9 @@
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
 
-       <form id="filterForm" method="GET" action="{{ route('list-consumption-report') }}" target="_blank">
+       <form id="filterForm" method="GET" action="{{ route('list-consumption-report') }}">
 
-    <input type="hidden" name="export_type" id="export_type" />
+     <input type="hidden" name="export_type" id="export_type" />
       
         <div class="row mb-3">
         
@@ -91,7 +91,7 @@
         <div class="row mb-2">
             <div class="col-md-6 d-flex justify-content-center">
                
-                <button type="submit" class="btn btn-primary" style="background-color: #175ca2;}">Filter</button>
+                <button type="submit" class="btn btn-primary filterbg">Filter</button>
              <button type="button" class="btn btn-secondary ms-2" id="resetFilters" style="margin-left: 10px;">
         Reset
     </button>
@@ -103,8 +103,8 @@
             <i class="fa fa-download"></i> Export
         </button>
         <ul class="dropdown-menu" aria-labelledby="exportDropdown">
-            <li><a class="dropdown-item" href="#" id="exportExcel">Export to Excel</a></li>
-            <li><a class="dropdown-item" href="#" id="exportPdf">Export to PDF</a></li>
+        <li><a class="dropdown-item" href="#" id="exportExcel">Export to Excel</a></li>
+        <li><a class="dropdown-item" href="#" id="exportPdf">Export to PDF</a></li>
         </ul>
     </div>
 </div>

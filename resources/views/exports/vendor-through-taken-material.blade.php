@@ -35,17 +35,16 @@
 </head>
 
 <body>
-    <h3 style="text-align:center;">Consumtion Report</h3>
+    <h3 style="text-align:center;">Vendor Through Taken Material Report</h3>
     <table>
         <thead>
             <tr>
                 <th style="width: 4%;">Sr No.</th>
                 <th style="width: 30px;">Date</th>
-                <th style="width: 100px;">project name</th>
-                <th style="width: 120px;">PO Number</th>
-                <th style="width: 100px;">title</th>
-                <th style="width: 100px;">product name</th>
-                <th style="width: 100px;">Quantity</th>
+                <th style="width: 100px;">Vendor Name</th>
+                <th style="width: 120px;">Vendor Company</th>
+                <th style="width: 100px;">Email</th>
+                <th style="width: 100px;">Phone</th>
 
             </tr>
         </thead>
@@ -54,12 +53,12 @@
                 <tr>
 
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ ucwords($row['updated_at'] ?? '-') }}</td>
-                    <td>{{ ucwords($row['project_name'] ?? '-') }}</td>
-                    <td>{{ $row['customer_po_number'] ?? '-' }}</td>
-                    <td>{{ $row['title'] ?? '-' }}</td>
-                    <td>{{ $row['product_name'] ?? '-' }}</td>
-                           <td>{{ $row['quantity'] ?? '-' }}</td>
+                    <td>{{ ucwords($row['latest_update'] ?? '-') }}</td>
+                    <td>{{ ucwords($row['vendor_name'] ?? '-') }}</td>
+                    <td>{{ $row['vendor_company_name'] ?? '-' }}</td>
+                    <td>{{ $row['vendor_email'] ?? '-' }}</td>
+                    <td>{{ $row['contact_no'] ?? '-' }}</td>
+                          
                 </tr>
             @endforeach
         </tbody>

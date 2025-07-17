@@ -22,9 +22,20 @@
             <div class="sparkline12-list">
                 <div class="sparkline12-hd">
                     <div class="main-sparkline12-hd">
-                        <center>
-                            <h1>Product Consumption Material List</h1>
-                        </center>
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex justify-content-center">
+                <div class="col-lg-6 col-md-6 col-sm-6 d-flex justify-content-start align-items-center">
+                    <h5 class="page-title">
+                        Product Consumption Material List
+                    </h5>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 show-btn-position">
+                     <a href="{{ route('list-consumption-report') }}" class=" ml-3"> <button type="submit" class="btn btn-primary filterbg">Back</button>
+                   </a>
+                </div>
+            </div>
+
+                        
                     </div>
                 </div>
                 <div class="sparkline12-graph">
@@ -69,7 +80,7 @@
                                         <table class="table table-hover table-white repeater" id="purchase_order_table">
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
+                                                    <th>Sr. No.</th>
                                                     <th>Part Item</th>
                                                     <th>Quantity</th>
                                                     <th>Unit</th>

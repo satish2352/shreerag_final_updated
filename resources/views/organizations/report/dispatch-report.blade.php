@@ -30,37 +30,35 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Consumption Report</h1>
+                                <h1>Project Completed  Report</h1>
                               
                             </div>
                         </div>
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
 
-       <form id="filterForm" method="GET" action="{{ route('list-consumption-report') }}" target="_blank">
+       <form id="filterForm" method="GET" action="{{ route('list-logistics-report') }}" target="_blank">
 
     <input type="hidden" name="export_type" id="export_type" />
       
         <div class="row mb-3">
-        
-             <div class="col-md-2">
-    <label>Project Name</label>
-    <select class="form-control select2" name="project_name" id="project_name">
-        <option value="">All Projects</option>
-        @foreach($getProjectName as $id => $name)
-            <option value="{{ $id }}">{{ $name }}</option>
-        @endforeach
-    </select>
-</div>
+              <div class="col-md-2">
+            <label>Project Name</label>
+            <select class="form-control select2" name="project_name" id="project_name">
+                <option value="">All Projects</option>
+                @foreach($getProjectName as $id => $name)
+                    <option value="{{ $id }}">{{ $name }}</option>
+                @endforeach
+            </select>
+        </div>
 
-<div class="col-md-2">
-    <label>Product Name</label>
-    <select class="form-control select2" name="business_details_id" id="business_details_id">
-        <option value="">All Product Name</option>
-        {{-- Product options will be populated via JS --}}
-    </select>
-</div>
-
+        <div class="col-md-2">
+            <label>Product Name</label>
+            <select class="form-control select2" name="business_details_id" id="business_details_id">
+                <option value="">All Product Name</option>
+                
+            </select>
+        </div>
          <div class="col-md-2">
                 <label>Year</label>
                 <select name="year" class="form-control">
@@ -91,7 +89,7 @@
         <div class="row mb-2">
             <div class="col-md-6 d-flex justify-content-center">
                
-                <button type="submit" class="btn btn-primary filterbg">Filter</button>
+                <button type="submit" class="btn btn-primary filterbg" >Filter</button>
              <button type="button" class="btn btn-secondary ms-2" id="resetFilters" style="margin-left: 10px;">
         Reset
     </button>
@@ -124,13 +122,17 @@
       <tr>
 
                                                 <th data-field="id">ID</th>
-                                                 <th data-field="updated_at" data-editable="false">Date</th>
-                                                  <th data-field="action" data-editable="false">Action</th>
-                                                 <th data-field="project_name" data-editable="false">project name</th>
+                                               <th data-field="last_updated_at" data-editable="false">Dispatch Completed Date</th>
+                                                <th data-field="project_name" data-editable="false">Project Name</th>
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
-                                                <th data-field="title" data-editable="false">title</th>
-                                                <th data-field="product_name" data-editable="false">product name</th>
-                                                <th data-field="quantity" data-editable="false">Quantity</th>
+                                                <th data-field="title" data-editable="false">customer Name</th>
+                                                <th data-field="product_name" data-editable="false">Product Name</th>
+                                                <th data-field="total_quantity" data-editable="false">Total Product Quantity
+                                                </th>
+                                                <th data-field="total_completed_quantity" data-editable="false">Total
+                                                    Production Done Quantity</th>
+                                                
+                                             
                                             </tr>
     </thead>
     <tbody id="reportBody">
@@ -182,7 +184,7 @@ function fetchReport(reset = false) {
     const params = new URLSearchParams();
     formData.forEach((val, key) => params.append(key, val));
 
-    fetch(`{{ route('consumption-ajax') }}?${params.toString()}`)
+    fetch(`{{ route('dispatch-ajax') }}?${params.toString()}`)
         .then(res => res.json())
         .then(res => {
             const tbody = document.getElementById('reportBody');
@@ -192,28 +194,21 @@ function fetchReport(reset = false) {
            if (res.status && Array.isArray(res.data)) {
           
  const rows = res.data.map((item, i) => {
-    console.log(res.data, "res.datares.datares.datares.datares.datares.datares.datares.datares.datares.datares.data");
-    
-    // const poUrl = `${window.APP_URL}owner/list-consumption/${item.business_details_id}`;
-const poUrl = "{{ route('list-consumption', '__id__') }}".replace('__id__', item.business_details_id);
+    const poUrl = `${window.APP_URL}securitydept/list-po-details/${btoa(item.purchase_id)}/${btoa(item.purchase_orders_id)}`;
 
     return `
         <tr>
             <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
-            <td>${item.updated_at ? new Date(item.updated_at).toLocaleDateString('en-IN') : '-'}</td>
-               <td>
-                <div style="display: flex; align-items: center;">
-                    <a href="${poUrl}">
-                        <button data-toggle="tooltip" title="View PO" class="pd-setting-ed">Consumtion List</button>
-                    </a>
-                </div>
-            </td>
+            <td>${item.last_updated_at ? new Date(item.last_updated_at).toLocaleDateString('en-IN') : '-'}</td>
             <td>${item.project_name ?? '-'}</td>
             <td>${item.customer_po_number ?? '-'}</td>
             <td>${item.title ?? '-'}</td>
             <td>${item.product_name ?? '-'}</td>
              <td>${item.quantity ?? '-'}</td>
-        
+              <td>${item.total_completed_quantity ?? '-'}</td>
+          
+            
+          
         </tr>
     `;
 }).join('');
@@ -296,7 +291,5 @@ fetchReport(true);
             });
     });
 </script>
-
-
 @endsection
 

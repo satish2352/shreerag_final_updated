@@ -35,18 +35,18 @@
 </head>
 
 <body>
-    <h3 style="text-align:center;">Consumtion Report</h3>
+    <h3 style="text-align:center;">Item Stock Report</h3>
     <table>
         <thead>
             <tr>
                 <th style="width: 4%;">Sr No.</th>
                 <th style="width: 30px;">Date</th>
-                <th style="width: 100px;">project name</th>
-                <th style="width: 120px;">PO Number</th>
-                <th style="width: 100px;">title</th>
-                <th style="width: 100px;">product name</th>
-                <th style="width: 100px;">Quantity</th>
-
+                <th style="width: 100px;">Item Name</th>
+                <th style="width: 120px;">Stock</th>
+                <th style="width: 100px;">Unit</th>
+                <th style="width: 100px;">HSN</th>
+                <th style="width: 100px;">Group</th>
+                 <th style="width: 100px;">Rack No.</th>
             </tr>
         </thead>
         <tbody>
@@ -55,11 +55,12 @@
 
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ ucwords($row['updated_at'] ?? '-') }}</td>
-                    <td>{{ ucwords($row['project_name'] ?? '-') }}</td>
-                    <td>{{ $row['customer_po_number'] ?? '-' }}</td>
-                    <td>{{ $row['title'] ?? '-' }}</td>
-                    <td>{{ $row['product_name'] ?? '-' }}</td>
-                           <td>{{ $row['quantity'] ?? '-' }}</td>
+                    <td>{{ ucwords($row['description'] ?? '-') }}</td>
+                    <td>{{ $row['quantity'] ?? '-' }}</td>
+                    <td>{{ $row['unit_name'] ?? '-' }}</td>
+                    <td>{{ $row['hsn_name'] ?? '-' }}</td>
+                    <td>{{ $row['group_name'] ?? '-' }}</td>
+                       <td>{{ $row['rack_name'] ?? '-' }}</td>
                 </tr>
             @endforeach
         </tbody>

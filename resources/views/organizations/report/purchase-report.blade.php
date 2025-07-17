@@ -55,7 +55,7 @@
         <div class="row mb-2">
             <div class="col-md-6 d-flex justify-content-center">
                
-                <button type="submit" class="btn btn-primary" style="background-color: #175ca2;}">Filter</button>
+                <button type="submit" class="btn btn-primary filterbg">Filter</button>
             
             </div>
             <div class="col-md-6 text-end d-flex" >

@@ -75,7 +75,7 @@
                                             <div class="row d-flex justify-content-center">
                                                 {{-- <div class="d-flex justify-content-center"> --}}
                                                 <div class="col-md-12 mt-4" style="display: flex; justify-content: center; margin-top:20px;">
-                                                    <button type="submit" class="btn btn-primary">Filter</button>
+                                                    <button type="submit" class="btn btn-primary filterbg">Filter</button>
                                                     <a href="{{ route('list-product-completed-report') }}" class="btn btn-secondary">Reset</a>
                                                 {{-- </div> --}}
                                                 </div>

@@ -176,6 +176,27 @@ Route::group(['middleware' => ['admin']], function () {
 
          Route::get('/list-logistics-report', [ReportController::class, 'listLogisticsReport'])->name('list-logistics-report');
         Route::get('/logistics-ajax', [ReportController::class, 'listLogisticsReportAjax'])->name('logistics-ajax');
+        
+         Route::get('/list-fianance-report', [ReportController::class, 'listFiananceReport'])->name('list-fianance-report');
+        Route::get('/fianance-ajax', [ReportController::class, 'listFiananceReportAjax'])->name('fianance-ajax');
+   
+        Route::get('/list-dispatch-report', [ReportController::class, 'listDispatchReport'])->name('list-dispatch-report');
+        Route::get('/dispatch-ajax', [ReportController::class, 'listDispatchReportAjax'])->name('dispatch-ajax');
+    
+
+        Route::get('/list-dispatch-bar-chart', [ReportController::class, 'listDispatchBarChart'])->name('list-dispatch-bar-chart');
+
+        Route::get('/list-vendor-through-taken-material', [ReportController::class, 'listVendorThroughTakenMaterial'])->name('list-vendor-through-taken-material');
+        Route::get('/list-vendor-through-taken-material-ajax', [ReportController::class, 'listVendorThroughTakenMaterialAjax'])->name('list-vendor-through-taken-material-ajax');
+        Route::get('/vendor-through-taken-material-data/{id}', [ReportController::class, 'listVendorThroughTakenMaterialVendorId'])->name('vendor-through-taken-material-data');
+        Route::get('/vendor-through-taken-material-data-ajax/{id}', [ReportController::class, 'listVendorThroughTakenMaterialVendorIdAjax'])->name('vendor-through-taken-material-data-ajax');
+        
+        Route::get('/stock-item', [ReportController::class, 'getStockItem'])->name('stock-item');
+        Route::get('/stock-item-ajax', [ReportController::class, 'getStockItemAjax'])->name('stock-item-ajax');
+
+         Route::get('/store-item-stock-list', [ReportController::class, 'getStoreItemStockList'])->name('store-item-stock-list');
+        Route::get('/store-item-stock-list-ajax', [ReportController::class, 'getStoreItemStockListAjax'])->name('store-item-stock-list-ajax');
+
     });
     Route::group(['prefix' => 'proddept', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);

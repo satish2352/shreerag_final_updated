@@ -176,24 +176,46 @@ public function getGRNReportAjax(Request $request){
         ]);
     }
 }
-public function listConsumptionReport( Request $request ) {
-        try {
-            $data = $this->service->getConsumptionReport($request);
+// public function listConsumptionReport( Request $request ) {
+//         try {
+//             $data = $this->service->getConsumptionReport($request);
        
-       $getProjectName = Business::whereNotNull('project_name')
-            ->where('is_deleted', 0)
-            ->where('is_active', 1)
-            ->pluck('project_name', 'id');
-    $getProductName = BusinessDetails::whereNotNull('product_name')
-            ->where('is_deleted', 0)
-            ->where('is_active', 1)
-            ->pluck('product_name', 'id');
+//        $getProjectName = Business::whereNotNull('project_name')
+//             ->where('is_deleted', 0)
+//             ->where('is_active', 1)
+//             ->pluck('project_name', 'id');
+//     $getProductName = BusinessDetails::whereNotNull('product_name')
+//             ->where('is_deleted', 0)
+//             ->where('is_active', 1)
+//             ->pluck('product_name', 'id');
            
-            return view( 'organizations.report.consumption-report', compact( 'data','getProjectName', 'getProductName') );
-        } catch ( \Exception $e ) {
-            return $e;
+//             return view( 'organizations.report.consumption-report', compact( 'data','getProjectName', 'getProductName') );
+//         } catch ( \Exception $e ) {
+//             return $e;
+//         }
+//     }
+public function listConsumptionReport(Request $request)
+{
+    $getProjectName = Business::whereNotNull('project_name')
+        ->where('is_deleted', 0)
+        ->where('is_active', 1)
+        ->pluck('project_name', 'id');
+
+    if ($request->filled('export_type')) {
+        $data = $this->service->getConsumptionReport($request)['data'];
+
+        if ($request->export_type == 1) {
+            $pdf = Pdf::loadView('exports.consumption-report-pdf', ['data' => $data]);
+            return $pdf->download('consumption_report.pdf');
+        }
+
+        if ($request->export_type == 2) {
+            return Excel::download(new ConsumptionReportExport($data), 'consumption_report.xlsx');
         }
     }
+
+    return view('organizations.report.consumption-report', compact('getProjectName'));
+}
 
 public function listConsumptionReportAjax(Request $request){
     try {
@@ -209,6 +231,7 @@ public function listConsumptionReportAjax(Request $request){
 
         // Handle PDF export
         if ($request->filled('export_type') && $request->export_type == 1) {
+           
             $pdf = Pdf::loadView('exports.consumption-report-pdf', [
                 'data' => $response['data']
             ])->setPaper('a4');
@@ -331,53 +354,404 @@ public function listItemStockReportAjax(Request $request)
         }
     }
 
-public function listLogisticsReport( Request $request ) {
-        try {
-            $data = $this->service->listLogisticsReport($request);
+// public function listLogisticsReport( Request $request ) {
+//         try {
+//             $data = $this->service->listLogisticsReport($request);
        
-          $getProjectName = Vendors::whereNotNull('vendor_name')
-            ->where('is_deleted', 0)
-            ->where('is_active', 1)
-            ->pluck('vendor_name', 'id');
-            $getPurchaseOrder = PurchaseOrdersModel::whereNotNull('purchase_orders_id')
-            ->where('is_deleted', 0)
-            ->where('is_active', 1)
-            ->pluck('purchase_orders_id', 'purchase_orders_id'); // use po number as key & value
-
+//           $getProjectName = Business::whereNotNull('project_name')
+//             ->where('is_deleted', 0)
+//             ->where('is_active', 1)
+//             ->pluck('project_name', 'id');
+//     $getProductName = BusinessDetails::whereNotNull('product_name')
+//             ->where('is_deleted', 0)
+//             ->where('is_active', 1)
+//             ->pluck('product_name', 'id');
            
-            return view( 'organizations.report.logistics-report', compact( 'data','getProjectName','getPurchaseOrder' ) );
+//             return view( 'organizations.report.logistics-report', compact( 'data','getProjectName','getProductName' ) );
+//         } catch ( \Exception $e ) {
+//             return $e;
+//         }
+//     }
+// public function listLogisticsReportAjax(Request $request)
+//     {
+//         try {
+//             $data = $this->service->listLogisticsReport($request);
+
+//             // PDF Export
+//             if ($request->filled('export_type') && $request->export_type == 1) {
+//                 $pdf = Pdf::loadView('exports.logistics-report-pdf', ['data' => $data['data']])
+//                     ->setPaper('a4'); // <-- Landscape
+
+//                 return $pdf->download('LogisticsReport.pdf');
+//             }
+
+//             // Excel Export
+//             if ($request->filled('export_type') && $request->export_type == 2) {
+//                 return Excel::download(new SecurityReportExport($data['data']), 'LogisticsReport.xlsx');
+//             }
+
+//             // Normal AJAX response
+//             return response()->json([
+//                 'status' => true,
+//                 'data' => $data['data'],
+//                 'pagination' => $data['pagination']
+//             ]);
+
+//         } catch (\Exception $e) {
+//             return response()->json(['status' => false, 'message' => $e->getMessage()]);
+//         }
+//     }
+public function listLogisticsReport(Request $request)
+{
+    try {
+        $data = $this->service->listLogisticsReport($request);
+
+        $getProjectName = Business::whereNotNull('project_name')
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->pluck('project_name', 'id');
+
+        $getProductName = BusinessDetails::whereNotNull('product_name')
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->pluck('product_name', 'id');
+
+        return view('organizations.report.logistics-report', compact('data', 'getProjectName', 'getProductName'));
+    } catch (\Exception $e) {
+        return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+    }
+}
+public function listLogisticsReportAjax(Request $request)
+{
+    try {
+        $data = $this->service->listLogisticsReport($request);
+
+        // Defensive check
+        if (!is_array($data) || !isset($data['data'])) {
+            throw new \Exception("Invalid response format from service.");
+        }
+
+        // PDF Export
+        if ($request->filled('export_type') && $request->export_type == 1) {
+            $pdf = Pdf::loadView('exports.logistics-report-pdf', ['data' => $data['data']])
+                ->setPaper('a4');
+
+            return $pdf->download('LogisticsReport.pdf');
+        }
+
+        // Excel Export
+        if ($request->filled('export_type') && $request->export_type == 2) {
+            return Excel::download(new SecurityReportExport($data['data']), 'LogisticsReport.xlsx');
+        }
+
+        // Normal AJAX response
+        return response()->json([
+            'status' => true,
+            'data' => $data['data'],
+            'pagination' => $data['pagination']
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json(['status' => false, 'message' => $e->getMessage()]);
+    }
+}
+public function listFiananceReport(Request $request)
+{
+    try {
+        $data = $this->service->listFiananceReport($request);
+
+        $getProjectName = Business::whereNotNull('project_name')
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->pluck('project_name', 'id');
+
+        $getProductName = BusinessDetails::whereNotNull('product_name')
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->pluck('product_name', 'id');
+
+        return view('organizations.report.fianance-report', compact('data', 'getProjectName', 'getProductName'));
+    } catch (\Exception $e) {
+        return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+    }
+}
+public function listFiananceReportAjax(Request $request)
+{
+    try {
+        $data = $this->service->listFiananceReport($request);
+
+        // Defensive check
+        if (!is_array($data) || !isset($data['data'])) {
+            throw new \Exception("Invalid response format from service.");
+        }
+
+        // PDF Export
+        if ($request->filled('export_type') && $request->export_type == 1) {
+            $pdf = Pdf::loadView('exports.logistics-report-pdf', ['data' => $data['data']])
+                ->setPaper('a4');
+
+            return $pdf->download('LogisticsReport.pdf');
+        }
+
+        // Excel Export
+        if ($request->filled('export_type') && $request->export_type == 2) {
+            return Excel::download(new SecurityReportExport($data['data']), 'LogisticsReport.xlsx');
+        }
+
+        // Normal AJAX response
+        return response()->json([
+            'status' => true,
+            'data' => $data['data'],
+            'pagination' => $data['pagination']
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json(['status' => false, 'message' => $e->getMessage()]);
+    }
+}
+
+public function listDispatchReport(Request $request)
+{
+    try {
+        $data = $this->service->listDispatchReport($request);
+
+        $getProjectName = Business::whereNotNull('project_name')
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->pluck('project_name', 'id');
+
+        $getProductName = BusinessDetails::whereNotNull('product_name')
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->pluck('product_name', 'id');
+
+        return view('organizations.report.dispatch-report', compact('data', 'getProjectName', 'getProductName'));
+    } catch (\Exception $e) {
+        return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+    }
+}
+public function listDispatchReportAjax(Request $request)
+{
+    try {
+        $data = $this->service->listDispatchReport($request);
+
+        // Defensive check
+        if (!is_array($data) || !isset($data['data'])) {
+            throw new \Exception("Invalid response format from service.");
+        }
+
+        // PDF Export
+        if ($request->filled('export_type') && $request->export_type == 1) {
+            $pdf = Pdf::loadView('exports.dispatch-report-pdf', ['data' => $data['data']])
+                ->setPaper('a4');
+
+            return $pdf->download('LogisticsReport.pdf');
+        }
+
+        // Excel Export
+        if ($request->filled('export_type') && $request->export_type == 2) {
+            return Excel::download(new SecurityReportExport($data['data']), 'LogisticsReport.xlsx');
+        }
+
+        // Normal AJAX response
+        return response()->json([
+            'status' => true,
+            'data' => $data['data'],
+            'pagination' => $data['pagination']
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json(['status' => false, 'message' => $e->getMessage()]);
+    }
+}
+public function listDispatchBarChart( Request $request ) {
+        try {
+            $data = $this->service->listDispatchBarChart($request); 
+            $DataProductWise = $this->service->listDispatchBarChartProductWise($request); 
+             $getProjectName = Business::whereNotNull('project_name')
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->pluck('project_name', 'id');
+
+        $getProductName = BusinessDetails::whereNotNull('product_name')
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->pluck('product_name', 'id');
+   $vendorWise = $this->service->listVendorWise($request);
+return view('organizations.report.dispatch-bar-chart', ['data' => $data, 'DataProductWise' => $DataProductWise, 'getProjectName'=> $getProjectName, 'getProductName'=>$getProductName,  'vendorWise' => $vendorWise['data'],]);
         } catch ( \Exception $e ) {
             return $e;
         }
     }
-public function listLogisticsReportAjax(Request $request)
-    {
-        try {
-            $data = $this->service->listLogisticsReport($request);
 
-            // PDF Export
-            if ($request->filled('export_type') && $request->export_type == 1) {
-                $pdf = Pdf::loadView('exports.logistics-report-pdf', ['data' => $data['data']])
-                    ->setPaper('a4'); // <-- Landscape
+public function listVendorThroughTakenMaterial(Request $request)
+{
+    $getVendorName = Vendors::whereNotNull('vendor_name')
+        ->where('is_deleted', 0)
+        ->where('is_active', 1)
+        ->pluck('vendor_name', 'id');
 
-                return $pdf->download('LogisticsReport.pdf');
-            }
+    if ($request->filled('export_type')) {
+        $data = $this->service->listVendorThroughTakenMaterial($request)['data'];
 
-            // Excel Export
-            if ($request->filled('export_type') && $request->export_type == 2) {
-                return Excel::download(new SecurityReportExport($data['data']), 'LogisticsReport.xlsx');
-            }
+        if ($request->export_type == 1) {
+            $pdf = Pdf::loadView('exports.vendor-through-taken-material', ['data' => $data])
+                ->setPaper('a3', 'landscape');
+            return $pdf->download('vendor-through-taken-material.pdf');
+        }
 
-            // Normal AJAX response
-            return response()->json([
-                'status' => true,
-                'data' => $data['data'],
-                'pagination' => $data['pagination']
-            ]);
-
-        } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+        if ($request->export_type == 2) {
+            return Excel::download(new VendorThroughTakenMaterialReport($data), 'vendor-through-taken-material.xlsx');
         }
     }
+
+    return view('organizations.report.vendor-through-taken-material', compact('getVendorName'));
 }
 
+public function listVendorThroughTakenMaterialAjax(Request $request)
+{
+    try {
+        $response = $this->service->listVendorThroughTakenMaterial($request);
+
+        if (isset($response['status']) && $response['status'] === false) {
+            return response()->json([
+                'status' => false,
+                'message' => $response['message']
+            ]);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => $response['data'],
+            'pagination' => $response['pagination']
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['status' => false, 'message' => $e->getMessage()]);
+    }
+}
+public function listVendorThroughTakenMaterialVendorId(Request $request, $id)
+{
+    try {
+        $data = $this->service->listVendorThroughTakenMaterialVendorId($request, $id)['data'];
+        return view('organizations.report.vendor-material-list', compact('data'));
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', $e->getMessage());
+    }
+}
+public function listVendorThroughTakenMaterialVendorIdAjax(Request $request, $id)
+{
+    try {
+        $data = $this->service->listVendorThroughTakenMaterialVendorId($request, $id);
+
+        // Defensive check
+        if (!is_array($data) || !isset($data['data'])) {
+            throw new \Exception("Invalid response format from service.");
+        }
+
+        // PDF Export
+        if ($request->filled('export_type') && $request->export_type == 1) {
+            $pdf = Pdf::loadView('exports.logistics-report-pdf', ['data' => $data['data']])
+                ->setPaper('a4');
+
+            return $pdf->download('LogisticsReport.pdf');
+        }
+
+        // Excel Export
+        if ($request->filled('export_type') && $request->export_type == 2) {
+            return Excel::download(new SecurityReportExport($data['data']), 'LogisticsReport.xlsx');
+        }
+
+        // Normal AJAX response
+        return response()->json([
+            'status' => true,
+            'data' => $data['data'],
+            'pagination' => $data['pagination']
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json(['status' => false, 'message' => $e->getMessage()]);
+    }
+}
+public function getStockItem(Request $request)
+{
+    if ($request->filled('export_type')) {
+        $data = $this->service->getStockItem($request)['data'];
+
+        if ($request->export_type == 1) {
+            $pdf = Pdf::loadView('exports.stock-item-pdf', ['data' => $data])
+                ->setPaper('a3', 'landscape');
+            return $pdf->download('stock-item.pdf');
+        }
+
+        if ($request->export_type == 2) {
+            return Excel::download(new ItemStockReport($data), 'stock-item.xlsx');
+        }
+    }
+
+    // If no export type, show the view with data (optional: fetch data for initial load)
+    $data = $this->service->getStockItem($request)['data'] ?? [];
+    return view('organizations.report.list-stock-item', compact('data'));
+}
+public function getStockItemAjax(Request $request)
+{
+    try {
+        $response = $this->service->getStockItem($request);
+
+        if (isset($response['status']) && $response['status'] === false) {
+            return response()->json([
+                'status' => false,
+                'message' => $response['message']
+            ]);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => $response['data'],
+            'pagination' => $response['pagination']
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['status' => false, 'message' => $e->getMessage()]);
+    }
+}
+public function getStoreItemStockList(Request $request)
+{
+    if ($request->filled('export_type')) {
+        $data = $this->service->getStoreItemStockList($request)['data'];
+
+        if ($request->export_type == 1) {
+            $pdf = Pdf::loadView('exports.stock-item-pdf', ['data' => $data])
+                ->setPaper('a3', 'landscape');
+            return $pdf->download('stock-item.pdf');
+        }
+
+        if ($request->export_type == 2) {
+            return Excel::download(new ItemStockReport($data), 'stock-item.xlsx');
+        }
+    }
+
+    // If no export type, show the view with data (optional: fetch data for initial load)
+    $data = $this->service->getStoreItemStockList($request)['data'] ?? [];
+    return view('organizations.report.store-item-stock-list', compact('data'));
+}
+public function getStoreItemStockListAjax(Request $request)
+{
+    try {
+        $response = $this->service->getStoreItemStockList($request);
+
+        if (isset($response['status']) && $response['status'] === false) {
+            return response()->json([
+                'status' => false,
+                'message' => $response['message']
+            ]);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => $response['data'],
+            'pagination' => $response['pagination']
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['status' => false, 'message' => $e->getMessage()]);
+    }
+}
+}

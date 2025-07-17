@@ -90,7 +90,32 @@
                                 <a href="{{ route('dashboard') }}"><i class="fa big-icon fa-envelope icon-wrap"
                                         aria-hidden="true"></i> <span class="mini-click-non">Dashboard</span></a>
                             </li>
+ <li>
+                                <a class="has-arrow" href="{{ route('list-product-completed-report') }}"
+                                    aria-expanded="false"><i class="fa fa-check-circle icon-wrap"></i> <span
+                                        class="mini-click-non">Report
+                                    </span></a>
+                                <ul class="submenu-angle" aria-expanded="false">
+                                    
+                                    <li class="{{ Request::is('list-consumption-report') ? 'active' : '' }}"><a href="{{ route('list-consumption-report') }}"><i
+                                                class="fa fa-check-circle icon-wrap" aria-hidden="true"></i> <span
+                                                class="mini-click-non">List Consumption</span></a></li>
 
+                                                <li class="{{ Request::is('list-dispatch-bar-chart') ? 'active' : '' }}"><a href="{{ route('list-dispatch-bar-chart') }}" aria-expanded="false"><i
+                                                class="fa fa-check-circle icon-wrap" aria-hidden="true"></i> <span
+                                                class="mini-click-non">Dispatch Bar Chart</span></a></li>
+   <li class="{{ Request::is('list-vendor-through-taken-material') ? 'active' : '' }}"><a href="{{ route('list-vendor-through-taken-material') }}" aria-expanded="false"><i
+                                                class="fa fa-check-circle icon-wrap" aria-hidden="true"></i> <span
+                                                class="mini-click-non">Vendor Through Taken Material</span></a></li>
+                                                <li class="{{ Request::is('list-product-completed-report') ? 'active' : '' }}"><a href="{{ route('list-product-completed-report') }}"><i
+                                                class="fa fa-check-circle icon-wrap" aria-hidden="true"></i> <span
+                                                class="mini-click-non">List Product Completed</span></a></li>
+                                                 <li class="{{ Request::is('stock-item') ? 'active' : '' }}"><a href="{{ route('stock-item') }}"><i
+                                                class="fa fa-check-circle icon-wrap" aria-hidden="true"></i> <span
+                                                class="mini-click-non">Item Stock</span></a></li>
+                                                
+                                </ul>
+                            </li>
 
                             <li>
                                 <a href="{{ route('list-users') }}" aria-expanded="false"><i
@@ -243,22 +268,9 @@
                             <li><a href="{{ route('list-rules-regulations') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-file-alt  icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">Rules and Regulations</span></a></li>
-                            <li>
-                            <li>
-                                <a class="has-arrow" href="{{ route('list-product-completed-report') }}"
-                                    aria-expanded="false"><i class="fa fa-check-circle icon-wrap"></i> <span
-                                        class="mini-click-non">Report
-                                    </span></a>
-                                <ul class="submenu-angle" aria-expanded="false">
-                                    <li><a href="{{ route('list-product-completed-report') }}"><i
-                                                class="fa fa-check-circle icon-wrap" aria-hidden="true"></i> <span
-                                                class="mini-click-non">List Product Completed</span></a></li>
-                                    <li><a href="{{ route('list-consumption-report') }}"><i
-                                                class="fa fa-check-circle icon-wrap" aria-hidden="true"></i> <span
-                                                class="mini-click-non">List Consumption</span></a></li>
-                                </ul>
-                            </li>
-                            </li>
+                           
+                           
+                          
 
                         </ul>
                     @endif
@@ -641,6 +653,9 @@
                         <li><a href="{{ route('list-returnable-chalan') }}"><i
                                     class="fa fa-clipboard-list icon-wrap" aria-hidden="true"></i> <span
                                     class="mini-click-non">Returnable Challan</span></a></li>
+                        <li class="{{ Request::is('store-item-stock-list') ? 'active' : '' }}"><a href="{{ route('store-item-stock-list') }}"><i
+                                                class="fa fa-check-circle icon-wrap" aria-hidden="true"></i> <span
+                                                class="mini-click-non">Item Stock Report</span></a></li>            
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.INVENTORY'))
                         <li class="nav-item {{ request()->is('owner/dashboard') ? 'active' : '' }}">
@@ -771,6 +786,13 @@
                                 <span class="mini-click-non">Product Submited to Dispatch</span>
                             </a>
                         </li>
+
+                           <li class="nav-item {{ request()->is('list-fianance-report*') ? 'active' : '' }}">
+                            <a href="{{ route('list-fianance-report') }}">
+                                <i class="fa fa-check-circle icon-wrap"></i>
+                                <span class="mini-click-non">Fianance Report </span>
+                            </a>
+                        </li>
                     @endif
 
 
@@ -846,6 +868,12 @@
                             <a href="{{ route('list-dispatch-final-product-close') }}">
                                 <i class="fa big-icon fa-truck icon-wrap"></i>
                                 <span class="mini-click-non">Product Dispatch Completed (Close Product)</span>
+                            </a>
+                        </li>
+                         <li class="nav-item {{ request()->is('list-dispatch-report*') ? 'active' : '' }}">
+                            <a href="{{ route('list-dispatch-report') }}">
+                                <i class="fa fa-check-circle icon-wrap"></i>
+                                <span class="mini-click-non">Dispatch Report </span>
                             </a>
                         </li>
                     @endif

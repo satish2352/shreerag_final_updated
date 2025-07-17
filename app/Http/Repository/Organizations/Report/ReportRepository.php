@@ -12,7 +12,10 @@ use App\Models\ {
     DesignRevisionForProd,
     PurchaseOrdersModel,
     Logistics,
-    Gatepass
+    Gatepass,
+    CustomerProductQuantityTracking,
+    GrnPOQuantityTracking,
+    ItemStock
     };
 use Config;
 
@@ -700,8 +703,7 @@ public function getConsumptionReport(Request $request)
   public function getConsumptionMaterialList($id) {
         try {
             // $id = base64_decode($id); 
-// dd($id);
-// die();
+
             
             $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
@@ -793,27 +795,26 @@ public function getConsumptionReport(Request $request)
 public function listLogisticsReport(Request $request)
 {
     try {
-       $array_to_be_quantity_tracking = [ config('constants.LOGISTICS_DEPARTMENT.UPDATED_COMPLETED_QUANLTITY_LOGISTICS_DEPT_SEND_TO_FIANANCE_DEPT')];
+        $query = Logistics::leftJoin('tbl_customer_product_quantity_tracking', function($join) {
+                $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_customer_product_quantity_tracking.id');
+            })
+            ->leftJoin('businesses', function($join) {
+                $join->on('tbl_logistics.business_id', '=', 'businesses.id');
+            })
+            ->leftJoin('business_application_processes as bap1', function($join) {
+                $join->on('tbl_logistics.business_application_processes_id', '=', 'bap1.id');
+            })
+            ->leftJoin('businesses_details', function($join) {
+                $join->on('tbl_logistics.business_details_id', '=', 'businesses_details.id');
+            }) 
+            ->leftJoin('production', function($join) {
+                $join->on('tbl_customer_product_quantity_tracking.production_id', '=', 'production.id');
+            })
+            ->where('tbl_customer_product_quantity_tracking.logistics_list_status', 'Send_Fianance')
+            ->where('businesses.is_active', true)
+            ->where('businesses.is_deleted', 0);
 
-    $query = Logistics::leftJoin('tbl_customer_product_quantity_tracking', function($join) {
-      $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_customer_product_quantity_tracking.id');
-  })
-    ->leftJoin('businesses', function($join) {
-            $join->on('tbl_logistics.business_id', '=', 'businesses.id');
-        })
-        ->leftJoin('business_application_processes as bap1', function($join) {
-            $join->on('tbl_logistics.business_application_processes_id', '=', 'bap1.id');
-        })
-        ->leftJoin('businesses_details', function($join) {
-            $join->on('tbl_logistics.business_details_id', '=', 'businesses_details.id');
-        }) 
-        ->leftJoin('production', function($join) {
-          $join->on('tbl_customer_product_quantity_tracking.production_id', '=', 'production.id');
-      })
-      ->where('tbl_customer_product_quantity_tracking.logistics_list_status','Send_Fianance')      
-      ->where('businesses.is_active',true)
-      ->where('businesses.is_deleted', 0);
-      
+        // 🔍 Search filter
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -824,9 +825,17 @@ public function listLogisticsReport(Request $request)
             });
         }
 
-       if ($request->filled('project_name')) {
+        // 📁 Filter by Project
+        if ($request->filled('project_name')) {
             $query->where('businesses.id', $request->project_name);
         }
+
+        // 📁 Filter by Product
+        if ($request->filled('product_name')) {
+            $query->where('businesses_details.id', $request->product_name);
+        }
+
+        // 🗓️ Date filters
         if ($request->filled('from_date')) {
             $query->whereDate('tbl_logistics.gatepass_date', '>=', $request->from_date);
         }
@@ -843,50 +852,47 @@ public function listLogisticsReport(Request $request)
             $query->whereMonth('tbl_logistics.updated_at', $request->month);
         }
 
+        // 🔽 Select columns
         $query->select(
-        'tbl_customer_product_quantity_tracking.id',
-        'tbl_customer_product_quantity_tracking.business_details_id',
-        'businesses.title',
-        'businesses.project_name',
-        'businesses.created_at',
-        'businesses.customer_po_number',
-        'businesses_details.product_name',
-        'businesses.title',
-        'businesses_details.quantity',
-        'businesses.remarks',
-        'businesses.is_active',
-        'tbl_customer_product_quantity_tracking.completed_quantity',
-        DB::raw('(SELECT SUM(t2.completed_quantity)
-        FROM tbl_customer_product_quantity_tracking AS t2
-        WHERE t2.business_details_id = businesses_details.id
-          AND t2.id <= tbl_customer_product_quantity_tracking.id
-       ) AS cumulative_completed_quantity'),
-      DB::raw('(businesses_details.quantity - (SELECT SUM(t2.completed_quantity)
-        FROM tbl_customer_product_quantity_tracking AS t2
-        WHERE t2.business_details_id = businesses_details.id
-          AND t2.id <= tbl_customer_product_quantity_tracking.id
-       )) AS remaining_quantity'),
-        'production.business_id',
-        'production.id as productionId',
-        'bap1.store_material_sent_date',
-        'tbl_customer_product_quantity_tracking.updated_at',
-               'tbl_logistics.truck_no',
-        'tbl_logistics.from_place',
-        'tbl_logistics.to_place',
-     
-    ) 
-    ->orderBy('tbl_logistics.updated_at', 'desc')
-      ->get();
+            'tbl_customer_product_quantity_tracking.id',
+            'tbl_customer_product_quantity_tracking.business_details_id',
+            'businesses.title',
+            'businesses.project_name',
+            'businesses.customer_po_number',
+            'businesses.created_at',
+            'businesses_details.product_name',
+            'businesses_details.quantity',
+            'tbl_customer_product_quantity_tracking.completed_quantity',
+            DB::raw('(SELECT SUM(t2.completed_quantity)
+                      FROM tbl_customer_product_quantity_tracking AS t2
+                      WHERE t2.business_details_id = businesses_details.id
+                        AND t2.id <= tbl_customer_product_quantity_tracking.id
+                    ) AS cumulative_completed_quantity'),
+            DB::raw('(businesses_details.quantity - (SELECT SUM(t2.completed_quantity)
+                      FROM tbl_customer_product_quantity_tracking AS t2
+                      WHERE t2.business_details_id = businesses_details.id
+                        AND t2.id <= tbl_customer_product_quantity_tracking.id
+                    )) AS remaining_quantity'),
+            'production.business_id',
+            'production.id as productionId',
+            'bap1.store_material_sent_date',
+            'tbl_customer_product_quantity_tracking.updated_at',
+            'tbl_logistics.truck_no',
+            'tbl_logistics.from_place',
+            'tbl_logistics.to_place'
+        );
 
-        // ✅ Export full data
+        $query->orderBy('tbl_logistics.updated_at', 'desc');
+
+        // 📤 Export full data (PDF/Excel)
         if ($request->filled('export_type')) {
             return [
                 'data' => $query->get(),
-                'pagination' => null,
+                'pagination' => null
             ];
         }
 
-        // ✅ Paginated result
+        // 📄 Pagination setup
         $perPage = $request->input('pageSize', 10);
         $currentPage = $request->input('currentPage', 1);
         $totalItems = (clone $query)->count();
@@ -908,10 +914,818 @@ public function listLogisticsReport(Request $request)
             ]
         ];
     } catch (\Exception $e) {
-        return response()->json([
-            'status' => false,
-            'message' => $e->getMessage()
-        ]);
+        throw $e; // ✅ Let the controller catch and respond
     }
 }
+public function listFiananceReport(Request $request){
+    try {
+       $array_to_be_check = [config('constants.FINANCE_DEPARTMENT.LIST_LOGISTICS_SEND_TO_DISPATCH_DEAPRTMENT')];
+      $array_to_be_quantity_tracking = [ config('constants.FINANCE_DEPARTMENT.SUBMITTED_COMPLETED_QUANLTITY_FROM_FIANANCE_DEPT_TO_DISPATCH_DEPT')];
+
+      $array_to_be_check_new = ['0'];
+       $query = CustomerProductQuantityTracking::leftJoin('tbl_logistics', function($join) {
+      $join->on('tbl_customer_product_quantity_tracking.id', '=', 'tbl_logistics.quantity_tracking_id');
+  })
+  ->leftJoin('businesses', function($join) {
+      $join->on('tbl_customer_product_quantity_tracking.business_id', '=', 'businesses.id');
+  })
+  ->leftJoin('business_application_processes as bap1', function($join) {
+      $join->on('tbl_customer_product_quantity_tracking.business_application_processes_id', '=', 'bap1.id');
+  })
+  ->leftJoin('businesses_details', function($join) {
+      $join->on('tbl_customer_product_quantity_tracking.business_details_id', '=', 'businesses_details.id');
+  })
+  ->leftJoin('tbl_transport_name', function($join) {
+      $join->on('tbl_logistics.transport_name_id', '=', 'tbl_transport_name.id');
+  })
+  ->leftJoin('tbl_vehicle_type', function($join) {
+      $join->on('tbl_logistics.vehicle_type_id', '=', 'tbl_vehicle_type.id');
+  })
+  ->leftJoin('production', function($join) {
+    $join->on('tbl_customer_product_quantity_tracking.production_id', '=', 'production.id');
+})
+      ->where('businesses.is_active',true)
+      ->where('businesses.is_deleted', 0)
+      ->where('tbl_customer_product_quantity_tracking.fianace_list_status','Send_Dispatch');
+        // 🔍 Search filter
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('businesses.project_name', 'like', "%{$search}%")
+                    ->orWhere('businesses.title', 'like', "%{$search}%")
+                    ->orWhere('businesses_details.product_name', 'like', "%{$search}%")
+                    ->orWhere('businesses.customer_po_number', 'like', "%{$search}%");
+            });
+        }
+
+        // 📁 Filter by Project
+        if ($request->filled('project_name')) {
+            $query->where('businesses.id', $request->project_name);
+        }
+
+        // 📁 Filter by Product
+        if ($request->filled('product_name')) {
+            $query->where('businesses_details.id', $request->product_name);
+        }
+
+        // 🗓️ Date filters
+        if ($request->filled('from_date')) {
+            $query->whereDate('tbl_logistics.gatepass_date', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('tbl_logistics.gatepass_date', '<=', $request->to_date);
+        }
+
+        if ($request->filled('year')) {
+            $query->whereYear('tbl_logistics.updated_at', $request->year);
+        }
+
+        if ($request->filled('month')) {
+            $query->whereMonth('tbl_logistics.updated_at', $request->month);
+        }
+
+        // 🔽 Select columns
+        $query->select(
+      'tbl_customer_product_quantity_tracking.id',
+      'tbl_customer_product_quantity_tracking.business_details_id',
+      'businesses.title',
+      'businesses.project_name',
+      'businesses.created_at',
+      'businesses.customer_po_number',
+      'businesses_details.product_name',
+      'businesses.title',
+      'businesses_details.quantity',
+      'businesses.remarks',
+      'businesses.is_active',
+      'tbl_customer_product_quantity_tracking.completed_quantity',
+      // DB::raw('(businesses_details.quantity - tbl_customer_product_quantity_tracking.completed_quantity) AS remaining_quantity'),
+      DB::raw('(SELECT SUM(t2.completed_quantity)
+      FROM tbl_customer_product_quantity_tracking AS t2
+      WHERE t2.business_details_id = businesses_details.id
+        AND t2.id <= tbl_customer_product_quantity_tracking.id
+     ) AS cumulative_completed_quantity'),
+DB::raw('(businesses_details.quantity - (SELECT SUM(t2.completed_quantity)
+      FROM tbl_customer_product_quantity_tracking AS t2
+      WHERE t2.business_details_id = businesses_details.id
+        AND t2.id <= tbl_customer_product_quantity_tracking.id
+     )) AS remaining_quantity'),
+// DB::raw('production.updated_at AS updated_at'),
+      'production.business_id',
+      'production.id as productionId',
+      'bap1.store_material_sent_date',
+      'tbl_customer_product_quantity_tracking.updated_at',
+            'tbl_transport_name.name as transport_name',
+        'tbl_vehicle_type.name as vehicle_name',
+             'tbl_logistics.truck_no',
+      'tbl_logistics.from_place',
+      'tbl_logistics.to_place',
+   
+  ) 
+  ->orderBy('tbl_logistics.updated_at', 'desc')
+      ->get();
+     
+
+        // 📤 Export full data (PDF/Excel)
+        if ($request->filled('export_type')) {
+            return [
+                'data' => $query->get(),
+                'pagination' => null
+            ];
+        }
+
+        // 📄 Pagination setup
+        $perPage = $request->input('pageSize', 10);
+        $currentPage = $request->input('currentPage', 1);
+        $totalItems = (clone $query)->count();
+
+        $data = (clone $query)
+            ->skip(($currentPage - 1) * $perPage)
+            ->take($perPage)
+            ->get();
+
+        return [
+            'data' => $data,
+            'pagination' => [
+                'currentPage' => $currentPage,
+                'pageSize' => $perPage,
+                'totalItems' => $totalItems,
+                'totalPages' => ceil($totalItems / $perPage),
+                'from' => ($currentPage - 1) * $perPage + 1,
+                'to' => (($currentPage - 1) * $perPage) + count($data),
+            ]
+        ];
+    } catch (\Exception $e) {
+        throw $e; // ✅ Let the controller catch and respond
+    }
+}
+
+public function listDispatchReport(Request $request)
+{
+    try {
+      $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.LIST_DISPATCH_COMPLETED_FROM_DISPATCH_DEPARTMENT')];
+        $array_to_be_quantity_tracking = [config('constants.DISPATCH_DEPARTMENT.SUBMITTED_COMPLETED_QUANLTITY_DISPATCH_DEPT')];
+
+        $query = Logistics::leftJoin('tbl_customer_product_quantity_tracking as tcqt1', function ($join) {
+                $join->on('tbl_logistics.quantity_tracking_id', '=', 'tcqt1.id');
+            })
+            ->leftJoin('businesses', function ($join) {
+                $join->on('tbl_logistics.business_id', '=', 'businesses.id');
+            })
+            ->leftJoin('business_application_processes as bap1', function ($join) {
+                $join->on('tbl_logistics.business_application_processes_id', '=', 'bap1.id');
+            })
+            ->leftJoin('businesses_details', function ($join) {
+                $join->on('tbl_logistics.business_details_id', '=', 'businesses_details.id');
+            })
+            ->leftJoin('tbl_dispatch', function ($join) {
+                $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_dispatch.quantity_tracking_id');
+            })
+            ->whereIn('tcqt1.quantity_tracking_status', $array_to_be_quantity_tracking)
+            ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
+            ->where('businesses.is_active', true)
+            ->where('businesses.is_deleted', 0);
+        // 🔍 Search filter
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('businesses.project_name', 'like', "%{$search}%")
+                    ->orWhere('businesses.title', 'like', "%{$search}%")
+                    ->orWhere('businesses_details.product_name', 'like', "%{$search}%")
+                    ->orWhere('businesses.customer_po_number', 'like', "%{$search}%");
+            });
+        }
+
+        // 📁 Filter by Project
+        if ($request->filled('project_name')) {
+            $query->where('businesses.id', $request->project_name);
+        }
+
+        // 📁 Filter by Product
+        if ($request->filled('product_name')) {
+            $query->where('businesses_details.id', $request->product_name);
+        }
+
+        // 🗓️ Date filters
+        if ($request->filled('from_date')) {
+            $query->whereDate('tbl_dispatch.gatepass_date', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('tbl_dispatch.gatepass_date', '<=', $request->to_date);
+        }
+
+        if ($request->filled('year')) {
+            $query->whereYear('tbl_dispatch.updated_at', $request->year);
+        }
+
+        if ($request->filled('month')) {
+            $query->whereMonth('tbl_dispatch.updated_at', $request->month);
+        }
+
+        // 🔽 Select columns
+        $query ->select(
+                'businesses_details.id as business_details_id',
+                'businesses.project_name',
+                'businesses.customer_po_number',
+                'businesses.title',
+                'businesses.created_at',
+                'businesses_details.product_name',
+                'businesses_details.description',
+                'businesses_details.quantity',
+                DB::raw('SUM(tcqt1.completed_quantity) as total_completed_quantity'),
+                DB::raw('MAX(tbl_dispatch.updated_at) as last_updated_at') // Alias for MAX(updated_at)
+            )
+
+            ->groupBy(
+                'businesses_details.id',
+                'businesses.project_name',
+                'businesses.customer_po_number',
+                'businesses.title',
+                'businesses.created_at',
+                'businesses_details.product_name',
+                'businesses_details.description',
+                'businesses_details.quantity'
+            )
+
+            ->havingRaw('SUM(tcqt1.completed_quantity) = businesses_details.quantity')
+            ->orderBy('last_updated_at', 'desc') // Use the alias instead of tbl_dispatch.last_updated_at
+            ->get()
+            ->map(function ($data) {
+                $data->last_updated_at = Carbon::parse($data->last_updated_at);
+                return $data;
+            });
+     
+
+        // 📤 Export full data (PDF/Excel)
+        if ($request->filled('export_type')) {
+            return [
+                'data' => $query->get(),
+                'pagination' => null
+            ];
+        }
+
+        // 📄 Pagination setup
+        $perPage = $request->input('pageSize', 10);
+        $currentPage = $request->input('currentPage', 1);
+        $totalItems = (clone $query)->count();
+
+        $data = (clone $query)
+            ->skip(($currentPage - 1) * $perPage)
+            ->take($perPage)
+            ->get();
+
+        return [
+            'data' => $data,
+            'pagination' => [
+                'currentPage' => $currentPage,
+                'pageSize' => $perPage,
+                'totalItems' => $totalItems,
+                'totalPages' => ceil($totalItems / $perPage),
+                'from' => ($currentPage - 1) * $perPage + 1,
+                'to' => (($currentPage - 1) * $perPage) + count($data),
+            ]
+        ];
+    } catch (\Exception $e) {
+        throw $e; // ✅ Let the controller catch and respond
+    }
+}
+
+
+
+public function listDispatchBarChartProductWise(Request $request)
+{
+    try {
+        $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.LIST_DISPATCH_COMPLETED_FROM_DISPATCH_DEPARTMENT')];
+        $array_to_be_quantity_tracking = [config('constants.DISPATCH_DEPARTMENT.SUBMITTED_COMPLETED_QUANLTITY_DISPATCH_DEPT')];
+
+        $query = Logistics::leftJoin('tbl_customer_product_quantity_tracking as tcqt1', 'tbl_logistics.quantity_tracking_id', '=', 'tcqt1.id')
+            ->leftJoin('business_application_processes as bap1', 'tbl_logistics.business_application_processes_id', '=', 'bap1.id')
+            ->leftJoin('businesses', 'tbl_logistics.business_id', '=', 'businesses.id') // ✅ needed for project filter
+            ->leftJoin('businesses_details', 'tbl_logistics.business_details_id', '=', 'businesses_details.id')
+            ->leftJoin('tbl_dispatch', 'tbl_logistics.quantity_tracking_id', '=', 'tbl_dispatch.quantity_tracking_id')
+            ->whereIn('tcqt1.quantity_tracking_status', $array_to_be_quantity_tracking)
+            ->whereIn('bap1.dispatch_status_id', $array_to_be_check);
+
+        // 📁 Filter by Project
+        if ($request->filled('project_name')) {
+            $query->where('businesses.id', $request->project_name);
+        }
+
+        // 📁 Filter by Product
+        if ($request->filled('product_name')) {
+            $query->where('businesses_details.id', $request->product_name);
+        }
+
+        $data = $query->select(
+                'businesses_details.id as business_details_id',
+                'businesses_details.product_name',
+                'businesses_details.quantity',
+                DB::raw('SUM(tcqt1.completed_quantity) as total_completed_quantity'),
+                DB::raw('MAX(tbl_dispatch.updated_at) as last_updated_at')
+            )
+            ->groupBy(
+                'businesses_details.id',
+                'businesses_details.product_name',
+                'businesses_details.quantity'
+            )
+            ->orderBy('last_updated_at', 'desc')
+            ->get()
+            ->map(function ($row) {
+                return [
+                    'business_details_id' => $row->business_details_id,
+                    'product_name' => $row->product_name,
+                    'quantity' => (int) $row->quantity,
+                    'total_completed_quantity' => (int) $row->total_completed_quantity,
+                    'last_updated_at' => $row->last_updated_at ? Carbon::parse($row->last_updated_at)->format('Y-m-d H:i:s') : null
+                ];
+            });
+
+        return ['data' => $data];
+
+    } catch (\Exception $e) {
+        throw $e;
+    }
+}
+
+public function listDispatchBarChart(Request $request)
+{
+    try {
+        $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.LIST_DISPATCH_COMPLETED_FROM_DISPATCH_DEPARTMENT')];
+        $array_to_be_quantity_tracking = [config('constants.DISPATCH_DEPARTMENT.SUBMITTED_COMPLETED_QUANLTITY_DISPATCH_DEPT')];
+
+        $query = Logistics::leftJoin('tbl_customer_product_quantity_tracking as tcqt1', function ($join) {
+                $join->on('tbl_logistics.quantity_tracking_id', '=', 'tcqt1.id');
+            })
+            ->leftJoin('businesses', 'tbl_logistics.business_id', '=', 'businesses.id')
+            ->leftJoin('business_application_processes as bap1', 'tbl_logistics.business_application_processes_id', '=', 'bap1.id')
+            ->leftJoin('businesses_details', 'tbl_logistics.business_details_id', '=', 'businesses_details.id')
+            ->leftJoin('tbl_dispatch', 'tbl_logistics.quantity_tracking_id', '=', 'tbl_dispatch.quantity_tracking_id')
+            ->whereIn('tcqt1.quantity_tracking_status', $array_to_be_quantity_tracking)
+            ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
+            ->where('businesses.is_active', true)
+            ->where('businesses.is_deleted', 0)
+            ->whereNotNull('tbl_dispatch.updated_at');
+
+        $data = $query
+            ->select(
+                DB::raw("DATE_FORMAT(tbl_dispatch.updated_at, '%Y-%m') as month"),
+                DB::raw('SUM(tcqt1.completed_quantity) as total_completed_quantity'),
+                DB::raw('SUM(businesses_details.quantity) as total_quantity')
+            )
+            ->groupBy(DB::raw("DATE_FORMAT(tbl_dispatch.updated_at, '%Y-%m')"))
+            ->orderBy(DB::raw("DATE_FORMAT(tbl_dispatch.updated_at, '%Y-%m')"), 'asc')
+            ->get()
+            ->map(function ($row) {
+                $row->month_label = \Carbon\Carbon::parse($row->month . '-01')->format('M Y');
+                $row->pending_quantity = max(0, $row->total_quantity - $row->total_completed_quantity);
+                return $row;
+            });
+
+        return ['data' => $data];
+
+    } catch (\Exception $e) {
+        throw $e;
+    }
+}
+
+// public function listVendorWise(Request $request)
+// {
+//     try {
+//         $data = \DB::table('purchase_orders')
+//             ->leftJoin('vendors', function ($join) {
+//                 $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
+//             })
+//             ->leftJoin('purchase_order_details', function ($join) {
+//                 $join->on('purchase_order_details.purchase_id', '=', 'purchase_orders.id');
+//             })
+//             ->leftJoin('tbl_part_item', function ($join) {
+//                 $join->on('purchase_order_details.part_no_id', '=', 'tbl_part_item.id');
+//             })
+//             ->select(
+//                 'purchase_orders.id as purchase_order_id',
+//                 'vendors.vendor_name',
+//                 'purchase_order_details.quantity',
+//                 'tbl_part_item.description',
+//                 'tbl_part_item.part_number'
+//             )
+//             ->get();
+
+//         return ['data' => $data];
+//     } catch (\Exception $e) {
+//         return response()->json(['error' => $e->getMessage()], 500);
+//     }
+// }
+public function listVendorWise(Request $request)
+{
+    try {
+        $query = \DB::table('purchase_orders')
+            ->leftJoin('vendors', 'purchase_orders.vendor_id', '=', 'vendors.id')
+            ->leftJoin('purchase_order_details', 'purchase_order_details.purchase_id', '=', 'purchase_orders.id')
+            ->select(
+                'vendors.vendor_name',
+                \DB::raw('SUM(purchase_order_details.quantity) as total_quantity')
+            )
+            // ->whereNull('purchase_orders.is_deleted')
+            // ->whereNull('vendors.is_deleted')
+            ->groupBy('vendors.vendor_name');
+
+        // Optional filter for month
+        if ($request->has('month')) {
+            $query->whereMonth('purchase_orders.created_at', $request->month);
+        }
+
+        $data = $query->get();
+
+        // Calculate percentage
+        $totalQuantity = $data->sum('total_quantity');
+        foreach ($data as $row) {
+            $row->percentage = $totalQuantity > 0 ? round(($row->total_quantity / $totalQuantity) * 100, 2) : 0;
+        }
+
+        return ['data' => $data];
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
+public function listVendorThroughTakenMaterial($request)
+{
+    $statuses = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')];
+
+    $query = PurchaseOrdersModel::leftJoin('vendors', 'purchase_orders.vendor_id', '=', 'vendors.id')
+        ->whereIn('purchase_orders.purchase_status_from_owner', $statuses)
+        ->whereIn('purchase_orders.purchase_status_from_purchase', $statuses);
+
+  
+
+    // Search filter
+    if ($request->filled('search')) {
+        $s = $request->search;
+        $query->where(function ($q) use ($s) {
+            $q->where('vendors.vendor_name', 'like', "%{$s}%")
+                ->orWhere('vendors.vendor_company_name', 'like', "%{$s}%")
+                ->orWhere('vendors.vendor_email', 'like', "%{$s}%")
+                ->orWhere('vendors.contact_no', 'like', "%{$s}%");
+        });
+    }
+  // Filter by vendor
+    if ($request->filled('vendor_id')) {
+        $query->where('vendors.id', $request->vendor_id);
+    }
+    // Date filters
+    if ($request->filled('from_date')) {
+        $query->whereDate('purchase_orders.created_at', '>=', $request->from_date);
+    }
+    if ($request->filled('to_date')) {
+        $query->whereDate('purchase_orders.created_at', '<=', $request->to_date);
+    }
+    if ($request->filled('year')) {
+        $query->whereYear('purchase_orders.updated_at', $request->year);
+    }
+    if ($request->filled('month')) {
+        $query->whereMonth('purchase_orders.updated_at', $request->month);
+    }
+
+    // Group by vendor only
+    $queryForData = (clone $query)
+        ->select(
+            'vendors.id as vendor_id',
+            'vendors.vendor_name',
+            'vendors.vendor_company_name',
+            'vendors.vendor_email',
+            'vendors.contact_no',
+            DB::raw('MAX(purchase_orders.updated_at) as latest_update'),
+            DB::raw('COUNT(purchase_orders.id) as total_pos')
+        )
+        ->groupBy(
+            'vendors.id',
+            'vendors.vendor_name',
+            'vendors.vendor_company_name',
+            'vendors.vendor_email',
+            'vendors.contact_no'
+        )
+        ->orderByDesc('latest_update');
+
+    if ($request->filled('export_type')) {
+        return [
+            'data' => $queryForData->get(),
+            'pagination' => null,
+        ];
+    }
+
+    $perPage = $request->input('pageSize', 10);
+    $currentPage = $request->input('currentPage', 1);
+    $totalItems = (clone $queryForData)->get()->count();
+
+    $data = $queryForData
+        ->skip(($currentPage - 1) * $perPage)
+        ->take($perPage)
+        ->get();
+
+    return [
+        'data' => $data,
+        'pagination' => [
+            'currentPage' => $currentPage,
+            'pageSize' => $perPage,
+            'totalItems' => $totalItems,
+            'totalPages' => ceil($totalItems / $perPage),
+            'from' => ($currentPage - 1) * $perPage + 1,
+            'to' => (($currentPage - 1) * $perPage) + count($data),
+        ]
+    ];
+}
+
+public function listVendorThroughTakenMaterialVendorId(Request $request, $id)
+{
+    try {
+        $query = GrnPOQuantityTracking::leftJoin('tbl_part_item', 'tbl_grn_po_quantity_tracking.part_no_id', '=', 'tbl_part_item.id')
+            ->leftJoin('purchase_order_details', 'tbl_grn_po_quantity_tracking.purchase_order_details_id', '=', 'purchase_order_details.id')
+            ->leftJoin('tbl_unit', 'tbl_grn_po_quantity_tracking.unit', '=', 'tbl_unit.id')
+            ->leftJoin('purchase_orders', 'tbl_grn_po_quantity_tracking.purchase_order_id', '=', 'purchase_orders.id')
+            ->leftJoin('vendors', 'purchase_orders.vendor_id', '=', 'vendors.id')
+            ->where('vendors.id', $id);
+
+        // 🔍 Search
+        if ($request->filled('search')) {
+            $s = $request->search;
+            $query->where(function ($q) use ($s) {
+                $q->where('tbl_part_item.description', 'like', "%{$s}%")
+                    ->orWhere('tbl_part_item.part_number', 'like', "%{$s}%")
+                    ->orWhere('purchase_orders.purchase_orders_id', 'like', "%{$s}%");
+            });
+        }
+
+        // 📅 Filters
+        if ($request->filled('from_date')) {
+            $query->whereDate('tbl_grn_po_quantity_tracking.created_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('tbl_grn_po_quantity_tracking.created_at', '<=', $request->to_date);
+        }
+
+        if ($request->filled('month')) {
+            $query->whereMonth('tbl_grn_po_quantity_tracking.updated_at', $request->month);
+        }
+
+        if ($request->filled('year')) {
+            $query->whereYear('tbl_grn_po_quantity_tracking.updated_at', $request->year);
+        }
+
+        // 📊 Select & Group
+        $query->select(
+            'tbl_grn_po_quantity_tracking.purchase_order_id',
+            'tbl_grn_po_quantity_tracking.part_no_id',
+            'tbl_grn_po_quantity_tracking.purchase_order_details_id',
+            DB::raw('MAX(tbl_grn_po_quantity_tracking.quantity) as max_quantity'),
+            DB::raw('SUM(tbl_grn_po_quantity_tracking.actual_quantity) as sum_actual_quantity'),
+            DB::raw('SUM(tbl_grn_po_quantity_tracking.accepted_quantity) as tracking_accepted_quantity'),
+            DB::raw('SUM(tbl_grn_po_quantity_tracking.rejected_quantity) as tracking_rejected_quantity'),
+
+            DB::raw('(SELECT SUM(t2.actual_quantity) 
+                      FROM tbl_grn_po_quantity_tracking AS t2 
+                      WHERE t2.purchase_order_id = tbl_grn_po_quantity_tracking.purchase_order_id
+                      AND t2.purchase_order_details_id = tbl_grn_po_quantity_tracking.purchase_order_details_id
+                      AND t2.part_no_id = tbl_grn_po_quantity_tracking.part_no_id
+                      AND t2.created_at <= tbl_grn_po_quantity_tracking.created_at) AS sum_grn_actual_quantity'),
+
+            DB::raw('(
+                purchase_order_details.quantity - 
+                (SELECT SUM(t2.actual_quantity) 
+                 FROM tbl_grn_po_quantity_tracking AS t2 
+                 WHERE t2.purchase_order_id = tbl_grn_po_quantity_tracking.purchase_order_id
+                 AND t2.purchase_order_details_id = tbl_grn_po_quantity_tracking.purchase_order_details_id
+                 AND t2.part_no_id = tbl_grn_po_quantity_tracking.part_no_id
+                 AND t2.created_at <= tbl_grn_po_quantity_tracking.created_at)
+            ) AS remaining_quantity'),
+
+            'tbl_part_item.description as part_description',
+            'tbl_part_item.part_number',
+            'tbl_unit.name as unit_name',
+            DB::raw('MAX(purchase_order_details.description) as po_description'),
+            DB::raw('MAX(purchase_order_details.rate) as po_rate'),
+            DB::raw('MAX(purchase_order_details.discount) as po_discount'),
+            'tbl_grn_po_quantity_tracking.created_at',
+            'tbl_grn_po_quantity_tracking.updated_at'
+        )
+        ->groupBy(
+            'tbl_grn_po_quantity_tracking.purchase_order_id',
+            'tbl_grn_po_quantity_tracking.part_no_id',
+            'tbl_grn_po_quantity_tracking.purchase_order_details_id',
+            'tbl_part_item.id',
+            'tbl_part_item.description',
+            'tbl_part_item.part_number',
+            'tbl_unit.name',
+            'purchase_order_details.quantity',
+            'tbl_grn_po_quantity_tracking.created_at',
+            'tbl_grn_po_quantity_tracking.updated_at'
+        )
+        ->orderByDesc('tbl_grn_po_quantity_tracking.updated_at');
+
+        // 📤 Export logic
+        if ($request->filled('export_type')) {
+            return [
+                'data' => $query->get(),
+                'pagination' => null,
+            ];
+        }
+
+        // 👇 No Pagination
+        return [
+            'data' => $query->get()
+        ];
+
+    } catch (\Exception $e) {
+        throw $e;
+    }
+}
+public function getStockItem($request)
+{
+    try {
+        $query = ItemStock::leftJoin('tbl_part_item', function ($join) {
+                $join->on('tbl_item_stock.part_item_id', '=', 'tbl_part_item.id');
+            })
+            ->leftJoin('tbl_unit', function ($join) {
+                $join->on('tbl_part_item.unit_id', '=', 'tbl_unit.id');
+            })
+            ->leftJoin('tbl_hsn', function ($join) {
+                $join->on('tbl_part_item.hsn_id', '=', 'tbl_hsn.id');
+            })
+            ->leftJoin('tbl_group_master', function ($join) {
+                $join->on('tbl_part_item.group_type_id', '=', 'tbl_group_master.id');
+            })
+            ->leftJoin('tbl_rack_master', function ($join) {
+                $join->on('tbl_part_item.rack_id', '=', 'tbl_rack_master.id');
+            });
+
+        // 🗓️ Date filters — make sure to use correct table columns, not tbl_dispatch
+        if ($request->filled('from_date')) {
+            $query->whereDate('tbl_item_stock.updated_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('tbl_item_stock.updated_at', '<=', $request->to_date);
+        }
+
+        if ($request->filled('year')) {
+            $query->whereYear('tbl_item_stock.updated_at', $request->year);
+        }
+
+        if ($request->filled('month')) {
+            $query->whereMonth('tbl_item_stock.updated_at', $request->month);
+        }
+        $query->orderBy('tbl_item_stock.quantity', 'desc');
+        $query->select(
+            'tbl_item_stock.id',
+            'tbl_part_item.part_number',
+            'tbl_part_item.basic_rate',
+            'tbl_part_item.opening_stock',
+            'tbl_part_item.description',
+            'tbl_part_item.extra_description',
+            'tbl_part_item.unit_id',
+            'tbl_item_stock.quantity',
+            'tbl_unit.name as unit_name',
+            'tbl_part_item.hsn_id',
+            'tbl_hsn.name as hsn_name',
+            'tbl_part_item.group_type_id',
+            'tbl_part_item.rack_id',
+            'tbl_rack_master.name as rack_name',
+            'tbl_group_master.name as group_name',
+            'tbl_item_stock.updated_at'
+        );
+
+        // 📤 Export full data
+        if ($request->filled('export_type')) {
+            return [
+                'status' => true,
+                'data' => $query->get(),
+                'pagination' => null
+            ];
+        }
+
+        // 📄 Pagination setup
+        $perPage = $request->input('pageSize', 10);
+        $currentPage = $request->input('currentPage', 1);
+
+        $totalItems = (clone $query)->count();
+
+        $data = (clone $query)
+            ->skip(($currentPage - 1) * $perPage)
+            ->take($perPage)
+            ->get();
+
+        return [
+            'status' => true,
+            'data' => $data,
+            'pagination' => [
+                'currentPage' => $currentPage,
+                'pageSize' => $perPage,
+                'totalItems' => $totalItems,
+                'totalPages' => ceil($totalItems / $perPage),
+                'from' => ($currentPage - 1) * $perPage + 1,
+                'to' => min($currentPage * $perPage, $totalItems),
+            ]
+        ];
+    } catch (\Exception $e) {
+        return [
+            'status' => false,
+            'message' => $e->getMessage()
+        ];
+    }
+}
+public function getStoreItemStockList($request)
+{
+    try {
+        $query = ItemStock::leftJoin('tbl_part_item', function ($join) {
+                $join->on('tbl_item_stock.part_item_id', '=', 'tbl_part_item.id');
+            })
+            ->leftJoin('tbl_unit', function ($join) {
+                $join->on('tbl_part_item.unit_id', '=', 'tbl_unit.id');
+            })
+            ->leftJoin('tbl_hsn', function ($join) {
+                $join->on('tbl_part_item.hsn_id', '=', 'tbl_hsn.id');
+            })
+            ->leftJoin('tbl_group_master', function ($join) {
+                $join->on('tbl_part_item.group_type_id', '=', 'tbl_group_master.id');
+            })
+            ->leftJoin('tbl_rack_master', function ($join) {
+                $join->on('tbl_part_item.rack_id', '=', 'tbl_rack_master.id');
+            });
+
+        // 🗓️ Date filters — make sure to use correct table columns, not tbl_dispatch
+        if ($request->filled('from_date')) {
+            $query->whereDate('tbl_item_stock.updated_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('tbl_item_stock.updated_at', '<=', $request->to_date);
+        }
+
+        if ($request->filled('year')) {
+            $query->whereYear('tbl_item_stock.updated_at', $request->year);
+        }
+
+        if ($request->filled('month')) {
+            $query->whereMonth('tbl_item_stock.updated_at', $request->month);
+        }
+        $query->orderBy('tbl_item_stock.quantity', 'desc');
+        $query->select(
+            'tbl_item_stock.id',
+            'tbl_part_item.part_number',
+            'tbl_part_item.basic_rate',
+            'tbl_part_item.opening_stock',
+            'tbl_part_item.description',
+            'tbl_part_item.extra_description',
+            'tbl_part_item.unit_id',
+            'tbl_item_stock.quantity',
+            'tbl_unit.name as unit_name',
+            'tbl_part_item.hsn_id',
+            'tbl_hsn.name as hsn_name',
+            'tbl_part_item.group_type_id',
+            'tbl_part_item.rack_id',
+            'tbl_rack_master.name as rack_name',
+            'tbl_group_master.name as group_name',
+            'tbl_item_stock.updated_at'
+        );
+
+        // 📤 Export full data
+        if ($request->filled('export_type')) {
+            return [
+                'status' => true,
+                'data' => $query->get(),
+                'pagination' => null
+            ];
+        }
+
+        // 📄 Pagination setup
+        $perPage = $request->input('pageSize', 10);
+        $currentPage = $request->input('currentPage', 1);
+
+        $totalItems = (clone $query)->count();
+
+        $data = (clone $query)
+            ->skip(($currentPage - 1) * $perPage)
+            ->take($perPage)
+            ->get();
+
+        return [
+            'status' => true,
+            'data' => $data,
+            'pagination' => [
+                'currentPage' => $currentPage,
+                'pageSize' => $perPage,
+                'totalItems' => $totalItems,
+                'totalPages' => ceil($totalItems / $perPage),
+                'from' => ($currentPage - 1) * $perPage + 1,
+                'to' => min($currentPage * $perPage, $totalItems),
+            ]
+        ];
+    } catch (\Exception $e) {
+        return [
+            'status' => false,
+            'message' => $e->getMessage()
+        ];
+    }
+}
+
 }

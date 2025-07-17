@@ -51,7 +51,7 @@
 
     <div class="row mb-2">
         <div class="col-md-6">
-            <button type="submit" class="btn btn-primary">Filter</button>
+            <button type="submit" class="btn btn-primary filterbg">Filter</button>
         </div>
         <div class="col-md-6 text-end d-flex">
             <input type="text" class="form-control me-2" id="searchKeyword" placeholder="Search...">

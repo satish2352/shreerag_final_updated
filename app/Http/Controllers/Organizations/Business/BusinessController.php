@@ -58,6 +58,7 @@ class BusinessController extends Controller
             'title.required' => 'The customer name is required.',
             'title.string' => 'The customer name must be a valid string.',
             'title.max' => 'The customer name must not exceed 255 characters.',
+             'project_name.required' => 'The project name is required.',
             'product_name.required' => 'The project name is required.',
             'customer_po_number.required' => 'The customer po number is required.',
             'customer_po_number.min' => 'The customer po number must be at least 10 characters.',

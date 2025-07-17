@@ -103,11 +103,79 @@ public function listItemStockReport($request)
 public function listLogisticsReport($request)
 {
     try {
-        $data_output =  $this->repo->listLogisticsReport($request);
-        
-          return $data_output;
+        return $this->repo->listLogisticsReport($request);
     } catch (\Exception $e) {
-        throw $e; // Let the controller handle it
+        throw $e;
     }
-} 
+}
+public function listFiananceReport($request)
+{
+    try {
+        return $this->repo->listFiananceReport($request);
+    } catch (\Exception $e) {
+        throw $e;
+    }
+}
+public function listDispatchReport($request)
+{
+    try {
+        return $this->repo->listDispatchReport($request);
+    } catch (\Exception $e) {
+        throw $e;
+    }
+}
+
+public function listDispatchBarChartProductWise($request)
+{
+    try {
+        return $this->repo->listDispatchBarChartProductWise($request);
+    } catch (\Exception $e) {
+        throw $e;
+    }
+}
+public function listDispatchBarChart($request)
+{
+    try {
+        return $this->repo->listDispatchBarChart($request);
+    } catch (\Exception $e) {
+        throw $e;
+    }
+}
+public function listVendorWise($request)
+{
+    try {
+        return $this->repo->listVendorWise($request);
+    } catch (\Exception $e) {
+        throw $e;
+    }
+}
+public function listVendorThroughTakenMaterial($request)
+{
+    try {
+        return $this->repo->listVendorThroughTakenMaterial($request);
+    } catch (\Exception $e) {
+        throw $e;
+    }
+}
+public function listVendorThroughTakenMaterialVendorId($request, $id)
+{
+    return $this->repo->listVendorThroughTakenMaterialVendorId($request, $id);
+}
+public function getStockItem($request)
+{
+    try {
+        return $this->repo->getStockItem($request);
+    } catch (\Exception $e) {
+        throw $e;
+    }
+}
+public function getStoreItemStockList($request)
+{
+    try {
+        return $this->repo->getStoreItemStockList($request);
+    } catch (\Exception $e) {
+        throw $e;
+    }
+}
+
 }

@@ -101,7 +101,9 @@
                                                                         <span class="red-text"><?php echo $errors->first('title', ':message'); ?></span>
                                                                     @endif
                                                                 </div>
-                                                                <div class="row">
+                                                                 </div>
+                                                                
+                                                                <div class="">
                                                                     <div class="col-md-12 col-sm-12">
                                                                         <div class="table-responsive">
                                                                             <table
@@ -185,6 +187,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                 <div>
                                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                                     <label for="po_validity">PO Validity : <span
                                                                             class="text-danger">*</span></label>
@@ -283,6 +286,11 @@
                 var validator = $("#addEmployeeForm").validate({
                     ignore: [], // Validate hidden inputs as well
                     rules: {
+                          project_name: {
+                            required: true,
+                            maxlength: 50, // Maximum length of 50 characters
+                            // alphanumeric: true // Alphanumeric validation
+                        },
                         title: {
                             required: true,
                             maxlength: 50, // Maximum length of 50 characters
@@ -323,6 +331,9 @@
                         }
                     },
                     messages: {
+                         project_name: {
+                             required: "Please enter Project Name.",
+                        },
                         title: {
                             required: "Please enter Customer Name.",
                             maxlength: "Customer Name must be at most 50 characters long.",

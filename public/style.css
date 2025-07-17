@@ -3340,13 +3340,17 @@ div#sparklinehome canvas {
 }
 
 .sidebar-menu .active a {
-    background-color: #243772;
-    color: #fff; 
+    /* background-color: #243772;
+    color: #fff;  */
     
 } 
-
+.filterbg{
+    background-color:#243772 !important;
+    border-color: #243772 !important;
+}
 .navbar-fixed-bottom{
     z-index: 0 !important;
+    
 }
 .nav-item.active a {
     background-color: #243772;

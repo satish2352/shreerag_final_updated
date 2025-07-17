@@ -30,7 +30,7 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Logistics Production Completed Report</h1>
+                                <h1>Security Report</h1>
                               
                             </div>
                         </div>
@@ -92,7 +92,7 @@
         <div class="row mb-2">
             <div class="col-md-6 d-flex justify-content-center">
                
-                <button type="submit" class="btn btn-primary" style="background-color: #175ca2;}">Filter</button>
+                <button type="submit" class="btn btn-primary filterbg">Filter</button>
              <button type="button" class="btn btn-secondary ms-2" id="resetFilters" style="margin-left: 10px;">
         Reset
     </button>

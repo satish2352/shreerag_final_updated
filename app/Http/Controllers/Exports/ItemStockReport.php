@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Exports;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class ConsumptionReportExport implements FromCollection, WithHeadings
+class ItemStockReport implements FromCollection, WithHeadings
 {
     protected $data;
 
@@ -17,12 +17,12 @@ class ConsumptionReportExport implements FromCollection, WithHeadings
     {
         return $this->data->map(function ($item) {
             return [
-                $item['project_name'] ?? '-',
-                $item['customer_po_number'] ?? '-',
-                $item['product_name'] ?? '-',
-                $item['title'] ?? '-',
+                $item['description'] ?? '-',
                 $item['quantity'] ?? '-',
-                $item['updated_at'] ?? '-',
+                $item['unit_name'] ?? '-',
+                $item['hsn_name'] ?? '-',
+                $item['group_name'] ?? '-',
+                $item['rack_name'] ?? '-',
             ];
         });
     }
@@ -30,12 +30,12 @@ class ConsumptionReportExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-            'Project Name',
-            'PO Number',
-            'Product Name',
-            'Title',
-            'Quantity',
-            'Date',
+            'Item Name',
+            'Stock',
+            'Unit Name',
+            'HSN Name',
+            'Group Name',
+            'Rack Name',
         ];
     }
 }
