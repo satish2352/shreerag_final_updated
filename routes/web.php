@@ -177,12 +177,17 @@ Route::group(['middleware' => ['admin']], function () {
          Route::get('/list-logistics-report', [ReportController::class, 'listLogisticsReport'])->name('list-logistics-report');
         Route::get('/logistics-ajax', [ReportController::class, 'listLogisticsReportAjax'])->name('logistics-ajax');
         
-         Route::get('/list-fianance-report', [ReportController::class, 'listFiananceReport'])->name('list-fianance-report');
+        Route::get('/list-fianance-report', [ReportController::class, 'listFiananceReport'])->name('list-fianance-report');
         Route::get('/fianance-ajax', [ReportController::class, 'listFiananceReportAjax'])->name('fianance-ajax');
+   
+        Route::get('/list-vendor-payment-report', [ReportController::class, 'listVendorPaymentReport'])->name('list-vendor-payment-report');
+        Route::get('/vendor-payment-ajax', [ReportController::class, 'listVendorPaymentReportAjax'])->name('vendor-payment-ajax');
    
         Route::get('/list-dispatch-report', [ReportController::class, 'listDispatchReport'])->name('list-dispatch-report');
         Route::get('/dispatch-ajax', [ReportController::class, 'listDispatchReportAjax'])->name('dispatch-ajax');
-    
+
+        Route::get('/dispatch-pending-report', [ReportController::class, 'listPendingDispatchReport'])->name('dispatch-pending-report');
+        Route::get('/pending-dispatch-ajax', [ReportController::class, 'listPendingDispatchReportAjax'])->name('pending-dispatch-ajax');
 
         Route::get('/list-dispatch-bar-chart', [ReportController::class, 'listDispatchBarChart'])->name('list-dispatch-bar-chart');
 

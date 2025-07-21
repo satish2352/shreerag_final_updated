@@ -365,10 +365,17 @@
                                             class="fa big-icon fa-list-check icon-wrap" aria-hidden="true"></i> <span
                                             class="mini-click-non">Purchase Report</span></a></li>
 
-                                      <li class="nav-item {{ Request::is('party-report') ? 'active' : '' }}"><a
+                                              <li class="{{ Request::is('list-vendor-through-taken-material') ? 'active' : '' }}"><a href="{{ route('list-vendor-through-taken-material') }}" aria-expanded="false"><i
+                                                class="fa fa-check-circle icon-wrap" aria-hidden="true"></i> <span
+                                                class="mini-click-non">Vendor Through Taken Material</span></a></li>
+                                                 <li class="{{ Request::is('stock-item') ? 'active' : '' }}"><a href="{{ route('stock-item') }}"><i
+                                                class="fa fa-check-circle icon-wrap" aria-hidden="true"></i> <span
+                                                class="mini-click-non">Item Stock</span></a></li>
+
+                                      {{-- <li class="nav-item {{ Request::is('party-report') ? 'active' : '' }}"><a
                                         href="{{ route('party-report') }}"><i
                                             class="fa big-icon fa-list-check icon-wrap" aria-hidden="true"></i> <span
-                                            class="mini-click-non">Party Wise Report</span></a></li>     
+                                            class="mini-click-non">Party Wise Report</span></a></li>      --}}
                                       <li class="nav-item {{ Request::is('follow-up-report') ? 'active' : '' }}"><a
                                         href="{{ route('follow-up-report') }}"><i
                                             class="fa big-icon fa-list-check icon-wrap" aria-hidden="true"></i> <span
@@ -786,13 +793,19 @@
                                 <span class="mini-click-non">Product Submited to Dispatch</span>
                             </a>
                         </li>
-
                            <li class="nav-item {{ request()->is('list-fianance-report*') ? 'active' : '' }}">
                             <a href="{{ route('list-fianance-report') }}">
                                 <i class="fa fa-check-circle icon-wrap"></i>
                                 <span class="mini-click-non">Fianance Report </span>
                             </a>
                         </li>
+                           <li class="nav-item {{ request()->is('list-vendor-payment-report*') ? 'active' : '' }}">
+                            <a href="{{ route('list-vendor-payment-report') }}">
+                                <i class="fa fa-check-circle icon-wrap"></i>
+                                <span class="mini-click-non">Vendor Payment Report </span>
+                            </a>
+                        </li>
+                        
                     @endif
 
 
@@ -876,6 +889,13 @@
                                 <span class="mini-click-non">Dispatch Report </span>
                             </a>
                         </li>
+                          <li class="nav-item {{ request()->is('dispatch-pending-report*') ? 'active' : '' }}">
+                            <a href="{{ route('dispatch-pending-report') }}">
+                                <i class="fa fa-check-circle icon-wrap"></i>
+                                <span class="mini-click-non">Pending Dispatch Report </span>
+                            </a>
+                        </li>
+                        
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.CMS'))
                         <li class="nav-item {{ request()->is('cms/dashboard') ? 'active' : '' }}">

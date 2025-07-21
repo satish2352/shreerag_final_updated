@@ -116,10 +116,30 @@ public function listFiananceReport($request)
         throw $e;
     }
 }
+public function listVendorPaymentReport($request)
+{
+    try {
+        $data_output = $this->repo->listVendorPaymentReport($request);
+    //   dd($data_output);
+    //   die();
+        return $data_output;
+    } catch (\Exception $e) {
+        throw $e;
+    }
+}
 public function listDispatchReport($request)
 {
     try {
         return $this->repo->listDispatchReport($request);
+    } catch (\Exception $e) {
+        throw $e;
+    }
+}
+public function listPendingDispatchReport($request)
+{
+    try {
+        $data_output =  $this->repo->listPendingDispatchReport($request);
+        return $data_output;
     } catch (\Exception $e) {
         throw $e;
     }

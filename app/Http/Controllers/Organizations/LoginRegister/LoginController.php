@@ -118,6 +118,9 @@ class LoginController extends Controller
                  
                     Session::put('user_id', $userId);
 
+                    // Log all request data (optional - for debugging only)
+    Log::info('Login Request Received', $request->all());
+    
                     if ($request->filled(['latitude', 'longitude'])) {
                         User::where('id', $userId)->update([
                             'latitude' => $request->latitude,

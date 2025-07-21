@@ -30,14 +30,14 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Production Completed  Report</h1>
+                                <h1>Completed Product Logistics to Fianance Report</h1>
                               
                             </div>
                         </div>
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
 
-       <form id="filterForm" method="GET" action="{{ route('list-logistics-report') }}" target="_blank">
+       <form id="filterForm" method="GET" action="{{ route('list-logistics-report') }}">
 
     <input type="hidden" name="export_type" id="export_type" />
       
@@ -132,7 +132,9 @@
                                                 <th data-field="remaining_quantity" data-editable="false">Balance Quantity</th>
                                                 <th data-field="from_place" data-editable="false">Form Place</th>
                                                 <th data-field="to_place" data-editable="false">To Place</th>
-                                             
+                                                <th data-field="transport_name" data-editable="false">Transport Name</th>
+                                                <th data-field="vehicle_name" data-editable="false">Vehicle Type</th>
+                                                <th data-field="truck_no" data-editable="false">Truck No.</th>
                                             </tr>
     </thead>
     <tbody id="reportBody">
@@ -204,11 +206,15 @@ function fetchReport(reset = false) {
             <td>${item.customer_po_number ?? '-'}</td>
             <td>${item.title ?? '-'}</td>
             <td>${item.product_name ?? '-'}</td>
-             <td>${item.quantity ?? '-'}</td>
-              <td>${item.completed_quantity ?? '-'}</td>
-             <td>${item.remaining_quantity ?? '-'}</td>
-               <td>${item.from_place ?? '-'}</td>
-                    <td>${item.to_place ?? '-'}</td>
+            <td>${item.quantity ?? '-'}</td>
+            <td>${item.completed_quantity ?? '-'}</td>
+            <td>${item.remaining_quantity ?? '-'}</td>
+            <td>${item.from_place ?? '-'}</td>
+            <td>${item.to_place ?? '-'}</td>
+            <td>${item.transport_name ?? '-'}</td>
+            <td>${item.vehicle_name ?? '-'}</td>
+            <td>${item.truck_no ?? '-'}</td>
+                    
           
         </tr>
     `;

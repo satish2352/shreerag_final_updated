@@ -1,14 +1,25 @@
 @extends('admin.layouts.master')
 @section('content')
 
-<div class="container-fluid mt-4">
-    <h4 class="mb-3">Follow Up Report</h4>
+    <div class="data-table-area mg-tb-15">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="sparkline13-list">
+                        <div class="sparkline13-hd">
+                            <div class="main-sparkline13-hd">
+                                <h1>Follow Up Report</h1>
+                              
+                            </div>
+                        </div>
+                        <div class="sparkline13-graph">
+                            <div class="datatable-dashv1-list custom-datatable-overright">
 
-    <form id="filterForm" method="GET" action="{{ route('party-report') }}">
+    <form id="filterForm" method="GET" action="{{ route('follow-up-report') }}">
         <input type="hidden" name="export_type" id="export_type" />
 
         <div class="row mb-3">
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <label>Vendor Name</label>
                 <select class="form-control" name="vendor_name" id="vendor_name">
                     <option value="">All Vendors</option>
@@ -18,7 +29,7 @@
                 </select>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <label>PO Status</label>
                 <select class="form-control" name="po_status" id="po_status">
                     <option value="">All PO Status</option>
@@ -48,7 +59,7 @@
                 </select>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <label>Month</label>
                 <select name="month" class="form-control">
                     <option value="">All</option>
@@ -64,6 +75,9 @@
         <div class="row mb-2">
             <div class="col-md-6">
                 <button type="submit" class="btn btn-primary filterbg">Filter</button>
+                 <button type="button" class="btn btn-secondary ms-2" id="resetFilters" style="margin-left: 10px;">
+        Reset
+    </button>
             </div>
             <div class="col-md-6 text-end d-flex">
                 <input type="text" class="form-control me-2" id="searchKeyword" placeholder="Search...">
@@ -104,7 +118,7 @@
         </div>
     </div>
 </div>
-
+                        </div></div></div></div></div></div>
 <script>
 let currentPage = 1, pageSize = 10;
 

@@ -10,6 +10,8 @@ use App\Http\Controllers\Exports\DesignReportExport;
 use App\Http\Controllers\Exports\ProductionReportExport;
 use App\Http\Controllers\Exports\SecurityReportExport;
 use App\Http\Controllers\Exports\GRNReportExport;
+use App\Http\Controllers\Exports\LogisticsReportExport;
+
 
 
 use Session;
@@ -353,54 +355,6 @@ public function listItemStockReportAjax(Request $request)
             return response()->json(['status' => false, 'message' => $e->getMessage()]);
         }
     }
-
-// public function listLogisticsReport( Request $request ) {
-//         try {
-//             $data = $this->service->listLogisticsReport($request);
-       
-//           $getProjectName = Business::whereNotNull('project_name')
-//             ->where('is_deleted', 0)
-//             ->where('is_active', 1)
-//             ->pluck('project_name', 'id');
-//     $getProductName = BusinessDetails::whereNotNull('product_name')
-//             ->where('is_deleted', 0)
-//             ->where('is_active', 1)
-//             ->pluck('product_name', 'id');
-           
-//             return view( 'organizations.report.logistics-report', compact( 'data','getProjectName','getProductName' ) );
-//         } catch ( \Exception $e ) {
-//             return $e;
-//         }
-//     }
-// public function listLogisticsReportAjax(Request $request)
-//     {
-//         try {
-//             $data = $this->service->listLogisticsReport($request);
-
-//             // PDF Export
-//             if ($request->filled('export_type') && $request->export_type == 1) {
-//                 $pdf = Pdf::loadView('exports.logistics-report-pdf', ['data' => $data['data']])
-//                     ->setPaper('a4'); // <-- Landscape
-
-//                 return $pdf->download('LogisticsReport.pdf');
-//             }
-
-//             // Excel Export
-//             if ($request->filled('export_type') && $request->export_type == 2) {
-//                 return Excel::download(new SecurityReportExport($data['data']), 'LogisticsReport.xlsx');
-//             }
-
-//             // Normal AJAX response
-//             return response()->json([
-//                 'status' => true,
-//                 'data' => $data['data'],
-//                 'pagination' => $data['pagination']
-//             ]);
-
-//         } catch (\Exception $e) {
-//             return response()->json(['status' => false, 'message' => $e->getMessage()]);
-//         }
-//     }
 public function listLogisticsReport(Request $request)
 {
     try {
@@ -441,7 +395,7 @@ public function listLogisticsReportAjax(Request $request)
 
         // Excel Export
         if ($request->filled('export_type') && $request->export_type == 2) {
-            return Excel::download(new SecurityReportExport($data['data']), 'LogisticsReport.xlsx');
+            return Excel::download(new LogisticsReportExport($data['data']), 'LogisticsReport.xlsx');
         }
 
         // Normal AJAX response
@@ -487,6 +441,59 @@ public function listFiananceReportAjax(Request $request)
 
         // PDF Export
         if ($request->filled('export_type') && $request->export_type == 1) {
+            $pdf = Pdf::loadView('exports.fianance-report-pdf', ['data' => $data['data']])
+                ->setPaper('a4');
+
+            return $pdf->download('LogisticsReport.pdf');
+        }
+
+        // Excel Export
+        if ($request->filled('export_type') && $request->export_type == 2) {
+            return Excel::download(new SecurityReportExport($data['data']), 'LogisticsReport.xlsx');
+        }
+
+        // Normal AJAX response
+        return response()->json([
+            'status' => true,
+            'data' => $data['data'],
+            'pagination' => $data['pagination']
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json(['status' => false, 'message' => $e->getMessage()]);
+    }
+}
+public function listVendorPaymentReport(Request $request)
+{
+    try {
+        $data = $this->service->listVendorPaymentReport($request);
+         $getVendorName = Vendors::whereNotNull('vendor_name')
+        ->where('is_deleted', 0)
+        ->where('is_active', 1)
+        ->pluck('vendor_name', 'id');
+
+         $getPurchaseOrder = PurchaseOrdersModel::whereNotNull('purchase_orders_id')
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->pluck('purchase_orders_id', 'purchase_orders_id'); // use po number as key & value
+
+        return view('organizations.report.vendor-payment-report', compact('data', 'getVendorName', 'getPurchaseOrder'));
+    } catch (\Exception $e) {
+        return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+    }
+}
+public function listVendorPaymentReportAjax(Request $request)
+{
+    try {
+        $data = $this->service->listVendorPaymentReport($request);
+
+        // Defensive check
+        if (!is_array($data) || !isset($data['data'])) {
+            throw new \Exception("Invalid response format from service.");
+        }
+
+        // PDF Export
+        if ($request->filled('export_type') && $request->export_type == 1) {
             $pdf = Pdf::loadView('exports.logistics-report-pdf', ['data' => $data['data']])
                 ->setPaper('a4');
 
@@ -509,7 +516,6 @@ public function listFiananceReportAjax(Request $request)
         return response()->json(['status' => false, 'message' => $e->getMessage()]);
     }
 }
-
 public function listDispatchReport(Request $request)
 {
     try {
@@ -534,6 +540,60 @@ public function listDispatchReportAjax(Request $request)
 {
     try {
         $data = $this->service->listDispatchReport($request);
+
+        // Defensive check
+        if (!is_array($data) || !isset($data['data'])) {
+            throw new \Exception("Invalid response format from service.");
+        }
+
+        // PDF Export
+        if ($request->filled('export_type') && $request->export_type == 1) {
+            $pdf = Pdf::loadView('exports.dispatch-report-pdf', ['data' => $data['data']])
+                ->setPaper('a4');
+
+            return $pdf->download('LogisticsReport.pdf');
+        }
+
+        // Excel Export
+        if ($request->filled('export_type') && $request->export_type == 2) {
+            return Excel::download(new SecurityReportExport($data['data']), 'LogisticsReport.xlsx');
+        }
+
+        // Normal AJAX response
+        return response()->json([
+            'status' => true,
+            'data' => $data['data'],
+            'pagination' => $data['pagination']
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json(['status' => false, 'message' => $e->getMessage()]);
+    }
+}
+public function listPendingDispatchReport(Request $request)
+{
+    try {
+        $data = $this->service->listPendingDispatchReport($request);
+
+        $getProjectName = Business::whereNotNull('project_name')
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->pluck('project_name', 'id');
+
+        $getProductName = BusinessDetails::whereNotNull('product_name')
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->pluck('product_name', 'id');
+
+        return view('organizations.report.dispatch-pending-report', compact('data', 'getProjectName', 'getProductName'));
+    } catch (\Exception $e) {
+        return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+    }
+}
+public function listPendingDispatchReportAjax(Request $request)
+{
+    try {
+        $data = $this->service->listPendingDispatchReport($request);
 
         // Defensive check
         if (!is_array($data) || !isset($data['data'])) {

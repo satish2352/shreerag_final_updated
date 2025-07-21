@@ -11,6 +11,13 @@
             right: 20px;
             transform: translateY(-50%);
         }
+           .password-toggle-disable {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+        }
         label.error {
             color: red;
             /* Change 'red' to your desired text color */
@@ -23,6 +30,10 @@
             color: red;
         }
     </style>
+@php
+    $isHR = session('role_name') === 'HR';
+@endphp
+
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list" style="padding-bottom: 100px">
@@ -146,57 +157,93 @@
                                                     @endif
                                                 </div>
                                             </div>
+                                            {{-- Mobile Number --}}
+
                                             <div class="col-lg-6 col-md-6 col-sm-6">
                                                 <div class="form-group">
-                                                    <label for="number">Mobile Number</label>&nbsp<span
-                                                        class="red-text">*</span>
-                                                    <input type="text" class="form-control mb-2" name="number"
-                                                        id="number" placeholder=""
+                                                    <label for="number">Mobile Number</label>&nbsp;<span class="red-text">*</span>
+                                                    <input type="text" class="form-control mb-2" name="number" id="number"
                                                         value="{{ $user_data['data_users']['number'] }}"
                                                         onkeyup="editvalidateMobileNumber(this.value)"
                                                         pattern="[789]{1}[0-9]{9}"
-                                                        oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');"
-                                                        maxlength="10" minlength="10">
+                                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                                        maxlength="10" minlength="10"
+                                                        @if(session('role_name') == 'HR') disabled @endif>
                                                     <span id="edit-message" class="red-text"></span>
                                                     @if ($errors->has('number'))
-                                                        <span class="red-text"><?php echo $errors->first('number', ':message'); ?></span>
+                                                        <span class="red-text">{{ $errors->first('number') }}</span>
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                                <div class="form-group">
-                                                    <label for="u_password">Change Password</label>
-                                                    <input type="password" class="password form-control mb-2" name="u_password"
-                                                        id="u_password" placeholder=""
-                                                        value="@if (old('u_password')) {{ old('u_password') }} @endif">
-        
-                                                    @if ($errors->has('u_password'))
-                                                        <span class="red-text"><?php echo $errors->first('u_password', ':message'); ?></span>
-                                                    @endif
-                                                    <span id="togglePassword" class="togglePpassword password-toggle"
-                                                        onclick="togglePasswordVisibility()">
-                                                        <i class="fa fa-eye-slash"></i>
-                                                    </span>
+                                                @if (session('role_id') === 9)
+                                                {{-- Change Password --}}
+                                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="u_password">Change Password</label>                                                    
+                                                        <input type="password" class="password form-control mb-2" name="u_password" id="u_password"
+                                                            value="{{ old('u_password') }}" disabled>
+                                                            <span class="text-danger">Please contact the owner to change the password.</span>
+                                                        @if ($errors->has('u_password'))
+                                                            <span class="red-text">{{ $errors->first('u_password') }}</span>
+                                                        @endif
+                                                        <span id="togglePassword" class="togglePpassword password-toggle-disable" onclick="togglePasswordVisibility()">
+                                                            <i class="fa fa-eye-slash"></i>
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                                <div class="form-group">
-                                                    <label for="password_confirmation">Confirm Password</label>
-                                                    <input type="password" class="password_confirmation form-control mb-2"
-                                                        id="password_confirmation" name="password_confirmation"
-                                                        value="@if (old('password_confirmation')) {{ old('password_confirmation') }} @endif">
-        
-                                                    <span id="password-error" class="error-message red-text"></span>
-                                                    @if ($errors->has('password_confirmation'))
-                                                        <span class="red-text"><?php echo $errors->first('password_confirmation', ':message'); ?></span>
-                                                    @endif
-                                                    <span id="toggleConfirmPassword"
-                                                        class="toggleConfirmPpassword password-toggle"
-                                                        onclick="toggleConfirmPasswordVisibility()">
-                                                        <i class="fa fa-eye-slash"></i>
-                                                    </span>
+
+                                                {{-- Confirm Password --}}
+                                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="password_confirmation">Confirm Password</label>
+                                                        <input type="password" class="password_confirmation form-control mb-2" id="password_confirmation"
+                                                            name="password_confirmation"
+                                                            value="{{ old('password_confirmation') }}" disabled>
+                                                        <span id="password-error" class="error-message red-text"></span>
+                                                        @if ($errors->has('password_confirmation'))
+                                                            <span class="red-text">{{ $errors->first('password_confirmation') }}</span>
+                                                        @endif
+                                                        <span id="toggleConfirmPassword" class="toggleConfirmPpassword password-toggle-disable"
+                                                            onclick="toggleConfirmPasswordVisibility()">
+                                                            <i class="fa fa-eye-slash"></i>
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                                @else
+                                                       {{-- Change Password --}}
+                                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="u_password">Change Password</label>
+                                                        <input type="password" class="password form-control mb-2" name="u_password" id="u_password"
+                                                            value="{{ old('u_password') }}">
+                                                        @if ($errors->has('u_password'))
+                                                            <span class="red-text">{{ $errors->first('u_password') }}</span>
+                                                        @endif
+                                                        <span id="togglePassword" class="togglePpassword password-toggle" onclick="togglePasswordVisibility()">
+                                                            <i class="fa fa-eye-slash"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                {{-- Confirm Password --}}
+                                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="password_confirmation">Confirm Password</label>
+                                                        <input type="password" class="password_confirmation form-control mb-2" id="password_confirmation"
+                                                            name="password_confirmation"
+                                                            value="{{ old('password_confirmation') }}">
+                                                        <span id="password-error" class="error-message red-text"></span>
+                                                        @if ($errors->has('password_confirmation'))
+                                                            <span class="red-text">{{ $errors->first('password_confirmation') }}</span>
+                                                        @endif
+                                                        <span id="toggleConfirmPassword" class="toggleConfirmPpassword password-toggle"
+                                                            onclick="toggleConfirmPasswordVisibility()">
+                                                            <i class="fa fa-eye-slash"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                @endif
+
 
                                             <div class="col-lg-6 col-md-6 col-sm-6">
                                                 <div class="form-group">

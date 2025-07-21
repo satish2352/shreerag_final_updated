@@ -30,14 +30,14 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Completed Product Fianance to Dispatch Report</h1>
+                                <h1>Pending Dispatch Product Report</h1>
                               
                             </div>
                         </div>
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
 
-       <form id="filterForm" method="GET" action="{{ route('list-logistics-report') }}" target="_blank">
+       <form id="filterForm" method="GET" action="{{ route('list-dispatch-report') }}" target="_blank">
 
     <input type="hidden" name="export_type" id="export_type" />
       
@@ -56,7 +56,7 @@
             <label>Product Name</label>
             <select class="form-control select2" name="business_details_id" id="business_details_id">
                 <option value="">All Product Name</option>
-                {{-- Product options will be populated via JS --}}
+                
             </select>
         </div>
          <div class="col-md-2">
@@ -89,7 +89,7 @@
         <div class="row mb-2">
             <div class="col-md-6 d-flex justify-content-center">
                
-                <button type="submit" class="btn btn-primary filterbg">Filter</button>
+                <button type="submit" class="btn btn-primary filterbg" >Filter</button>
              <button type="button" class="btn btn-secondary ms-2" id="resetFilters" style="margin-left: 10px;">
         Reset
     </button>
@@ -122,19 +122,15 @@
       <tr>
 
                                                 <th data-field="id">ID</th>
-                                               <th data-field="updated_at" data-editable="false">Sent Date</th>
+                                               <th data-field="last_updated_at" data-editable="false">Dispatch Completed Date</th>
                                                 <th data-field="project_name" data-editable="false">Project Name</th>
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
                                                 <th data-field="title" data-editable="false">customer Name</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
-                                                <th data-field="quantity" data-editable="false">Quantity</th>
-                                                <th data-field="completed_quantity" data-editable="false">Completed Production</th>
-                                                <th data-field="remaining_quantity" data-editable="false">Balance Quantity</th>
-                                                <th data-field="from_place" data-editable="false">Form Place</th>
-                                                <th data-field="to_place" data-editable="false">To Place</th>
-                                                <th data-field="transport_name" data-editable="false">Transport Name</th>
-                                                <th data-field="vehicle_name" data-editable="false">Vehicle Type</th>
-                                                <th data-field="truck_no" data-editable="false">Truck No.</th>
+                                                <th data-field="total_quantity" data-editable="false">Total Product Quantity
+                                                </th>
+                                                <th data-field="total_completed_quantity" data-editable="false">Total
+                                                    Production Done Quantity</th>
                                                 
                                              
                                             </tr>
@@ -188,7 +184,7 @@ function fetchReport(reset = false) {
     const params = new URLSearchParams();
     formData.forEach((val, key) => params.append(key, val));
 
-    fetch(`{{ route('logistics-ajax') }}?${params.toString()}`)
+    fetch(`{{ route('pending-dispatch-ajax') }}?${params.toString()}`)
         .then(res => res.json())
         .then(res => {
             const tbody = document.getElementById('reportBody');
@@ -203,19 +199,15 @@ function fetchReport(reset = false) {
     return `
         <tr>
             <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
-            <td>${item.updated_at ? new Date(item.updated_at).toLocaleDateString('en-IN') : '-'}</td>
+            <td>${item.last_updated_at ? new Date(item.last_updated_at).toLocaleDateString('en-IN') : '-'}</td>
             <td>${item.project_name ?? '-'}</td>
             <td>${item.customer_po_number ?? '-'}</td>
             <td>${item.title ?? '-'}</td>
             <td>${item.product_name ?? '-'}</td>
              <td>${item.quantity ?? '-'}</td>
-            <td>${item.completed_quantity ?? '-'}</td>
-             <td>${item.remaining_quantity ?? '-'}</td>
-            <td>${item.from_place ?? '-'}</td>
-             <td>${item.to_place ?? '-'}</td>
-             <td>${item.transport_name ?? '-'}</td>
-            <td>${item.vehicle_name ?? '-'}</td>
-            <td>${item.truck_no ?? '-'}</td>
+              <td>${item.total_completed_quantity ?? '-'}</td>
+          
+            
           
         </tr>
     `;

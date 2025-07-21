@@ -30,36 +30,46 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Completed Product Fianance to Dispatch Report</h1>
+                                <h1>Vendor Payment Report</h1>
                               
                             </div>
                         </div>
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
 
-       <form id="filterForm" method="GET" action="{{ route('list-logistics-report') }}" target="_blank">
+       <form id="filterForm" method="GET" action="{{ route('list-vendor-payment-report') }}" target="_blank">
 
     <input type="hidden" name="export_type" id="export_type" />
       
         <div class="row mb-3">
-              <div class="col-md-2">
-            <label>Project Name</label>
-            <select class="form-control select2" name="project_name" id="project_name">
-                <option value="">All Projects</option>
-                @foreach($getProjectName as $id => $name)
-                    <option value="{{ $id }}">{{ $name }}</option>
-                @endforeach
-            </select>
-        </div>
+             <div class="col-md-3">
+                <label>Vendor Name</label>
+                <select class="form-control select2" name="vendor_name">
+                    <option value="">All Vendors</option>
+                    @foreach($getVendorName as $id => $name)
+                        <option value="{{ $id }}">{{ $name }}</option>
+                    @endforeach
+                </select>
+            </div>
+                <div class="col-md-3">
+                <label>PO Number</label>
+                <select class="form-control select2" name="purchase_orders_id">
+                    <option value="">All PO Numbers</option>
+                   @foreach($getPurchaseOrder as $id => $name)
+    <option value="{{ $id }}">{{ $name }}</option>
+@endforeach
 
-        <div class="col-md-2">
-            <label>Product Name</label>
-            <select class="form-control select2" name="business_details_id" id="business_details_id">
-                <option value="">All Product Name</option>
-                {{-- Product options will be populated via JS --}}
+                </select>
+            </div>
+             <div class="col-md-3">
+              <label>Status</label>
+            <select name="grn_status_sanction" class="form-control" id="grn_status_sanction">
+                <option value="">Select Status</option>
+                <option value="6003">Paid</option>
+                <option value="6000,6001,6002">Pending</option>
             </select>
         </div>
-         <div class="col-md-2">
+         <div class="col-md-3">
                 <label>Year</label>
                 <select name="year" class="form-control">
                     <option value="">All</option>
@@ -68,7 +78,7 @@
                     @endfor
                 </select>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label>Month</label>
                 <select name="month" class="form-control">
                     <option value="">All</option>
@@ -77,11 +87,11 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label>From Date</label>
                 <input type="date" name="from_date" class="form-control">
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label>To Date</label>
                 <input type="date" name="to_date" class="form-control">
             </div>    
@@ -122,22 +132,18 @@
       <tr>
 
                                                 <th data-field="id">ID</th>
-                                               <th data-field="updated_at" data-editable="false">Sent Date</th>
-                                                <th data-field="project_name" data-editable="false">Project Name</th>
-                                                <th data-field="customer_po_number" data-editable="false">PO Number</th>
-                                                <th data-field="title" data-editable="false">customer Name</th>
-                                                <th data-field="product_name" data-editable="false">Product Name</th>
-                                                <th data-field="quantity" data-editable="false">Quantity</th>
-                                                <th data-field="completed_quantity" data-editable="false">Completed Production</th>
-                                                <th data-field="remaining_quantity" data-editable="false">Balance Quantity</th>
-                                                <th data-field="from_place" data-editable="false">Form Place</th>
-                                                <th data-field="to_place" data-editable="false">To Place</th>
-                                                <th data-field="transport_name" data-editable="false">Transport Name</th>
-                                                <th data-field="vehicle_name" data-editable="false">Vehicle Type</th>
-                                                <th data-field="truck_no" data-editable="false">Truck No.</th>
-                                                
-                                             
-                                            </tr>
+                                               <th data-field="updated_at" data-editable="false">Payment Release Date</th>
+                                                 <th data-field="purchase_orders_id" data-editable="false">Purchase Order No.</th>
+                                                   <th data-field="grn_status_sanction" data-editable="false">GRN No.</th>
+                                                    <th data-field="from_place" data-editable="false">Payment Status</th>
+                                                <th data-field="vendor_name" data-editable="false">Vendor Name</th>
+                                                <th data-field="vendor_company_name" data-editable="false">Vendor Company Name</th>
+                                                <th data-field="" data-editable="false">Vendor Email</th>
+                                                <th data-field="contact_no" data-editable="false">Contact No.</th>
+                                                <th data-field="purchase_orders_id" data-editable="false">PO Number</th>
+                                                <th data-field="invoice_date" data-editable="false">Invoice Date</th>
+                                                {{-- <th data-field="invoice_date" data-editable="false">Invoice Amount</th> --}}
+                                              </tr>
     </thead>
     <tbody id="reportBody">
         <tr><td colspan="6">Loading...</td></tr>
@@ -188,7 +194,7 @@ function fetchReport(reset = false) {
     const params = new URLSearchParams();
     formData.forEach((val, key) => params.append(key, val));
 
-    fetch(`{{ route('logistics-ajax') }}?${params.toString()}`)
+    fetch(`{{ route('vendor-payment-ajax') }}?${params.toString()}`)
         .then(res => res.json())
         .then(res => {
             const tbody = document.getElementById('reportBody');
@@ -198,24 +204,32 @@ function fetchReport(reset = false) {
            if (res.status && Array.isArray(res.data)) {
           
  const rows = res.data.map((item, i) => {
-    const poUrl = `${window.APP_URL}securitydept/list-po-details/${btoa(item.purchase_id)}/${btoa(item.purchase_orders_id)}`;
+    // const poUrl = `${window.APP_URL}securitydept/list-po-details/${btoa(item.purchase_id)}/${btoa(item.purchase_orders_id)}`;
 
     return `
         <tr>
             <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
             <td>${item.updated_at ? new Date(item.updated_at).toLocaleDateString('en-IN') : '-'}</td>
-            <td>${item.project_name ?? '-'}</td>
-            <td>${item.customer_po_number ?? '-'}</td>
-            <td>${item.title ?? '-'}</td>
-            <td>${item.product_name ?? '-'}</td>
-             <td>${item.quantity ?? '-'}</td>
-            <td>${item.completed_quantity ?? '-'}</td>
-             <td>${item.remaining_quantity ?? '-'}</td>
-            <td>${item.from_place ?? '-'}</td>
-             <td>${item.to_place ?? '-'}</td>
-             <td>${item.transport_name ?? '-'}</td>
-            <td>${item.vehicle_name ?? '-'}</td>
-            <td>${item.truck_no ?? '-'}</td>
+             <td>${item.purchase_orders_id ?? '-'}</td>
+              <td>${item.grn_no_generate ?? '-'}</td>
+                <td>
+            ${
+                item.grn_status_sanction == '6003'
+                    ? 'Paid'
+                    : ['6000', '6001', '6002'].includes(item.grn_status_sanction)
+                    ? 'Pending'
+                    : '-'
+            }
+        </td>
+            <td>${item.vendor_name ?? '-'}</td>
+            <td>${item.vendor_company_name ?? '-'}</td>
+            <td>${item.vendor_email ?? '-'}</td>
+            <td>${item.contact_no ?? '-'}</td>
+             <td>${item.purchase_orders_id ?? '-'}</td>
+              <td>${item.invoice_date ?? '-'}</td>
+                 
+             
+          
           
         </tr>
     `;

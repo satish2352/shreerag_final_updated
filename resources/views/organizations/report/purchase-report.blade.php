@@ -53,11 +53,11 @@
 
         {{-- 🔹 Search and Export --}}
         <div class="row mb-2">
-            <div class="col-md-6 d-flex justify-content-center">
-               
-                <button type="submit" class="btn btn-primary filterbg">Filter</button>
-            
-            </div>
+          <div class="col-md-6 d-flex justify-content-center">
+    <button type="submit" class="btn btn-primary filterbg me-2">Filter</button>
+    <button type="button" class="btn btn-secondary" id="resetFilters">Reset</button>
+</div>
+
             <div class="col-md-6 text-end d-flex" >
                 <input type="text" class="form-control d-flex align-self-center" id="searchKeyword" style="margin-right: 23px;" placeholder="Search...">
     <div class="dropdown">
@@ -193,5 +193,23 @@ document.getElementById('exportExcel').addEventListener('click', () => {
 // Initial load
 fetchReport(true);
 </script>
+<script>
+    document.getElementById('resetFilters').addEventListener('click', function () {
+    // Clear all form fields
+    const form = document.getElementById('filterForm');
+    form.reset();
 
+    // Clear search input
+    document.getElementById('searchKeyword').value = '';
+
+    // If using select2, reset it
+    if ($('.select2').length) {
+        $('.select2').val('').trigger('change');
+    }
+
+    // Fetch full report again
+    fetchReport(true);
+});
+
+</script>
 @endsection
