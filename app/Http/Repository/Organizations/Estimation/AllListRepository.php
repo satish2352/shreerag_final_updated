@@ -57,7 +57,7 @@ class AllListRepository  {
                 'estimation.business_id'
               
             )
-            ->orderBy('estimation_updated_at', 'desc')
+            ->orderBy('updated_at', 'desc')
 
           ->orderBy('estimation.updated_at', 'desc')
           ->get();
