@@ -3436,3 +3436,15 @@ div#sparklinehome canvas {
         font-size: 14px;
         white-space: nowrap;
     }
+   .btn-bg-colour {
+    color: #fff;
+    background-color: #243772;
+    border-color: #243772;
+    border-radius: 4px;
+}
+
+.btn-bg-colour:hover {
+    color: #fff;
+    background-color: #1e2f60; /* slightly darker on hover for better UX */
+    border-color: #1e2f60;
+}

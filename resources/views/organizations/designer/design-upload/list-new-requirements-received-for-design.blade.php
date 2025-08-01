@@ -80,7 +80,7 @@
                                                 {{-- <th data-field="product_name" data-editable="false">Product Name</th> --}}
                                                 {{-- <th data-field="title" data-editable="false">Name</th> --}}
                                                 {{-- <th data-field="quantity" data-editable="false">Quantity</th> --}}
-                                                {{-- <th data-field="grn_date" data-editable="false">Description</th> --}}
+                                                <th data-field="grand_total_amount" data-editable="false">Grand Total Amount</th>
                                                 <th data-field="purchase_id" data-editable="false">Remark</th>
                                                 <th data-field="action">Action</th>
                                             </tr>
@@ -93,7 +93,7 @@
                                                     </td>
                                                     <td>{{ ucwords($data->project_name) }}</td>
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
-                                                    {{-- <td>{{ ucwords($data->title) }}</td> --}}
+                                                    <td>{{ ucwords($data->grand_total_amount) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                     <td>
                                                         <a

@@ -19,17 +19,17 @@ use Config;
 class AllListRepository  {
   public function getAllNewRequirement(){
     try {
-        $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_PRODUCTION')];
-        $data_output = BusinessApplicationProcesses::leftJoin('production', function($join) {
-            $join->on('business_application_processes.business_id', '=', 'production.business_id');
+        $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_ESTIMATION_RECEIVED_FOR_PRODUCTION')];
+        $data_output = BusinessApplicationProcesses::leftJoin('estimation', function($join) {
+            $join->on('business_application_processes.business_id', '=', 'estimation.business_id');
           })
           ->leftJoin('businesses', function($join) {
             $join->on('business_application_processes.business_id', '=', 'businesses.id');
           })
-          ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
+          ->whereIn('business_application_processes.estimation_send_to_production', $array_to_be_check)
           ->where('businesses.is_active', true)
           ->where('businesses.is_deleted', 0)
-          ->groupBy('businesses.id', 'businesses.project_name', 'businesses.customer_po_number', 'businesses.created_at' ,'businesses.title', 'businesses.remarks', 'businesses.is_active', 'production.business_id', 'businesses.updated_at')
+          ->groupBy('businesses.id', 'businesses.project_name', 'businesses.customer_po_number', 'businesses.created_at' ,'businesses.title', 'businesses.remarks', 'businesses.is_active', 'estimation.business_id', 'businesses.updated_at')
           ->select(
               'businesses.id',
               'businesses.project_name',
@@ -38,7 +38,7 @@ class AllListRepository  {
               'businesses.remarks',
               'businesses.is_active',
               'businesses.created_at',
-              'production.business_id',
+              'estimation.business_id',
               'businesses.updated_at'
           )->orderBy('businesses.updated_at', 'desc')
           ->get();
@@ -53,10 +53,10 @@ public function getAllNewRequirementBusinessWise($business_id) {
   try {
     $decoded_business_id = base64_decode($business_id);
 
-      $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_PRODUCTION')];
+      $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_ESTIMATION_RECEIVED_FOR_PRODUCTION')];
 
-      $data_output = BusinessApplicationProcesses::leftJoin('production', function($join) {
-              $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+      $data_output = BusinessApplicationProcesses::leftJoin('estimation', function($join) {
+              $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
           })
           ->leftJoin('businesses_details', function($join) {
               $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
@@ -65,26 +65,26 @@ public function getAllNewRequirementBusinessWise($business_id) {
               $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
           })
           ->where('businesses_details.business_id', $decoded_business_id)
-          ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
+          ->whereIn('business_application_processes.estimation_send_to_production', $array_to_be_check)
           // ->whereNull('business_application_processes.business_details_status_id')
-          ->whereNull('production.is_approved_production')
+          ->whereNull('estimation.is_approved_estimation')
           ->where('businesses_details.is_active', true)
           ->where('businesses_details.is_deleted', 0)
           ->distinct('businesses_details.id')
           ->select(
-            'production.business_details_id',
+            'estimation.business_details_id',
               'businesses_details.product_name',
               'businesses_details.description',
               'businesses_details.quantity',
-              'production.business_id',
-              'production.id as productionId',
+              'estimation.business_id',
+              'estimation.id as productionId',
               'designs.bom_image',
               'designs.design_image',
-              'business_application_processes.production_status_id',
+              'business_application_processes.estimation_send_to_production',
               'business_application_processes.business_status_id',
               'business_application_processes.design_status_id',
-              'production.updated_at'
-          )->orderBy('production.updated_at', 'desc')
+              'estimation.updated_at'
+          )->orderBy('estimation.updated_at', 'desc')
           ->get();
 
       return $data_output;

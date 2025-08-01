@@ -28,6 +28,7 @@ return new class extends Migration
             $table->text('customer_terms_condition')->nullable();
             $table->text('remarks')->nullable();
             $table->string('is_approved_production')->nullable();
+            $table->decimal('grand_total_amount', 12, 2)->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('is_deleted')->default(false);
             $table->timestamps();

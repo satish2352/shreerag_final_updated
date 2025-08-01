@@ -12,6 +12,7 @@ class Business extends Model
     protected $primaryKey = 'id';
     protected $fillable = [
         'is_deleted',
+        'grand_total_amount',
     ];
 
     // Example relationships

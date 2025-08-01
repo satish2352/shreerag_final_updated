@@ -34,7 +34,7 @@ button.pd-setting-ed {
                 <div class="sparkline13-list">
                     <div class="sparkline13-hd">
                         <div class="main-sparkline13-hd">
-                            <h1>New Design Received  For Production <span class="table-project-n"></span></h1>
+                            <h1>New Design and BOM Received  For Production <span class="table-project-n"></span></h1>
                             <div class="form-group-inner login-btn-inner row">
                                 <div class="col-lg-2" >
                                     {{-- <div class="login-horizental cancel-wp pull-left">
@@ -121,15 +121,9 @@ button.pd-setting-ed {
                                             </td>
                                             
                                             <td>
-                                                <div style="display: inline-block; align-items: center;">
+                                                {{-- <div style="display: inline-block; align-items: center;">
                                                     <a href="{{route('reject-design-edit', base64_encode($data->business_details_id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed mb-4"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Reject</button></a> &nbsp;
-                                                    {{-- <a href="{{ route('accept-design', base64_encode($data->productionId)) }}"
-                                                        onclick="return confirmAccept('{{ route('accept-design', base64_encode($data->id)) }}')"
-                                                        class="pd-setting-ed"
-                                                        data-toggle="tooltip"
-                                                        title="Accept">
-                                                        <button><i class="fa fa-check" aria-hidden="true"></i> Accept </button>
-                                                    </a> --}}
+                                                   
 
                                                     <a href="{{ route('accept-design', base64_encode($data->business_details_id)) }}"
                                                         onclick="return confirmAccept('{{ route('accept-design', base64_encode($data->business_details_id)) }}')"
@@ -138,6 +132,18 @@ button.pd-setting-ed {
                                                         title="Accept">
                                                         <button><i class="fa fa-check" aria-hidden="true"></i> Accept </button>
                                                     </a>
+                                                </div> --}}
+
+                                                 <div>
+                                                    <a
+                                                       href="{{ route('accept-design', base64_encode($data->business_details_id)) }}"><button
+                                                            data-toggle="tooltip" title="Accept BOM Estimation" class="accept-btn">Accept</button></a> &nbsp;
+                                                    &nbsp; &nbsp;
+
+                                                    <a
+                                                       href="{{route('reject-design-edit', base64_encode($data->business_details_id))}}"><button
+                                                            data-toggle="tooltip" title="Rejected BOM Estimation" class="reject-btn">Reject</button></a> &nbsp;
+                                                    &nbsp; &nbsp;
                                                 </div>
                                             </td>
                                         </tr>

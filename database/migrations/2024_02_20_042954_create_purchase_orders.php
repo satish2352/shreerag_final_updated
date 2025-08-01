@@ -23,6 +23,7 @@ return new class extends Migration
                 $table->string('po_date')->nullable();
                 $table->string('vendor_id');
                 $table->string('terms_condition')->nullable();
+                $table->decimal('po_grand_total_amount', 12, 2)->nullable();
                 $table->string('remark')->nullable();
                 $table->string('transport_dispatch')->nullable();
                 $table->string('image');

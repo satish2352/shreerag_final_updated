@@ -84,14 +84,14 @@
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td> {{ $data->created_at ? $data->created_at->format('Y-m-d') : 'N/A' }}
+                                                    <td> {{ $data->updated_at ? $data->updated_at->format('Y-m-d') : 'N/A' }}
                                                     </td>
                                                     <td>{{ ucwords($data->project_name) }}</td>
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                     <td> <a
                                                             href="{{ route('list-design-uploaded-owner-business-wise', base64_encode($data->business_id)) }}"><button
-                                                                class="btn btn-sm btn-primary login-submit-cs"
+                                                                class="btn btn-sm btn-bg-colour"
                                                                 type="submit">View Details</button></a></td>
                                                 </tr>
                                             @endforeach

@@ -42,6 +42,7 @@ class PurchaseOrderRepository
             $dataOutput->terms_condition = '';
             $dataOutput->remark = '';
             $dataOutput->image = 'null';
+            $dataOutput->po_grand_total_amount = $request->po_grand_total_amount;
             // $dataOutput->quote_no = $request->quote_no;
             $dataOutput->contact_person_name = $request->contact_person_name;
             $dataOutput->contact_person_number = $request->contact_person_number;
@@ -210,6 +211,7 @@ class PurchaseOrderRepository
             $dataOutput->tax_id = $request->tax_id;
             $dataOutput->invoice_date = $request->invoice_date;
             $dataOutput->payment_terms = $request->payment_terms;
+             $dataOutput->po_grand_total_amount = $request->po_grand_total_amount;
             // $dataOutput->discount = $request->discount;
             $dataOutput->note = $request->note;
             $dataOutput->purchase_status_from_owner = NULL;

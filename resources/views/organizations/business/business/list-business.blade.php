@@ -85,6 +85,7 @@
                                                 {{-- <th data-field="title" data-editable="false">Name</th> --}}
                                                 {{-- <th data-field="quantity" data-editable="false">Quantity</th> --}}
                                                 {{-- <th data-field="rate" data-editable="false">Rate</th> --}}
+                                                 <th data-field="grand_total_amount" data-editable="false">Grand Total Amount</th>
                                                 <th data-field="po_validity" data-editable="false">PO Validity</th>
                                                 {{-- <th data-field="hsn_number" data-editable="false">HSN Number</th> --}}
                                                 <th data-field="customer_payment_terms" data-editable="false">Payment Terms
@@ -110,7 +111,7 @@
                                                     {{-- <td>{{ucwords($data->product_name)}}</td> --}}
                                                     {{-- <td>{{ ucwords($data->title) }}</td> --}}
                                                     {{-- <td>{{ucwords($data->quantity)}}</td> --}}
-                                                    {{-- <td>{{ucwords($data->rate)}}</td> --}}
+                                                    <td>{{ucwords($data->grand_total_amount)}}</td>
                                                     <td>{{ ucwords($data->po_validity) }}</td>
                                                     {{-- <td>{{ucwords($data->hsn_number)}}</td> --}}
                                                     <td>{{ ucwords($data->customer_payment_terms) }}</td>

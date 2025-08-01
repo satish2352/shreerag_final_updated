@@ -90,6 +90,7 @@
                                                 <th data-field="grn_date" data-editable="false">Description</th>
                                                 {{-- <th data-field="purchase_id" data-editable="false">Remark</th> --}}
                                                 <th data-field="bom_image" data-editable="false">BOM</th>
+                                                 <th data-field="total_estimation_amount" data-editable="false">Estimated Amount</th>
                                                 <th data-field="bom" data-editable="false">Action</th>
                                             </tr>
                                         </thead>
@@ -111,10 +112,10 @@
                                                             href="{{ Config::get('FileConstant.REQUISITION_VIEW') }}{{ $data['bom_file'] }}"
                                                             alt="bill of material" >Click to download</a>
                                                     </td>
-
+                                                     <td>{{ ucwords($data->total_estimation_amount) }}</td>
                                                     <td>
                                                         <div style="display: inline-block; align-items: center;">
-                                                            <a href="{{route('reject-design-edit', base64_encode($data->requistition_id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Reject</button></a> &nbsp; &nbsp; &nbsp;
+                                                            {{-- <a href="{{route('reject-design-edit', base64_encode($data->requistition_id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Reject</button></a> &nbsp; &nbsp; &nbsp; --}}
                                                             <a href="{{route('list-purchase-order', [base64_encode($data->requistition_id), base64_encode($data->business_details_id)]
                                                             )}} "><button data-toggle="tooltip" title="Accept and Send For Purchase " class="pd-setting-ed"><i class="fa fa-check" aria-hidden="true"></i> Accept and Send For Purchase </button></a>
                                                         </div>

@@ -642,7 +642,14 @@
                     '<td><input type="text" class="form-control amount" name="addmore[' + i +
                     '][amount]" placeholder=" Amount" readonly  required  style="width:100px"/></td>' +
                     '<td><a class="remove-tr delete-btn btn btn-danger m-1" title="Delete Tender"><i class="fas fa-archive" style="color: #fff;"></i></a></td>' +
-                    '</tr>'
+                    '</tr>'+
+                     '<tr>'+
+                    '<td colspan="6" class="text-end"><strong>Grand Total:</strong></td>'+
+                    '<td colspan="6">'+
+                        '<input type="text" id="po_grand_total_amount" name="po_grand_total_amount" class="form-control" readonly>'
+                   +'</td>'+
+                '</tr>'
+                    
                 );
 
                 $("#dynamicTable").append(newRow);
@@ -775,6 +782,49 @@
             });
         });
     </script>
+    <script>
+function calculateRowAmount(row) {
+    let qty = parseFloat(row.find('.quantity').val()) || 0;
+    let rate = parseFloat(row.find('.rate').val()) || 0;
+    let discount = parseFloat(row.find('.discount').val()) || 0;
+
+    let amount = qty * rate;
+    let discountAmount = (amount * discount) / 100;
+    let finalAmount = amount - discountAmount;
+
+    row.find('.amount').val(finalAmount.toFixed(2));
+    return finalAmount;
+}
+
+function calculateGrandTotal() {
+    let grandTotal = 0;
+
+    $('table tbody tr').each(function () {
+        grandTotal += calculateRowAmount($(this));
+    });
+
+    // Get selected tax percentage
+    let selectedOption = $('#tax_id option:selected');
+    let taxPercent = parseFloat(selectedOption.data('percentage')) || 0;
+    let taxAmount = (grandTotal * taxPercent) / 100;
+    let finalGrandTotal = grandTotal + taxAmount;
+
+    $('#po_grand_total_amount').val(finalGrandTotal.toFixed(2));
+}
+
+// Trigger when any quantity, rate, discount input changes
+$(document).on('input', '.quantity, .rate, .discount', function () {
+    let row = $(this).closest('tr');
+    calculateRowAmount(row);
+    calculateGrandTotal();
+});
+
+// Trigger when tax dropdown changes
+$('#tax_id').on('change', function () {
+    calculateGrandTotal();
+});
+</script>
+
 <script>
        $(document).ready(function() {
         var jQuery321 = $.noConflict(true);

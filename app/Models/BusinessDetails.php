@@ -10,7 +10,7 @@ class BusinessDetails extends Model
     use HasFactory;
     protected $table = 'businesses_details';
     protected $primaryKey = 'id';
-    protected $fillable = ['product_name', 'description', 'quantity', 'rate'];
+    protected $fillable = ['product_name', 'description', 'quantity', 'rate', 'total_amount'];
     
     public function business()
     {

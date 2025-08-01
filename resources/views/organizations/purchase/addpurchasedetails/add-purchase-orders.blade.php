@@ -144,6 +144,7 @@
                                             </select>
                                         </div>
                                     </div>
+                                   
                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                         <div class="form-group">
                                             <label>Purchase Order Date <span class="text-danger">*</span></label>
@@ -365,6 +366,10 @@
                                                             </button>
                                                         </td>
                                                     </tr>
+
+
+                                                    
+
                                                 </tbody>
                                             </table>
                                         </div>
@@ -675,6 +680,12 @@
                         </button>
                     </td>
                 </tr>
+                <tr>
+                    <td colspan="8" class="text-end"><strong>Grand Total:</strong></td>
+                    <td colspan="4">
+                        <input type="text" id="po_grand_total_amount" name="po_grand_total_amount" class="form-control" readonly>
+                    </td>
+                </tr>
             `;
                                 $("#purchase_order_table tbody").append(newRow);
                                 $('.select2').select2();
@@ -696,6 +707,7 @@
 
                                 // Reset validation state after removing row
                                 validator.resetForm();
+                                calculateGrandTotal();
                             });
 
                             // Initialize validation for the first row on page load
@@ -732,8 +744,71 @@
 
                                 // Update the total_amount field (formatted to 2 decimal places)
                                 currentRow.find('.total_amount').val(final_total_amount);
+
+                                 calculateGrandTotal();
                             });
                         });
+
+               
+// function calculateGrandTotal() {
+//     let grandTotal = 0;
+//     document.querySelectorAll('.total_amount').forEach(function(input) {
+//         grandTotal += parseFloat(input.value) || 0;
+//     });
+//     document.getElementById('po_grand_total_amount').value = grandTotal.toFixed(2);
+// }
+
+// // Trigger calculation on rate or quantity change
+// document.addEventListener('input', function (e) {
+//     if (e.target.classList.contains('rate') || e.target.classList.contains('quantity')) {
+//         const row = e.target.closest('tr');
+//         const quantity = parseFloat(row.querySelector('.quantity').value) || 0;
+//         const rate = parseFloat(row.querySelector('.rate').value) || 0;
+//         row.querySelector('.total_amount').value = (quantity * rate).toFixed(2);
+//         calculateGrandTotal();
+//     }
+// });
+
+
+
+function calculateGrandTotal() {
+    let grandTotal = 0;
+
+    document.querySelectorAll('tr').forEach(function(row) {
+        const quantity = parseFloat(row.querySelector('.quantity')?.value) || 0;
+        const rate = parseFloat(row.querySelector('.rate')?.value) || 0;
+        const taxSelect = row.querySelector('.tax_id');
+        const taxRate = parseFloat(taxSelect?.selectedOptions[0]?.getAttribute('data-tax-rate')) || 0;
+
+        const baseAmount = quantity * rate;
+        const taxAmount = (baseAmount * taxRate) / 100;
+        const totalAmount = baseAmount + taxAmount;
+
+        const totalAmountInput = row.querySelector('.total_amount');
+        if (totalAmountInput) {
+            totalAmountInput.value = totalAmount.toFixed(2);
+        }
+
+        grandTotal += totalAmount;
+    });
+
+    document.getElementById('po_grand_total_amount').value = grandTotal.toFixed(2);
+}
+
+// Trigger calculation on input or tax change
+document.addEventListener('input', function (e) {
+    if (e.target.classList.contains('rate') || e.target.classList.contains('quantity')) {
+        calculateGrandTotal();
+    }
+});
+
+document.addEventListener('change', function (e) {
+    if (e.target.classList.contains('tax_id')) {
+        calculateGrandTotal();
+    }
+});
+
+
                     </script>
 
                     <script>

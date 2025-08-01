@@ -110,7 +110,7 @@ class LeavesController extends Controller
     public function updateLabourStatus(Request $request) {
         try {
             $leaves_id = $request->input('active_id');
-            
+       
             $action = $request->input('action');
           
             $validator = Validator::make($request->all(), [
@@ -129,8 +129,8 @@ class LeavesController extends Controller
              $leaveType = $leaves->leave_type_id;
            
             if ($action === 'approve') {
-                if ($leaves->is_approved === '0') {
-                    $leaves->is_approved = '2';                
+                if ($leaves->is_approved === 0) {
+                    $leaves->is_approved = 2;                
                     $financialRecord = FinancialYearLeaveRecord::where('tbl_financial_year_leave_record.user_id', $employeeId)
                     ->where('tbl_financial_year_leave_record.leave_management_id', $leaveType)
                    ->first();
@@ -141,14 +141,14 @@ class LeavesController extends Controller
                         $financialRecord->save();
                     }
 
-                } elseif($leaves->is_approved === '1') {
-                    $leaves->is_approved = '2';
+                } elseif($leaves->is_approved === 1) {
+                    $leaves->is_approved = 2;
                 }
             } elseif ($action === 'notapprove') {
-                if ($leaves->is_approved === '0') {
-                    $leaves->is_approved = '1'; // Update status to not approved
-                } elseif($leaves->is_approved === '2') {
-                    $leaves->is_approved = '1';
+                if ($leaves->is_approved === 0) {
+                    $leaves->is_approved = 1; // Update status to not approved
+                } elseif($leaves->is_approved === 2) {
+                    $leaves->is_approved = 1;
                 }
             }
     

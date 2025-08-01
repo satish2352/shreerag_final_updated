@@ -88,6 +88,7 @@ class LoginController extends Controller
 //     }
   public function submitLogin(Request $request)
     {
+        
         $rules = [
             'email' => 'required|email',
             'password' => 'required',
@@ -165,4 +166,6 @@ class LoginController extends Controller
         $request->session()->regenerate();
         return redirect( '/organizations/login' );
     }
+
+
 }

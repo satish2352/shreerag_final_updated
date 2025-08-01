@@ -40,6 +40,9 @@ class AllListRepository
               ->leftJoin('purchase_orders', function($join) {
                   $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
               })
+                ->leftJoin('estimation', function ($join) {
+                  $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
+              })
               ->leftJoin('requisition as req2', function($join) {
                   $join->on('business_application_processes.business_details_id', '=', 'req2.business_details_id');
               })
@@ -56,6 +59,7 @@ class AllListRepository
                   'businesses_details.product_name',
                   'businesses_details.description',
                   'businesses_details.quantity',
+                  'estimation.total_estimation_amount',
                   'businesses_details.is_active',
                   'production.business_id',
                   'production.id',
@@ -75,6 +79,7 @@ class AllListRepository
                   'businesses_details.product_name',
                   'businesses_details.description',
                   'businesses_details.quantity',
+                  'estimation.total_estimation_amount',
                   'businesses_details.is_active',
                   'production.id',
                   'production.id as productionId',

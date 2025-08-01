@@ -245,7 +245,205 @@ class AllListController extends Controller
             return $e;
         }
     }
+public function loadDesignSubmittedForEstimation() {
+    try {
+        $data_output = $this->service->loadDesignSubmittedForEstimation();
 
+        // Check if it's actually a collection or array before using isNotEmpty()
+        if (is_iterable($data_output) && count($data_output) > 0) {
+            foreach ($data_output as $data) {
+                $business_id = $data->business_id;
+
+                if (!empty($business_id)) {
+                    AdminView::where('is_view', '0')
+                        ->where('business_id', $business_id)
+                        ->update(['is_view' => '1']);
+                }
+            }
+        } else {
+            return view('organizations.business.design.list-bom-received-estimation', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
+        }
+
+        return view('organizations.business.design.list-bom-received-estimation', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
+    }
+}
+
+     public function loadDesignSubmittedForEstimationBusinessWise( $business_details_id ) {
+        try {
+            $data_output = $this->service->loadDesignSubmittedForEstimationBusinessWise( $business_details_id );
+
+            return view( 'organizations.business.design.list-bom-received-estimation-business-wise', compact( 'data_output' ) );
+        } catch ( \Exception $e ) {
+            return $e;
+        }
+    }
+public function getAcceptEstimationBOM() {
+    try {
+        $data_output = $this->service->getAcceptEstimationBOM();
+
+        
+
+        return view('organizations.business.list.list-bom-accepted', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
+    }
+}
+public function getAcceptEstimationBOMBusinessWise($id) {
+    try {
+        
+        $data_output = $this->service->getAcceptEstimationBOMBusinessWise($id);
+
+        // Check if it's actually a collection or array before using isNotEmpty()
+        if (is_iterable($data_output) && count($data_output) > 0) {
+            foreach ($data_output as $data) {
+                $business_id = $data->id;
+
+                if (!empty($business_id)) {
+                    AdminView::where('is_view', '0')
+                        ->where('id', $business_id)
+                        ->update(['is_view' => '1']);
+                }
+            }
+        } else {
+            return view('organizations.business.list.list-bom-accepted-business-wise', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
+        }
+
+        return view('organizations.business.list.list-bom-accepted-business-wise', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
+    }
+}
+public function getRejectEstimationBOM()
+{
+    try {
+        $data_output = $this->service->getRejectEstimationBOM();
+
+        // Prevent errors if $data_output is not a collection
+        if (!is_iterable($data_output) || count($data_output) === 0) {
+            return view('organizations.business.list.list-bom-rejected', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
+        }
+
+        // Mark entries as viewed
+        foreach ($data_output as $data) {
+            if (isset($data->id)) {
+                AdminView::where('is_view', '0')
+                    ->where('business_id', $data->id)
+                    ->update(['is_view' => '1']);
+            }
+        }
+
+        return view('organizations.business.list.list-bom-rejected', compact('data_output'));
+
+    } catch (\Exception $e) {
+        \Log::error('Error in getRejectEstimationBOM: ' . $e->getMessage());
+        return view('organizations.business.list.list-bom-rejected', [
+            'data_output' => [],
+            'message' => 'An error occurred while fetching data.'
+        ]);
+    }
+}
+
+
+public function getRejectEstimationBOMBusinessWise($id) {
+    try {
+        $data_output = $this->service->getRejectEstimationBOMBusinessWise($id);
+
+        // Check if it's actually a collection or array before using isNotEmpty()
+        if (is_iterable($data_output) && count($data_output) > 0) {
+            foreach ($data_output as $data) {
+                $business_id = $data->business_id;
+
+                if (!empty($business_id)) {
+                    AdminView::where('is_view', '0')
+                        ->where('business_id', $business_id)
+                        ->update(['is_view' => '1']);
+                }
+            }
+        } else {
+            return view('organizations.business.list.list-bom-rejected-business-wise', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
+        }
+
+        return view('organizations.business.list.list-bom-rejected-business-wise', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
+    }
+}
+
+public function getRevisedEstimationBOM()
+{
+    try {
+        $data_output = $this->service->getRevisedEstimationBOM();
+
+        // Prevent errors if $data_output is not a collection
+        if (!is_iterable($data_output) || count($data_output) === 0) {
+            return view('organizations.business.list.list-revised-bom-estimation', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
+        }
+
+        // Mark entries as viewed
+        foreach ($data_output as $data) {
+            if (isset($data->id)) {
+                AdminView::where('is_view', '0')
+                    ->where('business_id', $data->id)
+                    ->update(['is_view' => '1']);
+            }
+        }
+
+        return view('organizations.business.list.list-revised-bom-estimation', compact('data_output'));
+
+    } catch (\Exception $e) {
+        \Log::error('Error in getRejectEstimationBOM: ' . $e->getMessage());
+        return view('organizations.business.list.list-revised-bom-estimation', [
+            'data_output' => [],
+            'message' => 'An error occurred while fetching data.'
+        ]);
+    }
+}
+public function getRevisedEstimationBOMBusinessWise($id) {
+    try {
+        $data_output = $this->service->getRevisedEstimationBOMBusinessWise($id);
+
+        // Check if it's actually a collection or array before using isNotEmpty()
+        if (is_iterable($data_output) && count($data_output) > 0) {
+            foreach ($data_output as $data) {
+                $business_id = $data->business_id;
+
+                if (!empty($business_id)) {
+                    AdminView::where('is_view', '0')
+                        ->where('business_id', $business_id)
+                        ->update(['is_view' => '1']);
+                }
+            }
+        } else {
+            return view('organizations.business.list.list-revised-bom-estimation-business-wise', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
+        }
+
+        return view('organizations.business.list.list-revised-bom-estimation-business-wise', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
+    }
+}
+    
+    
     public function loadDesignSubmittedForProduction() {
         try {
             $data_output = $this->service->loadDesignSubmittedForProduction();

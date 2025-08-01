@@ -78,6 +78,7 @@
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
                                                 <th data-field="description" data-editable="false">Description</th>
+                                                 <th data-field="total_amount" data-editable="false">Total Amount</th>
                                                 <th data-field="action">Action</th>
                                             </tr>
 
@@ -89,10 +90,11 @@
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
+                                                    <td>{{ ucwords($data->total_amount) }}</td>
                                                     <td>
                                                         <a
                                                             href="{{ route('add-design-upload', base64_encode($data->business_details_id)) }}"><button
-                                                                class="btn btn-sm btn-primary login-submit-cs"
+                                                                class="btn btn-sm btn-bg-colour"
                                                                 type="submit">Add Design</button></a>
 
                                 </div>

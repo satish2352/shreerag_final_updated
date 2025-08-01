@@ -14,7 +14,8 @@ use App\Models\{
     PurchaseOrdersModel,
     AdminView,
     NotificationStatus,
-    GrnPOQuantityTracking
+    GrnPOQuantityTracking,
+    ItemStock
 };
 use Config;
 
@@ -135,6 +136,21 @@ class GRNRepository
             $grnPoTracking->is_deleted = false;
             $grnPoTracking->is_active = true;
             $grnPoTracking->save();
+
+               // ✅ Inventory Update logic
+            $existingStock = ItemStock::where('part_item_id', $purchaseOrderDetail->part_no_id)->first();
+
+            // if ($existingStock) {
+                $existingStock->quantity += $item['accepted_quantity']; // Add new accepted qty
+                $existingStock->updated_at = now();
+                $existingStock->save();
+            // } else {
+            //     $newStock = new ItemStock();
+            //     $newStock->part_item_id = $purchaseOrderDetail->part_no_id;
+            //     $newStock->quantity = $item['accepted_quantity'];
+            //     $newStock->created_at = now();
+            //     $newStock->save();
+            // }
         }
         if ($request->hasFile('image')) {
                             $imageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->getClientOriginalExtension();

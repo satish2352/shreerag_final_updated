@@ -112,7 +112,86 @@ class AllListServices
             return $e;
         }
     }
+public function loadDesignSubmittedForEstimation()
+    {
+        try {
+            $data_output = $this->repo->loadDesignSubmittedForEstimation();
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function loadDesignSubmittedForEstimationBusinessWise($business_details_id)
+    {
+        try {
+            $data_output = $this->repo->loadDesignSubmittedForEstimationBusinessWise($business_details_id);
+             
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
 
+       public function getAcceptEstimationBOM()
+    {
+        try {
+            $data_output = $this->repo->getAcceptEstimationBOM();
+         
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+        public function getAcceptEstimationBOMBusinessWise($id)
+    {
+        try {
+            $data_output = $this->repo->getAcceptEstimationBOMBusinessWise($id);
+     
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+        public function getRejectEstimationBOM()
+    {
+        try {
+            $data_output = $this->repo->getRejectEstimationBOM();
+           
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+        public function getRejectEstimationBOMBusinessWise($id)
+    {
+        try {
+            $data_output = $this->repo->getRejectEstimationBOMBusinessWise($id);
+    
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+         public function getRevisedEstimationBOM()
+    {
+        try {
+            $data_output = $this->repo->getRevisedEstimationBOM();
+          
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+          public function getRevisedEstimationBOMBusinessWise($id)
+    {
+        try {
+            $data_output = $this->repo->getRevisedEstimationBOMBusinessWise($id);
+       
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     public function loadDesignSubmittedForProduction()
     {
         try {

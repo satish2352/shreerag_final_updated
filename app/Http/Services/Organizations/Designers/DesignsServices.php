@@ -36,6 +36,7 @@ use Config;
     public function getAll(){
         try {
             $data_output = $this->repo->getAll();
+        
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -53,7 +54,8 @@ use Config;
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
-   
+
+           
             $productName = $return_data['product_name']; 
             $formattedProductName = str_replace(' ', '_', $productName);
             $path = Config::get('FileConstant.DESIGNS_ADD');
@@ -99,9 +101,9 @@ use Config;
             $last_id = $this->repo->updateReUploadDesign($request);
             $path = Config::get('FileConstant.DESIGNS_ADD');
             $designImageName = $last_id['designImageName'];
-            $bomImageName = $last_id['bomImageName'];
+            // $bomImageName = $last_id['bomImageName'];
             uploadImage($request, 'design_image', $path, $designImageName);
-            uploadImage($request, 'bom_image', $path, $bomImageName);
+            // uploadImage($request, 'bom_image', $path, $bomImageName);
 
             if ($last_id) {
                 return ['status' => 'success', 'msg' => 'Data Added Successfully.'];

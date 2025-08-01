@@ -105,14 +105,28 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/material-ask-by-store-to-purchase', ['as' => 'material-ask-by-store-to-purchase', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllStoreDeptSentForPurchaseMaterials']);
         Route::get('/list-purchase-orders', ['as' => 'list-purchase-orders', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListPurchaseOrder']);
         Route::get('/list-approved-purchase-orders-owner', ['as' => 'list-approved-purchase-orders-owner', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListApprovedPurchaseOrderOwnerlogin']);
-        Route::get('/list-purchase-order-approved-bussinesswise/{id}', ['as' => 'list-purchase-order-approved-bussinesswise', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@submitFinalPurchaseOrder']);
+        Route::get('/list-purchase-order-approved-bussiness-wise/{id}', ['as' => 'list-purchase-order-approved-bussiness-wise', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@submitFinalPurchaseOrder']);
     
         Route::get('/list-rejected-purchase-orders-owner', ['as' => 'list-rejected-purchase-orders-owner', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListRejectedPurchaseOrderOwnerlogin']);
         Route::get('/list-purchase-order-rejected-bussinesswise/{id}', ['as' => 'list-purchase-order-rejected-bussinesswise', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getPurchaseOrderRejectedBusinessWise']);
 
         // Route::get('/list-submit-final-purchase-order-particular-business/{purchase_order_id}', ['as' => 'list-submit-final-purchase-order-particular-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@getPurchaseOrderDetails']);
-    
-    
+        Route::get('/list-design-received-estimation', ['as' => 'list-design-received-estimation', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@loadDesignSubmittedForEstimation']);
+        Route::get('/list-design-received-estimation-business-wise/{business_details_id}', ['as' => 'list-design-received-estimation-business-wise', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@loadDesignSubmittedForEstimationBusinessWise']);
+        Route::get('/accept-bom-estimation/{id}', ['as' => 'accept-bom-estimation', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@acceptEstimationBOM']);
+        Route::get('/list-accept-bom-estimation', ['as' => 'list-accept-bom-estimation', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAcceptEstimationBOM']);
+        Route::get('/list-accept-bom-estimation-business-wise/{id}', ['as' => 'list-accept-bom-estimation-business-wise', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAcceptEstimationBOMBusinessWise']);
+
+         Route::get('/edit-reject-estimation-owner-side/{id}', ['as' => 'edit-reject-estimation-owner-side', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@rejectEstimationedit']);
+
+        Route::post('/rejected-bom-estimation', ['as' => 'rejected-bom-estimation', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@rejectedEstimationBOM']);
+        Route::get('/list-rejected-bom-estimation', ['as' => 'list-rejected-bom-estimation', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getRejectEstimationBOM']);
+        Route::get('/list-rejected-bom-estimation-business-wise/{id}', ['as' => 'list-rejected-bom-estimation-business-wise', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getRejectEstimationBOMBusinessWise']);
+
+        Route::get('/list-revised-bom-estimation', ['as' => 'list-revised-bom-estimation', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getRevisedEstimationBOM']);
+        Route::get('/list-revised-bom-estimation-business-wise/{id}', ['as' => 'list-revised-bom-estimation-business-wise', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getRevisedEstimationBOMBusinessWise']);
+
+        
         Route::get('/list-design-uploaded-owner', ['as' => 'list-design-uploaded-owner', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@loadDesignSubmittedForProduction']);
         Route::get('/list-design-uploaded-owner-business-wise/{business_id}', ['as' => 'list-design-uploaded-owner-business-wise', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@loadDesignSubmittedForProductionBusinessWise']);
 
@@ -135,8 +149,9 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/recive-owner-logistics-list', ['as' => 'recive-owner-logistics-list', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getOwnerAllListBusinessReceivedFromLogistics']);
         Route::get('/list-owner-send-to-dispatch', ['as' => 'list-owner-send-to-dispatch', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getOwnerAllListBusinessFianaceSendToDispatch']);
 
-        Route::get('/list-product-completed-report', ['as' => 'list-product-completed-report', 'uses' => 'App\Http\Controllers\Organizations\Report\ReportController@getCompletedProductList']);
-
+        // Route::get('/', ['as' => 'list-product-completed-report', 'uses' => 'App\Http\Controllers\Organizations\Report\ReportController@getCompletedProductList']);
+Route::get('/list-product-completed-report', [ReportController::class, 'getCompletedProductList'])->name('list-product-completed-report');
+        Route::get('/list-product-completed-report-ajax', [ReportController::class, 'getCompletedProductListAjax'])->name('list-product-completed-report-ajax');
 
     });
     Route::group(['prefix' => 'designdept', 'middleware' => 'admin'], function () {
@@ -203,6 +218,55 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/store-item-stock-list-ajax', [ReportController::class, 'getStoreItemStockListAjax'])->name('store-item-stock-list-ajax');
 
     });
+       Route::group(['prefix' => 'estimationdept', 'middleware' => 'admin'], function () {
+        Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
+        //All List
+        Route::get('/list-new-requirements-received-for-estimation', ['as' => 'list-new-requirements-received-for-estimation', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@getAllNewRequirement']);
+        Route::get('/list-new-requirements-received-for-estimation-business-wise/{business_id}', ['as' => 'list-new-requirements-received-for-estimation-business-wise', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@getAllNewRequirementBusinessWise']);
+        Route::get('/edit-estimation/{id}', ['as' => 'edit-estimation', 'uses' => 'App\Http\Controllers\Organizations\Estimation\EstimationController@editEstimation']);
+        Route::post('/update-estimation', ['as' => 'update-estimation', 'uses' => 'App\Http\Controllers\Organizations\Estimation\EstimationController@updateEstimation']);
+        
+        Route::get('/list-updated-estimation-send-to-owner', ['as' => 'list-updated-estimation-send-to-owner', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@getAllEstimationSendToOwnerForApproval']);
+        Route::get('/list-updated-estimation-send-to-owner-business-wise/{business_id}', ['as' => 'list-updated-estimation-send-to-owner-business-wise', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@getAllEstimationSendToOwnerForApprovalBusinessWise']);
+
+         Route::get('/edit-revised-bom-material-estimation/{id}', ['as' => 'edit-revised-bom-material-estimation', 'uses' => 'App\Http\Controllers\Organizations\Estimation\EstimationController@editRevisedEstimation']);
+        Route::post('/update-edit-revised-bom-material-estimation', ['as' => 'update-edit-revised-bom-material-estimation', 'uses' => 'App\Http\Controllers\Organizations\Estimation\EstimationController@updateRevisedEstimation']);
+
+        
+        Route::post('/send-to-production/{id}', ['as' => 'send-to-production', 'uses' => 'App\Http\Controllers\Organizations\Estimation\EstimationController@sendToProduction']);
+        Route::get('/list-send-to-production', ['as' => 'list-send-to-production', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@getSendToProductionList']);
+
+        
+    
+        Route::get('/accept-design/{id}', ['as' => 'accept-design', 'uses' => 'App\Http\Controllers\Organizations\Estimation\ProductionController@acceptdesign']);
+        Route::get('/reject-design-edit/{id}', ['as' => 'reject-design-edit', 'uses' => 'App\Http\Controllers\Organizations\Estimation\ProductionController@rejectdesignedit']);
+        Route::post('/reject-design', ['as' => 'reject-design', 'uses' => 'App\Http\Controllers\Organizations\Estimation\ProductionController@rejectdesign']);
+    
+       
+
+        Route::get('/list-accept-bom', ['as' => 'list-accept-bom', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@acceptBOMlist']);
+        Route::get('/list-accept-bom-business-wise/{business_id}', ['as' => 'list-accept-bom-business-wise', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@acceptBOMlistBusinessWise']);
+        Route::get('/list-reject-design', ['as' => 'list-reject-design', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@rejectdesignlist']);
+        Route::get('/list-revislist-material-reciveded-design', ['as' => 'list-revislist-material-reciveded-design', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@reviseddesignlist']);
+      
+        Route::get('/list-material-recived', ['as' => 'list-material-recived', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@getAllListMaterialRecievedToProduction']);
+        Route::get('/list-final-purchase-order-production/{id}', ['as' => 'list-final-purchase-order-production', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@getAllListMaterialRecievedToProductionBusinessWise']);
+        Route::get('/edit-recived-inprocess-production-material/{id}', ['as' => 'edit-recived-inprocess-production-material', 'uses' => 'App\Http\Controllers\Organizations\Estimation\ProductionController@editProduct']);
+        Route::post('/update-recived-inprocess-production-material/{id}', ['as' => 'update-recived-inprocess-production-material', 'uses' => 'App\Http\Controllers\Organizations\Estimation\ProductionController@updateProductMaterial']);
+        Route::post('/delete-addmore-production-material-item', ['as' => 'delete-addmore-production-material-item', 'uses' => 'App\Http\Controllers\Organizations\Estimation\ProductionController@destroyAddmoreStoreItem']);
+        Route::post('/update-final-production-completed-status/{id}', ['as' => 'update-final-production-completed-status', 'uses' => 'App\Http\Controllers\Organizations\Estimation\ProductionController@acceptProductionCompleted']);
+
+        Route::post('/update-production/{id}', ['as' => 'update-production', 'uses' => 'App\Http\Controllers\Organizations\Estimation\ProductionController@updateProductMaterial']);
+        Route::get('/list-final-production-completed', ['as' => 'list-final-production-completed', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@getAllCompletedProduction']);
+        Route::get('/list-final-prod-completed-send-to-logistics-tracking', ['as' => 'list-final-prod-completed-send-to-logistics-tracking', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@getAllCompletedProductionSendToLogistics']);
+        Route::get('/list-final-prod-completed-send-to-logistics-tracking-product-wise/{id}', ['as' => 'list-final-prod-completed-send-to-logistics-tracking-product-wise', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@getAllCompletedProductionSendToLogisticsProductWise']);
+        Route::get('/edit-recived-bussinesswise-quantity-tracking/{id}', ['as' => 'edit-recived-bussinesswise-quantity-tracking', 'uses' => 'App\Http\Controllers\Organizations\Estimation\ProductionController@editProductQuantityTracking']);
+
+        // Route::get('/list-final-production-completed/{id}', ['as' => 'list-final-production-completed', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllFinalProductionCompleted']);
+  Route::get('/list-production-report', [ReportController::class, 'getProductionReport'])->name('list-production-report');
+    Route::get('/production-report-ajax', [ReportController::class, 'getProductionReportAjax'])->name('production-report-ajax');
+    });
+
     Route::group(['prefix' => 'proddept', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'App\Http\Controllers\Admin\Dashboard\DashboardController@index']);
         Route::get('/accept-design/{id}', ['as' => 'accept-design', 'uses' => 'App\Http\Controllers\Organizations\Productions\ProductionController@acceptdesign']);

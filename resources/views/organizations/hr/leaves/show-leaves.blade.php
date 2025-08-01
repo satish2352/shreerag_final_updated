@@ -47,12 +47,12 @@
                                                     text-transform: uppercase; /* Convert to uppercase */
                                                     line-height: 1.2;   /* Adjust line height */
                                                     font-family: Arial, sans-serif; /* Set clean font family */
-                                                     font-family: 'Font Awesome 5 Free'!important;
+                                                     font-family: 'Play', sans-serif!important;
                                                 ">
                                             {{ $getOrganizationData->company_name }}
                                         </div>
                                         <div
-                                            style="margin-top: 5px; font-size: 12px;  font-family: 'Font Awesome 5 Free'!important;">
+                                            style="margin-top: 5px; font-size: 12px;  font-family: 'Play', sans-serif!important;">
                                             {{ $getOrganizationData->address }}, CIN:
                                             {{ $getOrganizationData->cin_number }}<br>
                                             Phone No.: {{ $getOrganizationData->mobile_number }}, Email Id:
@@ -68,58 +68,58 @@
 
                         </div>
                         <div style="display: flex;justify-content: center;">
-                            <h3 style="font-family: 'Font Awesome 5 Free'!important; ">Leave Application Form</h3>
+                            <h3 style="font-family: 'Play', sans-serif!important; ">Leave Application Form</h3>
                         </div>
                         <div class="w-75">
                         <div class="row print-row" style="padding-left:10px;">
                             <div class="col-lg-4 col-md-4 col-sm-4 left-side">
-                                <h4 style="font-family: 'Font Awesome 5 Free'!important;">Full Name :</h4>
+                                <h4 style="font-family: 'Play', sans-serif!important;">Full Name :</h4>
                             </div>
                             <div class="col-lg-8 col-md-8 col-sm-8 right-side">
-                                <h4 style="font-family: 'Font Awesome 5 Free'!important;">
+                                <h4 style="font-family: 'Play', sans-serif!important;">
                                     {{ $user_detail['leave_details']->other_employee_name }} </h4>
                             </div>
                         </div>
                         <div class="row print-row" style="padding-left:10px;">
                             <div class="col-lg-4 col-md-4 col-sm-4 left-side">
-                                <h4 style="font-family: 'Font Awesome 5 Free'!important;"><strong>Email Id</strong> :
+                                <h4 style="font-family: 'Play', sans-serif!important;"><strong>Email Id</strong> :
                                     </h4>
                             </div>
                             <div class="col-lg-8 col-md-8 col-sm-8 right-side">
-                                <h4 style="font-family: 'Font Awesome 5 Free'!important;">
+                                <h4 style="font-family: 'Play', sans-serif!important;">
                                     {{ strip_tags($user_detail['leave_details']->u_email) }}</h4>
                             </div>
                         </div>
                         <div class="row print-row" style="padding-left:10px;">
                             <div class="col-lg-4 col-md-4 col-sm-4 left-side"
-                                style="font-family: 'Font Awesome 5 Free'!important;">
+                                style="font-family: 'Play', sans-serif!important;">
                                 <h4><strong>From Date</strong> :</h4>
                               
                             </div>
                             <div class="col-lg-8 col-md-8 col-sm-8 right-side">
-                                <h4 style="font-family: 'Font Awesome 5 Free'!important;">
+                                <h4 style="font-family: 'Play', sans-serif!important;">
                                     {{ strip_tags($user_detail['leave_details']->leave_start_date) }}</h4>
                             </div>
                         </div>
                         <div class="row print-row" style="padding-left:10px;">
                             <div class="col-lg-4 col-md-4 col-sm-4 left-side"
-                            style="font-family: 'Font Awesome 5 Free'!important;">
+                            style="font-family: 'Play', sans-serif!important;">
                                 <h4><strong>To Date</strong> :</h4>
                             </div>
                             <div class="col-lg-8 col-md-8 col-sm-8 right-side">
-                                <h4 style="font-family: 'Font Awesome 5 Free'!important;">
+                                <h4 style="font-family: 'Play', sans-serif!important;">
                                     {{ strip_tags($user_detail['leave_details']->leave_end_date) }}</h4>
                             </div>
                         </div>
                         <div class="row print-row" style="padding-left:10px;">
                             <div class="col-lg-4 col-md-4 col-sm-4 left-side"
-                                style="font-family: 'Font Awesome 5 Free'!important;">
+                                style="font-family: 'Play', sans-serif!important;">
                                 <h4><strong>Leave Day</strong> :</h4>
                                
                             </div>
 
                             <div class="col-lg-8 col-md-8 col-sm-8 right-side">
-                                <h4 style="font-family: 'Font Awesome 5 Free'!important;">
+                                <h4 style="font-family: 'Play', sans-serif!important;">
                                     <h4>
                                         @if ($user_detail['leave_details']->leave_day == 'half_day')
                                             Half Day
@@ -134,62 +134,62 @@
                         </div>
                         <div class="row print-row" style="padding-left:10px;">
                             <div class="col-lg-4 col-md-4 col-sm-4 left-side"
-                            style="font-family: 'Font Awesome 5 Free'!important;">
+                            style="font-family: 'Play', sans-serif!important;">
                                 <h4><strong>Leave Count</strong> :</h4>
                             </div>
                             <div class="col-lg-8 col-md-8 col-sm-8 right-side">
-                                <h4 style="font-family: 'Font Awesome 5 Free'!important;">
+                                <h4 style="font-family: 'Play', sans-serif!important;">
                                     {{ strip_tags($user_detail['leave_details']->leave_count) }}</h4>
                             </div>
                         </div>
                         <div class="row print-row" style="padding-left:10px;">
                             <div class="col-lg-4 col-md-4 col-sm-4 left-side"
-                                style="font-family: 'Font Awesome 5 Free'!important;">
+                                style="font-family: 'Play', sans-serif!important;">
                                 <h4><strong>Leave Type Name</strong> :</h4>
                             </div>
                             <div class="col-lg-8 col-md-8 col-sm-8 right-side">
-                                <h4 style="font-family: 'Font Awesome 5 Free'!important;">
+                                <h4 style="font-family: 'Play', sans-serif!important;">
                                     {{ strip_tags($user_detail['leave_details']->leave_type_name) }}</h4>
                             </div>
                         </div>
                         <div class="row print-row" style="padding-left:10px;">
                             <div class="col-lg-4 col-md-4 col-sm-4 left-side"
-                            style="font-family: 'Font Awesome 5 Free'!important;">
+                            style="font-family: 'Play', sans-serif!important;">
                                 <h4><strong>Reason</strong> :</h4>
                             </div>
                             <div class="col-lg-8 col-md-8 col-sm-8 right-side">
-                                <h4 style="font-family: 'Font Awesome 5 Free'!important;">
+                                <h4 style="font-family: 'Play', sans-serif!important;">
                                     {{ strip_tags($user_detail['leave_details']->reason) }}</h4>
                             </div>
                         </div>
                     <div class=" fix-bottom ">
                         <div class="row print-row" style="padding-left:10px;">
-                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Font Awesome 5 Free'!important;">
+                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Play', sans-serif!important;">
                                 <span><strong>Leave Type</strong></span>
                             </div>
-                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Font Awesome 5 Free'!important;">
+                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Play', sans-serif!important;">
                                 <span><strong>Total Leave Count</strong></span>
                             </div>
-                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Font Awesome 5 Free'!important;">
+                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Play', sans-serif!important;">
                                 <span><strong>Total Leaves Taken</strong></span>
                             </div>
-                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Font Awesome 5 Free'!important;">
+                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Play', sans-serif!important;">
                                 <span><strong>Remaining Leaves</strong></span>
                             </div>
                         </div>
                         
                         @foreach($user_detail['leave_summary'] as $leave)
                         <div class="row print-row" style="padding-left:10px;">
-                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Font Awesome 5 Free'!important;">
+                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Play', sans-serif!important;">
                                 <span>{{ $leave->leave_type_name }}</span>
                             </div>
-                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Font Awesome 5 Free'!important;">
+                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Play', sans-serif!important;">
                                 <span>{{ $leave->leave_count }}</span>
                             </div>
-                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Font Awesome 5 Free'!important;">
+                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Play', sans-serif!important;">
                                 <span>{{ $leave->total_leaves_taken }}</span>
                             </div>
-                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Font Awesome 5 Free'!important;">
+                            <div class="col-lg-3 col-md-3 col-sm-3 left-side" style="font-family: 'Play', sans-serif!important;">
                                 <span>{{ $leave->remaining_leaves }}</span>
                             </div>
                         </div>

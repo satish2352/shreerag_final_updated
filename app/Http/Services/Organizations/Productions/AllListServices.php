@@ -59,6 +59,8 @@ class AllListServices
     public function getAllreviseddesign(){
         try {
             $data_output = $this->repo->getAllreviseddesign();
+            // dd($data_output);
+            // die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;

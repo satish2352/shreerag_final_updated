@@ -12,7 +12,9 @@ DesignRevisionForProd,
 AdminView,
 ProductionDetails,
 BusinessDetails,
-NotificationStatus
+NotificationStatus,
+EstimationModel,
+EstimationDetails
 };
 use Config;
 
@@ -43,6 +45,7 @@ class DesignsRepository  {
                 //   'businesses.quantity',
                 //   'businesses.descriptions',
                   'businesses.remarks',
+                'businesses.grand_total_amount',
                   'businesses.is_active',
                   'designs.business_id',
                   'businesses.updated_at'
@@ -82,7 +85,7 @@ class DesignsRepository  {
             ->where('designs.business_id', $decoded_business_id)
             ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
             ->groupBy('businesses_details.product_name', 'designs.business_id', 'designs.business_details_id','businesses_details.description',
-                'businesses_details.quantity','businesses_details.business_id','business_application_processes.production_id',
+                'businesses_details.quantity',  'businesses_details.total_amount','businesses_details.business_id','business_application_processes.production_id',
                 'business_application_processes.production_status_id','designs.updated_at')
             ->select(
               'businesses_details.business_id',
@@ -92,6 +95,7 @@ class DesignsRepository  {
                 'businesses_details.product_name',
                 'businesses_details.description',
                 'businesses_details.quantity',
+                'businesses_details.total_amount',
                 'business_application_processes.production_id',
                 'business_application_processes.production_status_id',
                 'designs.updated_at'
@@ -104,73 +108,67 @@ class DesignsRepository  {
     }
 }
 
-    public function getAll(){
-        try {
+  public function getAll()
+{
+    try {
+        $array_to_be_check = [
+            config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_ESTIMATION_DEPT_FIRST_TIME')
+        ];
 
-            $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN'),
-            config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_PRODUCTION'),
-            config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECIVED_FROM_PRODUCTION_DEPT_REVISED'),
-        
-            ];
-            $data_output= ProductionModel::leftJoin('businesses', function($join) {
-                $join->on('production.business_id', '=', 'businesses.id');
-              })
-              ->leftJoin('business_application_processes', function($join) {
-                $join->on('production.business_id', '=', 'business_application_processes.business_id');
-              })
-              ->leftJoin('designs', function($join) {
-                $join->on('production.business_details_id', '=', 'designs.business_id');
-              })
-              
-              ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
-              ->where('businesses.is_active',true)
-              ->where('businesses.is_deleted', 0)
-              ->groupBy('businesses.id', 'businesses.customer_po_number', 'businesses.title', 'businesses.remarks', 'businesses.is_active', 'production.business_id')
+        $send_estimation = config('constants.ESTIMATION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_ESTIMATION');
 
-              ->select(
-                  'businesses.id',
-                  'businesses.project_name',
-                  'businesses.customer_po_number',
-                //   'businesses.product_name',
-                //   'businesses.title',
-                //   'businesses.descriptions',
-                //   'businesses.quantity',
-                  'businesses.remarks',
-                  'businesses.is_active',
-                  'businesses.created_at',
-                  'production.business_id',
-                  'businesses.updated_at'
-                //   'designs.id',
-                //   'designs.design_image',
-                //   'designs.bom_image',
-                //   'designs.business_id'
+        $data_output = EstimationModel::leftJoin('businesses', function($join) {
+                $join->on('estimation.business_id', '=', 'businesses.id');
+            })
+            ->leftJoin('business_application_processes', function($join) {
+                $join->on('estimation.business_id', '=', 'business_application_processes.business_id');
+            })
+            ->leftJoin('designs', function($join) {
+                $join->on('estimation.business_details_id', '=', 'designs.business_id');
+            })
+            ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
+            // ->where('business_application_processes.design_send_to_estimation', $send_estimation) // Uncomment if needed
+            ->where('businesses.is_active', true)
+            ->where('businesses.is_deleted', 0)
+            ->select(
+                'businesses.id',
+                'businesses.project_name',
+                'businesses.customer_po_number',
+                'businesses.remarks',
+                'businesses.is_active',
+                'businesses.created_at',
+                'businesses.updated_at',
+                'estimation.business_id',
+                'designs.id as design_id',
+                'designs.design_image',
+                'designs.bom_image',
+                'designs.business_id as design_business_id'
+            )
+            ->groupBy(
+                'businesses.id',
+                'businesses.project_name',
+                'businesses.customer_po_number',
+                'businesses.remarks',
+                'businesses.is_active',
+                'businesses.created_at',
+                'businesses.updated_at',
+                'estimation.business_id',
+                'designs.id',
+                'designs.design_image',
+                'designs.bom_image',
+                'designs.business_id'
+            )
+            ->orderBy('estimation.updated_at', 'desc')
+            ->get();
 
-              )
-             
-              ->distinct()
-              ->groupBy(
-                  'businesses.id',
-                  'businesses.project_name',
-                  'businesses.customer_po_number',
-                  'businesses.title',
-                  'businesses.remarks',
-                  'businesses.is_active',
-                  'businesses.created_at',
-                  'designs.id',
-                  'designs.design_image',
-                  'designs.bom_image',
-                  'designs.business_id',
-                  'businesses.updated_at'
-              )
-              ->orderBy('businesses.updated_at', 'desc')
-              ->get();
+        return $data_output;
 
-         
-            return $data_output;
-        } catch (\Exception $e) {
-            return $e;
-        }
+    } catch (\Exception $e) {
+        \Log::error('Error in getAll(): ' . $e->getMessage());
+        return response()->json(['status' => false, 'message' => 'Failed to fetch data.'], 500);
     }
+}
+
     public function getById($id){
     try {
             $dataOutputByid = DesignModel::find($id);
@@ -233,34 +231,34 @@ public function updateAll($request)
 
         $dataOutputNew->save();
 
-        $production_data = ProductionModel::firstOrNew(['design_id' => $dataOutputNew->id]);
+        $estimation_data = EstimationModel::firstOrNew(['design_id' => $dataOutputNew->id]);
 
-        $production_data->business_id = $dataOutputNew->business_id;
-        $production_data->business_details_id = $dataOutputNew->business_details_id;
-        $production_data->design_id = $dataOutputNew->id;
-        $production_data->save();
-        $production_data_details = ProductionDetails::firstOrNew(['design_id' => $dataOutputNew->id]);
-        $production_data_details->business_id = $dataOutputNew->business_id;
-        $production_data_details->design_id = $dataOutputNew->id;
-        $production_data_details->business_details_id = $production_data->business_details_id;
-        $production_data_details->production_id = $production_data->id;
-        $production_data_details->material_send_production = 0;
-        $production_data_details->quantity_minus_status = 'pending';
-        $production_data_details->part_item_id = NULL;
-        $production_data_details->quantity = NULL;
-        $production_data_details->unit = NULL;
-        $production_data_details->save();
+        $estimation_data->business_id = $dataOutputNew->business_id;
+        $estimation_data->business_details_id = $dataOutputNew->business_details_id;
+        $estimation_data->design_id = $dataOutputNew->id;
+        $estimation_data->save();
+        // $production_data_details = EstimationDetails::firstOrNew(['design_id' => $dataOutputNew->id]);
+        // $production_data_details->business_id = $dataOutputNew->business_id;
+        // $production_data_details->design_id = $dataOutputNew->id;
+        // $production_data_details->business_details_id = $production_data->business_details_id;
+        // $production_data_details->production_id = $production_data->id;
+        // $production_data_details->material_send_production = 0;
+        // $production_data_details->quantity_minus_status = 'pending';
+        // $production_data_details->part_item_id = NULL;
+        // $production_data_details->quantity = NULL;
+        // $production_data_details->unit = NULL;
+        // $production_data_details->save();
       
         // Store design and production IDs
         $designIds[] = $dataOutputNew->id;
-        $productionIds[] = $production_data->id;
-        $productionIdsDetails[] = $production_data_details->id;
+        $estimationIds[] = $estimation_data->id;
+        // $productionIdsDetails[] = $production_data_details->id;
 
         $designRevisionForProdIDInsert = new DesignRevisionForProd();
         $designRevisionForProdIDInsert->business_id = $dataOutputNew->business_id;
         $designRevisionForProdIDInsert->business_details_id = $dataOutputNew->business_details_id;
         $designRevisionForProdIDInsert->design_id = $dataOutputNew->id;
-        $designRevisionForProdIDInsert->production_id = $production_data->id;
+        $designRevisionForProdIDInsert->estimation_id = $estimation_data->id;
         $designRevisionForProdIDInsert->reject_reason_prod = '';
         $designRevisionForProdIDInsert->remark_by_design = '';
         $designRevisionForProdIDInsert->design_image = $designImageName ?? null;
@@ -273,12 +271,16 @@ public function updateAll($request)
         foreach ($business_applications as $business_application) {
             $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
             $business_application->design_id = $designIds[0] ?? null; // Use first element if available
-            $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
-            $business_application->production_id = $productionIds[0] ?? null; // Use first element if available
-            $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_PRODUCTION');
+            $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_ESTIMATION_DEPT_FIRST_TIME');
+            $business_application->design_send_to_estimation = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_ESTIMATION_DEPT_FIRST_TIME');
+            $business_application->estimation_id = $estimation_data->id ?? null; // Use first element if available
+            // $business_application->estimation_status_id = config('constants.ESTIMATION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_ESTIMATION');
             $business_application->	off_canvas_status = 12;
 
             $business_application->save();
+
+
+           
         }
 
         // $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
@@ -334,11 +336,11 @@ public function updateAll($request)
                 $designRevisionForProd->remark_by_design = $request->remark_by_design;
 
                 $designImageName = $designRevisionForProd->id . '_'. $formattedProductName . '_' . rand(100000, 999999) . '_re_design.' . $request->design_image->getClientOriginalExtension();
-                $bomImageName = $designRevisionForProd->id . '_'. $formattedProductName . '_' . rand(100000, 999999) . '_re_bom.' . $request->bom_image->getClientOriginalExtension();
+                // $bomImageName = $designRevisionForProd->id . '_'. $formattedProductName . '_' . rand(100000, 999999) . '_re_bom.' . $request->bom_image->getClientOriginalExtension();
                 
                 // Update the design image and bom image fields in the DesignModel
                 $designRevisionForProd->design_image = $designImageName;
-                $designRevisionForProd->bom_image = $bomImageName;
+                // $designRevisionForProd->bom_image = $bomImageName;
 
                 $designRevisionForProd->save();
 
@@ -369,7 +371,7 @@ public function updateAll($request)
             }
     
             $return_data['designImageName'] = $designImageName;
-            $return_data['bomImageName'] = $bomImageName;
+            // $return_data['bomImageName'] = $bomImageName;
             $return_data['last_insert_id'] = $designRevisionForProd->business_id;
     
             // Return the data

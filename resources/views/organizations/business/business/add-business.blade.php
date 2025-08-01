@@ -119,6 +119,7 @@
                                                                                         <th class="col-md-2">Quantity</th>
                                                                                         {{-- <th class="col-md-2">Unit</th> --}}
                                                                                         <th class="col-md-2">Rate</th>
+                                                                                           <th class="col-md-2">Total</th>
                                                                                         <th>
                                                                                             <button type="button"
                                                                                                 class="btn btn-sm btn-success font-18 mr-1"
@@ -173,6 +174,10 @@
                                                                                                 name="addmore[0][rate]"
                                                                                                 type="text">
                                                                                         </td>
+                                                                                       
+                                                                                        <td>
+                                                                                            <input class="form-control total_amount" name="addmore[${i}][total]" type="text" readonly>
+                                                                                        </td>
                                                                                         <td>
                                                                                             <button type="button"
                                                                                                 class="btn btn-sm btn-danger font-18 ml-2 remove-row"
@@ -182,10 +187,14 @@
                                                                                             </button>
                                                                                         </td>
                                                                                     </tr>
+                                                                                 
                                                                                 </tbody>
                                                                             </table>
                                                                         </div>
                                                                     </div>
+                                                                </div>
+                                                                <div class="col-md-12 text-right" style="margin-top: 10px;">
+                                                                    <strong>Grand Total: ₹</strong> <span id="grand_total">0.00</span>
                                                                 </div>
                                                                  <div>
                                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -459,6 +468,9 @@
                             <input class="form-control rate" name="addmore[${i}][rate]" type="text">
                         </td>
                         <td>
+                            <input class="form-control total_amount" name="addmore[${i}][total]" type="text" readonly>
+                        </td>
+                        <td>
                             <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete" data-repeater-delete>
                                 <i class="fa fa-trash"></i>
                             </button>
@@ -479,5 +491,46 @@
                     validator.resetForm(); // Reset validation state after removing a row
                 });
             });
+        </script>
+        <script>
+            // Function to calculate total amount
+            function calculateRowTotal(row) {
+                let quantity = parseFloat(row.find('.quantity').val()) || 0;
+                let rate = parseFloat(row.find('.rate').val()) || 0;
+                let total = (quantity * rate).toFixed(2);
+                row.find('.total_amount').val(total);
+            }
+
+            // Trigger on change of quantity or rate
+            $(document).on('input', '.quantity, .rate', function() {
+                let row = $(this).closest('tr');
+                calculateRowTotal(row);
+            });
+
+        </script>
+        <script>
+            function calculateGrandTotal() {
+    let grandTotal = 0;
+    $('.total_amount').each(function() {
+        let val = parseFloat($(this).val()) || 0;
+        grandTotal += val;
+    });
+    $('#grand_total').text(grandTotal.toFixed(2));
+        }
+
+        // Recalculate on rate/quantity change
+        $(document).on('input', '.quantity, .rate', function() {
+            let row = $(this).closest('tr');
+            calculateRowTotal(row);
+            calculateGrandTotal();
+        });
+
+        // Also recalculate on row remove
+        $(document).on("click", ".remove-row", function() {
+            $(this).closest("tr").remove();
+            validator.resetForm();
+            calculateGrandTotal();
+        });
+
         </script>
     @endsection

@@ -25,6 +25,8 @@ class OrgnisationSeeder extends Seeder
                 'image'=> 'null'   ,
                 'employee_count'=> '1',
                 'founding_date' => '2024-03-16',
+                'cin_number' => 'U12345MH2010PTC123456',
+                'gst_no' => '27ABCDE1234F1Z5',
                 'instagram_link' => 'null',
                 'facebook_link' => 'null',
                 'twitter_link' => 'null',

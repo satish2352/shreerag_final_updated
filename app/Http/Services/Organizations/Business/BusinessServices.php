@@ -27,6 +27,7 @@ class BusinessServices
     {
         try {
             $result = $this->repo->addAll($request);
+            
             if ($result['status'] === 'success') {
                 return ['status' => 'success', 'msg' => 'This business send to Design Department Successfully.'];
             } else {
@@ -45,25 +46,57 @@ class BusinessServices
         }
     }
 
+    // public function updateAll($request)
+    // {
+    //     try {
+    //         $return_data = $this->repo->updateAll($request);
+
+    //         dd($return_data );
+    //         die();
+    //         if ($return_data['status'] == 'success') {
+    //             return ['status' => 'success', 'msg' => 'Data Updated Successfully.'];
+    //         } else {
+    //             return ['status' => 'error', 'msg' => $return_data['msg']];
+    //         }
+    //     } catch (Exception $e) {
+    //         return ['status' => 'error', 'msg' => $e->getMessage()];
+    //     }
+    // }
     public function updateAll($request)
-    {
-        try {
-            $return_data = $this->repo->updateAll($request);
-            if ($return_data['status'] == 'success') {
-                return ['status' => 'success', 'msg' => 'Data Updated Successfully.'];
-            } else {
-                return ['status' => 'error', 'msg' => $return_data['msg']];
-            }
-        } catch (Exception $e) {
-            return ['status' => 'error', 'msg' => $e->getMessage()];
+{
+    try {
+        $return_data = $this->repo->updateAll($request);
+// dd($return_data);
+// die();
+        if ($return_data['status'] === 'success') {
+            return [
+                'status' => 'success',
+                'msg' => $return_data['msg'],
+                'last_insert_id' => $return_data['last_insert_id'] ?? null,
+                'total_amount' => $return_data['total_amount'] ?? 0,
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'msg' => $return_data['msg'],
+                'error' => $return_data['error'] ?? null,
+            ];
         }
+    } catch (\Exception $e) {
+        return [
+            'status' => 'error',
+            'msg' => 'Something went wrong in the service.',
+            'error' => $e->getMessage()
+        ];
     }
-    
+}
+
 
     public function deleteByIdAddmore($id){
         try {
             $delete = $this->repo->deleteByIdAddmore($id);
-         
+           dd($delete);
+           die();
             if ($delete) {
                 return ['status' => 'success', 'msg' => 'Deleted Successfully.'];
             } else {
@@ -83,6 +116,27 @@ class BusinessServices
             } else {
                 return ['status' => 'error', 'msg' => ' Not Deleted.'];
             }
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
+    }
+
+      public function acceptEstimationBOM($id)
+    {
+        try {
+            $acceptPurchaseOrder = $this->repo->acceptEstimationBOM($id);
+         
+            return $acceptPurchaseOrder;
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
+    }
+    public function rejectedEstimationBOM($request)
+    {
+        try {
+            $rejectedPurchaseOrder = $this->repo->rejectedEstimationBOM($request);
+           
+            return $rejectedPurchaseOrder;
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
@@ -126,4 +180,5 @@ class BusinessServices
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
+       
 }

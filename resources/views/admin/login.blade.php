@@ -164,9 +164,6 @@
                                         </span>
                                     @endif
                                 </div>
-                                <input type="hidden" name="latitude" id="latitude">
-                                <input type="hidden" name="longitude" id="longitude">
-
                                 <button type="submit" class="btn btn-success btn-block loginbtn">Login</button>
                             </form>
 
@@ -242,48 +239,6 @@
             });
         });
     </script>
-
-
-<script>
-    $(document).ready(function () {
-        const loginForm = $("#loginForm");
-
-
-        loginForm.on("submit", function (e) {
-            e.preventDefault();
-
-            // Disable button
-            $(".loginbtn").prop("disabled", true).text("Logging in...");
-
-            // Check if browser supports location
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    // Set lat/lng
-                       console.log("Latitude:", position.coords.latitude);
-    console.log("Longitude:", position.coords.longitude);
-    
-                    $("#latitude").val(position.coords.latitude);
-                    $("#longitude").val(position.coords.longitude);
-
-                    // Submit form now
-                    loginForm.off("submit");
-                    loginForm.submit();
-                }, function (error) {
-                    console.warn("Location error:", error.message);
-
-                    // Submit even if location fails
-                    loginForm.off("submit");
-                    loginForm.submit();
-                });
-            } else {
-                console.warn("Geolocation not supported.");
-                loginForm.off("submit");
-                loginForm.submit();
-            }
-        });
-    });
-</script>
-
 
 
 

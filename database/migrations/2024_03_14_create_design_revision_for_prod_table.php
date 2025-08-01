@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('production_id');
             $table->string('reject_reason_prod')->nullable();
             $table->string('remark_by_design');
+              $table->string('rejected_remark_by_owner')->nullable();
             $table->string('design_image')->nullable();
             $table->string('bom_image')->nullable();
             $table->boolean('is_active')->default(true);

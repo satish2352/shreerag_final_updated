@@ -24,6 +24,8 @@ use Config;
     public function rejectdesign($request) {
         try {
             $update_data = $this->repo->rejectdesign($request);
+            // dd($update_data);
+            // die();
             return $update_data;
         } catch (\Exception $e) {
             return $e;

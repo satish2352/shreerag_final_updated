@@ -82,18 +82,18 @@
                                                             <span class="red-text"><?php echo $errors->first('design_image', ':message'); ?></span>
                                                         @endif
                                                     </div>
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="bom_image">Upload BOM (upload excel file min : 1KB to
                                                             max : 5MB) :</label>
                                                         <input type="file" class="form-control" accept=".xls, .xlsx"
                                                             id="bom_image" name="bom_image">
                                                         @if ($errors->has('bom_image'))
-                                                            <span class="red-text"><?php echo $errors->first('bom_image', ':message'); ?></span>
+                                                            <span class="red-text"><?php //echo $errors->first('bom_image', ':message'); ?></span>
                                                         @endif
-                                                    </div>
+                                                    </div> --}}
 
 
-                                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <div class="sparkline12-graph">
                                                             <div id="pwd-container1">
                                                                 <div class="form-group">

@@ -5,7 +5,7 @@
 
 
     .font-family-page {
-        font-family: 'Font Awesome 5 Free' !important;
+        font-family: 'Play', sans-serif !important;
     }
 
     .form-control {
@@ -204,12 +204,12 @@
                                         text-transform: uppercase; /* Convert to uppercase */
                                         line-height: 1.2;   /* Adjust line height */
                                         font-family: Arial, sans-serif; /* Set clean font family */
-                                         font-family: 'Font Awesome 5 Free'!important;
+                                         font-family: 'Play', sans-serif!important;
                                     ">
                                             {{ $getOrganizationData->company_name }}
                                         </div>
                                         <div
-                                            style="margin-top: 5px; font-size: 12px;  font-family: 'Font Awesome 5 Free'!important;">
+                                            style="margin-top: 5px; font-size: 12px;  font-family: 'Play', sans-serif!important;">
                                             {{ $getOrganizationData->address }}, CIN:
                                             {{ $getOrganizationData->cin_number }}<br>
                                             Phone No.: {{ $getOrganizationData->mobile_number }}, Email Id:
@@ -228,14 +228,14 @@
 
 
                         <div class="d-flex justify-content-center align-items-center font-family-page"
-                            style="font-size: 20px; font-weight: bold; text-align:center;border-bottom: 1px solid black;font-family: 'Font Awesome 5 Free'!important;">
+                            style="font-size: 20px; font-weight: bold; text-align:center;border-bottom: 1px solid black;font-family: 'Play', sans-serif!important;">
                             PURCHASE ORDER</div>
                         <table
                             style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 13px;">
                             <tr>
                                 <!-- Left Side Content -->
                                 <td
-                                    style="width: 50%; vertical-align: top; padding: 5px;  font-family: 'Font Awesome 5 Free'!important;">
+                                    style="width: 50%; vertical-align: top; padding: 5px;  font-family: 'Play', sans-serif!important;">
                                     <div style="font-weight: bold;">To, {{ $purchaseOrder->vendor_company_name }}</div>
                                     <div>{{ $purchaseOrder->vendor_address }}</div>
                                     <div>GST No.: {{ $purchaseOrder->gst_no }}</div>
@@ -245,7 +245,7 @@
 
                                 <!-- Right Side Content -->
                                 <td
-                                    style="width: 25%; vertical-align: top; text-align: left; padding: 5px;  font-family: 'Font Awesome 5 Free'!important;">
+                                    style="width: 25%; vertical-align: top; text-align: left; padding: 5px;  font-family: 'Play', sans-serif!important;">
                                     <div style="font-weight: bold;">PO. No.: {{ $purchaseOrder->purchase_orders_id }}
                                     </div>
                                     <div>Date:
@@ -260,13 +260,13 @@
                         </table>
 
                         <div style="border-bottom: 1px solid black; padding: 10px;">
-                            <div style="font-family: 'Font Awesome 5 Free'!important; font-size:11px;"><b>Dear Sir,
+                            <div style="font-family: 'Play', sans-serif!important; font-size:11px;"><b>Dear Sir,
                                     Please arrange to supply the following Material as per quantity, specification, and
                                     schedule mentioned below</b></div>
                         </div>
                         <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
                             <thead>
-                                <tr style="bold; font-family: 'Font Awesome 5 Free'!important;font-size:14px;">
+                                <tr style="bold; font-family: 'Play', sans-serif!important;font-size:14px;">
                                     <th class="pdf-font-size"
                                         style="border: 1px solid black; padding: 5px; font-size:12px;">No.</th>
                                     <th class="pdf-font-size"
@@ -289,7 +289,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($purchaseOrderDetails as $index => $item)
-                                    <tr style="bold; font-family: 'Font Awesome 5 Free'!important;">
+                                    <tr style="bold; font-family: 'Play', sans-serif!important;">
                                         <td style="border: 1px solid black; padding: 5px; text-align: center;">
                                             {{ $index + 1 }}</td>
                                         <td
@@ -311,7 +311,7 @@
                                 @endforeach
                             </tbody>
                             <tfoot style="border: 1px solid black;">
-                                <tr style="bold; font-family: 'Font Awesome 5 Free'!important; font-size:12px;">
+                                <tr style="bold; font-family: 'Play', sans-serif!important; font-size:12px;">
                                     <td class="no-border" colspan="5" style="padding-top:10px;">
                                         <strong>Remark:- {{ $purchaseOrder->note }}</strong>
                                     </td>
@@ -320,13 +320,13 @@
                                     <td style="border-top: 1px solid black;border-bottom: 1px solid black;border-left: 1px solid black; border-right: none;  padding: 5px; text-align: right;"
                                         class="text-right"><b>{{ $purchaseOrderDetails->sum('amount') }}</b></td>
                                 </tr>
-                                <tr style="bold; font-family: 'Font Awesome 5 Free'!important; font-size:12px;">
+                                <tr style="bold; font-family: 'Play', sans-serif!important; font-size:12px;">
                                     <td class="no-border" colspan="6"></td>
                                     <td style="border: 1px solid black;"><b>Freight</b></td>
                                     <td style="border: 1px solid black; text-align:right;" class="text-right">
                                         <b>0.00</b></td>
                                 </tr>
-                                <tr style="bold; font-family: 'Font Awesome 5 Free'!important; font-size:12px;">
+                                <tr style="bold; font-family: 'Play', sans-serif!important; font-size:12px;">
                                     <td class="no-border" colspan="6"></td>
                                     <td style="border: 1px solid black;"><b>{{ $purchaseOrder->tax_type }}
                                             {{ $purchaseOrder->name }}%</b></td>
@@ -338,14 +338,14 @@
                                     </td>
 
                                 </tr>
-                                <tr style="bold; font-family: 'Font Awesome 5 Free'!important; font-size:12px;">
+                                <tr style="bold; font-family: 'Play', sans-serif!important; font-size:12px;">
                                     <td class="no-border" colspan="6"></td>
                                     <td style="border: 1px solid black;"><b>NIL GST</b></td>
                                     <td style="border-top: 1px solid black;border-bottom:1px solid black;border-left:1px solid black; border-right:none;padding:5px; text-align:right;"
                                         class="text-right"><b>0.00</b></td>
                                 </tr>
                                 <tr
-                                    style="border-bottom: 1px solid black; bold; font-family: 'Font Awesome 5 Free'!important; font-size:12px;">
+                                    style="border-bottom: 1px solid black; bold; font-family: 'Play', sans-serif!important; font-size:12px;">
                                     <td class="no-border" colspan="5">
                                         <strong>Transport/Dispatch :- {{ $purchaseOrder->transport_dispatch }}</strong>
                                     </td>
@@ -363,12 +363,12 @@
                                     </td>
                                 </tr>
                                 <tr
-                                    style="padding-bottom: 20px; bold; font-family: 'Font Awesome 5 Free'!important; font-size:12px;">
+                                    style="padding-bottom: 20px; bold; font-family: 'Play', sans-serif!important; font-size:12px;">
                                     <td colspan="8" class="no-border" style="padding: 0px;">
                                         {{-- Delivery AS PER ATTACHED DELIVERY SCHEDULE --}}
                                     </td>
                                 </tr>
-                                <tr style="bold; font-family: 'Font Awesome 5 Free'!important; font-size:12px;">
+                                <tr style="bold; font-family: 'Play', sans-serif!important; font-size:12px;">
                                     <td colspan="8" class="no-border" style="height: 10px; padding: 5px;">
                                         <div style="float: right; font-size:12px;"><strong>
                                                 @php echo convertToWords(($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * (1 + ($purchaseOrder->name / 100)));  @endphp
@@ -376,7 +376,7 @@
                                     </td>
                                 </tr>
 
-                                <tr style="bold; font-family: 'Font Awesome 5 Free'!important; font-size:12px;">
+                                <tr style="bold; font-family: 'Play', sans-serif!important; font-size:12px;">
                                     <td colspan="8" class="no-border" style="height: 100px; padding: 5px;">
                                         <div style="float: right; font-size:18px; font-size:12px;"><strong>For: <span
                                                     style="text-transform: uppercase;">{{ $getOrganizationData->company_name }}</span></strong>
@@ -387,7 +387,7 @@
                                             <div style="float: right; font-size:18px;"><strong>For: {{ $getOrganizationData->company_name }}</strong></div>
                                         </td> --}}
                                 </tr>
-                                <tr style="bold; font-family: 'Font Awesome 5 Free'!important; font-size:12px;">
+                                <tr style="bold; font-family: 'Play', sans-serif!important; font-size:12px;">
                                     <td class="no-border" colspan="2"
                                         style="padding-bottom: 10px;  font-size:11px;">
 
@@ -410,7 +410,7 @@
                                 </tr>
 
 
-                                <tr style="bold; font-family: 'Font Awesome 5 Free'!important; font-size:12px;">
+                                <tr style="bold; font-family: 'Play', sans-serif!important; font-size:12px;">
                                     <td class="no-border" colspan="2"
                                         style="padding-bottom: 10px;  font-size:11px;">
                                         <strong>Prepared By</strong>
@@ -428,7 +428,7 @@
                             </tfoot>
                         </table>
                         <div><span
-                                style="padding: 10px 10px 10px 8px;font-family: 'Font Awesome 5 Free'!important; font-size:13px;">This
+                                style="padding: 10px 10px 10px 8px;font-family: 'Play', sans-serif!important; font-size:13px;">This
                                 is a computer-generated document No signature is required</span></div>
                         @if (empty($is_pdf))
                             <a>

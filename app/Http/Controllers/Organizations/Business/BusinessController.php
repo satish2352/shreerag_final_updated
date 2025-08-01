@@ -101,43 +101,109 @@ class BusinessController extends Controller
     public function edit( Request $request ) {
         try {
 
-            $edit_data_id = base64_decode( $request->id );
-            // $edit_data_id = $request->id;
+           $editDataId = base64_decode($request->id);
+$response = $this->service->getById($editDataId);
 
-            $editData = $this->service->getById( $edit_data_id );
-            return view( 'organizations.business.business.edit-business', compact( 'editData' ) );
+if (isset($response['status']) && $response['status'] == 'error') {
+    return redirect()->back()->with('msg', $response['msg'])->with('status', 'error');
+}
+           return view('organizations.business.business.edit-business', [
+    'editData' => $response['designData'],
+    'totalAmount' => $response['total_amount'],
+    'grandTotalAmount' => $response['grand_total_amount'],
+]);
         } catch ( \Exception $e ) {
             return $e;
         }
     }
 
-    public function update( Request $request )
- {
-        $rules = [];
-        // Define your validation rules
-        $messages = [];
-        // Define your custom messages
+//     public function update( Request $request )
+//  {
+//         $rules = [];
+//         // Define your validation rules
+//         $messages = [];
+//         // Define your custom messages
 
-        try {
-            // Validate the request
-            $validation = Validator::make( $request->all(), $rules, $messages );
-            if ( $validation->fails() ) {
-                return redirect()->back()
+//         try {
+//             // Validate the request
+//             $validation = Validator::make( $request->all(), $rules, $messages );
+//             if ( $validation->fails() ) {
+//                 return redirect()->back()
+//                 ->withInput()
+//                 ->withErrors( $validation );
+//             } else {
+//                 // Update data
+//                 $update_data = $this->service->updateAll( $request );
+//                 if ( $update_data[ 'status' ] == 'success' ) {
+//                     return redirect( 'owner/list-business' )->with( 'msg', $update_data[ 'msg' ] )->with( 'status', $update_data[ 'status' ] );
+//                 } else {
+//                     return redirect()->back()->withInput()->with( 'msg', $update_data[ 'msg' ] )->with( 'status', $update_data[ 'status' ] );
+//                 }
+//             }
+//         } catch ( Exception $e ) {
+//             return redirect()->back()->withInput()->with( [ 'msg' => $e->getMessage(), 'status' => 'error' ] );
+//         }
+//     }
+public function update(Request $request)
+{
+    $rules = [
+        'design_count' => 'required|integer',
+        'business_main_id' => 'required|integer|exists:businesses,id',
+        'customer_po_number' => 'required|string',
+        'title' => 'required|string',
+        'po_validity' => 'required|date',
+        'remarks' => 'nullable|string',
+
+        // Validation for new entries (addmore)
+        'addmore.*.product_name' => 'required|string',
+        'addmore.*.description' => 'required|string',
+        'addmore.*.quantity' => 'required|integer|min:1',
+        'addmore.*.rate' => 'required|numeric|min:0',
+    ];
+
+    $messages = [
+        'design_count.required' => 'Design count is required.',
+        'business_main_id.required' => 'Business main ID is required.',
+        'customer_po_number.required' => 'Customer PO number is required.',
+        'title.required' => 'Title is required.',
+        'po_validity.required' => 'PO validity date is required.',
+
+        'addmore.*.product_name.required' => 'Product name is required in all rows.',
+        'addmore.*.description.required' => 'Description is required in all rows.',
+        'addmore.*.quantity.required' => 'Quantity is required in all rows.',
+        'addmore.*.rate.required' => 'Rate is required in all rows.',
+    ];
+
+    try {
+        // Validate the request
+        $validation = Validator::make($request->all(), $rules, $messages);
+
+        if ($validation->fails()) {
+            return redirect()->back()
                 ->withInput()
-                ->withErrors( $validation );
-            } else {
-                // Update data
-                $update_data = $this->service->updateAll( $request );
-                if ( $update_data[ 'status' ] == 'success' ) {
-                    return redirect( 'owner/list-business' )->with( 'msg', $update_data[ 'msg' ] )->with( 'status', $update_data[ 'status' ] );
-                } else {
-                    return redirect()->back()->withInput()->with( 'msg', $update_data[ 'msg' ] )->with( 'status', $update_data[ 'status' ] );
-                }
-            }
-        } catch ( Exception $e ) {
-            return redirect()->back()->withInput()->with( [ 'msg' => $e->getMessage(), 'status' => 'error' ] );
+                ->withErrors($validation);
         }
+
+        // Call service to update
+        $update_data = $this->service->updateAll($request);
+
+        if ($update_data['status'] == 'success') {
+            return redirect('owner/list-business')
+                ->with('msg', $update_data['msg'])
+                ->with('status', $update_data['status']);
+        } else {
+            return redirect()->back()
+                ->withInput()
+                ->with('msg', $update_data['msg'])
+                ->with('status', $update_data['status']);
+        }
+
+    } catch (Exception $e) {
+        return redirect()->back()
+            ->withInput()
+            ->with(['msg' => $e->getMessage(), 'status' => 'error']);
     }
+}
 
     public function destroy( Request $request ) {
         $delete_data_id = base64_decode( $request->id );
@@ -161,6 +227,7 @@ class BusinessController extends Controller
 
     public function destroyAddmore( Request $request ) {
         try {
+             
             $delete_rti = $this->service->deleteByIdAddmore( $request->delete_id );
 
             if ( $delete_rti ) {
@@ -182,6 +249,69 @@ class BusinessController extends Controller
             return $e;
         }
     }
+
+     public function acceptEstimationBOM( $id )
+ {
+        try {
+            $data_output = $this->service->acceptEstimationBOM($id);
+         
+            if ( $data_output ) {
+                $status = 'success';
+                $msg = 'Purchase order accepted.';
+            } else {
+                $status = 'success';
+                $msg = 'Purchase order accepted.';
+            }
+             return redirect( 'owner/list-accept-bom-estimation' )->with( compact( 'msg', 'status' ) );
+         
+        } catch ( Exception $e ) {
+            return [ 'status' => 'error', 'msg' => $e->getMessage() ];
+        }
+
+    }
+
+     public function rejectEstimationedit( $idtoedit ) {
+        try {
+
+            return view( 'organizations.business.business.reject-estimation-owner-side', compact( 'idtoedit' ) );
+        } catch ( \Exception $e ) {
+            return $e;
+        }
+    }
+
+    public function rejectedEstimationBOM(Request $request ) {
+        try {
+            $update_data = $this->service->rejectedEstimationBOM($request);
+         
+            return redirect( 'owner/list-rejected-bom-estimation' );
+        } catch ( \Exception $e ) {
+            return $e;
+        }
+    }
+
+//    public function rejectedEstimationBOM($id)
+// {
+//     try {
+//         $data_output = $this->service->rejectedEstimationBOM($id);
+
+//         // This will dump and stop, so the rest of the code never runs
+      
+
+//         if ($data_output) {
+//             $status = 'success';
+//             $msg = 'Purchase order accepted.';
+//         } else {
+//             $status = 'error'; // <-- better to show error if false
+//             $msg = 'No BOM found.';
+//         }
+
+//         return view('organizations.business.list.list-bom-rejected', compact('data_output'));
+
+//     } catch (Exception $e) {
+//         return ['status' => 'error', 'msg' => $e->getMessage()];
+//     }
+// }
+
 
     public function submitFinalPurchaseOrder( $id ) {
         try {
@@ -287,4 +417,6 @@ class BusinessController extends Controller
 
     }
 
+
+     
 }

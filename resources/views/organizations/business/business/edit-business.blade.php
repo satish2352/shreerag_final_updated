@@ -67,12 +67,12 @@
                                                     @if ($key == 0)
                                                         <div class="row">
                                                              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                <label for="project_name">PO Number : <span
+                                                                <label for="project_name">Project Name : <span
                                                                         class="text-danger">*</span></label>
                                                                 <input class="form-control" name="project_name"
                                                                     id="project_name"
                                                                     placeholder="Enter the customer po number"
-                                                                    value="@if (old('project_name')) {{ trim(old('project_name')) }}@else{{ trim($editDataNew->customer_po_number) }} @endif">
+                                                                    value="@if (old('project_name')) {{ trim(old('project_name')) }}@else{{ trim($editDataNew->project_name) }} @endif">
                                                             </div>
 
                                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -105,6 +105,7 @@
                                                             <th>Description</th>
                                                             <th>Quantity</th>
                                                             <th>Rate</th>
+                                                              <th>Total</th>
                                                             <th>
                                                                 <button type="button"
                                                                     class="btn btn-sm btn-success font-18 mr-1"
@@ -136,19 +137,36 @@
                                                                         class="form-control"
                                                                         @if (!($editDataNew->business_status_id === 1112 && $editDataNew->design_status_id === 1111)) disabled @endif />
                                                                 </td>
-                                                                <td>
+                                                                {{-- <td>
                                                                     <input type="text"
                                                                         name="quantity_{{ $key }}"
                                                                         value="{{ $editDataNew->quantity }}"
                                                                         class="form-control"
                                                                         @if (!($editDataNew->business_status_id === 1112 && $editDataNew->design_status_id === 1111)) disabled @endif />
+                                                                </td> --}}
+                                                                <td>
+                                                                <input type="text"
+                                                                    name="quantity_{{ $key }}"
+                                                                    value="{{ $editDataNew->quantity }}"
+                                                                    class="form-control quantity"
+                                                                    ... />
                                                                 </td>
                                                                 <td>
+                                                                <input type="text"
+                                                                    name="rate_{{ $key }}"
+                                                                    value="{{ $editDataNew->rate }}"
+                                                                    class="form-control rate"
+                                                                    ... />
+                                                                </td>
+                                                                {{-- <td>
                                                                     <input type="text" name="rate_{{ $key }}"
                                                                         value="{{ $editDataNew->rate }}"
                                                                         class="form-control"
                                                                         @if (!($editDataNew->business_status_id === 1112 && $editDataNew->design_status_id === 1111)) disabled @endif />
-                                                                </td>
+                                                                </td> --}}
+                                                               <td>
+        <input type="number" class="form-control total_amount" value="{{ $item->total_amount ?? 0 }}" readonly>
+    </td>
                                                                 <td>
                                                                     <a data-id="{{ $editDataNew->id }}"
                                                                         class="btn btn-sm btn-danger font-18 ml-2 remove-row"
@@ -163,9 +181,14 @@
 
                                                     </table>
                                                 </div>
-
+                                               
                                                 @foreach ($editData as $key => $editDataNew)
                                                     @if ($key == 0)
+                                                    <input type="hidden" name="grand_total_amount" id="grand_total_input" value="{{ old('grand_total_amount', $editDataNew->grand_total_amount) }}">
+
+                                                    <strong>Grand Total: ₹ <span id="grand_total_amount">{{ $businessDetails->grand_total_amount ?? 0 }}</span></strong>
+
+
                                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                             <label for="po_validity">PO Validity: <span
                                                                     class="text-danger">*</span></label>
@@ -396,6 +419,7 @@
                         <td><input type="text" name="addmore[${rowCount}][description]" class="form-control description" placeholder="Enter description" /></td>
                         <td><input type="text" name="addmore[${rowCount}][quantity]" class="form-control quantity" placeholder="Enter quantity" /></td>
                         <td><input type="text" name="addmore[${rowCount}][rate]" class="form-control rate" placeholder="Enter rate" /></td>
+                       <td><input type="text"  name="addmore[${rowCount}][total_amount]"  class="form-control total_amount"  > </td>
                         <td>
                             <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete">
                                 <i class="fa fa-trash"></i>
@@ -416,6 +440,146 @@
                 initializeValidation($(this));
             });
         });
+        // 👉 Add this block to calculate total & grand total on page load
+$("#purchase_order_table tbody tr").each(function() {
+    calculateRowTotal($(this));
+});
+calculateGrandTotal();
     </script>
+ <script>
+    function calculateRowTotal(row) {
+        let quantity = parseFloat(row.find('.quantity').val()) || 0;
+        let rate = parseFloat(row.find('.rate').val()) || 0;
+        let total = quantity * rate;
+        row.find('.total_amount').val(total.toFixed(2));
+    }
+
+    function calculateGrandTotal() {
+        let grandTotal = 0;
+        $('.total_amount').each(function() {
+            let val = parseFloat($(this).val()) || 0;
+            grandTotal += val;
+        });
+        $('#grand_total_amount').text(grandTotal.toFixed(2));
+    }
+
+    $(document).ready(function() {
+        // Initial calculation
+        $("#purchase_order_table tbody tr").each(function() {
+            calculateRowTotal($(this));
+        });
+        calculateGrandTotal();
+    });
+
+    // On quantity or rate input
+    $(document).on('input', '.quantity, .rate', function() {
+        let row = $(this).closest('tr');
+        calculateRowTotal(row);
+        calculateGrandTotal();
+    });
+
+    $(document).on("click", ".remove-row", function() {
+        $(this).closest("tr").remove();
+        calculateGrandTotal();
+    });
+</script>
+
+        {{-- <script>
+            function calculateGrandTotal() {
+    let grandTotal = 0;
+    $('.total_amount').each(function() {
+        let val = parseFloat($(this).val()) || 0;
+        grandTotal += val;
+    });
+    $('#grand_total_amount').text(grandTotal.toFixed(2));
+        }
+
+        // Recalculate on rate/quantity change
+        $(document).on('input', '.quantity, .rate', function() {
+            let row = $(this).closest('tr');
+            calculateRowTotal(row);
+            calculateGrandTotal();
+        });
+
+        // Also recalculate on row remove
+        $(document).on("click", ".remove-row", function() {
+            $(this).closest("tr").remove();
+            validator.resetForm();
+            calculateGrandTotal();
+        });
+
+        </script> --}}
+        <script>
+    function calculateRowTotal(row) {
+        let quantity = parseFloat(row.find('.quantity').val()) || 0;
+        let rate = parseFloat(row.find('.rate').val()) || 0;
+        let total = quantity * rate;
+        row.find('.total_amount').val(total.toFixed(2));
+    }
+
+    function calculateGrandTotal() {
+        let grandTotal = 0;
+        $('.total_amount').each(function () {
+            let val = parseFloat($(this).val()) || 0;
+            grandTotal += val;
+        });
+
+        // Update display and hidden input
+        $('#grand_total_amount').text(grandTotal.toFixed(2));
+        $('#grand_total_input').val(grandTotal.toFixed(2));
+    }
+
+    // Recalculate on rate/quantity change
+    $(document).on('input', '.quantity, .rate', function () {
+        let row = $(this).closest('tr');
+        calculateRowTotal(row);
+        calculateGrandTotal();
+    });
+
+    // Recalculate on row remove
+    // $(document).on("click", ".remove-row", function () {
+    //     $(this).closest("tr").remove();
+    //     if (typeof validator !== 'undefined') {
+    //         validator.resetForm();
+    //     }
+    //     calculateGrandTotal();
+    // });
+$(document).on("click", ".remove-row", function () {
+    let button = $(this);
+    let row = button.closest("tr");
+    let deleteId = button.data('id'); // Only present for existing DB records
+
+    // Case: new (unsaved) row
+    if (!deleteId || deleteId == 0) {
+        row.remove();
+        calculateGrandTotal();
+        return;
+    }
+
+    // Case: saved row, confirm before delete
+    Swal.fire({
+        title: "Are you sure?",
+        text: "This record will be permanently deleted.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $("#delete_id").val(deleteId);
+            $("#deleteform").submit();
+        }
+    });
+});
+
+    // Optional: trigger total calculation on page load
+    $(document).ready(function () {
+        $('#purchase_order_table tbody tr').each(function () {
+            calculateRowTotal($(this));
+        });
+        calculateGrandTotal();
+    });
+</script>
 
 @endsection

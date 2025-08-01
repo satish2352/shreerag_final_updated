@@ -23,7 +23,14 @@ return new class extends Migration
             $table->unsignedBigInteger('design_id')->nullable();
             $table->date('design_sent_date')->nullable();
             $table->unsignedBigInteger('design_status_id')->nullable();
-            $table->unsignedBigInteger('production_id')->nullable();
+            $table->unsignedBigInteger('estimation_id')->nullable();
+            $table->unsignedBigInteger('design_send_to_estimation')->nullable();
+            $table->unsignedBigInteger('bom_estimation_send_to_owner')->nullable();
+            $table->unsignedBigInteger('owner_bom_accepted')->nullable();
+            $table->unsignedBigInteger('owner_bom_rejected')->nullable();
+            $table->unsignedBigInteger('resend_bom_estimation_send_to_owner')->nullable();
+            $table->unsignedBigInteger('estimation_send_to_production')->nullable();
+            $table->unsignedBigInteger('production_id')->nullable();               
             $table->date('production_sent_date')->nullable();
             $table->unsignedBigInteger('production_status_id')->nullable();
             $table->date('store_material_recived_date')->nullable();
