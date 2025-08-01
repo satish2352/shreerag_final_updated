@@ -222,7 +222,7 @@
                              <li class="nav-item {{ request()->is('estimationdept/list-new-requirements-received-for-estimation') ? 'active' : '' }}">
                                 <a href="{{ route('list-new-requirements-received-for-estimation') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-paper-plane icon-wrap"></i> <span
-                                        class="mini-click-non">Design Dept Sent Design and BOM Estimation Dept</span></a>
+                                        class="mini-click-non">Design Dept Sent Design and BOM to Estimation Dept</span></a>
                             </li>
                                  <li
                                 class="nav-item {{ request()->is('owner/list-design-received-estimation') ? 'active' : '' }}">

@@ -113,7 +113,7 @@
                                                     &nbsp; &nbsp;
 
                                                     <a
-                                                        href="{{ route('rejected-bom-estimation', base64_encode($data->id)) }}"><button
+                                                        href="{{ route('edit-reject-estimation-owner-side', base64_encode($data->id)) }}"><button
                                                             data-toggle="tooltip" title="Rejected BOM Estimation" class="reject-btn">Reject</button></a> &nbsp;
                                                     &nbsp; &nbsp;
                                                 </div>

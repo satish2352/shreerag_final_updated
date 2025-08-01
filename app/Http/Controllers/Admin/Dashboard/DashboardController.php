@@ -616,6 +616,17 @@ class DashboardController extends Controller {
                   'message' => 'Business Sent For Design',
                   'url' => $baseUrl . '/owner/list-forwarded-to-design',
                    ];
+
+                    $received_design_estimation = NotificationStatus::where('off_canvas_status',12)
+                    ->where('estimation_view','0')
+                    ->select('id')
+                    ->get();
+                    $received_design_for_estimation = $received_design_estimation->count();
+
+                    $notifications[] = ['admin_count' => $received_design_for_estimation,
+                        'message' => 'Design Dept Send Design to Estimation Dept',
+                        'url' => $baseUrl . '/estimationdept/list-new-requirements-received-for-estimation'
+                    ];
                    $business_data = AdminView::where('off_canvas_status', 28)
                                 ->where('is_view', '0')
                                 ->select('id')
@@ -760,7 +771,7 @@ class DashboardController extends Controller {
                 'message' => 'Dispatch Dept Production Dispatch Completed',
                'url' => $baseUrl . '/owner/list-product-dispatch-completed',
                 ];
-                $count = $business_count + $uploaded_design_count + $material_ask_prod_to_store_count + $received_correction_design_count + $material_ask_by_store_to_purchase_count + $Purchase_order_need_to_check_count + $purchase_order_approved_count
+                $count = $business_count + $uploaded_design_count + $received_design_for_estimation + $material_ask_prod_to_store_count + $received_correction_design_count + $material_ask_by_store_to_purchase_count + $Purchase_order_need_to_check_count + $purchase_order_approved_count
                  + $po_send_to_vendor_count + $gate_pass_generate_count + $quality_dept_material_received_in_store_count + $production_completed_count + $logistics_send_to_fianance_count
                  + $received_fianance_to_dispatch_count + $dispatch_completed_count;
        
@@ -1074,7 +1085,7 @@ class DashboardController extends Controller {
                     $received_design_for_estimation = $received_design->count();
 
                     $notifications[] = ['admin_count' => $received_design_for_estimation,
-                        'message' => 'New Design Received ',
+                        'message' => 'New Design Received for Estimation',
                         'url' => $baseUrl . '/estimationdept/list-new-requirements-received-for-estimation'
                     ];
 
