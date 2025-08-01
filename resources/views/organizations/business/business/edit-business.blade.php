@@ -67,12 +67,12 @@
                                                     @if ($key == 0)
                                                         <div class="row">
                                                              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                <label for="project_name">Project Name : <span
+                                                                <label for="project_name">PO Number : <span
                                                                         class="text-danger">*</span></label>
                                                                 <input class="form-control" name="project_name"
                                                                     id="project_name"
                                                                     placeholder="Enter the customer po number"
-                                                                    value="@if (old('project_name')) {{ trim(old('project_name')) }}@else{{ trim($editDataNew->project_name) }} @endif">
+                                                                    value="@if (old('project_name')) {{ trim(old('project_name')) }}@else{{ trim($editDataNew->customer_po_number) }} @endif">
                                                             </div>
 
                                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -105,7 +105,7 @@
                                                             <th>Description</th>
                                                             <th>Quantity</th>
                                                             <th>Rate</th>
-                                                              <th>Total</th>
+                                                            <th>Total Amount</th>
                                                             <th>
                                                                 <button type="button"
                                                                     class="btn btn-sm btn-success font-18 mr-1"
@@ -137,36 +137,20 @@
                                                                         class="form-control"
                                                                         @if (!($editDataNew->business_status_id === 1112 && $editDataNew->design_status_id === 1111)) disabled @endif />
                                                                 </td>
-                                                                {{-- <td>
+                                                                <td>
                                                                     <input type="text"
                                                                         name="quantity_{{ $key }}"
                                                                         value="{{ $editDataNew->quantity }}"
-                                                                        class="form-control"
+                                                                        class="form-control quantity"
                                                                         @if (!($editDataNew->business_status_id === 1112 && $editDataNew->design_status_id === 1111)) disabled @endif />
-                                                                </td> --}}
-                                                                <td>
-                                                                <input type="text"
-                                                                    name="quantity_{{ $key }}"
-                                                                    value="{{ $editDataNew->quantity }}"
-                                                                    class="form-control quantity"
-                                                                    ... />
                                                                 </td>
                                                                 <td>
-                                                                <input type="text"
-                                                                    name="rate_{{ $key }}"
-                                                                    value="{{ $editDataNew->rate }}"
-                                                                    class="form-control rate"
-                                                                    ... />
-                                                                </td>
-                                                                {{-- <td>
                                                                     <input type="text" name="rate_{{ $key }}"
                                                                         value="{{ $editDataNew->rate }}"
-                                                                        class="form-control"
+                                                                        class="form-control rate"
                                                                         @if (!($editDataNew->business_status_id === 1112 && $editDataNew->design_status_id === 1111)) disabled @endif />
-                                                                </td> --}}
-                                                               <td>
-        <input type="number" class="form-control total_amount" value="{{ $item->total_amount ?? 0 }}" readonly>
-    </td>
+                                                                </td>
+                                                                  <td><input type="text" name="total_{{ $key }}" class="form-control total" readonly value="{{ $editDataNew->quantity * $editDataNew->rate }}"></td>
                                                                 <td>
                                                                     <a data-id="{{ $editDataNew->id }}"
                                                                         class="btn btn-sm btn-danger font-18 ml-2 remove-row"
@@ -178,17 +162,19 @@
                                                             </tr>
                                                         @endforeach
 
-
+<tfoot>
+        <tr>
+            <td colspan="5" class="text-right font-weight-bold">Grand Total</td>
+            <td colspan="2">
+                <input type="text" id="grandTotal" name="grand_total_amount" class="form-control" readonly>
+            </td>
+        </tr>
+    </tfoot>
                                                     </table>
                                                 </div>
-                                               
+
                                                 @foreach ($editData as $key => $editDataNew)
                                                     @if ($key == 0)
-                                                    <input type="hidden" name="grand_total_amount" id="grand_total_input" value="{{ old('grand_total_amount', $editDataNew->grand_total_amount) }}">
-
-                                                    <strong>Grand Total: ₹ <span id="grand_total_amount">{{ $businessDetails->grand_total_amount ?? 0 }}</span></strong>
-
-
                                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                             <label for="po_validity">PO Validity: <span
                                                                     class="text-danger">*</span></label>
@@ -258,328 +244,169 @@
         <input type="hidden" name="delete_id" id="delete_id" value="">
     </form>
 
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
 
-    <script>
-        $(document).ready(function() {
-            // Trim whitespace on form submission
-            $("#addEmployeeForm").on('submit', function() {
-                // Trim the input value before submitting the form
-                var poNumberInput = $('#customer_po_number');
-                var remarksInput = $('#remarks');
-                poNumberInput.val($.trim(poNumberInput.val()));
-                remarksInput.val($.trim(remarksInput.val()));
-            });
+<script>
+    function calculateTotalAmount(row) {
+    const quantity = parseFloat(row.find('.quantity').val()) || 0;
+    const rate = parseFloat(row.find('.rate').val()) || 0;
+    const total = quantity * rate;
+    row.find('.total').val(total.toFixed(2));
+    calculateGrandTotal();
+}
 
+function calculateGrandTotal() {
+    let grandTotal = 0;
+    $('.total').each(function () {
+        const val = parseFloat($(this).val());
+        if (!isNaN(val)) grandTotal += val;
+    });
+    $('#grandTotal').val(grandTotal.toFixed(2));
+}
+    $(document).ready(function() {
+        // Trim whitespace on form submission
+        $("#businessForm").on('submit', function() {
+            var poNumberInput = $('#customer_po_number');
+            var remarksInput = $('#remarks');
+            poNumberInput.val($.trim(poNumberInput.val()));
+            remarksInput.val($.trim(remarksInput.val()));
+        });
 
-            var validator = $("#addEmployeeForm").validate({
-                ignore: [], // Validate hidden inputs as well
-                rules: {
-                    title: {
-                        required: true,
-                        maxlength: 50 // Maximum length of 50 characters
-                    },
-                    customer_po_number: {
-                        required: true,
-                        minlength: 10,
-                        maxlength: 16,
-                        digits: true // Digits only
-                    },
-                    po_validity: {
-                        required: true,
-                        date: true // Date validation
-                    },
-                    remarks: {
-                        required: true,
-                        maxlength: 255 // Maximum length of 255 characters
-                    },
-                    'addmore[0][product_name]': {
-                        required: true,
-                        maxlength: 100 // Maximum length of 100 characters
-                    },
-                    'addmore[0][description]': {
-                        required: true,
-                        maxlength: 255 // Maximum length of 255 characters
-                    },
-                    'addmore[0][quantity]': {
-                        required: true,
-                        digits: true, // Digits only
-                        min: 1 // Minimum value 1
-                    },
-                    'addmore[0][rate]': {
-                        required: true,
-                        number: true, // Number validation
-                        min: 0.01 // Minimum value 0.01
-                    }
+        var validator = $("#businessForm").validate({
+            ignore: [],
+            rules: {
+                title: {
+                    required: true,
+                    maxlength: 50
                 },
+                customer_po_number: {
+                    required: true,
+                    minlength: 10,
+                    maxlength: 16,
+                    digits: true
+                },
+                po_validity: {
+                    required: true,
+                    date: true
+                },
+                remarks: {
+                    required: true,
+                    maxlength: 255
+                }
+            },
+            messages: {
+                title: {
+                    required: "Please enter Customer Name.",
+                    maxlength: "Customer Name must be at most 50 characters long."
+                },
+                customer_po_number: {
+                    required: "Please enter PO number.",
+                    minlength: "PO number must be at least 10 characters long.",
+                    maxlength: "PO number must be at most 16 characters long.",
+                    digits: "PO number can only contain digits."
+                },
+                po_validity: {
+                    required: "Please enter PO validity.",
+                    date: "Please enter a valid date."
+                },
+                remarks: {
+                    required: "Please enter remarks.",
+                    maxlength: "Remarks must be at most 255 characters long."
+                }
+            },
+            errorPlacement: function(error, element) {
+                error.addClass('text-danger');
+                if (element.closest('.form-group').length) {
+                    element.closest('.form-group').append(error);
+                } else if (element.closest('td').length) {
+                    element.closest('td').append(error);
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+
+        function initializeValidation(row) {
+            row.find('.product_name').rules("add", {
+                required: true,
+                maxlength: 100,
                 messages: {
-                    title: {
-                        required: "Please enter Customer Name.",
-                        maxlength: "Customer Name must be at most 50 characters long."
-                    },
-                    customer_po_number: {
-                        required: "Please enter PO number.",
-                        minlength: "PO number must be at least 10 characters long.",
-                        maxlength: "PO number must be at most 16 characters long.",
-                        digits: "PO number can only contain digits."
-                    },
-                    po_validity: {
-                        required: "Please enter PO validity.",
-                        date: "Please enter a valid date."
-                    },
-                    remarks: {
-                        required: "Please enter remarks.",
-                        maxlength: "Remarks must be at most 255 characters long."
-                    },
-                    'addmore[0][product_name]': {
-                        required: "Please enter the Product Name.",
-                        maxlength: "Product Name must be at most 100 characters long."
-                    },
-                    'addmore[0][description]': {
-                        required: "Please enter the Description.",
-                        maxlength: "Description must be at most 255 characters long."
-                    },
-                    'addmore[0][quantity]': {
-                        required: "Please enter the Quantity.",
-                        digits: "Please enter only digits for Quantity.",
-                        min: "Quantity must be at least 1."
-                    },
-                    'addmore[0][rate]': {
-                        required: "Please enter the Rate.",
-                        number: "Please enter a valid number for Rate.",
-                        min: "Rate must be a positive number."
-                    }
-                },
-                errorPlacement: function(error, element) {
-                    error.addClass('text-danger'); // Add Bootstrap text-danger class for styling
-                    if (element.closest('.form-group').length) {
-                        element.closest('.form-group').append(error);
-                    } else if (element.closest('td').length) {
-                        element.closest('td').append(error);
-                    } else {
-                        error.insertAfter(element);
-                    }
+                    required: "Please enter the Product Name.",
+                    maxlength: "Product Name must be at most 100 characters long."
                 }
             });
-
-            initializeValidation($("#purchase_order_table tbody tr"));
-
-            function initializeValidation(row) {
-                row.find('.product_name').rules("add", {
-                    required: true,
-                    maxlength: 100, // Maximum length of 100 characters
-                    messages: {
-                        required: "Please enter the Product Name.",
-                        maxlength: "Product Name must be at most 100 characters long."
-                    }
-                });
-                row.find('.description').rules("add", {
-                    required: true,
-                    maxlength: 255, // Maximum length of 255 characters
-                    messages: {
-                        required: "Please enter the Description.",
-                        maxlength: "Description must be at most 255 characters long."
-                    }
-                });
-                row.find('.quantity').rules("add", {
-                    required: true,
-                    digits: true, // Digits only
-                    min: 1, // Minimum value 1
-                    messages: {
-                        required: "Please enter the Quantity.",
-                        digits: "Please enter only digits for Quantity.",
-                        min: "Quantity must be at least 1."
-                    }
-                });
-                row.find('.rate').rules("add", {
-                    required: true,
-                    number: true, // Number validation
-                    min: 0.01, // Minimum value 0.01
-                    messages: {
-                        required: "Please enter the Rate.",
-                        number: "Please enter a valid number for Rate.",
-                        min: "Rate must be a positive number."
-                    }
-                });
-            }
-
-            var rowCount = {{ count($editData) }};
-
-            $("#add_more_btn").click(function() {
-                rowCount++;
-                var newRow = `
-                    <tr>
-                        <td><input type="text" name="addmore[${rowCount}][business_id]" class="form-control" value="${rowCount}"></td>
-                        <td>
-                            <input type="hidden" name="design_id_${rowCount}" value="0">
-                            <input type="text" name="addmore[${rowCount}][product_name]" class="form-control product_name" placeholder="Enter product name" />
-                        </td>
-                        <td><input type="text" name="addmore[${rowCount}][description]" class="form-control description" placeholder="Enter description" /></td>
-                        <td><input type="text" name="addmore[${rowCount}][quantity]" class="form-control quantity" placeholder="Enter quantity" /></td>
-                        <td><input type="text" name="addmore[${rowCount}][rate]" class="form-control rate" placeholder="Enter rate" /></td>
-                       <td><input type="text"  name="addmore[${rowCount}][total_amount]"  class="form-control total_amount"  > </td>
-                        <td>
-                            <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>`;
-                $("#purchase_order_table tbody").append(newRow);
-                initializeValidation($("#purchase_order_table tbody tr:last-child"));
+            row.find('.description').rules("add", {
+                required: true,
+                maxlength: 255,
+                messages: {
+                    required: "Please enter the Description.",
+                    maxlength: "Description must be at most 255 characters long."
+                }
             });
-
-            $(document).on("click", ".remove-row", function() {
-                $(this).closest("tr").remove();
-                rowCount--; // Decrease the row count
-                validator.resetForm(); // Reset validation state after removing a row
+            row.find('.quantity').rules("add", {
+                required: true,
+                digits: true,
+                min: 1,
+                messages: {
+                    required: "Please enter the Quantity.",
+                    digits: "Please enter only digits for Quantity.",
+                    min: "Quantity must be at least 1."
+                }
             });
-
-            $("#purchase_order_table tbody tr").each(function() {
-                initializeValidation($(this));
+            row.find('.rate').rules("add", {
+                required: true,
+                number: true,
+                min: 0.01,
+                messages: {
+                    required: "Please enter the Rate.",
+                    number: "Please enter a valid number for Rate.",
+                    min: "Rate must be a positive number."
+                }
             });
-        });
-        // 👉 Add this block to calculate total & grand total on page load
-$("#purchase_order_table tbody tr").each(function() {
-    calculateRowTotal($(this));
-});
-calculateGrandTotal();
-    </script>
- <script>
-    function calculateRowTotal(row) {
-        let quantity = parseFloat(row.find('.quantity').val()) || 0;
-        let rate = parseFloat(row.find('.rate').val()) || 0;
-        let total = quantity * rate;
-        row.find('.total_amount').val(total.toFixed(2));
-    }
-
-    function calculateGrandTotal() {
-        let grandTotal = 0;
-        $('.total_amount').each(function() {
-            let val = parseFloat($(this).val()) || 0;
-            grandTotal += val;
-        });
-        $('#grand_total_amount').text(grandTotal.toFixed(2));
-    }
-
-    $(document).ready(function() {
-        // Initial calculation
-        $("#purchase_order_table tbody tr").each(function() {
-            calculateRowTotal($(this));
-        });
-        calculateGrandTotal();
-    });
-
-    // On quantity or rate input
-    $(document).on('input', '.quantity, .rate', function() {
-        let row = $(this).closest('tr');
-        calculateRowTotal(row);
-        calculateGrandTotal();
-    });
-
-    $(document).on("click", ".remove-row", function() {
-        $(this).closest("tr").remove();
-        calculateGrandTotal();
-    });
-</script>
-
-        {{-- <script>
-            function calculateGrandTotal() {
-    let grandTotal = 0;
-    $('.total_amount').each(function() {
-        let val = parseFloat($(this).val()) || 0;
-        grandTotal += val;
-    });
-    $('#grand_total_amount').text(grandTotal.toFixed(2));
         }
 
-        // Recalculate on rate/quantity change
-        $(document).on('input', '.quantity, .rate', function() {
-            let row = $(this).closest('tr');
-            calculateRowTotal(row);
-            calculateGrandTotal();
+        $(document).on('input', '.quantity, .rate', function () {
+            const row = $(this).closest('tr');
+              calculateTotalAmount(row);
         });
 
-        // Also recalculate on row remove
+        var rowCount = $("#purchase_order_table tbody tr").length;
+
+        $("#add_more_btn").click(function() {
+            rowCount++;
+            const newRow = `
+                <tr>
+                    <td><input type="text" name="addmore[${rowCount}][business_id]" class="form-control" value="${rowCount}"></td>
+                    <td>
+                        <input type="hidden" name="design_id_${rowCount}" value="0">
+                        <input type="text" name="addmore[${rowCount}][product_name]" class="form-control product_name" placeholder="Enter product name" />
+                    </td>
+                    <td><input type="text" name="addmore[${rowCount}][description]" class="form-control description" placeholder="Enter description" /></td>
+                    <td><input type="text" name="addmore[${rowCount}][quantity]" class="form-control quantity" placeholder="Enter quantity" /></td>
+                    <td><input type="text" name="addmore[${rowCount}][rate]" class="form-control rate" placeholder="Enter rate" /></td>
+                    <td><input type="text" name="addmore[${rowCount}][total]" class="form-control total" readonly></td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>`;
+            $("#purchase_order_table tbody").append(newRow);
+            const $lastRow = $("#purchase_order_table tbody tr:last-child");
+            initializeValidation($lastRow);
+        });
+
         $(document).on("click", ".remove-row", function() {
             $(this).closest("tr").remove();
-            validator.resetForm();
-            calculateGrandTotal();
+               calculateGrandTotal();
         });
 
-        </script> --}}
-        <script>
-    function calculateRowTotal(row) {
-        let quantity = parseFloat(row.find('.quantity').val()) || 0;
-        let rate = parseFloat(row.find('.rate').val()) || 0;
-        let total = quantity * rate;
-        row.find('.total_amount').val(total.toFixed(2));
-    }
-
-    function calculateGrandTotal() {
-        let grandTotal = 0;
-        $('.total_amount').each(function () {
-            let val = parseFloat($(this).val()) || 0;
-            grandTotal += val;
+        $("#purchase_order_table tbody tr").each(function() {
+            initializeValidation($(this));
+            calculateTotalAmount($(this));
         });
-
-        // Update display and hidden input
-        $('#grand_total_amount').text(grandTotal.toFixed(2));
-        $('#grand_total_input').val(grandTotal.toFixed(2));
-    }
-
-    // Recalculate on rate/quantity change
-    $(document).on('input', '.quantity, .rate', function () {
-        let row = $(this).closest('tr');
-        calculateRowTotal(row);
-        calculateGrandTotal();
-    });
-
-    // Recalculate on row remove
-    // $(document).on("click", ".remove-row", function () {
-    //     $(this).closest("tr").remove();
-    //     if (typeof validator !== 'undefined') {
-    //         validator.resetForm();
-    //     }
-    //     calculateGrandTotal();
-    // });
-$(document).on("click", ".remove-row", function () {
-    let button = $(this);
-    let row = button.closest("tr");
-    let deleteId = button.data('id'); // Only present for existing DB records
-
-    // Case: new (unsaved) row
-    if (!deleteId || deleteId == 0) {
-        row.remove();
-        calculateGrandTotal();
-        return;
-    }
-
-    // Case: saved row, confirm before delete
-    Swal.fire({
-        title: "Are you sure?",
-        text: "This record will be permanently deleted.",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $("#delete_id").val(deleteId);
-            $("#deleteform").submit();
-        }
-    });
-});
-
-    // Optional: trigger total calculation on page load
-    $(document).ready(function () {
-        $('#purchase_order_table tbody tr').each(function () {
-            calculateRowTotal($(this));
-        });
-        calculateGrandTotal();
     });
 </script>
-
 @endsection
