@@ -115,19 +115,16 @@ class DesignsRepository  {
             config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_ESTIMATION_DEPT_FIRST_TIME')
         ];
 
-        $send_estimation = config('constants.ESTIMATION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_ESTIMATION');
-
-        $data_output = EstimationModel::leftJoin('businesses', function($join) {
+        $data_output = EstimationModel::leftJoin('businesses', function ($join) {
                 $join->on('estimation.business_id', '=', 'businesses.id');
             })
-            ->leftJoin('business_application_processes', function($join) {
+            ->leftJoin('business_application_processes', function ($join) {
                 $join->on('estimation.business_id', '=', 'business_application_processes.business_id');
             })
-            ->leftJoin('designs', function($join) {
+            ->leftJoin(DB::raw('(SELECT * FROM designs d1 WHERE d1.id IN (SELECT MAX(id) FROM designs GROUP BY business_id)) as designs'), function ($join) {
                 $join->on('estimation.business_details_id', '=', 'designs.business_id');
             })
             ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
-            // ->where('business_application_processes.design_send_to_estimation', $send_estimation) // Uncomment if needed
             ->where('businesses.is_active', true)
             ->where('businesses.is_deleted', 0)
             ->select(
@@ -137,7 +134,7 @@ class DesignsRepository  {
                 'businesses.remarks',
                 'businesses.is_active',
                 'businesses.created_at',
-                'estimation.updated_at',
+                DB::raw('MAX(estimation.updated_at) as updated_at'),
                 'estimation.business_id',
                 'designs.id as design_id',
                 'designs.design_image',
@@ -151,23 +148,23 @@ class DesignsRepository  {
                 'businesses.remarks',
                 'businesses.is_active',
                 'businesses.created_at',
-                'estimation.updated_at',
                 'estimation.business_id',
                 'designs.id',
                 'designs.design_image',
                 'designs.bom_image',
                 'designs.business_id'
             )
-            ->orderBy('estimation.updated_at', 'desc')
+            ->orderBy('updated_at', 'desc')
             ->get();
 
         return $data_output;
 
     } catch (\Exception $e) {
         \Log::error('Error in getAll(): ' . $e->getMessage());
-        return response()->json(['status' => false, 'message' => 'Failed to fetch data.'], 500);
+        return collect(); // return an empty collection to avoid type errors
     }
 }
+
 
     public function getById($id){
     try {
