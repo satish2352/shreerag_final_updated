@@ -49,16 +49,25 @@ class DesignUploadController extends Controller
             return $e;
         }
     } 
+public function index() {
+    try {
+        $data_output = $this->service->getAll();
+        return view('organizations.designer.design-upload.list-design-upload', compact('data_output'));
+    } catch (\Exception $e) {
+        \Log::error('Controller index() error: ' . $e->getMessage());
+        return back()->with('status', 'error')->with('msg', 'Something went wrong while fetching data.');
+    }
+}
 
     
-    public function index(){
-        try {
-            $data_output = $this->service->getAll();
-            return view('organizations.designer.design-upload.list-design-upload', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }     
+    // public function index(){
+    //     try {
+    //         $data_output = $this->service->getAll();
+    //         return view('organizations.designer.design-upload.list-design-upload', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }     
     public function add($id)
     {
         try {

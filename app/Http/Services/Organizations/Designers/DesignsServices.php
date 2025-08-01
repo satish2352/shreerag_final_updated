@@ -33,15 +33,15 @@ use Config;
             return $e;
         }
     }
-    public function getAll(){
-        try {
-            $data_output = $this->repo->getAll();
-        
-            return $data_output;
-        } catch (\Exception $e) {
-            return $e;
-        }
+  public function getAll() {
+    try {
+        return $this->repo->getAll();
+    } catch (\Exception $e) {
+        \Log::error('Service getAll() error: ' . $e->getMessage());
+        throw $e;
     }
+}
+
    
    
     public function getById($id){

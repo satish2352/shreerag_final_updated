@@ -152,13 +152,13 @@ class DesignsRepository  {
                 'businesses.is_active',
                 'businesses.created_at',
                 'businesses.updated_at',
-                'businesses.business_id',
+                'estimation.business_id',
                 'designs.id',
                 'designs.design_image',
                 'designs.bom_image',
                 'designs.business_id'
             )
-            ->orderBy('businesses.updated_at', 'desc')
+            ->orderBy('estimation.updated_at', 'desc')
             ->get();
 
         return $data_output;
