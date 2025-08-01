@@ -32,19 +32,34 @@ class AllListRepository  {
            ->where('business_application_processes.design_send_to_estimation',$send_estimation)
           ->where('businesses.is_active', true)
           ->where('businesses.is_deleted', 0)
-          ->groupBy('businesses.id', 'businesses.project_name', 'businesses.customer_po_number', 'businesses.created_at' , 'businesses.grand_total_amount','businesses.title', 'businesses.remarks', 'businesses.is_active', 'estimation.business_id', 'businesses.updated_at')
           ->select(
-              'businesses.id',
-              'businesses.project_name',
-              'businesses.customer_po_number',
-              'businesses.title',
-              'businesses.remarks',
-              'businesses.grand_total_amount',
-              'businesses.is_active',
-              'businesses.created_at',
-              'estimation.business_id',
-              'businesses.updated_at'
-          )->orderBy('estimation.updated_at', 'desc')
+                'businesses.id',
+                'businesses.project_name',
+                'businesses.customer_po_number',
+                'businesses.title',
+                'businesses.remarks',
+                'businesses.grand_total_amount',
+                'businesses.is_active',
+                'businesses.created_at',
+                'estimation.business_id',
+                DB::raw('MAX(estimation.updated_at) as updated_at')
+                
+            )
+            ->groupBy(
+                'businesses.id',
+                'businesses.project_name',
+                'businesses.customer_po_number',
+                'businesses.title',
+                'businesses.remarks',
+                'businesses.grand_total_amount',
+                'businesses.is_active',
+                'businesses.created_at',
+                'estimation.business_id'
+              
+            )
+            ->orderBy('estimation_updated_at', 'desc')
+
+          ->orderBy('estimation.updated_at', 'desc')
           ->get();
 
         return $data_output;
