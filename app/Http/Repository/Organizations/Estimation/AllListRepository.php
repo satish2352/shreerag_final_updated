@@ -18,21 +18,21 @@ use App\Models\ {
 use Config;
 
 class AllListRepository  {
-  public function getAllNewRequirement(){
+ public function getAllNewRequirement(){
     try {
-         $send_estimation =config('constants.ESTIMATION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_ESTIMATION');
-         
+        $send_estimation = config('constants.ESTIMATION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_ESTIMATION');
+
         $data_output = BusinessApplicationProcesses::leftJoin('estimation', function($join) {
-            $join->on('business_application_processes.business_id', '=', 'estimation.business_id');
-          })
-          ->leftJoin('businesses', function($join) {
-            $join->on('business_application_processes.business_id', '=', 'businesses.id');
-          })
-           ->whereNull('business_application_processes.bom_estimation_send_to_owner')
-           ->where('business_application_processes.design_send_to_estimation',$send_estimation)
-          ->where('businesses.is_active', true)
-          ->where('businesses.is_deleted', 0)
-          ->select(
+                $join->on('business_application_processes.business_id', '=', 'estimation.business_id');
+            })
+            ->leftJoin('businesses', function($join) {
+                $join->on('business_application_processes.business_id', '=', 'businesses.id');
+            })
+            ->whereNull('business_application_processes.bom_estimation_send_to_owner')
+            ->where('business_application_processes.design_send_to_estimation', $send_estimation)
+            ->where('businesses.is_active', true)
+            ->where('businesses.is_deleted', 0)
+            ->select(
                 'businesses.id',
                 'businesses.project_name',
                 'businesses.customer_po_number',
@@ -43,7 +43,6 @@ class AllListRepository  {
                 'businesses.created_at',
                 'estimation.business_id',
                 DB::raw('MAX(estimation.updated_at) as updated_at')
-                
             )
             ->groupBy(
                 'businesses.id',
@@ -55,12 +54,9 @@ class AllListRepository  {
                 'businesses.is_active',
                 'businesses.created_at',
                 'estimation.business_id'
-              
             )
-            ->orderBy('updated_at', 'desc')
-
-          ->orderBy('estimation.updated_at', 'desc')
-          ->get();
+            ->orderBy('updated_at', 'desc') // ✅ Keep this only
+            ->get();
 
         return $data_output;
     } catch (\Exception $e) {
