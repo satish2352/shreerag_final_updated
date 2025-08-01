@@ -128,7 +128,7 @@ button.pd-setting-ed {
                                              <td>{{ ucwords($data->total_amount) }}</td>
 
 
-                                               @if (session('role_id') === 15)
+                                               @if (session('role_id') == 15)
                                                       <td>
                                                 <div style="display: inline-block; align-items: center;">
                                                     <a href="{{ route('edit-estimation', base64_encode($data->business_details_id)) }}" data-toggle="tooltip"  title="Edit">

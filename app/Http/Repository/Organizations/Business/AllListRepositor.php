@@ -948,23 +948,24 @@ public function getRevisedEstimationBOM()
             ->where('business_application_processes.resend_bom_estimation_send_to_owner', $revised)
             ->where('businesses.is_active', true)
             ->where('businesses.is_deleted', 0)
-            ->select(
+           ->select(
                 'businesses.id',
                 'businesses.project_name',
                 'businesses.customer_po_number',
-                'businesses.title',
                 'businesses.remarks',
-                'business_application_processes.updated_at'
+                'businesses.grand_total_amount',
+                DB::raw('MAX(estimation.updated_at) as updated_at'),
+                DB::raw('MAX(estimation.business_id) as business_id'),
+                DB::raw('MAX(estimation.business_details_id) as business_details_id')
             )
             ->groupBy(
                 'businesses.id',
                 'businesses.project_name',
                 'businesses.customer_po_number',
-                'businesses.title',
                 'businesses.remarks',
-                'business_application_processes.updated_at'
+                'businesses.grand_total_amount'
             )
-           ->orderBy('business_application_processes.updated_at', 'desc')
+            ->orderBy('updated_at', 'desc') // use the alias
             ->get();
 
         return $data_output; // Must always return collection, never true/false
