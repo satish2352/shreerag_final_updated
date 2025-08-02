@@ -951,6 +951,9 @@ public function getRevisedEstimationBOM()
         $data_output = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
                 $join->on('business_application_processes.business_id', '=', 'businesses.id');
             })
+              ->leftJoin('estimation', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
+            })
             ->where('business_application_processes.resend_bom_estimation_send_to_owner', $revised)
             ->where('businesses.is_active', true)
             ->where('businesses.is_deleted', 0)
@@ -971,7 +974,7 @@ public function getRevisedEstimationBOM()
                 'businesses.remarks',
                 'businesses.grand_total_amount'
             )
-            ->orderBy('updated_at', 'desc') // use the alias
+            // ->orderBy('updated_at', 'desc') // use the alias
             ->get();
 
         return $data_output; // Must always return collection, never true/false
@@ -980,6 +983,7 @@ public function getRevisedEstimationBOM()
         return collect(); // return empty collection instead of boolean
     }
 }
+
 
 public function getRevisedEstimationBOMBusinessWise($id)
 {
