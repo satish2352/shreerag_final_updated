@@ -74,7 +74,7 @@
                                                  <th data-field="design_image" data-editable="false">Design</th>
                                                   <th data-field="bom_image" data-editable="false">Estimated BOM</th>
                                                    <th data-field="total_estimation_amount" data-editable="false">Total Estimation Amount</th>
-                                                    @if (session('role_id') === 15)
+                                                    @if (session('role_id') == 15)
                                                        <th data-field="action" data-editable="false">Action</th>
                                                          @else
                                                         
@@ -103,7 +103,7 @@
                                                             alt="bill of material">Click to download</a>
                                                     </td>
                                                        <td>{{ ucwords($data->total_estimation_amount) }}</td>
-                                                @if (session('role_id') === 15)
+                                                @if (session('role_id') == 15)
                                                          <td>
                                                         <form action="{{ route('send-to-production',$data->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to send this to production?');">
                                                             @csrf
