@@ -664,14 +664,17 @@ class AllListRepositor
           return $e->getMessage();
       }
   }
-   public function loadDesignSubmittedForEstimation(){
+public function loadDesignSubmittedForEstimation()
+{
     try {
-        $array_to_be_check = config('constants.HIGHER_AUTHORITY.ESTIMATION_DEPT_THROUGH_RECEIVED_BOM');    
+        // Get the constant value that indicates BOM sent to estimation department
+        $array_to_be_check = config('constants.HIGHER_AUTHORITY.ESTIMATION_DEPT_THROUGH_RECEIVED_BOM');
 
-        $data_output = EstimationModel::leftJoin('businesses', function($join) {
+        // Build the query
+        $data_output = EstimationModel::leftJoin('businesses', function ($join) {
                 $join->on('estimation.business_id', '=', 'businesses.id');
             })
-            ->leftJoin('business_application_processes', function($join) {
+            ->leftJoin('business_application_processes', function ($join) {
                 $join->on('estimation.business_id', '=', 'business_application_processes.business_id');
             })
             ->where('business_application_processes.bom_estimation_send_to_owner', $array_to_be_check)
@@ -679,13 +682,14 @@ class AllListRepositor
             ->whereNull('business_application_processes.owner_bom_rejected')
             ->where('businesses.is_active', true)
             ->where('businesses.is_deleted', 0)
-            ->distinct('businesses.id')
-             ->select(
+            ->select(
                 'businesses.id',
                 'businesses.project_name',
                 'businesses.customer_po_number',
                 'businesses.remarks',
                 'businesses.grand_total_amount',
+
+                // Use aggregate functions for estimation fields
                 \DB::raw('MAX(estimation.updated_at) as updated_at'),
                 \DB::raw('MAX(estimation.business_id) as business_id'),
                 \DB::raw('MAX(estimation.business_details_id) as business_details_id')
@@ -695,20 +699,18 @@ class AllListRepositor
                 'businesses.project_name',
                 'businesses.customer_po_number',
                 'businesses.remarks',
-                  'businesses.grand_total_amount',
+                'businesses.grand_total_amount'
             )
-            ->orderBy('estimation.updated_at', 'desc')
+            // Use alias 'updated_at' (from MAX function) for ordering
+            ->orderBy('updated_at', 'desc')
             ->get();
 
         return $data_output;
     } catch (\Exception $e) {
+        // Return the exception for debugging/logging
         return $e;
     }
 }
-
-
-
-
 public function loadDesignSubmittedForEstimationBusinessWise($business_details_id)
 {
     try {
