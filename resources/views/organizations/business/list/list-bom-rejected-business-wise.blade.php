@@ -73,7 +73,7 @@
                                                  <th data-field="design_image" data-editable="false">Design</th>
                                                   <th data-field="bom_image" data-editable="false">Estimated BOM</th>
                                                    <th data-field="total_estimation_amount" data-editable="false">Total Estimation Amount</th>
-                                                    @if (session('role_id') === 15)
+                                                    @if (session('role_id') == 15)
                                                        <th data-field="rejected_remark_by_owner" data-editable="false">Rejected Remark By Owner</th>
                                                        <th data-field="action" data-editable="false">Action</th>
                                                          @else
