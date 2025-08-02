@@ -102,7 +102,7 @@
                                                             alt="bill of material">Click to download</a>
                                                     </td>
                                                        <td>{{ ucwords($data->total_estimation_amount) }}</td>
-                                                          @if (session('role_id') === 15)
+                                                          @if (session('role_id') == 15)
                                                           <td>{{ ucwords($data->rejected_remark_by_owner) }}</td>
                                                          <td>
                                                                     <a href="{{ route('edit-revised-bom-material-estimation', base64_encode($data->id)) }}">
