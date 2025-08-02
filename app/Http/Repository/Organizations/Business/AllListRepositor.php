@@ -855,6 +855,9 @@ public function getRejectEstimationBOM()
         $data_output = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
                 $join->on('business_application_processes.business_id', '=', 'businesses.id');
             })
+            ->leftJoin('design_revision_for_prod', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+            })
             ->where('business_application_processes.owner_bom_rejected', $rejected)
             ->where('businesses.is_active', true)
             ->where('businesses.is_deleted', 0)
@@ -864,7 +867,7 @@ public function getRejectEstimationBOM()
                 'businesses.customer_po_number',
                 'businesses.title',
                 'businesses.remarks',
-                'businesses.updated_at'
+                'design_revision_for_prod.updated_at'
             )
             ->groupBy(
                 'businesses.id',
@@ -872,9 +875,10 @@ public function getRejectEstimationBOM()
                 'businesses.customer_po_number',
                 'businesses.title',
                 'businesses.remarks',
-                'businesses.updated_at'
+                'design_revision_for_prod.updated_at'
             )
-            ->orderBy('business_application_processes.updated_at', 'desc')->get();
+            // ->orderBy('updated_at', 'desc')
+            ->get();
            
 
         return $data_output; // Must always return collection, never true/false
