@@ -5,7 +5,7 @@
         background-color: #8cd9b3 !important;
     }
     </style>
-    <div class="row">
+    <div class="row" id="printableArea">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list">
                 <div class="sparkline12-hd">
@@ -227,7 +227,9 @@
                                                             style="width:150px; height:150px; background-color: aliceblue;"
                                                             alt=" No Signature" />
                                                     </div>
-
+  <a style="padding-bottom: 100px; padding-left:20px;">
+        <button data-toggle="tooltip" onclick="printGRN()"  style="margin-top: 20px;">Print</button>
+    </a>
 
 
                                                 </div>
@@ -244,4 +246,68 @@
             </div>
         </div>
     </div>
+   <script>
+   function printGRN() {
+    var contentToPrint = document.getElementById("printableArea").innerHTML;
+    var printWindow = window.open('', '', 'height=800,width=1200');
+
+    printWindow.document.write('<html><head><title>GRN Details</title>');
+    printWindow.document.write('<style>');
+    printWindow.document.write(`
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            font-size: 11px;
+            text-align: center;
+            vertical-align: top;
+        }
+        th:first-child,
+        td:first-child {
+            text-align: left;
+            width: 25%; /* Give Description column more space */
+            word-wrap: break-word;
+        }
+        input, textarea {
+            border: none;
+            background: transparent;
+            font-size: 11px;
+            width: 100%;
+        }
+        img {
+            margin-top: 10px;
+            max-width: 150px;
+            height: auto;
+        }
+        @media print {
+            @page {
+                size: landscape;
+            }
+        }
+    `);
+    printWindow.document.write('</style></head><body>');
+    printWindow.document.write(contentToPrint);
+    printWindow.document.write('</body></html>');
+
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+}
+
+
+</script>
+
 @endsection

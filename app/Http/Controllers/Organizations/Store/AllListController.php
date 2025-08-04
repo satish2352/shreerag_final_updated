@@ -146,9 +146,9 @@ class AllListController extends Controller
             return $e;
         }
     }
-    public function getAllListMaterialReceivedFromQualityPOTrackingBusinessWise($id){
+    public function getAllListMaterialReceivedFromQualityPOTrackingBusinessWise(){
         try {
-            $data_output = $this->service->getAllListMaterialReceivedFromQualityPOTrackingBusinessWise($id);
+            $data_output = $this->service->getAllListMaterialReceivedFromQualityPOTrackingBusinessWise();
            
             return view('organizations.store.list.list-material-received-from-quality-businesswise-po-tracking', compact('data_output'));
         } catch (\Exception $e) {

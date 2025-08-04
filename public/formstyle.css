@@ -1,0 +1,38 @@
+ .business-form label {
+            margin-top: 10px;
+        }
+
+        .business-form label.error {
+            color: red;
+            font-size: 12px;
+        }
+
+       .business-form .form-display-center {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center;
+        }
+
+        .business-form .red-text {
+            color: red;
+        }
+          .fixed-table-loading {
+            display: none;
+        }
+
+        #table thead th {
+            white-space: nowrap;
+        }
+
+        #table thead th {
+            width: 300px !important;
+            padding-right: 49px !important;
+            padding-left: 20px !important;
+        }
+
+        .custom-datatable-overright table tbody tr td {
+            padding-left: 19px !important;
+            padding-right: 5px !important;
+            font-size: 14px;
+            text-align: left;
+        }

@@ -65,9 +65,9 @@ class AllListServices
             return $e;
         }
     }
-    public function getAllListMaterialReceivedFromQualityPOTrackingBusinessWise($purchase_order_id){
+    public function getAllListMaterialReceivedFromQualityPOTrackingBusinessWise(){
         try {
-            $data_output = $this->repo->getAllListMaterialReceivedFromQualityPOTrackingBusinessWise($purchase_order_id);
+            $data_output = $this->repo->getAllListMaterialReceivedFromQualityPOTrackingBusinessWise();
             return $data_output;
         } catch (\Exception $e) {
             return $e;

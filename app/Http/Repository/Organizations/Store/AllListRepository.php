@@ -405,7 +405,7 @@ class AllListRepository  {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    public function getAllListMaterialReceivedFromQualityPOTrackingBusinessWise($id)
+    public function getAllListMaterialReceivedFromQualityPOTrackingBusinessWise()
     {
         try {
             $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
@@ -422,7 +422,7 @@ class AllListRepository  {
                     'tbl_grn_po_quantity_tracking.grn_id as tracking_grn_id' // GRN ID from tracking table
                 )
                 ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
-                ->where('businesses_details.id', $id)
+                // ->where('businesses_details.id', $id)
                 ->where('businesses_details.is_deleted', 0)
                 ->groupBy( 'purchase_orders.purchase_orders_id','tbl_grn_po_quantity_tracking.grn_id',   'purchase_orders.business_details_id','businesses_details.product_name', 
                 'businesses_details.description',)

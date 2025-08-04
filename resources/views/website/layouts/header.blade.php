@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="{{ asset('website/assets/css/meanmenu.css')}}" media="all">
     <link rel="stylesheet" href="{{ asset('website/assets/css/default.css')}}">
     <link rel="stylesheet" href="{{ asset('website/assets/css/style.css')}}">
+     <link rel="stylesheet" href="{{ asset('website/assets/css/formstyle.css')}}">
     <link rel="stylesheet" class="color-changing" href="{{ asset('website/assets/css/color.css')}}">
     <link rel="stylesheet" href="{{ asset('website/assets/css/responsive.css')}}">
     <link rel="stylesheet" href="{{ asset('website/assets/webfonts/fa-brands-400.eot')}}">

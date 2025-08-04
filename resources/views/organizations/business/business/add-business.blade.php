@@ -1,26 +1,6 @@
 @extends('admin.layouts.master')
 @section('content')
-    <style>
-        label {
-            margin-top: 10px;
-        }
-
-        label.error {
-            color: red;
-            font-size: 12px;
-        }
-
-        .form-display-center {
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center;
-        }
-
-        .red-text {
-            color: red;
-        }
-    </style>
-    <div class="container-fluid">
+    <div class="container-fluid business-form">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="sparkline12-list">
@@ -34,8 +14,6 @@
                     <div class="sparkline12-graph">
                         <div class="basic-login-form-ad">
                             <div class="row">
-
-
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     @if (Session::get('status') == 'success')
                                         <div class="col-md-12">
@@ -48,7 +26,6 @@
                                             </div>
                                         </div>
                                     @endif
-
                                     @if (Session::get('status') == 'error')
                                         <div class="col-md-12">
                                             <div class="alert alert-danger alert-dismissible" role="alert">
@@ -78,7 +55,7 @@
                                                                     @if ($errors->has('project_name'))
                                                                         <span class="red-text"><?php echo $errors->first('project_name', ':message'); ?></span>
                                                                     @endif
-                                                                </div>
+                                                                    </div>
                                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                                     <label for="customer_po_number">Customer PO Number :
                                                                         <span class="text-danger">*</span></label>
@@ -101,9 +78,18 @@
                                                                         <span class="red-text"><?php echo $errors->first('title', ':message'); ?></span>
                                                                     @endif
                                                                 </div>
+                                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                    <label for="po_validity">PO Validity : <span
+                                                                            class="text-danger">*</span></label>
+                                                                    <input type="date" class="form-control"
+                                                                        id="po_validity" value="{{ old('po_validity') }}"
+                                                                        name="po_validity"
+                                                                        placeholder="Enter PO Validity">
+                                                                    @if ($errors->has('po_validity'))
+                                                                        <span class="red-text"><?php echo $errors->first('po_validity', ':message'); ?></span>
+                                                                    @endif
+                                                                </div>
                                                                  </div>
-                                                                
-                                                                <div class="">
                                                                     <div class="col-md-12 col-sm-12">
                                                                         <div class="table-responsive">
                                                                             <table
@@ -111,13 +97,12 @@
                                                                                 id="purchase_order_table">
                                                                                 <thead>
                                                                                     <tr>
-                                                                                        <th>#</th>
+                                                                                        <th>Sr. No.</th>
                                                                                         <th class="col-sm-3">Product Name
                                                                                         </th>
                                                                                         <th class="col-md-3">Description
                                                                                         </th>
                                                                                         <th class="col-md-2">Quantity</th>
-                                                                                        {{-- <th class="col-md-2">Unit</th> --}}
                                                                                         <th class="col-md-2">Rate</th>
                                                                                            <th class="col-md-2">Total</th>
                                                                                         <th>
@@ -166,9 +151,6 @@
                                                                                                 name="addmore[0][quantity]"
                                                                                                 type="text">
                                                                                         </td>
-                                                                                        {{-- <td>
-                                                                                <input class="form-control unit" name="addmore[0][unit]"  type="text">
-                                                                            </td> --}}
                                                                                         <td>
                                                                                             <input class="form-control rate"
                                                                                                 name="addmore[0][rate]"
@@ -192,41 +174,12 @@
                                                                             </table>
                                                                         </div>
                                                                     </div>
-                                                                </div>
+                                                               
                                                                 <div class="col-md-12 text-right" style="margin-top: 10px;">
                                                                     <strong>Grand Total: ₹</strong> <span id="grand_total">0.00</span>
                                                                 </div>
-                                                                 <div>
-                                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                    <label for="po_validity">PO Validity : <span
-                                                                            class="text-danger">*</span></label>
-                                                                    <input type="date" class="form-control"
-                                                                        id="po_validity" value="{{ old('po_validity') }}"
-                                                                        name="po_validity"
-                                                                        placeholder="Enter PO Validity">
-                                                                    @if ($errors->has('po_validity'))
-                                                                        <span class="red-text"><?php echo $errors->first('po_validity', ':message'); ?></span>
-                                                                    @endif
-                                                                </div>
-
-                                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                    <label for="customer_payment_terms">Payment Terms
-                                                                        :</label> (optional)
-                                                                    <input type="text" class="form-control"
-                                                                        id="customer_payment_terms"
-                                                                        value="{{ old('customer_payment_terms') }}"
-                                                                        name="customer_payment_terms"
-                                                                        placeholder="Enter Payment Terms">
-
-                                                                </div>
-
-                                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                    <label for="customer_terms_condition">Terms Condition
-                                                                        :</label> (optional)
-                                                                    <textarea class="form-control" rows="3" type="text" class="form-control" id="customer_terms_condition"
-                                                                        name="customer_terms_condition" placeholder="Enter Terms and Condition">{{ old('customer_terms_condition') }}</textarea>
-                                                                </div>
-                                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                 <div class="row">
+                                                                   <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                                     <div class="sparkline12-graph">
                                                                         <div id="pwd-container1">
                                                                             <div class="form-group">
@@ -243,6 +196,20 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                    <label for="customer_payment_terms">Payment Terms
+                                                                        :</label> (optional)
+                                                                        <textarea class="form-control" rows="3" type="text" class="form-control" id="customer_payment_terms"
+                                                                        name="customer_payment_terms" placeholder="Enter Payment Terms">{{ old('customer_payment_terms') }}</textarea>
+                                                                </div>
+
+                                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                    <label for="customer_terms_condition">Terms Condition
+                                                                        :</label> (optional)
+                                                                    <textarea class="form-control" rows="3" type="text" class="form-control" id="customer_terms_condition"
+                                                                        name="customer_terms_condition" placeholder="Enter Terms and Condition">{{ old('customer_terms_condition') }}</textarea>
+                                                                </div>
+                                                             
                                                             </div>
                                                         </div>
                                                         <div class="login-btn-inner">
@@ -288,7 +255,6 @@
 
                     $('#po_validity').attr('min', todayDate);
                 }
-                // Call the function to set the minimum date
                 setMinDate();
 
                 // Initialize jQuery Validation
@@ -297,13 +263,13 @@
                     rules: {
                           project_name: {
                             required: true,
-                            maxlength: 50, // Maximum length of 50 characters
-                            // alphanumeric: true // Alphanumeric validation
+                            maxlength: 50, 
+                            
                         },
                         title: {
                             required: true,
-                            maxlength: 50, // Maximum length of 50 characters
-                            // alphanumeric: true // Alphanumeric validation
+                            maxlength: 50, 
+                           
                         },
                         customer_po_number: {
                             required: true,
@@ -346,7 +312,6 @@
                         title: {
                             required: "Please enter Customer Name.",
                             maxlength: "Customer Name must be at most 50 characters long.",
-                            // alphanumeric: "Customer Name can only contain letters and numbers."
                         },
                         customer_po_number: {
                             required: "Please enter PO number.",
@@ -359,13 +324,12 @@
                             date: "Please enter a valid date."
                         },
                         remarks: {
-                            required: "Please enter remarks.",
+                            required: "Please enter remark.",
                             maxlength: "Remarks must be at most 255 characters long."
                         },
                         'addmore[0][product_name]': {
                             required: "Please enter the Product Name.",
                             maxlength: "Product Name must be at most 100 characters long.",
-                            // alphanumeric: "Product Name can only contain letters and numbers."
                         },
                         'addmore[0][description]': {
                             required: "Please enter the Description.",
@@ -383,7 +347,7 @@
                         }
                     },
                     errorPlacement: function(error, element) {
-                        error.addClass('text-danger'); // Add Bootstrap text-danger class for styling
+                        error.addClass('text-danger'); 
                         if (element.closest('.form-group').length) {
                             element.closest('.form-group').append(error);
                         } else if (element.closest('td').length) {

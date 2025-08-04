@@ -1,28 +1,7 @@
 <!-- Static Table Start -->
 @extends('admin.layouts.master')
 @section('content')
-
     <style>
-        .fixed-table-loading {
-            display: none;
-        }
-
-        #table thead th {
-            white-space: nowrap;
-        }
-
-        #table thead th {
-            width: 300px !important;
-            padding-right: 49px !important;
-            padding-left: 20px !important;
-        }
-
-        .custom-datatable-overright table tbody tr td {
-            padding-left: 19px !important;
-            padding-right: 5px !important;
-            font-size: 14px;
-            text-align: left;
-        }
         button.disabled {
             opacity: 0.5; /* Makes the button appear grayed out */
             cursor: not-allowed; /* Changes the cursor to indicate it's disabled */

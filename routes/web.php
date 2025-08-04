@@ -87,8 +87,8 @@ Route::group(['middleware' => ['admin']], function () {
         // Route::get('/organizations-list-employees', ['as' => 'organizations-list-employees', 'uses' => 'App\Http\Controllers\Organizations\Employees\EmployeesController@index']);
     
         Route::get('/list-business', ['as' => 'list-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@index']);
-        Route::get('/add-business', ['as' => 'add-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@add']);
-        Route::post('/store-business', ['as' => 'store-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@store']);
+        Route::get('/add-business', ['as' => 'add-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@add']);            //add business
+        Route::post('/store-business', ['as' => 'store-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@store']);     //store business
         Route::get('/edit-business/{id}', ['as' => 'edit-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@edit']);
         Route::post('/update-business', ['as' => 'update-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@update']);
         Route::any('/delete-business/{id}', ['as' => 'delete-business', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@destroy']);
@@ -325,7 +325,7 @@ Route::get('/list-product-completed-report', [ReportController::class, 'getCompl
 
         
         Route::get('/list-material-received-from-quality-po-tracking', ['as' => 'list-material-received-from-quality-po-tracking', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialReceivedFromQualityPOTracking']);
-        Route::get('/list-material-received-from-quality-bussinesswise-tracking/{id}', ['as' => 'list-material-received-from-quality-bussinesswise-tracking', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialReceivedFromQualityPOTrackingBusinessWise']);
+        Route::get('/list-material-received-from-quality-bussinesswise-tracking', ['as' => 'list-material-received-from-quality-bussinesswise-tracking', 'uses' => 'App\Http\Controllers\Organizations\Store\AllListController@getAllListMaterialReceivedFromQualityPOTrackingBusinessWise']);
 
         Route::get('/accepted-store-material-sent-to-production/{purchase_orders_id}/{business_id}', ['as' => 'accepted-store-material-sent-to-production', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@genrateStoreReciptAndForwardMaterialToTheProduction']);
     

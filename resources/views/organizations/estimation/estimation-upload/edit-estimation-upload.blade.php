@@ -168,7 +168,11 @@
                     },
                      total_estimation_amount: {
                         required: true,
-                    }
+                    },
+                      remark_by_estimation: {
+                        required: true,
+                    },
+                    
                 },
                 messages: {
 
@@ -179,7 +183,10 @@
                     },
                     total_estimation_amount: {
                         required: "Please enter the total estimation amount",
-                    }
+                    },
+                     remark_by_estimation: {
+                         required: "Please enter the remark",
+                    },
                 },
                 errorPlacement: function(error, element) {
                     error.addClass('text-danger'); // Add Bootstrap text-danger class for styling

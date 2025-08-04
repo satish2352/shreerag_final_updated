@@ -2,26 +2,6 @@
 @extends('admin.layouts.master')
 @section('content')
     <style>
-        .fixed-table-loading {
-            display: none;
-        }
-
-        #table thead th {
-            white-space: nowrap;
-        }
-
-        #table thead th {
-            width: 300px !important;
-            padding-right: 49px !important;
-            padding-left: 20px !important;
-        }
-
-        .custom-datatable-overright table tbody tr td {
-            padding-left: 19px !important;
-            padding-right: 5px !important;
-            font-size: 14px;
-            text-align: left;
-        }
         .disabled-btn {
         background-color: #ccc;  /* Light gray background */
         color: #666;             /* Darker gray text */
@@ -94,6 +74,7 @@
                                             <tr>
                                                 
                                                 <th data-field="id">ID</th>
+                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="grn_number" data-editable="false">PO Number</th>
                                                 <th data-field="grn_date" data-editable="false">Title</th>
                                                 <th data-field="grn_date" data-editable="false">Description</th>
@@ -106,6 +87,7 @@
                                                 <tr>
                                                     
                                                     <td>{{ $loop->iteration }}</td>
+                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->purchase_orders_id) }}</td>
                                                     <td>{{ ucwords($data->Title) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>

@@ -772,8 +772,8 @@
                         </li>
 
                         <li
-                            class="nav-item {{ request()->is('storedept/list-material-received-from-quality') ? 'active' : '' }}">
-                            <a href="{{ route('list-material-received-from-quality') }}">
+                            class="nav-item {{ request()->is('storedept/list-material-received-from-quality-bussinesswise-tracking') ? 'active' : '' }}">
+                            <a href="{{ route('list-material-received-from-quality-bussinesswise-tracking') }}">
                                 <i class="fa big-icon fa-box-open icon-wrap"></i>
                                 <span class="mini-click-non">Material Received From Quality</span>
                             </a>
