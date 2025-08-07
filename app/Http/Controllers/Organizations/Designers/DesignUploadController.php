@@ -49,25 +49,16 @@ class DesignUploadController extends Controller
             return $e;
         }
     } 
-public function index() {
-    try {
-        $data_output = $this->service->getAll();
-        return view('organizations.designer.design-upload.list-design-upload', compact('data_output'));
-    } catch (\Exception $e) {
-        \Log::error('Controller index() error: ' . $e->getMessage());
-        return back()->with('status', 'error')->with('msg', 'Something went wrong while fetching data.');
-    }
-}
-
-    
-    // public function index(){
-    //     try {
-    //         $data_output = $this->service->getAll();
-    //         return view('organizations.designer.design-upload.list-design-upload', compact('data_output'));
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }     
+    public function index() {
+        try {
+            $data_output = $this->service->getAll();
+            return view('organizations.designer.design-upload.list-design-upload', compact('data_output'));
+        } catch (\Exception $e) {
+            \Log::error('Controller index() error: ' . $e->getMessage());
+            return back()->with('status', 'error')->with('msg', 'Something went wrong while fetching data.');
+        }
+    }    
+     
     public function add($id)
     {
         try {
@@ -82,9 +73,7 @@ public function index() {
             return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
         }
     }
-    
-
-    public function addReUploadDesing($id){
+        public function addReUploadDesing($id){
         try {
             $design_revision_for_prod_id = base64_decode($id);
             return view('organizations.designer.design-upload.add-design-re-submit-upload', compact('design_revision_for_prod_id'));
@@ -94,7 +83,6 @@ public function index() {
     } 
     public function update(Request $request)
 {
-    // Validate the request
     $rules = [
         'design_image' => 'required|mimes:pdf|max:' . Config::get("AllFileValidation.DESIGNS_PDF_MAX_SIZE") . '|min:' . Config::get("AllFileValidation.DESIGNS_PDF_MIN_SIZE"),
         'bom_image' => 'required|mimes:xls,xlsx|max:' . Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE") . '|min:' . Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE")

@@ -55,7 +55,7 @@ class AllListRepository  {
                 'businesses.created_at',
                 'estimation.business_id'
             )
-            ->orderBy('updated_at', 'desc') // ✅ Keep this only
+            ->orderBy('updated_at', 'desc') 
             ->get();
 
         return $data_output;
@@ -63,7 +63,6 @@ class AllListRepository  {
         return $e;
     }
 }
-
 public function getAllNewRequirementBusinessWise($business_id) {
   try {
     $decoded_business_id = base64_decode($business_id);
@@ -108,7 +107,6 @@ public function getAllNewRequirementBusinessWise($business_id) {
       return $e->getMessage(); 
   }
 }  
-
 public function getAllEstimationSendToOwnerForApproval()
 {
     try {
@@ -361,6 +359,9 @@ public function getSendToProductionList()
             ->leftJoin('estimation', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
             })
+              ->leftJoin('design_revision_for_prod', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+            })
             ->where('business_application_processes.estimation_send_to_production', $array_to_be_check)
             ->where('businesses.is_active', true)
             ->where('businesses.is_deleted', 0)
@@ -377,7 +378,7 @@ public function getSendToProductionList()
                 DB::raw('MAX(businesses_details.quantity) as quantity'),
                 DB::raw('MAX(businesses_details.description) as description'),
 
-                DB::raw('MAX(designs.bom_image) as bom_image'),
+                DB::raw('MAX(design_revision_for_prod.bom_image) as bom_image'),
                 DB::raw('MAX(designs.design_image) as design_image'),
 
                 'estimation.total_estimation_amount'

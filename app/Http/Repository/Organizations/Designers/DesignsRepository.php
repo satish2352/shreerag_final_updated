@@ -38,14 +38,10 @@ class DesignsRepository  {
                   'businesses.id',
                   'businesses.project_name',
                   'businesses.customer_po_number',
-                //   'businesses.product_name',
                   'businesses.title',
                   'businesses.created_at',
-                //   'businesses.descriptions',
-                //   'businesses.quantity',
-                //   'businesses.descriptions',
                   'businesses.remarks',
-                'businesses.grand_total_amount',
+                  'businesses.grand_total_amount',
                   'businesses.is_active',
                   'designs.business_id',
                   'businesses.updated_at'
@@ -58,55 +54,48 @@ class DesignsRepository  {
             return $e;
         }
     }
-   
-    public function getAllNewRequirementBusinessWise($id)
-{
-    try {
-        $decoded_business_id = base64_decode($id);
+    public function getAllNewRequirementBusinessWise($id){
+        try {
+            $decoded_business_id = base64_decode($id);
+            $dataOutputNew = DesignModel::where('business_id', $decoded_business_id)->get();       
+            $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN')];
 
-        // Fetch the design data based on the given id
-        $dataOutputNew = DesignModel::where('business_id', $decoded_business_id)->get();
-
-        // Define the array to be checked against
-        $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN')];
-
-        // Perform the query using the provided id
-        $data_output = DesignModel::leftJoin('businesses', function($join) {
-                $join->on('designs.business_id', '=', 'businesses.id');
-            })
-            ->leftJoin('businesses_details', function($join) {
-                $join->on('designs.business_details_id', '=', 'businesses_details.id');
-            })
-            ->leftJoin('business_application_processes', function($join) {
-                $join->on('designs.business_details_id', '=', 'business_application_processes.business_details_id');
-            })
-            ->where('business_application_processes.production_status_id', 0) 
-            ->where('business_application_processes.production_id', 0)
-            ->where('designs.business_id', $decoded_business_id)
-            ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
-            ->groupBy('businesses_details.product_name', 'designs.business_id', 'designs.business_details_id','businesses_details.description',
-                'businesses_details.quantity',  'businesses_details.total_amount','businesses_details.business_id','business_application_processes.production_id',
-                'business_application_processes.production_status_id','designs.updated_at')
-            ->select(
-              'businesses_details.business_id',
-                'designs.business_id',
-                'designs.business_details_id',
+            $data_output = DesignModel::leftJoin('businesses', function($join) {
+                    $join->on('designs.business_id', '=', 'businesses.id');
+                })
+                ->leftJoin('businesses_details', function($join) {
+                    $join->on('designs.business_details_id', '=', 'businesses_details.id');
+                })
+                ->leftJoin('business_application_processes', function($join) {
+                    $join->on('designs.business_details_id', '=', 'business_application_processes.business_details_id');
+                })
+                ->where('business_application_processes.production_status_id', 0) 
+                ->where('business_application_processes.production_id', 0)
+                ->where('designs.business_id', $decoded_business_id)
+                ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
+                ->groupBy('businesses_details.product_name', 'designs.business_id', 'designs.business_details_id','businesses_details.description',
+                    'businesses_details.quantity',  'businesses_details.total_amount','businesses_details.business_id','business_application_processes.production_id',
+                    'business_application_processes.production_status_id','designs.updated_at')
+                ->select(
                 'businesses_details.business_id',
-                'businesses_details.product_name',
-                'businesses_details.description',
-                'businesses_details.quantity',
-                'businesses_details.total_amount',
-                'business_application_processes.production_id',
-                'business_application_processes.production_status_id',
-                'designs.updated_at'
-            )->orderBy('designs.updated_at', 'desc')
-            ->get();
+                    'designs.business_id',
+                    'designs.business_details_id',
+                    'businesses_details.business_id',
+                    'businesses_details.product_name',
+                    'businesses_details.description',
+                    'businesses_details.quantity',
+                    'businesses_details.total_amount',
+                    'business_application_processes.production_id',
+                    'business_application_processes.production_status_id',
+                    'designs.updated_at'
+                )->orderBy('designs.updated_at', 'desc')
+                ->get();
 
-        return $data_output;
-    } catch (\Exception $e) {
-        return $e;
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
     }
-}
 
   public function getAll()
 {
@@ -188,18 +177,14 @@ public function updateAll($request)
     try {
         $return_data = array();
         $edit_id = $request->business_id;
-
-
-        // $dataOutputNew = DesignModel::where('id', $edit_id)->first();
+       
         $dataOutputNew = DesignModel::where('business_details_id', $edit_id)->first();
-        // Check if the record was found
         if (!$dataOutputNew) {
             return [
                 'msg' => 'Design not found.',
                 'status' => 'error',
             ];
         }
-
         $businessDetails = BusinessDetails::where('id', $dataOutputNew->business_details_id)->first();
         if (!$businessDetails) {
             return [
@@ -234,22 +219,10 @@ public function updateAll($request)
         $estimation_data->business_details_id = $dataOutputNew->business_details_id;
         $estimation_data->design_id = $dataOutputNew->id;
         $estimation_data->save();
-        // $production_data_details = EstimationDetails::firstOrNew(['design_id' => $dataOutputNew->id]);
-        // $production_data_details->business_id = $dataOutputNew->business_id;
-        // $production_data_details->design_id = $dataOutputNew->id;
-        // $production_data_details->business_details_id = $production_data->business_details_id;
-        // $production_data_details->production_id = $production_data->id;
-        // $production_data_details->material_send_production = 0;
-        // $production_data_details->quantity_minus_status = 'pending';
-        // $production_data_details->part_item_id = NULL;
-        // $production_data_details->quantity = NULL;
-        // $production_data_details->unit = NULL;
-        // $production_data_details->save();
       
         // Store design and production IDs
         $designIds[] = $dataOutputNew->id;
         $estimationIds[] = $estimation_data->id;
-        // $productionIdsDetails[] = $production_data_details->id;
 
         $designRevisionForProdIDInsert = new DesignRevisionForProd();
         $designRevisionForProdIDInsert->business_id = $dataOutputNew->business_id;
@@ -273,11 +246,7 @@ public function updateAll($request)
             $business_application->estimation_id = $estimation_data->id ?? null; // Use first element if available
             // $business_application->estimation_status_id = config('constants.ESTIMATION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_ESTIMATION');
             $business_application->	off_canvas_status = 12;
-
             $business_application->save();
-
-
-           
         }
 
         // $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');

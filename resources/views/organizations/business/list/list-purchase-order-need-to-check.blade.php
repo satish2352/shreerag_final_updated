@@ -55,6 +55,7 @@
                                                 <th data-field="id">Sr.No.</th>
                                                 <th data-field="grn_number" data-editable="false">Product Name</th>
                                                 <th data-field="grn_date" data-editable="false">Description</th>
+                                                <th data-field="total_estimation_amount" data-editable="false">Estimation Amount</th>
                                                 <th data-field="action" data-editable="false">Action</th>
                                             </tr>
 
@@ -66,7 +67,7 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
-
+                                                    <td>{{ ucwords($data->total_estimation_amount) }}</td>
                                                     <td>
                                                         <div style="display: inline-block; align-items: center;">
                                                             <a

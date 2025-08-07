@@ -117,9 +117,9 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-accept-bom-estimation', ['as' => 'list-accept-bom-estimation', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAcceptEstimationBOM']);
         Route::get('/list-accept-bom-estimation-business-wise/{id}', ['as' => 'list-accept-bom-estimation-business-wise', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAcceptEstimationBOMBusinessWise']);
 
-         Route::get('/edit-reject-estimation-owner-side/{id}', ['as' => 'edit-reject-estimation-owner-side', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@rejectEstimationedit']);
+         Route::get('/edit-reject-estimation-owner-side/{id}', ['as' => 'edit-reject-estimation-owner-side', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@editRejectEstimation']);
 
-        Route::post('/rejected-bom-estimation', ['as' => 'rejected-bom-estimation', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@rejectedEstimationBOM']);
+        Route::post('/add-rejected-bom-estimation', ['as' => 'add-rejected-bom-estimation', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@addRejectedEstimationBOM']);
         Route::get('/list-rejected-bom-estimation', ['as' => 'list-rejected-bom-estimation', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getRejectEstimationBOM']);
         Route::get('/list-rejected-bom-estimation-business-wise/{id}', ['as' => 'list-rejected-bom-estimation-business-wise', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getRejectEstimationBOMBusinessWise']);
 
@@ -492,6 +492,13 @@ Route::get('/list-product-completed-report', [ReportController::class, 'getCompl
         Route::any('/update-tax', ['as' => 'update-tax', 'uses' => 'App\Http\Controllers\Organizations\Purchase\TaxController@update']);
         Route::any('/delete-tax/{id}', ['as' => 'delete-tax', 'uses' => 'App\Http\Controllers\Organizations\Purchase\TaxController@destroy']);
     
+        Route::any('/list-vendor-type', ['as' => 'list-vendor-type', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorTypeController@index']);
+        Route::any('/add-vendor-type', ['as' => 'add-vendor-type', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorTypeController@add']);
+        Route::any('/store-vendor-type', ['as' => 'store-vendor-type', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorTypeController@store']);
+        Route::any('/edit-vendor-type/{id}', ['as' => 'edit-vendor-type', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorTypeController@edit']);
+        Route::any('/update-vendor-type', ['as' => 'update-vendor-type', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorTypeController@update']);
+        Route::any('/delete-vendor-type/{id}', ['as' => 'delete-vendor-type', 'uses' => 'App\Http\Controllers\Organizations\Purchase\VendorTypeController@destroy']);
+
         Route::any('/list-part-item', ['as' => 'list-part-item', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ItemController@index']);
         Route::any('/add-part-item', ['as' => 'add-part-item', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ItemController@add']);
         Route::any('/store-part-item', ['as' => 'store-part-item', 'uses' => 'App\Http\Controllers\Organizations\Purchase\ItemController@store']);

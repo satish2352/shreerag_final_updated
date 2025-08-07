@@ -11,14 +11,6 @@
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
                                 <h1>Dispatch List</h1>
-                                <div class="form-group-inner login-btn-inner row">
-                                    <div class="col-lg-2">
-                                        {{-- <div class="login-horizental cancel-wp pull-left">
-                                                <a href="{{ route('add-design-upload') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Design</button></a>
-                                        </div> --}}
-                                    </div>
-                                    <div class="col-lg-10"></div>
-                                </div>
                             </div>
                         </div>
 
@@ -27,7 +19,6 @@
                                 <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
                                     <span class="icon-sc-cl" aria-hidden="true">&times;</span>
                                 </button>
-                                {{-- <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i> --}}
                                 <p><strong>Success!</strong> {{ Session::get('msg') }}</p>
                             </div>
                         @endif
@@ -91,7 +82,7 @@
                                                     <td>{{ ucwords($data->transport_name) }}</td>
                                                     <td>{{ ucwords($data->vehicle_name) }}</td>
                                                     <td>
-                                                        <div style="display: flex; align-items: center;">
+                                                        <div>
                                                             <a
                                                                 href="{{ route('add-dispatch', [base64_encode($data->id), base64_encode($data->business_details_id)]) }}"><button
                                                                     data-toggle="tooltip" title="Edit"

@@ -127,6 +127,26 @@
                                                                     </div>
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
+                                                                            <label for="Service">Vendor Type:  <span class="text-danger">*</span></label> 
+                                                                            <select class="form-control mb-2 select2"
+                                                                                name="vendor_type_id" id="vendor_type_id">
+                                                                                <option value="" default>Select
+                                                                                    Vendor Company Name</option>
+                                                                                @foreach ($dataOutputVendorType as $service)
+                                                                                    <option value="{{ $service['id'] }}"
+                                                                                        {{ old('vendor_type_id', $editDataNew->vendor_type_id) == $service->id ? 'selected' : '' }}>
+                                                                                        {{ $service->name }}
+                                                                                    </option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                            @if ($errors->has('vendor_type_id'))
+                                                                                <span
+                                                                                    class="red-text">{{ $errors->first('vendor_type_id') }}</span>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                                        <div class="form-group">
                                                                             <label>Contact Person Name<span class="text-danger">*</span></label>
                                                                             <input type="text" class="form-control" id="contact_person_name" value="@if (old('contact_person_name')) {{ old('contact_person_name') }}@else{{ $editDataNew->contact_person_name }} @endif" name="contact_person_name" placeholder="Contact Person Name">
                                                                             @if ($errors->has('contact_person_name'))
@@ -195,7 +215,7 @@
                                                               
                                                                  
                                                                     
-                                                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
                                                                             <label>Payment Terms <span class="text-danger">*</span></label>
                                                                             <input type="text" class="form-control" id="payment_terms" value="@if (old('payment_terms')) {{ old('payment_terms') }}@else{{ $editDataNew->payment_terms }} @endif" name="payment_terms" placeholder="Enter payment terms">
@@ -224,7 +244,7 @@
                                                                             @endif
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <label for="quote_no">Quote No:  (optional)</label>
                                                                         <input type="text" class="form-control"
                                                                             id="quote_no" name="quote_no"

@@ -96,7 +96,7 @@
                         </div>
                         <div class="sparkline13-graph" style="border: 1px solid black; padding:20px;">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                <div >
+                                <div>
                                     <div style="text-align: center; font-size: 20px; font-weight: bold;"> {{ $getOrganizationData->company_name }}</div>
                                     <div style="text-align: center;">
                                         {{ $getOrganizationData->mobile_number }}, {{ $getOrganizationData->email }}

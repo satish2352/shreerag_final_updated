@@ -422,6 +422,12 @@
                                     class="fa big-icon fa-receipt icon-wrap"></i> <span
                                     class="mini-click-non">Tax</span></a>
                         </li>
+                         <li class="nav-item {{ request()->is('purchase/list-vendor-type') ? 'active' : '' }}">
+                            <a class="" href="{{ route('list-vendor-type') }}" aria-expanded="false"><i
+                                    class="fa big-icon fa-receipt icon-wrap"></i> <span
+                                    class="mini-click-non">Vendor Type</span></a>
+                        </li>
+                        
                         <li class="{{ Request::is('list-approved-purchase-orders') ? 'active' : '' }}">
                             <a class="has-arrow" href="{{ route('list-approved-purchase-orders') }}"
                                 aria-expanded="false"><i class="fa big-icon fa-file-signature icon-wrap"></i> <span

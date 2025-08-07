@@ -275,34 +275,34 @@
                             required: true,
                             minlength: 10,
                             maxlength: 16,
-                            digits: true // Digits only
+                            digits: true 
                         },
                         po_validity: {
                             required: true,
-                            date: true // Date validation
+                            date: true 
                         },
                         remarks: {
                             required: true,
-                            maxlength: 255 // Maximum length of 255 characters
+                            maxlength: 255 
                         },
                         'addmore[0][product_name]': {
                             required: true,
-                            maxlength: 100, // Maximum length of 100 characters
-                            // alphanumeric: true // Alphanumeric validation
+                            maxlength: 100,
+                            
                         },
                         'addmore[0][description]': {
                             required: true,
-                            maxlength: 255 // Maximum length of 255 characters
+                            maxlength: 255 
                         },
                         'addmore[0][quantity]': {
                             required: true,
-                            digits: true, // Digits only
-                            min: 1 // Minimum value 1
+                            digits: true, 
+                            min: 1 
                         },
                         'addmore[0][rate]': {
                             required: true,
-                            number: true, // Number validation
-                            min: 0.01 // Minimum value 0.01
+                            number: true, 
+                            min: 0.01 
                         }
                     },
                     messages: {

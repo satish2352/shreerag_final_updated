@@ -96,6 +96,20 @@
                                             </select>
                                         </div>
                                     </div>
+                                       <div class="col-lg-4 col-md-4 col-sm-4">
+                                        <div class="form-group">
+                                            <label for="vendor_type_id">Vendor Type <span
+                                                    class="text-danger">*</span></label>
+                                                 <select class="form-control mb-2 select2" name="vendor_type_id" id="vendor_type_id">
+                                                <option value="" default>Vendor Type</option>
+
+                                                @foreach ($dataOutputVendorTyper as $data)
+                                                    <option value="{{ $data['id'] }}">
+                                                        {{ $data['name'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                         <div class="form-group">
                                             <label>Contact Person Name <span class="text-danger">*</span></label>
@@ -154,11 +168,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
-
-
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <div class="col-lg-4 col-md-4 col-sm-4">
                                         <div class="form-group">
                                             <label>Payment Terms <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" id="payment_terms"
@@ -173,7 +183,7 @@
                     </select> --}}
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-lg-4 col-md-4 col-sm-4">
                                         <div class="form-group">
                                             <label>Quote Number (optional)</label>
                                             <input class="form-control" type="text" name="quote_no" value=""
@@ -833,6 +843,9 @@ document.addEventListener('change', function (e) {
                                     vendor_id: {
                                         required: true,
                                     },
+                                      vendor_type_id: {
+                                        required: true,
+                                    },
                                     contact_person_name: {
                                         required: true,
                                     },
@@ -887,6 +900,9 @@ document.addEventListener('change', function (e) {
                                 messages: {
                                     vendor_id: {
                                         required: "Please Select the Vendor Company Name",
+                                    },
+                                     vendor_type_id: {
+                                        required: "Please Select the Vendor Type",
                                     },
                                     contact_person_name: {
                                         required: "Please Enter contact person name",

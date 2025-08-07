@@ -59,8 +59,9 @@
                                                 <th data-field="description" data-editable="false">Description</th>
                                                  <th data-field="design_image" data-editable="false">Design</th>
                                                   <th data-field="bom_image" data-editable="false">Estimated BOM</th>
-                                                   <th data-field="total_estimation_amount" data-editable="false">Total Estimation Amount</th>
-                                                    <th data-field="action" data-editable="false">Action</th>
+                                                   <th data-field="total_estimation_amount" data-editable="false">Est Amount</th>
+                                                    <th data-field="remark_by_estimation" data-editable="false">Est Remark</th> 
+                                                   <th data-field="action" data-editable="false">Action</th>
                                               
                                             </tr>
 
@@ -84,6 +85,8 @@
                                                             alt="bill of material">Click to download</a>
                                                     </td>
                                                        <td>{{ ucwords($data->total_estimation_amount) }}</td>
+                                                       <td>{{ ucwords($data->remark_by_estimation) }}</td>
+                                                       
                                                   <td>
                                                 <div class="">
                                                     <a

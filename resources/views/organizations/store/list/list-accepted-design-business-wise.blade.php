@@ -78,9 +78,9 @@
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="description" data-editable="false">Description</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
-                                                <th data-field="design_image" data-editable="false">Design Layout</th>
+                                                <th data-field="design_image" data-editable="false">Design</th>
                                                 <th data-field="bom_image" data-editable="false">BOM</th>
-                                                <th data-field="re_design_image" data-editable="false">Revised Design Layout
+                                                <th data-field="re_design_image" data-editable="false">Revised Design 
                                                 </th>
                                                 <th data-field="re_bom_image" data-editable="false">Revised BOM</th>
                                                 <th data-field="action" data-editable="false" ><span style="display: flex; justify-content: center;">Action</span></th>
@@ -117,8 +117,8 @@
                                                     @endif
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
-                                                            <div style="display: inline-block; align-items: center;">
-                                                                <a href="{{route('edit-material-list-bom-wise-new-req',base64_encode($data->business_details_id))}}"><button data-toggle="tooltip" style="padding: 14px; width:130px;" title="View Details" class="pd-setting-ed">Issue Product Material</button></a>
+                                                            <div style="display: inline-block; align-items: center; margin-right: 10px;">
+                                                                <a href="{{route('edit-material-list-bom-wise-new-req',base64_encode($data->business_details_id))}}"><button data-toggle="tooltip" style="padding: 7px;" title="View Details" class="btn-bg-colour">Issue Product Material</button></a>
                                                             </div>
                                                             {{-- @if($data->material_send_production == 1)
                                                             <a href="{{ route('accepted-and-material-sent', base64_encode($data->business_details_id)) }}">
@@ -140,7 +140,7 @@
                                                                     <a
                                                                     href="{{ route('need-to-create-req', base64_encode($data->business_details_id)) }} "><button
                                                                         data-toggle="tooltip" title="Need To Purchase"
-                                                                        class="pd-setting-ed" style="padding: 14px;">Need To Purchase</button></a>
+                                                                        class="btn-bg-colour" style="padding: 7px;">Need To Purchase</button></a>
                                                                     
                                                         </div>
                                                     </td>

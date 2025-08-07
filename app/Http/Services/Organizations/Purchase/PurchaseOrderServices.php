@@ -33,8 +33,6 @@ use Config;
     public function submitBOMToOwner($request){
         try {
             $data = $this->repo->submitBOMToOwner($request);
-         dd($data);
-         die();
             if ($data) {
                 return ['status' => 'success', 'msg' => 'Purchase Order Added Successfully.'];
             } else {

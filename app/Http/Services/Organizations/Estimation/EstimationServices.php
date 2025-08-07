@@ -3,7 +3,7 @@ namespace App\Http\Services\Organizations\Estimation;
 use App\Http\Repository\Organizations\Estimation\EstimationRepository;
 use Carbon\Carbon;
 use App\Models\ {
-    DesignModel
+    DesignRevisionForProd
     };
 
 use Config;
@@ -14,6 +14,34 @@ use Config;
         $this->repo = new EstimationRepository();
     }
 
+    public function updateAll($request){
+    try {
+        $return_data = $this->repo->updateAll($request);
+        
+        $productName = $return_data['product_name']; 
+        $formattedProductName = str_replace(' ', '_', $productName);
+        $path = Config::get('FileConstant.DESIGNS_ADD');
+        if ($request->hasFile('bom_image')) {
+            if ($return_data['bom_image']) {
+                if (file_exists(Config::get('DocumentConstant.DESIGNS_DELETE') . $return_data['bom_image'])) {
+                    removeImage(Config::get('DocumentConstant.DESIGNS_DELETE') . $return_data['bom_image']);
+                }
+            }
+            $marathiImageName = $return_data['last_insert_id'] . '_' . $formattedProductName .'_' . rand(100000, 999999) . '.' . $request->bom_image->extension();
+            uploadImage($request, 'bom_image', $path, $marathiImageName);
+            $slide_data = DesignRevisionForProd::find($return_data['last_insert_id']);
+            $slide_data->bom_image = $marathiImageName;
+            $slide_data->save();
+        }
+        if ($return_data) {
+            return ['status' => 'success', 'msg' => 'Estimation Updated Successfully.'];
+        } else {
+            return ['status' => 'error', 'msg' => 'Estimation  Not Updated.'];
+        }  
+    } catch (Exception $e) {
+        return ['status' => 'error', 'msg' => $e->getMessage()];
+    }      
+    }
 
     public function sendToProduction($id)
 {
@@ -31,37 +59,7 @@ use Config;
 }
 
 
-     public function updateAll($request){
-        try {
-            $return_data = $this->repo->updateAll($request);
-          
-            $productName = $return_data['product_name']; 
-            $formattedProductName = str_replace(' ', '_', $productName);
-            $path = Config::get('FileConstant.DESIGNS_ADD');
-           
     
-            if ($request->hasFile('bom_image')) {
-                if ($return_data['bom_image']) {
-                    if (file_exists(Config::get('DocumentConstant.DESIGNS_DELETE') . $return_data['bom_image'])) {
-                        removeImage(Config::get('DocumentConstant.DESIGNS_DELETE') . $return_data['bom_image']);
-                    }
-                }
-                $marathiImageName = $return_data['last_insert_id'] . '_' . $formattedProductName .'_' . rand(100000, 999999) . '.' . $request->bom_image->extension();
-                uploadImage($request, 'bom_image', $path, $marathiImageName);
-                $slide_data = DesignModel::find($return_data['last_insert_id']);
-                $slide_data->bom_image = $marathiImageName;
-                $slide_data->save();
-            }
-        
-            if ($return_data) {
-                return ['status' => 'success', 'msg' => 'Estimation Updated Successfully.'];
-            } else {
-                return ['status' => 'error', 'msg' => 'Estimation  Not Updated.'];
-            }  
-        } catch (Exception $e) {
-            return ['status' => 'error', 'msg' => $e->getMessage()];
-        }      
-    }
 
 
       public function updateRevisedEstimation($request){
@@ -82,8 +80,12 @@ use Config;
                 }
                 $marathiImageName = $return_data['last_insert_id'] . '_' . $formattedProductName .'_' . rand(100000, 999999) . '.' . $request->bom_image->extension();
                 uploadImage($request, 'bom_image', $path, $marathiImageName);
-                $slide_data = DesignModel::find($return_data['last_insert_id']);
+                $slide_data = DesignRevisionForProd::find($return_data['last_insert_id']);
+        //            dd($slide_data);
+        //  die();
                 $slide_data->bom_image = $marathiImageName;
+
+             
                 $slide_data->save();
             }
         

@@ -51,7 +51,7 @@ class AllListController extends Controller
                     }
                 }
             } else {
-                return view('organizations.store.list.list-accepted-design-business-wis', [
+                return view('organizations.store.list.list-accepted-design-business-wise', [
                     'data_output' => [],
                     'message' => 'No data found for designs received for correction'
                 ]);

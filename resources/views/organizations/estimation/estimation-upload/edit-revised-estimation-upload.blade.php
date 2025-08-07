@@ -1,19 +1,5 @@
 @extends('admin.layouts.master')
 @section('content')
-    <style>
-        label {
-            margin-top: 20px;
-        }
-
-        label.error {
-            color: red;
-            font-size: 12px;
-        }
-
-        .red-text {
-            color: red;
-        }
-    </style>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list">
@@ -170,6 +156,9 @@
                     },
                      total_estimation_amount: {
                         required: true,
+                    },
+                    remark_by_estimation:{
+                          required: true,
                     }
                 },
                 messages: {
@@ -181,6 +170,9 @@
                     },
                      total_estimation_amount: {
                         required: "Please enter the total estimation amount",
+                    },
+                     remark_by_estimation:{
+                          required: "Please enter the remark",
                     }
                    
                 },

@@ -35,6 +35,7 @@ class PurchaseOrderRepository
             $dataOutput->purchase_orders_id = $purchase_orderid;
             $dataOutput->requisition_id = $requistition_id;
             $dataOutput->vendor_id = $request->vendor_id;
+            $dataOutput->vendor_type_id = $request->vendor_type_id;
             $dataOutput->business_id = $data_for_requistition->business_id;
             $dataOutput->business_details_id = $data_for_requistition->business_details_id;
             $dataOutput->production_id = $data_for_requistition->production_id;
@@ -156,6 +157,7 @@ class PurchaseOrderRepository
                 'pod1.id as purchase_order_details_id',
                 'purchase_orders.id as purchase_main_id',
                 'purchase_orders.vendor_id',
+                 'purchase_orders.vendor_type_id',
                 'purchase_orders.quote_no',
                 'purchase_orders.contact_person_name',
                 'purchase_orders.contact_person_number',
@@ -204,6 +206,7 @@ class PurchaseOrderRepository
             // Update main design data
             $dataOutput = PurchaseOrdersModel::findOrFail($request->purchase_main_id);
             $dataOutput->vendor_id = $request->vendor_id;
+            $dataOutput->vendor_type_id = $request->vendor_type_id;
             // $dataOutput->quote_no = $request->quote_no;
             $dataOutput->contact_person_name = $request->contact_person_name;
             $dataOutput->contact_person_number = $request->contact_person_number;

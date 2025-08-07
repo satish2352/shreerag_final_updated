@@ -26,66 +26,55 @@ class EstimationController extends Controller
         $this->service = new EstimationServices();
         $this->listapiservice = new AllListController();
     }
-
-
-
-      public function editEstimation($id)
-    {
-        try {
-            $addData = base64_decode($id);
-            $business_details_data = BusinessDetails::findOrFail($addData);
-
-            return view('organizations.estimation.estimation-upload.edit-estimation-upload', [
-                'addData' => $addData,
-                'business_details_data' => $business_details_data
-            ]);
-        } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
-        }
-    }
-
-
-    public function updateEstimation(Request $request)
-{
-    // Validate the request
-    $rules = [
-        'bom_image' => 'required|mimes:xls,xlsx|max:' . Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE") . '|min:' . Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE"),
-         'total_estimation_amount' => 'required|',
-    ];
-
-    $messages = [
-        'bom_image.required' => 'The bill of material Excel sheet is required.',
-        'bom_image.mimes' => 'The bill of material must be in XLS or XLSX format.',
-        'bom_image.max' => 'The bill of material size must not exceed ' . Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE") . ' KB.',
-        'bom_image.min' => 'The bill of material size must not be less than ' . Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE") . ' KB.',
-        'total_estimation_amount.required' => 'Enter the Total Estimation Amount',
-    ];
-
+    public function editEstimation($id){
     try {
-        $validation = Validator::make($request->all(), $rules, $messages);
+        $addData = base64_decode($id);
+        $business_details_data = BusinessDetails::findOrFail($addData);
 
-        if ($validation->fails()) {
-            return redirect()->back()
-                ->withInput()
-                ->withErrors($validation);
-        } else {
-            $update_data = $this->service->updateAll($request);
-            if ($update_data['status'] == 'success') {
-                return redirect('estimationdept/list-updated-estimation-send-to-owner')->with($update_data);
-            } else {
+        return view('organizations.estimation.estimation-upload.edit-estimation-upload', [
+            'addData' => $addData,
+            'business_details_data' => $business_details_data
+        ]);
+    } catch (\Exception $e) {
+        return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
+    }
+    }
+    public function updateEstimation(Request $request){
+        $rules = [
+            'bom_image' => 'required|mimes:xls,xlsx|max:' . Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE") . '|min:' . Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE"),
+            'total_estimation_amount' => 'required|',
+        ];
+        $messages = [
+            'bom_image.required' => 'The bill of material Excel sheet is required.',
+            'bom_image.mimes' => 'The bill of material must be in XLS or XLSX format.',
+            'bom_image.max' => 'The bill of material size must not exceed ' . Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE") . ' KB.',
+            'bom_image.min' => 'The bill of material size must not be less than ' . Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE") . ' KB.',
+            'total_estimation_amount.required' => 'Enter the Total Estimation Amount',
+        ];
+
+        try {
+            $validation = Validator::make($request->all(), $rules, $messages);
+
+            if ($validation->fails()) {
                 return redirect()->back()
                     ->withInput()
-                    ->with($update_data);
+                    ->withErrors($validation);
+            } else {
+                $update_data = $this->service->updateAll($request);
+                if ($update_data['status'] == 'success') {
+                    return redirect('estimationdept/list-updated-estimation-send-to-owner')->with($update_data);
+                } else {
+                    return redirect()->back()
+                        ->withInput()
+                        ->with($update_data);
+                }
             }
+        } catch (Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
-    } catch (Exception $e) {
-        return redirect()->back()
-            ->withInput()
-            ->with(['msg' => $e->getMessage(), 'status' => 'error']);
     }
-}
-
-
     public function editRevisedEstimation($id)
 {
     try {

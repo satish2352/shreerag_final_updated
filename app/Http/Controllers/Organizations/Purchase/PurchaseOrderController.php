@@ -17,7 +17,8 @@ use App\Models\{
     UnitMaster,
     HSNMaster,
     PurchaseOrderDetailsModel,
-    NotificationStatus
+    NotificationStatus,
+    VendorType
 };
 use App\Http\Controllers\Organizations\CommanController;
 
@@ -34,6 +35,7 @@ class PurchaseOrderController extends Controller
     public function index($requistition_id, $business_details_id)
     {
         $getOutput = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
+       ->join('tbl_vendor_type', 'tbl_vendor_type.id', '=', 'purchase_orders.vendor_type_id')
         ->whereNull('purchase_status_from_owner')
         ->where('requisition_id', base64_decode($requistition_id))
         ->where('business_details_id', base64_decode($business_details_id))
@@ -57,7 +59,8 @@ class PurchaseOrderController extends Controller
             'vendors.vendor_email',
             'vendors.contact_no',
             'vendors.vendor_address',
-            'vendors.gst_no'
+            'vendors.gst_no',
+            'tbl_vendor_type.name as vendor_type_name'
             )
         ->orderBy('purchase_orders.updated_at', 'desc')
         ->get();
@@ -144,6 +147,7 @@ class PurchaseOrderController extends Controller
         $dataOutputPartItem = PartItem::where('is_active', true)->get();
         $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
         $dataOutputHSNMaster = HSNMaster::where('is_active', true)->get();
+        $dataOutputVendorTyper = VendorType::where('is_active', true)->get();
         return view(
             'organizations.purchase.addpurchasedetails.add-purchase-orders',
             compact(
@@ -155,7 +159,8 @@ class PurchaseOrderController extends Controller
                 'dataOutputUnitMaster',
                 'dataOutputHSNMaster',
                 'dataPurchaseOrder',
-                'business_detailsId'
+                'business_detailsId',
+                'dataOutputVendorTyper'
             )
         );
     }
@@ -171,6 +176,7 @@ class PurchaseOrderController extends Controller
     {
         $rules = [
             'vendor_id' => 'required',
+            'vendor_type_id' => 'required',
             'tax_id' => 'required',
             'invoice_date' => 'required',
             'payment_terms' => 'required',
@@ -183,6 +189,7 @@ class PurchaseOrderController extends Controller
 
         $messages = [
             'vendor_id.required' => 'The select vendor comapny name is required.',
+             'vendor_type_id.required' => 'The select vendor type is required.',
             'tax_id.required' => 'The Tax is required.',
             'invoice_date.required' => 'The Invoice Date is required.',
             'payment_terms.required' => 'The Payment Terms is required.',
@@ -460,8 +467,9 @@ class PurchaseOrderController extends Controller
         $dataOutputPartItem = PartItem::where('is_active', true)->get();
         $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
         $dataOutputHSNMaster = HSNMaster::where('is_active', true)->get();
+        $dataOutputVendorType = VendorType::where('is_active', true)->get();
         return view('organizations.purchase.addpurchasedetails.edit-purchase-orders', compact('editData', 'dataOutputVendor', 'dataOutputTax', 'dataOutputPartItem',  'dataOutputUnitMaster',
-        'dataOutputHSNMaster',));
+        'dataOutputHSNMaster','dataOutputVendorType'));
     }
     
     

@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 @section('content')
 <style>
-    label {
+     label {
         margin-top: 20px;
     }
     label.error {
@@ -12,11 +12,54 @@
     .sparkline12-list{
         margin-bottom: 100px;
     }
-    
+    .table-responsive {
+    overflow-x: clip !important;
+    }
+    .custom-dropdown {
+        position: relative;
+        width: 100%;
+    }
+.dropdown-height{
+    height: 280px !important;
+}
+/* .form-control[readonly], fieldset[disabled] .form-control {
+    background-color: #fff;
+    opacity: 1;
+} */
+    .custom-dropdown .dropdown-options {
+        position: absolute;
+        width:600px !important;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #ccc;
+        z-index: 999;
+        /* max-height: 200px; */
+        overflow-y: auto;
+    }
+
+    .custom-dropdown .option {
+        padding: 6px 10px;
+        cursor: pointer;
+    }
+
+    .custom-dropdown .option:hover {
+        background: #f0f0f0;
+    }
+
+    .custom-dropdown .search-box {
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 5px;
+    }
+    .margin-bottom{
+        margin-bottom: 100px !important;
+    }
 </style>
-<div class="row">
+
+<div class="">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div class="sparkline12-list">
+        <div class="sparkline12-list margin-bottom">
             <div class="sparkline12-hd">
                 <div class="main-sparkline12-hd">
                     <center><h1>Issue Product Material</h1></center>
@@ -59,7 +102,7 @@
                                         <table class="table table-hover table-white repeater" id="purchase_order_table">
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
+                                                    <th>Sr. No.</th>
                                                     <th>Part Item</th>
                                                     <th>Quantity</th>
                                                     <th>Unit</th>
@@ -79,6 +122,36 @@
                                                                 <input type="text" name="addmore[{{ $index }}][id]" class="form-control" readonly value="{{ $index + 1 }}">
                                                             </td>
                                                             <td>
+                                                                    <div class="custom-dropdown" data-index="{{ $index }}">
+                                                                        <input type="hidden" name="addmore[{{ $index }}][part_item_id]" class="part_no" value="{{ $item->part_item_id }}">
+                                                                        <input type="text" class="dropdown-input form-control part-no" placeholder="Select Part Item..." readonly >
+
+                                                                        <div class="dropdown-options dropdown-height" style="display: none;">
+                                                                            <input type="text" class="search-box form-control" placeholder="Search...">
+                                                                            <div class="options-list">
+                                                                                @foreach ($dataOutputPartItem as $data)
+                                                                                    <div class="option" data-id="{{ $data->id }}">{{ $data->description }}</div>
+                                                                                @endforeach
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+{{-- @php
+    $selectedPart = $dataOutputPartItem->firstWhere('id', $item->part_item_id);
+@endphp
+
+<td>
+    <div class="custom-dropdown" data-index="{{ $index }}">
+        <input type="hidden" name="addmore[{{ $index }}][part_item_id]" class="part_no" value="{{ $item->part_item_id }}">
+        <input type="text" class="dropdown-input form-control part-no" 
+               placeholder="Select Part Item..." 
+               value="{{ $selectedPart ? $selectedPart->description : '' }}" readonly>
+
+        <div class="dropdown-options dropdown-height" style="display: none;">
+            <input type="text" class="search-box form-control" placeholder="Search..."> --}}
+            
+
+                                                            {{-- <td>
                                                                 <select class="form-control part-no" name="addmore[{{ $index }}][part_item_id]" required>
                                                                     <option value="">Select Part Item</option>
                                                                     @foreach ($dataOutputPartItem as $partItem)
@@ -87,7 +160,7 @@
                                                                         </option>
                                                                     @endforeach
                                                                 </select>
-                                                            </td>
+                                                            </td> --}}
                                                             <td>
                                                                 <input class="form-control quantity" name="addmore[{{ $index }}][quantity]" type="number" step="any" required value="{{ $item->quantity }}">
                                                                 <span class="stock-available"></span>
@@ -116,9 +189,8 @@
                                                             <td>
                                                                 @if($item->material_send_production == 0)
                                                                 <a data-id="{{ $item->id }}"
-                                                                    class="delete-btn btn btn-danger m-1"
-                                                                    title="Delete"><i
-                                                                        class="fas fa-archive"></i></a>
+                                                                    class="delete-btn btn btn-danger"
+                                                                    title="Delete"><i class="fa fa-trash"></i></a>
                                                                 @else
                                                                 <button type="button" class="delete-btn btn btn-sm btn-danger remove-row" disabled>
                                                                     <i class="fa fa-trash"></i>
@@ -132,7 +204,7 @@
                                         </table>
                                     </div>
                                 
-                                    <div class="login-btn-inner">
+                                    <div class="login-btn-inner text-center" >
                                         <button class="btn btn-sm btn-primary" type="submit" id="saveBtn">Save Data</button>
                                     </div>
                                 </form>
@@ -153,6 +225,44 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+<script>
+    $(document).ready(function () {
+        // Show/hide dropdown
+        $(document).on('click', '.dropdown-input', function () {
+            $('.dropdown-options').hide(); // close others
+            $(this).siblings('.dropdown-options').toggle();
+            $(this).siblings('.dropdown-options').find('.search-box').val('').trigger('input').focus();
+        });
+
+        // Search filter
+        $(document).on('input', '.search-box', function () {
+            const searchTerm = $(this).val().toLowerCase();
+            const $options = $(this).siblings('.options-list').find('.option');
+            $options.each(function () {
+                const text = $(this).text().toLowerCase();
+                $(this).toggle(text.includes(searchTerm));
+            });
+        });
+
+        // Select option
+        $(document).on('click', '.custom-dropdown .option', function () {
+            const selectedText = $(this).text();
+            const selectedId = $(this).data('id');
+            const $dropdown = $(this).closest('.custom-dropdown');
+            $dropdown.find('.dropdown-input').val(selectedText);
+            $dropdown.find('.part_no').val(selectedId);
+            $dropdown.find('.dropdown-options').hide();
+        });
+
+        // Close on click outside
+        $(document).click(function (e) {
+            if (!$(e.target).closest('.custom-dropdown').length) {
+                $('.dropdown-options').hide();
+            }
+        });
+    });
+</script>
+
 <script>
     function removeRow(button) {
         // Find the row containing the button
@@ -199,12 +309,12 @@
 
     // Initialize validation rules
     function initializeValidation(context) {
-        $(context).find('.part-no').each(function () {
-            $(this).rules("add", {
-                required: true,
-                messages: { required: validationMessages.partNo }
-            });
+       $(context).find('.part_no').each(function () {
+        $(this).rules("add", {
+            required: true,
+            messages: { required: validationMessages.partNo }
         });
+    });
         $(context).find('.quantity').each(function () {
             $(this).rules("add", {
                 required: true,
@@ -230,23 +340,14 @@
 
     // Function to check stock availability
 
-    function checkStock($row) {
+   function checkStock($row) {
     const quantity = $row.find('.quantity').val();
-    const partItemId = $row.find('select[name*="part_item_id"]').val();
-    const materialSendProduction = $row.find('input[name*="material_send_production"]').is(':checked') ? 1 : 0;
-    const quantityMinusStatus = $row.find('input[name*="quantity_minus_status"]').val(); // Ensure this is captured correctly
-
+    const partItemId = $row.find('input.part_no').val(); // ✅ FIXED
+    const materialSendProduction = $row.find('.material-send-checkbox').is(':checked') ? 1 : 0;
+    const quantityMinusStatus = $row.find('input[name*="quantity_minus_status"]').val();
     const stockAvailableMessage = $row.find('.stock-available');
 
-    console.log("Checking stock for:", {
-        part_item_id: partItemId,
-        quantity: quantity,
-        material_send_production: materialSendProduction,
-        quantity_minus_status: quantityMinusStatus
-    });
-
     if (materialSendProduction === 1 && quantityMinusStatus === 'done') {
-        console.log("Stock check skipped (Already processed)");
         stockAvailableMessage.text('Stock check skipped').css('color', 'blue');
         return;
     }
@@ -278,6 +379,7 @@
     }
 }
 
+
    
 
     // Add new row functionality
@@ -288,14 +390,23 @@
                 <td>
                     <input type="text" name="addmore[${rowCount}][id]" class="form-control" readonly value="${rowCount}">
                 </td>
+               
+
                 <td>
-                    <select class="form-control part-no" name="addmore[${rowCount}][part_item_id]" required>
-                        <option value="">Select Part Item</option>
-                        @foreach ($dataOutputPartItem as $data)
-                            <option value="{{ $data->id }}">{{ $data->description }}</option>
-                        @endforeach
-                    </select>
-                </td>
+                                                                    <div class="custom-dropdown" data-index="{{ $index }}">
+                                                                        <input type="hidden" name="addmore[${rowCount}][part_item_id]" class="part_no" value="{{ $item->part_item_id }}">
+                                                                        <input type="text" class="dropdown-input form-control part_no" placeholder="Select Part Item..." readonly >
+
+                                                                        <div class="dropdown-options dropdown-height" style="display: none;">
+                                                                            <input type="text" class="search-box form-control" placeholder="Search...">
+                                                                            <div class="options-list">
+                                                                                @foreach ($dataOutputPartItem as $data)
+                                                                                    <div class="option" data-id="{{ $data->id }}">{{ $data->description }}</div>
+                                                                                @endforeach
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
                 <td>
                     <input class="form-control quantity" name="addmore[${rowCount}][quantity]" type="number" step="any" required>
                     <span class="stock-available"></span>
@@ -313,7 +424,7 @@
                     <input type="checkbox" class="material-send-checkbox" name="addmore[${rowCount}][material_send_production]" value="1">
                 </td>
                 <td>
-                    <button type="button" class="btn btn-sm btn-danger remove-row delete-btn">
+                    <button type="button" class="btn btn-danger remove-row delete-btn">
                         <i class="fa fa-trash"></i>
                     </button>
                 </td>
@@ -348,6 +459,13 @@
     // Submit form with confirmation
     $("form").validate({
         ignore: ".delete-btn", // Ignore delete buttons during validation
+        errorPlacement: function (error, element) {
+        if (element.hasClass('part_no')) {
+            error.insertAfter(element.closest('.custom-dropdown'));
+        } else {
+            error.insertAfter(element);
+        }
+    },
         submitHandler: function (form) {
             Swal.fire({
                 icon: 'question',

@@ -36,3 +36,18 @@
             font-size: 14px;
             text-align: left;
         }
+        .edit-buinsess-btn-center{
+           margin: 30px 10px !important;
+        }
+        label {
+            margin-top: 20px;
+        }
+
+        label.error {
+            color: red !important;
+            font-size: 12px;
+        }
+
+        .red-text {
+            color: red !important;
+        }

@@ -36,6 +36,24 @@ class AllListController extends Controller
     public function getAllNewRequirementBusinessWise( $business_id ) {
         try {
             $data_output = $this->service->getAllNewRequirementBusinessWise( $business_id );
+           
+               if ( $data_output->isNotEmpty() ) {
+                foreach ( $data_output as $data ) {
+                    $business_details_id = $data->business_details_id;
+
+                    if ( !empty( $business_details_id ) ) {
+                        $update_data[ 'prod_is_view' ] = '1';
+                        NotificationStatus::where( 'prod_is_view', '0' )
+                        ->where( 'business_details_id', $business_details_id )
+                        ->update( $update_data );
+                    }
+                }
+            } else {
+                return view( 'organizations.estimation.list.list-updated-estimation-send-to-owner_business_wise', [
+                    'data_output' => [],
+                    'message' => 'No data found for designs received for correction'
+                ] );
+            }
             return view( 'organizations.productions.product.list_design_received_for_production_business_wise', compact( 'data_output' ) );
         } catch ( \Exception $e ) {
             return $e;

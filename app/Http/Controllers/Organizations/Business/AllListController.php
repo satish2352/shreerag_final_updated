@@ -9,7 +9,8 @@ use Validator;
 use Config;
 use Carbon;
 use App\Models\ {
-    AdminView
+    AdminView,
+    NotificationStatus
 }
 ;
 
@@ -304,9 +305,9 @@ public function getAcceptEstimationBOMBusinessWise($id) {
                 $business_id = $data->id;
 
                 if (!empty($business_id)) {
-                    AdminView::where('is_view', '0')
+                    NotificationStatus::where('accepted_bom_estimated', '0')
                         ->where('id', $business_id)
-                        ->update(['is_view' => '1']);
+                        ->update(['accepted_bom_estimated' => '1']);
                 }
             }
         } else {
@@ -325,26 +326,7 @@ public function getRejectEstimationBOM()
 {
     try {
         $data_output = $this->service->getRejectEstimationBOM();
-
-        // Prevent errors if $data_output is not a collection
-        if (!is_iterable($data_output) || count($data_output) === 0) {
-            return view('organizations.business.list.list-bom-rejected', [
-                'data_output' => [],
-                'message' => 'No data found'
-            ]);
-        }
-
-        // Mark entries as viewed
-        foreach ($data_output as $data) {
-            if (isset($data->id)) {
-                AdminView::where('is_view', '0')
-                    ->where('business_id', $data->id)
-                    ->update(['is_view' => '1']);
-            }
-        }
-
         return view('organizations.business.list.list-bom-rejected', compact('data_output'));
-
     } catch (\Exception $e) {
         \Log::error('Error in getRejectEstimationBOM: ' . $e->getMessage());
         return view('organizations.business.list.list-bom-rejected', [
@@ -357,26 +339,27 @@ public function getRejectEstimationBOM()
 
 public function getRejectEstimationBOMBusinessWise($id) {
     try {
-        $data_output = $this->service->getRejectEstimationBOMBusinessWise($id);
+        $data_output = $this->service->getRejectEstimationBOMBusinessWise($id);  
 
-        // Check if it's actually a collection or array before using isNotEmpty()
-        if (is_iterable($data_output) && count($data_output) > 0) {
-            foreach ($data_output as $data) {
-                $business_id = $data->business_id;
-
-                if (!empty($business_id)) {
-                    AdminView::where('is_view', '0')
-                        ->where('business_id', $business_id)
-                        ->update(['is_view' => '1']);
+          if ( $data_output->isNotEmpty() ) {
+                foreach ( $data_output as $data ) {
+                    $business_id = $data->id;
+                  
+                     if ( !empty( $business_id ) ) {
+                        $update_data['rejected_bom_estimated'] = '11';
+                       
+                        NotificationStatus::where('rejected_bom_estimated', '0' )
+                        ->where( 'id', $business_id )
+                        ->update( $update_data );
+                       
+                    }
                 }
+            } else {
+                return view( 'organizations.business.list.list-bom-rejected-business-wise', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ] );
             }
-        } else {
-            return view('organizations.business.list.list-bom-rejected-business-wise', [
-                'data_output' => [],
-                'message' => 'No data found'
-            ]);
-        }
-
         return view('organizations.business.list.list-bom-rejected-business-wise', compact('data_output'));
     } catch (\Exception $e) {
         return $e;
@@ -387,24 +370,6 @@ public function getRevisedEstimationBOM()
 {
     try {
         $data_output = $this->service->getRevisedEstimationBOM();
-
-        // Prevent errors if $data_output is not a collection
-        if (!is_iterable($data_output) || count($data_output) === 0) {
-            return view('organizations.business.list.list-revised-bom-estimation', [
-                'data_output' => [],
-                'message' => 'No data found'
-            ]);
-        }
-
-        // Mark entries as viewed
-        foreach ($data_output as $data) {
-            if (isset($data->id)) {
-                AdminView::where('is_view', '0')
-                    ->where('business_id', $data->id)
-                    ->update(['is_view' => '1']);
-            }
-        }
-
         return view('organizations.business.list.list-revised-bom-estimation', compact('data_output'));
 
     } catch (\Exception $e) {
@@ -442,19 +407,26 @@ public function getRevisedEstimationBOMBusinessWise($id) {
         return $e;
     }
 }
-    
-    
-    public function loadDesignSubmittedForProduction() {
+        public function loadDesignSubmittedForProduction() {
         try {
             $data_output = $this->service->loadDesignSubmittedForProduction();
+            return view( 'organizations.business.design.list-design-upload', compact( 'data_output' ) );
+        } catch ( \Exception $e ) {
+            return $e;
+        }
+    }
+
+    public function loadDesignSubmittedForProductionBusinessWise( $business_id ) {
+        try {
+            $data_output = $this->service->loadDesignSubmittedForProductionBusinessWise( $business_id );           
             if ( $data_output->isNotEmpty() ) {
                 foreach ( $data_output as $data ) {
-                    $business_id = $data->business_id;
+                    $business_id = $data->business_details_id;
 
-                    if ( !empty( $business_id ) ) {
+                     if ( !empty( $business_id ) ) {
                         $update_data[ 'is_view' ] = '1';
                         AdminView::where( 'is_view', '0' )
-                        ->where( 'business_id', $business_id )
+                        ->where( 'business_details_id', $business_id )
                         ->update( $update_data );
                     }
                 }
@@ -464,15 +436,6 @@ public function getRevisedEstimationBOMBusinessWise($id) {
                     'message' => 'No data found'
                 ] );
             }
-            return view( 'organizations.business.design.list-design-upload', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
-            return $e;
-        }
-    }
-
-    public function loadDesignSubmittedForProductionBusinessWise( $business_id ) {
-        try {
-            $data_output = $this->service->loadDesignSubmittedForProductionBusinessWise( $business_id );
             return view( 'organizations.business.design.list-design-uploaded-owner-business-wise', compact( 'data_output' ) );
         } catch ( \Exception $e ) {
             return $e;

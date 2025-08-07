@@ -103,6 +103,7 @@
                       <th data-field="po_id">ID</th>
                       <th data-field="purchase_orders_id" data-editable="false"> PO Number</th>
                       <th data-field="vendor_name" data-editable="false">Vendor Name</th>
+                      <th data-field="vendor_type_id" data-editable="false">Vendor Type Name</th>
                       <th data-field="name" data-editable="false">Vendor Company Name</th>
                       <th data-field="email" data-editable="false">Vendor Email</th>
                       <th data-field="contact_no" data-editable="false">Vendor Contact No.</th>
@@ -126,6 +127,7 @@
                       <td>{{ $data->id }}</td>
                       <td>{{ucwords($data->purchase_orders_id)}}</td>
                       <td>{{ucwords($data->vendor_name)}}</td>
+                        <td>{{ucwords($data->vendor_type_name)}}</td>
                       <td>{{ucwords($data->vendor_company_name)}}</td>
                       <td>{{ucwords($data->vendor_email)}}</td>
                       <td>{{ucwords($data->contact_no)}}</td>

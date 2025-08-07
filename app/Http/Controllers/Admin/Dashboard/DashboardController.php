@@ -605,25 +605,23 @@ class DashboardController extends Controller {
         $notifications = [];  // Initialize the $notifications array
 
         if ($ses_userId == '2') {//Owner Department
-  
                 $business_data = AdminView::where('off_canvas_status', 11)
                                 ->where('is_view', '0')
                                 ->select('id')
                                 ->get();
-
                 $business_count = $business_data->count();            
                   $notifications[] = ['admin_count' => $business_count,
                   'message' => 'Business Sent For Design',
                   'url' => $baseUrl . '/owner/list-forwarded-to-design',
                    ];
 
-                    $received_design_estimation = NotificationStatus::where('off_canvas_status',12)
-                    ->where('estimation_view','0')
+                    $estimation_received_design = AdminView::where('off_canvas_status',12)
+                    ->where('is_view','0')
                     ->select('id')
                     ->get();
-                    $received_design_for_estimation = $received_design_estimation->count();
+                    $received_design_for_estimation_count = $estimation_received_design->count();
 
-                    $notifications[] = ['admin_count' => $received_design_for_estimation,
+                    $notifications[] = ['admin_count' => $received_design_for_estimation_count,
                         'message' => 'Design Dept Send Design to Estimation Dept',
                         'url' => $baseUrl . '/estimationdept/list-new-requirements-received-for-estimation'
                     ];
@@ -637,8 +635,17 @@ class DashboardController extends Controller {
                   'message' => 'Estimation Received For Accept/Reject',
                   'url' => $baseUrl . '/owner/list-forwarded-to-design',
                    ];
+                 $revised_rejected_list= AdminView::where('off_canvas_status', 31)
+                                ->where('is_view', '0')
+                                ->select('id')
+                                ->get();
 
-                $uploaded_design = AdminView::where('off_canvas_status', '12')
+                $revised_rejected_list_count = $revised_rejected_list->count();            
+                  $notifications[] = ['admin_count' => $revised_rejected_list_count,
+                  'message' => 'Revised BOM send Estimation Dept',
+                  'url' => $baseUrl . '/owner/list-revised-bom-estimation',
+                   ];
+                $uploaded_design = AdminView::where('off_canvas_status', '33')
                                 ->where('is_view', '0')
                                 ->select('id')
                                     ->get();
@@ -771,14 +778,11 @@ class DashboardController extends Controller {
                 'message' => 'Dispatch Dept Production Dispatch Completed',
                'url' => $baseUrl . '/owner/list-product-dispatch-completed',
                 ];
-                $count = $business_count + $uploaded_design_count + $received_design_for_estimation + $material_ask_prod_to_store_count + $received_correction_design_count + $material_ask_by_store_to_purchase_count + $Purchase_order_need_to_check_count + $purchase_order_approved_count
+                $count = $business_count + $revised_rejected_list_count + $received_design_for_estimation_count + $uploaded_design_count  + $material_ask_prod_to_store_count + $received_correction_design_count + $material_ask_by_store_to_purchase_count + $Purchase_order_need_to_check_count + $purchase_order_approved_count
                  + $po_send_to_vendor_count + $gate_pass_generate_count + $quality_dept_material_received_in_store_count + $production_completed_count + $logistics_send_to_fianance_count
                  + $received_fianance_to_dispatch_count + $dispatch_completed_count;
        
             }elseif($ses_userId == '3'){//Design Department
-              
-               
-
                     $sent_to_prod_data = NotificationStatus::where('off_canvas_status',11)
                     ->where('design_is_view','0')
                     ->select('id')
@@ -788,7 +792,6 @@ class DashboardController extends Controller {
                     $notifications[] = ['admin_count' => $received_for_design,
                     'message' => 'Business Received For Design',
                      'url' => $baseUrl . '/designdept/list-new-requirements-received-for-design'
-                    // 'url' => 'list-new-requirements-received-for-design'
                    ];
 
                 //    $design_rejected_prod_dept= NotificationStatus::where('off_canvas_status',15)
@@ -826,14 +829,14 @@ class DashboardController extends Controller {
 
                    $count = $received_for_design + $design_accepted_prod_count + $design_rejected_prod_count;
         }elseif($ses_userId == '4'){ //Production Department
-                    $received_prod_req = NotificationStatus::where('off_canvas_status',12)
+                    $received_prod_req = NotificationStatus::where('off_canvas_status',33)
                     ->where('prod_is_view','0')
                     ->select('id')
                     ->get();
                     $received_design_in_prod = $received_prod_req->count();
 
                     $notifications[] = ['admin_count' => $received_design_in_prod,
-                        'message' => 'New Design Received ',
+                        'message' => 'New Design Estimated BOM Received ',
                         'url' => $baseUrl . '/proddept/list-new-requirements-received-for-production'
                     ];
                     $revised_received_design = NotificationStatus::where('off_canvas_status',14)
@@ -1089,8 +1092,8 @@ class DashboardController extends Controller {
                         'url' => $baseUrl . '/estimationdept/list-new-requirements-received-for-estimation'
                     ];
 
-                      $estimation_accept_data = AdminView::where('off_canvas_status', 29)
-                                ->where('is_view', '0')
+                      $estimation_accept_data = NotificationStatus::where('off_canvas_status', 32)
+                                ->where('accepted_bom_estimated', '0')
                                 ->select('id')
                                 ->get();
 
@@ -1099,9 +1102,20 @@ class DashboardController extends Controller {
                   'message' => 'Owner Side Estimation Accepted',
                   'url' => $baseUrl . '/owner/list-accept-bom-estimation',
                    ];
+       
+                $estimation_rejected_data = NotificationStatus::where('off_canvas_status', 30)
+                        ->where('rejected_bom_estimated', '0')
+                        ->select('id')
+                        ->get();
 
+        $estimation_rejected_data_count = $estimation_rejected_data->count();            
+            $notifications[] = ['admin_count' => $estimation_rejected_data_count,
+            'message' => 'Received Rejected Estimation',
+            'url' => $baseUrl . '/owner/list-rejected-bom-estimation',
+            ];
 
-            $count = $received_design_for_estimation + $estimation_accept_data_count; 
+  
+            $count = $received_design_for_estimation + $estimation_accept_data_count + $estimation_rejected_data_count; 
         }
             return response()->json([
                 'notification_count' => $count,

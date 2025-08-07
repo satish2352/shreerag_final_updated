@@ -15,24 +15,21 @@ class AllListServices
     public function getAllNewRequirement(){
         try {
             $data_output = $this->repo->getAllNewRequirement();
-       
             return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
-   public function getAllNewRequirementBusinessWise($business_id)
-{
-    try {
-      $data_output = $this->repo->getAllNewRequirementBusinessWise($business_id);
-          
-       return $data_output;
-    } catch (\Exception $e) {
-        \Log::error('Service Error: ' . $e->getMessage());
-        return []; // Return safe fallback
+    public function getAllNewRequirementBusinessWise($business_id){
+        try {
+        $data_output = $this->repo->getAllNewRequirementBusinessWise($business_id);
+            
+        return $data_output;
+        } catch (\Exception $e) {
+            \Log::error('Service Error: ' . $e->getMessage());
+            return []; 
+        }
     }
-}
-
  public function getAllEstimationSendToOwnerForApproval(){
         try {
             $data_output = $this->repo->getAllEstimationSendToOwnerForApproval();

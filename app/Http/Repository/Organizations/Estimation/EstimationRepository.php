@@ -26,10 +26,7 @@ public function updateAll($request)
 {
     try {
         $return_data = [];
-
         $edit_id = $request->business_id;
-
-        // Get existing DesignRevisionForProd
         $dataOutputNew = DesignRevisionForProd::where('business_details_id', $edit_id)->first();
 
         if (!$dataOutputNew) {
@@ -48,12 +45,20 @@ public function updateAll($request)
         }
 
         $productName = $businessDetails->product_name;
-        $bomImageName = $dataOutputNew->bom_image; // use existing image name
+        $bomImageName = $dataOutputNew->bom_image; 
 
         // Only update remark here (no image logic in repo)
-        $dataOutputNew->remark_by_estimation = $request->remark_by_estimation;
+     
+if ($request->hasFile('bom_image')) {
+            $formattedProductName = str_replace(' ', '_', $productName);
+            $bomImageName = $dataOutputNew->id . '_'. $formattedProductName .'_'. rand(100000, 999999) . '.' . $request->file('bom_image')->getClientOriginalExtension();
+           
+            $dataOutputNew->bom_image = $bomImageName;
+           
+        }
+         $dataOutputNew->remark_by_estimation = $request->remark_by_estimation;
+        
         $dataOutputNew->save();
-
         // Update existing estimation record (not insert)
         $estimation_data = EstimationModel::where('design_id', $dataOutputNew->design_id)->first();
 
@@ -90,7 +95,7 @@ public function updateAll($request)
         NotificationStatus::where('business_details_id', $dataOutputNew->business_details_id)->update(['off_canvas_status' => 28]);
 
         // Return data for image processing in service
-        $return_data['last_insert_id'] = $dataOutputNew->design_id;
+        $return_data['last_insert_id'] = $dataOutputNew->id;
         $return_data['bom_image'] = $bomImageName;
         $return_data['product_name'] = $productName;
 
@@ -136,14 +141,18 @@ public function updateRevisedEstimation($request)
                 if ($request->hasFile('bom_image')) {
             $formattedProductName = str_replace(' ', '_', $productName);
             $bomImageName = $dataOutputNew->id . '_'. $formattedProductName .'_'. rand(100000, 999999) . '.' . $request->file('bom_image')->getClientOriginalExtension();
+           
             $dataOutputNew->bom_image = $bomImageName;
+           
         }
         $dataOutputNew->remark_by_estimation = $request->remark_by_estimation;
+        
         $dataOutputNew->save();
 
         // Update existing estimation record (not insert)
         $estimation_data = EstimationModel::where('design_id', $dataOutputNew->design_id)->first();
-
+//  dd($estimation_data);
+//             die();
         if (!$estimation_data) {
             return [
                 'status' => 'error',
@@ -163,21 +172,21 @@ public function updateRevisedEstimation($request)
             $business_application->design_id = $dataOutputNew->design_id;
             $business_application->estimation_id = $estimation_data->id;
             $business_application->resend_bom_estimation_send_to_owner = config('constants.ESTIMATION_DEPARTMENT.RIVISED_BOM_ESTIMATION_SEND_TO_OWNER');
-            $business_application->off_canvas_status = 28;
+            $business_application->off_canvas_status = 31;
             $business_application->save();
         }
 
         // Update AdminView and NotificationStatus
         $update_data = [
-            'off_canvas_status' => 28,
+            'off_canvas_status' => 31,
             'is_view' => 0
         ];
 
         AdminView::where('business_details_id', $dataOutputNew->business_details_id)->update($update_data);
-        NotificationStatus::where('business_details_id', $dataOutputNew->business_details_id)->update(['off_canvas_status' => 28]);
+        // NotificationStatus::where('business_details_id', $dataOutputNew->business_details_id)->update(['off_canvas_status' => 28]);
 
         // Return data for image processing in service
-        $return_data['last_insert_id'] = $dataOutputNew->design_id;
+        $return_data['last_insert_id'] = $dataOutputNew->id;
         $return_data['bom_image'] = $bomImageName;
         $return_data['product_name'] = $productName;
 
@@ -191,206 +200,6 @@ public function updateRevisedEstimation($request)
         ];
     }
 }
-
-// public function updateRevisedEstimation($request)
-// {
-  
-//     try {
-//         $return_data = array();
-//         $edit_id = $request->business_id;
-
-
-//         // $dataOutputNew = DesignModel::where('id', $edit_id)->first();
-//         $dataOutputNew = DesignModel::where('business_details_id', $edit_id)->first();
-//         // Check if the record was found
-//         if (!$dataOutputNew) {
-//             return [
-//                 'msg' => 'Design not found.',
-//                 'status' => 'error',
-//             ];
-//         }
-
-//         $businessDetails = BusinessDetails::where('id', $dataOutputNew->business_details_id)->first();
-//         if (!$businessDetails) {
-//             return [
-//                 'msg' => 'Business details not found.',
-//                 'status' => 'error',
-//             ];
-//         }
-
-//         $productName = $businessDetails->product_name;
-//         $bomImageName = $dataOutputNew->bom_image;
-
-       
-//         // Handle BOM image upload
-//         if ($request->hasFile('bom_image')) {
-//             $formattedProductName = str_replace(' ', '_', $productName);
-//             $bomImageName = $dataOutputNew->id . '_'. $formattedProductName .'_'. rand(100000, 999999) . '.' . $request->file('bom_image')->getClientOriginalExtension();
-//             $dataOutputNew->bom_image = $bomImageName;
-//         }
-
-//         $dataOutputNew->save();
-
-//         $estimation_data = EstimationModel::firstOrNew(['design_id' => $dataOutputNew->id]);
-
-//         $estimation_data->business_id = $dataOutputNew->business_id;
-//         $estimation_data->business_details_id = $dataOutputNew->business_details_id;
-//         $estimation_data->business_details_id = $dataOutputNew->business_details_id;
-//         $estimation_data->total_estimation_amount = $request->total_estimation_amount;
-//         $estimation_data->save();
-
-//         // Store design and production IDs
-//         $designIds[] = $dataOutputNew->id;
-//         $estimationIds[] = $estimation_data->id;
-//         // $productionIdsDetails[] = $production_data_details->id;
-
-    
-
-//         // Update BusinessApplicationProcesses if record exists
-//         $business_applications = BusinessApplicationProcesses::where('design_id', $dataOutputNew->id)->get();
-
-//         foreach ($business_applications as $business_application) {
-//             // $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
-//             $business_application->design_id = $designIds[0] ?? null; // Use first element if available
-//             // $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_ESTIMATION_DEPT_FIRST_TIME');
-//             $business_application->estimation_id = $productionIds[0] ?? null; // Use first element if available
-//             $business_application->	bom_estimation_send_to_owner = config('constants.ESTIMATION_DEPARTMENT.RIVISED_BOM_ESTIMATION_SEND_TO_OWNER');
-//             $business_application->	off_canvas_status = 12;
-
-//             $business_application->save();
-//         }
-
-//         // $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
-//         $update_data_admin['off_canvas_status'] = 12;
-//         $update_data_business['off_canvas_status'] = 12;
-//         $update_data_admin['is_view'] = '0';
-//         AdminView::where('business_details_id', $dataOutputNew->business_details_id)
-//                 ->update($update_data_admin);
-//                 NotificationStatus::where('business_details_id', $dataOutputNew->business_details_id)
-//                 ->update($update_data_business);
-
-//         $last_insert_id = $dataOutputNew->id; 
-
-//         $return_data['last_insert_id'] = $last_insert_id;
-//         $return_data['bom_image'] = $bomImageName;
-//         $return_data['product_name'] = $productName;
-//         return $return_data;
-
-//     } catch (\Exception $e) {
-//         return [
-//             'msg' => 'Failed to update design.',
-//             'status' => 'error',
-//             'error' => $e->getMessage()
-//         ];
-//     }
-// }
-
-//  public function sendToProduction($id)
-// {
-//     try {
-//      $decoded_business_id = base64_decode($id);
-
-//         $dataOutputNew = EstimationModel::where('business_details_id', $decoded_business_id)->get();
- 
-//         if (!$dataOutputNew) {
-//             return [
-//                 'msg' => 'Design not found.',
-//                 'status' => 'error',
-//             ];
-//         }
-
-//         $businessDetails = BusinessDetails::where('id', $decoded_business_id)->first();
- 
-//         if (!$businessDetails) {
-//             return [
-//                 'msg' => 'Business details not found.',
-//                 'status' => 'error',
-//             ];
-//         }
-
-//         $productName = $businessDetails->product_name;
-//         $designImageName = $dataOutputNew->design_image;
-//         $bomImageName = $dataOutputNew->bom_image;
-        
-//         // Create or update production data
-//         $production_data = ProductionModel::firstOrNew(['business_details_id' => $decoded_business_id]);
-//      dd($production_data);
-// die();
-//         $production_data->business_id = $dataOutputNew->business_id;
-//         $production_data->business_details_id = $dataOutputNew->business_details_id;
-//         $production_data->design_id = $dataOutputNew->id;
-
-           
-//         $production_data->save();
-
-//         $production_data_details = ProductionDetails::firstOrNew(['business_details_id' => $dataOutputNew->id]);
-       
-       
-//         $production_data_details->business_id = $dataOutputNew->business_id;
-//         $production_data_details->design_id = $dataOutputNew->id;
-//         $production_data_details->business_details_id = $production_data->business_details_id;
-//         $production_data_details->production_id = $production_data->id;
-//         $production_data_details->material_send_production = 0;
-//         $production_data_details->quantity_minus_status = 'pending';
-//         $production_data_details->part_item_id = NULL;
-//         $production_data_details->quantity = NULL;
-//         $production_data_details->unit = NULL;
-//         $production_data_details->save();
-
-//         // Store design and production IDs
-//         $designIds[] = $dataOutputNew->id;
-//         $productionIds[] = $production_data->id;
-//         $productionIdsDetails[] = $production_data_details->id;
-
-//         // Insert into DesignRevisionForProd without updating DesignModel images
-//         // $designRevisionForProdIDInsert = new DesignRevisionForProd();
-//         // $designRevisionForProdIDInsert->business_id = $dataOutputNew->business_id;
-//         // $designRevisionForProdIDInsert->business_details_id = $dataOutputNew->business_details_id;
-//         // $designRevisionForProdIDInsert->design_id = $dataOutputNew->id;
-//         // $designRevisionForProdIDInsert->production_id = $production_data->id;
-//         // $designRevisionForProdIDInsert->reject_reason_prod = '';
-//         // $designRevisionForProdIDInsert->remark_by_design = '';
-//         // $designRevisionForProdIDInsert->design_image = $designImageName ?? null;
-//         // $designRevisionForProdIDInsert->bom_image = $bomImageName ?? null;
-//         // $designRevisionForProdIDInsert->save();
-
-//         // Update BusinessApplicationProcesses
-//         $business_applications = BusinessApplicationProcesses::where('business_details_id', $dataOutputNew->id)->get();
-
-//         foreach ($business_applications as $business_application) {
-//             if ($business_application) {
-//                 $business_application->estimation_send_to_production = config('constants.ESTIMATION_DEPARTMENT.UPDATED_ACCEPTED_BOM_SEND_TO_PRODUCTION');
-             
-          
-//                 $business_application->save();
-//             }
-//         }
-
-//         // Update admin and notification view
-//         $update_data_admin['off_canvas_status'] = 30;
-//         $update_data_business['off_canvas_status'] = 30;
-//         $update_data_admin['is_view'] = '0';
-//         AdminView::where('business_details_id', $dataOutputNew->id)->update($update_data_admin);
-//         NotificationStatus::where('business_details_id', $dataOutputNew->id)->update($update_data_business);
-
-//         return [
-//             'last_insert_id' => $dataOutputNew->id,
-//             'design_image' => $designImageName,
-//             'bom_image' => $bomImageName,
-//             'product_name' => $productName,
-//             'status' => 'success',
-//             'msg' => 'Sent to production successfully.'
-//         ];
-
-//     } catch (\Exception $e) {
-//         \Log::error('Error in sendToProduction: ' . $e->getMessage());
-//         return [
-//             'status' => 'error',
-//             'msg' => 'Something went wrong.',
-//         ];
-//     }
-// }
-
 public function sendToProduction($id)
 {
     try {
@@ -455,11 +264,11 @@ public function sendToProduction($id)
 
         // Update admin and notification view
         $update_data_admin = [
-            'off_canvas_status' => 30,
+            'off_canvas_status' => 33,
             'is_view' => '0'
         ];
         $update_data_business = [
-            'off_canvas_status' => 30
+            'off_canvas_status' => 33
         ];
 
         AdminView::where('business_details_id', $dataOutputNew->business_details_id)->update($update_data_admin);

@@ -1,15 +1,5 @@
 @extends('admin.layouts.master')
 @section('content')
-    <style>
-        label {
-            margin-top: 20px;
-        }
-
-        label.error {
-            color: red;
-            font-size: 12px;
-        }
-    </style>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list">
@@ -108,10 +98,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
-
-
-
                                                 <div class="login-btn-inner">
                                                     <div class="row">
                                                         <div class="col-lg-5"></div>
@@ -161,8 +147,8 @@
                 rules: {
                     design_image: {
                         required: true,
-                        fileExtension: ["pdf"], // Validate for PDF extension
-                        fileSize: [1, 6144], // Min 1KB and Max 2MB
+                        fileExtension: ["pdf"], 
+                        fileSize: [1, 6144], 
                     },
                     bom_image: {
                         required: true,

@@ -128,7 +128,7 @@ public function getAllListDesignRecievedForCorrection() {
             DB::raw('MAX(design_revision_for_prod.id) as design_revision_for_prod_id'),
             DB::raw('MAX(COALESCE(design_revision_for_prod.reject_reason_prod, "")) as reject_reason_prod'),
             'businesses.updated_at',
-            'designs.bom_image',
+            'design_revision_for_prod.bom_image',
             'designs.design_image'
         )
         ->groupBy(
@@ -143,7 +143,7 @@ public function getAllListDesignRecievedForCorrection() {
             'businesses_details.is_active',
             'production.business_id',
             'businesses.updated_at',
-            'designs.bom_image',
+            'design_revision_for_prod.bom_image',
             'designs.design_image'
         )
         

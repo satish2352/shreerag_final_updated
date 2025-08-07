@@ -282,6 +282,9 @@ class AllListRepositor
         ->leftJoin('businesses_details', function($join) {
           $join->on('production.business_details_id', '=', 'businesses_details.id');
       })
+        ->leftJoin('estimation', function($join) {
+          $join->on('business_application_processes.business_details_id', '=', 'estimation.id');
+      })
       // ->where('purchase_orders.po_send_owner_status', 'send_owner')
       ->whereIn('purchase_orders.purchase_status_from_purchase',$array_to_be_check)
       ->whereNull('purchase_orders.purchase_status_from_owner')
@@ -300,6 +303,7 @@ class AllListRepositor
           'businesses.remarks',
           'businesses.is_active',
           'production.business_id',
+          'estimation.total_estimation_amount',
           // 'design_revision_for_prod.reject_reason_prod',
           // 'designs.bom_image',
           // 'designs.design_image',
@@ -728,6 +732,9 @@ public function loadDesignSubmittedForEstimationBusinessWise($business_details_i
               ->leftJoin('estimation', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
             })
+             ->leftJoin('design_revision_for_prod', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+            })
              ->where(function ($query) {
                 $query->whereNull('business_application_processes.owner_bom_accepted')
                       ->orWhereNull('business_application_processes.owner_bom_rejected');
@@ -742,7 +749,7 @@ public function loadDesignSubmittedForEstimationBusinessWise($business_details_i
                 'businesses_details.quantity',
                 'businesses_details.description',
                 'businesses_details.total_amount',
-                DB::raw('MAX(designs.bom_image) as bom_image'),
+                DB::raw('MAX(design_revision_for_prod.bom_image) as bom_image'),
                 DB::raw('MAX(designs.design_image) as design_image'),
                 'estimation.total_estimation_amount',
             )
@@ -815,6 +822,9 @@ public function getAcceptEstimationBOMBusinessWise($id)
              ->leftJoin('estimation', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
             })
+              ->leftJoin('design_revision_for_prod', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+            })
              ->where('businesses.id', $decoded_business_id)
             // ->where('business_application_processes.bom_estimation_send_to_owner', $received)
             ->where('business_application_processes.owner_bom_accepted', $accepted)
@@ -825,7 +835,7 @@ public function getAcceptEstimationBOMBusinessWise($id)
                 'businesses_details.product_name',
                 'businesses_details.quantity',
                 'businesses_details.description',
-                DB::raw('MAX(designs.bom_image) as bom_image'),
+                DB::raw('MAX(design_revision_for_prod.bom_image) as bom_image'),
                 DB::raw('MAX(designs.design_image) as design_image'),
                 'estimation.total_estimation_amount',
                  'business_application_processes.updated_at',
@@ -877,7 +887,7 @@ public function getRejectEstimationBOM()
                 'businesses.remarks',
                 'design_revision_for_prod.updated_at'
             )
-            // ->orderBy('updated_at', 'desc')
+            ->orderBy('updated_at', 'desc')
             ->get();
            
 
@@ -887,6 +897,7 @@ public function getRejectEstimationBOM()
         return collect(); // return empty collection instead of boolean
     }
 }
+
 public function getRejectEstimationBOMBusinessWise($id)
 {
     try {
@@ -920,10 +931,11 @@ public function getRejectEstimationBOMBusinessWise($id)
                 'businesses_details.product_name',
                 'businesses_details.quantity',
                 'businesses_details.description',
-                DB::raw('MAX(designs.bom_image) as bom_image'),
+                // DB::raw('MAX(designs.bom_image) as bom_image'),
                 DB::raw('MAX(designs.design_image) as design_image'),
                 'estimation.total_estimation_amount',
                 'design_revision_for_prod.rejected_remark_by_owner',
+                 'design_revision_for_prod.bom_image',
                 'business_application_processes.updated_at',
                 
              
@@ -936,6 +948,7 @@ public function getRejectEstimationBOMBusinessWise($id)
                 'businesses_details.description',
                  'estimation.total_estimation_amount',
                  'design_revision_for_prod.rejected_remark_by_owner',
+                      'design_revision_for_prod.bom_image',
                  'business_application_processes.updated_at',
             )
             ->get();
@@ -974,7 +987,7 @@ public function getRevisedEstimationBOM()
                 'businesses.remarks',
                 'businesses.grand_total_amount'
             )
-            // ->orderBy('updated_at', 'desc') // use the alias
+            ->orderBy('updated_at', 'desc') // use the alias
             ->get();
 
         return $data_output; // Must always return collection, never true/false
@@ -1002,6 +1015,9 @@ public function getRevisedEstimationBOMBusinessWise($id)
              ->leftJoin('estimation', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
             })
+              ->leftJoin('design_revision_for_prod', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+            })
             ->where('businesses.id', $decoded_business_id)
             ->where('business_application_processes.resend_bom_estimation_send_to_owner', $revised)
             ->where('businesses.is_active', true)
@@ -1011,7 +1027,7 @@ public function getRevisedEstimationBOMBusinessWise($id)
                 'businesses_details.product_name',
                 'businesses_details.quantity',
                 'businesses_details.description',
-                DB::raw('MAX(designs.bom_image) as bom_image'),
+                DB::raw('MAX(design_revision_for_prod.bom_image) as bom_image'),
                 DB::raw('MAX(designs.design_image) as design_image'),
                 'estimation.total_estimation_amount',
                 'business_application_processes.updated_at'
@@ -1024,6 +1040,7 @@ public function getRevisedEstimationBOMBusinessWise($id)
                 'businesses_details.quantity',
                 'businesses_details.description',
                  'estimation.total_estimation_amount',
+                  'design_revision_for_prod.remark_by_estimation',
                  'business_application_processes.updated_at'
             )
             ->get();

@@ -13,7 +13,8 @@ use App\Models\ {
     BusinessApplicationProcesses,
     NotificationStatus,
     PartItem,
-    UnitMaster
+    UnitMaster,
+    AdminView
 }
 ;
 
@@ -33,34 +34,32 @@ class AllListController extends Controller
             return $e;
         }
     }
-
     public function getAllNewRequirementBusinessWise( $business_id ) {
         try {
             $data_output = $this->service->getAllNewRequirementBusinessWise( $business_id );
              if ( $data_output->isNotEmpty() ) {
-                foreach ( $data_output as $data ) {
-                    $business_details_id = $data->business_details_id;
+                 foreach ($data_output as $data) {
+            if (isset($data->business_details_id)) {
+                NotificationStatus::where('estimation_view', '0')
+                    ->where('business_details_id', $data->business_details_id)
+                    ->update(['estimation_view' => '1']);
+                  AdminView::where('is_view', '0')
+                    ->where('business_details_id', $data->business_details_id)
+                    ->update(['is_view' => '1']);
 
-                    if ( !empty( $business_details_id ) ) {
-                        $update_data[ 'estimation_view' ] = '1';
-                        NotificationStatus::where( 'estimation_view', '0' )
-                        ->where( 'business_details_id', $business_details_id )
-                        ->update( $update_data );
-                    }
-                }
+            }
+        }
             } else {
                 return view( 'organizations.estimation.list.list_design_received_for_estimation_business_wise', [
                     'data_output' => [],
                     'message' => 'No data found for designs received for correction'
                 ] );
             }
-
             return view( 'organizations.estimation.list.list_design_received_for_estimation_business_wise', compact( 'data_output' ) );
         } catch ( \Exception $e ) {
             return $e;
         }
     }
-
      public function getAllEstimationSendToOwnerForApproval( Request $request ) {
         try {
             $data_output = $this->service->getAllEstimationSendToOwnerForApproval();

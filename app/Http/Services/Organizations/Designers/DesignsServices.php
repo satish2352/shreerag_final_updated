@@ -54,7 +54,8 @@ use Config;
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
-
+// dd($return_data);
+// die();
            
             $productName = $return_data['product_name']; 
             $formattedProductName = str_replace(' ', '_', $productName);

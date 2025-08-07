@@ -1,22 +1,6 @@
 @extends('admin.layouts.master')
 @section('content')
-    <style>
-        label {
-            margin-top: 10px;
-        }
-
-        label.error {
-            color: red;
-            font-size: 12px;
-        }
-
-        .form-display-center {
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center;
-        }
-    </style>
-    <div class="">
+    <div class=".business-form">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list">
                 <div class="sparkline12-hd">
@@ -57,7 +41,7 @@
                                 <div class="row d-flex justify-content-center form-display-center">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <form action="{{ route('update-business', $editData[0]->business_main_id) }}"
-                                            method="POST" enctype="multipart/form-data" id="addEmployeeForm">
+                                            method="POST" enctype="multipart/form-data" id="updateBusiness">
                                             @csrf
                                             <input type="hidden" name="business_main_id" id=""
                                                 class="form-control" value="{{ $editData[0]->business_main_id }}"
@@ -67,12 +51,12 @@
                                                     @if ($key == 0)
                                                         <div class="row">
                                                              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                <label for="project_name">PO Number : <span
+                                                                <label for="project_name">Project Name : <span
                                                                         class="text-danger">*</span></label>
                                                                 <input class="form-control" name="project_name"
                                                                     id="project_name"
                                                                     placeholder="Enter the customer po number"
-                                                                    value="@if (old('project_name')) {{ trim(old('project_name')) }}@else{{ trim($editDataNew->customer_po_number) }} @endif">
+                                                                    value="@if (old('project_name')) {{ trim(old('project_name')) }}@else{{ trim($editDataNew->project_name) }} @endif">
                                                             </div>
 
                                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -84,13 +68,20 @@
                                                                     value="@if (old('customer_po_number')) {{ trim(old('customer_po_number')) }}@else{{ trim($editDataNew->customer_po_number) }} @endif">
                                                             </div>
 
-                                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mb-4">
                                                                 <label for="title">Customer Name : <span
                                                                         class="text-danger">*</span></label>
                                                                 <input class="form-control" name="title" id="title"
                                                                     placeholder="Enter the customer po number"
                                                                     value=" @if (old('title')) {{ old('title') }}@else{{ $editDataNew->title }} @endif">
                                                             </div>
+                                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                            <label for="po_validity">PO Validity: <span
+                                                                    class="text-danger">*</span></label>
+                                                            <input type="date" class="form-control" name="po_validity"
+                                                                id="po_validity"
+                                                                value="{{ old('po_validity', $editDataNew->po_validity) }}">
+                                                        </div>
                                                         </div>
                                                     @endif
                                                 @endforeach
@@ -100,7 +91,7 @@
                                                     <table class="table table-hover table-white repeater"
                                                         id="purchase_order_table">
                                                         <tr>
-                                                            <th>#</th>
+                                                            <th>Sr. No.</th>
                                                             <th>Product Name</th>
                                                             <th>Description</th>
                                                             <th>Quantity</th>
@@ -116,6 +107,8 @@
                                                         </tr>
 
                                                         @foreach ($editData as $key => $editDataNew)
+                                                      
+                                                        <input type="hidden" name="delete_id" id="delete_id" value="{{ $editDataNew->id }}">
                                                             <tr>
                                                                 <input type="hidden" name="design_count"
                                                                     value="{{ count($editData) }}">
@@ -158,76 +151,54 @@
                                                                         @if (!($editDataNew->business_status_id === 1112 && $editDataNew->design_status_id === 1111)) disabled @endif>
                                                                         <i class="fas fa-archive"></i>
                                                                     </a>
+                                                                    
                                                                 </td>
                                                             </tr>
                                                         @endforeach
-
-<tfoot>
-        <tr>
-            <td colspan="5" class="text-right font-weight-bold">Grand Total</td>
-            <td colspan="2">
-                <input type="text" id="grandTotal" name="grand_total_amount" class="form-control" readonly>
-            </td>
-        </tr>
-    </tfoot>
+                                                         <tfoot>
+                                                            <tr>
+                                                                <td colspan="5" class="text-right font-weight-bold">Grand Total</td>
+                                                                <td colspan="2">
+                                                                    <input type="text" id="grandTotal" name="grand_total_amount" class="form-control" readonly>
+                                                                </td>
+                                                            </tr>
+                                                        </tfoot>
                                                     </table>
                                                 </div>
-
                                                 @foreach ($editData as $key => $editDataNew)
                                                     @if ($key == 0)
+                                                    <div>
                                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                            <label for="po_validity">PO Validity: <span
-                                                                    class="text-danger">*</span></label>
-                                                            <input type="date" class="form-control" name="po_validity"
-                                                                id="po_validity"
-                                                                value="{{ old('po_validity', $editDataNew->po_validity) }}">
+                                                            <label for="remarks">Remark: <span
+                                                                        class="text-danger">*</span> </label>
+                                                            <textarea class="form-control remarks" name="remarks" id="remarks" placeholder="Enter the Description">@if (old('remarks')){{ trim(old('remarks')) }}@else{{ trim($editDataNew->remarks) }}@endif</textarea>
                                                         </div>
-
                                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                             <label for="customer_payment_terms">Payment Terms:</label>
                                                             (optional)
-                                                            <input class="form-control" name="customer_payment_terms"
-                                                                id="customer_payment_terms"
-                                                                placeholder="Enter the customer po number"
-                                                                value=" @if (old('customer_payment_terms')) {{ old('customer_payment_terms') }}@else{{ $editDataNew->customer_payment_terms }} @endif">
+                                                            <textarea class="form-control customer_payment_terms" name="customer_payment_terms" id="customer_payment_terms" placeholder="Enter the Description">@if (old('customer_payment_terms')){{ trim(old('customer_payment_terms')) }}@else{{ trim($editDataNew->customer_payment_terms) }}@endif</textarea>
+
                                                         </div>
-                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mb-3">
                                                             <label for="customer_terms_condition">Terms
                                                                 Condition:</label> (optional)
-                                                            <input class="form-control" name="customer_terms_condition"
-                                                                id="customer_terms_condition"
-                                                                placeholder="Enter the customer po number"
-                                                                value=" @if (old('customer_terms_condition')) {{ old('customer_terms_condition') }}@else{{ $editDataNew->customer_terms_condition }} @endif">
+                                                                <textarea class="form-control customer_terms_condition" name="customer_terms_condition" id="customer_terms_condition" placeholder="Enter the Description">@if (old('customer_terms_condition')){{ trim(old('customer_terms_condition')) }}@else{{ trim($editDataNew->customer_terms_condition) }}@endif</textarea>
                                                         </div>
-                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                            <label for="remarks">Remark:</label> (optional)
-                                                            <textarea class="form-control english_description" name="remarks" id="remarks"
-                                                                placeholder="Enter the Description">
-                                                                   @if (old('remarks'))
-{{ trim(old('remarks')) }}@else{{ trim($editDataNew->remarks) }}
-@endif
-                                                                    </textarea>
-                                                        </div>
+                                                    </div>
                                                     @endif
                                                 @endforeach
                                             </div>
-                                            <div class="login-btn-inner">
-                                                <div class="row">
-                                                    <div class="col-lg-5"></div>
-                                                    <div class="col-lg-7">
-                                                        <div class="login-horizental cancel-wp pull-left">
-                                                            <button class="btn btn-sm btn-primary login-submit-cs"
-                                                                type="submit" style="margin-bottom:50px">Update
-                                                                Data</button>
+                                             <div class="col-lg-12 col-md-12 col-sm-12 text-center login-btn-inner mb-5">
+                                                <button class="btn btn-sm btn-primary login-submit-cs edit-buinsess-btn-center" type="submit">
+                                                    Update Data
+                                                </button>
 
-                                                            <a href="{{ route('list-business') }}"><button
-                                                                    class="btn btn-white"
-                                                                    style="margin-bottom:50px">Cancel</button></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <a href="{{ route('list-business') }}">
+                                                    <button type="button" class="btn btn-white edit-buinsess-btn-center">
+                                                        Cancel
+                                                    </button>
+                                                </a>
                                             </div>
-                                    </div>
                                     </form>
                                 </div>
                             </div>
@@ -244,11 +215,22 @@
         <input type="hidden" name="delete_id" id="delete_id" value="">
     </form>
 
-   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
 
 <script>
+     function setMinDate() {
+    var today = new Date();
+    var day = String(today.getDate()).padStart(2, '0');
+    var month = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var year = today.getFullYear();
+    var todayDate = year + '-' + month + '-' + day;
+
+        $('#po_validity').attr('min', todayDate);
+    }
+        setMinDate();
+
     function calculateTotalAmount(row) {
     const quantity = parseFloat(row.find('.quantity').val()) || 0;
     const rate = parseFloat(row.find('.rate').val()) || 0;
@@ -267,14 +249,14 @@ function calculateGrandTotal() {
 }
     $(document).ready(function() {
         // Trim whitespace on form submission
-        $("#businessForm").on('submit', function() {
+        $("#updateBusiness").on('submit', function() {
             var poNumberInput = $('#customer_po_number');
             var remarksInput = $('#remarks');
             poNumberInput.val($.trim(poNumberInput.val()));
             remarksInput.val($.trim(remarksInput.val()));
         });
 
-        var validator = $("#businessForm").validate({
+        var validator = $("#updateBusiness").validate({
             ignore: [],
             rules: {
                 title: {
@@ -398,10 +380,37 @@ function calculateGrandTotal() {
             initializeValidation($lastRow);
         });
 
-        $(document).on("click", ".remove-row", function() {
-            $(this).closest("tr").remove();
-               calculateGrandTotal();
-        });
+        // $(document).on("click", ".remove-row", function() {
+        //     $(this).closest("tr").remove();
+        //        calculateGrandTotal();
+        // });
+$(document).on("click", ".remove-row", function(e) {
+    const id = $(this).data("id");
+
+    // If no data-id, it's a new row => just remove
+    if (!id || id === 0) {
+        $(this).closest("tr").remove();
+        calculateGrandTotal();
+        return;
+    }
+
+    // Else it's an old row => confirm and submit delete form
+    e.preventDefault();
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This will permanently delete this product row!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $('#delete_id').val(id);
+            $('#deleteform').submit();
+        }
+    });
+});
 
         $("#purchase_order_table tbody tr").each(function() {
             initializeValidation($(this));

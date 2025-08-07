@@ -22,6 +22,7 @@ return new class extends Migration
                 $table->unsignedBigInteger('production_id');
                 $table->string('po_date')->nullable();
                 $table->string('vendor_id');
+                $table->string('vendor_type_id');
                 $table->string('terms_condition')->nullable();
                 $table->decimal('po_grand_total_amount', 12, 2)->nullable();
                 $table->string('remark')->nullable();

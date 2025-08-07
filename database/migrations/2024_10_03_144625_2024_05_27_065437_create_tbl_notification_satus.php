@@ -18,7 +18,11 @@ return new class extends Migration
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('business_details_id');
             $table->string('off_canvas_status')->nullable();
-        $table->boolean('design_is_view')->default(0);
+            $table->boolean('design_is_view')->default(0);
+            $table->boolean('estimation_view')->default(0);
+            $table->boolean('add_bom_estimation')->default(0);
+            $table->boolean('accepted_bom_estimated')->default(0);
+            $table->boolean('rejected_bom_estimated')->default(0);
         $table->boolean('prod_is_view')->default(0);
         $table->boolean('prod_design_accepted')->default(0);
         $table->boolean('prod_design_rejected')->default(0);
@@ -29,6 +33,7 @@ return new class extends Migration
         $table->boolean('store_is_view')->default(0);
         $table->boolean('purchase_is_view')->default(0);
         $table->boolean('visible_purchase_quality_to_store')->default(0);
+         $table->boolean('issue_material_send_req_to_store')->default(0);
         $table->boolean('purchase_order_is_view_po')->default(0);
         $table->boolean('po_is_approved_owner_view')->default(0);
         $table->boolean('purchase_order_is_rejected_view')->default(0);
