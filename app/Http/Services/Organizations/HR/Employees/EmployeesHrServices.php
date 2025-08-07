@@ -24,7 +24,7 @@ class EmployeesHrServices
         }
     }
 
-    public function index() {
+    public function getUsersList() {
         $data_users = $this->repo->getUsersList();
         return $data_users;
     }

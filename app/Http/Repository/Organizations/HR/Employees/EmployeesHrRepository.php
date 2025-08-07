@@ -41,6 +41,8 @@ class EmployeesHrRepository  {
 								'users.city',
 								'users.pincode',
 								'users.id',
+								'users.latitude',
+								'users.longitude',
 								'users.is_active'
 							)->where('users.is_deleted', 0)
 							->orderBy('users.id', 'desc')->get();

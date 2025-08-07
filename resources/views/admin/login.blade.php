@@ -134,6 +134,7 @@
                             @endif
                             <form action="{{ route('login') }}" method="POST" id="loginForm">
                                 @csrf
+                               
                                 <div class="form-group">
                                     <label class="control-label" for="username">Email Id</label>
                                     <input type="text" placeholder="Please enter your email Id" value=""
@@ -154,6 +155,8 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                
                                 <div class="form-group">
                                     {!! NoCaptcha::renderJs() !!}
                                     {!! NoCaptcha::display() !!}
@@ -164,6 +167,9 @@
                                         </span>
                                     @endif
                                 </div>
+                                 <input type="hidden" name="latitude" id="latitude">
+                                <input type="hidden" name="longitude" id="longitude">
+                                 <input type="hidden" name="location_address" id="location_address">
                                 <button type="submit" class="btn btn-success btn-block loginbtn">Login</button>
                             </form>
 
@@ -239,6 +245,36 @@
             });
         });
     </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const loginForm = document.getElementById("loginForm");
+
+        loginForm.addEventListener("submit", function (event) {
+            event.preventDefault(); // Stop form for now
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    document.getElementById("latitude").value = position.coords.latitude;
+                    document.getElementById("longitude").value = position.coords.longitude;
+
+                    console.log("Latitude set to:", position.coords.latitude);
+                    console.log("Longitude set to:", position.coords.longitude);
+
+                    loginForm.submit(); // Now submit with data
+                }, function (error) {
+                    console.warn("Geolocation error:", error.message);
+                    loginForm.submit(); // Still submit without coords
+                });
+            } else {
+                console.warn("Geolocation not supported.");
+                loginForm.submit(); // Still submit without coords
+            }
+        });
+    });
+</script>
+
+
+
 
 
 

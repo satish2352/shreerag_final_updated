@@ -61,6 +61,8 @@
                                                 <th>Sr. No.</th>
                                                 <th>Name</th>
                                                 <th>Department</th>
+                                                <th>latitude</th>
+                                                <th>longitude</th>
                                                 <th>Leave Details</th>
                                                 <th>Action</th>
                                             </tr>
@@ -73,7 +75,8 @@
                                                         ({{ $item->u_email }})
                                                     </td>
                                                     <td>{{ $item->role_name }}</td>
-
+                                                    <td>{{ $item->latitude }}</td>
+                                                    <td>{{ $item->longitude }}</td>
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
                                                             <a href="{{ route('users-leaves-details', base64_encode($item->id)) }} "><button

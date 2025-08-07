@@ -24,8 +24,31 @@ class EmployeesHrController extends Controller
         $this->service = new EmployeesHrServices();
     }
 
+    public function getLatLngFromAddress($address)
+{
+    $apiKey = env('GOOGLE_MAPS_API_KEY'); // Add this in your .env file
+    $formattedAddress = urlencode($address);
+    $url = "https://maps.googleapis.com/maps/api/geocode/json?address={$formattedAddress}&key={$apiKey}";
+
+    try {
+        $response = file_get_contents($url);
+        $json = json_decode($response, true);
+
+        if ($json['status'] === 'OK') {
+            $lat = $json['results'][0]['geometry']['location']['lat'];
+            $lng = $json['results'][0]['geometry']['location']['lng'];
+            return ['lat' => $lat, 'lng' => $lng];
+        } else {
+            return ['lat' => null, 'lng' => null];
+        }
+    } catch (\Exception $e) {
+        \Log::error("Geocoding error: " . $e->getMessage());
+        return ['lat' => null, 'lng' => null];
+    }
+}
+
     public function index() {
-        $register_user = $this->service->index();
+        $register_user = $this->service->getUsersList();
         return view( 'organizations.hr.employees.list-employees', compact( 'register_user' ) );
     }
 

@@ -30,6 +30,8 @@ return new class extends Migration
             $table->string('pincode')->nullable();
             $table->string('department_id')->nullable();
             $table->string('ip_address')->nullable();
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
             $table->rememberToken();
             $table->boolean('is_active')->default(true);
             $table->boolean('is_deleted')->default(false);
