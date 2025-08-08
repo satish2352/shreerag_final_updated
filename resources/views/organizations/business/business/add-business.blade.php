@@ -46,16 +46,17 @@
                                                         @csrf
                                                         <div class="form-group-inner">
                                                             <div>
-                                                                   <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                                     <label for="project_name">Project Name : <span
                                                                             class="text-danger">*</span></label>
                                                                     <input type="text" class="form-control"
                                                                         id="project_name" value="{{ old('project_name') }}"
-                                                                        name="project_name" placeholder="Enter project Name">
+                                                                        name="project_name"
+                                                                        placeholder="Enter project Name">
                                                                     @if ($errors->has('project_name'))
                                                                         <span class="red-text"><?php echo $errors->first('project_name', ':message'); ?></span>
                                                                     @endif
-                                                                    </div>
+                                                                </div>
                                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                                     <label for="customer_po_number">Customer PO Number :
                                                                         <span class="text-danger">*</span></label>
@@ -78,108 +79,104 @@
                                                                         <span class="red-text"><?php echo $errors->first('title', ':message'); ?></span>
                                                                     @endif
                                                                 </div>
-                                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                                     <label for="po_validity">PO Validity : <span
                                                                             class="text-danger">*</span></label>
                                                                     <input type="date" class="form-control"
                                                                         id="po_validity" value="{{ old('po_validity') }}"
-                                                                        name="po_validity"
-                                                                        placeholder="Enter PO Validity">
+                                                                        name="po_validity" placeholder="Enter PO Validity">
                                                                     @if ($errors->has('po_validity'))
                                                                         <span class="red-text"><?php echo $errors->first('po_validity', ':message'); ?></span>
                                                                     @endif
                                                                 </div>
-                                                                 </div>
-                                                                    <div class="col-md-12 col-sm-12">
-                                                                        <div class="table-responsive">
-                                                                            <table
-                                                                                class="table table-hover table-white repeater"
-                                                                                id="purchase_order_table">
-                                                                                <thead>
-                                                                                    <tr>
-                                                                                        <th>Sr. No.</th>
-                                                                                        <th class="col-sm-3">Product Name
-                                                                                        </th>
-                                                                                        <th class="col-md-3">Description
-                                                                                        </th>
-                                                                                        <th class="col-md-2">Quantity</th>
-                                                                                        <th class="col-md-2">Rate</th>
-                                                                                           <th class="col-md-2">Total</th>
-                                                                                        <th>
-                                                                                            <button type="button"
-                                                                                                class="btn btn-sm btn-success font-18 mr-1"
-                                                                                                id="add_more_btn"
-                                                                                                title="Add"
-                                                                                                data-repeater-create>
-                                                                                                <i class="fa fa-plus"></i>
-                                                                                            </button>
-                                                                                        </th>
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody>
-                                                                                    <tr>
-                                                                                        <td>
-                                                                                            <input type="text"
-                                                                                                name="id"
-                                                                                                class="form-control"
-                                                                                                style="min-width:50px"
-                                                                                                readonly value="1">
-                                                                                            <input type="hidden"
-                                                                                                id="i_id"
-                                                                                                class="form-control"
-                                                                                                style="min-width:50px"
-                                                                                                readonly value="0">
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <input
-                                                                                                class="form-control product_name"
-                                                                                                name="addmore[0][product_name]"
-                                                                                                type="text"
-                                                                                                style="min-width:150px">
-                                                                                        </td>
+                                                            </div>
+                                                            <div class="col-md-12 col-sm-12">
+                                                                <div class="table-responsive">
+                                                                    <table class="table table-hover table-white repeater"
+                                                                        id="purchase_order_table">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Sr. No.</th>
+                                                                                <th class="col-sm-3">Product Name
+                                                                                </th>
+                                                                                <th class="col-md-3">Description
+                                                                                </th>
+                                                                                <th class="col-md-2">Quantity</th>
+                                                                                <th class="col-md-2">Rate</th>
+                                                                                <th class="col-md-2">Total</th>
+                                                                                <th>
+                                                                                    <button type="button"
+                                                                                        class="btn btn-sm font-18 mr-1 btn-bg-colour"
+                                                                                        id="add_more_btn" title="Add"
+                                                                                        data-repeater-create>
+                                                                                        <i class="fa fa-plus"></i>
+                                                                                    </button>
+                                                                                </th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <input type="text" name="id"
+                                                                                        class="form-control"
+                                                                                        style="min-width:50px" readonly
+                                                                                        value="1">
+                                                                                    <input type="hidden" id="i_id"
+                                                                                        class="form-control"
+                                                                                        style="min-width:50px" readonly
+                                                                                        value="0">
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input class="form-control product_name"
+                                                                                        name="addmore[0][product_name]"
+                                                                                        type="text"
+                                                                                        style="min-width:150px">
+                                                                                </td>
 
-                                                                                        <td>
-                                                                                            <input
-                                                                                                class="form-control description"
-                                                                                                name="addmore[0][description]"
-                                                                                                type="text"
-                                                                                                style="min-width:150px">
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <input
-                                                                                                class="form-control quantity"
-                                                                                                name="addmore[0][quantity]"
-                                                                                                type="text">
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <input class="form-control rate"
-                                                                                                name="addmore[0][rate]"
-                                                                                                type="text">
-                                                                                        </td>
-                                                                                       
-                                                                                        <td>
-                                                                                            <input class="form-control total_amount" name="addmore[${i}][total]" type="text" readonly>
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <button type="button"
-                                                                                                class="btn btn-sm btn-danger font-18 ml-2 remove-row"
-                                                                                                title="Delete"
-                                                                                                data-repeater-delete>
-                                                                                                <i class="fa fa-trash"></i>
-                                                                                            </button>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                 
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                               
-                                                                <div class="col-md-12 text-right" style="margin-top: 10px;">
-                                                                    <strong>Grand Total: ₹</strong> <span id="grand_total">0.00</span>
+                                                                                <td>
+                                                                                    <input class="form-control description"
+                                                                                        name="addmore[0][description]"
+                                                                                        type="text"
+                                                                                        style="min-width:150px">
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input class="form-control quantity"
+                                                                                        name="addmore[0][quantity]"
+                                                                                        type="text">
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input class="form-control rate"
+                                                                                        name="addmore[0][rate]"
+                                                                                        type="text">
+                                                                                </td>
+
+                                                                                <td>
+                                                                                    <input
+                                                                                        class="form-control total_amount"
+                                                                                        name="addmore[${i}][total]"
+                                                                                        type="text" readonly>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <button type="button"
+                                                                                        class="btn btn-sm btn-danger font-18 ml-2 remove-row"
+                                                                                        title="Delete"
+                                                                                        data-repeater-delete>
+                                                                                        <i class="fa fa-trash"></i>
+                                                                                    </button>
+                                                                                </td>
+                                                                            </tr>
+
+                                                                        </tbody>
+                                                                    </table>
                                                                 </div>
-                                                                 <div class="row">
-                                                                   <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                            </div>
+
+                                                            <div class="col-md-12 text-right" style="margin-top: 10px;">
+                                                                <strong>Grand Total: ₹</strong> <span
+                                                                    id="grand_total">0.00</span>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                                     <div class="sparkline12-graph">
                                                                         <div id="pwd-container1">
                                                                             <div class="form-group">
@@ -199,7 +196,7 @@
                                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                                     <label for="customer_payment_terms">Payment Terms
                                                                         :</label> (optional)
-                                                                        <textarea class="form-control" rows="3" type="text" class="form-control" id="customer_payment_terms"
+                                                                    <textarea class="form-control" rows="3" type="text" class="form-control" id="customer_payment_terms"
                                                                         name="customer_payment_terms" placeholder="Enter Payment Terms">{{ old('customer_payment_terms') }}</textarea>
                                                                 </div>
 
@@ -209,7 +206,7 @@
                                                                     <textarea class="form-control" rows="3" type="text" class="form-control" id="customer_terms_condition"
                                                                         name="customer_terms_condition" placeholder="Enter Terms and Condition">{{ old('customer_terms_condition') }}</textarea>
                                                                 </div>
-                                                             
+
                                                             </div>
                                                         </div>
                                                         <div class="login-btn-inner">
@@ -261,53 +258,53 @@
                 var validator = $("#addEmployeeForm").validate({
                     ignore: [], // Validate hidden inputs as well
                     rules: {
-                          project_name: {
+                        project_name: {
                             required: true,
-                            maxlength: 50, 
-                            
+                            maxlength: 50,
+
                         },
                         title: {
                             required: true,
-                            maxlength: 50, 
-                           
+                            maxlength: 50,
+
                         },
                         customer_po_number: {
                             required: true,
                             minlength: 10,
                             maxlength: 16,
-                            digits: true 
+                            digits: true
                         },
                         po_validity: {
                             required: true,
-                            date: true 
+                            date: true
                         },
                         remarks: {
                             required: true,
-                            maxlength: 255 
+                            maxlength: 255
                         },
                         'addmore[0][product_name]': {
                             required: true,
                             maxlength: 100,
-                            
+
                         },
                         'addmore[0][description]': {
                             required: true,
-                            maxlength: 255 
+                            maxlength: 255
                         },
                         'addmore[0][quantity]': {
                             required: true,
-                            digits: true, 
-                            min: 1 
+                            digits: true,
+                            min: 1
                         },
                         'addmore[0][rate]': {
                             required: true,
-                            number: true, 
-                            min: 0.01 
+                            number: true,
+                            min: 0.01
                         }
                     },
                     messages: {
-                         project_name: {
-                             required: "Please enter Project Name.",
+                        project_name: {
+                            required: "Please enter Project Name.",
                         },
                         title: {
                             required: "Please enter Customer Name.",
@@ -347,7 +344,7 @@
                         }
                     },
                     errorPlacement: function(error, element) {
-                        error.addClass('text-danger'); 
+                        error.addClass('text-danger');
                         if (element.closest('.form-group').length) {
                             element.closest('.form-group').append(error);
                         } else if (element.closest('td').length) {
@@ -470,31 +467,29 @@
                 let row = $(this).closest('tr');
                 calculateRowTotal(row);
             });
-
         </script>
         <script>
             function calculateGrandTotal() {
-    let grandTotal = 0;
-    $('.total_amount').each(function() {
-        let val = parseFloat($(this).val()) || 0;
-        grandTotal += val;
-    });
-    $('#grand_total').text(grandTotal.toFixed(2));
-        }
+                let grandTotal = 0;
+                $('.total_amount').each(function() {
+                    let val = parseFloat($(this).val()) || 0;
+                    grandTotal += val;
+                });
+                $('#grand_total').text(grandTotal.toFixed(2));
+            }
 
-        // Recalculate on rate/quantity change
-        $(document).on('input', '.quantity, .rate', function() {
-            let row = $(this).closest('tr');
-            calculateRowTotal(row);
-            calculateGrandTotal();
-        });
+            // Recalculate on rate/quantity change
+            $(document).on('input', '.quantity, .rate', function() {
+                let row = $(this).closest('tr');
+                calculateRowTotal(row);
+                calculateGrandTotal();
+            });
 
-        // Also recalculate on row remove
-        $(document).on("click", ".remove-row", function() {
-            $(this).closest("tr").remove();
-            validator.resetForm();
-            calculateGrandTotal();
-        });
-
+            // Also recalculate on row remove
+            $(document).on("click", ".remove-row", function() {
+                $(this).closest("tr").remove();
+                validator.resetForm();
+                calculateGrandTotal();
+            });
         </script>
     @endsection

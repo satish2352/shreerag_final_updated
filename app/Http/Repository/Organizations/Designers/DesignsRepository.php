@@ -20,9 +20,8 @@ use Config;
 
 class DesignsRepository  {
     
-    public function getAllNewRequirement(){
+    public function getAllNewRequirement(){ //checked
         try {
-
             $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN')];
             $data_output= DesignModel::leftJoin('businesses', function($join) {
                 $join->on('designs.business_id', '=', 'businesses.id');
@@ -45,7 +44,6 @@ class DesignsRepository  {
                   'businesses.is_active',
                   'designs.business_id',
                   'businesses.updated_at'
-                 
               )
               ->orderBy('businesses.updated_at', 'desc')
               ->get();
@@ -54,12 +52,11 @@ class DesignsRepository  {
             return $e;
         }
     }
-    public function getAllNewRequirementBusinessWise($id){
+    public function getAllNewRequirementBusinessWise($id){ //checked
         try {
             $decoded_business_id = base64_decode($id);
             $dataOutputNew = DesignModel::where('business_id', $decoded_business_id)->get();       
             $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN')];
-
             $data_output = DesignModel::leftJoin('businesses', function($join) {
                     $join->on('designs.business_id', '=', 'businesses.id');
                 })
@@ -90,191 +87,176 @@ class DesignsRepository  {
                     'designs.updated_at'
                 )->orderBy('designs.updated_at', 'desc')
                 ->get();
-
             return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
-
-  public function getAll()
-{
-    try {
-        $array_to_be_check = [
-            config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_ESTIMATION_DEPT_FIRST_TIME')
-        ];
-
-        $data_output = EstimationModel::leftJoin('businesses', function ($join) {
-                $join->on('estimation.business_id', '=', 'businesses.id');
-            })
-            ->leftJoin('business_application_processes', function ($join) {
-                $join->on('estimation.business_id', '=', 'business_application_processes.business_id');
-            })
-            ->leftJoin(DB::raw('(SELECT * FROM designs d1 WHERE d1.id IN (SELECT MAX(id) FROM designs GROUP BY business_id)) as designs'), function ($join) {
-                $join->on('estimation.business_details_id', '=', 'designs.business_id');
-            })
-            ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
-            ->where('businesses.is_active', true)
-            ->where('businesses.is_deleted', 0)
-            ->select(
-                'businesses.id',
-                'businesses.project_name',
-                'businesses.customer_po_number',
-                'businesses.remarks',
-                'businesses.is_active',
-                'businesses.created_at',
-                DB::raw('MAX(estimation.updated_at) as updated_at'),
-                'estimation.business_id',
-                'designs.id as design_id',
-                'designs.design_image',
-                'designs.bom_image',
-                'designs.business_id as design_business_id'
-            )
-            ->groupBy(
-                'businesses.id',
-                'businesses.project_name',
-                'businesses.customer_po_number',
-                'businesses.remarks',
-                'businesses.is_active',
-                'businesses.created_at',
-                'estimation.business_id',
-                'designs.id',
-                'designs.design_image',
-                'designs.bom_image',
-                'designs.business_id'
-            )
-            ->orderBy('updated_at', 'desc')
-            ->get();
-
-        return $data_output;
-
-    } catch (\Exception $e) {
-        \Log::error('Error in getAll(): ' . $e->getMessage());
-        return collect(); // return an empty collection to avoid type errors
-    }
-}
-
-
     public function getById($id){
-    try {
-            $dataOutputByid = DesignModel::find($id);
-            
-            if ($dataOutputByid) {
-                return $dataOutputByid;
-            } else {
-                return null;
+        try {
+                $dataOutputByid = DesignModel::find($id);
+                
+                if ($dataOutputByid) {
+                    return $dataOutputByid;
+                } else {
+                    return null;
+                }
+            } catch (\Exception $e) {
+                return [
+                    'msg' => $e,
+                    'status' => 'error'
+                ];
             }
+    }
+    public function updateAll($request){  //checked
+        try {
+            $return_data = array();
+            $edit_id = $request->business_id;
+        
+            $dataOutputNew = DesignModel::where('business_details_id', $edit_id)->first();
+            if (!$dataOutputNew) {
+                return [
+                    'msg' => 'Design not found.',
+                    'status' => 'error',
+                ];
+            }
+            $businessDetails = BusinessDetails::where('id', $dataOutputNew->business_details_id)->first();
+            if (!$businessDetails) {
+                return [
+                    'msg' => 'Business details not found.',
+                    'status' => 'error',
+                ];
+            }
+
+            $productName = $businessDetails->product_name;
+            $designImageName = $dataOutputNew->design_image;
+            $bomImageName = $dataOutputNew->bom_image;
+
+            if ($request->hasFile('design_image')) {
+                $formattedProductName = preg_replace('/_+/', '_', $productName);
+                $designImageName = $dataOutputNew->id . '_'. $formattedProductName .'_'. rand(100000, 999999) . '.' . $request->file('design_image')->getClientOriginalExtension();
+                $dataOutputNew->design_image = $designImageName;
+            }
+
+            if ($request->hasFile('bom_image')) {
+                $formattedProductName = preg_replace('/_+/', '_', $productName);
+                $bomImageName = $dataOutputNew->id . '_'. $formattedProductName .'_'. rand(100000, 999999) . '.' . $request->file('bom_image')->getClientOriginalExtension();
+                $dataOutputNew->bom_image = $bomImageName;
+            }
+
+            $dataOutputNew->save();
+
+            $estimation_data = EstimationModel::firstOrNew(['design_id' => $dataOutputNew->id]);
+
+            $estimation_data->business_id = $dataOutputNew->business_id;
+            $estimation_data->business_details_id = $dataOutputNew->business_details_id;
+            $estimation_data->design_id = $dataOutputNew->id;
+            $estimation_data->save();
+        
+            // Store design and production IDs
+            $designIds[] = $dataOutputNew->id;
+            $estimationIds[] = $estimation_data->id;
+
+            $designRevisionForProdIDInsert = new DesignRevisionForProd();
+            $designRevisionForProdIDInsert->business_id = $dataOutputNew->business_id;
+            $designRevisionForProdIDInsert->business_details_id = $dataOutputNew->business_details_id;
+            $designRevisionForProdIDInsert->design_id = $dataOutputNew->id;
+            $designRevisionForProdIDInsert->estimation_id = $estimation_data->id;
+            $designRevisionForProdIDInsert->reject_reason_prod = '';
+            $designRevisionForProdIDInsert->remark_by_design = '';
+            $designRevisionForProdIDInsert->design_image = $designImageName ?? null;
+            $designRevisionForProdIDInsert->bom_image = $bomImageName ?? null;
+            $designRevisionForProdIDInsert->save();
+
+            // Update BusinessApplicationProcesses if record exists
+            $business_applications = BusinessApplicationProcesses::where('design_id', $dataOutputNew->id)->get();
+
+            foreach ($business_applications as $business_application) {
+                $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
+                $business_application->design_id = $designIds[0] ?? null; // Use first element if available
+                $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_ESTIMATION_DEPT_FIRST_TIME');
+                $business_application->design_send_to_estimation = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_ESTIMATION_DEPT_FIRST_TIME');
+                $business_application->estimation_id = $estimation_data->id ?? null; // Use first element if available
+                $business_application->	off_canvas_status = 12;
+                $business_application->save();
+            }
+            $update_data_admin['off_canvas_status'] = 12;
+            $update_data_business['off_canvas_status'] = 12;
+            $update_data_admin['is_view'] = '0';
+            AdminView::where('business_details_id', $dataOutputNew->business_details_id)
+                    ->update($update_data_admin);
+            NotificationStatus::where('business_details_id', $dataOutputNew->business_details_id)
+                    ->update($update_data_business);
+
+            $last_insert_id = $dataOutputNew->id; 
+            $return_data['last_insert_id'] = $last_insert_id;
+            $return_data['design_image'] = $designImageName;
+            $return_data['bom_image'] = $bomImageName;
+            $return_data['product_name'] = $productName;
+            return $return_data;
+
         } catch (\Exception $e) {
             return [
-                'msg' => $e,
-                'status' => 'error'
+                'msg' => 'Failed to update design.',
+                'status' => 'error',
+                'error' => $e->getMessage()
             ];
         }
     }
-
-public function updateAll($request)
-{
-    try {
-        $return_data = array();
-        $edit_id = $request->business_id;
-       
-        $dataOutputNew = DesignModel::where('business_details_id', $edit_id)->first();
-        if (!$dataOutputNew) {
-            return [
-                'msg' => 'Design not found.',
-                'status' => 'error',
+    public function getUploadedDesignSendEstimation(){ //checked
+        try {
+            $array_to_be_check = [
+                config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_ESTIMATION_DEPT_FIRST_TIME')
             ];
+            $data_output = EstimationModel::leftJoin('businesses', function ($join) {
+                    $join->on('estimation.business_id', '=', 'businesses.id');
+                })
+                ->leftJoin('business_application_processes', function ($join) {
+                    $join->on('estimation.business_id', '=', 'business_application_processes.business_id');
+                })
+                ->leftJoin(DB::raw('(SELECT * FROM designs d1 WHERE d1.id IN (SELECT MAX(id) FROM designs GROUP BY business_id)) as designs'), function ($join) {
+                    $join->on('estimation.business_details_id', '=', 'designs.business_id');
+                })
+                ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
+                ->where('businesses.is_active', true)
+                ->where('businesses.is_deleted', 0)
+                ->select(
+                    'businesses.id',
+                    'businesses.project_name',
+                    'businesses.customer_po_number',
+                    'businesses.remarks',
+                    'businesses.is_active',
+                    'businesses.created_at',
+                    DB::raw('MAX(estimation.updated_at) as updated_at'),
+                    'estimation.business_id',
+                    'designs.id as design_id',
+                    'designs.design_image',
+                    'designs.bom_image',
+                    'designs.business_id as design_business_id'
+                )
+                ->groupBy(
+                    'businesses.id',
+                    'businesses.project_name',
+                    'businesses.customer_po_number',
+                    'businesses.remarks',
+                    'businesses.is_active',
+                    'businesses.created_at',
+                    'estimation.business_id',
+                    'designs.id',
+                    'designs.design_image',
+                    'designs.bom_image',
+                    'designs.business_id'
+                )
+                ->orderBy('updated_at', 'desc')
+                ->get();
+
+            return $data_output;
+
+        } catch (\Exception $e) {
+            \Log::error('Error in getAll(): ' . $e->getMessage());
+            return collect(); // return an empty collection to avoid type errors
         }
-        $businessDetails = BusinessDetails::where('id', $dataOutputNew->business_details_id)->first();
-        if (!$businessDetails) {
-            return [
-                'msg' => 'Business details not found.',
-                'status' => 'error',
-            ];
-        }
-
-        $productName = $businessDetails->product_name;
-        $designImageName = $dataOutputNew->design_image;
-        $bomImageName = $dataOutputNew->bom_image;
-
-        // Handle design image upload
-        if ($request->hasFile('design_image')) {
-            $formattedProductName = str_replace(' ', '_', $productName);
-            $designImageName = $dataOutputNew->id . '_'. $formattedProductName .'_'. rand(100000, 999999) . '.' . $request->file('design_image')->getClientOriginalExtension();
-            $dataOutputNew->design_image = $designImageName;
-        }
-
-        // Handle BOM image upload
-        if ($request->hasFile('bom_image')) {
-            $formattedProductName = str_replace(' ', '_', $productName);
-            $bomImageName = $dataOutputNew->id . '_'. $formattedProductName .'_'. rand(100000, 999999) . '.' . $request->file('bom_image')->getClientOriginalExtension();
-            $dataOutputNew->bom_image = $bomImageName;
-        }
-
-        $dataOutputNew->save();
-
-        $estimation_data = EstimationModel::firstOrNew(['design_id' => $dataOutputNew->id]);
-
-        $estimation_data->business_id = $dataOutputNew->business_id;
-        $estimation_data->business_details_id = $dataOutputNew->business_details_id;
-        $estimation_data->design_id = $dataOutputNew->id;
-        $estimation_data->save();
-      
-        // Store design and production IDs
-        $designIds[] = $dataOutputNew->id;
-        $estimationIds[] = $estimation_data->id;
-
-        $designRevisionForProdIDInsert = new DesignRevisionForProd();
-        $designRevisionForProdIDInsert->business_id = $dataOutputNew->business_id;
-        $designRevisionForProdIDInsert->business_details_id = $dataOutputNew->business_details_id;
-        $designRevisionForProdIDInsert->design_id = $dataOutputNew->id;
-        $designRevisionForProdIDInsert->estimation_id = $estimation_data->id;
-        $designRevisionForProdIDInsert->reject_reason_prod = '';
-        $designRevisionForProdIDInsert->remark_by_design = '';
-        $designRevisionForProdIDInsert->design_image = $designImageName ?? null;
-        $designRevisionForProdIDInsert->bom_image = $bomImageName ?? null;
-        $designRevisionForProdIDInsert->save();
-
-        // Update BusinessApplicationProcesses if record exists
-        $business_applications = BusinessApplicationProcesses::where('design_id', $dataOutputNew->id)->get();
-
-        foreach ($business_applications as $business_application) {
-            $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.NEW_REQUIREMENTS_SENT_TO_DESIGN_DEPARTMENT');
-            $business_application->design_id = $designIds[0] ?? null; // Use first element if available
-            $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_ESTIMATION_DEPT_FIRST_TIME');
-            $business_application->design_send_to_estimation = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_ESTIMATION_DEPT_FIRST_TIME');
-            $business_application->estimation_id = $estimation_data->id ?? null; // Use first element if available
-            // $business_application->estimation_status_id = config('constants.ESTIMATION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_ESTIMATION');
-            $business_application->	off_canvas_status = 12;
-            $business_application->save();
-        }
-
-        // $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
-        $update_data_admin['off_canvas_status'] = 12;
-        $update_data_business['off_canvas_status'] = 12;
-        $update_data_admin['is_view'] = '0';
-        AdminView::where('business_details_id', $dataOutputNew->business_details_id)
-                ->update($update_data_admin);
-                NotificationStatus::where('business_details_id', $dataOutputNew->business_details_id)
-                ->update($update_data_business);
-
-        $last_insert_id = $dataOutputNew->id; 
-
-        $return_data['last_insert_id'] = $last_insert_id;
-        $return_data['design_image'] = $designImageName;
-        $return_data['bom_image'] = $bomImageName;
-        $return_data['product_name'] = $productName;
-        return $return_data;
-
-    } catch (\Exception $e) {
-        return [
-            'msg' => 'Failed to update design.',
-            'status' => 'error',
-            'error' => $e->getMessage()
-        ];
     }
-}
-
     public function updateReUploadDesign($request)
     {
         try {
@@ -326,7 +308,7 @@ public function updateAll($request)
                 $business_application->	off_canvas_status = 14;
                 $business_application->save();
 
-                  // $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
+                // $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
         $update_data_admin['off_canvas_status'] = 14;
         $update_data_business['off_canvas_status'] = 14;
         $update_data_admin['is_view'] = '0';
@@ -352,6 +334,6 @@ public function updateAll($request)
             ];
         }
     }
-   
+    
 
-}
+    }

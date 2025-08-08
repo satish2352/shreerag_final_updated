@@ -159,7 +159,7 @@ Route::get('/list-product-completed-report', [ReportController::class, 'getCompl
         //ALL List
         Route::get('/list-new-requirements-received-for-design', ['as' => 'list-new-requirements-received-for-design', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@getAllNewRequirement']);
         Route::get('/list-new-requirements-received-for-design-businesswise/{id}', ['as' => 'list-new-requirements-received-for-design-businesswise', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@getAllNewRequirementBusinessWise']);
-        Route::get('/list-design-upload', ['as' => 'list-design-upload', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@index']);
+        Route::get('/list-design-upload', ['as' => 'list-design-upload', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@getUploadedDesignSendEstimation']);
     
         Route::get('/add-design-upload/{id}', ['as' => 'add-design-upload', 'uses' => 'App\Http\Controllers\Organizations\Designers\DesignUploadController@add']);
     

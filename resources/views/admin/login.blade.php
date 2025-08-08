@@ -84,20 +84,6 @@
 </style>
 
 <body>
-    <!--[if lt IE 8]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-
-    {{-- <div class="color-line"></div> --}}
-    <div class="container-fluid">
-        <div class="row">
-            {{-- <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="back-link back-backend">
-                  
-                </div>
-            </div> --}}
-        </div>
-    </div>
     <div class="container-fluid">
         <div class="row " style="display: flex; justify-content: center; ">
 
@@ -134,17 +120,13 @@
                             @endif
                             <form action="{{ route('login') }}" method="POST" id="loginForm">
                                 @csrf
-                               
+
                                 <div class="form-group">
                                     <label class="control-label" for="username">Email Id</label>
                                     <input type="text" placeholder="Please enter your email Id" value=""
                                         name="email" id="email" class="form-control">
-                                    {{-- <span class="help-block small">Your unique username for the app</span> --}}
                                 </div>
-                                {{-- <div class="form-group">
-                                <label class="control-label" for="password">Password</label>
-                                <input type="password" placeholder="Please enter your password" value="" name="password" id="password" class="form-control">
-                            </div> --}}
+
                                 <div class="form-group">
                                     <label class="control-label" for="password">Password</label>
                                     <div class="input-group">
@@ -156,7 +138,7 @@
                                     </div>
                                 </div>
 
-                                
+
                                 <div class="form-group">
                                     {!! NoCaptcha::renderJs() !!}
                                     {!! NoCaptcha::display() !!}
@@ -167,9 +149,9 @@
                                         </span>
                                     @endif
                                 </div>
-                                 <input type="hidden" name="latitude" id="latitude">
+                                <input type="hidden" name="latitude" id="latitude">
                                 <input type="hidden" name="longitude" id="longitude">
-                                 <input type="hidden" name="location_address" id="location_address">
+                                <input type="hidden" name="location_address" id="location_address">
                                 <button type="submit" class="btn btn-success btn-block loginbtn">Login</button>
                             </form>
 
@@ -245,39 +227,32 @@
             });
         });
     </script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const loginForm = document.getElementById("loginForm");
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const loginForm = document.getElementById("loginForm");
 
-        loginForm.addEventListener("submit", function (event) {
-            event.preventDefault(); // Stop form for now
+            loginForm.addEventListener("submit", function(event) {
+                event.preventDefault(); // Stop form for now
 
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    document.getElementById("latitude").value = position.coords.latitude;
-                    document.getElementById("longitude").value = position.coords.longitude;
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        document.getElementById("latitude").value = position.coords.latitude;
+                        document.getElementById("longitude").value = position.coords.longitude;
 
-                    console.log("Latitude set to:", position.coords.latitude);
-                    console.log("Longitude set to:", position.coords.longitude);
+                        console.log("Latitude set to:", position.coords.latitude);
+                        console.log("Longitude set to:", position.coords.longitude);
 
-                    loginForm.submit(); // Now submit with data
-                }, function (error) {
-                    console.warn("Geolocation error:", error.message);
+                        loginForm.submit(); // Now submit with data
+                    }, function(error) {
+                        console.warn("Geolocation error:", error.message);
+                        loginForm.submit(); // Still submit without coords
+                    });
+                } else {
+                    console.warn("Geolocation not supported.");
                     loginForm.submit(); // Still submit without coords
-                });
-            } else {
-                console.warn("Geolocation not supported.");
-                loginForm.submit(); // Still submit without coords
-            }
+                }
+            });
         });
-    });
-</script>
-
-
-
-
-
-
+    </script>
 </body>
-
 </html>

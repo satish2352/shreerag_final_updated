@@ -15,35 +15,22 @@ use Config;
     }
 
     
-    public function getAllNewRequirement(){
+    public function getAllNewRequirement(){   //checked
         try {
             $data_output = $this->repo->getAllNewRequirement();
-      
             return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
-    public function getAllNewRequirementBusinessWise($id){
+    public function getAllNewRequirementBusinessWise($id){ //checked
         try {
             $data_output = $this->repo->getAllNewRequirementBusinessWise($id);
-      
             return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
-  public function getAll() {
-    try {
-        return $this->repo->getAll();
-    } catch (\Exception $e) {
-        \Log::error('Service getAll() error: ' . $e->getMessage());
-        throw $e;
-    }
-}
-
-   
-   
     public function getById($id){
         try {
             return $this->repo->getById($id);
@@ -51,12 +38,9 @@ use Config;
             return $e;
         }
     }
-    public function updateAll($request){
+    public function updateAll($request){ //checked
         try {
-            $return_data = $this->repo->updateAll($request);
-// dd($return_data);
-// die();
-           
+            $return_data = $this->repo->updateAll($request);           
             $productName = $return_data['product_name']; 
             $formattedProductName = str_replace(' ', '_', $productName);
             $path = Config::get('FileConstant.DESIGNS_ADD');
@@ -65,7 +49,6 @@ use Config;
                     if (file_exists(Config::get('DocumentConstant.DESIGNS_DELETE') . $return_data['design_image'])) {
                         removeImage(Config::get('DocumentConstant.DESIGNS_DELETE') . $return_data['design_image']);
                     }
-
                 }
                 $englishImageName = $return_data['last_insert_id'] . '_' . $formattedProductName .'_'. rand(100000, 999999) . '.' . $request->design_image->extension();
                 uploadImage($request, 'design_image', $path, $englishImageName);
@@ -95,6 +78,14 @@ use Config;
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }      
+    }
+    public function getUploadedDesignSendEstimation() { //checked
+        try {
+            return $this->repo->getUploadedDesignSendEstimation();
+        } catch (\Exception $e) {
+            \Log::error('Service getAll() error: ' . $e->getMessage());
+            throw $e;
+        }
     }
     public function updateReUploadDesign($request){
         try {

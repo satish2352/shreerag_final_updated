@@ -201,8 +201,8 @@
                     $('#notification-messages').html(notificationMessages);
 
                     // Debugging previousNotificationCount and response.notification_count
-                    console.log('Previous Count:', previousNotificationCount);
-                    console.log('Current Count:', response.notification_count);
+                    // console.log('Previous Count:', previousNotificationCount);
+                    // console.log('Current Count:', response.notification_count);
 
                     // Check if the new count is greater than the previous count
                     if (response.notification_count > previousNotificationCount && 

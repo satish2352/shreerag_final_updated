@@ -3448,3 +3448,6 @@ div#sparklinehome canvas {
     background-color: #1e2f60 !important; /* slightly darker on hover for better UX */
     border-color: #1e2f60 !important;
 }
+.red-text{
+    color:red;
+}

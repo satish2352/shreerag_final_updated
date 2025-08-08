@@ -99,7 +99,7 @@
                                                             <th>Total Amount</th>
                                                             <th>
                                                                 <button type="button"
-                                                                    class="btn btn-sm btn-success font-18 mr-1"
+                                                                    class="btn btn-sm font-18 mr-1 btn-bg-colour"
                                                                     id="add_more_btn" title="Add" data-repeater-create>
                                                                     <i class="fa fa-plus"></i>
                                                                 </button>
@@ -189,15 +189,14 @@
                                                 @endforeach
                                             </div>
                                              <div class="col-lg-12 col-md-12 col-sm-12 text-center login-btn-inner mb-5">
-                                                <button class="btn btn-sm btn-primary login-submit-cs edit-buinsess-btn-center" type="submit">
-                                                    Update Data
-                                                </button>
-
-                                                <a href="{{ route('list-business') }}">
+                                                 <a href="{{ route('list-business') }}">
                                                     <button type="button" class="btn btn-white edit-buinsess-btn-center">
                                                         Cancel
                                                     </button>
                                                 </a>
+                                                <button class="btn btn-sm btn-primary login-submit-cs edit-buinsess-btn-center" type="submit">
+                                                    Update Data
+                                                </button>                                               
                                             </div>
                                     </form>
                                 </div>

@@ -20,16 +20,13 @@ class LoginController extends Controller
  {
     public static $loginServe, $masterApi;
 
-    public function __construct()
- {
+    public function __construct(){
         self::$loginServe = new LoginService();
     }
-
     public function index() {
 
         return view( 'admin.login' );
     }
-
     // public function submitLogin( Request $request ) {
     //     $rules = [
     //         'email' => 'required|email',
@@ -192,13 +189,4 @@ class LoginController extends Controller
     
         return redirect('/login');
     }
-    // public function logout(Request $request)
-    // {
- 
-    //     $request->session()->flush();
-
-    //     $request->session()->regenerate();
-
-    //     return redirect('/login' );
-    //     }
-    }
+}

@@ -298,23 +298,19 @@ class BusinessRepository
             ];
         }
     }
-    public function deleteByIdAddmore()
-{
-       dd($id );
-die();
-    try {
-        $rti = BusinessDetails::find($id);
-        if ($rti) {
-            $rti->delete();
-            return true;
-        } else {
+    public function deleteByIdAddmore(){
+        try {
+            $rti = BusinessDetails::find($id);
+            if ($rti) {
+                $rti->delete();
+                return true;
+            } else {
+                return false;
+            }
+        } catch (\Exception $e) {
             return false;
         }
-    } catch (\Exception $e) {
-        return false;
     }
-}
-
     public function deleteById($id){
         try {
             $business = Business::find($id);
@@ -410,8 +406,7 @@ die();
             return response()->json(['error' => 'Something went wrong.'], 500);
         }
     }
-    public function addRejectedEstimationBOM($request)
-    {
+    public function addRejectedEstimationBOM($request){
         try {
             $idtoedit = base64_decode($request->business_id);
 

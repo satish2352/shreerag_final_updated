@@ -44,8 +44,6 @@ class BusinessServices
     public function updateAll($request){
         try {
             $return_data = $this->repo->updateAll($request);
-            dd($return_data);
-            die();
             if ($return_data['status'] === 'success') {
                 return [
                     'status' => 'success',
@@ -68,24 +66,21 @@ class BusinessServices
             ];
         }
     }
-   public function deleteByIdAddmore()
-{
-    try {
-     
-        $delete = $this->repo->deleteByIdAddmore();
+    public function deleteByIdAddmore(){
+            try {
+            
+                $delete = $this->repo->deleteByIdAddmore();
 
-        if ($delete) {
-            return ['status' => 'success', 'msg' => 'Deleted Successfully.'];
-        } else {
-            return ['status' => 'error', 'msg' => 'Not Deleted.'];
-        }
-    } catch (Exception $e) {
-        return ['status' => 'error', 'msg' => $e->getMessage()];
+                if ($delete) {
+                    return ['status' => 'success', 'msg' => 'Deleted Successfully.'];
+                } else {
+                    return ['status' => 'error', 'msg' => 'Not Deleted.'];
+                }
+            } catch (Exception $e) {
+                return ['status' => 'error', 'msg' => $e->getMessage()];
+            }
     }
-}
-
-    public function deleteById($id)
-    {
+    public function deleteById($id){
         try {
             $delete = $this->repo->deleteById($id);
             if ($delete) {
@@ -97,19 +92,16 @@ class BusinessServices
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
-
-      public function acceptEstimationBOM($id)
-    {
-        try {
-            $acceptPurchaseOrder = $this->repo->acceptEstimationBOM($id);
-         
-            return $acceptPurchaseOrder;
-        } catch (Exception $e) {
-            return ['status' => 'error', 'msg' => $e->getMessage()];
-        }
+    public function acceptEstimationBOM($id){
+    try {
+        $acceptPurchaseOrder = $this->repo->acceptEstimationBOM($id);
+        
+        return $acceptPurchaseOrder;
+    } catch (Exception $e) {
+        return ['status' => 'error', 'msg' => $e->getMessage()];
     }
-    public function addRejectedEstimationBOM($request)
-    {
+    }
+    public function addRejectedEstimationBOM($request){
         try {
             $rejectedPurchaseOrder = $this->repo->addRejectedEstimationBOM($request);
            
@@ -118,9 +110,7 @@ class BusinessServices
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
-
-    public function acceptPurchaseOrder($id, $business_id)
-    {
+    public function acceptPurchaseOrder($id, $business_id){
         try {
             $acceptPurchaseOrder = $this->repo->acceptPurchaseOrder($id, $business_id);
          
@@ -129,8 +119,7 @@ class BusinessServices
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
-    public function rejectedPurchaseOrder($id, $business_id)
-    {
+    public function rejectedPurchaseOrder($id, $business_id){
         try {
             $rejectedPurchaseOrder = $this->repo->rejectedPurchaseOrder($id, $business_id);
             return $rejectedPurchaseOrder;
@@ -138,8 +127,7 @@ class BusinessServices
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
-    public function getPurchaseOrderBusinessWise($purchase_order_id)
-    {
+    public function getPurchaseOrderBusinessWise($purchase_order_id){
         try {
             $data_output = $this->repo->getPurchaseOrderBusinessWise($purchase_order_id);
             return $data_output;
@@ -148,8 +136,7 @@ class BusinessServices
             return $e;
         }
     }
-    public function acceptPurchaseOrderPaymentRelease($id, $business_id)
-    {
+    public function acceptPurchaseOrderPaymentRelease($id, $business_id){
         try {
             $acceptPurchaseOrderPaymentRelease = $this->repo->acceptPurchaseOrderPaymentRelease($id, $business_id);
             return $acceptPurchaseOrderPaymentRelease;
@@ -157,5 +144,4 @@ class BusinessServices
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
-       
 }

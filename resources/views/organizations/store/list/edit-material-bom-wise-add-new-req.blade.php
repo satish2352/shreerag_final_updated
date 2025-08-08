@@ -124,7 +124,11 @@
                                                             <td>
                                                                     <div class="custom-dropdown" data-index="{{ $index }}">
                                                                         <input type="hidden" name="addmore[{{ $index }}][part_item_id]" class="part_no" value="{{ $item->part_item_id }}">
-                                                                        <input type="text" class="dropdown-input form-control part-no" placeholder="Select Part Item..." readonly >
+                                                                        {{-- <input type="text" class="dropdown-input form-control part-no" placeholder="Select Part Item..." readonly > --}}
+@php
+    $selectedPartItem = $dataOutputPartItem->firstWhere('id', $item->part_item_id);
+@endphp
+<input type="text" class="dropdown-input form-control part-no" placeholder="Select Part Item..." readonly value="{{ $selectedPartItem->description ?? '' }}">
 
                                                                         <div class="dropdown-options dropdown-height" style="display: none;">
                                                                             <input type="text" class="search-box form-control" placeholder="Search...">
@@ -183,8 +187,9 @@
                                                                 
                                                             @else --}}
                                                             <input type="hidden" name="addmore[{{ $index }}][material_send_production]" value="0">
+                                                            <div class="checkbox-wrapper">
                                                             <input type="checkbox" class="material-send-checkbox" name="addmore[{{ $index }}][material_send_production]" value="1" {{ $item->material_send_production == 1 ? 'checked' : '' }} required>
-                                                                
+                                                            </div>
                                                             </td>
                                                             <td>
                                                                 @if($item->material_send_production == 0)
@@ -298,7 +303,7 @@
     $(document).ready(function () {
     const purchaseOrderTable = $("#purchase_order_table");
     const validationMessages = {
-        partNo: "Please select a Part Item",
+        part_no: "Please select a Part Item",
         quantity: {
             required: "Please enter the Quantity",
             digits: "Quantity must be a valid number",
@@ -312,7 +317,7 @@
        $(context).find('.part_no').each(function () {
         $(this).rules("add", {
             required: true,
-            messages: { required: validationMessages.partNo }
+            messages: { required: validationMessages.part_no }
         });
     });
         $(context).find('.quantity').each(function () {
@@ -394,8 +399,9 @@
 
                 <td>
                                                                     <div class="custom-dropdown" data-index="{{ $index }}">
-                                                                        <input type="hidden" name="addmore[${rowCount}][part_item_id]" class="part_no" value="{{ $item->part_item_id }}">
-                                                                        <input type="text" class="dropdown-input form-control part_no" placeholder="Select Part Item..." readonly >
+                                                                      <input type="hidden" name="addmore[${rowCount}][part_item_id]" class="part_no" value="">
+<input type="text" class="dropdown-input form-control part-item-name" placeholder="Select Part Item..." readonly>
+
 
                                                                         <div class="dropdown-options dropdown-height" style="display: none;">
                                                                             <input type="text" class="search-box form-control" placeholder="Search...">
