@@ -72,7 +72,7 @@
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                     <td> <a
                                                             href="{{ route('list-design-uploaded-owner-business-wise', base64_encode($data->business_id)) }}"><button
-                                                                class="btn btn-sm btn-primary login-submit-cs"
+                                                                class="btn btn-sm btn-primary btn-bg-colour"
                                                                 type="submit">View Details</button></a></td>
 
                                                 </tr>
