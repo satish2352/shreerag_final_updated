@@ -1,5 +1,10 @@
 @extends('admin.layouts.master')
 @section('content')
+<style>
+    .error{
+        color: red !important;
+    }
+    </style>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list">
@@ -87,7 +92,7 @@
                                                         <div class="sparkline12-graph">
                                                             <div id="pwd-container1">
                                                                 <div class="form-group">
-                                                                    <label for="remarks">Remark</label>
+                                                                    <label for="remark_by_design">Remark</label>
                                                                     <textarea class="form-control" rows="3" type="text" class="form-control" id="remark_by_design"
                                                                         name="remark_by_design" placeholder="Enter Remark">{{ old('remark_by_design') }}</textarea>
                                                                 </div>
@@ -155,6 +160,9 @@
                         fileExtension: ["xls", "xlsx"], // Validate for Excel files
                         fileSize: [1, 6144], // Min 1KB and Max 2MB
                     },
+                    remark_by_design: {
+                         required: true,
+                    }
                 },
                 messages: {
                     design_image: {
@@ -167,6 +175,9 @@
                         fileExtension: "Only Excel files (.xls, .xlsx) are allowed.",
                         fileSize: "File size must be between 1 KB and 5MB.",
                     },
+                     remark_by_design: {
+                        required: "Please enter remark",
+                    }
                 },
                 submitHandler: function(form) {
                     Swal.fire({

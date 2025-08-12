@@ -158,6 +158,8 @@ public function getAllDispatch(){
           WHERE t2.business_details_id = businesses_details.id
             AND t2.id <= tbl_customer_product_quantity_tracking.id
          )) AS remaining_quantity'),
+       
+
       )
       ->orderBy('tbl_dispatch.updated_at', 'desc')
       ->get();
@@ -190,6 +192,12 @@ public function getAllDispatchClosedProduct()
             ->leftJoin('tbl_dispatch', function ($join) {
                 $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_dispatch.quantity_tracking_id');
             })
+              ->leftJoin('estimation', function ($join) {
+                $join->on('tbl_dispatch.business_details_id', '=', 'estimation.business_details_id');
+            })
+            // ->leftJoin('production_details', function ($join) {
+            //     $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
+            // })
             ->whereIn('tcqt1.quantity_tracking_status', $array_to_be_quantity_tracking)
             ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
             ->where('businesses.is_active', true)
@@ -203,7 +211,10 @@ public function getAllDispatchClosedProduct()
                 'businesses_details.product_name',
                 'businesses_details.description',
                 'businesses_details.quantity',
+                'estimation.total_estimation_amount',
                 DB::raw('SUM(tcqt1.completed_quantity) as total_completed_quantity'),
+//    DB::raw('COALESCE(SUM(production_details.items_used_total_amount), 0) as total_items_used_amount'),
+
                 DB::raw('MAX(tbl_dispatch.updated_at) as last_updated_at') // Alias for MAX(updated_at)
             )
 
@@ -215,7 +226,8 @@ public function getAllDispatchClosedProduct()
                 'businesses.created_at',
                 'businesses_details.product_name',
                 'businesses_details.description',
-                'businesses_details.quantity'
+                'businesses_details.quantity',
+                'estimation.total_estimation_amount',
             )
 
             ->havingRaw('SUM(tcqt1.completed_quantity) = businesses_details.quantity')

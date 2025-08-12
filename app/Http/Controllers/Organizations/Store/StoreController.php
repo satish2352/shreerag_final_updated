@@ -85,7 +85,7 @@ class StoreController extends Controller
             return $e;
         }
     }
-    public function editProductMaterialWiseAddNewReq($id) {
+    public function editProductMaterialWiseAddNewReq($id) { //checked
         try {
             $id = $id;
             $editData = $this->service->editProductMaterialWiseAddNewReq($id);
@@ -270,7 +270,20 @@ class StoreController extends Controller
             return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $e->getMessage()]);
         }
     }
-   
+   public function getPartItemRate(Request $request)
+{
+    $partItem = PartItem::find($request->part_item_id);
+
+    if ($partItem) {
+        return response()->json([
+            'status' => 'success',
+            'basic_rate' => $partItem->basic_rate // adjust field name if different
+        ]);
+    } else {
+        return response()->json(['status' => 'error', 'message' => 'Part item not found']);
+    }
+}
+
     public function editProductMaterialWiseAdd($purchase_orders_id, $business_id) {
         try {
             $purchase_orders_id = base64_decode($purchase_orders_id);

@@ -854,4 +854,49 @@ public function getStoreItemStockListAjax(Request $request)
         return response()->json(['status' => false, 'message' => $e->getMessage()]);
     }
 }
+
+public function getProductionReport(Request $request)
+{
+    if ($request->filled('export_type')) {
+        $data = $this->service->getProductionReport($request)['data'];
+        if ($request->export_type == 1) {
+            $pdf = Pdf::loadView('exports.stock-item-pdf', ['data' => $data])
+                ->setPaper('a3', 'landscape');
+            return $pdf->download('stock-item.pdf');
+        }
+
+        if ($request->export_type == 2) {
+            return Excel::download(new ItemStockReport($data), 'stock-item.xlsx');
+        }
+    }
+
+    $getProjectName = Business::whereNotNull('project_name')
+    ->where('is_deleted', 0)
+    ->where('is_active', 1)
+    ->pluck('project_name', 'id');
+    // If no export type, show the view with data (optional: fetch data for initial load)
+    $data = $this->service->getStoreItemStockList($request)['data'] ?? [];
+    return view('organizations.report.production-report', compact('data', 'getProjectName'));
+}
+public function getProductionReportAjax(Request $request)
+{
+    try {
+        $response = $this->service->getProductionReport($request);
+
+        if (isset($response['status']) && $response['status'] === false) {
+            return response()->json([
+                'status' => false,
+                'message' => $response['message']
+            ]);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => $response['data'],
+            'pagination' => $response['pagination']
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['status' => false, 'message' => $e->getMessage()]);
+    }
+}
 }

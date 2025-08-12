@@ -22,8 +22,7 @@ use Config;
 
 class EstimationRepository  {
 
-public function updateAll($request)
-{
+public function updateAll($request){ //checked
     try {
         $return_data = [];
         $edit_id = $request->business_id;
@@ -43,23 +42,15 @@ public function updateAll($request)
                 'status' => 'error',
             ];
         }
-
         $productName = $businessDetails->product_name;
         $bomImageName = $dataOutputNew->bom_image; 
-
-        // Only update remark here (no image logic in repo)
-     
-if ($request->hasFile('bom_image')) {
-            $formattedProductName = str_replace(' ', '_', $productName);
+        if ($request->hasFile('bom_image')) {
+            $formattedProductName = preg_replace('/_+/', '_', $productName);
             $bomImageName = $dataOutputNew->id . '_'. $formattedProductName .'_'. rand(100000, 999999) . '.' . $request->file('bom_image')->getClientOriginalExtension();
-           
             $dataOutputNew->bom_image = $bomImageName;
-           
         }
          $dataOutputNew->remark_by_estimation = $request->remark_by_estimation;
-        
         $dataOutputNew->save();
-        // Update existing estimation record (not insert)
         $estimation_data = EstimationModel::where('design_id', $dataOutputNew->design_id)->first();
 
         if (!$estimation_data) {
@@ -109,23 +100,17 @@ if ($request->hasFile('bom_image')) {
         ];
     }
 }
-public function updateRevisedEstimation($request)
-{
+public function updateRevisedEstimation($request){ //checked
     try {
         $return_data = [];
-
-        $edit_id = $request->business_id;
-
-        // Get existing DesignRevisionForProd
+        $edit_id = $request->business_id;        
         $dataOutputNew = DesignRevisionForProd::where('business_details_id', $edit_id)->first();
-
         if (!$dataOutputNew) {
             return [
                 'msg' => 'Design not found.',
                 'status' => 'error',
             ];
         }
-
         $businessDetails = BusinessDetails::find($dataOutputNew->business_details_id);
         if (!$businessDetails) {
             return [
@@ -133,13 +118,11 @@ public function updateRevisedEstimation($request)
                 'status' => 'error',
             ];
         }
-
         $productName = $businessDetails->product_name;
-        $bomImageName = $dataOutputNew->bom_image; // use existing image name
+        $bomImageName = $dataOutputNew->bom_image; 
 
-        
-                if ($request->hasFile('bom_image')) {
-            $formattedProductName = str_replace(' ', '_', $productName);
+        if ($request->hasFile('bom_image')) {
+            $formattedProductName = preg_replace('/_+/', '_', $productName);
             $bomImageName = $dataOutputNew->id . '_'. $formattedProductName .'_'. rand(100000, 999999) . '.' . $request->file('bom_image')->getClientOriginalExtension();
            
             $dataOutputNew->bom_image = $bomImageName;
@@ -149,10 +132,8 @@ public function updateRevisedEstimation($request)
         
         $dataOutputNew->save();
 
-        // Update existing estimation record (not insert)
         $estimation_data = EstimationModel::where('design_id', $dataOutputNew->design_id)->first();
-//  dd($estimation_data);
-//             die();
+
         if (!$estimation_data) {
             return [
                 'status' => 'error',
@@ -164,10 +145,8 @@ public function updateRevisedEstimation($request)
         $estimation_data->business_details_id = $dataOutputNew->business_details_id;
         $estimation_data->total_estimation_amount = $request->total_estimation_amount;
         $estimation_data->save();
-
         // Update existing BusinessApplicationProcesses
         $business_application = BusinessApplicationProcesses::where('business_details_id', $dataOutputNew->business_details_id)->first();
-
         if ($business_application) {
             $business_application->design_id = $dataOutputNew->design_id;
             $business_application->estimation_id = $estimation_data->id;
@@ -175,23 +154,17 @@ public function updateRevisedEstimation($request)
             $business_application->off_canvas_status = 31;
             $business_application->save();
         }
-
         // Update AdminView and NotificationStatus
         $update_data = [
             'off_canvas_status' => 31,
             'is_view' => 0
         ];
-
         AdminView::where('business_details_id', $dataOutputNew->business_details_id)->update($update_data);
-        // NotificationStatus::where('business_details_id', $dataOutputNew->business_details_id)->update(['off_canvas_status' => 28]);
-
         // Return data for image processing in service
         $return_data['last_insert_id'] = $dataOutputNew->id;
         $return_data['bom_image'] = $bomImageName;
         $return_data['product_name'] = $productName;
-
         return $return_data;
-
     } catch (\Exception $e) {
         return [
             'msg' => 'Failed to update estimation.',
@@ -200,31 +173,23 @@ public function updateRevisedEstimation($request)
         ];
     }
 }
-public function sendToProduction($id)
-{
+public function sendToProduction($id){ //checked
     try {
         $decoded_business_id = base64_decode($id);
-
-        // Get single estimation record
         $dataOutputNew = EstimationModel::where('business_details_id', $decoded_business_id)->first();
-
         if (!$dataOutputNew) {
             return [
                 'msg' => 'Design not found.',
                 'status' => 'error',
             ];
         }
-
-        // Get business details
         $businessDetails = BusinessDetails::where('id', $decoded_business_id)->first();
-
         if (!$businessDetails) {
             return [
                 'msg' => 'Business details not found.',
                 'status' => 'error',
             ];
         }
-
         $productName = $businessDetails->product_name;
         $designImageName = $dataOutputNew->design_image;
         $bomImageName = $dataOutputNew->bom_image;

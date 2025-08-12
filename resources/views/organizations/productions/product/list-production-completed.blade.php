@@ -1,9 +1,6 @@
-<!-- Static Table Start -->
 @extends('admin.layouts.master')
 @section('content')
-    
-
-    <div class="data-table-area mg-tb-15">
+        <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -13,30 +10,11 @@
                                 <h1>Production Completed List</h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
-                                        {{-- Add Button or Other Actions Here --}}
                                     </div>
                                     <div class="col-lg-10"></div>
                                 </div>
                             </div>
                         </div>
-
-                        @if (Session::get('status') == 'success')
-                            <div class="alert alert-success alert-success-style1">
-                                <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
-                                    <span class="icon-sc-cl" aria-hidden="true">&times;</span>
-                                </button>
-                                <p><strong>Success!</strong> {{ Session::get('msg') }}</p>
-                            </div>
-                        @endif
-                        @if (Session::get('status') == 'error')
-                            <div class="alert alert-danger alert-mg-b alert-success-style4">
-                                <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
-                                    <span class="icon-sc-cl" aria-hidden="true">&times;</span>
-                                </button>
-                                <p><strong>Error!</strong> {{ Session::get('msg') }}</p>
-                            </div>
-                        @endif
-
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
                                 <div class="table-responsive">
@@ -69,7 +47,7 @@
                                                     <td>{{ $data->product_name }}</td>
                                                     <td>{{ $data->description }}</td>
                                                     <td>{{ $data->quantity }}</td>
-                                                    <td><b>{{ $data->completed_quantity }}</b></td>
+                                                    <td ><b style="font-size: 16px;">{{ $data->completed_quantity }}</b></td>
                                                     <td>{{ $data->remaining_quantity }}</td>
                                                     <td>{{ $data->cumulative_completed_quantity }}</td>
                                                 </tr>

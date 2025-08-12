@@ -104,7 +104,7 @@ class DesignUploadController extends Controller
             return back()->with('status', 'error')->with('msg', 'Something went wrong while fetching data.');
         }
     } 
-    public function addReUploadDesing($id){
+    public function addReUploadDesing($id){ //checked
         try {
             $design_revision_for_prod_id = base64_decode($id);
             return view('organizations.designer.design-upload.add-design-re-submit-upload', compact('design_revision_for_prod_id'));
@@ -112,7 +112,7 @@ class DesignUploadController extends Controller
             return $e;
         }
     } 
-     public function updateReUploadDesign(Request $request){
+     public function updateReUploadDesign(Request $request){ //checked
             
         $rules = [
             'design_image' => 'required|mimes:pdf|max:'.Config::get("AllFileValidation.DESIGNS_PDF_MAX_SIZE").'|min:'.Config::get("AllFileValidation.DESIGNS_PDF_MIN_SIZE").'',

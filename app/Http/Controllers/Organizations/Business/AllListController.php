@@ -246,11 +246,9 @@ class AllListController extends Controller
             return $e;
         }
     }
-public function loadDesignSubmittedForEstimation() {
+public function loadDesignSubmittedForEstimation() { //checked
     try {
         $data_output = $this->service->loadDesignSubmittedForEstimation();
-
-        // Check if it's actually a collection or array before using isNotEmpty()
         if (is_iterable($data_output) && count($data_output) > 0) {
             foreach ($data_output as $data) {
                 $business_id = $data->business_id;
@@ -286,9 +284,6 @@ public function loadDesignSubmittedForEstimation() {
 public function getAcceptEstimationBOM() {
     try {
         $data_output = $this->service->getAcceptEstimationBOM();
-
-        
-
         return view('organizations.business.list.list-bom-accepted', compact('data_output'));
     } catch (\Exception $e) {
         return $e;
@@ -296,10 +291,7 @@ public function getAcceptEstimationBOM() {
 }
 public function getAcceptEstimationBOMBusinessWise($id) {
     try {
-        
         $data_output = $this->service->getAcceptEstimationBOMBusinessWise($id);
-
-        // Check if it's actually a collection or array before using isNotEmpty()
         if (is_iterable($data_output) && count($data_output) > 0) {
             foreach ($data_output as $data) {
                 $business_id = $data->id;
@@ -322,8 +314,7 @@ public function getAcceptEstimationBOMBusinessWise($id) {
         return $e;
     }
 }
-public function getRejectEstimationBOM()
-{
+public function getRejectEstimationBOM(){ //checked
     try {
         $data_output = $this->service->getRejectEstimationBOM();
         return view('organizations.business.list.list-bom-rejected', compact('data_output'));
@@ -366,8 +357,7 @@ public function getRejectEstimationBOMBusinessWise($id) {
     }
 }
 
-public function getRevisedEstimationBOM()
-{
+public function getRevisedEstimationBOM(){ //checked
     try {
         $data_output = $this->service->getRevisedEstimationBOM();
         return view('organizations.business.list.list-revised-bom-estimation', compact('data_output'));
@@ -380,11 +370,9 @@ public function getRevisedEstimationBOM()
         ]);
     }
 }
-public function getRevisedEstimationBOMBusinessWise($id) {
+public function getRevisedEstimationBOMBusinessWise($id) { //checked
     try {
-        $data_output = $this->service->getRevisedEstimationBOMBusinessWise($id);
-
-        // Check if it's actually a collection or array before using isNotEmpty()
+        $data_output = $this->service->getRevisedEstimationBOMBusinessWise($id);        
         if (is_iterable($data_output) && count($data_output) > 0) {
             foreach ($data_output as $data) {
                 $business_id = $data->business_id;
@@ -416,7 +404,7 @@ public function getRevisedEstimationBOMBusinessWise($id) {
         }
     }
 
-    public function loadDesignSubmittedForProductionBusinessWise( $business_id ) {
+    public function loadDesignSubmittedForProductionBusinessWise( $business_id ) { //checked
         try {
             $data_output = $this->service->loadDesignSubmittedForProductionBusinessWise( $business_id );           
             if ( $data_output->isNotEmpty() ) {
@@ -431,7 +419,7 @@ public function getRevisedEstimationBOMBusinessWise($id) {
                     }
                 }
             } else {
-                return view( 'organizations.business.design.list-design-upload', [
+                return view( 'organizations.business.design.list-design-uploaded-owner-business-wise', [
                     'data_output' => [],
                     'message' => 'No data found'
                 ] );

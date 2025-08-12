@@ -438,16 +438,6 @@ class BusinessRepository
                 $business_application->off_canvas_status = 30;
                 $business_application->save();
             }
-
-            // Update AdminView
-            // $update_data_admin = [
-            //     'off_canvas_status' => 30,
-            //     'is_view' => '0'
-            // ];
-
-            // AdminView::where('business_details_id', $estimation_data->business_details_id)
-            //     ->update($update_data_admin);
-
             // Update NotificationStatus
             $update_data_business = [
                 'off_canvas_status' => 30

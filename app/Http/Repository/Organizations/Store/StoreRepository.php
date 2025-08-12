@@ -18,7 +18,8 @@ use App\Models\{
     ItemStock,
     NotificationStatus,
     CustomerProductQuantityTracking,
-    Gatepass
+    Gatepass,
+    PartItem
     
 };
 use Config;
@@ -155,7 +156,7 @@ class StoreRepository
             return $e->getMessage();
         }
     }
-    public function editProductMaterialWiseAddNewReq($id) {
+    public function editProductMaterialWiseAddNewReq($id) { //checked
         try {
             $id = base64_decode($id); 
             $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function($join) {
@@ -181,11 +182,12 @@ class StoreRepository
                     'production_details.quantity',
                     'production_details.unit',
                     'production_details.quantity_minus_status',
+                    'production_details.basic_rate',
                     'production_details.material_send_production',
                     'business_application_processes.store_material_sent_date'
                 )
                 ->get(); 
-            $productDetails = $dataOutputByid->first(); // Assuming the first entry contains the product details
+            $productDetails = $dataOutputByid->first();
             $dataGroupedById = $dataOutputByid->groupBy('business_details_id');
     
             return [
@@ -236,12 +238,25 @@ public function updateProductMaterialWiseAddNewReq($request)
             ->where('quantity_minus_status','pending')
             ->where('material_send_production',0)  
                 ->first();
+
+            $partItemData = PartItem::where('id', $item['part_item_id'])->first();
+           
+            $basicRate = $partItemData ? $partItemData->basic_rate : 0; // default 0 if not found
+
+            // Calculate total amount
+            $totalAmount = isset($item['items_used_total_amount'])
+                ? $item['items_used_total_amount']
+                : ($basicRate * $item['quantity']);
+
+
             if ($existingEntry) {
              if($item['quantity_minus_status'] =='pending' && $item['quantity_minus_status'] !='done'){
                 // if ($existingEntry->quantity_minus_status == 'pending' && $existingEntry->material_send_production == '0') {
                     $existingEntry->part_item_id = $item['part_item_id'];
                     $existingEntry->quantity = $item['quantity'];  // Set the new quantity (replacing the existing one)
                     $existingEntry->unit = $item['unit'];  // Update the unit if needed
+                    $existingEntry->basic_rate = $basicRate; // <-- auto insert basic_rate
+                    $existingEntry->items_used_total_amount = $totalAmount; // auto insert items_used_total_amount
                     $existingEntry->quantity_minus_status = 'pending';  // Ensure it's 'pending' for new request
                     $existingEntry->material_send_production = 0;  // Reset material_send_production
                     $existingEntry->save();
@@ -288,6 +303,8 @@ public function updateProductMaterialWiseAddNewReq($request)
                 $newEntry->part_item_id = $item['part_item_id'];
                 $newEntry->quantity = $item['quantity'];
                 $newEntry->unit = $item['unit'];
+                $newEntry->basic_rate = $basicRate; // <-- auto insert basic_rate
+                $newEntry->items_used_total_amount = $totalAmount; // auto insert items_used_total_amount
                 $newEntry->quantity_minus_status = 'pending';  // Status as 'pending'
                 $newEntry->material_send_production = 0;  // Not yet sent for production
                 $newEntry->business_id = $dataOutput_ProductionDetails->business_id;

@@ -668,13 +668,10 @@ class AllListRepositor
           return $e->getMessage();
       }
   }
-public function loadDesignSubmittedForEstimation()
-{
+public function loadDesignSubmittedForEstimation(){ //checked
     try {
-        // Get the constant value that indicates BOM sent to estimation department
         $array_to_be_check = config('constants.HIGHER_AUTHORITY.ESTIMATION_DEPT_THROUGH_RECEIVED_BOM');
 
-        // Build the query
         $data_output = EstimationModel::leftJoin('businesses', function ($join) {
                 $join->on('estimation.business_id', '=', 'businesses.id');
             })
@@ -692,8 +689,6 @@ public function loadDesignSubmittedForEstimation()
                 'businesses.customer_po_number',
                 'businesses.remarks',
                 'businesses.grand_total_amount',
-
-                // Use aggregate functions for estimation fields
                 \DB::raw('MAX(estimation.updated_at) as updated_at'),
                 \DB::raw('MAX(estimation.business_id) as business_id'),
                 \DB::raw('MAX(estimation.business_details_id) as business_details_id')
@@ -705,27 +700,21 @@ public function loadDesignSubmittedForEstimation()
                 'businesses.remarks',
                 'businesses.grand_total_amount'
             )
-            // Use alias 'updated_at' (from MAX function) for ordering
             ->orderBy('updated_at', 'desc')
             ->get();
 
         return $data_output;
     } catch (\Exception $e) {
-        // Return the exception for debugging/logging
         return $e;
     }
 }
-public function loadDesignSubmittedForEstimationBusinessWise($business_details_id)
-{
+public function loadDesignSubmittedForEstimationBusinessWise($business_details_id){ //checked
     try {
         $decoded_business_id = base64_decode($business_details_id);
-
          $array_to_be_check = config('constants.HIGHER_AUTHORITY.ESTIMATION_DEPT_THROUGH_RECEIVED_BOM');    
-
         $data_output = BusinessApplicationProcesses::leftJoin('businesses_details', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
             })
-          
             ->leftJoin('designs', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
             })
@@ -768,8 +757,7 @@ public function loadDesignSubmittedForEstimationBusinessWise($business_details_i
         return $e;
     }
 }
-public function getAcceptEstimationBOM()
-{
+public function getAcceptEstimationBOM(){
     try {
          $array_to_be_check = config('constants.HIGHER_AUTHORITY.OWNER_BOM_ESTIMATION_ACCEPTED');    
         $data_output = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
@@ -803,8 +791,7 @@ public function getAcceptEstimationBOM()
         return $e;
     }
 }
-public function getAcceptEstimationBOMBusinessWise($id)
-{
+public function getAcceptEstimationBOMBusinessWise($id){
     try {
        $decoded_business_id = base64_decode($id);
       
@@ -837,6 +824,7 @@ public function getAcceptEstimationBOMBusinessWise($id)
                 'businesses_details.description',
                 DB::raw('MAX(design_revision_for_prod.bom_image) as bom_image'),
                 DB::raw('MAX(designs.design_image) as design_image'),
+                'design_revision_for_prod.remark_by_estimation',
                 'estimation.total_estimation_amount',
                  'business_application_processes.updated_at',
                 
@@ -849,6 +837,7 @@ public function getAcceptEstimationBOMBusinessWise($id)
                 'businesses_details.quantity',
                 'businesses_details.description',
                  'estimation.total_estimation_amount',
+                  'design_revision_for_prod.remark_by_estimation',
                     'business_application_processes.updated_at',
             )
             ->get();
@@ -858,8 +847,7 @@ public function getAcceptEstimationBOMBusinessWise($id)
     }
 }
 
-public function getRejectEstimationBOM()
-{
+public function getRejectEstimationBOM(){ //checked
     try {
         $rejected = config('constants.HIGHER_AUTHORITY.OWNER_BOM_ESTIMATION_REJECTED');    
         $data_output = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
@@ -957,8 +945,7 @@ public function getRejectEstimationBOMBusinessWise($id)
         return $e;
     }
 }
-public function getRevisedEstimationBOM()
-{
+public function getRevisedEstimationBOM(){ //checked
     try {
         $revised = config('constants.HIGHER_AUTHORITY.RIVISED_BOM_ESTIMATION_SEND_TO_OWNER');    
         $data_output = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
@@ -998,8 +985,7 @@ public function getRevisedEstimationBOM()
 }
 
 
-public function getRevisedEstimationBOMBusinessWise($id)
-{
+public function getRevisedEstimationBOMBusinessWise($id){ //checked
     try {
        $decoded_business_id = base64_decode($id);
           $revised = config('constants.HIGHER_AUTHORITY.RIVISED_BOM_ESTIMATION_SEND_TO_OWNER');   
@@ -1030,6 +1016,7 @@ public function getRevisedEstimationBOMBusinessWise($id)
                 DB::raw('MAX(design_revision_for_prod.bom_image) as bom_image'),
                 DB::raw('MAX(designs.design_image) as design_image'),
                 'estimation.total_estimation_amount',
+                'design_revision_for_prod.remark_by_estimation',
                 'business_application_processes.updated_at'
              
             )
@@ -1041,7 +1028,8 @@ public function getRevisedEstimationBOMBusinessWise($id)
                 'businesses_details.description',
                  'estimation.total_estimation_amount',
                   'design_revision_for_prod.remark_by_estimation',
-                 'business_application_processes.updated_at'
+                 'business_application_processes.updated_at',
+                  'design_revision_for_prod.remark_by_estimation',
             )
             ->get();
         return $data_output;
@@ -1103,16 +1091,14 @@ public function getRevisedEstimationBOMBusinessWise($id)
         return $e;
     }
 }
-public function loadDesignSubmittedForProductionBusinessWise($business_id)
-{
+public function loadDesignSubmittedForProductionBusinessWise($business_id){ //checked
     try {
         $decoded_business_id = base64_decode($business_id);
-
         $array_to_be_check = [
             config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN'),
             config('constants.ESTIMATION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_ESTIMATION'),
         ];
-  $send_estimation =config('constants.ESTIMATION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_ESTIMATION');
+        $send_estimation =config('constants.ESTIMATION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_ESTIMATION');
         $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
             $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
         })
@@ -1127,7 +1113,7 @@ public function loadDesignSubmittedForProductionBusinessWise($business_id)
             })
             ->leftJoin('businesses', function ($join) {
                 $join->on('businesses_details.business_id', '=', 'businesses.id');
-            }) // Added this join
+            }) 
             ->where('businesses_details.business_id', $decoded_business_id)
             ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
             ->where('business_application_processes.design_send_to_estimation',$send_estimation)

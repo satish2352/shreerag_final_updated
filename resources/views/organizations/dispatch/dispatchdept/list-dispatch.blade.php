@@ -52,10 +52,10 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
-                                                <th data-field="date" data-editable="false">Sent Date</th>
+                                                <th data-field="updated_at" data-editable="false">Dispatch Date</th>
                                                 <th data-field="project_name" data-editable="false">Project Name</th>
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
-                                                <th data-field="title" data-editable="false">customer Name</th>
+                                                {{-- <th data-field="title" data-editable="false">customer Name</th> --}}
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
                                                 <th data-field="completed_quantity" data-editable="false">Completed
@@ -68,7 +68,7 @@
                                                 <th data-field="outdoor_no" data-editable="false">Outdoor Number</th>
                                                 <th data-field="gate_entry" data-editable="false">Gate Entry</th>
                                                 <th data-field="remark" data-editable="false">Dispatch Remark</th>
-                                                <th data-field="updated_at" data-editable="false">Dispatch Date</th>
+                 
 
                                             </tr>
 
@@ -77,11 +77,11 @@
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td> {{ $data->created_at ? $data->created_at->format('Y-m-d') : 'N/A' }}
+                                                     <td>{{ $data->updated_at ? $data->updated_at->format('Y-m-d') : 'N/A' }}
                                                     </td>
                                                     <td>{{ ucwords($data->project_name) }}</td>
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
-                                                    <td>{{ ucwords($data->title) }}</td>
+                                                    {{-- <td>{{ ucwords($data->title) }}</td> --}}
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
                                                     <td>{{ ucwords($data->cumulative_completed_quantity) }}</td>
@@ -94,8 +94,7 @@
                                                     </td>
                                                     <td>{{ ucwords($data->gate_entry) }}</td>
                                                     <td>{{ ucwords($data->remark) }}</td>
-                                                    <td>{{ $data->updated_at ? $data->updated_at->format('Y-m-d') : 'N/A' }}
-                                                    </td>
+                                                   
 
 
 

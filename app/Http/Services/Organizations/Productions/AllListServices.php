@@ -12,7 +12,7 @@ class AllListServices
         $this->repo = new AllListRepository();
 
     }
-    public function getAllNewRequirement(){
+    public function getAllNewRequirement(){ //checked
         try {
             $data_output = $this->repo->getAllNewRequirement();
           
@@ -21,7 +21,7 @@ class AllListServices
             return $e;
         }
     }
-    public function getAllNewRequirementBusinessWise($business_id){
+    public function getAllNewRequirementBusinessWise($business_id){ //checked
         try {
             $data_output = $this->repo->getAllNewRequirementBusinessWise($business_id);
             return $data_output;
@@ -29,7 +29,7 @@ class AllListServices
             return $e;
         }
     }
-    public function getAllacceptdesign(){
+    public function getAllacceptdesign(){ //checked
         try {
             $data_output = $this->repo->getAllacceptdesign();
           
@@ -38,7 +38,7 @@ class AllListServices
             return $e;
         }
     }
-    public function acceptdesignlistBusinessWise($business_id){
+    public function acceptdesignlistBusinessWise($business_id){ //checked
         try {
             $data_output = $this->repo->acceptdesignlistBusinessWise($business_id);
             return $data_output;
@@ -56,11 +56,9 @@ class AllListServices
         }
     }
 
-    public function getAllreviseddesign(){
+    public function getAllreviseddesign(){//checked
         try {
             $data_output = $this->repo->getAllreviseddesign();
-            // dd($data_output);
-            // die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -98,7 +96,7 @@ class AllListServices
     //     }
     // }
 
-    public function getAllCompletedProduction(){
+    public function getAllCompletedProduction(){ //checked
         try {
           $data_output = $this->repo->getAllCompletedProduction();
           return $data_output;

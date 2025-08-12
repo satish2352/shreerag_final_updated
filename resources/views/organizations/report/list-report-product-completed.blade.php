@@ -112,7 +112,8 @@
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="total_quantity" data-editable="false">Total Product Quantity</th>
                                                 <th data-field="total_completed_quantity" data-editable="false">Total Production Done Quantity</th>    
-                                            
+                                            <th data-field="total_estimation_amount" data-editable="false">Estimated Amount</th> 
+                                             <th data-field="total_completed_quantity" data-editable="false">Actual Amount</th> 
                                             </tr>
     </thead>
     <tbody id="reportBody">
@@ -184,7 +185,7 @@ function fetchReport(reset = false) {
             <td>${item.product_name ?? '-'}</td>
              <td>${item.quantity ?? '-'}</td>
               <td>${item.total_completed_quantity ?? '-'}</td>
-              
+                <td>${item.total_estimation_amount ?? '-'}</td>
         
         </tr>
     `;

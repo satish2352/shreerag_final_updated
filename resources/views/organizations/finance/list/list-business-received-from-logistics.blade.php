@@ -94,8 +94,8 @@
                                                     <td>
                                                         <a href="{{ route('send-to-dispatch', [base64_encode($data->id), base64_encode($data->business_details_id)]) }}"
                                                             onclick="return confirmAccept('{{ route('send-to-dispatch', [base64_encode($data->id), base64_encode($data->business_details_id)]) }}')"
-                                                            class="pd-setting-ed" data-toggle="tooltip" title="Send">
-                                                            <button><i class="fa fa-check" aria-hidden="true"></i> Send to
+                                                            class="btn-bg-colour" data-toggle="tooltip" title="Send">
+                                                            <button class="btn-bg-colour">Send to
                                                                 Dispatch </button>
                                                         </a>
                                                     </td>

@@ -126,18 +126,15 @@
             </div>
         </div>
     </div>
-
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
     <script>
         jQuery.noConflict();
         jQuery(document).ready(function($) {
-            // Custom validation method for file size
             $.validator.addMethod('filesize', function(value, element, param) {
-                if (element.files.length === 0) return true; // Allow if no file selected
-                var fileSize = element.files[0].size; // Get file size in bytes
+                if (element.files.length === 0) return true; 
+                var fileSize = element.files[0].size; 
                 return this.optional(element) || (fileSize >= param.min && fileSize <= param.max);
             }, 'Invalid file size.');
 
@@ -177,8 +174,8 @@
                    
                 },
                 errorPlacement: function(error, element) {
-                    error.addClass('text-danger'); // Add Bootstrap text-danger class for styling
-                    error.insertAfter(element); // Insert error message after the input
+                    error.addClass('text-danger'); 
+                    error.insertAfter(element); 
                 },
                 submitHandler: function(form) {
                     Swal.fire({

@@ -24,6 +24,8 @@ return new class extends Migration
             $table->unsignedBigInteger('part_item_id')->nullable();
             $table->string('quantity')->nullable();
             $table->string('unit')->nullable();
+            $table->string('basic_rate')->nullable();
+            $table->string('items_used_total_amount')->nullable();
             $table->boolean('is_approve')->default(false);
             $table->boolean('is_active')->default(true);
             $table->boolean('is_deleted')->default(false);

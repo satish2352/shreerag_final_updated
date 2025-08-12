@@ -69,8 +69,6 @@
                                                     <td>{{ ucwords($data->rate) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
-                                                    <td> {{ $data->created_at ? $data->created_at->format('Y-m-d') : 'N/A' }}
-                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

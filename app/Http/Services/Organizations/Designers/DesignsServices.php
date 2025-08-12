@@ -42,7 +42,7 @@ use Config;
         try {
             $return_data = $this->repo->updateAll($request);           
             $productName = $return_data['product_name']; 
-            $formattedProductName = str_replace(' ', '_', $productName);
+            $formattedProductName = preg_replace('/_+/', '_', $productName);
             $path = Config::get('FileConstant.DESIGNS_ADD');
             if ($request->hasFile('design_image')) {
                 if ($return_data['design_image']) {
@@ -87,7 +87,7 @@ use Config;
             throw $e;
         }
     }
-    public function updateReUploadDesign($request){
+    public function updateReUploadDesign($request){ //checked
         try {
            
             $last_id = $this->repo->updateReUploadDesign($request);

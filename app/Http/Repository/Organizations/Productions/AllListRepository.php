@@ -17,7 +17,7 @@ use App\Models\ {
 use Config;
 
 class AllListRepository  {
-  public function getAllNewRequirement(){
+  public function getAllNewRequirement(){ //checked
     try {
         $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_ESTIMATION_RECEIVED_FOR_PRODUCTION')];
         $data_output = BusinessApplicationProcesses::leftJoin('estimation', function($join) {
@@ -49,7 +49,7 @@ class AllListRepository  {
     }
 }
 
-public function getAllNewRequirementBusinessWise($business_id) {
+public function getAllNewRequirementBusinessWise($business_id) { //checked
   try {
     $decoded_business_id = base64_decode($business_id);
 
@@ -66,7 +66,6 @@ public function getAllNewRequirementBusinessWise($business_id) {
           })
           ->where('businesses_details.business_id', $decoded_business_id)
           ->whereIn('business_application_processes.estimation_send_to_production', $array_to_be_check)
-          // ->whereNull('business_application_processes.business_details_status_id')
           ->whereNull('estimation.is_approved_estimation')
           ->where('businesses_details.is_active', true)
           ->where('businesses_details.is_deleted', 0)
@@ -89,12 +88,12 @@ public function getAllNewRequirementBusinessWise($business_id) {
 
       return $data_output;
   } catch (\Exception $e) {
-      return $e->getMessage(); // or return response()->json(['error' => $e->getMessage()], 500);
+      return $e->getMessage(); 
   }
 }
 
   
-  public function getAllacceptdesign(){
+  public function getAllacceptdesign(){ //checked
       try {
           $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION')];
           $array_to_be_check_store = [
@@ -176,7 +175,7 @@ public function getAllNewRequirementBusinessWise($business_id) {
           return $e;
       }
   }
-  public function acceptdesignlistBusinessWise($business_id){
+  public function acceptdesignlistBusinessWise($business_id){ //checked
     try {
       $decoded_business_id = base64_decode($business_id);
         $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION')];
@@ -411,70 +410,6 @@ public function getAllListMaterialRecievedToProduction()
         return $e;
     }
 }
-// public function getAllListMaterialRecievedToProductionBusinessWise($id)
-// {
-//     try {
-//         $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_BOM_PART_MATERIAL_RECIVED_FROM_STORE_DEPT_FOR_PRODUCTION')];
-
-//         $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
-//             $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-//         })
-//             ->leftJoin('businesses', function ($join) {
-//                 $join->on('business_application_processes.business_id', '=', 'businesses.id');
-//             })
-//             ->leftJoin('businesses_details', function ($join) {
-//                 $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-//             })
-//             ->leftJoin('tbl_customer_product_quantity_tracking', 'business_application_processes.business_details_id', '=', 'tbl_customer_product_quantity_tracking.business_details_id')
-//             ->leftJoin('purchase_orders', function ($join) {
-//                 $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-//             })
-//             ->where('businesses_details.id', $id)
-//             ->where('businesses_details.is_active', true)
-//             ->where('businesses.is_deleted', 0)
-//             ->distinct('businesses.id')
-//             ->select(
-//                 'business_application_processes.id',
-//                 'businesses.id as business_id',
-//                 'businesses.customer_po_number',
-//                 'businesses.title',
-//                 'businesses_details.id as business_details_id',
-//                 'businesses_details.product_name',
-//                 'businesses_details.quantity',
-//                 'businesses_details.description',
-//                 'businesses.remarks',
-//                 DB::raw('(SELECT SUM(t2.completed_quantity)
-//                           FROM tbl_customer_product_quantity_tracking AS t2
-//                           WHERE t2.business_details_id = businesses_details.id
-//                             AND t2.id <= tbl_customer_product_quantity_tracking.id
-//                          ) AS cumulative_completed_quantity'),
-//                 DB::raw('(businesses_details.quantity - (SELECT SUM(t2.completed_quantity)
-//                           FROM tbl_customer_product_quantity_tracking AS t2
-//                           WHERE t2.business_details_id = businesses_details.id
-//                             AND t2.id <= tbl_customer_product_quantity_tracking.id
-//                          )) AS remaining_quantity'),
-//                 'production.updated_at'
-//             )
-//             ->groupBy(
-//                 'business_application_processes.id',
-//                 'businesses.id',
-//                 'businesses.customer_po_number',
-//                 'businesses.title',
-//                 'businesses_details.id',
-//                 'businesses_details.product_name',
-//                 'businesses_details.quantity',
-//                 'businesses_details.description',
-//                 'businesses.remarks',
-//                 'tbl_customer_product_quantity_tracking.id', // Added to resolve the issue
-//             'production.updated_at'
-//                 )
-//             ->get();
-
-//         return $data_output;
-//     } catch (\Exception $e) {
-//         return $e;
-//     }
-// }
 public function getAllListMaterialRecievedToProductionBusinessWise($id)
 {
     try {
@@ -535,7 +470,7 @@ public function getAllListMaterialRecievedToProductionBusinessWise($id)
     }
 }
 
-public function getAllCompletedProduction() {
+public function getAllCompletedProduction() { //checked
     try {
         $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
         $array_to_be_quantity_tracking = [config('constants.PRODUCTION_DEPARTMENT.INPROCESS_COMPLETED_QUANLTITY_SEND_TO_LOGISTICS')];

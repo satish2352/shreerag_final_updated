@@ -88,11 +88,7 @@ class AllListRepositor  {
         return $e;
     }
 }
-
-
-
-
-public function getAllListDesignRecievedForCorrection() {
+public function getAllListDesignRecievedForCorrection() { //checked
   try {
       $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.DESIGN_SENT_TO_DESIGN_DEPT_FOR_REVISED')];
 
@@ -146,7 +142,6 @@ public function getAllListDesignRecievedForCorrection() {
             'design_revision_for_prod.bom_image',
             'designs.design_image'
         )
-        
           ->orderBy('businesses.updated_at', 'desc')
           ->get();
 

@@ -244,9 +244,9 @@ Route::get('/list-product-completed-report', [ReportController::class, 'getCompl
     
        
 
-        Route::get('/list-accept-bom', ['as' => 'list-accept-bom', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@acceptBOMlist']);
-        Route::get('/list-accept-bom-business-wise/{business_id}', ['as' => 'list-accept-bom-business-wise', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@acceptBOMlistBusinessWise']);
-        Route::get('/list-reject-design', ['as' => 'list-reject-design', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@rejectdesignlist']);
+        // Route::get('/list-accept-bom', ['as' => 'list-accept-bom', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@acceptBOMlist']);
+        // Route::get('/list-accept-bom-business-wise/{business_id}', ['as' => 'list-accept-bom-business-wise', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@acceptBOMlistBusinessWise']);
+        // Route::get('/list-reject-design', ['as' => 'list-reject-design', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@rejectdesignlist']);
         Route::get('/list-revislist-material-reciveded-design', ['as' => 'list-revislist-material-reciveded-design', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@reviseddesignlist']);
       
         Route::get('/list-material-recived', ['as' => 'list-material-recived', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@getAllListMaterialRecievedToProduction']);
@@ -337,6 +337,8 @@ Route::get('/list-product-completed-report', [ReportController::class, 'getCompl
 
         Route::get('/edit-material-list-bom-wise-new-req/{id}', ['as' => 'edit-material-list-bom-wise-new-req', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@editProductMaterialWiseAddNewReq']);
         Route::post('/update-material-list-bom-wise-new-req/{id}', ['as' => 'update-material-list-bom-wise-new-req', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@updateProductMaterialWiseAddNewReq']);
+        Route::get('/get-part-item-rate', ['as' => 'get-part-item-rate', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@getPartItemRate']);
+
         Route::post('/deleted-addmore-store-material-item', ['as' => 'deleted-addmore-store-material-item', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@destroyAddmoreStoreItem']);
 
         Route::get('/check-stock-quantity', ['as' => 'check-stock-quantity', 'uses' => 'App\Http\Controllers\Organizations\Store\StoreController@checkStockQuantity']);

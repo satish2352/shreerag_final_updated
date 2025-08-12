@@ -50,8 +50,7 @@ class AllListController extends Controller
             return $e;
         }
     }
-   public function getAllListDesignRecievedForCorrection( Request $request )
- {
+   public function getAllListDesignRecievedForCorrection( Request $request ){ //checked
         try {
             // Retrieve the list of designs received for correction
             $data_output = $this->service->getAllListDesignRecievedForCorrection();

@@ -18,7 +18,7 @@ use App\Models\ {
 use Config;
 
 class AllListRepository  {
- public function getAllNewRequirement(){
+ public function getAllNewRequirement(){ //checked
     try {
         $send_estimation = config('constants.ESTIMATION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_ESTIMATION');
 
@@ -63,7 +63,7 @@ class AllListRepository  {
         return $e;
     }
 }
-public function getAllNewRequirementBusinessWise($business_id) {
+public function getAllNewRequirementBusinessWise($business_id) { //checked
   try {
     $decoded_business_id = base64_decode($business_id);
 
@@ -107,8 +107,7 @@ public function getAllNewRequirementBusinessWise($business_id) {
       return $e->getMessage(); 
   }
 }  
-public function getAllEstimationSendToOwnerForApproval()
-{
+public function getAllEstimationSendToOwnerForApproval(){ //checked
     try {
         $array_to_be_check = config('constants.HIGHER_AUTHORITY.ESTIMATION_DEPT_THROUGH_RECEIVED_BOM');
 
@@ -151,8 +150,7 @@ public function getAllEstimationSendToOwnerForApproval()
         return $e;
     }
 }
-
-public function getAllEstimationSendToOwnerForApprovalBusinessWise($business_id) {
+public function getAllEstimationSendToOwnerForApprovalBusinessWise($business_id) { //checked
    try {
         $decoded_business_id = base64_decode($business_id);
 
@@ -168,7 +166,9 @@ public function getAllEstimationSendToOwnerForApprovalBusinessWise($business_id)
               ->leftJoin('estimation', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
             })
-          
+          ->leftJoin('design_revision_for_prod', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+            })
             ->where('business_application_processes.business_id', $decoded_business_id)
             ->where('business_application_processes.bom_estimation_send_to_owner', $array_to_be_check)
             ->where('business_application_processes.is_active', true)
@@ -180,7 +180,7 @@ public function getAllEstimationSendToOwnerForApprovalBusinessWise($business_id)
                 'businesses_details.description',
                  'businesses_details.total_amount',
                  'estimation.total_estimation_amount',
-                DB::raw('MAX(designs.bom_image) as bom_image'),
+                DB::raw('MAX(design_revision_for_prod.bom_image) as bom_image'),
                 DB::raw('MAX(designs.design_image) as design_image'),
                 'estimation.total_estimation_amount',
             )
@@ -200,147 +200,147 @@ public function getAllEstimationSendToOwnerForApprovalBusinessWise($business_id)
       return $e->getMessage(); // or return response()->json(['error' => $e->getMessage()], 500);
   }
 } 
-  public function acceptBOMlist(){
+//   public function acceptBOMlist(){
    
-    try {
-         $array_to_be_check = config('constants.HIGHER_AUTHORITY.OWNER_BOM_ESTIMATION_ACCEPTED');    
-        $data_output = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
-                $join->on('business_application_processes.business_id', '=', 'businesses.id');
-            })
-            ->where('business_application_processes.owner_bom_accepted', $array_to_be_check)
-            ->where('businesses.is_active', true)
-            ->where('businesses.is_deleted', 0)
-            ->select(
-                'businesses.id',
-                'businesses.project_name',
-                'businesses.customer_po_number',
-                'businesses.title',
-                 'businesses.remarks',
-                 'businesses.updated_at'
+//     try {
+//          $array_to_be_check = config('constants.HIGHER_AUTHORITY.OWNER_BOM_ESTIMATION_ACCEPTED');    
+//         $data_output = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
+//                 $join->on('business_application_processes.business_id', '=', 'businesses.id');
+//             })
+//             ->where('business_application_processes.owner_bom_accepted', $array_to_be_check)
+//             ->where('businesses.is_active', true)
+//             ->where('businesses.is_deleted', 0)
+//             ->select(
+//                 'businesses.id',
+//                 'businesses.project_name',
+//                 'businesses.customer_po_number',
+//                 'businesses.title',
+//                  'businesses.remarks',
+//                  'businesses.updated_at'
              
-            )
-            ->groupBy(
-                'businesses.id',
-                'businesses.project_name',
-                'businesses.customer_po_number',
-                'businesses.title',
-                 'businesses.remarks',
-                  'businesses.updated_at'
-            )
-            ->get();
-        return $data_output;
-    } catch (\Exception $e) {
-        return $e;
-    }
-}
-  public function acceptBOMlistBusinessWise($business_id){
+//             )
+//             ->groupBy(
+//                 'businesses.id',
+//                 'businesses.project_name',
+//                 'businesses.customer_po_number',
+//                 'businesses.title',
+//                  'businesses.remarks',
+//                   'businesses.updated_at'
+//             )
+//             ->get();
+//         return $data_output;
+//     } catch (\Exception $e) {
+//         return $e;
+//     }
+// }
+//   public function acceptBOMlistBusinessWise($business_id){
     
-    try {
-       $decoded_business_id = base64_decode($id);
+//     try {
+//        $decoded_business_id = base64_decode($id);
       
-         $accepted = config('constants.HIGHER_AUTHORITY.OWNER_BOM_ESTIMATION_ACCEPTED'); 
-          $received = config('constants.HIGHER_AUTHORITY.ESTIMATION_DEPT_THROUGH_RECEIVED_BOM');   
-        $data_output = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
-                $join->on('business_application_processes.business_id', '=', 'businesses.id');
-            })
-            ->leftJoin('businesses_details', function ($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-            })
-               ->leftJoin('designs', function ($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-            })
-             ->leftJoin('estimation', function ($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
-            })
-            ->where('business_application_processes.bom_estimation_send_to_owner', $received)
-            ->where('business_application_processes.owner_bom_accepted', $accepted)
-            ->where('businesses.is_active', true)
-            ->where('businesses.is_deleted', 0)
-            ->select(
-               'businesses_details.id',
-                'businesses_details.product_name',
-                'businesses_details.quantity',
-                'businesses_details.description',
-                DB::raw('MAX(designs.bom_image) as bom_image'),
-                DB::raw('MAX(designs.design_image) as design_image'),
-                'estimation.total_estimation_amount',
+//          $accepted = config('constants.HIGHER_AUTHORITY.OWNER_BOM_ESTIMATION_ACCEPTED'); 
+//           $received = config('constants.HIGHER_AUTHORITY.ESTIMATION_DEPT_THROUGH_RECEIVED_BOM');   
+//         $data_output = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
+//                 $join->on('business_application_processes.business_id', '=', 'businesses.id');
+//             })
+//             ->leftJoin('businesses_details', function ($join) {
+//                 $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+//             })
+//                ->leftJoin('designs', function ($join) {
+//                 $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+//             })
+//              ->leftJoin('estimation', function ($join) {
+//                 $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
+//             })
+//             ->where('business_application_processes.bom_estimation_send_to_owner', $received)
+//             ->where('business_application_processes.owner_bom_accepted', $accepted)
+//             ->where('businesses.is_active', true)
+//             ->where('businesses.is_deleted', 0)
+//             ->select(
+//                'businesses_details.id',
+//                 'businesses_details.product_name',
+//                 'businesses_details.quantity',
+//                 'businesses_details.description',
+//                 DB::raw('MAX(designs.bom_image) as bom_image'),
+//                 DB::raw('MAX(designs.design_image) as design_image'),
+//                 'estimation.total_estimation_amount',
              
-            )
-            ->groupBy(
-                'businesses_details.id',
-                'businesses_details.id',
-                'businesses_details.product_name',
-                'businesses_details.quantity',
-                'businesses_details.description',
-                 'estimation.total_estimation_amount',
-            )
-            ->get();
-        return $data_output;
-    } catch (\Exception $e) {
-        return $e;
-    }
-}
-  public function getAllrejectdesign(){
-    try {
+//             )
+//             ->groupBy(
+//                 'businesses_details.id',
+//                 'businesses_details.id',
+//                 'businesses_details.product_name',
+//                 'businesses_details.quantity',
+//                 'businesses_details.description',
+//                  'estimation.total_estimation_amount',
+//             )
+//             ->get();
+//         return $data_output;
+//     } catch (\Exception $e) {
+//         return $e;
+//     }
+// }
+//   public function getAllrejectdesign(){
+//     try {
 
-        $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.DESIGN_SENT_TO_DESIGN_DEPT_FOR_REVISED')];
-        $data_output = BusinessApplicationProcesses::leftJoin('production', function($join) {
-          $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-      })
-      ->leftJoin('businesses', function($join) {
-          $join->on('business_application_processes.business_id', '=', 'businesses.id');
-      })
-      ->leftJoin('businesses_details', function($join) {
-          $join->on('production.business_details_id', '=', 'businesses_details.id');
-      })
-      ->leftJoin('designs', function($join) {
-          $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-      })
-      ->leftJoin('design_revision_for_prod', function($join) {
-          $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-      })
-      ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
-      ->where('businesses.is_active', true)
-      ->where('businesses.is_deleted', 0)
-      ->groupBy(
-          'businesses.id',
-          'businesses_details.id',
-          'businesses.project_name',
-          'businesses.customer_po_number',
-          'businesses.created_at',
-          'businesses_details.product_name',
-          'businesses_details.description',
-          'businesses_details.quantity',
-          'businesses_details.is_active',
-          'production.business_id',
-          'businesses.updated_at',
-          'designs.bom_image',
-          'designs.design_image'
-      )
-      ->select(
-          'businesses.id',
-          'businesses_details.id',
-          'businesses.project_name',
-          'businesses.customer_po_number',
-          'businesses.created_at',
-          'businesses_details.product_name',
-          'businesses_details.description',
-          'businesses_details.quantity',
-          'businesses_details.is_active',
-          'production.business_id',
-          DB::raw('MAX(COALESCE(design_revision_for_prod.reject_reason_prod, "")) as reject_reason_prod'),
-          'businesses.updated_at',
-          'designs.bom_image',
-          'designs.design_image'
-      )
-      ->orderBy('businesses.updated_at', 'desc')
-      ->get();
-        return $data_output;
-    } catch (\Exception $e) {
+//         $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.DESIGN_SENT_TO_DESIGN_DEPT_FOR_REVISED')];
+//         $data_output = BusinessApplicationProcesses::leftJoin('production', function($join) {
+//           $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+//       })
+//       ->leftJoin('businesses', function($join) {
+//           $join->on('business_application_processes.business_id', '=', 'businesses.id');
+//       })
+//       ->leftJoin('businesses_details', function($join) {
+//           $join->on('production.business_details_id', '=', 'businesses_details.id');
+//       })
+//       ->leftJoin('designs', function($join) {
+//           $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+//       })
+//       ->leftJoin('design_revision_for_prod', function($join) {
+//           $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+//       })
+//       ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
+//       ->where('businesses.is_active', true)
+//       ->where('businesses.is_deleted', 0)
+//       ->groupBy(
+//           'businesses.id',
+//           'businesses_details.id',
+//           'businesses.project_name',
+//           'businesses.customer_po_number',
+//           'businesses.created_at',
+//           'businesses_details.product_name',
+//           'businesses_details.description',
+//           'businesses_details.quantity',
+//           'businesses_details.is_active',
+//           'production.business_id',
+//           'businesses.updated_at',
+//           'designs.bom_image',
+//           'designs.design_image'
+//       )
+//       ->select(
+//           'businesses.id',
+//           'businesses_details.id',
+//           'businesses.project_name',
+//           'businesses.customer_po_number',
+//           'businesses.created_at',
+//           'businesses_details.product_name',
+//           'businesses_details.description',
+//           'businesses_details.quantity',
+//           'businesses_details.is_active',
+//           'production.business_id',
+//           DB::raw('MAX(COALESCE(design_revision_for_prod.reject_reason_prod, "")) as reject_reason_prod'),
+//           'businesses.updated_at',
+//           'designs.bom_image',
+//           'designs.design_image'
+//       )
+//       ->orderBy('businesses.updated_at', 'desc')
+//       ->get();
+//         return $data_output;
+//     } catch (\Exception $e) {
         
-        return $e;
-    }
-  }
+//         return $e;
+//     }
+//   }
   
 public function getSendToProductionList()
 {

@@ -22,10 +22,6 @@
 .dropdown-height{
     height: 280px !important;
 }
-/* .form-control[readonly], fieldset[disabled] .form-control {
-    background-color: #fff;
-    opacity: 1;
-} */
     .custom-dropdown .dropdown-options {
         position: absolute;
         width:600px !important;
@@ -104,6 +100,7 @@
                                                 <tr>
                                                     <th>Sr. No.</th>
                                                     <th>Part Item</th>
+                                                    <th>Basic Rate</th>
                                                     <th>Quantity</th>
                                                     <th>Unit</th>
                                                     <th>Send to Production</th>
@@ -140,6 +137,11 @@
                                                                         </div>
                                                                     </div>
                                                                 </td>
+                                                              <td>
+                                                                <input class="form-control basic_rate" name="addmore[{{ $index }}][basic_rate]" type="number" step="any" required value="{{ $item->basic_rate }}" readonly>
+                                                                <input type="hidden" class="total_amount" name="addmore[{{ $index }}][total_amount]" value="{{ $item->basic_rate * $item->quantity }}">
+                                                            </td>
+
 {{-- @php
     $selectedPart = $dataOutputPartItem->firstWhere('id', $item->part_item_id);
 @endphp
@@ -197,7 +199,7 @@
                                                                     class="delete-btn btn btn-danger"
                                                                     title="Delete"><i class="fa fa-trash"></i></a>
                                                                 @else
-                                                                <button type="button" class="delete-btn btn btn-sm btn-danger remove-row" disabled>
+                                                                <button type="button" class="delete-btn btn btn-danger remove-row" disabled>
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
                                                                 @endif
@@ -209,9 +211,19 @@
                                         </table>
                                     </div>
                                 
-                                    <div class="login-btn-inner text-center" >
+                                    <div class="d-flex justify-content-center align-items-center mt-3 mb-5">
+                                            <a href="{{ route('list-accepted-design-from-prod') }}" class="btn btn-white me-3">
+                                                Cancel
+                                            </a>
+                                            <button class="btn btn-sm btn-bg-colour" type="submit" id="saveBtn">
+                                                Save Data
+                                            </button>
+                                        </div>
+                                    {{-- <div class="login-btn-inner text-center" >
                                         <button class="btn btn-sm btn-primary" type="submit" id="saveBtn">Save Data</button>
-                                    </div>
+                                    </div> --}}
+
+
                                 </form>
                                 </div>
                             </div>
@@ -250,14 +262,55 @@
         });
 
         // Select option
-        $(document).on('click', '.custom-dropdown .option', function () {
-            const selectedText = $(this).text();
-            const selectedId = $(this).data('id');
-            const $dropdown = $(this).closest('.custom-dropdown');
-            $dropdown.find('.dropdown-input').val(selectedText);
-            $dropdown.find('.part_no').val(selectedId);
-            $dropdown.find('.dropdown-options').hide();
-        });
+        // $(document).on('click', '.custom-dropdown .option', function () {
+        //     const selectedText = $(this).text();
+        //     const selectedId = $(this).data('id');
+        //     const $dropdown = $(this).closest('.custom-dropdown');
+        //     $dropdown.find('.dropdown-input').val(selectedText);
+        //     $dropdown.find('.part_no').val(selectedId);
+        //     $dropdown.find('.dropdown-options').hide();
+        // });
+
+        function updateTotalAmount($row) {
+    let rate = parseFloat($row.find('.basic_rate').val()) || 0;
+    let qty = parseFloat($row.find('.quantity').val()) || 0;
+    let total = rate * qty;
+    $row.find('.total_amount').val(total.toFixed(2)); // store in hidden input
+}
+
+$("#purchase_order_table").on('input', '.basic_rate, .quantity', function () {
+    let $row = $(this).closest('tr');
+    updateTotalAmount($row);
+});
+
+
+        // Select option
+$(document).on('click', '.custom-dropdown .option', function () {
+    const selectedText = $(this).text();
+    const selectedId = $(this).data('id');
+    const $dropdown = $(this).closest('.custom-dropdown');
+    const $row = $dropdown.closest('tr');
+
+    // Set the selected text & ID
+    $dropdown.find('.dropdown-input').val(selectedText);
+    $dropdown.find('.part_no').val(selectedId);
+    $dropdown.find('.dropdown-options').hide();
+
+    // Fetch the basic rate via AJAX
+    $.ajax({
+        url: '{{ route("get-part-item-rate") }}',
+        type: 'GET',
+        data: { part_item_id: selectedId },
+        success: function (response) {
+            if (response.status === 'success') {
+                $row.find('.basic_rate').val(response.basic_rate);
+                updateTotalAmount($row);
+            } else {
+                $row.find('.basic_rate').val('');
+            }
+        }
+    });
+});
 
         // Close on click outside
         $(document).click(function (e) {
@@ -400,7 +453,7 @@
                 <td>
                                                                     <div class="custom-dropdown" data-index="{{ $index }}">
                                                                       <input type="hidden" name="addmore[${rowCount}][part_item_id]" class="part_no" value="">
-<input type="text" class="dropdown-input form-control part-item-name" placeholder="Select Part Item..." readonly>
+<input type="text" class="dropdown-input form-control part-item-name" placeholder="Select Part Item..." readonly required>
 
 
                                                                         <div class="dropdown-options dropdown-height" style="display: none;">
@@ -413,6 +466,12 @@
                                                                         </div>
                                                                     </div>
                                                                 </td>
+                                                                   <td>
+    <input class="form-control basic_rate" name="addmore[${rowCount}][basic_rate]" type="number" step="any" required>
+    <input type="hidden" class="total_amount" name="addmore[${rowCount}][items_used_total_amount]" value="0">
+</td>
+
+
                 <td>
                     <input class="form-control quantity" name="addmore[${rowCount}][quantity]" type="number" step="any" required>
                     <span class="stock-available"></span>

@@ -45,8 +45,8 @@ class AllListRepository  {
                 'businesses.remarks',
                 'businesses.is_active',
                 'production.business_id',
-                'businesses.updated_at',
-                'businesses.created_at'
+                'business_application_processes.updated_at',
+                'business_application_processes.created_at'
             )
             ->select(
                 'businesses.id',
@@ -55,10 +55,10 @@ class AllListRepository  {
                 'businesses.remarks',
                 'businesses.is_active',
                 'production.business_id',
-                'businesses.updated_at',
-                'businesses.created_at'
+                'business_application_processes.updated_at',
+                'business_application_processes.created_at'
             )
-            ->orderBy('businesses.updated_at', 'desc')
+            ->orderBy('business_application_processes.updated_at', 'desc')
             ->get();
 
             return $data_output;

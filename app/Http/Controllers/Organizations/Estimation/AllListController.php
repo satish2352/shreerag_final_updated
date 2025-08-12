@@ -25,7 +25,7 @@ class AllListController extends Controller
         $this->service = new AllListServices();
     }
 
-    public function getAllNewRequirement( Request $request ) {
+    public function getAllNewRequirement( Request $request ) { //checked
         try {
             $data_output = $this->service->getAllNewRequirement();
 
@@ -34,7 +34,7 @@ class AllListController extends Controller
             return $e;
         }
     }
-    public function getAllNewRequirementBusinessWise( $business_id ) {
+    public function getAllNewRequirementBusinessWise( $business_id ) { //checked
         try {
             $data_output = $this->service->getAllNewRequirementBusinessWise( $business_id );
              if ( $data_output->isNotEmpty() ) {
@@ -60,7 +60,7 @@ class AllListController extends Controller
             return $e;
         }
     }
-     public function getAllEstimationSendToOwnerForApproval( Request $request ) {
+     public function getAllEstimationSendToOwnerForApproval( Request $request ){ //checked
         try {
             $data_output = $this->service->getAllEstimationSendToOwnerForApproval();
 
@@ -70,7 +70,7 @@ class AllListController extends Controller
         }
     }
 
-    public function getAllEstimationSendToOwnerForApprovalBusinessWise( $business_id ) {
+    public function getAllEstimationSendToOwnerForApprovalBusinessWise( $business_id ){ //checked
         try {
             $data_output = $this->service->getAllEstimationSendToOwnerForApprovalBusinessWise( $business_id );
              if ( $data_output->isNotEmpty() ) {
@@ -97,74 +97,74 @@ class AllListController extends Controller
         }
     }
 
-    public function acceptBOMlist() {
-        try {
-            $data_output = $this->service->acceptBOMlist();
-            if ( $data_output->isNotEmpty() ) {
-                foreach ( $data_output as $data ) {
-                    $business_details_id = $data->id;
+    // public function acceptBOMlist() {
+    //     try {
+    //         $data_output = $this->service->acceptBOMlist();
+    //         if ( $data_output->isNotEmpty() ) {
+    //             foreach ( $data_output as $data ) {
+    //                 $business_details_id = $data->id;
 
-                    if ( !empty( $business_details_id ) ) {
-                        $update_data[ 'add_bom_estimation' ] = '1';
-                        NotificationStatus::where( 'add_bom_estimation', '0' )
-                        ->where( 'business_details_id', $business_details_id )
-                        ->update( $update_data );
-                    }
-                }
-            } else {
-                return view( 'organizations.estimation.list.list-bom-accepted', [
-                    'data_output' => [],
-                    'message' => 'No data found for designs received for correction'
-                ] );
-            }
-            //     $first_business_id = optional( $data_output->first() )->id;
-            //     if ( $first_business_id ) {
-            //     $update_data[ 'prod_design_accepted' ] = '1';
-            //     NotificationStatus::where( 'prod_design_accepted', '0' )
-            //         ->where( 'business_id', $first_business_id )
-            //         ->update( $update_data );
-            // }
-            return view( 'organizations.estimation.list.list-bom-accepted', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
-            return $e;
-        }
-    }
+    //                 if ( !empty( $business_details_id ) ) {
+    //                     $update_data[ 'add_bom_estimation' ] = '1';
+    //                     NotificationStatus::where( 'add_bom_estimation', '0' )
+    //                     ->where( 'business_details_id', $business_details_id )
+    //                     ->update( $update_data );
+    //                 }
+    //             }
+    //         } else {
+    //             return view( 'organizations.estimation.list.list-bom-accepted', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found for designs received for correction'
+    //             ] );
+    //         }
+    //         //     $first_business_id = optional( $data_output->first() )->id;
+    //         //     if ( $first_business_id ) {
+    //         //     $update_data[ 'prod_design_accepted' ] = '1';
+    //         //     NotificationStatus::where( 'prod_design_accepted', '0' )
+    //         //         ->where( 'business_id', $first_business_id )
+    //         //         ->update( $update_data );
+    //         // }
+    //         return view( 'organizations.estimation.list.list-bom-accepted', compact( 'data_output' ) );
+    //     } catch ( \Exception $e ) {
+    //         return $e;
+    //     }
+    // }
 
-    public function acceptBOMlistBusinessWise( $business_id ) {
-        try {
-            $data_output = $this->service->acceptBOMlistBusinessWise( $business_id );
-            if ( $data_output->isNotEmpty() ) {
-                foreach ( $data_output as $data ) {
-                    $business_id = $data->business_details_id;
+    // public function acceptBOMlistBusinessWise( $business_id ) {
+    //     try {
+    //         $data_output = $this->service->acceptBOMlistBusinessWise( $business_id );
+    //         if ( $data_output->isNotEmpty() ) {
+    //             foreach ( $data_output as $data ) {
+    //                 $business_id = $data->business_details_id;
 
-                    if ( !empty( $business_id ) ) {
-                        $update_data[ 'prod_is_view' ] = '1';
-                        NotificationStatus::where( 'prod_is_view', '0' )
-                        ->where( 'id', $business_id )
-                        ->update( $update_data );
-                    }
-                }
-            } else {
-                return view( 'organizations.estimation.list.list-bom-accepted-business-wise', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ] );
-            }
-            return view( 'organizations.estimation.list.list-bom-accepted-business-wise', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
-            return $e;
-        }
-    }
+    //                 if ( !empty( $business_id ) ) {
+    //                     $update_data[ 'prod_is_view' ] = '1';
+    //                     NotificationStatus::where( 'prod_is_view', '0' )
+    //                     ->where( 'id', $business_id )
+    //                     ->update( $update_data );
+    //                 }
+    //             }
+    //         } else {
+    //             return view( 'organizations.estimation.list.list-bom-accepted-business-wise', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found'
+    //             ] );
+    //         }
+    //         return view( 'organizations.estimation.list.list-bom-accepted-business-wise', compact( 'data_output' ) );
+    //     } catch ( \Exception $e ) {
+    //         return $e;
+    //     }
+    // }
 
-    public function rejectdesignlist() {
-        try {
-            $data_output = $this->service->getAllrejectdesign();
+    // public function rejectdesignlist() {
+    //     try {
+    //         $data_output = $this->service->getAllrejectdesign();
 
-            return view( 'organizations.productions.product.list-design-rejected', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
-            return $e;
-        }
-    }
+    //         return view( 'organizations.productions.product.list-design-rejected', compact( 'data_output' ) );
+    //     } catch ( \Exception $e ) {
+    //         return $e;
+    //     }
+    // }
 
     public function reviseddesignlist() {
         try {

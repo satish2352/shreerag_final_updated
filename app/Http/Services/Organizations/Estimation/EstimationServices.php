@@ -14,12 +14,12 @@ use Config;
         $this->repo = new EstimationRepository();
     }
 
-    public function updateAll($request){
+    public function updateAll($request){ //checked
     try {
         $return_data = $this->repo->updateAll($request);
         
         $productName = $return_data['product_name']; 
-        $formattedProductName = str_replace(' ', '_', $productName);
+        $formattedProductName = preg_replace('/_+/', '_', $productName);
         $path = Config::get('FileConstant.DESIGNS_ADD');
         if ($request->hasFile('bom_image')) {
             if ($return_data['bom_image']) {
@@ -43,12 +43,9 @@ use Config;
     }      
     }
 
-    public function sendToProduction($id)
-{
+    public function sendToProduction($id){ //checked
     try {
         $data_output =  $this->repo->sendToProduction($id);
-        //    dd($data_output);
-        //     die();
         return $data_output;
     } catch (\Exception $e) {
         return [
@@ -62,13 +59,13 @@ use Config;
     
 
 
-      public function updateRevisedEstimation($request){
+      public function updateRevisedEstimation($request){ //checked
         try {
               
             $return_data = $this->repo->updateRevisedEstimation($request);
          
             $productName = $return_data['product_name']; 
-            $formattedProductName = str_replace(' ', '_', $productName);
+            $formattedProductName = preg_replace('/_+/', '_', $productName);
             $path = Config::get('FileConstant.DESIGNS_ADD');
            
     
@@ -81,11 +78,7 @@ use Config;
                 $marathiImageName = $return_data['last_insert_id'] . '_' . $formattedProductName .'_' . rand(100000, 999999) . '.' . $request->bom_image->extension();
                 uploadImage($request, 'bom_image', $path, $marathiImageName);
                 $slide_data = DesignRevisionForProd::find($return_data['last_insert_id']);
-        //            dd($slide_data);
-        //  die();
                 $slide_data->bom_image = $marathiImageName;
-
-             
                 $slide_data->save();
             }
         

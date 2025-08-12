@@ -47,7 +47,7 @@ class StoreServices
             return $e;
         }
     }
-    public function editProductMaterialWiseAddNewReq($id){
+    public function editProductMaterialWiseAddNewReq($id){ //checked
         try {
             $data_output = $this->repo->editProductMaterialWiseAddNewReq($id);
           
@@ -59,7 +59,7 @@ class StoreServices
     public function updateProductMaterialWiseAddNewReq($request) {
         try {
             $result = $this->repo->updateProductMaterialWiseAddNewReq($request);
-           
+     
             return $result;
         } catch (\Exception $e) {
             return ['status' => 'error', 'message' => $e->getMessage()];

@@ -26,11 +26,10 @@ class EstimationController extends Controller
         $this->service = new EstimationServices();
         $this->listapiservice = new AllListController();
     }
-    public function editEstimation($id){
+    public function editEstimation($id){ //checked
     try {
         $addData = base64_decode($id);
         $business_details_data = BusinessDetails::findOrFail($addData);
-
         return view('organizations.estimation.estimation-upload.edit-estimation-upload', [
             'addData' => $addData,
             'business_details_data' => $business_details_data
@@ -39,7 +38,7 @@ class EstimationController extends Controller
         return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
     }
     }
-    public function updateEstimation(Request $request){
+    public function updateEstimation(Request $request){ //checked
         $rules = [
             'bom_image' => 'required|mimes:xls,xlsx|max:' . Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE") . '|min:' . Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE"),
             'total_estimation_amount' => 'required|',
@@ -75,8 +74,7 @@ class EstimationController extends Controller
                 ->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
-    public function editRevisedEstimation($id)
-{
+    public function editRevisedEstimation($id){ //checked
     try {
         $addData = base64_decode($id);
 
@@ -116,10 +114,8 @@ class EstimationController extends Controller
 }
 
 
-    public function updateRevisedEstimation(Request $request)
-{
+    public function updateRevisedEstimation(Request $request){ //checked
    
-    // Validate the request
     $rules = [
         'bom_image' => 'required|mimes:xls,xlsx|max:' . Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE") . '|min:' . Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE"),
          'total_estimation_amount' => 'required|',
@@ -157,13 +153,10 @@ class EstimationController extends Controller
     }
 }
 
-     public function sendToProduction($id)
-{
+     public function sendToProduction($id){ //checked
     try {
           $id = base64_encode($id);
-
         $update_data = $this->service->sendToProduction($id);
-
         if (!empty($update_data) && isset($update_data['status']) && $update_data['status'] === 'success') {
             return redirect('estimationdept/list-send-to-production')->with($update_data);
         } else {

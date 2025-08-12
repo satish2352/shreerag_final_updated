@@ -52,32 +52,36 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
-                                                <th data-field="date" data-editable="false">Sent Date</th>
+                                                <th data-field="updated_at" data-editable="false">Dispatch Completed Date
+                                                </th>
                                                 <th data-field="project_name" data-editable="false">Project Name</th>
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
-                                                <th data-field="title" data-editable="false">customer Name</th>
+                                                {{-- <th data-field="title" data-editable="false">customer Name</th> --}}
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="total_quantity" data-editable="false">Total Product Quantity
                                                 </th>
                                                 <th data-field="total_completed_quantity" data-editable="false">Total
                                                     Production Done Quantity</th>
-                                                <th data-field="updated_at" data-editable="false">Dispatch Completed Date
-                                                </th>
+                                                <th data-field="total_estimation_amount" data-editable="false">Estimated Amount</th>
+                                                     <th data-field="total_items_used_amount" data-editable="false">total  Amount</th> 
+                                               
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td> {{ $data->created_at ? $data->created_at->format('Y-m-d') : 'N/A' }}</td>
+                                                    <td>{{ $data->last_updated_at ? $data->last_updated_at->format('Y-m-d') : 'N/A' }}
+                                                    </td>
                                                     <td>{{ ucwords($data->project_name) }}</td>
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
-                                                    <td>{{ ucwords($data->title) }}</td>
+                                                    {{-- <td>{{ ucwords($data->title) }}</td> --}}
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
                                                     <td>{{ ucwords($data->total_completed_quantity) }}</td>
-                                                    <td>{{ $data->last_updated_at ? $data->last_updated_at->format('Y-m-d') : 'N/A' }}
-                                                    </td>
+                                                   <td>{{ ucwords($data->total_estimation_amount) }}</td>
+                                                   <td>{{ ucwords($data->total_items_used_amount) }}</td>
+                                                   
                                                 </tr>
                                             @endforeach
                                         </tbody>

@@ -12,7 +12,7 @@ class AllListServices
         $this->repo = new AllListRepository();
 
     }
-    public function getAllNewRequirement(){
+    public function getAllNewRequirement(){ //checked
         try {
             $data_output = $this->repo->getAllNewRequirement();
             return $data_output;
@@ -20,7 +20,7 @@ class AllListServices
             return $e;
         }
     }
-    public function getAllNewRequirementBusinessWise($business_id){
+    public function getAllNewRequirementBusinessWise($business_id){ //checked
         try {
         $data_output = $this->repo->getAllNewRequirementBusinessWise($business_id);
             
@@ -30,7 +30,7 @@ class AllListServices
             return []; 
         }
     }
- public function getAllEstimationSendToOwnerForApproval(){
+ public function getAllEstimationSendToOwnerForApproval(){ //checked
         try {
             $data_output = $this->repo->getAllEstimationSendToOwnerForApproval();
            
@@ -39,8 +39,7 @@ class AllListServices
             return $e;
         }
     }
-   public function getAllEstimationSendToOwnerForApprovalBusinessWise($business_id)
-{
+   public function getAllEstimationSendToOwnerForApprovalBusinessWise($business_id){ //checked
     try {
       $data_output = $this->repo->getAllEstimationSendToOwnerForApprovalBusinessWise($business_id);
     
@@ -61,32 +60,32 @@ class AllListServices
         return []; // Return safe fallback
     }
 }
-    public function acceptBOMlist(){
-        try {
-            $data_output = $this->repo->acceptBOMlist();
+    // public function acceptBOMlist(){
+    //     try {
+    //         $data_output = $this->repo->acceptBOMlist();
           
-            return $data_output;
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
-    public function acceptBOMlistBusinessWise($business_id){
-        try {
-            $data_output = $this->repo->acceptBOMlistBusinessWise($business_id);
-            return $data_output;
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
-    public function getAllrejectdesign(){
-        try {
-            $data_output = $this->repo->getAllrejectdesign();
+    //         return $data_output;
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+    // public function acceptBOMlistBusinessWise($business_id){
+    //     try {
+    //         $data_output = $this->repo->acceptBOMlistBusinessWise($business_id);
+    //         return $data_output;
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+    // public function getAllrejectdesign(){
+    //     try {
+    //         $data_output = $this->repo->getAllrejectdesign();
             
-            return $data_output; 
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
+    //         return $data_output; 
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
 
     public function getAllreviseddesign(){
         try {

@@ -225,16 +225,15 @@ class BusinessController extends Controller
     }
 
     }
-    public function editRejectEstimation( $idtoedit ){
+    public function editRejectEstimation( $idtoedit ){ //checked
     try {
         return view( 'organizations.business.business.reject-estimation-owner-side', compact( 'idtoedit' ) );
     } catch ( \Exception $e ) {
         return $e;
     }
     }
-    public function addRejectedEstimationBOM(Request $request){
+    public function addRejectedEstimationBOM(Request $request){ //checked
         try {
-            // Step 1: Validate the request
             $rules = [
                 'rejected_remark_by_owner' => 'required',
             ];
@@ -254,7 +253,6 @@ class BusinessController extends Controller
                 ->with('msg', 'Estimation rejected and sent for correction successfully.');
 
         } catch (\Exception $e) {
-            // Optional: log error
             \Log::error("Error in addRejectedEstimationBOM: " . $e->getMessage());
 
             return redirect()->back()

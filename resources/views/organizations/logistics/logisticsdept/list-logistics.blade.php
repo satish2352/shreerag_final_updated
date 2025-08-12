@@ -93,7 +93,7 @@
                                                         class="pd-setting-ed"
                                                         data-toggle="tooltip"
                                                         title="Accept">
-                                                        <button><i class="fa fa-check" aria-hidden="true"></i> Send to Fianance </button>
+                                                        <button class="btn-bg-colour"> Send to Fianance </button>
                                                     </a>
                                                 </td>
                                                 </tr>

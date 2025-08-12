@@ -36,16 +36,15 @@ class ProductionController extends Controller
         }
     }
 
-    public function rejectdesignedit( $idtoedit ) {
+    public function rejectdesignedit( $idtoedit ) { //checked
         try {
-
             return view( 'organizations.productions.product.reject-design', compact( 'idtoedit' ) );
         } catch ( \Exception $e ) {
             return $e;
         }
     }
 
-    public function rejectdesign( Request $request ) {
+    public function rejectdesign( Request $request ) { //checked
         try {
             $update_data = $this->service->rejectdesign( $request );
             return redirect( 'proddept/list-reject-design' );

@@ -24,7 +24,7 @@ class AllListController extends Controller
         $this->service = new AllListServices();
     }
 
-    public function getAllNewRequirement( Request $request ) {
+    public function getAllNewRequirement( Request $request ) { //checked
         try {
             $data_output = $this->service->getAllNewRequirement();
             return view( 'organizations.productions.product.list_design_received_for_production', compact( 'data_output' ) );
@@ -33,7 +33,7 @@ class AllListController extends Controller
         }
     }
 
-    public function getAllNewRequirementBusinessWise( $business_id ) {
+    public function getAllNewRequirementBusinessWise( $business_id ) { //checked
         try {
             $data_output = $this->service->getAllNewRequirementBusinessWise( $business_id );
            
@@ -60,7 +60,7 @@ class AllListController extends Controller
         }
     }
 
-    public function acceptdesignlist() {
+    public function acceptdesignlist() { //checked
         try {
             $data_output = $this->service->getAllacceptdesign();
             if ( $data_output->isNotEmpty() ) {
@@ -75,18 +75,11 @@ class AllListController extends Controller
                     }
                 }
             } else {
-                return view( 'organizations.designer.list.list_design_received_from_production_for_correction', [
+                return view( 'organizations.productions.product.list-design-accepted', [
                     'data_output' => [],
                     'message' => 'No data found for designs received for correction'
                 ] );
             }
-            //     $first_business_id = optional( $data_output->first() )->id;
-            //     if ( $first_business_id ) {
-            //     $update_data[ 'prod_design_accepted' ] = '1';
-            //     NotificationStatus::where( 'prod_design_accepted', '0' )
-            //         ->where( 'business_id', $first_business_id )
-            //         ->update( $update_data );
-            // }
             return view( 'organizations.productions.product.list-design-accepted', compact( 'data_output' ) );
         } catch ( \Exception $e ) {
             return $e;
@@ -119,17 +112,16 @@ class AllListController extends Controller
         }
     }
 
-    public function rejectdesignlist() {
+    public function rejectdesignlist() { //checked
         try {
             $data_output = $this->service->getAllrejectdesign();
-
             return view( 'organizations.productions.product.list-design-rejected', compact( 'data_output' ) );
         } catch ( \Exception $e ) {
             return $e;
         }
     }
 
-    public function reviseddesignlist() {
+    public function reviseddesignlist() { //checked
         try {
             $data_output = $this->service->getAllreviseddesign();
             if ( $data_output->isNotEmpty() ) {
@@ -155,7 +147,7 @@ class AllListController extends Controller
         }
     }
 
-    public function getAllListMaterialRecievedToProduction() {
+    public function getAllListMaterialRecievedToProduction() { //checked
         try {
             $data_output = $this->service->getAllListMaterialRecievedToProduction();           
             return view( 'organizations.productions.product.list-recived-material', compact( 'data_output' ) );
@@ -163,8 +155,7 @@ class AllListController extends Controller
             return $e;
         }
     }
-    public function getAllListMaterialRecievedToProductionBusinessWise($id)
-    {
+    public function getAllListMaterialRecievedToProductionBusinessWise($id){ //checked
         try {
             $data_output = $this->service->getAllListMaterialRecievedToProductionBusinessWise($id);
     

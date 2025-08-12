@@ -1,8 +1,5 @@
-<!-- Static Table Start -->
 @extends('admin.layouts.master')
 @section('content')
-    
-
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">
@@ -11,14 +8,6 @@
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
                                 <h1>Revised BOM Business Wise List</h1>
-                                <div class="form-group-inner login-btn-inner row">
-                                    <div class="col-lg-2">
-                                        {{-- <div class="login-horizental cancel-wp pull-left">
-                                                <a href="{{ route('add-design-upload') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Design</button></a>
-                                        </div> --}}
-                                    </div>
-                                    <div class="col-lg-10"></div>
-                                </div>
                             </div>
                         </div>
 
@@ -40,7 +29,6 @@
                                 <p><strong>Danger!</strong> {{ Session::get('msg') }}</p>
                             </div>
                         @endif
-
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
                                 <div class="table-responsive">
@@ -51,23 +39,20 @@
                                         data-click-to-select="true" data-toolbar="#toolbar">
                                         <thead>
                                             <tr>
-
                                                 <th data-field="id">ID</th>
                                                 <th data-field="date" data-editable="false">Sent Date</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
                                                 <th data-field="description" data-editable="false">Description</th>
-                                                 <th data-field="design_image" data-editable="false">Design</th>
-                                                  <th data-field="bom_image" data-editable="false">Estimated BOM</th>
-                                                   <th data-field="total_estimation_amount" data-editable="false">Est Amount</th>
-                                                    <th data-field="remark_by_estimation" data-editable="false">Est Remark</th> 
-                                                   <th data-field="action" data-editable="false">Action</th>
-                                              
+                                                <th data-field="design_image" data-editable="false">Design</th>
+                                                <th data-field="bom_image" data-editable="false">Estimated BOM</th>
+                                                <th data-field="total_estimation_amount" data-editable="false">Est Amount
+                                                </th>
+                                                <th data-field="remark_by_estimation" data-editable="false">Est Remark</th>
+                                                <th data-field="action" data-editable="false">Action</th>
                                             </tr>
-
                                         </thead>
                                         <tbody>
-                                            
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
@@ -76,7 +61,7 @@
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
-                                                       <td> <a class="img-size" target="_blank"
+                                                    <td> <a class="img-size" target="_blank"
                                                             href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
                                                             alt="Design"> Click to view</a>
                                                     </td>
@@ -84,22 +69,24 @@
                                                             href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
                                                             alt="bill of material">Click to download</a>
                                                     </td>
-                                                       <td>{{ ucwords($data->total_estimation_amount) }}</td>
-                                                       <td>{{ ucwords($data->remark_by_estimation) }}</td>
-                                                       
-                                                  <td>
-                                                <div class="">
-                                                    <a
-                                                        href="{{ route('accept-bom-estimation', base64_encode($data->id)) }}"><button
-                                                            data-toggle="tooltip" title="Accept BOM Estimation" class="accept-btn">Accept</button></a> &nbsp;
-                                                    &nbsp; &nbsp;
+                                                    <td>{{ ucwords($data->total_estimation_amount) }}</td>
+                                                    <td>{{ ucwords($data->remark_by_estimation) }}</td>
 
-                                                    <a
-                                                        href="{{ route('edit-reject-estimation-owner-side', base64_encode($data->id)) }}"><button
-                                                            data-toggle="tooltip" title="Rejected BOM Estimation" class="reject-btn">Reject</button></a> &nbsp;
-                                                    &nbsp; &nbsp;
-                                                </div>
-                                            </td>
+                                                    <td>
+                                                        <div class="">
+                                                            <a
+                                                                href="{{ route('accept-bom-estimation', base64_encode($data->id)) }}"><button
+                                                                    data-toggle="tooltip" title="Accept BOM Estimation"
+                                                                    class="accept-btn">Accept</button></a> &nbsp;
+                                                            &nbsp; &nbsp;
+
+                                                            <a
+                                                                href="{{ route('edit-reject-estimation-owner-side', base64_encode($data->id)) }}"><button
+                                                                    data-toggle="tooltip" title="Rejected BOM Estimation"
+                                                                    class="reject-btn">Reject</button></a> &nbsp;
+                                                            &nbsp; &nbsp;
+                                                        </div>
+                                                    </td>
 
                                                 </tr>
                                             @endforeach

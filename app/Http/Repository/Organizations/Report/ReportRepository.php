@@ -42,6 +42,9 @@ public function getCompletedProductList(Request $request)
             ->leftJoin('tbl_dispatch', function ($join) {
                 $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_dispatch.quantity_tracking_id');
             })
+             ->leftJoin('estimation', function ($join) {
+                $join->on('tbl_logistics.business_details_id', '=', 'estimation.business_details_id');
+            })
             ->whereIn('tcqt1.quantity_tracking_status', $array_to_be_quantity_tracking)
             ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
             ->where('businesses.is_active', true)
@@ -97,7 +100,8 @@ public function getCompletedProductList(Request $request)
                 'businesses_details.description',
                 'businesses_details.quantity',
                 DB::raw('SUM(tcqt1.completed_quantity) as total_completed_quantity'),
-                DB::raw('MAX(tbl_dispatch.updated_at) as updated_at')
+                DB::raw('MAX(tbl_dispatch.updated_at) as updated_at'),
+                'estimation.total_estimation_amount',
             )
             ->groupBy(
                 'businesses_details.id',
@@ -107,7 +111,8 @@ public function getCompletedProductList(Request $request)
                 'businesses.created_at',
                 'businesses_details.product_name',
                 'businesses_details.description',
-                'businesses_details.quantity'
+                'businesses_details.quantity',
+                'estimation.total_estimation_amount',
             )
             ->havingRaw('SUM(tcqt1.completed_quantity) = businesses_details.quantity');
 

@@ -112,17 +112,15 @@ class AllListServices
             return $e;
         }
     }
-public function loadDesignSubmittedForEstimation()
-    {
+public function loadDesignSubmittedForEstimation(){ //checked
         try {
             $data_output = $this->repo->loadDesignSubmittedForEstimation();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
-    }
-    public function loadDesignSubmittedForEstimationBusinessWise($business_details_id)
-    {
+}
+public function loadDesignSubmittedForEstimationBusinessWise($business_details_id){ //checked
         try {
             $data_output = $this->repo->loadDesignSubmittedForEstimationBusinessWise($business_details_id);
              
@@ -130,10 +128,9 @@ public function loadDesignSubmittedForEstimation()
         } catch (\Exception $e) {
             return $e;
         }
-    }
+}
 
-       public function getAcceptEstimationBOM()
-    {
+       public function getAcceptEstimationBOM(){
         try {
             $data_output = $this->repo->getAcceptEstimationBOM();
          
@@ -142,8 +139,7 @@ public function loadDesignSubmittedForEstimation()
             return $e;
         }
     }
-        public function getAcceptEstimationBOMBusinessWise($id)
-    {
+        public function getAcceptEstimationBOMBusinessWise($id){
         try {
             $data_output = $this->repo->getAcceptEstimationBOMBusinessWise($id);
      
@@ -152,8 +148,7 @@ public function loadDesignSubmittedForEstimation()
             return $e;
         }
     }
-        public function getRejectEstimationBOM()
-    {
+        public function getRejectEstimationBOM(){ //checked
         try {
             $data_output = $this->repo->getRejectEstimationBOM();
            
@@ -172,8 +167,7 @@ public function loadDesignSubmittedForEstimation()
             return $e;
         }
     }
-         public function getRevisedEstimationBOM()
-    {
+         public function getRevisedEstimationBOM(){ //checked
         try {
             $data_output = $this->repo->getRevisedEstimationBOM();
           
@@ -182,8 +176,7 @@ public function loadDesignSubmittedForEstimation()
             return $e;
         }
     }
-          public function getRevisedEstimationBOMBusinessWise($id)
-    {
+          public function getRevisedEstimationBOMBusinessWise($id){ //checked
         try {
             $data_output = $this->repo->getRevisedEstimationBOMBusinessWise($id);
        
@@ -201,8 +194,7 @@ public function loadDesignSubmittedForEstimation()
             return $e;
         }
     }
-    public function loadDesignSubmittedForProductionBusinessWise($business_id)
-    {
+    public function loadDesignSubmittedForProductionBusinessWise($business_id){ //checked
         try {
             $data_output = $this->repo->loadDesignSubmittedForProductionBusinessWise($business_id);
             return $data_output;

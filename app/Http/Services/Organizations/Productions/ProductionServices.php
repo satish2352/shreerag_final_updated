@@ -21,11 +21,9 @@ use Config;
             return $e;
         }
     } 
-    public function rejectdesign($request) {
+    public function rejectdesign($request) { //checked
         try {
             $update_data = $this->repo->rejectdesign($request);
-            // dd($update_data);
-            // die();
             return $update_data;
         } catch (\Exception $e) {
             return $e;

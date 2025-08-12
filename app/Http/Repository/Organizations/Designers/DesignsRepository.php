@@ -257,8 +257,7 @@ class DesignsRepository  {
             return collect(); // return an empty collection to avoid type errors
         }
     }
-    public function updateReUploadDesign($request)
-    {
+    public function updateReUploadDesign($request){ //checked
         try {
             $return_data = array();
             $edit_id = $request->design_revision_for_prod_id;
@@ -277,7 +276,7 @@ class DesignsRepository  {
                 ];
             }
             $productName = $businessDetails->product_name;
-            $formattedProductName = str_replace(' ', '_', $productName);
+            $formattedProductName = preg_replace('/_+/', '_', $productName);
             $designRevisionForProd = DesignRevisionForProd::where('id', $request->design_revision_for_prod_id)->orderBy('id','desc')->first();
             if($designRevisionForProd) {
 
@@ -309,10 +308,10 @@ class DesignsRepository  {
                 $business_application->save();
 
                 // $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
-        $update_data_admin['off_canvas_status'] = 14;
-        $update_data_business['off_canvas_status'] = 14;
-        $update_data_admin['is_view'] = '0';
-        AdminView::where('business_details_id', $business_application->business_details_id)
+                $update_data_admin['off_canvas_status'] = 14;
+                $update_data_business['off_canvas_status'] = 14;
+                $update_data_admin['is_view'] = '0';
+                AdminView::where('business_details_id', $business_application->business_details_id)
                 ->update($update_data_admin);
                 NotificationStatus::where('business_details_id', $business_application->business_details_id)
                 ->update($update_data_business);
@@ -322,8 +321,6 @@ class DesignsRepository  {
             // $return_data['bomImageName'] = $bomImageName;
             $return_data['last_insert_id'] = $designRevisionForProd->business_id;
     
-            // Return the data
-
             return $return_data;
         } catch (\Exception $e) {
             
