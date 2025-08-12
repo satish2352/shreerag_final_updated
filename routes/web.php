@@ -249,18 +249,18 @@ Route::get('/list-product-completed-report', [ReportController::class, 'getCompl
         // Route::get('/list-reject-design', ['as' => 'list-reject-design', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@rejectdesignlist']);
         Route::get('/list-revislist-material-reciveded-design', ['as' => 'list-revislist-material-reciveded-design', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@reviseddesignlist']);
       
-        Route::get('/list-material-recived', ['as' => 'list-material-recived', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@getAllListMaterialRecievedToProduction']);
-        Route::get('/list-final-purchase-order-production/{id}', ['as' => 'list-final-purchase-order-production', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@getAllListMaterialRecievedToProductionBusinessWise']);
-        Route::get('/edit-recived-inprocess-production-material/{id}', ['as' => 'edit-recived-inprocess-production-material', 'uses' => 'App\Http\Controllers\Organizations\Estimation\ProductionController@editProduct']);
-        Route::post('/update-recived-inprocess-production-material/{id}', ['as' => 'update-recived-inprocess-production-material', 'uses' => 'App\Http\Controllers\Organizations\Estimation\ProductionController@updateProductMaterial']);
-        Route::post('/delete-addmore-production-material-item', ['as' => 'delete-addmore-production-material-item', 'uses' => 'App\Http\Controllers\Organizations\Estimation\ProductionController@destroyAddmoreStoreItem']);
-        Route::post('/update-final-production-completed-status/{id}', ['as' => 'update-final-production-completed-status', 'uses' => 'App\Http\Controllers\Organizations\Estimation\ProductionController@acceptProductionCompleted']);
+        // Route::get('/list-material-recived', ['as' => 'list-material-recived', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@getAllListMaterialRecievedToProduction']);
+        // Route::get('/list-final-purchase-order-production/{id}', ['as' => 'list-final-purchase-order-production', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@getAllListMaterialRecievedToProductionBusinessWise']);
+        // Route::get('/edit-recived-inprocess-production-material/{id}', ['as' => 'edit-recived-inprocess-production-material', 'uses' => 'App\Http\Controllers\Organizations\Estimation\ProductionController@editProduct']);
+        // Route::post('/update-recived-inprocess-production-material/{id}', ['as' => 'update-recived-inprocess-production-material', 'uses' => 'App\Http\Controllers\Organizations\Estimation\ProductionController@updateProductMaterial']);
+        // Route::post('/delete-addmore-production-material-item', ['as' => 'delete-addmore-production-material-item', 'uses' => 'App\Http\Controllers\Organizations\Estimation\ProductionController@destroyAddmoreStoreItem']);
+        // Route::post('/update-final-production-completed-status/{id}', ['as' => 'update-final-production-completed-status', 'uses' => 'App\Http\Controllers\Organizations\Estimation\ProductionController@acceptProductionCompleted']);
 
-        Route::post('/update-production/{id}', ['as' => 'update-production', 'uses' => 'App\Http\Controllers\Organizations\Estimation\ProductionController@updateProductMaterial']);
-        Route::get('/list-final-production-completed', ['as' => 'list-final-production-completed', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@getAllCompletedProduction']);
-        Route::get('/list-final-prod-completed-send-to-logistics-tracking', ['as' => 'list-final-prod-completed-send-to-logistics-tracking', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@getAllCompletedProductionSendToLogistics']);
-        Route::get('/list-final-prod-completed-send-to-logistics-tracking-product-wise/{id}', ['as' => 'list-final-prod-completed-send-to-logistics-tracking-product-wise', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@getAllCompletedProductionSendToLogisticsProductWise']);
-        Route::get('/edit-recived-bussinesswise-quantity-tracking/{id}', ['as' => 'edit-recived-bussinesswise-quantity-tracking', 'uses' => 'App\Http\Controllers\Organizations\Estimation\ProductionController@editProductQuantityTracking']);
+        // Route::post('/update-production/{id}', ['as' => 'update-production', 'uses' => 'App\Http\Controllers\Organizations\Estimation\ProductionController@updateProductMaterial']);
+        // Route::get('/list-final-production-completed', ['as' => 'list-final-production-completed', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@getAllCompletedProduction']);
+        // Route::get('/list-final-prod-completed-send-to-logistics-tracking', ['as' => 'list-final-prod-completed-send-to-logistics-tracking', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@getAllCompletedProductionSendToLogistics']);
+        // Route::get('/list-final-prod-completed-send-to-logistics-tracking-product-wise/{id}', ['as' => 'list-final-prod-completed-send-to-logistics-tracking-product-wise', 'uses' => 'App\Http\Controllers\Organizations\Estimation\AllListController@getAllCompletedProductionSendToLogisticsProductWise']);
+        // Route::get('/edit-recived-bussinesswise-quantity-tracking/{id}', ['as' => 'edit-recived-bussinesswise-quantity-tracking', 'uses' => 'App\Http\Controllers\Organizations\Estimation\ProductionController@editProductQuantityTracking']);
 
         // Route::get('/list-final-production-completed/{id}', ['as' => 'list-final-production-completed', 'uses' => 'App\Http\Controllers\Organizations\Productions\AllListController@getAllFinalProductionCompleted']);
   Route::get('/list-production-report', [ReportController::class, 'getProductionReport'])->name('list-production-report');

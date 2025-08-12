@@ -234,38 +234,38 @@ class AllListController extends Controller
             return $e;
         }
     }
-    public function getAllCompletedProduction() {
-        try {
-            $data_output = $this->service->getAllCompletedProduction();
-            return view( 'organizations.productions.product.list-production-completed', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
-            return $e;
-        }
-    }
+    // public function getAllCompletedProduction() {
+    //     try {
+    //         $data_output = $this->service->getAllCompletedProduction();
+    //         return view( 'organizations.productions.product.list-production-completed', compact( 'data_output' ) );
+    //     } catch ( \Exception $e ) {
+    //         return $e;
+    //     }
+    // }
 
-    public function getAllCompletedProductionSendToLogistics() {
-        try {
-            $data_output = $this->service->getAllCompletedProductionSendToLogistics();
-            return view( 'organizations.productions.product.list-production-completed-send-to-logistics-tracking', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
-            return $e;
-        }
-    }
+    // public function getAllCompletedProductionSendToLogistics() {
+    //     try {
+    //         $data_output = $this->service->getAllCompletedProductionSendToLogistics();
+    //         return view( 'organizations.productions.product.list-production-completed-send-to-logistics-tracking', compact( 'data_output' ) );
+    //     } catch ( \Exception $e ) {
+    //         return $e;
+    //     }
+    // }
 
-    public function getAllCompletedProductionSendToLogisticsProductWise( $id ) {
-        try {
-            $editData = $this->service->getAllCompletedProductionSendToLogisticsProductWise( $id );
-            $dataOutputPartItem = PartItem::where( 'is_active', true )->get();
-            $dataOutputUnitMaster = UnitMaster::where( 'is_active', true )->get();
-            return view( 'organizations.productions.product.list-production-completed-send-to-logistics-tracking-business-wise', [
-                'productDetails' => $editData[ 'productDetails' ],
-                'dataGroupedById' => $editData[ 'dataGroupedById' ],
-                'dataOutputPartItem' => $dataOutputPartItem,
-                'dataOutputUnitMaster'=>$dataOutputUnitMaster,
-                'id' => $id
-            ] );
-        } catch ( \Exception $e ) {
-            return redirect()->back()->with( [ 'status' => 'error', 'msg' => $e->getMessage() ] );
-        }
-    }
+    // public function getAllCompletedProductionSendToLogisticsProductWise( $id ) {
+    //     try {
+    //         $editData = $this->service->getAllCompletedProductionSendToLogisticsProductWise( $id );
+    //         $dataOutputPartItem = PartItem::where( 'is_active', true )->get();
+    //         $dataOutputUnitMaster = UnitMaster::where( 'is_active', true )->get();
+    //         return view( 'organizations.productions.product.list-production-completed-send-to-logistics-tracking-business-wise', [
+    //             'productDetails' => $editData[ 'productDetails' ],
+    //             'dataGroupedById' => $editData[ 'dataGroupedById' ],
+    //             'dataOutputPartItem' => $dataOutputPartItem,
+    //             'dataOutputUnitMaster'=>$dataOutputUnitMaster,
+    //             'id' => $id
+    //         ] );
+    //     } catch ( \Exception $e ) {
+    //         return redirect()->back()->with( [ 'status' => 'error', 'msg' => $e->getMessage() ] );
+    //     }
+    // }
 }

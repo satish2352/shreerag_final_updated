@@ -127,29 +127,29 @@ class AllListServices
     //     }
     // }
 
-    public function getAllCompletedProduction(){
-        try {
-          $data_output = $this->repo->getAllCompletedProduction();
-          return $data_output;
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
+    // public function getAllCompletedProduction(){
+    //     try {
+    //       $data_output = $this->repo->getAllCompletedProduction();
+    //       return $data_output;
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
 
-    public function getAllCompletedProductionSendToLogistics(){
-        try {
-          $data_output = $this->repo->getAllCompletedProductionSendToLogistics();
-          return $data_output;
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
-    public function getAllCompletedProductionSendToLogisticsProductWise($id) {
-        try {
-            $data_output = $this->repo->getAllCompletedProductionSendToLogisticsProductWise($id);
-return $data_output;
-        } catch (\Exception $e) {
-            return ['status' => 'error', 'msg' => $e->getMessage()];
-        }
-    }
+//     public function getAllCompletedProductionSendToLogistics(){
+//         try {
+//           $data_output = $this->repo->getAllCompletedProductionSendToLogistics();
+//           return $data_output;
+//         } catch (\Exception $e) {
+//             return $e;
+//         }
+//     }
+//     public function getAllCompletedProductionSendToLogisticsProductWise($id) {
+//         try {
+//             $data_output = $this->repo->getAllCompletedProductionSendToLogisticsProductWise($id);
+// return $data_output;
+//         } catch (\Exception $e) {
+//             return ['status' => 'error', 'msg' => $e->getMessage()];
+//         }
+//     }
 }
