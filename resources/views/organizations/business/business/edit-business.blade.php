@@ -230,12 +230,28 @@
     }
         setMinDate();
 
-    function calculateTotalAmount(row) {
+//     function calculateTotalAmount(row) {
+//     const quantity = parseFloat(row.find('.quantity').val()) || 0;
+//     const rate = parseFloat(row.find('.rate').val()) || 0;
+//     const total = quantity * rate;
+//     row.find('.total').val(total.toFixed(2));
+//     calculateGrandTotal();
+// }
+
+// function calculateGrandTotal() {
+//     let grandTotal = 0;
+//     $('.total').each(function () {
+//         const val = parseFloat($(this).val());
+//         if (!isNaN(val)) grandTotal += val;
+//     });
+//     $('#grandTotal').val(grandTotal.toFixed(2));
+//     }
+
+function calculateTotalAmount(row) {
     const quantity = parseFloat(row.find('.quantity').val()) || 0;
     const rate = parseFloat(row.find('.rate').val()) || 0;
     const total = quantity * rate;
     row.find('.total').val(total.toFixed(2));
-    calculateGrandTotal();
 }
 
 function calculateGrandTotal() {
@@ -246,6 +262,49 @@ function calculateGrandTotal() {
     });
     $('#grandTotal').val(grandTotal.toFixed(2));
 }
+
+$(document).ready(function () {
+    // Initial calculation for all rows when page loads
+    $("#purchase_order_table tbody tr").each(function () {
+        calculateTotalAmount($(this));
+    });
+    calculateGrandTotal();
+
+    // When quantity or rate changes
+    $(document).on('input', '.quantity, .rate', function () {
+        const row = $(this).closest('tr');
+        calculateTotalAmount(row);
+        calculateGrandTotal();
+    });
+
+    // Add new row
+    var rowCount = $("#purchase_order_table tbody tr").length;
+    $("#add_more_btn").click(function () {
+        rowCount++;
+        const newRow = `
+            <tr>
+                <td>${rowCount}</td>
+                <td>
+                    <input type="text" name="addmore[${rowCount}][product_name]" class="form-control product_name" />
+                </td>
+                <td><input type="text" name="addmore[${rowCount}][description]" class="form-control description" /></td>
+                <td><input type="text" name="addmore[${rowCount}][quantity]" class="form-control quantity" /></td>
+                <td><input type="text" name="addmore[${rowCount}][rate]" class="form-control rate" /></td>
+                <td><input type="text" class="form-control total" readonly></td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-danger remove-row"><i class="fa fa-trash"></i></button>
+                </td>
+            </tr>`;
+        $("#purchase_order_table tbody").append(newRow);
+    });
+
+    // Remove row
+    $(document).on("click", ".remove-row", function () {
+        $(this).closest("tr").remove();
+        calculateGrandTotal();
+    });
+});
+
     $(document).ready(function() {
         // Trim whitespace on form submission
         $("#updateBusiness").on('submit', function() {
@@ -383,7 +442,7 @@ function calculateGrandTotal() {
         //     $(this).closest("tr").remove();
         //        calculateGrandTotal();
         // });
-$(document).on("click", ".remove-row", function(e) {
+    $(document).on("click", ".remove-row", function(e) {
     const id = $(this).data("id");
 
     // If no data-id, it's a new row => just remove
