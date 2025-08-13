@@ -15,6 +15,35 @@
             cursor: not-allowed;
             opacity: 0.7;
         }
+         .custom-dropdown .dropdown-options {
+        position: absolute;
+        width:600px !important;
+        top: 700px;
+        left: 193px;
+        right: 0;
+        background: white;
+        border: 1px solid #ccc;
+        z-index: 999;
+        /* max-height: 200px; */
+        overflow-y: auto;
+    }
+
+    .custom-dropdown .option {
+        padding: 6px 10px;
+        cursor: pointer;
+    }
+
+    .custom-dropdown .option:hover {
+        background: #f0f0f0;
+    }
+
+    .custom-dropdown .search-box {
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 5px;
+    }
+    .margin-bottom{
+        margin-bottom: 100px !important;
+    }
     </style>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -81,6 +110,7 @@
                                                         <tr>
                                                             <th>#</th>
                                                             <th>Part Item</th>
+                                                             <th>Basic Rate</th>
                                                             <th>Quantity</th>
                                                             <th>Unit</th>
                                                             <th>Received Material for Production</th>
@@ -101,7 +131,21 @@
                                                                     </td>
                                                                     <td>
                                                                         @if ($item->material_send_production == 0)
-                                                                            <select class="form-control part-no"
+                                                                           <div class="custom-dropdown">
+        <input type="hidden" name="addmore[{{ $index }}][part_item_id]" class="part_no" value="{{ $item->part_item_id ?? '' }}">
+        <input type="text" class="dropdown-input form-control" placeholder="Select Part Item..." value="{{ $item->description ?? '' }}" readonly required>
+
+        <div class="dropdown-options dropdown-height" style="display: none;">
+            <input type="text" class="search-box form-control" placeholder="Search...">
+            <div class="options-list">
+                @foreach ($dataOutputPartItem as $data)
+                    <div class="option" data-id="{{ $data->id }}">{{ $data->description }}</div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+                                                                            {{-- <select class="form-control part-no"
                                                                                 name="addmore[{{ $index }}][part_no_id]"
                                                                                 required>
                                                                                 <option value="">Select Part Item
@@ -112,23 +156,28 @@
                                                                                         {{ $partItem->description }}
                                                                                     </option>
                                                                                 @endforeach
-                                                                            </select>
+                                                                            </select> --}}
                                                                         @else
-                                                                            <select
-                                                                                class="form-control part-no disabled-btn"
-                                                                                name="addmore[{{ $index }}][part_no_id]"
-                                                                                disabled>
-                                                                                <option value="">Select Part Item
-                                                                                </option>
-                                                                                @foreach ($dataOutputPartItem as $partItem)
-                                                                                    <option value="{{ $partItem->id }}"
-                                                                                        {{ $partItem->id == $item->part_item_id ? 'selected' : '' }}>
-                                                                                        {{ $partItem->description }}
-                                                                                    </option>
-                                                                                @endforeach
-                                                                            </select>
+                                                                               <div class="custom-dropdown">
+        <input type="hidden" name="addmore[{{ $index }}][part_item_id]" class="part_no" value="{{ $item->part_item_id ?? '' }}">
+        <input type="text" class="dropdown-input form-control" placeholder="Select Part Item..." value="{{ $item->description ?? '' }}" readonly required>
+
+        <div class="dropdown-options dropdown-height" style="display: none;">
+            <input type="text" class="search-box form-control" placeholder="Search...">
+            <div class="options-list">
+                @foreach ($dataOutputPartItem as $data)
+                    <div class="option" data-id="{{ $data->id }}">{{ $data->description }}</div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
                                                                         @endif
                                                                     </td>
+                                                                      <td>
+                                                                <input class="form-control basic_rate" name="addmore[{{ $index }}][basic_rate]" type="number" step="any" required value="{{ $item->basic_rate }}" readonly>
+                                                                <input type="hidden" class="total_amount" name="addmore[{{ $index }}][total_amount]" value="{{ $item->basic_rate * $item->quantity }}">
+                                                            </td>
                                                                     <td>
                                                                         @if ($item->material_send_production == 0)
                                                                             <input class="form-control quantity"
@@ -231,98 +280,169 @@
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-    <script>
-        $(document).ready(function() {
-            // 1. Initialize jQuery Validate on the form
-            var validator = $("#addProductForm").validate({
-                rules: {
-                    product_name: {
-                        required: true
-                    },
-                    description: {
-                        required: true
-                    }
-                    // Dynamic fields can be validated via added rules.
-                },
-                messages: {
-                    product_name: {
-                        required: "Product name is required."
-                    },
-                    description: {
-                        required: "Description is required."
-                    }
-                },
-                errorClass: "error",
-                errorPlacement: function(error, element) {
-                    error.insertAfter(element);
+   <script>
+$(document).ready(function () {
+    const table = $("#purchase_order_table");
+
+    // ========================
+    //  DROPDOWN FUNCTIONALITY
+    // ========================
+    table.on('click', '.dropdown-input', function () {
+        $('.dropdown-options').hide(); // close all others
+        $(this).siblings('.dropdown-options').show();
+        $(this).siblings('.dropdown-options').find('.search-box').val('').trigger('input').focus();
+    });
+
+    table.on('input', '.search-box', function () {
+        const term = $(this).val().toLowerCase();
+        $(this).siblings('.options-list').find('.option').each(function () {
+            $(this).toggle($(this).text().toLowerCase().includes(term));
+        });
+    });
+
+    table.on('click', '.custom-dropdown .option', function () {
+        const text = $(this).text();
+        const id = $(this).data('id');
+        const $dropdown = $(this).closest('.custom-dropdown');
+        const $row = $dropdown.closest('tr');
+
+        // Set hidden value + visible text
+        $dropdown.find('.dropdown-input').val(text);
+        $dropdown.find('.part_no').val(id);
+        $dropdown.find('.dropdown-options').hide();
+
+        // Fetch basic rate
+        $.ajax({
+            url: '{{ route("get-part-item-rate") }}',
+            type: 'GET',
+            data: { part_item_id: id },
+            success: function (res) {
+                if (res.status === 'success') {
+                    $row.find('.basic_rate').val(res.basic_rate);
+                    updateTotalAmount($row);
+                } else {
+                    $row.find('.basic_rate').val('');
                 }
-            });
-
-            // 2. Set row counter based on current rows
-            var i_count = $("#purchase_order_table tbody tr").length;
-
-            // 3. Event handler for "Add More" button
-            $("#add_more_btn").click(function() {
-                i_count++;
-                var newRow = `
-            <tr>
-                <td>
-                    <input type="text" name="addmore[${i_count}][id]" class="form-control" style="min-width:20px" value="${i_count}" readonly>
-                </td>
-                <td>
-                    <select class="form-control part-no mb-2" name="addmore[${i_count}][part_no_id]" required>
-                        <option value="">Select Part Item</option>
-                        @foreach ($dataOutputPartItem as $data)
-                            <option value="{{ $data['id'] }}">{{ $data['description'] }}</option>
-                        @endforeach
-                    </select>
-                </td>
-                <td>
-                    <input class="form-control quantity" name="addmore[${i_count}][quantity]" type="text" required>
-                </td>
-                <td>
-                    <select class="form-control mb-2 unit" name="addmore[${i_count}][unit]" required>
-                        <option value="">Select Unit</option>
-                        @foreach ($dataOutputUnitMaster as $data)
-                            <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
-                        @endforeach
-                    </select>
-                </td>
-                <td>
-                           <span>-</span>
-                    <input type="hidden" name="addmore[${i_count}][material_send_production]" value="0">
-                    <input type="hidden" name="addmore[${i_count}][quantity_minus_status]" value="pending">
-                </td>
-                    <td><a class="remove-tr delete-btn btn btn-danger m-1" title="Delete Tender" data-id="{{ $item->pd_id }}"><i class="fas fa-archive"></i></a></td>
-                
-            </tr>
-        `;
-                // Append the new row to the table
-                $("#purchase_order_table tbody").append(newRow);
-
-                // 4. Add validation rules to the newly added "quantity" input
-                $("#purchase_order_table tbody tr:last .quantity").rules("add", {
-                    required: true,
-                    digits: true,
-                    messages: {
-                        required: "Quantity is required.",
-                        digits: "Please enter a valid number."
-                    }
-                });
-            });
-
-            // 5. Delegate click event for removing rows
-            $(document).on("click", ".remove-row", function() {
-                $(this).closest("tr").remove();
-                updateSerialNumbers();
-            });
-
-            // Helper function to update serial numbers after a row removal
-            function updateSerialNumbers() {
-                $("#purchase_order_table tbody tr").each(function(index) {
-                    $(this).find('td:first input[type="text"]').val(index + 1);
-                });
+            },
+            error: function () {
+                $row.find('.basic_rate').val('');
             }
         });
-    </script>
+    });
+
+    $(document).click(function (e) {
+        if (!$(e.target).closest('.custom-dropdown').length) {
+            $('.dropdown-options').hide();
+        }
+    });
+
+    // ========================
+    //  TOTAL AMOUNT CALCULATION
+    // ========================
+    function updateTotalAmount($row) {
+        let rate = parseFloat($row.find('.basic_rate').val()) || 0;
+        let qty = parseFloat($row.find('.quantity').val()) || 0;
+        $row.find('.total_amount').val((rate * qty).toFixed(2));
+    }
+
+    table.on('input', '.basic_rate, .quantity', function () {
+        updateTotalAmount($(this).closest('tr'));
+    });
+
+    // ========================
+    //  ADD MORE ROW
+    // ========================
+    let rowCount = table.find("tbody tr").length;
+    $("#add_more_btn").click(function () {
+        rowCount++;
+        let newRow = `
+            <tr>
+                <td><input type="text" class="form-control" value="${rowCount}" readonly></td>
+                <td>
+                    <div class="custom-dropdown">
+                        <input type="hidden" name="addmore[${rowCount}][part_item_id]" class="part_no" value="">
+                        <input type="text" class="dropdown-input form-control" placeholder="Select Part Item..." readonly required>
+                        <div class="dropdown-options dropdown-height" style="display: none;">
+                            <input type="text" class="search-box form-control" placeholder="Search...">
+                            <div class="options-list">
+                                @foreach ($dataOutputPartItem as $data)
+                                    <div class="option" data-id="{{ $data->id }}">{{ $data->description }}</div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <input class="form-control basic_rate" name="addmore[${rowCount}][basic_rate]" type="number" step="any" required>
+                    <input type="hidden" class="total_amount" name="addmore[${rowCount}][items_used_total_amount]" value="0">
+                </td>
+                <td>
+                    <input class="form-control quantity" name="addmore[${rowCount}][quantity]" type="number" step="any" required>
+                </td>
+                <td>
+                    <select class="form-control unit" name="addmore[${rowCount}][unit]" required>
+                        <option value="">Select Unit</option>
+                        @foreach ($dataOutputUnitMaster as $unit)
+                            <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td>
+                 -
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger remove-row"><i class="fa fa-trash"></i></button>
+                </td>
+            </tr>`;
+        table.find("tbody").append(newRow);
+
+        $(`input[name="addmore[${rowCount}][part_item_id]"]`).rules("add", {
+    required: true,
+    messages: { required: "Please select a Part Item" }
+});
+    });
+
+    // Remove row
+    table.on("click", ".remove-row", function () {
+        $(this).closest("tr").remove();
+    });
+
+    // ========================
+    //  VALIDATION
+    // ========================
+    $("#addProductForm").validate({
+        ignore: [],
+        rules: {
+            "product_name": { required: true },
+            "description": { required: true }
+        },
+        messages: {
+            "product_name": "Product name is required",
+            "description": "Description is required"
+        },
+        errorPlacement: function (error, element) {
+            if (element.hasClass('part_no')) {
+                error.insertAfter(element.closest('.custom-dropdown'));
+            } else {
+                error.insertAfter(element);
+            }
+        },
+        submitHandler: function (form) {
+            Swal.fire({
+                icon: 'question',
+                title: 'Are you sure?',
+                text: 'Send this material to Production?',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+    });
+});
+</script>
+
 @endsection

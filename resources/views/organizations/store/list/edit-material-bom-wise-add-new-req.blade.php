@@ -199,7 +199,7 @@
                                                                     class="delete-btn btn btn-danger"
                                                                     title="Delete"><i class="fa fa-trash"></i></a>
                                                                 @else
-                                                                <button type="button" class="delete-btn btn btn-danger remove-row" disabled>
+                                                                <button type="button" class="delete-btn btn btn-sm btn-danger remove-row" disabled>
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
                                                                 @endif
@@ -219,6 +219,11 @@
                                                 Save Data
                                             </button>
                                         </div>
+                                    {{-- <div class="login-btn-inner text-center" >
+                                        <button class="btn btn-sm btn-primary" type="submit" id="saveBtn">Save Data</button>
+                                    </div> --}}
+
+
                                 </form>
                                 </div>
                             </div>
