@@ -1920,7 +1920,14 @@
                         
                         @elseif ($role == config('constants.ROLE_ID.HIGHER_AUTHORITY'))
                         @include('admin.pages.dashboard.higher-dashboard')
+                       
+                        @elseif ($role == config('constants.ROLE_ID.ESTIMATION'))
+                        @include('admin.pages.dashboard.estimation-dashboard')
                         @endif
+
+                        
+                          
+                       
 
                         {{-- <div class="col-lg-6 col-md-6 mb-4">
                             <h4>{{ ucfirst(strtolower($role)) }} Leave Status</h4>

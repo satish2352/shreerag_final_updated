@@ -219,11 +219,6 @@
                                                 Save Data
                                             </button>
                                         </div>
-                                    {{-- <div class="login-btn-inner text-center" >
-                                        <button class="btn btn-sm btn-primary" type="submit" id="saveBtn">Save Data</button>
-                                    </div> --}}
-
-
                                 </form>
                                 </div>
                             </div>

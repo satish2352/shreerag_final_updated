@@ -410,6 +410,7 @@ class DashboardController extends Controller {
         ->count();
 
 
+
         // $user_leaves_status = User::crossJoin('tbl_leave_management') 
         // ->leftJoin('tbl_leaves', function($join) use ($ses_userId) {
         //     $join->on('users.id', '=', 'tbl_leaves.employee_id')
@@ -468,9 +469,34 @@ class DashboardController extends Controller {
         ->select('name', 'leave_count') 
         ->get();
 
-        // $progressPercentage = min(100, max(0, $directorDeskCount));
+        $design_received = BusinessApplicationProcesses::leftJoin('estimation', function($join) {
+              $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
+          })
+          ->leftJoin('businesses_details', function($join) {
+              $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+          })
+        ->whereNull('business_application_processes.bom_estimation_send_to_owner')
+        ->where('business_application_processes.design_send_to_estimation',1113)
+        ->where('business_application_processes.design_status_id', 1113)
+        ->count();   
+        
+           $estimation_accepted_bom= BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
+                $join->on('business_application_processes.business_id', '=', 'businesses.id');
+            })
+        ->where('business_application_processes.owner_bom_accepted', 1150)
+        ->count(); 
 
+         $estimation_rejected_bom= BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
+                $join->on('business_application_processes.business_id', '=', 'businesses.id');
+            })
+         ->where('business_application_processes.owner_bom_rejected', 1151)
+        ->count(); 
 
+          $estimation_send_tp_production= BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
+                $join->on('business_application_processes.business_id', '=', 'businesses.id');
+            })
+         ->where('business_application_processes.estimation_send_to_production', 1152)
+        ->count(); 
         $owner_counts = [
             'user_active_count' => $user_active_count,
             'active_businesses' => $active_count,
@@ -580,12 +606,17 @@ class DashboardController extends Controller {
             'user_leaves_status' => $user_leaves_status,
             
         ];
-
+ $estimation_counts = [
+            'design_received' => $design_received, 
+            'estimation_accepted_bom'=>$estimation_accepted_bom,    
+            'estimation_rejected_bom' => $estimation_rejected_bom,
+            'estimation_send_tp_production' =>$estimation_send_tp_production       
+        ];
         
         return view('admin.pages.dashboard.dashboard', ['return_data' => $owner_counts,'offcanvas' => $offcanvas,'department_count' =>$department_count, 'logistics_counts'=>$logistics_counts, 'design_dept_counts'=>$design_dept_counts,
     'production_dept_counts'=>$production_dept_counts, 'store_dept_counts'=>$store_dept_counts, 'cms_counts'=>$cms_counts,
 'purchase_dept_counts'=>$purchase_dept_counts, 'secuirty_dept_counts'=>$secuirty_dept_counts, 'quality_dept_counts'=>$quality_dept_counts,'fianance_counts'=>$fianance_counts,
-'inventory_dept_counts'=>$inventory_dept_counts,'dispatch_counts'=>$dispatch_counts, 'hr_counts'=>$hr_counts, 'employee_counts'=>$employee_counts, 'employee_leave_type'=>$employee_leave_type ]);
+'inventory_dept_counts'=>$inventory_dept_counts,'dispatch_counts'=>$dispatch_counts, 'hr_counts'=>$hr_counts, 'employee_counts'=>$employee_counts, 'employee_leave_type'=>$employee_leave_type, 'estimation_counts'=>$estimation_counts ]);
     } catch (\Exception $e) {
         \Log::error("Error fetching business data: " . $e->getMessage());
         return redirect()->back()->with('error', 'An error occurred while fetching data.');

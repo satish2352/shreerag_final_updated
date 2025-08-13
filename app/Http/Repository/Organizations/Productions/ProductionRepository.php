@@ -491,8 +491,18 @@ public function editProduct($id){
             
             $errorMessages = []; // Array to hold error messages
     
+
+            
             // Loop through the addmore array and update or create new ProductionDetails
             foreach ($request->addmore as $item) {
+
+                  $basicRate = $partItemData ? $partItemData->basic_rate : 0; // default 0 if not found
+
+            // Calculate total amount
+            $totalAmount = isset($item['items_used_total_amount'])
+                ? $item['items_used_total_amount']
+                : ($basicRate * $item['quantity']);
+
                 // First, check if part_item_id already exists with material_send_production == 0
                 $existingDetail = ProductionDetails::where('business_details_id', $request->business_details_id)
                     ->where('part_item_id', $item['part_no_id'])
@@ -505,6 +515,8 @@ public function editProduct($id){
                     $existingDetail->part_item_id = $item['part_no_id'];
                     $existingDetail->quantity = $item['quantity'];
                     $existingDetail->unit = $item['unit'];
+                    $existingDetail->basic_rate = $basicRate; // <-- auto insert basic_rate
+                    $existingDetail->items_used_total_amount = $totalAmount;
                     $existingDetail->material_send_production = '0';
                     $existingDetail->quantity_minus_status = 'pending';
                     $existingDetail->save();
@@ -513,6 +525,8 @@ public function editProduct($id){
                 $dataOutput->part_item_id = $item['part_no_id'];
                 $dataOutput->quantity = $item['quantity'];
                 $dataOutput->unit = $item['unit'];
+                $dataOutput->basic_rate = $basicRate; 
+                $dataOutput->items_used_total_amount = $totalAmount;
                 $dataOutput->quantity_minus_status = 'pending';
                 $dataOutput->material_send_production = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
                 $dataOutput->business_id = $dataOutput_ProductionDetails->business_id;

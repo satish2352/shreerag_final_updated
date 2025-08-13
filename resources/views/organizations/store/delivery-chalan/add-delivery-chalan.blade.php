@@ -19,6 +19,22 @@
         .red-text {
             color: red;
         }
+        .custom-dropdown {
+    position: relative;
+}
+.custom-dropdown .dropdown-options {
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    width: 615px !important;
+}
+.custom-dropdown .option {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.custom-dropdown .option:hover {
+    background: #f0f0f0;
+}
+
     </style>
     <div class="container-fluid">
         <div class="row">
@@ -265,7 +281,7 @@
                                                                                             style="min-width:50px" readonly
                                                                                             value="0">
                                                                                     </td>
-                                                                                    <td>
+                                                                                    {{-- <td>
                                                                                         <select
                                                                                             class="form-control part_item_id mb-2"
                                                                                             name="addmore[0][part_item_id]"
@@ -281,8 +297,23 @@
                                                                                             @endforeach
                                                                                         </select>
 
-                                                                                        {{-- <input class="form-control part_item_id" name="addmore[0][part_item_id]" type="text" style="min-width:150px"> --}}
-                                                                                    </td>
+                                                                                    </td> --}}
+                                                                                    <td>
+    <div class="custom-dropdown" data-index="0">
+        <input type="hidden" name="addmore[0][part_item_id]" class="part_no" value="">
+        <input type="text" class="dropdown-input form-control part-no" placeholder="Select Part Item..." readonly>
+
+        <div class="dropdown-options dropdown-height" style="display: none; position: absolute; background: white; border: 1px solid #ccc; z-index: 1000; width: 100%;">
+            <input type="text" class="search-box form-control" placeholder="Search..." style="margin-bottom: 5px;">
+            <div class="options-list" style="max-height: 200px; overflow-y: auto;">
+                @foreach ($dataOutputPartItem as $data)
+                    <div class="option" data-id="{{ $data['id'] }}">{{ $data['description'] }}</div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</td>
+
                                                                                     <td>
                                                                                         <input
                                                                                             class="form-control hsn_name"
@@ -407,22 +438,22 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="login-btn-inner">
-                                                            <div class="row">
-                                                                <div class="col-lg-12"
+                                                      
+                                                           
+                                                                <div class="col-lg-12 mb-4"
                                                                     style="display: flex; justify-content: center;">
                                                                     <div class="login-horizental cancel-wp pull-left">
                                                                         <a href="{{ route('list-delivery-chalan') }}"
                                                                             class="btn btn-white"
                                                                             style="margin-bottom:50px">Cancel</a>
                                                                         <button
-                                                                            class="btn btn-sm btn-primary login-submit-cs"
+                                                                            class="btn btn-sm btn-primary btn-bg-colour"
                                                                             type="submit" style="margin-bottom:50px">Save
                                                                             Data</button>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                        </div>
+                                                           
+                                                        
                                                     </form>
                                                 </div>
                                             </div>
@@ -435,40 +466,94 @@
                 </div>
             </div>
         </div>
-        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function () {
 
-        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+    /* -----------------------------------------
+       1. Custom Dropdown with Search
+    ----------------------------------------- */
+    $(document).on('click', '.dropdown-input', function () {
+        $('.dropdown-options').hide(); // close other dropdowns
+        $(this).siblings('.dropdown-options').toggle();
+        $(this).siblings('.dropdown-options').find('.search-box').val('').trigger('keyup'); // reset search
+    });
 
-        <script>
-            $(document).ready(function() {
-                // Function to set the minimum date for PO date
-                function setMinDate() {
-                    var today = new Date();
-                    var day = String(today.getDate()).padStart(2, '0');
-                    var month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
-                    var year = today.getFullYear();
-                    var todayDate = year + '-' + month + '-' + day;
-                    $('#po_date').attr('min', todayDate);
+    $(document).on('keyup', '.search-box', function () {
+        var searchValue = $(this).val().toLowerCase();
+        var optionsList = $(this).siblings('.options-list').find('.option');
+        optionsList.each(function () {
+            var text = $(this).text().toLowerCase();
+            $(this).toggle(text.indexOf(searchValue) > -1);
+        });
+    });
+
+    $(document).on('click', '.option', function () {
+        var selectedText = $(this).text();
+        var selectedId = $(this).data('id');
+        var dropdown = $(this).closest('.custom-dropdown');
+        var currentRow = $(this).closest('tr');
+
+        // Set value to hidden input & visible input
+        dropdown.find('.part_no').val(selectedId);
+        dropdown.find('.dropdown-input').val(selectedText);
+        dropdown.find('.dropdown-options').hide();
+
+        // Fetch HSN after selection
+        fetchHSN(selectedId, currentRow);
+    });
+
+    $(document).on('click', function (e) {
+        if (!$(e.target).closest('.custom-dropdown').length) {
+            $('.dropdown-options').hide();
+        }
+    });
+
+    /* -----------------------------------------
+       2. Normal <select> dropdown change event
+    ----------------------------------------- */
+    $(document).on('change', '.part_item_id', function () {
+        var partNoId = $(this).val();
+        var currentRow = $(this).closest('tr');
+
+        // Store in hidden input (for stock check)
+        currentRow.find('.part_no').val(partNoId);
+
+        fetchHSN(partNoId, currentRow);
+    });
+
+    /* -----------------------------------------
+       3. Fetch HSN Function
+    ----------------------------------------- */
+    function fetchHSN(partNoId, row) {
+        if (!partNoId) return;
+
+        $.ajax({
+            url: '{{ route("get-hsn-for-part") }}',
+            type: 'GET',
+            data: { part_no_id: partNoId },
+            success: function (response) {
+                if (response.part && response.part.length > 0) {
+                    var hsnName = response.part[0].name;
+                    var hsnId = response.part[0].id;
+                    row.find('.hsn_name').val(hsnName);
+                    row.find('.hsn_id').val(hsnId);
+                } else {
+                    row.find('.hsn_name').val('');
+                    row.find('.hsn_id').val('');
+                    Swal.fire("HSN not found for selected part.");
                 }
-                setMinDate();
+            },
+            error: function () {
+                Swal.fire("Error fetching HSN. Please try again.");
+            }
+        });
+    }
 
-                // Function to set the minimum date for DC date
-                function setMinDate11() {
-                    var today = new Date();
-                    var day = String(today.getDate()).padStart(2, '0');
-                    var month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
-                    var year = today.getFullYear();
-                    var todayDate = year + '-' + month + '-' + day;
-                    $('#dc_date').attr('min', todayDate);
-                }
-                setMinDate11();
-
-                // Initialize jQuery Validation
+     // Initialize jQuery Validation
                 var validator = $("#addEmployeeForm").validate({
                     ignore: [], // Validate hidden inputs as well
                     rules: {
@@ -504,10 +589,6 @@
                             required: true,
                             maxlength: 255
                         },
-                        // 'addmore[0][hsn_id]': {
-                        //     required: true,
-                        //     maxlength: 255
-                        // },
                         'addmore[0][process_id]': {
                             required: true,
                             maxlength: 255
@@ -559,10 +640,6 @@
                             required: "Please enter the unit_id.",
                             maxlength: "unit_id must be at most 255 characters long."
                         },
-                        // 'addmore[0][hsn_id]': {
-                        //     required: "Please enter the hsn_id.",
-                        //     maxlength: "hsn_id must be at most 255 characters long."
-                        // },
                         'addmore[0][process_id]': {
                             required: "Please select the process."
                         },
@@ -589,176 +666,178 @@
                         }
                     }
                 });
+    /* -----------------------------------------
+       4. Stock Check Function
+    ----------------------------------------- */
+    function checkStock($row) {
+        const quantity = $row.find('.quantity').val();
+        const partItemId = $row.find('.part_no').val();
+        const stockAvailableMessage = $row.find('.stock-available');
 
-                // Function to check stock availability
-                function checkStock($row) {
-                    const quantity = $row.find('.quantity').val();
-                    const partItemId = $row.find('select[name*="part_item_id"]').val();
-                    const stockAvailableMessage = $row.find('.stock-available');
-
-                    if (partItemId && quantity) {
-                        $.ajax({
-                            url: '{{ route('check-stock-quantity') }}',
-                            type: 'GET',
-                            data: {
-                                part_item_id: partItemId,
-                                quantity: quantity
-                            },
-                            success: function(response) {
-                                if (response.status === 'error') {
-                                    stockAvailableMessage.text('Insufficient stock. Available: ' + response
-                                            .available_quantity)
-                                        .css('color', 'red');
-                                } else {
-                                    stockAvailableMessage.text('Stock is sufficient').css('color', 'green');
-                                }
-                            },
-                            error: function() {
-                                stockAvailableMessage.text('Error checking stock').css('color', 'red');
-                            }
-                        });
+        if (partItemId && quantity) {
+            $.ajax({
+                url: '{{ route("check-stock-quantity") }}',
+                type: 'GET',
+                data: {
+                    part_item_id: partItemId,
+                    quantity: quantity
+                },
+                success: function (response) {
+                    if (response.status === 'error') {
+                        stockAvailableMessage
+                            .text('Insufficient stock. Available: ' + response.available_quantity)
+                            .css('color', 'red');
                     } else {
-                        stockAvailableMessage.text('');
+                        stockAvailableMessage
+                            .text('Stock is sufficient')
+                            .css('color', 'green');
                     }
+                },
+                error: function () {
+                    stockAvailableMessage
+                        .text('Error checking stock')
+                        .css('color', 'red');
                 }
+            });
+        } else {
+            stockAvailableMessage.text('');
+        }
+    }
 
-                // Add more rows when the "Add More" button is clicked
-                $("#add_more_btn").click(function() {
-                    var i_count = $('#i_id').val();
-                    var i = parseInt(i_count) + 1;
-                    $('#i_id').val(i);
+    /* -----------------------------------------
+       5. Quantity/Rate Change
+    ----------------------------------------- */
+    $(document).on('keyup', '.quantity, .rate', function () {
+        var $row = $(this).closest('tr');
+        var quantity = parseFloat($row.find('.quantity').val()) || 0;
+        var rate = parseFloat($row.find('.rate').val()) || 0;
+        var totalAmount = (quantity * rate).toFixed(2);
 
-                    if (i_count === "0") {
-                        i = 2;
-                    }
+        $row.find('.total_amount').val(totalAmount);
 
-                    $('#i_id').val(i);
-                    var newRow = `
-                <tr>
-                    <td>
-                        <input type="text" name="id" class="form-control" style="min-width:50px" readonly value="${i}">
-                    </td>
-                    <td>
-                        <select class="form-control part_item_id mb-2" name="addmore[${i}][part_item_id]">
-                            <option value="" default>Select Part Item</option>
-                            @foreach ($dataOutputPartItem as $data)
-                                <option value="{{ $data['id'] }}">{{ $data['description'] }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        <input class="form-control hsn_name" type="text" style="min-width:150px" disabled>
-                        <input type="hidden" class="form-control hsn_id" name="addmore[${i}][hsn_id]" type="text" style="min-width:150px">
-                    </td>
-                    <td>
-                        <select class="form-control mb-2 unit_id" name="addmore[${i}][unit_id]">
-                            <option value="" default>Select Unit</option>
-                            @foreach ($dataOutputUnitMaster as $data)
-                                <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        <select class="form-control mb-2 process_id" name="addmore[${i}][process_id]">
-                            <option value="" default>Select Process</option>
-                            @foreach ($dataOutputProcessMaster as $data)
-                                <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        <input class="form-control quantity" name="addmore[${i}][quantity]" type="text">
-                        <span class="stock-available"></span>
-                    </td>
-                    <td>
-                        <input class="form-control rate" name="addmore[${i}][rate]" type="text">
-                    </td>
-                    <td>
-                        <input class="form-control size" name="addmore[${i}][size]" type="text" required>
-                    </td>
-                    <td>
-                        <input class="form-control total_amount" name="addmore[${i}][amount]" readonly style="width:120px" type="text" required>
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove_row"><i class="fa fa-trash"></i></button>
-                    </td>
-                </tr>`;
+        // Stock check after amount calculation
+        checkStock($row);
+    });
 
-                    $('#purchase_order_table tbody').append(newRow);
-                    initializeValidation($('#purchase_order_table tbody tr:last-child'));
-                    validator.resetForm(); // Reset the validation errors
-                });
+    /* -----------------------------------------
+       6. Add More Rows Button
+    ----------------------------------------- */
+    $("#add_more_btn").click(function () {
+        var i_count = $('#i_id').val();
+        var i = parseInt(i_count) + 1;
+        $('#i_id').val(i);
 
-                // Remove a row when the "Remove" button is clicked
-                $(document).on('click', '.remove_row', function() {
-                    $(this).closest('tr').remove();
-                    validator.resetForm(); // Reset the validation errors
-                });
+        var newRow = `
+            <tr>
+                <td>${i}</td>
+                <td>
+                    <!-- Custom dropdown example -->
+                    <div class="custom-dropdown">
+                        <input type="text" class="form-control dropdown-input" placeholder="Search Part Item">
+                        <input type="hidden" name="addmore[${i}][part_item_id]" class="part_no">
+                        <div class="dropdown-options" style="display:none;">
+                            <input type="text" class="form-control search-box" placeholder="Search...">
+                            <div class="options-list" style="max-height:150px; overflow:auto;">
+                                @foreach ($dataOutputPartItem as $data)
+                                    <div class="option" data-id="{{ $data['id'] }}">{{ $data['description'] }}</div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <input class="form-control hsn_name" type="text" disabled>
+                    <input type="hidden" class="form-control hsn_id" name="addmore[${i}][hsn_id]">
+                </td>
+                <td>
+                    <select class="form-control unit_id" name="addmore[${i}][unit_id]">
+                        <option value="">Select Unit</option>
+                        @foreach ($dataOutputUnitMaster as $data)
+                            <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control process_id" name="addmore[${i}][process_id]">
+                        <option value="">Select Process</option>
+                        @foreach ($dataOutputProcessMaster as $data)
+                            <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td>
+                    <input class="form-control quantity" name="addmore[${i}][quantity]" type="text">
+                    <span class="stock-available"></span>
+                </td>
+                <td>
+                    <input class="form-control rate" name="addmore[${i}][rate]" type="text">
+                </td>
+                <td>
+                    <input class="form-control size" name="addmore[${i}][size]" type="text">
+                </td>
+                <td>
+                    <input class="form-control total_amount" name="addmore[${i}][amount]" readonly>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove_row" title="Delete" data-repeater-delete>
+    <i class="fa fa-trash"></i>
+</button>
+                </td>
+            </tr>`;
 
-                // Recalculate the total amount when quantity or rate changes
-               // Recalculate the total amount when quantity or rate changes
-$(document).on('keyup', '.quantity, .rate', function() {
-    var $row = $(this).closest('tr');
-    var quantity = parseFloat($row.find('.quantity').val()) || 0;
-    var rate = parseFloat($row.find('.rate').val()) || 0;
-    var totalAmount = (quantity * rate).toFixed(2);
-    $row.find('.total_amount').val(totalAmount);
-    checkStock($row); // Check stock after calculating total
+        $('#purchase_order_table tbody').append(newRow);
+
+          // Apply validation rules to new row
+  // Apply validation rules to new row (target actual elements)
+$(`input[name='addmore[${i}][part_item_id]']`).rules("add", {
+    required: true,
+    maxlength: 100,
+    messages: { required: "Please enter the Product Name." }
 });
 
+    $(`select[name='addmore[${i}][unit_id]']`).rules("add", {
+        required: true,
+        maxlength: 255,
+        messages: { required: "Please enter the unit_id." }
+    });
 
-                // Initialize validation for the newly added row
-                function initializeValidation(row) {
-                    row.find('.part_item_id, .unit_id, .process_id, .quantity, .rate').each(function() {
-                        $(this).rules('add', {
-                            required: true
-                        });
-                    });
-                }
-            });
-        </script>
+    $(`select[name='addmore[${i}][process_id]']`).rules("add", {
+        required: true,
+        maxlength: 255,
+        messages: { required: "Please select the process." }
+    });
 
-        <script>
-            $(document).ready(function() {
-                // Bind the select2:select event
-                $(document).on('change', '.part_item_id', function(e) {
-                    var partNoId = $(this).val(); // Get the selected part_no_id
-                    var currentRow = $(this).closest('tr'); // Get the current row
+    $(`input[name='addmore[${i}][size]']`).rules("add", {
+        required: true,
+        maxlength: 255,
+        messages: { required: "Please enter the size." }
+    });
 
-                    // Check if partNoId has value
-                    if (partNoId) {
-                        console.log("Selected partNoId: ", partNoId); // Debugging the selected ID
+    $(`input[name='addmore[${i}][quantity]']`).rules("add", {
+        required: true,
+        digits: true,
+        min: 1,
+        messages: {
+            required: "Please enter the Quantity.",
+            digits: "Please enter only digits.",
+            min: "Quantity must be at least 1."
+        }
+    });
 
-                        // Make an AJAX request to fetch the HSN based on the part_no_id
-                        $.ajax({
-                            url: '{{ route('get-hsn-for-part') }}', // Ensure this route is correct in your routes file
-                            type: 'GET',
-                            data: {
-                                part_no_id: partNoId
-                            }, // Pass the part_no_id as a query parameter
-                            success: function(response) {
-                                console.log("HSN response:",
-                                    response); // Debug the response
+    $(`input[name='addmore[${i}][amount]']`).rules("add", {
+        required: true,
+        messages: { required: "Please Enter the Amount." }
+    });
+    });
 
-                                if (response.part && response.part.length > 0) {
-                                    var hsnName = response.part[0].name;
-                                    var hsnId = response.part[0].id;
+    /* -----------------------------------------
+       7. Remove Row
+    ----------------------------------------- */
+   $(document).on('click', '.remove_row', function () {
+    $(this).closest('tr').remove();
+});
 
-                                    // Update the HSN inputs for the current row only
-                                    currentRow.find('.hsn_name').val(
-                                        hsnName); // Set HSN name
-                                    currentRow.find('.hsn_id').val(hsnId); // Set HSN ID
-                                } else {
-                                    alert("HSN not found for the selected part.");
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                console.error("AJAX Error: ", status, error);
-                                alert("Error fetching HSN. Please try again.");
-                            }
-                        });
-                    }
-                });
-            });
-        </script>
+});
+</script>
+
     @endsection

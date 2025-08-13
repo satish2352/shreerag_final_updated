@@ -297,7 +297,7 @@
                                                                     <th>
                                                                         <button type="button"
                                                                             class="btn btn-sm btn-success font-18 mr-1"
-                                                                            id="add" title="Add" name="add"
+                                                                            id="edit_addmore_form" title="Add" name="add"
                                                                             data-repeater-create>
                                                                             <i class="fa fa-plus"></i>
                                                                         </button>
@@ -473,7 +473,381 @@
         @csrf
         <input type="hidden" name="delete_id" id="delete_id" value="">
     </form>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function () {
+
+    /* -----------------------------------------
+       1. Custom Dropdown with Search
+    ----------------------------------------- */
+    $(document).on('click', '.dropdown-input', function () {
+        $('.dropdown-options').hide(); // close other dropdowns
+        $(this).siblings('.dropdown-options').toggle();
+        $(this).siblings('.dropdown-options').find('.search-box').val('').trigger('keyup'); // reset search
+    });
+
+    $(document).on('keyup', '.search-box', function () {
+        var searchValue = $(this).val().toLowerCase();
+        var optionsList = $(this).siblings('.options-list').find('.option');
+        optionsList.each(function () {
+            var text = $(this).text().toLowerCase();
+            $(this).toggle(text.indexOf(searchValue) > -1);
+        });
+    });
+
+    $(document).on('click', '.option', function () {
+        var selectedText = $(this).text();
+        var selectedId = $(this).data('id');
+        var dropdown = $(this).closest('.custom-dropdown');
+        var currentRow = $(this).closest('tr');
+
+        // Set value to hidden input & visible input
+        dropdown.find('.part_no').val(selectedId);
+        dropdown.find('.dropdown-input').val(selectedText);
+        dropdown.find('.dropdown-options').hide();
+
+        // Fetch HSN after selection
+        fetchHSN(selectedId, currentRow);
+    });
+
+    $(document).on('click', function (e) {
+        if (!$(e.target).closest('.custom-dropdown').length) {
+            $('.dropdown-options').hide();
+        }
+    });
+
+    /* -----------------------------------------
+       2. Normal <select> dropdown change event
+    ----------------------------------------- */
+    $(document).on('change', '.part_item_id', function () {
+        var partNoId = $(this).val();
+        var currentRow = $(this).closest('tr');
+
+        // Store in hidden input (for stock check)
+        currentRow.find('.part_no').val(partNoId);
+
+        fetchHSN(partNoId, currentRow);
+    });
+
+    /* -----------------------------------------
+       3. Fetch HSN Function
+    ----------------------------------------- */
+    function fetchHSN(partNoId, row) {
+        if (!partNoId) return;
+
+        $.ajax({
+            url: '{{ route("get-hsn-for-part") }}',
+            type: 'GET',
+            data: { part_no_id: partNoId },
+            success: function (response) {
+                if (response.part && response.part.length > 0) {
+                    var hsnName = response.part[0].name;
+                    var hsnId = response.part[0].id;
+                    row.find('.hsn_name').val(hsnName);
+                    row.find('.hsn_id').val(hsnId);
+                } else {
+                    row.find('.hsn_name').val('');
+                    row.find('.hsn_id').val('');
+                    Swal.fire("HSN not found for selected part.");
+                }
+            },
+            error: function () {
+                Swal.fire("Error fetching HSN. Please try again.");
+            }
+        });
+    }
+
+     // Initialize jQuery Validation
+                var validator = $("#editDesignsForm").validate({
+                    ignore: [], // Validate hidden inputs as well
+                    rules: {
+                        vendor_id: {
+                            required: true
+                        },
+                        transport_id: {
+                            required: true
+                        },
+                        vehicle_id: {
+                            required: true
+                        },
+                        tax_type: {
+                            required: true
+                        },
+                        tax_id: {
+                            required: true
+                        },
+                        plant_id: {
+                            required: true
+                        },
+                        vehicle_number: {
+                            required: true
+                        },
+                        po_date: {
+                            required: true,
+                        },
+                        'addmore[0][part_item_id]': {
+                            required: true,
+                            maxlength: 100
+                        },
+                        'addmore[0][unit_id]': {
+                            required: true,
+                            maxlength: 255
+                        },
+                        'addmore[0][process_id]': {
+                            required: true,
+                            maxlength: 255
+                        },
+                        'addmore[0][size]': {
+                            required: true,
+                            maxlength: 255
+                        },
+                        'addmore[0][quantity]': {
+                            required: true,
+                            digits: true,
+                            min: 1
+                        },
+                        'addmore[0][amount]': {
+                            required: true,
+                        }
+                    },
+                    messages: {
+                        vendor_id: {
+                            required: "Select vendor name."
+                        },
+                        transport_id: {
+                            required: "Select transport name."
+                        },
+                        vehicle_id: {
+                            required: "Select vehicle type."
+                        },
+                        tax_type: {
+                            required: "Select tax type"
+                        },
+                        tax_id: {
+                            required: "Select tax name."
+                        },
+                        vehicle_number: {
+                            required: "Enter vehicle number."
+                        },
+                        plant_id: {
+                            required: "Enter plant name."
+                        },
+                        po_date: {
+                            required: "Please select PO date.",
+                            date: "Please select a valid date."
+                        },
+                        'addmore[0][part_item_id]': {
+                            required: "Please enter the Product Name.",
+                            maxlength: "Product Name must be at most 100 characters long."
+                        },
+                        'addmore[0][unit_id]': {
+                            required: "Please enter the unit_id.",
+                            maxlength: "unit_id must be at most 255 characters long."
+                        },
+                        'addmore[0][process_id]': {
+                            required: "Please select the process."
+                        },
+                        'addmore[0][size]': {
+                            required: "Please enter the size."
+                        },
+                        'addmore[0][quantity]': {
+                            required: "Please enter the Quantity.",
+                            digits: "Please enter only digits for Quantity.",
+                            min: "Quantity must be at least 1."
+                        },
+                        'addmore[0][amount]': {
+                            required: "Please Enter the Amount"
+                        },
+                    },
+                    errorPlacement: function(error, element) {
+                        error.addClass('text-danger');
+                        if (element.closest('.form-group').length) {
+                            element.closest('.form-group').append(error);
+                        } else if (element.closest('td').length) {
+                            element.closest('td').append(error);
+                        } else {
+                            error.insertAfter(element);
+                        }
+                    }
+                });
+    /* -----------------------------------------
+       4. Stock Check Function
+    ----------------------------------------- */
+    function checkStock($row) {
+        const quantity = $row.find('.quantity').val();
+        const partItemId = $row.find('.part_no').val();
+        const stockAvailableMessage = $row.find('.stock-available');
+
+        if (partItemId && quantity) {
+            $.ajax({
+                url: '{{ route("check-stock-quantity") }}',
+                type: 'GET',
+                data: {
+                    part_item_id: partItemId,
+                    quantity: quantity
+                },
+                success: function (response) {
+                    if (response.status === 'error') {
+                        stockAvailableMessage
+                            .text('Insufficient stock. Available: ' + response.available_quantity)
+                            .css('color', 'red');
+                    } else {
+                        stockAvailableMessage
+                            .text('Stock is sufficient')
+                            .css('color', 'green');
+                    }
+                },
+                error: function () {
+                    stockAvailableMessage
+                        .text('Error checking stock')
+                        .css('color', 'red');
+                }
+            });
+        } else {
+            stockAvailableMessage.text('');
+        }
+    }
+
+    /* -----------------------------------------
+       5. Quantity/Rate Change
+    ----------------------------------------- */
+    $(document).on('keyup', '.quantity, .rate', function () {
+        var $row = $(this).closest('tr');
+        var quantity = parseFloat($row.find('.quantity').val()) || 0;
+        var rate = parseFloat($row.find('.rate').val()) || 0;
+        var totalAmount = (quantity * rate).toFixed(2);
+
+        $row.find('.total_amount').val(totalAmount);
+
+        // Stock check after amount calculation
+        checkStock($row);
+    });
+
+    /* -----------------------------------------
+       6. Add More Rows Button
+    ----------------------------------------- */
+    $("#edit_addmore_form").click(function () {
+        var i_count = $('#i_id').val();
+        var i = parseInt(i_count) + 1;
+        $('#i_id').val(i);
+
+        var newRow = `
+            <tr>
+                
+                <td>
+                    <!-- Custom dropdown example -->
+                    <div class="custom-dropdown">
+                        <input type="text" class="form-control dropdown-input" placeholder="Search Part Item">
+                        <input type="hidden" name="addmore[${i}][part_item_id]" class="part_no">
+                        <div class="dropdown-options" style="display:none;">
+                            <input type="text" class="form-control search-box" placeholder="Search...">
+                            <div class="options-list" style="max-height:150px; overflow:auto;">
+                                @foreach ($dataOutputPartItem as $data)
+                                    <div class="option" data-id="{{ $data['id'] }}">{{ $data['description'] }}</div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <input class="form-control hsn_name" type="text" disabled>
+                    <input type="hidden" class="form-control hsn_id" name="addmore[${i}][hsn_id]">
+                </td>
+                <td>
+                    <select class="form-control unit_id" name="addmore[${i}][unit_id]">
+                        <option value="">Select Unit</option>
+                        @foreach ($dataOutputUnitMaster as $data)
+                            <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control process_id" name="addmore[${i}][process_id]">
+                        <option value="">Select Process</option>
+                        @foreach ($dataOutputProcessMaster as $data)
+                            <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td>
+                    <input class="form-control quantity" name="addmore[${i}][quantity]" type="text">
+                    <span class="stock-available"></span>
+                </td>
+                <td>
+                    <input class="form-control rate" name="addmore[${i}][rate]" type="text">
+                </td>
+                <td>
+                    <input class="form-control size" name="addmore[${i}][size]" type="text">
+                </td>
+                <td>
+                    <input class="form-control total_amount" name="addmore[${i}][amount]" readonly>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger remove_row">X</button>
+                </td>
+            </tr>`;
+
+        $('#dynamicTable tbody').append(newRow);
+
+          // Apply validation rules to new row
+  // Apply validation rules to new row (target actual elements)
+$(`input[name='addmore[${i}][part_item_id]']`).rules("add", {
+    required: true,
+    maxlength: 100,
+    messages: { required: "Please enter the Product Name." }
+});
+
+    $(`select[name='addmore[${i}][unit_id]']`).rules("add", {
+        required: true,
+        maxlength: 255,
+        messages: { required: "Please enter the unit_id." }
+    });
+
+    $(`select[name='addmore[${i}][process_id]']`).rules("add", {
+        required: true,
+        maxlength: 255,
+        messages: { required: "Please select the process." }
+    });
+
+    $(`input[name='addmore[${i}][size]']`).rules("add", {
+        required: true,
+        maxlength: 255,
+        messages: { required: "Please enter the size." }
+    });
+
+    $(`input[name='addmore[${i}][quantity]']`).rules("add", {
+        required: true,
+        digits: true,
+        min: 1,
+        messages: {
+            required: "Please enter the Quantity.",
+            digits: "Please enter only digits.",
+            min: "Quantity must be at least 1."
+        }
+    });
+
+    $(`input[name='addmore[${i}][amount]']`).rules("add", {
+        required: true,
+        messages: { required: "Please Enter the Amount." }
+    });
+    });
+
+    /* -----------------------------------------
+       7. Remove Row
+    ----------------------------------------- */
+    $(document).on('click', '.remove_row', function () {
+        $(this).closest('tr').remove();
+    });
+
+});
+</script>
+
+    @endsection
+
+    {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
@@ -785,4 +1159,4 @@
             hiddenInput.value = selectElement.value;
         }
     </script>
-@endsection
+@endsection --}}
