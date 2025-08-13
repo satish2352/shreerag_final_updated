@@ -164,8 +164,12 @@ class LeavesController extends Controller
         }
     }
     public function add(){
-        $leaveManagment = LeaveManagement::where('is_active', true)->where('is_deleted', 0)
-        ->select('id','name')
+         $currentYear = date('Y');
+
+         $leaveManagment = LeaveManagement::where('is_active', true)
+        ->where('is_deleted', 0)
+        ->where('leave_year', $currentYear) 
+        ->select('id', 'name')
         ->get()
         ->toArray();
             $dept=DepartmentsModel::get();

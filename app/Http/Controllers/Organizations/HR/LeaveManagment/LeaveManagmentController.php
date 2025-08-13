@@ -39,50 +39,105 @@ class LeaveManagmentController extends Controller
         return view( 'organizations.hr.yearly-leave-management.add-yearly-leave-management', compact( 'dept', 'roles' ) );
     }
 
-    public function store( Request $request ) {
-        $rules = [
-            'name' => 'required|unique:tbl_leave_management|regex:/^[a-zA-Z\s]+$/u|max:255',
-            'leave_year' => 'required',
-            'leave_count' => 'required|integer',
+    // public function store( Request $request ) {
+    //     $rules = [
+    //         'name' => 'required|unique:tbl_leave_management|regex:/^[a-zA-Z\s]+$/u|max:255',
+    //         'leave_year' => 'required',
+    //         'leave_count' => 'required|integer',
 
-        ];
+    //     ];
 
-        $messages = [
-            'name.required' => 'Please enter name.',
-            'name.regex' => 'Please  enter text only.',
-            'name.max' => 'Please  enter text length upto 255 character only.',
-            'name.unique' => 'Name already exist.',
-            'leave_year.required' => 'Please select year.',
-            'leave_count.required' => 'Please enter leave count.',
-            'leave_count.integer' => 'Please enter a valid number for leave count.',
+    //     $messages = [
+    //         'name.required' => 'Please enter name.',
+    //         'name.regex' => 'Please  enter text only.',
+    //         'name.max' => 'Please  enter text length upto 255 character only.',
+    //         'name.unique' => 'Name already exist.',
+    //         'leave_year.required' => 'Please select year.',
+    //         'leave_count.required' => 'Please enter leave count.',
+    //         'leave_count.integer' => 'Please enter a valid number for leave count.',
 
-        ];
+    //     ];
 
-        try {
-            $validation = Validator::make( $request->all(), $rules, $messages );
+    //     try {
+    //         $validation = Validator::make( $request->all(), $rules, $messages );
 
-            if ( $validation->fails() ) {
-                return redirect( 'hr/add-yearly-leave-management' )
+    //         if ( $validation->fails() ) {
+    //             return redirect( 'hr/add-yearly-leave-management' )
+    //             ->withInput()
+    //             ->withErrors( $validation );
+    //         } else {
+    //             $add_record = $this->service->addAll( $request );
+
+    //             if ( $add_record ) {
+    //                 $msg = $add_record[ 'msg' ];
+    //                 $status = $add_record[ 'status' ];
+
+    //                 if ( $status == 'success' ) {
+    //                     return redirect( 'hr/list-yearly-leave-management' )->with( compact( 'msg', 'status' ) );
+    //                 } else {
+    //                     return redirect( 'hr/add-yearly-leave-management' )->withInput()->with( compact( 'msg', 'status' ) );
+    //                 }
+    //             }
+    //         }
+    //     } catch ( Exception $e ) {
+    //         return redirect( 'hr/add-yearly-leave-management' )->withInput()->with( [ 'msg' => $e->getMessage(), 'status' => 'error' ] );
+    //     }
+    // }
+public function store(Request $request)
+{
+    $rules = [
+        'leave_year' => 'required',
+        'name' => [
+            'required',
+            'regex:/^[a-zA-Z\s]+$/u',
+            'max:255',
+            function ($attribute, $value, $fail) use ($request) {
+                $exists = \App\Models\LeaveManagement::where('leave_year', $request->leave_year)
+                    ->where('name', $value)
+                    ->exists();
+
+                if ($exists) {
+                    $fail('Name already exist for this year.');
+                }
+            },
+        ],
+        'leave_count' => 'required|integer',
+    ];
+
+    $messages = [
+        'leave_year.required' => 'Please select year.',
+        'name.required' => 'Please enter name.',
+        'name.regex' => 'Please enter text only.',
+        'name.max' => 'Please enter text length up to 255 characters only.',
+        'leave_count.required' => 'Please enter leave count.',
+        'leave_count.integer' => 'Please enter a valid number for leave count.',
+    ];
+
+    try {
+        $validation = Validator::make($request->all(), $rules, $messages);
+
+        if ($validation->fails()) {
+            return redirect('hr/add-yearly-leave-management')
                 ->withInput()
-                ->withErrors( $validation );
-            } else {
-                $add_record = $this->service->addAll( $request );
+                ->withErrors($validation);
+        } else {
+            $add_record = $this->service->addAll($request);
 
-                if ( $add_record ) {
-                    $msg = $add_record[ 'msg' ];
-                    $status = $add_record[ 'status' ];
+            if ($add_record) {
+                $msg = $add_record['msg'];
+                $status = $add_record['status'];
 
-                    if ( $status == 'success' ) {
-                        return redirect( 'hr/list-yearly-leave-management' )->with( compact( 'msg', 'status' ) );
-                    } else {
-                        return redirect( 'hr/add-yearly-leave-management' )->withInput()->with( compact( 'msg', 'status' ) );
-                    }
+                if ($status == 'success') {
+                    return redirect('hr/list-yearly-leave-management')->with(compact('msg', 'status'));
+                } else {
+                    return redirect('hr/add-yearly-leave-management')->withInput()->with(compact('msg', 'status'));
                 }
             }
-        } catch ( Exception $e ) {
-            return redirect( 'hr/add-yearly-leave-management' )->withInput()->with( [ 'msg' => $e->getMessage(), 'status' => 'error' ] );
         }
+    } catch (Exception $e) {
+        return redirect('hr/add-yearly-leave-management')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
     }
+}
 
     public function edit( Request $request ) {
         $edit_data_id = base64_decode( $request->id );

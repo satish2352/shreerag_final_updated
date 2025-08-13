@@ -432,12 +432,16 @@ class DashboardController extends Controller {
         //     'tbl_leave_management.leave_count'
         // )
         // ->get();
+        $currentYear = date('Y');
+      
         $user_leaves_status = DB::table('tbl_leave_management')
     ->leftJoin('tbl_leaves', function($join) use ($ses_userId) {
         $join->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
             ->where('tbl_leaves.employee_id', $ses_userId)
             ->where('tbl_leaves.is_approved', 2);
+             
     })
+    ->where('tbl_leave_management.leave_year', $currentYear)
     ->where('tbl_leave_management.is_active', 1)
     ->where('tbl_leave_management.is_deleted', 0)
     ->select(
@@ -468,6 +472,37 @@ class DashboardController extends Controller {
         $employee_leave_type = LeaveManagement::where('is_active', 1) ->where('is_deleted', 0)
         ->select('name', 'leave_count') 
         ->get();
+
+      $total_leaves = LeaveManagement::where('is_active', 1)
+    ->where('is_deleted', 0)
+    ->sum('leave_count');
+
+    $available_leaves = LeaveManagement::where('leave_year', $currentYear)
+    ->where('is_active', 1)
+    ->where('is_deleted', 0)
+    ->sum('leave_count');
+
+$pending_leaves = DB::table('tbl_leave_management as lm')
+    ->leftJoin('tbl_leaves as l', function($join) use ($ses_userId) {
+        $join->on('lm.id', '=', 'l.leave_type_id')
+             ->where('l.employee_id', $ses_userId)
+             ->where('l.is_approved', 2) 
+             ->where('l.is_active', 1)
+             ->where('l.is_deleted', 0);
+    })
+    ->where('lm.is_active', 1)
+    ->where('lm.is_deleted', 0)
+    // ->where('lm.leave_year', date('Y'))
+    ->select(DB::raw('SUM(lm.leave_count - COALESCE(l.leave_count, 0)) as remaining_count'))
+    ->first()
+    ->remaining_count ?? 0;
+
+// Previous unused = example logic (last year’s remaining)
+$previous_unused_leaves = DB::table('tbl_leave_management')
+    ->where('is_active', 1)
+    ->where('is_deleted', 0)
+    ->where('leave_year', date('Y') - 1)
+    ->sum('leave_count'); // adjust logic if you track remaining from last year
 
         $design_received = BusinessApplicationProcesses::leftJoin('estimation', function($join) {
               $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
@@ -604,7 +639,10 @@ class DashboardController extends Controller {
             'employee_accepted_leave_request' => $employee_accepted_leave_request,
             'employee_rejected_leave_request' => $employee_rejected_leave_request,
             'user_leaves_status' => $user_leaves_status,
-            
+             'total_leaves' => $total_leaves,
+            'available_leaves' => $available_leaves,
+            'previous_unused_leaves' => $previous_unused_leaves,
+            'pending_leaves' => $pending_leaves,
         ];
  $estimation_counts = [
             'design_received' => $design_received, 

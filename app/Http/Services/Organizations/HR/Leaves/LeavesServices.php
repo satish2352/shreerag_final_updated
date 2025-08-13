@@ -30,7 +30,10 @@ class LeavesServices
     }
     public function getAllLeavesRequest(){
         try {
-            return $this->repo->getAllLeavesRequest();
+           $data_output =  $this->repo->getAllLeavesRequest();
+        //    dd($data_output);
+        //    die();
+           return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
