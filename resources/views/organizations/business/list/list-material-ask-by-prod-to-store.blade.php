@@ -1,4 +1,4 @@
-<!-- Static Table Start -->
+
 @extends('admin.layouts.master')
 @section('content')
     
@@ -10,11 +10,6 @@
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
                                 <h1>Material Ask By Production To Store</h1>
-                                <div class="form-group-inner login-btn-inner row">
-                                    <div class="col-lg-2">
-                                    </div>
-                                    <div class="col-lg-10"></div>
-                                </div>
                             </div>
                         </div>
 

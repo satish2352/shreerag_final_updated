@@ -1,4 +1,3 @@
-<!-- Static Table Start -->
 @extends('admin.layouts.master')
 @section('content')
     <div class="data-table-area mg-tb-15">
@@ -9,14 +8,6 @@
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
                             <h1>Material List Sent To <span class="table-project-n">Purchase</span> Department</h1>
-                                <div class="form-group-inner login-btn-inner row">
-                                    <div class="col-lg-2">
-                                        {{-- <div class="login-horizental cancel-wp pull-left">
-                                                <a href="{{ route('add-design-upload') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Design</button></a>
-                                        </div> --}}
-                                    </div>
-                                    <div class="col-lg-10"></div>
-                                </div>
                             </div>
                         </div>
 
@@ -38,18 +29,8 @@
                                 <p><strong>Danger!</strong> {{ Session::get('msg') }}</p>
                             </div>
                         @endif
-
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -83,13 +64,10 @@
                                                     <td>{{ucwords($data->quantity)}}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
-                                                  
                                                 <td> <a class="img-size"
                                                         href="{{ Config::get('FileConstant.REQUISITION_VIEW') }}{{ $data['bom_file'] }}"
                                                         alt="bill of material" >Click to download</a>
                                                 </td>
-                                                 
-
                                                 </tr>
                                             @endforeach
                                         </tbody>

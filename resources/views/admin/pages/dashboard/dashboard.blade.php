@@ -1,4 +1,4 @@
-<!-- Static Table Start -->
+
 @extends('admin.layouts.master')
 @section('content')
     <!-- ============= pratiksha (21/08/24) =============  -->

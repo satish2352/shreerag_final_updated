@@ -1,4 +1,4 @@
-<!-- Static Table Start -->
+
 @extends('admin.layouts.master')
 @section('content')
     
@@ -11,14 +11,7 @@
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
                                 <h1>Logistics List</h1>
-                                <div class="form-group-inner login-btn-inner row">
-                                    <div class="col-lg-2">
-                                        {{-- <div class="login-horizental cancel-wp pull-left">
-                                                <a href="{{ route('add-design-upload') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Design</button></a>
-                                        </div> --}}
-                                    </div>
-                                    <div class="col-lg-10"></div>
-                                </div>
+                               
                             </div>
                         </div>
 
@@ -43,13 +36,7 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
+                               
 
 
                                 <div class="table-responsive">

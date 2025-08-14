@@ -8,11 +8,7 @@
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
                                 <h1>Production Completed List</h1>
-                                <div class="form-group-inner login-btn-inner row">
-                                    <div class="col-lg-2">
-                                    </div>
-                                    <div class="col-lg-10"></div>
-                                </div>
+                                
                             </div>
                         </div>
                         <div class="sparkline13-graph">

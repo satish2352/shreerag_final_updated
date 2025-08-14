@@ -1,4 +1,4 @@
-<!-- Static Table Start -->
+
 @extends('admin.layouts.master')
 @section('content')
 <style>

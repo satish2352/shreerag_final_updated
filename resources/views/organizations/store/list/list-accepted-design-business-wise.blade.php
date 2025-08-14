@@ -1,4 +1,4 @@
-<!-- Static Table Start -->
+
 @extends('admin.layouts.master')
 @section('content')
     <style>
@@ -24,14 +24,6 @@
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
                                 <h1>Material Need To Sent To<span class="table-project-n"> Production</span> Department</h1>
-                                <div class="form-group-inner login-btn-inner row">
-                                    <div class="col-lg-2">
-                                        {{-- <div class="login-horizental cancel-wp pull-left">
-                                                <a href="{{ route('add-design-upload') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Design</button></a>
-                                        </div> --}}
-                                    </div>
-                                    <div class="col-lg-10"></div>
-                                </div>
                             </div>
                         </div>
 
@@ -56,15 +48,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -120,23 +103,6 @@
                                                             <div style="display: inline-block; align-items: center; margin-right: 10px;">
                                                                 <a href="{{route('edit-material-list-bom-wise-new-req',base64_encode($data->business_details_id))}}"><button data-toggle="tooltip" style="padding: 7px;" title="View Details" class="btn-bg-colour">Issue Product Material</button></a>
                                                             </div>
-                                                            {{-- @if($data->material_send_production == 1)
-                                                            <a href="{{ route('accepted-and-material-sent', base64_encode($data->business_details_id)) }}">
-                                                                <button class="pd-setting-ed enabled-btn" style="width: 200px;" title="Requirement forwarded for production">Requirement forwarded For production</button>
-                                                            </a>
-                                                        @else
-                                                        <button class="pd-setting-ed disabled-btn" style="width: 200px;"  title="Requirement forwarded for production" disabled>Requirement forwarded For production</button>  
-                                                        @endif --}}
-                                                            {{-- <a
-                                                                href="{{ route('accepted-and-material-sent', base64_encode($data->business_details_id)) }} "><button
-                                                                    data-toggle="tooltip" title="Requirement forwareded For production"
-                                                                    class="pd-setting-ed">Requirement forwareded For production</button></a> --}}
-
-                                                            {{-- <a
-                                                                href="{{ route('need-to-create-req', base64_encode($data->productionId)) }} "><button
-                                                                    data-toggle="tooltip" title="Need To Purchase"
-                                                                    class="pd-setting-ed">Need To Purchase</button></a> --}}
-
                                                                     <a
                                                                     href="{{ route('need-to-create-req', base64_encode($data->business_details_id)) }} "><button
                                                                         data-toggle="tooltip" title="Need To Purchase"

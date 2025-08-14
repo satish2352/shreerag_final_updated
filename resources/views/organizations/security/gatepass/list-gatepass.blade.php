@@ -1,4 +1,4 @@
-<!-- Static Table Start -->
+
 @extends('admin.layouts.master')
 @section('content')
     <style>
@@ -17,11 +17,7 @@
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
                                 <h1>Gatepass <span class="table-project-n">Data</span> Table</h1>
-                                <div class="form-group-inner login-btn-inner row">
-                                    <div class="col-lg-2">
-                                    </div>
-                                    <div class="col-lg-10"></div>
-                                </div>
+                                
                             </div>
                         </div>
 
