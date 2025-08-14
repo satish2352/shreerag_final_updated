@@ -40,7 +40,7 @@
                                                     <td>{{ ucwords($data->title) }}</td>
                                                 <td>
                                                     <div style="display: inline-block; align-items: center;">
-                                                        <a href="{{route('list-final-purchase-order-production', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="btn-bg-colour">View Details</button></a>
+                                                        <a href="{{route('list-final-purchase-order-production', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="btn btn-sm btn-bg-colour">View Details</button></a>
                                                     </div>
                                                 </td>
                                                 </tr>

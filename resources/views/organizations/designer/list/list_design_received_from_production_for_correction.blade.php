@@ -7,27 +7,9 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Corected Design Need To Upload <span class="table-project-n"></span></h1>
+                                <h1>Corected Design Need To Upload</h1>
                             </div>
                         </div>
-
-                        @if (Session::get('status') == 'success')
-                            <div class="alert alert-success alert-success-style1">
-                                <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
-                                    <span class="icon-sc-cl" aria-hidden="true">&times;</span>
-                                </button>
-                                <p><strong>Success!</strong> {{ Session::get('msg') }}</p>
-                            </div>
-                        @endif
-                        @if (Session::get('status') == 'error')
-                            <div class="alert alert-danger alert-mg-b alert-success-style4">
-                                <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
-                                    <span class="icon-sc-cl" aria-hidden="true">&times;</span>
-                                </button>
-                                <i class="fa fa-times adminpro-danger-error admin-check-pro" aria-hidden="true"></i>
-                                <p><strong>Danger!</strong> {{ Session::get('msg') }}</p>
-                            </div>
-                        @endif
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
                                 <div class="table-responsive">

@@ -88,7 +88,8 @@
                                         <span class="mini-click-non">List Organizations</span>
                                     </a>
                                 </li>
-                                <li>
+                                
+                                <li class="{{ Request::is('hr/users-leaves-details/*') || Request::is('hr/show-users/*') || Request::is('edit-users/*') ? 'active' : '' }}">
                                     <a href="{{ route('list-users') }}" aria-expanded="false"><i
                                             class="fa big-icon fa-users icon-wrap" aria-hidden="true"></i> <span
                                             class="mini-click-non">Add Employees</span></a>
@@ -209,7 +210,7 @@
                                         class="fa big-icon fa-users icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">Add Employees</span></a>
                             </li>
-                            <li class="nav-item {{ request()->is('owner/list-business') ? 'active' : '' }}">
+                             <li class="nav-item {{ request()->is('owner/list-business') || request()->is('owner/edit-business/*') ? 'active' : '' }}">
                                 <a href="{{ route('list-business') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-briefcase icon-wrap"></i> <span
                                         class="mini-click-non">Business</span></a>
@@ -219,36 +220,32 @@
                                         class="fa big-icon fa-paper-plane icon-wrap"></i> <span
                                         class="mini-click-non">Business Sent For Design</span></a>
                             </li>
-                             <li class="nav-item {{ request()->is('estimationdept/list-new-requirements-received-for-estimation') ? 'active' : '' }}">
+                             <li class="nav-item {{ request()->is('estimationdept/list-new-requirements-received-for-estimation') || request()->is('estimationdept/list-new-requirements-received-for-estimation-business-wise/*') ? 'active' : '' }}">
                                 <a href="{{ route('list-new-requirements-received-for-estimation') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-paper-plane icon-wrap"></i> <span
                                         class="mini-click-non">Design Dept Sent Design and BOM to Estimation Dept</span></a>
                             </li>
-                                 <li
-                                class="nav-item {{ request()->is('owner/list-design-received-estimation') ? 'active' : '' }}">
+                              <li class="nav-item {{ request()->is('owner/list-design-received-estimation') || request()->is('owner/list-design-received-estimation-business-wise/*') ? 'active' : '' }}">
+                             
                                 <a href="{{ route('list-design-received-estimation') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-check icon-wrap"></i> <span class="mini-click-non">Design and BOM 
                                         Received Estimation</span></a>
                             </li>
-                              <li
-                                class="nav-item {{ request()->is('owner/list-accept-bom-estimation') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('owner/list-accept-bom-estimation') || request()->is('owner/list-accept-bom-estimation-business-wise/*') ? 'active' : '' }}">
                                 <a href="{{ route('list-accept-bom-estimation') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-check icon-wrap"></i> <span class="mini-click-non">Accepted Estimation</span></a>
                             </li>
-                             <li
-                                class="nav-item {{ request()->is('owner/list-rejected-bom-estimation') ? 'active' : '' }}">
+                             <li class="nav-item {{ request()->is('owner/list-rejected-bom-estimation') || request()->is('owner/list-rejected-bom-estimation-business-wise/*') ? 'active' : '' }}">
                                 <a href="{{ route('list-rejected-bom-estimation') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-check icon-wrap"></i> <span class="mini-click-non">Rejected Estimation</span></a>
                             </li>
-                             <li
-                                class="nav-item {{ request()->is('owner/list-revised-bom-estimation') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('owner/list-revised-bom-estimation') || request()->is('owner/list-revised-bom-estimation-business-wise/*') ? 'active' : '' }}">
                                 <a href="{{ route('list-revised-bom-estimation') }}">
                                     <i class="fa fa-list-alt icon-wrap"></i>
                                     <span class="mini-click-non">Revised Estimation</span>
                                 </a>
                             </li>
-                            <li
-                                class="nav-item {{ request()->is('owner/list-design-uploaded-owner') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('owner/list-design-uploaded-owner') || request()->is('owner/list-design-uploaded-owner-business-wise/*') ? 'active' : '' }}">
                                 <a href="{{ route('list-design-uploaded-owner') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-check icon-wrap"></i> <span class="mini-click-non">Design
                                         Received For Production</span></a>
@@ -270,19 +267,17 @@
                                         class="fa big-icon fa-warehouse icon-wrap"></i> <span
                                         class="mini-click-non">Purchase Material Ask By Store To Purchase</span></a>
                             </li>
-                            <li class="nav-item {{ request()->is('owner/list-purchase-orders') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('owner/list-purchase-orders') || request()->is('owner/list-submit-final-purchase-order/*') || request()->is('owner/list-submit-final-purchase-order-particular-business/*')? 'active' : '' }}">
                                 <a href="{{ route('list-purchase-orders') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-file-invoice icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">Purchase order need to check</span></a>
                             </li>
-                            <li
-                                class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') || request()->is('owner/list-purchase-order-approved-bussinesswise/*') || request()->is('owner/list-submit-final-purchase-order-particular-business/*')? 'active' : '' }}">
                                 <a href="{{ route('list-approved-purchase-orders-owner') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-check icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">Purchase Order Approved</span></a>
                             </li>
-                            <li
-                                class="nav-item {{ request()->is('owner/list-rejected-purchase-orders-owner') ? 'active' : '' }}">
+                             <li class="nav-item {{ request()->is('owner/list-rejected-purchase-orders-owner') || request()->is('owner/list-purchase-order-rejected-bussinesswise/*') || request()->is('owner/list-submit-final-purchase-order-particular-business/*')? 'active' : '' }}">
                                 <a href="{{ route('list-rejected-purchase-orders-owner') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-file-invoice icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">Purchase Order Rejected</span></a>
@@ -303,9 +298,7 @@
                                         class="fa big-icon fa-clipboard-check icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">Material Received for GRN Generate</span></a>
                             </li>
-
-                            <li
-                                class="nav-item {{ request()->is('owner/list-material-sent-to-store-generated-grn') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('owner/list-material-sent-to-store-generated-grn') || request()->is('owner/list-material-sent-to-store-generated-grn-businesswise/*') ? 'active' : '' }}">
                                 <a href="{{ route('list-material-sent-to-store-generated-grn') }}"><i
                                         class="fa big-icon fa-clipboard-list icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">Generated GRN Material send Quality Dept to Store
@@ -354,7 +347,7 @@
                                         class="fa fa-truck icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">Dispatch Dept Production Dispatch Completed</span></a>
                             </li>
-                            <li class="nav-item {{ request()->is('storedept/list-rejected-chalan-updated') ? 'active' : '' }}" >
+                             <li class="nav-item {{ request()->is('storedept/list-rejected-chalan-updated') || request()->is('owner/list-revised-bom-estimation-business-wise/*') ? 'active' : '' }}">
                                 <a href="{{ route('list-rejected-chalan-updated') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-times-circle icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">List Rejected Chalan</span></a>
@@ -379,15 +372,10 @@
                                         aria-hidden="true"></i> <span class="mini-click-non">PO Payment Release to
                                         Vendor By Fianance</span></a>
                             </li>
-
-                            <li><a href="{{ route('list-rules-regulations') }}" aria-expanded="false"><i
+                            {{-- <li><a href="{{ route('list-rules-regulations') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-file-alt  icon-wrap" aria-hidden="true"></i> <span
-                                        class="mini-click-non">Rules and Regulations</span></a></li>
-                           
-                           
-                          
-
-                        </ul>
+                                        class="mini-click-non">Rules and Regulations</span></a></li> --}}
+                      </ul>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.PURCHASE'))
                         <li class="nav-item {{ request()->is('purchase/dashboard') ? 'active' : '' }}">
@@ -510,20 +498,17 @@
                             <a href="{{ route('dashboard') }}"><i class="fa big-icon fa-envelope icon-wrap"
                                     aria-hidden="true"></i> <span class="mini-click-non">Dashboard</span></a>
                         </li>
-                        <li
-                            class="nav-item {{ request()->is('designdept/list-new-requirements-received-for-design') ? 'active' : '' }}">
+                         <li class="nav-item {{ request()->is('designdept/list-new-requirements-received-for-design') || request()->is('designdept/list-new-requirements-received-for-design-businesswise/*') || request()->is('designdept/add-design-upload/*') ? 'active' : '' }}">
                             <a class="" href="{{ route('list-new-requirements-received-for-design') }}"
                                 aria-expanded="false"><i class="fa big-icon fa-briefcase   icon-wrap"></i> <span
                                     class="mini-click-non">New Business<br> Received For Design</span></a>
                         </li>
-                        <li class="nav-item {{ request()->is('designdept/list-design-upload') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('designdept/list-design-upload') || request()->is('owner/list-design-uploaded-owner-business-wise/*') ? 'active' : '' }}">
                             <a class="" href="{{ route('list-design-upload') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-paper-plane icon-wrap"></i> <span
                                     class="mini-click-non">Designs Sent To Estimation</span></a>
                         </li>
-
-                        <li
-                            class="nav-item {{ request()->is('designdept/list-reject-design-from-prod') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('designdept/list-reject-design-from-prod') || request()->is('designdept/add-re-upload-design/*') ? 'active' : '' }}">
                             <a class="" href="{{ route('list-reject-design-from-prod') }}"
                                 aria-expanded="false"><i class="fa big-icon fa-ban  icon-wrap"></i> <span
                                     class="mini-click-non">Rejected Design List</span></a>
@@ -561,29 +546,25 @@
                                 <a href="{{ route('dashboard') }}"><i class="fa big-icon fa-envelope icon-wrap"
                                         aria-hidden="true"></i> <span class="mini-click-non">Dashboard</span></a>
                             </li>
-
-                            <li
-                                class="nav-item {{ request()->is('estimationdept/list-new-requirements-received-for-estimation') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('estimationdept/list-new-requirements-received-for-estimation') || request()->is('estimationdept/list-new-requirements-received-for-estimation-business-wise/*') || request()->is('estimationdept/edit-estimation/*') ? 'active' : '' }}">
                                 <a href="{{ route('list-new-requirements-received-for-estimation') }}">
                                     <i class="fa big-icon fa-files-o icon-wrap"></i>
                                     <span class="mini-click-non">New Design List</span>
                                 </a>
                             </li>
-                             <li
-                                class="nav-item {{ request()->is('estimationdept/list-updated-estimation-send-to-owner') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('estimationdept/list-updated-estimation-send-to-owner') || request()->is('estimationdept/list-updated-estimation-send-to-owner-business-wise/*') ? 'active' : '' }}">                           
                                 <a href="{{ route('list-updated-estimation-send-to-owner') }}">
                                     <i class="fa big-icon fa-files-o icon-wrap"></i>
                                     <span class="mini-click-non">Updated Estimation Send to Owner</span>
                                 </a>
                             </li>
-                            <li class="nav-item {{ request()->is('estimationdept/list-accept-bom-estimation*') ? 'active' : '' }}">
+                             <li class="nav-item {{ request()->is('owner/list-accept-bom-estimation') || request()->is('owner/list-accept-bom-estimation-business-wise/*') ? 'active' : '' }}">
                                 <a href="{{ route('list-accept-bom-estimation') }}">
                                     <i class="fa fa-check-circle icon-wrap"></i>
                                     <span class="mini-click-non">Accepted Estimation</span>
                                 </a>
                             </li>
-
-                            <li class="nav-item {{ request()->is('estimationdept/list-rejected-bom-estimation') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('owner/list-rejected-bom-estimation') || request()->is('owner/list-rejected-bom-estimation-business-wise/*') || request()->is('estimationdept/edit-revised-bom-material-estimation/*') ? 'active' : '' }}">
                                 <a href="{{ route('list-rejected-bom-estimation') }}">
                                     <i class="fa fa-ban  icon-wrap"></i>
                                     <span class="mini-click-non">Rejected Estimation</span>
@@ -607,9 +588,7 @@
                                 <a href="{{ route('dashboard') }}"><i class="fa big-icon fa-envelope icon-wrap"
                                         aria-hidden="true"></i> <span class="mini-click-non">Dashboard</span></a>
                             </li>
-
-                            <li
-                                class="nav-item {{ request()->is('proddept/list-new-requirements-received-for-production') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('proddept/list-new-requirements-received-for-production') || request()->is('proddept/list-new-requirements-received-for-production-business-wise/*') || request()->is('proddept/reject-design-edit/*') ? 'active' : '' }}">
                                 <a href="{{ route('list-new-requirements-received-for-production') }}">
                                     <i class="fa big-icon fa-files-o icon-wrap"></i>
                                     <span class="mini-click-non">New Design List</span>
@@ -629,17 +608,13 @@
                                     <span class="mini-click-non">Rejected Design List</span>
                                 </a>
                             </li>
-
-                            <li
-                                class="nav-item {{ request()->is('proddept/list-revislist-material-reciveded-design') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('proddept/list-revislist-material-reciveded-design') || request()->is('proddept/reject-design-edit/*') ? 'active' : '' }}">
                                 <a href="{{ route('list-revislist-material-reciveded-design') }}">
                                     <i class="fa fa-list-alt icon-wrap"></i>
                                     <span class="mini-click-non">Revised Design List</span>
                                 </a>
                             </li>
-
-                            <li
-                                class="nav-item {{ request()->is('proddept/list-material-recived') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('proddept/list-material-recived') || request()->is('proddept/list-final-purchase-order-production/*') || request()->is('proddept/edit-recived-inprocess-production-material/*') || request()->is('proddept/edit-recived-bussinesswise-quantity-tracking/*') ? 'active' : '' }}">                            
                                 <a href="{{ route('list-material-recived') }}">
                                     <i class="fa fa-box   icon-wrap"></i>
                                     <span class="mini-click-non">Tracking Material</span>
@@ -652,9 +627,7 @@
                                     <span class="mini-click-non">Production Completed</span>
                                 </a>
                             </li>
-
-                            <li
-                                class="nav-item {{ request()->is('proddept/list-final-prod-completed-send-to-logistics-tracking') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->is('proddept/list-final-prod-completed-send-to-logistics-tracking') || request()->is('proddept/list-final-prod-completed-send-to-logistics-tracking-product-wise/*')  ? 'active' : '' }}">                            
                                 <a href="{{ route('list-final-prod-completed-send-to-logistics-tracking') }}">
                                     <i class="fa fa-check-circle icon-wrap"></i>
                                     <span class="mini-click-non">Tracking Of Send Material To Logistics Dept</span>
@@ -760,8 +733,7 @@
 
                             </ul>
                         </li>
-                        <li
-                            class="nav-item {{ request()->is('storedept/list-accepted-design-from-prod') ? 'active' : '' }}">
+                         <li class="nav-item {{ request()->is('storedept/list-accepted-design-from-prod') || request()->is('storedept/list-accepted-design-from-prod-business-wise/*') || request()->is('storedept/need-to-create-req/*') || request()->is('storedept/edit-material-list-bom-wise-new-req/*') ? 'active' : '' }}">
                             <a href="{{ route('list-accepted-design-from-prod') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-list icon-wrap"></i> <span class="mini-click-non">All
                                     New Requirements</span></a>
@@ -776,9 +748,7 @@
                                 <span class="mini-click-non">Material For Purchase</span>
                             </a>
                         </li>
-
-                        <li
-                            class="nav-item {{ request()->is('storedept/list-material-received-from-quality-bussinesswise-tracking') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('storedept/list-material-received-from-quality-bussinesswise-tracking') || request()->is('storedept/list-grn-details-po-tracking/*') ? 'active' : '' }}">
                             <a href="{{ route('list-material-received-from-quality-bussinesswise-tracking') }}">
                                 <i class="fa big-icon fa-box-open icon-wrap"></i>
                                 <span class="mini-click-non">Material Received From Quality</span>
@@ -791,11 +761,12 @@
                                 <span class="mini-click-non">Material Received PO Tracking</span>
                             </a>
                         </li>
-
-                        <li><a href="{{ route('list-rejected-chalan') }}"><i class="fa big-icon fa-ban  icon-wrap"
+                        <li class="nav-item {{ request()->is('storedept/list-rejected-chalan') || request()->is('storedept/add-rejected-chalan/*') ? 'active' : '' }}">
+                        <a href="{{ route('list-rejected-chalan') }}"><i class="fa big-icon fa-ban  icon-wrap"
                                     aria-hidden="true"></i> <span class="mini-click-non">Create Rejected
                                     Chalan</span></a></li>
-                        <li><a href="{{ route('list-rejected-chalan-updated') }}"><i
+                           <li class="nav-item {{ request()->is('storedept/list-rejected-chalan-updated') || request()->is('storedept/list-rejected-chalan-details/*') ? 'active' : '' }}">           
+                        <a href="{{ route('list-rejected-chalan-updated') }}"><i
                                     class="fa big-icon fa-ban  icon-wrap" aria-hidden="true"></i> <span
                                     class="mini-click-non">List Rejected Chalan</span></a></li>
 
@@ -830,13 +801,16 @@
 
                             </ul>
                         </li>
-                        <li><a href="{{ route('list-inventory-material') }}"><i
+                        <li class="nav-item {{ request()->is('storedept/list-inventory-material') || request()->is('storedept/add-product-stock/*') || request()->is('storedept/edit-product-stock/*') ? 'active' : '' }}">
+                        <a href="{{ route('list-inventory-material') }}"><i
                                     class="fa big-icon fa-box-open icon-wrap" aria-hidden="true"></i> <span
                                     class="mini-click-non">Inventory Material List</span></a></li>
-                        <li><a href="{{ route('list-delivery-chalan') }}"><i class="fa fa-clipboard-list icon-wrap"
+                          <li class="nav-item {{ request()->is('storedept/list-delivery-chalan') || request()->is('storedept/show-delivery-chalan/*') || request()->is('storedept/edit-delivery-chalan/*') ? 'active' : '' }}">           
+                        <a href="{{ route('list-delivery-chalan') }}"><i class="fa fa-clipboard-list icon-wrap"
                                     aria-hidden="true"></i> <span class="mini-click-non">Delivery Challan</span></a>
                         </li>
-                        <li><a href="{{ route('list-returnable-chalan') }}"><i
+                         <li class="nav-item {{ request()->is('storedept/list-returnable-chalan') || request()->is('storedept/add-returnable-chalan/*') || request()->is('storedept/edit-returnable-chalan/*') || request()->is('storedept/show-returnable-chalan/*') ? 'active' : '' }}">           
+                        <a href="{{ route('list-returnable-chalan') }}"><i
                                     class="fa fa-clipboard-list icon-wrap" aria-hidden="true"></i> <span
                                     class="mini-click-non">Returnable Challan</span></a></li>
                                     
@@ -1113,6 +1087,7 @@
                         session()->get('role_id') != config('constants.ROLE_ID.CMS') &&
                         session()->get('role_id') != config('constants.ROLE_ID.SUPER')
                     )
+                    
                     <li class="nav-item">
                             <a class="nav-item" href="{{ route('list-leaves') }}" aria-expanded="false">
                                 <i class="fa big-icon fa-paper-plane icon-wrap"></i>

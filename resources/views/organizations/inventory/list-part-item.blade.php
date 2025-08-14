@@ -1,4 +1,3 @@
-<!-- Static Table Start -->
 @extends('admin.layouts.master')
 @section('content')
 <style>
@@ -9,24 +8,7 @@
     pointer-events: none; /* Prevent clicks */
     opacity: 0.5; /* Visual indication of being disabled */
 }
-
-/*
-#table thead th {
-    white-space: nowrap;
-}
-#table thead th{
-    width: 300px !important; 
-    padding-right: 49px !important;
-padding-left: 20px !important;
-}
-.custom-datatable-overright table tbody tr td {
-    padding-left: 19px !important;
-    padding-right: 5px !important;
-    font-size: 14px;
-    text-align: left;
-} */
 </style>
-
 <div class="data-table-area mg-tb-15">
     <div class="container-fluid">
         <div class="row">
@@ -67,13 +49,6 @@ padding-left: 20px !important;
 
                     <div class="sparkline13-graph">
                         <div class="datatable-dashv1-list custom-datatable-overright">
-                            {{-- <div id="toolbar">
-                                <select class="form-control">
-                                    <option value="">Export Basic</option>
-                                    <option value="all">Export All</option>
-                                    <option value="selected">Export Selected</option>
-                                </select>
-                            </div>                          --}}
                             <div class="table-responsive"> 
                                 <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                     data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -83,7 +58,6 @@ padding-left: 20px !important;
                                     <thead>
                                         <tr>
                                              <th data-field="id">Sr.No.</th>
-                                            {{-- <th data-field="part_number" data-editable="false">Part Number</th> --}}
                                             <th data-field="description" data-editable="false">Description</th>
                                             <th data-field="quantity" data-editable="false">Quantity</th>
                                             <th data-field="unit_id" data-editable="false">Unit</th>
@@ -91,18 +65,12 @@ padding-left: 20px !important;
                                             <th data-field="group_type_id" data-editable="false">Group</th>
                                             <th data-field="rack_no" data-editable="false">Rack No.</th>
                                             <th data-field="action">Action</th>
-                                            {{-- <th data-field="extra_description" data-editable="false">Extra Description</th>
-   
-                                            <th data-field="basic_rate" data-editable="false">Basic Rate</th>
-                                            <th data-field="opening_stock" data-editable="false">Open Stock</th> --}}
-                                            {{--  --}}
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($getOutput as $data)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            {{-- <td>{{ucwords($data->part_number)}}</td> --}}
                                             <td>{{ucwords($data->description)}}</td>
                                             <td>
                                                 @if(is_null($data->quantity))
@@ -115,14 +83,6 @@ padding-left: 20px !important;
                                             <td>{{ucwords($data->hsn_name)}}</td>
                                             <td>{{ucwords($data->group_name)}}</td>
                                             <td>{{ucwords($data->rack_name)}}</td>
-                                            {{-- <td>{{ucwords($data->extra_description)}}</td>
-                                          
-                                       
-                                           
-                                            <td>{{ucwords($data->basic_rate)}}</td>
-                                            <td>{{ucwords($data->opening_stock)}}</td> --}}
-                                          
-                                          
                                                 <td>
                                                     <div style="display: flex; align-items: center;">
                                                         @if(is_null($data->quantity))
@@ -133,7 +93,7 @@ padding-left: 20px !important;
                                                             </a>
                                                         @else
                                                             <a href="{{route('edit-product-stock', base64_encode($data->id))}}">
-                                                                <button data-toggle="tooltip" title="Edit" class="pd-setting-ed">
+                                                                <button data-toggle="tooltip" title="Edit" class="btn btn-sm btn-bg-colour">
                                                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                                                 </button>
                                                             </a>

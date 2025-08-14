@@ -1,9 +1,9 @@
 @extends('admin.layouts.master')
 @section('content')
-<style>
-    .remaining_quantity{
-        background-color: #8cd9b3 !important;
-    }
+    <style>
+        .remaining_quantity {
+            background-color: #8cd9b3 !important;
+        }
     </style>
     <div class="row" id="printableArea">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -126,7 +126,7 @@
                                                         <input type="date" class="form-control" id="bill_date"
                                                             name="bill_date" placeholder=""
                                                             value="{{ $grn_data->bill_date }}" readonly>
-                                                        </div>
+                                                    </div>
                                                 </div>
 
                                                 <div style="margin-top:20px">
@@ -156,7 +156,8 @@
                                                                         value="{{ $item->part_description }}" readonly />
                                                                 </td>
                                                                 </td>
-                                                                <td><input type="text" name="addmore[0][po_description]"
+                                                                <td><input type="text"
+                                                                        name="addmore[0][po_description]"
                                                                         placeholder="Enter part_number"
                                                                         class="form-control"
                                                                         value="{{ $item->po_description }}" readonly />
@@ -189,25 +190,29 @@
                                                                         name="addmore[0][actual_quantity]"
                                                                         placeholder="Enter Actual Qty"
                                                                         class="form-control actual_quantity"
-                                                                        value="{{ $item->sum_actual_quantity }}" readonly />
+                                                                        value="{{ $item->sum_actual_quantity }}"
+                                                                        readonly />
                                                                 </td>
                                                                 <td><input type="text"
                                                                         name="addmore[0][accepted_quantity]"
                                                                         placeholder="Enter Accepted Qty"
                                                                         class="form-control accepted_quantity"
-                                                                        value="{{ $item->tracking_accepted_quantity }}" readonly />
+                                                                        value="{{ $item->tracking_accepted_quantity }}"
+                                                                        readonly />
                                                                 </td>
                                                                 <td><input type="text"
                                                                         name="addmore[0][rejected_quantity]"
                                                                         placeholder="Enter Rejected Qty"
                                                                         class="form-control rejected_quantity"
-                                                                        value="{{ $item->tracking_rejected_quantity }}" readonly />
+                                                                        value="{{ $item->tracking_rejected_quantity }}"
+                                                                        readonly />
                                                                 </td>
                                                                 <td><input type="text"
-                                                                    name="addmore[0][remaining_quantity]"
-                                                                    placeholder="Balance Qty" value="{{ $item->remaining_quantity }}"
-                                                                    class="form-control remaining_quantity" readonly />
-                                                            </td>
+                                                                        name="addmore[0][remaining_quantity]"
+                                                                        placeholder="Balance Qty"
+                                                                        value="{{ $item->remaining_quantity }}"
+                                                                        class="form-control remaining_quantity" readonly />
+                                                                </td>
                                                                 {{-- <td><button type="button" name="add" id="add"
                                                                         class="btn btn-success">Add More</button></td> --}}
                                                             </tr>
@@ -227,14 +232,13 @@
                                                             style="width:150px; height:150px; background-color: aliceblue;"
                                                             alt=" No Signature" />
                                                     </div>
-  <a style="padding-bottom: 100px; padding-left:20px;">
-        <button data-toggle="tooltip" onclick="printGRN()"  style="margin-top: 20px;">Print</button>
-    </a>
-
-
+                                                    <div class="d-flex justify-content-center mb-5">
+                                                        <button data-toggle="tooltip" onclick="printGRN()"
+                                                            class="btn btn-sm btn-bg-colour mt-3">
+                                                            Print
+                                                        </button>
+                                                    </div>
                                                 </div>
-
-
                                             </div>
                                         </form>
                                     </div>
@@ -246,14 +250,13 @@
             </div>
         </div>
     </div>
-   <script>
-   function printGRN() {
-    var contentToPrint = document.getElementById("printableArea").innerHTML;
-    var printWindow = window.open('', '', 'height=800,width=1200');
-
-    printWindow.document.write('<html><head><title>GRN Details</title>');
-    printWindow.document.write('<style>');
-    printWindow.document.write(`
+    <script>
+        function printGRN() {
+            var contentToPrint = document.getElementById("printableArea").innerHTML;
+            var printWindow = window.open('', '', 'height=800,width=1200');
+            printWindow.document.write('<html><head><title>GRN Details</title>');
+            printWindow.document.write('<style>');
+            printWindow.document.write(`
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
@@ -297,17 +300,14 @@
             }
         }
     `);
-    printWindow.document.write('</style></head><body>');
-    printWindow.document.write(contentToPrint);
-    printWindow.document.write('</body></html>');
-
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-    printWindow.close();
-}
-
-
-</script>
+            printWindow.document.write('</style></head><body>');
+            printWindow.document.write(contentToPrint);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+            printWindow.close();
+        }
+    </script>
 
 @endsection

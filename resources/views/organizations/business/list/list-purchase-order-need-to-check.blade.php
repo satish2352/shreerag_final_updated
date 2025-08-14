@@ -12,36 +12,8 @@
                             <div class="main-sparkline13-hd">
                                 <h1>Purchase Order Need To Check <span class="table-project-n"></span> From Purchase
                                     Department</h1>
-                                <div class="form-group-inner login-btn-inner row">
-                                    <div class="col-lg-2">
-                                        {{-- <div class="login-horizental cancel-wp pull-left">
-                                                <a href="{{ route('add-design-upload') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Design</button></a>
-                                        </div> --}}
-                                    </div>
-                                    <div class="col-lg-10"></div>
-                                </div>
                             </div>
-                        </div>
-
-                        @if (Session::get('status') == 'success')
-                            <div class="alert alert-success alert-success-style1">
-                                <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
-                                    <span class="icon-sc-cl" aria-hidden="true">&times;</span>
-                                </button>
-                                {{-- <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i> --}}
-                                <p><strong>Success!</strong> {{ Session::get('msg') }}</p>
-                            </div>
-                        @endif
-                        @if (Session::get('status') == 'error')
-                            <div class="alert alert-danger alert-mg-b alert-success-style4">
-                                <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
-                                    <span class="icon-sc-cl" aria-hidden="true">&times;</span>
-                                </button>
-                                <i class="fa fa-times adminpro-danger-error admin-check-pro" aria-hidden="true"></i>
-                                <p><strong>Danger!</strong> {{ Session::get('msg') }}</p>
-                            </div>
-                        @endif
-
+                        </div>                       
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
                                 <div class="table-responsive">
@@ -53,7 +25,8 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
-                                                <th data-field="grn_number" data-editable="false">Product Name</th>
+                                                 <th data-field="project_name" data-editable="false">Project Name</th>
+                                                <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="grn_date" data-editable="false">Description</th>
                                                 <th data-field="total_estimation_amount" data-editable="false">Estimation Amount</th>
                                                 <th data-field="action" data-editable="false">Action</th>
@@ -65,6 +38,7 @@
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
+                                                     <td>{{ ucwords($data->project_name) }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->total_estimation_amount) }}</td>
@@ -73,13 +47,11 @@
                                                             <a
                                                                 href="{{ route('list-submit-final-purchase-order', $data->id) }}"><button
                                                                     data-toggle="tooltip" title="Edit"
-                                                                    class="pd-setting-ed"><i class="fa fa-pencil-square-o"
+                                                                    class="btn-bg-colour"><i class="fa fa-pencil-square-o"
                                                                         aria-hidden="true"></i> Check Details</button></a>
                                                             &nbsp; &nbsp; &nbsp;
                                                         </div>
                                                     </td>
-
-
                                                 </tr>
                                             @endforeach
                                         </tbody>

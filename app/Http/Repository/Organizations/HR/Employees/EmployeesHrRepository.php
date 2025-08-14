@@ -294,6 +294,7 @@ class EmployeesHrRepository  {
 public function usersLeavesDetails($id)
 {
     try {
+		 $currentYear = date('Y');
         $user = User::leftJoin('tbl_roles', 'tbl_roles.id', '=', 'users.role_id')
             ->crossJoin('tbl_leave_management') 
             ->leftJoin('tbl_leaves', function($join) use ($id) {
@@ -312,6 +313,7 @@ public function usersLeavesDetails($id)
                 'tbl_roles.role_name',
                 'tbl_leave_management.name as leave_type_name',
                 'tbl_leave_management.leave_count',
+				 'tbl_leave_management.leave_year',
                 DB::raw('COALESCE(SUM(tbl_leaves.leave_count), 0) as total_leaves_taken'),
                 DB::raw('tbl_leave_management.leave_count - COALESCE(SUM(tbl_leaves.leave_count), 0) as remaining_leaves'),
                 DB::raw('IFNULL(MONTHNAME(MIN(STR_TO_DATE(tbl_leaves.leave_end_date, "%m/%d/%Y"))), "-") as month_name')
@@ -323,8 +325,10 @@ public function usersLeavesDetails($id)
                 'tbl_roles.role_name',
                 'tbl_leave_management.id',
                 'tbl_leave_management.name',
-                'tbl_leave_management.leave_count'
+                'tbl_leave_management.leave_count',
+				 'tbl_leave_management.leave_year',
             )
+			 ->orderByRaw("CASE WHEN tbl_leave_management.leave_year = ? THEN 0 ELSE 1 END", [$currentYear])
             ->orderBy('month_name', 'asc')
             ->get();
 

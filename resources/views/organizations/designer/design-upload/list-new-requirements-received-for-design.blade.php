@@ -25,7 +25,8 @@
                                                 <th data-field="date" data-editable="false">Sent Date</th>
                                                 <th data-field="project_name" data-editable="false">Project Name</th>
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
-                                                <th data-field="grand_total_amount" data-editable="false">Grand Total Amount</th>
+                                                <th data-field="grand_total_amount" data-editable="false">Grand Total Amount
+                                                </th>
                                                 <th data-field="purchase_id" data-editable="false">Remark</th>
                                                 <th data-field="action">Action</th>
                                             </tr>
@@ -44,8 +45,7 @@
                                                         <a
                                                             href="{{ route('list-new-requirements-received-for-design-businesswise', base64_encode($data->business_id)) }}"><button
                                                                 data-toggle="tooltip" title="Edit"
-                                                                class="pd-setting-ed"><i class="fa fa-pencil-square-o"
-                                                                    aria-hidden="true"></i> Check Details</button></a>
+                                                                class="btn btn-sm btn-bg-colour"> Check Details</button></a>
 
                                 </div>
 

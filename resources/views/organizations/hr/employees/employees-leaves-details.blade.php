@@ -24,7 +24,7 @@
                                     <strong>Role:</strong> {{ $user_detail[0]->role_name }}
                                 </div>
                                 <div class="col-lg-3 col-md-3 col-sm-3">
-                                    <a href="{{ url()->previous() }}" class="btn btn-primary mt-3">Back</a>
+                                    <a href="{{ url()->previous() }}" class="btn btn-bg-colour mt-3 mb-2">Back</a>
                                 </div>
                             </div>
                             <div class="datatable-dashv1-list custom-datatable-overright">
@@ -40,6 +40,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Sr. No</th>
+                                                 <th>Year</th>
                                                 <th>Leave Type</th>
                                 <th>Total Leaves</th>
                                 <th>Total Leaves Taken</th>
@@ -51,6 +52,7 @@
                                             @foreach($user_detail as $index => $leave)
                                             <tr>
                                                 <td>{{ $index + 1 }}</td>
+                                                 <td>{{ $leave->leave_year ?? '-' }}</td>
                                                 <td>{{ $leave->leave_type_name ?? '-' }}</td>
                                                 <td>{{ $leave->leave_count ?? '0' }}</td>
                                                 <td>{{ $leave->total_leaves_taken ?? '0' }}</td>

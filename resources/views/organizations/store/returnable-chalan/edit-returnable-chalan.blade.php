@@ -239,7 +239,7 @@
                                                                     <th>Amount</th>
                                                                   <th>
                                                                     <button type="button"
-                                                                        class="btn btn-sm btn-success font-18 mr-1"
+                                                                        class="btn btn-sm btn-bg-colour font-18 mr-1"
                                                                         id="edit_addmore_form"
                                                                         title="Add"
                                                                         data-repeater-create>

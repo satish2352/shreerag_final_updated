@@ -533,7 +533,7 @@ $previous_unused_leaves = DB::table('tbl_leave_management')
          ->where('business_application_processes.estimation_send_to_production', 1152)
         ->count(); 
         $owner_counts = [
-            'user_active_count' => $user_active_count,
+            'user active count' => $user_active_count,
             'active_businesses' => $active_count,
             'business_details' => $business_details_count,
             'business_completed' => $business_completed_count,

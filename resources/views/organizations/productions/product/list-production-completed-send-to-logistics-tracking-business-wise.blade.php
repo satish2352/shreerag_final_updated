@@ -1,23 +1,5 @@
 @extends('admin.layouts.master')
 @section('content')
-<style>
-    label {
-        margin-top: 20px;
-    }
-    label.error {
-        color: red;
-        font-size: 12px;
-    }
-    .disabled-row {
-        background-color: #f0f0f0;
-        opacity: 0.6;
-    }
-    .disabled-row input,
-    .disabled-row select,
-    .disabled-row button {
-        pointer-events: none;
-    }
-</style>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 200px;">
         <div class="sparkline12-list" >
@@ -30,24 +12,6 @@
                 <div class="basic-login-form-ad">
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            @if (Session::get('status') == 'success')
-                                <div class="col-12 grid-margin">
-                                    <div class="alert alert-custom-success" id="success-alert">
-                                        <button type="button" data-bs-dismiss="alert"></button>
-                                        <strong style="color: green;">Success!</strong> {{ Session::get('msg') }}
-                                    </div>
-                                </div>
-                            @endif
-
-                            @if (Session::get('status') == 'error')
-                                <div class="col-12 grid-margin">
-                                    <div class="alert alert-custom-danger" id="error-alert">
-                                        <button type="button" data-bs-dismiss="alert"></button>
-                                        <strong style="color: red;">Error!</strong> {!! session('msg') !!}
-                                    </div>
-                                </div>
-                            @endif
-
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="all-form-element-inner">
                                      <form action="{{ route('update-production', $id) }}" method="POST" id="addProductForm" enctype="multipart/form-data">
@@ -70,7 +34,7 @@
                                             <table class="table table-hover table-white" id="purchase_order_table">
                                                 <thead>
                                                     <tr>
-                                                        <th>#</th>
+                                                        <th>Sr. No.</th>
                                                         <th>Part Item</th>
                                                         <th>Quantity</th>
                                                         <th>Unit</th>
@@ -126,10 +90,4 @@
         </div>
     </div>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
-
 @endsection

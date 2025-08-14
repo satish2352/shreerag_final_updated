@@ -70,14 +70,14 @@ Route::group(['middleware' => ['admin']], function () {
     Route::any('/delete-roles/{id}', ['as' => 'delete-roles', 'uses' => 'App\Http\Controllers\Admin\Roles\RolesController@destroy']);
 
 
-    Route::get('/list-rules-regulations', ['as' => 'list-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@index']);
-    Route::get('/add-rules-regulations', ['as' => 'add-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@add']);
-    Route::post('/add-rules-regulations', ['as' => 'add-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@store']);
-    Route::get('/edit-rules-regulations/{edit_id}', ['as' => 'edit-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@edit']);
-    Route::post('/update-rules-regulations', ['as' => 'update-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@update']);
-    Route::post('/show-rules-regulations', ['as' => 'show-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@show']);
-    Route::any('/delete-rules-regulations/{id}', ['as' => 'delete-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@destroy']);
-    Route::post('/update-active-rules-regulations', ['as' => 'update-active-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@updateOne']);
+    // Route::get('/list-rules-regulations', ['as' => 'list-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@index']);
+    // Route::get('/add-rules-regulations', ['as' => 'add-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@add']);
+    // Route::post('/add-rules-regulations', ['as' => 'add-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@store']);
+    // Route::get('/edit-rules-regulations/{edit_id}', ['as' => 'edit-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@edit']);
+    // Route::post('/update-rules-regulations', ['as' => 'update-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@update']);
+    // Route::post('/show-rules-regulations', ['as' => 'show-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@show']);
+    // Route::any('/delete-rules-regulations/{id}', ['as' => 'delete-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@destroy']);
+    // Route::post('/update-active-rules-regulations', ['as' => 'update-active-rules-regulations', 'uses' => 'App\Http\Controllers\Admin\RulesAndRegulations\RulesAndRegulationsController@updateOne']);
 });
        
     Route::group(['prefix' => 'owner', 'middleware' => 'admin'], function () {
@@ -105,7 +105,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/material-ask-by-store-to-purchase', ['as' => 'material-ask-by-store-to-purchase', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllStoreDeptSentForPurchaseMaterials']);
         Route::get('/list-purchase-orders', ['as' => 'list-purchase-orders', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListPurchaseOrder']);
         Route::get('/list-approved-purchase-orders-owner', ['as' => 'list-approved-purchase-orders-owner', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListApprovedPurchaseOrderOwnerlogin']);
-        Route::get('/list-purchase-order-approved-bussiness-wise/{id}', ['as' => 'list-purchase-order-approved-bussiness-wise', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@submitFinalPurchaseOrder']);
+        Route::get('/list-purchase-order-approved-bussinesswise/{id}', ['as' => 'list-purchase-order-approved-bussinesswise', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@submitFinalPurchaseOrder']);
     
         Route::get('/list-rejected-purchase-orders-owner', ['as' => 'list-rejected-purchase-orders-owner', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getAllListRejectedPurchaseOrderOwnerlogin']);
         Route::get('/list-purchase-order-rejected-bussinesswise/{id}', ['as' => 'list-purchase-order-rejected-bussinesswise', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@getPurchaseOrderRejectedBusinessWise']);

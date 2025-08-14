@@ -258,7 +258,7 @@
                                                                                     <th class="col-md-1">Amount</th>
                                                                                     <th>
                                                                                         <button type="button"
-                                                                                            class="btn btn-sm btn-success font-18 mr-1"
+                                                                                            class="btn btn-sm btn-bg-colour font-18 mr-1"
                                                                                             id="add_more_btn"
                                                                                             title="Add"
                                                                                             data-repeater-create>

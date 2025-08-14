@@ -113,7 +113,7 @@
                                             alt="No Image" style="width: 100px; padding: 10px;" />
                                     </div>
                                     <!-- Title Section (Centered) -->
-                                    <div style="width: 60%; text-align: center;font-family: 'Font Awesome 5 Free ">
+                                    <div style="width: 60%; text-align: center;">
                                         <span style="font-size: 20px; font-weight: bold;">DELIVERY CHALLAN</span>
                                         <div style="text-align: center; margin-top: 5px;">
                                             <span style="font-size: 11px;"> (In Case of goods sent for the Job Work Under
@@ -126,8 +126,8 @@
                                 <!-- Details Section (Centered) -->
                             </div>
                             <table
-                                style="width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px; font-family: 'Font Awesome 5 Free">
-                                <tr>
+                                style="width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px;">
+                                <tr >
                                     <td style="width: 56%; padding: 10px; border: 1px solid black; padding: 5px">
                                         <strong>
                                             <p class="company-name-size"
@@ -171,7 +171,7 @@
                             </table>
                             <table style="width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px;">
                                 <thead>
-                                    <tr class="font-size-delivery" style="font-family: 'Font Awesome 5 Free">
+                                    <tr class="font-size-delivery">
                                         <th style="border: 1px solid black; padding: 5px;">No.</th>
                                         <th style="border: 1px solid black; padding: 5px; width:70px;">Part Item.</th>
                                         <th style="border: 1px solid black; padding: 5px;">Particulars</th>
@@ -187,7 +187,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($showData['purchaseOrderDetails'] as $index => $item)
-                                        <tr class="font-size-delivery" style="font-family: 'Font Awesome 5 Free">
+                                        <tr class="font-size-delivery">
                                             <td style="border: 1px solid black; padding: 5px; text-align: center;">
                                                 {{ $index + 1 }}</td>
                                             <td style="border: 1px solid black; padding: 5px;">{{ $item->part_number }}
@@ -218,7 +218,7 @@
                                     @endforeach
                                 </tbody>
                                 <tfoot style="border: 1px solid black;">
-                                    <tr style="font-family: 'Font Awesome 5 Free">
+                                    <tr>
                                         <td class="no-border" colspan="3">
                                             {{-- <strong>Terms & Condition :- {{ $getOrganizationData->terms_condition }}</strong> --}}
                                             <strong>Remark :- {{ $showData['purchaseOrder']->remark }}</strong>
@@ -235,35 +235,8 @@
                                                 ->filter(fn($item) => is_numeric($item->amount))
                                                 ->sum('amount') ?: '-' }}
                                         </td>
-                                        
                                     </tr>
-
-                                    {{-- <tr style="font-family: 'Font Awesome 5 Free">
-                                        @php
-                                            // Get the total amount from purchase order details
-                                            $totalAmount = $showData['purchaseOrderDetails']->sum('amount');
-
-                                            // Get tax percentage and type
-                                            $taxPercentage = $showData['purchaseOrder']->tax_number; // The tax percentage, e.g., 1%, 5%, etc.
-                                            $taxType = $showData['purchaseOrder']->tax_type; // The tax type (GST, SGST, etc.)
-
-                                            // Calculate the tax amount
-                                            $taxAmount = ($totalAmount * $taxPercentage) / 100;
-
-                                            // Calculate the final amount including tax
-                                            $finalAmount = $totalAmount + $taxAmount;
-                                        @endphp
-                                       
-                                        <td class="no-border" colspan="6"></td>
-                                        <td colspan="2" style="border: 1px solid black;" class="text-left">
-                                            {{ $taxType }} {{ $showData['purchaseOrder']->tax_number }}%
-                                        </td>
-                                        <td colspan="2" style="border: 1px solid black;" class="text-right">
-                                            {{ number_format($taxAmount, 2) }}
-                                        </td>
-                                    </tr> --}}
-
-                                    <tr style="font-family: 'Font Awesome 5 Free'">
+                                    <tr >
                                         @php
                                             // Safely filter numeric values for amount
                                             $totalAmount = $showData['purchaseOrderDetails']
@@ -291,7 +264,7 @@
                                         </td>
                                     </tr>
                                     
-                                    <tr style="border-bottom: 1px solid black; font-family: 'Font Awesome 5 Free">
+                                    <tr style="border-bottom: 1px solid black;">
                                         <td class="no-border" colspan="6">
                                             <div>
                                                 <p style="font-size: 15px;"> <strong>Vehicle
@@ -306,18 +279,18 @@
                                             {{-- <strong>{{ $showData['purchaseOrderDetails']->sum('amount') - $showData['purchaseOrderDetails']->sum('amount') * ($showData['purchaseOrder']->discount / 100) + ($showData['purchaseOrderDetails']->sum('amount') - $showData['purchaseOrderDetails']->sum('amount') * ($showData['purchaseOrder']->discount / 100)) * 0.09 * 2 }}</strong> --}}
                                         </td>
                                     </tr>
-                                    <tr style="padding-top:10px font-family: 'Font Awesome 5 Free">
+                                    <tr style="padding-top:10px">
                                         <td colspan="2" class="no-border">
                                         </td>
                                         <td colspan="7" class="no-border" style="padding-bottom: 40px;">
                                             <div class="company-name-size"
-                                                style="display: flex; justify-content: end; font-size:18px; text-transform: uppercase; font-family: 'Font Awesome 5 Free'; padding-top:20px;">
+                                                style="display: flex; justify-content: end; font-size:18px; text-transform: uppercase; padding-top:20px;">
                                                 <strong>For:
                                                     <span class="company-name-size">
                                                         {{ $getOrganizationData->company_name }}</span></strong></div>
                                         </td>
                                     </tr>
-                                    <tr style="height:80px; font-family: 'Font Awesome 5 Free">
+                                    <tr style="height:80px;">
 
                                         <td class="no-border" colspan="3"><strong>Signature of Receiver/Job
                                                 Worker</strong></td>

@@ -433,7 +433,7 @@
                         @if (empty($is_pdf))
                             <a>
                                 <button onclick="printInvoice()" style="margin: 20px;" type="button"
-                                    class="btn btn-primary print-btn m-4 print-button">Print</button>
+                                    class="btn  print-btn m-4 print-button btn-bg-colour">Print</button>
                             </a>
                         @endif
                         {{-- <a>

@@ -1,32 +1,5 @@
-<!-- Static Table Start -->
 @extends('admin.layouts.master')
 @section('content')
-    <style>
-        .fixed-table-loading {
-            display: none;
-        }
-
-        #table thead th {
-            white-space: nowrap;
-        }
-
-        #table thead th {
-            width: 300px !important;
-            padding-right: 49px !important;
-            padding-left: 20px !important;
-        }
-
-        .custom-datatable-overright table tbody tr td {
-            padding-left: 19px !important;
-            padding-right: 5px !important;
-            font-size: 14px;
-            text-align: left;
-        }
-
-        .btncolor {
-            color: gray !important;
-        }
-    </style>
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">
@@ -76,7 +49,7 @@
                                                         <div style="display: inline-block; align-items: center;">
                                                             @if ($disableButton)
                                                                 <button data-toggle="tooltip" title="Production Completed"
-                                                                    class="pd-setting-ed btncolor" disabled>
+                                                                    class="btn btn-sm btn-lg-colour" disabled>
                                                                     <i class="fa fa-check" aria-hidden="true"></i> Edit
                                                                     Product
                                                                 </button>
@@ -85,7 +58,7 @@
                                                                     <a
                                                                         href="{{ route('edit-recived-bussinesswise-quantity-tracking', $data->business_details_id) }}">
                                                                         <button data-toggle="tooltip" title="View Details"
-                                                                            class="pd-setting-ed btncolor" disabled>
+                                                                            class="btn btn-sm btn-lg-colour" disabled>
                                                                             Production Completed
                                                                         </button>
                                                                     </a>

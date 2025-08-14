@@ -131,17 +131,15 @@
                                                             name="completed_quantity" value=""
                                                             placeholder="Enter Completed Quantity">
                                                     </div>
-                                                    {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="description">Description:</label>
-                                                <input type="text" class="form-control" id="description" name="description" value="{{ $productDetails->description }}" placeholder="Enter Description" readonly>
-                                            </div> --}}
+                                                
                                                 </div>
 
 
-                                                <div class="login-btn-inner marg-top">
-                                                    <button class="btn btn-sm btn-primary" type="submit">Submit Completed
-                                                        Quantity</button>
+                                                <div class="login-btn-inner marg-top d-flex justify-content-center">
+                                                    <a href="{{ route('list-material-recived') }}" class="btn btn-white me-2">Cancel</a>
+                                                    <button class="btn btn-sm btn-bg-colour" type="submit">Submit Completed Quantity</button>
                                                 </div>
+
                                         </form>
 
                                     </div>

@@ -1,8 +1,5 @@
-<!-- Static Table Start -->
 @extends('admin.layouts.master')
 @section('content')
-    
-
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">
@@ -11,47 +8,10 @@
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
                                 <h1>Corected Design List Received From  <span class="table-project-n">Design</span> Department</h1>
-                                <div class="form-group-inner login-btn-inner row">
-                                    <div class="col-lg-2">
-                                        {{-- <div class="login-horizental cancel-wp pull-left">
-                                                <a href="{{ route('add-design-upload') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Design</button></a>
-                                        </div> --}}
-                                    </div>
-                                    <div class="col-lg-10"></div>
-                                </div>
                             </div>
-                        </div>
-
-                        @if (Session::get('status') == 'success')
-                            <div class="alert alert-success alert-success-style1">
-                                <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
-                                    <span class="icon-sc-cl" aria-hidden="true">&times;</span>
-                                </button>
-                                {{-- <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i> --}}
-                                <p><strong>Success!</strong> {{ Session::get('msg') }}</p>
-                            </div>
-                        @endif
-                        @if (Session::get('status') == 'error')
-                            <div class="alert alert-danger alert-mg-b alert-success-style4">
-                                <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
-                                    <span class="icon-sc-cl" aria-hidden="true">&times;</span>
-                                </button>
-                                <i class="fa fa-times adminpro-danger-error admin-check-pro" aria-hidden="true"></i>
-                                <p><strong>Danger!</strong> {{ Session::get('msg') }}</p>
-                            </div>
-                        @endif
-
+                        </div>                       
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                {{-- <div id="toolbar">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div> --}}
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -60,7 +20,6 @@
                                         data-click-to-select="true" data-toolbar="#toolbar">
                                         <thead>
                                             <tr>
-                                                
                                                 <th data-field="id">ID</th>
                                                 <th data-field="date" data-editable="false">Sent Date</th>
                                                 <th data-field="project_name" data-editable="false">Project Name</th>
@@ -93,14 +52,6 @@
                                                     <td>{{ucwords($data->quantity)}}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                     <td>{{ ucwords($data->reject_reason_prod) }}</td>
-                                                    {{-- <td> <a class="img-size" target="_blank"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
-                                                        alt="Design"> Click to view</a>
-                                                </td>
-                                                <td> <a class="img-size"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                        alt="bill of material" >Click to download</a>
-                                                </td> --}}
                                                 <td> <a class="img-size" target="_blank"
                                                     href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
                                                     alt="Design"> Click to view</a>
@@ -130,20 +81,8 @@
                                                     <a href="{{ route('reject-design-edit', base64_encode($data->business_details_id)) }}"><button
                                                             data-toggle="tooltip" title="Rejected BOM Estimation" class="reject-btn">Reject</button></a> &nbsp;
                                                     &nbsp; &nbsp;
-
-                                                            {{-- <a href="{{route('reject-design-edit', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed mb-4"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Reject</button></a> &nbsp;
-                                                                        <a href="{{ route('accept-design', base64_encode($data->id)) }}"
-                                                                            onclick="return confirmAccept('{{ route('accept-design', base64_encode($data->id)) }}')"
-                                                                            class="pd-setting-ed"
-                                                                            data-toggle="tooltip"
-                                                                            title="Accept">
-                                                                            <button><i class="fa fa-check" aria-hidden="true"></i> Accept </button>
-                                                                        </a> --}}
                                                         </div>
                                                     </td>
-
-
-
                                                 </tr>
                                             @endforeach
                                         </tbody>
