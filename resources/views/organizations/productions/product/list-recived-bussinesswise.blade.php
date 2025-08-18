@@ -7,7 +7,7 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Material Received From Store Department BusinessWise<span class="table-project-n"></span>
+                                <h1>Material Received From Store Department BusinessWise
                                 </h1>
                             </div>
                         </div>
@@ -67,7 +67,7 @@
                                                                 <a
                                                                     href="{{ route('edit-recived-inprocess-production-material', $data->business_details_id) }}">
                                                                     <button data-toggle="tooltip" title="Edit Product"
-                                                                        class="btn-bg-colour">
+                                                                        class="btn btn-sm btn-bg-colour">
                                                                         <i class="fa fa-edit" aria-hidden="true"></i> Edit
                                                                         Product
                                                                     </button>
@@ -77,7 +77,7 @@
                                                                     <a
                                                                         href="{{ route('edit-recived-bussinesswise-quantity-tracking', $data->business_details_id) }}">
                                                                         <button data-toggle="tooltip" title="View Details"
-                                                                            class="btn-bg-colour"><i class="fa fa-edit" aria-hidden="true"></i> Submit Production Competed Quantity</button>
+                                                                            class="btn btn-sm btn-bg-colour"><i class="fa fa-edit" aria-hidden="true"></i> Submit Production Competed Quantity</button>
                                                                     </a>
                                                                 </div>
                                                             @endif

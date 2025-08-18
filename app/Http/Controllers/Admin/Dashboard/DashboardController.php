@@ -220,16 +220,13 @@ class DashboardController extends Controller {
         ->where('tbl_customer_product_quantity_tracking.fianace_list_status','Send_Dispatch')
         ->count();
         $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN')];
-         $business_received_for_designs= DesignModel::leftJoin('businesses', function($join) {
-                $join->on('designs.business_id', '=', 'businesses.id');
-              })
-              ->leftJoin('business_application_processes', function($join) {
-                $join->on('designs.business_id', '=', 'business_application_processes.business_id');
+         $business_received_for_designs= DesignModel::leftJoin('business_application_processes', function($join) {
+                $join->on('designs.business_details_id', '=', 'business_application_processes.business_details_id');
               })
               ->whereIn('business_application_processes.design_status_id',$array_to_be_check)
-              ->where('businesses.is_active',true)
-              ->where('businesses.is_deleted', 0)
-              ->distinct('businesses.id')
+              ->where('business_application_processes.is_active',true)
+              ->where('business_application_processes.is_deleted', 0)
+            //   ->distinct('businesses.id')
              ->count();      
         $array_to_be_check_send_production = [
             config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN'),
@@ -273,8 +270,8 @@ class DashboardController extends Controller {
         ->where('businesses.is_active', true)
         ->where('businesses.is_deleted', 0)
         ->count();
-        $design_recived_for_production = BusinessApplicationProcesses::where('business_status_id',1112)->where('design_status_id', 1113)
-        ->where('production_status_id', 1113)
+        $design_recived_for_production = BusinessApplicationProcesses::where('business_status_id',1112)->where('estimation_send_to_production', 1152)
+        ->where('off_canvas_status', 33)
         ->where('is_deleted', 0)
         ->where('is_active',1)->count();
         
@@ -548,12 +545,14 @@ $previous_unused_leaves = DB::table('tbl_leave_management')
                 $join->on('business_application_processes.business_id', '=', 'businesses.id');
             })
         ->where('business_application_processes.owner_bom_accepted', 1150)
+         ->whereNull('business_application_processes.estimation_send_to_production')
         ->count(); 
 
          $estimation_rejected_bom= BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
                 $join->on('business_application_processes.business_id', '=', 'businesses.id');
             })
          ->where('business_application_processes.owner_bom_rejected', 1151)
+          ->whereNull('business_application_processes.owner_bom_accepted')
         ->count(); 
 
           $estimation_send_tp_production= BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
@@ -1187,12 +1186,13 @@ $previous_unused_leaves = DB::table('tbl_leave_management')
             ];
             $count = $received_fianance_to_dispatch_count;
         }
-         elseif($ses_userId == '16'){
+         elseif($ses_userId == '15'){
 
            $received_design = NotificationStatus::where('off_canvas_status',12)
                     ->where('estimation_view','0')
                     ->select('id')
                     ->get();
+                    
                     $received_design_for_estimation = $received_design->count();
 
                     $notifications[] = ['admin_count' => $received_design_for_estimation,

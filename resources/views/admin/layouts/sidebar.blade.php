@@ -755,7 +755,7 @@
                         <li
                             class="nav-item {{ request()->is('storedept/list-material-received-from-quality-po-tracking') ? 'active' : '' }}">
                             <a href="{{ route('list-material-received-from-quality-po-tracking') }}">
-                                <i class="fa fa-clipboard-list icon-wrap"></i>
+                                <i class="fa fa-clipboard-list icon-wrap"></i> <span class="mini-click-non">Tracking Material</span>
                         </li>
                         <li class="nav-item {{ request()->is('storedept/list-rejected-chalan') || request()->is('storedept/add-rejected-chalan/*') ? 'active' : '' }}">
                         <a href="{{ route('list-rejected-chalan') }}"><i class="fa big-icon fa-ban  icon-wrap"

@@ -294,8 +294,8 @@
                                                 <div class="row border-bottom">
                                                     <div class="col mb-2">
                                                         <span
-                                                            class="h6 font-semibold text-muted text-sm d-block mb-2">Accept
-                                                            For Design</span>
+                                                            class="h6 font-semibold text-muted text-sm d-block mb-2">Accepted
+                                                            Design</span>
                                                         <span
                                                             class="h5 font-bold mb-0">{{ $design_dept_counts['accepted_design_production_dept'] }}</span>
                                                     </div>
@@ -325,7 +325,7 @@
                                                     <div class="col mb-2">
                                                         <span
                                                             class="h6 font-semibold text-muted text-sm d-block mb-2">Rejected
-                                                            For Design</span>
+                                                            Design</span>
                                                         <span
                                                             class="h5 font-bold mb-0">{{ $design_dept_counts['rejected_design_production_dept'] }}</span>
                                                     </div>

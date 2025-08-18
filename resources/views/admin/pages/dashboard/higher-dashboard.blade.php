@@ -662,13 +662,16 @@ var myBarChart = new Chart(ctx, {
                                             @case($data->off_canvas_status == 23)
                                                 Purchase Department
                                             @break
+                                              @case($data->off_canvas_status == 17)
+                                                Store Department Issue Material Send to Production Dept
+                                            @break
 
                                             @case($data->off_canvas_status == 16)
                                                 Store Department submitted requisition form
                                             @break
 
                                             @case($data->off_canvas_status == 15)
-                                                Accepted Production Department and send to store Department
+                                                Accepted Production Dept and send to store Department
                                             @break
 
                                             @case($data->off_canvas_status == 14)
@@ -679,11 +682,11 @@ var myBarChart = new Chart(ctx, {
                                                 Rejected Design in Production Department
                                             @break
                                             
-                                              @case($data->off_canvas_status == 32)
+                                              @case($data->off_canvas_status == 33)
                                                 Estimation Department Estimation  Send Production Department
                                             @break
 
-                                              @case($data->off_canvas_status == 29)
+                                              @case($data->off_canvas_status == 32)
                                                 Owner Department Estimation Accepted and Send Estimation Department
                                             @break
 

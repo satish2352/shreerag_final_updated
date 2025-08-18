@@ -372,14 +372,14 @@ public function getRevisedEstimationBOM(){ //checked
 }
 public function getRevisedEstimationBOMBusinessWise($id) { //checked
     try {
-        $data_output = $this->service->getRevisedEstimationBOMBusinessWise($id);        
+        $data_output = $this->service->getRevisedEstimationBOMBusinessWise($id);   
         if (is_iterable($data_output) && count($data_output) > 0) {
             foreach ($data_output as $data) {
-                $business_id = $data->business_id;
+                $business_id = $data->id;
 
                 if (!empty($business_id)) {
                     AdminView::where('is_view', '0')
-                        ->where('business_id', $business_id)
+                        ->where('id', $business_id)
                         ->update(['is_view' => '1']);
                 }
             }

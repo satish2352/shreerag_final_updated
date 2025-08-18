@@ -760,9 +760,45 @@ public function loadDesignSubmittedForEstimationBusinessWise($business_details_i
         return $e;
     }
 }
-public function getAcceptEstimationBOM(){
+// public function getAcceptEstimationBOM(){
+//     try {
+//          $array_to_be_check = config('constants.HIGHER_AUTHORITY.OWNER_BOM_ESTIMATION_ACCEPTED');    
+//         $data_output = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
+//                 $join->on('business_application_processes.business_id', '=', 'businesses.id');
+//             })
+//             ->whereNull('business_application_processes.estimation_send_to_production')
+//             ->where('business_application_processes.owner_bom_accepted', $array_to_be_check)
+//             ->where('businesses.is_active', true)
+//             ->where('businesses.is_deleted', 0)
+//             ->select(
+//                 'businesses.id',
+//                 'businesses.project_name',
+//                 'businesses.customer_po_number',
+//                 'businesses.title',
+//                  'businesses.remarks',
+//                  'business_application_processes.updated_at'
+             
+//             )
+//             ->groupBy(
+//                 'businesses.id',
+//                 'businesses.project_name',
+//                 'businesses.customer_po_number',
+//                 'businesses.title',
+//                  'businesses.remarks',
+//                   'business_application_processes.updated_at'
+//             )
+//              ->orderBy('business_application_processes.updated_at', 'desc')
+//             ->get();
+//         return $data_output;
+//     } catch (\Exception $e) {
+//         return $e;
+//     }
+// }
+public function getAcceptEstimationBOM()
+{
     try {
-         $array_to_be_check = config('constants.HIGHER_AUTHORITY.OWNER_BOM_ESTIMATION_ACCEPTED');    
+        $array_to_be_check = config('constants.HIGHER_AUTHORITY.OWNER_BOM_ESTIMATION_ACCEPTED');    
+
         $data_output = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
                 $join->on('business_application_processes.business_id', '=', 'businesses.id');
             })
@@ -775,25 +811,25 @@ public function getAcceptEstimationBOM(){
                 'businesses.project_name',
                 'businesses.customer_po_number',
                 'businesses.title',
-                 'businesses.remarks',
-                 'business_application_processes.updated_at'
-             
+                'businesses.remarks',
+                \DB::raw('MAX(business_application_processes.updated_at) as updated_at')
             )
             ->groupBy(
                 'businesses.id',
                 'businesses.project_name',
                 'businesses.customer_po_number',
                 'businesses.title',
-                 'businesses.remarks',
-                  'business_application_processes.updated_at'
+                'businesses.remarks'
             )
-             ->orderBy('business_application_processes.updated_at', 'desc')
+            ->orderBy('updated_at', 'desc')
             ->get();
+
         return $data_output;
     } catch (\Exception $e) {
         return $e;
     }
 }
+
 public function getAcceptEstimationBOMBusinessWise($id){
     try {
        $decoded_business_id = base64_decode($id);
@@ -818,6 +854,7 @@ public function getAcceptEstimationBOMBusinessWise($id){
              ->where('businesses.id', $decoded_business_id)
             // ->where('business_application_processes.bom_estimation_send_to_owner', $received)
             ->where('business_application_processes.owner_bom_accepted', $accepted)
+               ->whereNull('business_application_processes.estimation_send_to_production')
             ->where('businesses.is_active', true)
             ->where('businesses.is_deleted', 0)
             ->select(
@@ -860,6 +897,7 @@ public function getRejectEstimationBOM(){ //checked
                 $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
             })
             ->where('business_application_processes.owner_bom_rejected', $rejected)
+            ->whereNull('business_application_processes.owner_bom_accepted')
             ->where('businesses.is_active', true)
             ->where('businesses.is_deleted', 0)
             ->select(
@@ -915,6 +953,7 @@ public function getRejectEstimationBOMBusinessWise($id)
              ->where('businesses.id', $decoded_business_id)
             ->where('business_application_processes.bom_estimation_send_to_owner', $received)
             ->where('business_application_processes.owner_bom_rejected', $rejected)
+              ->whereNull('business_application_processes.owner_bom_accepted')
             ->where('businesses.is_active', true)
             ->where('businesses.is_deleted', 0)
             ->select(
@@ -958,6 +997,7 @@ public function getRevisedEstimationBOM(){ //checked
                 $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
             })
             ->where('business_application_processes.resend_bom_estimation_send_to_owner', $revised)
+              ->whereNull('business_application_processes.owner_bom_accepted')
             ->where('businesses.is_active', true)
             ->where('businesses.is_deleted', 0)
            ->select(
@@ -1009,6 +1049,7 @@ public function getRevisedEstimationBOMBusinessWise($id){ //checked
             })
             ->where('businesses.id', $decoded_business_id)
             ->where('business_application_processes.resend_bom_estimation_send_to_owner', $revised)
+              ->whereNull('business_application_processes.owner_bom_accepted')
             ->where('businesses.is_active', true)
             ->where('businesses.is_deleted', 0)
             ->select(
