@@ -40,7 +40,8 @@ use App\Models\ {
     CustomerProductQuantityTracking,
     PurchaseOrdersModel,
     EstimationModel,
-    ProductionDetails
+    ProductionDetails,
+    Dispatch
 
 };
 use Validator;
@@ -86,15 +87,24 @@ class DashboardController extends Controller {
 
         $active_count = Business::where('is_active', 1)->where('is_deleted', 0)->count(); 
         $business_details_count = BusinessDetails::where('is_active', 1)->where('is_deleted', 0)->count(); 
-        $product_completed_count =  Logistics::leftJoin('tbl_customer_product_quantity_tracking', function($join) {
-            $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_customer_product_quantity_tracking.id');
-        })
-        ->leftJoin('businesses', function($join) {
-            $join->on('tbl_logistics.business_id', '=', 'businesses.id');
-        })
-        ->where('tbl_customer_product_quantity_tracking.quantity_tracking_status',3005)
-        ->where('businesses.is_active',true)
-        ->where('businesses.is_deleted', 0)->count();
+
+
+     $product_completed_count = Dispatch::leftJoin('business_application_processes', function($join) {
+        $join->on('tbl_dispatch.business_details_id', '=', 'business_application_processes.business_details_id');
+    })
+    ->leftJoin('tbl_customer_product_quantity_tracking', function($join) {
+        $join->on('tbl_dispatch.quantity_tracking_id', '=', 'tbl_customer_product_quantity_tracking.id');
+    })
+    ->leftJoin('businesses', function($join) {
+        $join->on('tbl_dispatch.business_id', '=', 'businesses.id');
+    })
+    ->where('tbl_customer_product_quantity_tracking.quantity_tracking_status', 3005)
+    ->where('businesses.is_active', true)
+    ->where('businesses.is_deleted', 0)
+    ->distinct('tbl_dispatch.business_details_id')  
+    ->count('tbl_dispatch.business_details_id');    
+
+
         $business_completed_count = BusinessApplicationProcesses::where('business_application_processes.is_active', 1)
         ->join('businesses_details', 'business_application_processes.business_details_id', '=', 'businesses_details.id')
         ->where('business_application_processes.dispatch_status_id', 1140)
@@ -555,10 +565,14 @@ $previous_unused_leaves = DB::table('tbl_leave_management')
             'user active count' => $user_active_count,
             'active_businesses' => $active_count,
             'business_details' => $business_details_count,
-            'business_completed' => $business_completed_count,
-            'product_completed' => $product_completed_count,
-            'business_inprocess' => $business_inprocess_count,
-            'product_inprocess' => $product_inprocess_count
+            'business_completed' => $business_completed_count ?? 0,
+        'product_completed'  => $product_completed_count ?? 0,
+        'business_inprocess' => $business_inprocess_count ?? 0,
+        'product_inprocess'  => $product_inprocess_count ?? 0,
+            // 'business_completed' => $business_completed_count,
+            // 'product_completed' => $product_completed_count,
+            // 'business_inprocess' => $business_inprocess_count,
+            // 'product_inprocess' => $product_inprocess_count
             
             
         ];

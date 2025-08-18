@@ -36,8 +36,8 @@
                         <div class="card shadow border-0">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col mb-2">
-                                        <span class="font-semibold text-muted text-sm d-block mb-2">Total Estimation
+                                    <div class="col mb-2 font-size-dashboard">
+                                        <span class="font-semibold text-muted text-sm d-block mb-2 ">Total Estimation
                                         </span>
                                         <span class="h5 font-bold mb-0">₹ {{ $business_total_amount['total_revenu_count'] }}
 
@@ -57,8 +57,8 @@
                         <div class="card shadow border-0">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col mb-2">
-                                        <span class="font-semibold text-muted text-sm d-block mb-2">Total utilize
+                                    <div class="col mb-2 font-size-dashboard"> 
+                                        <span class="font-semibold text-muted text-sm d-block mb-2 " >Total utilize
                                         </span>
                                         <span class="h5 font-bold mb-0">₹ {{ $business_total_amount['total_utilize_materila_amount'] }}
 
@@ -78,7 +78,7 @@
                         <div class="card shadow border-0">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col mb-2">
+                                    <div class="col mb-2 font-size-dashboard">
                                         <span class="font-semibold text-muted text-sm d-block mb-2">Total Profit
                                         </span>
                                         <span class="h5 font-bold mb-0">₹ {{ $business_total_amount['profit'] }}
@@ -100,7 +100,7 @@
                         <div class="card shadow border-0">
                             <div class="card-body">
                                 <div class="row border-bottom">
-                                    <div class="col mb-2">
+                                    <div class="col mb-2  font-size-dashboard">
                                         <span class="font-semibold text-muted text-sm d-block mb-2">Total Project
                                         </span>
                                         <span class="h5 font-bold mb-0">{{ $return_data['active_businesses'] }}
@@ -128,7 +128,7 @@
                         <div class="card shadow border-0">
                             <div class="card-body">
                                 <div class="row border-bottom">
-                                    <div class="col mb-2">
+                                    <div class="col mb-2 font-size-dashboard">
                                         <span class="font-semibold text-muted text-sm d-block mb-2">Total
                                             Product</span>
                                         <span class="h5 font-bold mb-0">{{ $return_data['business_details'] }}</span>
@@ -155,7 +155,7 @@
                         <div class="card shadow border-0">
                             <div class="card-body">
                                 <div class="row border-bottom">
-                                    <div class="col mb-2">
+                                    <div class="col mb-2  font-size-dashboard">
                                         <span class="font-semibold text-muted text-sm d-block mb-2">Total
                                             PO Order</span>
                                         <span class="h5 font-bold mb-0">{{ $purchase_dept_counts['purchase_order_submited_by_vendor'] }}</span>
@@ -294,12 +294,29 @@
              <canvas id="myDonutChart" width="300" height="300" class=""></canvas>
         </div>
        
+
 <script>
-     document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
     const ctx = document.getElementById('myDonutChart').getContext('2d');
 
-    const labels = ["Complete Project", "Pending Project", "Product C", "Product D"];
-    const data = [25, 15, 30, 10];
+    // Get Laravel data
+    const counts = @json($return_data);
+
+    // Labels must match the meaning of your data
+    const labels = [
+        "Business Completed",
+        "Business In Process",
+        "Product Completed",
+        "Product In Process"
+    ];
+
+    // Values must match the keys in $owner_counts
+    const data = [
+        counts.business_completed ?? 0,
+        counts.business_inprocess ?? 0,
+        counts.product_completed ?? 0,
+        counts.product_inprocess ?? 0
+    ];
 
     const backgroundColors = [
         '#2D4E59', // Deep Blue-Teal
@@ -308,7 +325,7 @@
         '#199CC2'  // Sky Blue
     ];
 
-    const donutChart = new Chart(ctx, {
+    new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: labels,
@@ -318,22 +335,18 @@
             }]
         },
         options: {
-            cutout: '80%', // thinner ring
+            cutout: '80%',
             borderWidth: 2,
             plugins: {
-                legend: {
-                    position: 'right'
-                },
+                legend: { position: 'right' },
                 title: {
                     display: true,
                     text: 'Project Details',
-                    font: {
-                        size: 18
-                    }
+                    font: { size: 18 }
                 }
             },
             responsive: true,
-            maintainAspectRatio: false // allow custom height
+            maintainAspectRatio: false
         }
     });
 });
@@ -341,11 +354,12 @@
 
 <style>
 #myDonutChart {
-    max-width: 400px;   /* width limit */
-    height: 235px;      /* reduced height */
+    max-width: 400px;
+    height: 235px;
     padding: 30px;
 }
 </style>
+
 
 
 
@@ -664,9 +678,29 @@ var myBarChart = new Chart(ctx, {
                                             @case($data->off_canvas_status == 13)
                                                 Rejected Design in Production Department
                                             @break
+                                            
+                                              @case($data->off_canvas_status == 32)
+                                                Estimation Department Estimation  Send Production Department
+                                            @break
+
+                                              @case($data->off_canvas_status == 29)
+                                                Owner Department Estimation Accepted and Send Estimation Department
+                                            @break
+
+                                             @case($data->off_canvas_status == 31)
+                                             Owner Department Revised Estimation Received
+                                            @break
+                                                                                                                                
+                                            @case($data->off_canvas_status == 30)
+                                                Owner Department Estimation Rejected and Send Estimation Department
+                                            @break
+
+                                              @case($data->off_canvas_status == 28)
+                                                Owner Department Received Estimation for Accept or Reject
+                                            @break
 
                                             @case($data->off_canvas_status == 12)
-                                                Design Department Submitted Design and Received Production Department
+                                                Design Department Submitted Design and Received Estimation Department
                                             @break
 
                                             @case($data->off_canvas_status == 11)

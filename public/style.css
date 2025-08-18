@@ -3451,3 +3451,6 @@ div#sparklinehome canvas {
 .red-text{
     color:red;
 }
+ .font-size-dashboard{
+            font-size: 14px !important;
+        }
