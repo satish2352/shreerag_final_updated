@@ -1,12 +1,12 @@
-
 @extends('admin.layouts.master')
 @section('content')
     <style>
         button.disabled {
-            opacity: 0.5; /* Makes the button appear grayed out */
-            cursor: not-allowed; /* Changes the cursor to indicate it's disabled */
+            opacity: 0.5;
+            /* Makes the button appear grayed out */
+            cursor: not-allowed;
+            /* Changes the cursor to indicate it's disabled */
         }
-
     </style>
 
     <div class="data-table-area mg-tb-15">
@@ -17,7 +17,7 @@
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
                                 <h1>Gatepass <span class="table-project-n">Data</span> Table</h1>
-                                
+
                             </div>
                         </div>
 
@@ -57,7 +57,6 @@
                                                 <th data-field="time" data-editable="false">Time</th>
                                                 <th data-field="remark" data-editable="false">Remark</th>
                                                 <th data-field="" data-editable="false">Purchase Order</th>
-                                                {{-- <th data-field="status" data-editable="false">Status</th> --}}
                                                 <th data-field="action">Action</th>
                                             </tr>
 
@@ -73,40 +72,26 @@
                                                     <td>{{ ucwords($data->remark) }}</td>
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
-                                                               
-                                                                <a href="{{ route('list-po-details', [base64_encode($data->purchase_id), base64_encode($data->purchase_orders_id)]) }}">
-                                                                    <button data-toggle="tooltip"
-                                                                    title="View PO" class="pd-setting-ed">Check PO Details</button></a>
-                                                            
-                                                        </div>
-                                                        </td>
-                                                    {{-- <td>
-                                                        <div style="display: flex; align-items: center;">
-                                                               
-                                                                <a href="{{ route('check-details-of-po-before-send-vendor', $data->purchase_orders_id) }}"
-                                                                 >
-                                                                    <button data-toggle="tooltip"
-                                                                    title="View PO" class="pd-setting-ed">Check PO Details</button></a>
-                                                            
-                                                        </div>
-                                                        </td> --}}
 
-                                                        <td>
-                                                            <div style="display: flex; align-items: center;">
-          <a href="{{ route('edit-gatepass', base64_encode($data->id)) }}">
-              <button 
-                  data-toggle="tooltip" 
-                  title="Edit" 
-                  class="pd-setting-ed @if($data->quality_status_id === 1134) disabled @endif" 
-                  @if($data->quality_status_id === 1134) 
-                      disabled 
-                  @endif
-              >
-                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-              </button>
-          </a>
-      </div>
-  </td>
+                                                            <a
+                                                                href="{{ route('list-po-details', [base64_encode($data->purchase_id), base64_encode($data->purchase_orders_id)]) }}">
+                                                                <button data-toggle="tooltip" title="View PO"
+                                                                    class="btn btn-sm btn-bg-colour">Check PO Details</button></a>
+
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div style="display: flex; align-items: center;">
+                                                            <a
+                                                                href="{{ route('edit-gatepass', base64_encode($data->id)) }}">
+                                                                <button data-toggle="tooltip" title="Edit"
+                                                                    class="btn btn-sm btn-bg-colour @if ($data->quality_status_id === 1134) disabled @endif"
+                                                                    @if ($data->quality_status_id === 1134) disabled @endif>
+                                                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                                </button>
+                                                            </a>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             @endforeach
 

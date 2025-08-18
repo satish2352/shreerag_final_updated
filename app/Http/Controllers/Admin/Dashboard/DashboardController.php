@@ -38,7 +38,9 @@ use App\Models\ {
     BusinessDetails,
     Logistics,
     CustomerProductQuantityTracking,
-    PurchaseOrdersModel
+    PurchaseOrdersModel,
+    EstimationModel,
+    ProductionDetails
 
 };
 use Validator;
@@ -58,6 +60,20 @@ class DashboardController extends Controller {
         $department_count = RolesModel::where('is_active', 1)->where('is_deleted', 0)->count(); 
 
         // start owner====================
+ $total_revenu_count = EstimationModel::leftJoin('business_application_processes', function ($join) {
+                $join->on('estimation.business_details_id', '=', 'business_application_processes.business_details_id');
+            })
+        ->where('business_application_processes.dispatch_status_id', 1148)   
+        ->where('business_application_processes.off_canvas_status', 22)   
+        ->sum('total_estimation_amount');
+
+  $total_utilize_materila_amount = ProductionDetails::join('business_application_processes', function ($join) {
+                $join->on('production_details.business_details_id', '=', 'business_application_processes.business_details_id');
+            })
+            ->where('business_application_processes.dispatch_status_id', 1148)
+            ->where('business_application_processes.off_canvas_status', 22)
+            ->sum('production_details.items_used_total_amount');
+                
         $user_active_count= User::leftJoin('tbl_roles', function ($join) {
             $join->on('users.role_id', '=', 'tbl_roles.id');
         })
@@ -65,6 +81,9 @@ class DashboardController extends Controller {
         ->where('users.is_deleted', 0)
         ->where('users.id', '>', 1)
         ->count(); 
+
+        $profit = $total_revenu_count - $total_utilize_materila_amount;
+
         $active_count = Business::where('is_active', 1)->where('is_deleted', 0)->count(); 
         $business_details_count = BusinessDetails::where('is_active', 1)->where('is_deleted', 0)->count(); 
         $product_completed_count =  Logistics::leftJoin('tbl_customer_product_quantity_tracking', function($join) {
@@ -539,9 +558,15 @@ $previous_unused_leaves = DB::table('tbl_leave_management')
             'business_completed' => $business_completed_count,
             'product_completed' => $product_completed_count,
             'business_inprocess' => $business_inprocess_count,
-            'product_inprocess' => $product_inprocess_count,
+            'product_inprocess' => $product_inprocess_count
+            
             
         ];
+          $business_total_amount = [
+            'total_revenu_count'=> $total_revenu_count,
+            'total_utilize_materila_amount' => $total_utilize_materila_amount,
+            'profit' =>  $profit
+          ];
         $offcanvas = [
             'offcanvas' => $offcanvas,
         ];
@@ -654,7 +679,7 @@ $previous_unused_leaves = DB::table('tbl_leave_management')
         return view('admin.pages.dashboard.dashboard', ['return_data' => $owner_counts,'offcanvas' => $offcanvas,'department_count' =>$department_count, 'logistics_counts'=>$logistics_counts, 'design_dept_counts'=>$design_dept_counts,
     'production_dept_counts'=>$production_dept_counts, 'store_dept_counts'=>$store_dept_counts, 'cms_counts'=>$cms_counts,
 'purchase_dept_counts'=>$purchase_dept_counts, 'secuirty_dept_counts'=>$secuirty_dept_counts, 'quality_dept_counts'=>$quality_dept_counts,'fianance_counts'=>$fianance_counts,
-'inventory_dept_counts'=>$inventory_dept_counts,'dispatch_counts'=>$dispatch_counts, 'hr_counts'=>$hr_counts, 'employee_counts'=>$employee_counts, 'employee_leave_type'=>$employee_leave_type, 'estimation_counts'=>$estimation_counts ]);
+'inventory_dept_counts'=>$inventory_dept_counts,'dispatch_counts'=>$dispatch_counts, 'hr_counts'=>$hr_counts, 'employee_counts'=>$employee_counts, 'employee_leave_type'=>$employee_leave_type, 'estimation_counts'=>$estimation_counts, 'business_total_amount'=>$business_total_amount]);
     } catch (\Exception $e) {
         \Log::error("Error fetching business data: " . $e->getMessage());
         return redirect()->back()->with('error', 'An error occurred while fetching data.');

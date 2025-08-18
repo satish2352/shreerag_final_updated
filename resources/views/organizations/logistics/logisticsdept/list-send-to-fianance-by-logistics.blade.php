@@ -1,8 +1,5 @@
-
 @extends('admin.layouts.master')
 @section('content')
-    
-
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">
@@ -11,34 +8,10 @@
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
                                 <h1>Logistics List</h1>
-                               
                             </div>
                         </div>
-
-                        @if (Session::get('status') == 'success')
-                            <div class="alert alert-success alert-success-style1">
-                                <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
-                                    <span class="icon-sc-cl" aria-hidden="true">&times;</span>
-                                </button>
-                                {{-- <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i> --}}
-                                <p><strong>Success!</strong> {{ Session::get('msg') }}</p>
-                            </div>
-                        @endif
-                        @if (Session::get('status') == 'error')
-                            <div class="alert alert-danger alert-mg-b alert-success-style4">
-                                <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
-                                    <span class="icon-sc-cl" aria-hidden="true">&times;</span>
-                                </button>
-                                <i class="fa fa-times adminpro-danger-error admin-check-pro" aria-hidden="true"></i>
-                                <p><strong>Danger!</strong> {{ Session::get('msg') }}</p>
-                            </div>
-                        @endif
-
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                               
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -58,12 +31,7 @@
                                                 <th data-field="remaining_quantity" data-editable="false">Balance Quantity</th>
                                                 <th data-field="from_place" data-editable="false">Form Place</th>
                                                 <th data-field="to_place" data-editable="false">To Place</th>
-                                                {{-- <th data-field="remark" data-editable="false">Remark</th> --}}
-                                            
-                                          
-                                               
                                             </tr>
-
                                         </thead>
                                         <tbody>
                                             @foreach ($data_output as $data)
@@ -80,16 +48,6 @@
                                                     <td>{{ $data->remaining_quantity }}</td>
                                                     <td>{{ ucwords($data->from_place) }}</td>
                                                     <td>{{ ucwords($data->to_place) }}</td>
-                                                    {{-- <td>{{ ucwords($data->remarks) }}</td> --}}
-                                                   
-                                                
-
-                                                   
-
-                                               
-
-
-
                                                 </tr>
                                             @endforeach
                                         </tbody>

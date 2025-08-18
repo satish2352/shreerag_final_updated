@@ -195,28 +195,30 @@ public function getAllDispatchClosedProduct()
               ->leftJoin('estimation', function ($join) {
                 $join->on('tbl_dispatch.business_details_id', '=', 'estimation.business_details_id');
             })
-            // ->leftJoin('production_details', function ($join) {
-            //     $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
-            // })
+           ->leftJoin(DB::raw('(SELECT business_details_id, SUM(items_used_total_amount) as total_items_used_amount 
+                     FROM production_details 
+                     GROUP BY business_details_id) as pd'), 
+           'tbl_dispatch.business_details_id', '=', 'pd.business_details_id')
+
             ->whereIn('tcqt1.quantity_tracking_status', $array_to_be_quantity_tracking)
             ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
             ->where('businesses.is_active', true)
             ->where('businesses.is_deleted', 0)
-            ->select(
-                'businesses_details.id as business_details_id',
-                'businesses.project_name',
-                'businesses.customer_po_number',
-                'businesses.title',
-                'businesses.created_at',
-                'businesses_details.product_name',
-                'businesses_details.description',
-                'businesses_details.quantity',
-                'estimation.total_estimation_amount',
-                DB::raw('SUM(tcqt1.completed_quantity) as total_completed_quantity'),
-//    DB::raw('COALESCE(SUM(production_details.items_used_total_amount), 0) as total_items_used_amount'),
+          ->select(
+    'businesses_details.id as business_details_id',
+    'businesses.project_name',
+    'businesses.customer_po_number',
+    'businesses.title',
+    'businesses.created_at',
+    'businesses_details.product_name',
+    'businesses_details.description',
+    'businesses_details.quantity',
+    'estimation.total_estimation_amount',
+    DB::raw('SUM(tcqt1.completed_quantity) as total_completed_quantity'),
+    DB::raw('COALESCE(MAX(pd.total_items_used_amount), 0) as total_items_used_amount'),
+    DB::raw('MAX(tbl_dispatch.updated_at) as last_updated_at')
+)
 
-                DB::raw('MAX(tbl_dispatch.updated_at) as last_updated_at') // Alias for MAX(updated_at)
-            )
 
             ->groupBy(
                 'businesses_details.id',

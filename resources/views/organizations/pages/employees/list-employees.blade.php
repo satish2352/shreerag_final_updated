@@ -64,13 +64,7 @@ padding-left: 20px !important;
 
                     <div class="sparkline13-graph">
                         <div class="datatable-dashv1-list custom-datatable-overright">
-                            {{-- <div id="toolbar">
-                                <select class="form-control">
-                                    <option value="">Export Basic</option>
-                                    <option value="all">Export All</option>
-                                    <option value="selected">Export Selected</option>
-                                </select>
-                            </div>                          --}}
+                          
                            
                           
                             <div class="table-responsive"> 

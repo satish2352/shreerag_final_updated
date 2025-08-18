@@ -58,8 +58,6 @@
                 <div class="sparkline12-graph">
                     <div class="basic-login-form-ad">
                         <div class="row">
-
-
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 @if (Session::get('status') == 'success')
                                     <div class="col-12 grid-margin">
@@ -123,6 +121,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+                                                       
                                                         @foreach ($dataGroupedById as $key => $items)
                                                             @foreach ($items as $index => $item)
                                                                 <tr>
@@ -135,6 +134,7 @@
         <input type="hidden" name="addmore[{{ $index }}][part_item_id]" class="part_no" value="{{ $item->part_item_id ?? '' }}">
         <input type="text" class="dropdown-input form-control" placeholder="Select Part Item..." value="{{ $item->description ?? '' }}" readonly required>
 
+       
         <div class="dropdown-options dropdown-height" style="display: none;">
             <input type="text" class="search-box form-control" placeholder="Search...">
             <div class="options-list">

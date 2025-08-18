@@ -1,8 +1,5 @@
-
 @extends('admin.layouts.master')
 @section('content')
-    
-
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">
@@ -14,14 +11,12 @@
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
                                         <div class="login-horizental cancel-wp pull-left">
-
                                         </div>
                                     </div>
                                     <div class="col-lg-10"></div>
                                 </div>
                             </div>
                         </div>
-
                         @if (Session::get('status') == 'success')
                             <div class="alert alert-success alert-success-style1">
                                 <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
@@ -51,41 +46,34 @@
                                         data-click-to-select="true" data-toolbar="#toolbar">
                                         <thead>
                                             <tr>
-
                                                 <th data-field="id">ID</th>
                                                 <th data-field="purchase_id" data-editable="false">PO Number</th>
                                                 <th data-field="name" data-editable="false">Name</th>
                                                 <th data-field="date" data-editable="false">Date</th>
                                                 <th data-field="time" data-editable="false">Time</th>
                                                 <th data-field="remark" data-editable="false">Remark</th>
-                                                {{-- <th data-field="status" data-editable="false">Status</th> --}}
                                                 <th data-field="action">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($all_gatepass as $data)
                                                 <tr>
-
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $data->purchase_orders_id}}</td>
                                                     <td>{{ ucwords($data->gatepass_name) }}</td>
                                                     <td>{{ ucwords($data->gatepass_date) }}</td>
                                                     <td>{{ ucwords($data->gatepass_time) }}</td>
                                                     <td>{{ ucwords($data->remark) }}</td>
-
-
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
                                                             <a href="{{ route('add-grn', [base64_encode($data->purchase_orders_id), base64_encode($data->id)]) }}"><button
                                                                     data-toggle="tooltip" title="Edit"
-                                                                    class="pd-setting-ed"><i class="fa fa-pencil-square-o"
+                                                                    class="btn btn-sm btn-bg-colour"><i class="fa fa-pencil-square-o"
                                                                         aria-hidden="true"></i></button></a>
                                                         </div>
                                                     </td>
                                                 </tr>
                                             @endforeach
-
-
                                         </tbody>
                                     </table>
                                 </div>

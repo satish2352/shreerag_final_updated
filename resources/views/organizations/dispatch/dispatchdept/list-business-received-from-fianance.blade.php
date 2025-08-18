@@ -1,8 +1,5 @@
-
 @extends('admin.layouts.master')
 @section('content')
-    
-
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">
@@ -13,7 +10,6 @@
                                 <h1>Dispatch List</h1>
                             </div>
                         </div>
-
                         @if (Session::get('status') == 'success')
                             <div class="alert alert-success alert-success-style1">
                                 <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
@@ -54,15 +50,12 @@
                                                 </th>
                                                 <th data-field="from_place" data-editable="false">From Place</th>
                                                 <th data-field="to_place" data-editable="false">To Place</th>
-                                                {{-- <th data-field="title" data-editable="false">customer Name</th> --}}
                                                 <th data-field="truck_no" data-editable="false">Truck Number</th>
                                                 <th data-field="transport_name" data-editable="false">Transport Name</th>
                                                 <th data-field="vehicle_name" data-editable="false">Vehicle Name</th>
                                                 <th data-field="action" data-editable="false">Action</th>
                                             </tr>
-
                                         </thead>
-
                                         <tbody>
                                             @foreach ($data_output as $data)
                                                 <tr>
@@ -77,7 +70,6 @@
                                                     <td>{{ $data->remaining_quantity }}</td>
                                                     <td>{{ ucwords($data->from_place) }}</td>
                                                     <td>{{ ucwords($data->to_place) }}</td>
-                                                    {{-- <td>{{ ucwords($data->title) }}</td> --}}
                                                     <td>{{ ucwords($data->truck_no) }}</td>
                                                     <td>{{ ucwords($data->transport_name) }}</td>
                                                     <td>{{ ucwords($data->vehicle_name) }}</td>
@@ -86,17 +78,10 @@
                                                             <a
                                                                 href="{{ route('add-dispatch', [base64_encode($data->id), base64_encode($data->business_details_id)]) }}"><button
                                                                     data-toggle="tooltip" title="Edit"
-                                                                    class="pd-setting-ed"><i class="fa fa-pencil-square-o"
+                                                                    class="btn btn-sm btn-bg-colour"><i class="fa fa-pencil-square-o"
                                                                         aria-hidden="true"></i></button></a>
-                                                            {{-- <a href="{{route('delete-products')}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a> --}}
                                                         </div>
                                                     </td>
-
-
-
-
-
-
                                                 </tr>
                                             @endforeach
                                         </tbody>

@@ -37,30 +37,9 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col mb-2">
-                                        <span class="font-semibold text-muted text-sm d-block mb-2">Total Revenue
+                                        <span class="font-semibold text-muted text-sm d-block mb-2">Total Estimation
                                         </span>
-                                        <span class="h5 font-bold mb-0">{{ $return_data['active_businesses'] }}
-
-                                        </span>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                            <i class="fa-solid fa-user-tie"></i>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-sm-4 col-12 mb-2">
-                        <div class="card shadow border-0">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col mb-2">
-                                        <span class="font-semibold text-muted text-sm d-block mb-2">Total Profit
-                                        </span>
-                                        <span class="h5 font-bold mb-0">{{ $return_data['active_businesses'] }}
+                                        <span class="h5 font-bold mb-0">₹ {{ $business_total_amount['total_revenu_count'] }}
 
                                         </span>
                                     </div>
@@ -81,7 +60,28 @@
                                     <div class="col mb-2">
                                         <span class="font-semibold text-muted text-sm d-block mb-2">Total utilize
                                         </span>
-                                        <span class="h5 font-bold mb-0">{{ $return_data['active_businesses'] }}
+                                        <span class="h5 font-bold mb-0">₹ {{ $business_total_amount['total_utilize_materila_amount'] }}
+
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                            <i class="fa-solid fa-user-tie"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                      <div class="col-xl-4 col-sm-4 col-12 mb-2">
+                        <div class="card shadow border-0">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col mb-2">
+                                        <span class="font-semibold text-muted text-sm d-block mb-2">Total Profit
+                                        </span>
+                                        <span class="h5 font-bold mb-0">₹ {{ $business_total_amount['profit'] }}
 
                                         </span>
                                     </div>
@@ -158,7 +158,7 @@
                                     <div class="col mb-2">
                                         <span class="font-semibold text-muted text-sm d-block mb-2">Total
                                             PO Order</span>
-                                        <span class="h5 font-bold mb-0">{{ $return_data['business_details'] }}</span>
+                                        <span class="h5 font-bold mb-0">{{ $purchase_dept_counts['purchase_order_submited_by_vendor'] }}</span>
                                     </div>
                                     <div class="col-auto">
                                         <div class="icon icon-shape bg-warning text-white text-lg rounded-circle">

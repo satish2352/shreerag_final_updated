@@ -1,8 +1,6 @@
 
 @extends('admin.layouts.master')
 @section('content')
-    
-
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">
@@ -11,34 +9,10 @@
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
                                 <h1>Logistics List</h1>
-                               
                             </div>
                         </div>
-
-                        @if (Session::get('status') == 'success')
-                            <div class="alert alert-success alert-success-style1">
-                                <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
-                                    <span class="icon-sc-cl" aria-hidden="true">&times;</span>
-                                </button>
-                                {{-- <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i> --}}
-                                <p><strong>Success!</strong> {{ Session::get('msg') }}</p>
-                            </div>
-                        @endif
-                        @if (Session::get('status') == 'error')
-                            <div class="alert alert-danger alert-mg-b alert-success-style4">
-                                <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
-                                    <span class="icon-sc-cl" aria-hidden="true">&times;</span>
-                                </button>
-                                <i class="fa fa-times adminpro-danger-error admin-check-pro" aria-hidden="true"></i>
-                                <p><strong>Danger!</strong> {{ Session::get('msg') }}</p>
-                            </div>
-                        @endif
-
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                               
-
-
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
@@ -72,7 +46,6 @@
                                                     <td>{{ ucwords($data->quantity) }}</td>
                                                     <td>{{ ucwords($data->cumulative_completed_quantity) }}</td>
                                                     <td>{{ $data->remaining_quantity }}</td>
-                                                    {{-- <td>{{ ucwords($data->remarks) }}</td> --}}
                                                     <td>{{ ucwords($data->title) }}</td>
                                                 <td>
                                                     <a href="{{ route('send-to-fianance', [base64_encode($data->id), base64_encode($data->business_details_id)]) }}"
@@ -80,7 +53,7 @@
                                                         class="pd-setting-ed"
                                                         data-toggle="tooltip"
                                                         title="Accept">
-                                                        <button class="btn-bg-colour"> Send to Fianance </button>
+                                                        <button class="btn btn-sm btn-bg-colour"> Send to Fianance </button>
                                                     </a>
                                                 </td>
                                                 </tr>

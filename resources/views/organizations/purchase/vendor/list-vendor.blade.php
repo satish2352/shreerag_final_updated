@@ -1,26 +1,5 @@
-
 @extends('admin.layouts.master')
 @section('content')
-<style>
-.fixed-table-loading {
-    display: none;
-}
-#table thead th {
-    white-space: nowrap;
-}
-#table thead th{
-    width: 300px !important; 
-    padding-right: 49px !important;
-padding-left: 20px !important;
-}
-.custom-datatable-overright table tbody tr td {
-    padding-left: 19px !important;
-    padding-right: 5px !important;
-    font-size: 14px;
-    text-align: left;
-}
-</style>
-
 <div class="data-table-area mg-tb-15">
     <div class="container-fluid">
         <div class="row">
@@ -61,13 +40,7 @@ padding-left: 20px !important;
 
                     <div class="sparkline13-graph">
                         <div class="datatable-dashv1-list custom-datatable-overright">
-                            {{-- <div id="toolbar">
-                                <select class="form-control">
-                                    <option value="">Export Basic</option>
-                                    <option value="all">Export All</option>
-                                    <option value="selected">Export Selected</option>
-                                </select>
-                            </div>                          --}}
+                          
                            
                           
                             <div class="table-responsive"> 

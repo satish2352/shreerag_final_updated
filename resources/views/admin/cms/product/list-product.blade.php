@@ -1,5 +1,4 @@
 @extends('admin.layouts.master')
-
 @section('content')
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
@@ -17,7 +16,6 @@
                                                     Product</button></a>
                                         </div>
                                     </div>
-                                    <div class="col-lg-10"></div>
                                 </div>
                             </div>
                         </div>

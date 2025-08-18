@@ -1,7 +1,5 @@
-
 @extends('admin.layouts.master')
 @section('content')
-    
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">
@@ -10,29 +8,8 @@
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
                                 <h1>Material Need To Sent To<span class="table-project-n"> Production</span> Department</h1>
-                               
                             </div>
                         </div>
-
-                        @if (Session::get('status') == 'success')
-                            <div class="alert alert-success alert-success-style1">
-                                <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
-                                    <span class="icon-sc-cl" aria-hidden="true">&times;</span>
-                                </button>
-                                {{-- <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i> --}}
-                                <p><strong>Success!</strong> {{ Session::get('msg') }}</p>
-                            </div>
-                        @endif
-                        @if (Session::get('status') == 'error')
-                            <div class="alert alert-danger alert-mg-b alert-success-style4">
-                                <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
-                                    <span class="icon-sc-cl" aria-hidden="true">&times;</span>
-                                </button>
-                                <i class="fa fa-times adminpro-danger-error admin-check-pro" aria-hidden="true"></i>
-                                <p><strong>Danger!</strong> {{ Session::get('msg') }}</p>
-                            </div>
-                        @endif
-
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
                                 <div class="table-responsive">
@@ -43,7 +20,6 @@
                                         data-click-to-select="true" data-toolbar="#toolbar">
                                         <thead>
                                             <tr>
-                                                
                                                 <th data-field="id">ID</th>
                                                 <th data-field="grn_number" data-editable="false">Product Name</th>
                                                 <th data-field="grn_date" data-editable="false">Description</th>
@@ -62,12 +38,10 @@
                                                             <a
                                                                 href="{{ route('list-material-sent-to-quality-businesswise', $data->id) }}"><button
                                                                     data-toggle="tooltip" title="Edit"
-                                                                    class="pd-setting-ed"><i class="fa fa-pencil-square-o"
-                                                                        aria-hidden="true"></i> Check Details</button></a>
+                                                                    class="btn btn-sm btn-bg-colour"> Check Details</button></a>
                                                             &nbsp; &nbsp; &nbsp;
                                                         </div>
                                                     </td>
-
                                                 </tr>
                                             @endforeach
                                         </tbody>

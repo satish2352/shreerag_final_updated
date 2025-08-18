@@ -44,7 +44,7 @@ class GRNController extends Controller
                     }
                 }
             } else {
-                return view( 'organizations.purchase.list.list-purchase-order-approved-need-to-check', [
+                return view( 'organizations.quality.grn.list-grn', [
                     'data_output' => [],
                     'message' => 'No data found'
                 ] );
@@ -310,7 +310,7 @@ public function getBalanceQuantity(Request $request)
                 }
             }
         } else {
-            return view('organizations.quality.list.list-checked-material-sent-to-store', [
+            return view('organizations.quality.list.list-checked-material-sent-to-store-businesswise', [
                 'data_output' => [],
                 'message' => 'No data found'
             ]);

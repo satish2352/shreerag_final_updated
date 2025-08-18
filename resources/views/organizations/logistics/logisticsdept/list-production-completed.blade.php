@@ -1,8 +1,6 @@
 
 @extends('admin.layouts.master')
 @section('content')
-    
-
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">
@@ -11,16 +9,13 @@
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
                                 <h1>Production Completed List</h1>
-                               
                             </div>
                         </div>
-
                         @if (Session::get('status') == 'success')
                             <div class="alert alert-success alert-success-style1">
                                 <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
                                     <span class="icon-sc-cl" aria-hidden="true">&times;</span>
                                 </button>
-                                {{-- <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i> --}}
                                 <p><strong>Success!</strong> {{ Session::get('msg') }}</p>
                             </div>
                         @endif
@@ -53,25 +48,13 @@
                                                 <th data-field="quantity" data-editable="false">PO Quantity</th>
                                                 <th data-field="completed_quantity" data-editable="false">Completed Production</th>
                                                 <th data-field="remaining_quantity" data-editable="false">Balance Quantity</th>
-                                              
-
-                                                {{-- <th data-field="updated_at" data-editable="false">Date</th> --}}
                                                 <th data-field="remark" data-editable="false">Remark</th>
                                                 <th data-field="title" data-editable="false">customer Name</th>
                                                  <th data-field="cumulative_completed_quantity" data-editable="false">Total Completed Production</th>
-                                                {{-- <th data-field="vendor_company_name" data-editable="false">Vendor company Name</th>
-                                                <th data-field="vendor_email" data-editable="false">Vendor Email</th>
-                                                <th data-field="contact_no" data-editable="false">Vendor Contact Number</th>
-                                                <th data-field="vendor_address" data-editable="false">Vendor Address</th> --}}
-                                                {{-- <th data-field="store_material_sent_date" data-editable="false">Matrial Recieved Date</th> --}}
-                                                {{-- <th data-field="design_image" data-editable="false">Design Layout</th> --}}
-                                                {{-- <th data-field="bom_image" data-editable="false">BOM</th> --}}
                                                 <th data-field="" data-editable="false">Action</th>
                                             </tr>
-
                                         </thead>
                                         <tbody>
-
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
@@ -84,41 +67,17 @@
                                                     <td>{{ ucwords($data->quantity) }}</td>                                                   
                                                     <td><strong>{{ $data->completed_quantity }}</strong></td>
                                                     <td>{{ $data->remaining_quantity }}</td>
-                                                   
-                                                    {{-- <td>{{ $data->updated_at ? $data->updated_at->format('Y-m-d') : 'N/A' }}
-                                                    </td> --}}
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                     <td>{{ ucwords($data->title) }}</td>
                                                      <td>{{ ucwords($data->cumulative_completed_quantity) }}</td>
-                                                    {{-- <td>{{ ucwords($data->vendor_company_name) }}</td>
-                                                    <td>{{ ucwords($data->vendor_email) }}</td>
-                                                    <td>{{ ucwords($data->contact_no) }}</td>
-                                                    <td>{{ ucwords($data->vendor_address) }}</td> --}}
-                                                    {{-- <td>{{ ucwords($data->store_material_sent_date) }}</td> --}}
-                                                    {{-- <td> <a class="img-size" target="_blank"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
-                                                        alt="Design"> Click to view</a>
-                                                </td>
-                                                <td> <a class="img-size"
-                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                        alt="bill of material" >Click to download</a>
-                                                </td> --}}
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
                                                             <a href="{{ route('add-logistics', $data->id) }}"><button
                                                                     data-toggle="tooltip" title="Edit"
                                                                     class="btn-bg-colour"><i class="fa fa-pencil-square-o"
                                                                         aria-hidden="true"></i></button></a>
-                                                            {{-- <a href="{{route('delete-products')}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a> --}}
                                                         </div>
                                                     </td>
-
-
-
-
-
-
-
                                                 </tr>
                                             @endforeach
                                         </tbody>

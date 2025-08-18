@@ -401,16 +401,16 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item {{ Request::is('list-vendor') ? 'active' : '' }}"><a
-                                href="{{ route('list-vendor') }}"><i class="fa big-icon fa-users icon-wrap"
+                        <li class="nav-item {{ Request::is('purchase/vendor/list-vendor') || request()->is('purchase/vendor/add-vendor') || request()->is('purchase/vendor/edit-vendor/*') ? 'active' : '' }}">
+                            <a href="{{ route('list-vendor') }}"><i class="fa big-icon fa-users icon-wrap"
                                     aria-hidden="true"></i> <span class="mini-click-non">Vendor List</span></a></li>
 
-                        <li class="nav-item {{ request()->is('purchase/list-tax') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('purchase/list-tax') || request()->is('purchase/add-tax') || request()->is('purchase/edit-tax/*') ? 'active' : '' }}">
                             <a class="" href="{{ route('list-tax') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-receipt icon-wrap"></i> <span
                                     class="mini-click-non">Tax</span></a>
                         </li>
-                         <li class="nav-item {{ request()->is('purchase/list-vendor-type') ? 'active' : '' }}">
+                         <li class="nav-item {{ request()->is('purchase/list-vendor-type') || request()->is('purchase/add-vendor-type') || request()->is('purchase/edit-vendor-type/*') ? 'active' : '' }}">
                             <a class="" href="{{ route('list-vendor-type') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-receipt icon-wrap"></i> <span
                                     class="mini-click-non">Vendor Type</span></a>
@@ -450,14 +450,12 @@
                             </li> --}}
                             </ul>
                         </li>
-                        <li
-                            class="nav-item {{ request()->is('purchase/list-submited-po-to-vendor') ? 'active' : '' }}">
+                        <li  class="nav-item {{ request()->is('purchase/list-submited-po-to-vendor') || request()->is('purchase/list-submited-po-to-vendor-businesswise/*') || request()->is('purchase/check-details-of-po-before-send-vendor/*') ? 'active' : '' }}">
                             <a class="" href="{{ route('list-submited-po-to-vendor') }}"
                                 aria-expanded="false"><i class="fa big-icon fa-check-circle icon-wrap"></i> <span
                                     class="mini-click-non">Submitted PO by Vendor List</span></a>
                         </li>
-                        <li
-                            class="nav-item {{ request()->is('storedept/list-material-received-from-quality-po-tracking') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('storedept/list-material-received-from-quality-po-tracking') || request()->is('storedept/list-material-received-from-quality-bussinesswise-tracking/*') || request()->is('storedept/list-grn-details-po-tracking/*') ? 'active' : '' }}">
                             <a href="{{ route('list-material-received-from-quality-po-tracking') }}">
                                 <i class="fa fa-clipboard-list icon-wrap"></i>
                                 <span class="mini-click-non">Material Received PO Tracking</span>
@@ -646,19 +644,20 @@
                         <a href="{{ route('dashboard') }}"><i class="fa big-icon fa-envelope icon-wrap"
                                 aria-hidden="true"></i> <span class="mini-click-non">Dashboard</span></a>
                     </li>
-                        <li class="nav-item {{ request()->is('search-by-po-no') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('securitydept/search-by-po-no') ? 'active' : '' }}">
                             <a href="{{ route('search-by-po-no') }}">
                                 <i class="fa fa-search icon-wrap"></i>
                                 <span class="mini-click-non">Search By PO No</span>
                             </a>
                         </li>
 
-
-                        <li><a class="nav-item" href="{{ route('list-gatepass') }}" aria-expanded="false"><i
+                       <li class="nav-item {{ request()->is('securitydept/list-gatepass') || request()->is('securitydept/edit-gatepass/*') || request()->is('securitydept/list-po-details/*') ? 'active' : '' }}">
+                        <a class="nav-item" href="{{ route('list-gatepass') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-id-badge icon-wrap"></i> <span class="mini-click-non">List
                                     Gate
                                     Pass</span></a></li>
-                        <li><a class="nav-item" href="{{ route('list-dispatch-final-product-close') }}"
+                        <li class="nav-item {{ request()->is('dispatchdept/list-dispatch-final-product-close') ? 'active' : '' }}">
+                        <a class="nav-item" href="{{ route('list-dispatch-final-product-close') }}"
                                 aria-expanded="false"><i class="fa big-icon fa-id-badge icon-wrap"></i> <span
                                     class="mini-click-non">Closed PO List</span></a></li>
 
@@ -675,31 +674,30 @@
                             <a href="{{ route('dashboard') }}"><i class="fa big-icon fa-envelope icon-wrap"
                                     aria-hidden="true"></i> <span class="mini-click-non">Dashboard</span></a>
                         </li>
-
                         <li>
                             <a class="has-arrow" href="{{ route('list-grn') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-file-invoice  icon-wrap"></i> <span
                                     class="mini-click-non">GRN
                                     Form</span></a>
                             <ul class="submenu-angle" aria-expanded="false">
-                                <li><a href="{{ route('list-grn') }}"><i
+                                <li class="nav-item {{ request()->is('quality/list-grn') || request()->is('quality/add-grn/*') ? 'active' : '' }}">
+                                    <a href="{{ route('list-grn') }}"><i
                                             class="fa big-icon fa-clipboard-list icon-wrap" aria-hidden="true"></i>
                                         <span class="mini-click-non">List GRN</span></a></li>
                             </ul>
                         </li>
-
-
-                        <li class="nav-item {{ request()->is('list-material-sent-to-quality') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('quality/list-material-sent-to-quality') || request()->is('quality/list-material-sent-to-quality-businesswise/*') ? 'active' : '' }}">                       
                             <a href="{{ route('list-material-sent-to-quality') }}">
                                 <i class="fa big-icon fa-truck  icon-wrap"></i>
                                 <span class="mini-click-non">Material Sent to Store</span>
                             </a>
                         </li>
-                        <li><a href="{{ route('list-rejected-chalan-updated') }}"><i
+                        <li class="nav-item {{ request()->is('storedept/list-rejected-chalan-updated') || request()->is('storedept/list-rejected-chalan-details/*') ? 'active' : '' }}">                       
+                        <a href="{{ route('list-rejected-chalan-updated') }}">
+                            <i
                                     class="fa big-icon fa-ban  icon-wrap" aria-hidden="true"></i> <span
                                     class="mini-click-non">List Rejected Chalan</span></a></li>
-                        <li
-                            class="nav-item {{ request()->is('storedept/list-material-received-from-quality-po-tracking') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('storedept/list-material-received-from-quality-po-tracking')  || request()->is('storedept/list-grn-details-po-tracking/*') ? 'active' : '' }}">
                             <a href="{{ route('list-material-received-from-quality-po-tracking') }}">
                                 <i class="fa fa-clipboard-list icon-wrap"></i>
                                 <span class="mini-click-non">GRN List</span>
@@ -758,8 +756,6 @@
                             class="nav-item {{ request()->is('storedept/list-material-received-from-quality-po-tracking') ? 'active' : '' }}">
                             <a href="{{ route('list-material-received-from-quality-po-tracking') }}">
                                 <i class="fa fa-clipboard-list icon-wrap"></i>
-                                <span class="mini-click-non">Material Received PO Tracking</span>
-                            </a>
                         </li>
                         <li class="nav-item {{ request()->is('storedept/list-rejected-chalan') || request()->is('storedept/add-rejected-chalan/*') ? 'active' : '' }}">
                         <a href="{{ route('list-rejected-chalan') }}"><i class="fa big-icon fa-ban  icon-wrap"
@@ -932,13 +928,13 @@
                                     aria-hidden="true"></i> <span class="mini-click-non">PO Payment Release to Vendor
                                     By Fianance</span></a>
                         </li>
-                        <li class="nav-item {{ request()->is('recive-logistics-list') ? 'active' : '' }}">
+                         <li class="nav-item {{ request()->is('financedept/recive-logistics-list') ? 'active' : '' }}">           
                             <a href="{{ route('recive-logistics-list') }}">
                                 <i class="fa big-icon fa-list-check icon-wrap"></i>
                                 <span class="mini-click-non">Receive Logistics List</span>
                             </a>
                         </li>
-                        <li class="nav-item {{ request()->is('list-send-to-dispatch') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('financedept/list-send-to-dispatch') ? 'active' : '' }}">  
                             <a href="{{ route('list-send-to-dispatch') }}">
                                 <i class="fa big-icon fa-truck  icon-wrap"></i>
                                 <span class="mini-click-non">Product Submited to Dispatch</span>
@@ -965,36 +961,30 @@
                             <a href="{{ route('dashboard') }}"><i class="fa big-icon fa-envelope icon-wrap"
                                     aria-hidden="true"></i> <span class="mini-click-non">Dashboard</span></a>
                         </li>
-
-                        <li
-                            class="nav-item {{ request()->is('list-final-production-completed-recive-to-logistics') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('logisticsdept/list-final-production-completed-recive-to-logistics') || request()->is('logisticsdept/add-logistics/*') ? 'active' : '' }}">
                             <a href="{{ route('list-final-production-completed-recive-to-logistics') }}">
                                 <i class="fa big-icon fa-check-circle icon-wrap"></i>
                                 <span class="mini-click-non">Production Completed</span>
                             </a>
                         </li>
-
-                        <li class="nav-item {{ request()->is('list-logistics') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('logisticsdept/list-logistics') ? 'active' : '' }}">                        
                             <a href="{{ route('list-logistics') }}">
                                 <i class="fa big-icon fa-list-check icon-wrap"></i>
                                 <span class="mini-click-non">List Logistics</span>
                             </a>
                         </li>
-
-
-                        <li
-                            class="nav-item {{ request()->is('list-send-to-fianance-by-logistics') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('logisticsdept/list-send-to-fianance-by-logistics') ? 'active' : '' }}">   
                             <a href="{{ route('list-send-to-fianance-by-logistics') }}">
                                 <i class="fa big-icon fa-paper-plane icon-wrap"></i>
                                 <span class="mini-click-non">Submited to Fianance</span>
                             </a>
                         </li>
-                        <li>
+                         <li class="nav-item {{ request()->is('logisticsdept/list-vehicle-type') || request()->is('logisticsdept/add-vehicle-type/*') || request()->is('logisticsdept/edit-vehicle-type/*') ? 'active' : '' }}">   
                             <a class="" href="{{ route('list-vehicle-type') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-cogs icon-wrap"></i> <span class="mini-click-non">Vehicle
                                     Type</span></a>
                         </li>
-                        <li>
+                        <li class="nav-item {{ request()->is('logisticsdept/list-transport-name') || request()->is('logisticsdept/add-transport-name') || request()->is('logisticsdept/edit-transport-name/*') ? 'active' : '' }}">   
                             <a class="" href="{{ route('list-transport-name') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-truck icon-wrap"></i> <span class="mini-click-non">Transport
                                     Name</span></a>
@@ -1012,23 +1002,21 @@
                             <a href="{{ route('dashboard') }}"><i class="fa big-icon fa-envelope icon-wrap"
                                     aria-hidden="true"></i> <span class="mini-click-non">Dashboard</span></a>
                         </li>
-
-                        <li
-                            class="nav-item {{ request()->is('list-final-production-completed-received-from-fianance') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('dispatchdept/list-final-production-completed-received-from-fianance') || request()->is('dispatchdept/add-dispatch/*') ? 'active' : '' }}">
                             <a href="{{ route('list-final-production-completed-received-from-fianance') }}">
                                 <i class="fa big-icon fa-receipt  icon-wrap"></i>
                                 <span class="mini-click-non">Received From Finance</span>
                             </a>
                         </li>
 
-                        <li class="nav-item {{ request()->is('list-dispatch') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('dispatchdept/list-dispatch') ? 'active' : '' }}">
                             <a href="{{ route('list-dispatch') }}">
                                 <i class="fa big-icon fa-truck icon-wrap"></i>
                                 <span class="mini-click-non">Product Dispatch Quantity Wise </span>
                             </a>
                         </li>
                         <li
-                            class="nav-item {{ request()->is('list-dispatch-final-product-close') ? 'active' : '' }}">
+                            class="nav-item {{ request()->is('dispatchdept/list-dispatch-final-product-close') ? 'active' : '' }}">
                             <a href="{{ route('list-dispatch-final-product-close') }}">
                                 <i class="fa big-icon fa-truck icon-wrap"></i>
                                 <span class="mini-click-non">Product Dispatch Completed (Close Product)</span>
@@ -1054,28 +1042,35 @@
                                     aria-hidden="true"></i> <span class="mini-click-non">Dashboard</span></a>
                         </li>
 
-                        <li class="nav-item"><a href="{{ route('list-product') }}" aria-expanded="false"><i
+                             <li class="nav-item {{ request()->is('cms/list-product') || request()->is('cms/add-product') || request()->is('cms/show-product') || request()->is('cms/edit-product/*')  ? 'active' : '' }}">                            
+                            <a href="{{ route('list-product') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-cube icon-wrap" aria-hidden="true"></i> <span
                                     class="mini-click-non">Product</span></a></li>
-                        <li class="nav-item"><a href="{{ route('list-services') }}" aria-expanded="false"><i
+                      <li class="nav-item {{ request()->is('cms/list-services') || request()->is('cms/add-services') || request()->is('cms/show-services') || request()->is('cms/edit-services/*')  ? 'active' : '' }}">   
+                            <a href="{{ route('list-services') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-tools icon-wrap" aria-hidden="true"></i> <span
                                     class="mini-click-non">Services</span></a></li>
 
-                        <li class="nav-item"><a href="{{ route('list-testimonial') }}" aria-expanded="false"><i
+                        <li class="nav-item {{ request()->is('cms/list-testimonial') || request()->is('cms/add-testimonial') || request()->is('cms/show-testimonial') || request()->is('cms/edit-testimonial/*')  ? 'active' : '' }}">   
+                            <a href="{{ route('list-testimonial') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-quote-right icon-wrap" aria-hidden="true"></i> <span
                                     class="mini-click-non">Testimonial</span></a></li>
 
-                        <li class="nav-item"><a href="{{ route('list-director-desk') }}" aria-expanded="false"><i
+                       <li class="nav-item {{ request()->is('cms/list-director-desk') || request()->is('cms/add-director-desk') || request()->is('cms/show-director-desk') || request()->is('cms/edit-director-desk/*')  ? 'active' : '' }}">   
+                            <a href="{{ route('list-director-desk') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-briefcase icon-wrap" aria-hidden="true"></i> <span
                                     class="mini-click-non">Director Desk</span></a></li>
-                        <li class="nav-item"><a href="{{ route('list-vision-mission') }}" aria-expanded="false"><i
+                       <li class="nav-item {{ request()->is('cms/list-vision-mission') || request()->is('cms/add-vision-mission') || request()->is('cms/show-vision-mission') || request()->is('cms/edit-vision-mission/*')  ? 'active' : '' }}">   
+                            <a href="{{ route('list-vision-mission') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-bullseye icon-wrap" aria-hidden="true"></i> <span
                                     class="mini-click-non">Vision Mission</span></a></li>
-                        <li class="nav-item"><a href="{{ route('list-team') }}" aria-expanded="false"><i
+                        <li class="nav-item {{ request()->is('cms/list-team') || request()->is('cms/add-team') || request()->is('cms/show-team') || request()->is('cms/edit-team/*')  ? 'active' : '' }}">   
+                            <a href="{{ route('list-team') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-user-friends icon-wrap" aria-hidden="true"></i> <span
                                     class="mini-click-non">Team</span></a></li>
 
-                        <li class="nav-item"><a href="{{ route('list-contactus-form') }}" aria-expanded="false"><i
+                        <li class="nav-item {{ request()->is('cms/list-contactus-form') || request()->is('cms/show-contactus-form') ? 'active' : '' }}">   
+                            <a href="{{ route('list-contactus-form') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-edit icon-wrap" aria-hidden="true"></i> <span
                                     class="mini-click-non">Contact Us Form </span></a></li>
                         <!-- </ul>

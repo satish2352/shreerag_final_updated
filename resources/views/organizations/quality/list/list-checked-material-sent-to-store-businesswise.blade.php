@@ -17,10 +17,8 @@
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
                                 <h1>Material Need To Sent To<span class="table-project-n"> Production</span> Department Business Wise</h1>
-                               
                             </div>
                         </div>
-                        
                         <form method="GET" action="{{ route('list-material-sent-to-quality-businesswise', ['id' => $id]) }}">
                             <div class="row">
                                 <div class="col-md-3">
@@ -54,33 +52,11 @@
                             </div>
                             <div class="row d-flex justify-content-center">
                                 <div class="col-md-12 mt-4" style="display: flex; justify-content: center; margin-top:20px;">
-                                    <button type="submit" class="btn btn-primary">Filter</button>
+                                    <button type="submit" class="btn btn-sm btn-bg-colour">Filter</button>
                                     <a href="{{ route('list-material-sent-to-quality-businesswise', ['id' => $id]) }}" class="btn btn-secondary">Reset</a>
                                 </div>
                             </div>
                         </form>
-                        
-                       
-
-                        @if (Session::get('status') == 'success')
-                            <div class="alert alert-success alert-success-style1">
-                                <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
-                                    <span class="icon-sc-cl" aria-hidden="true">&times;</span>
-                                </button>
-                                {{-- <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i> --}}
-                                <p><strong>Success!</strong> {{ Session::get('msg') }}</p>
-                            </div>
-                        @endif
-                        @if (Session::get('status') == 'error')
-                            <div class="alert alert-danger alert-mg-b alert-success-style4">
-                                <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
-                                    <span class="icon-sc-cl" aria-hidden="true">&times;</span>
-                                </button>
-                                <i class="fa fa-times adminpro-danger-error admin-check-pro" aria-hidden="true"></i>
-                                <p><strong>Danger!</strong> {{ Session::get('msg') }}</p>
-                            </div>
-                        @endif
-
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
                                 <div class="table-responsive">
