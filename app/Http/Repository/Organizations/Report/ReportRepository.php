@@ -45,6 +45,10 @@ public function getCompletedProductList(Request $request)
              ->leftJoin('estimation', function ($join) {
                 $join->on('tbl_logistics.business_details_id', '=', 'estimation.business_details_id');
             })
+               ->leftJoin(DB::raw('(SELECT business_details_id, SUM(items_used_total_amount) as total_items_used_amount 
+                     FROM production_details 
+                     GROUP BY business_details_id) as pd'), 
+           'tbl_dispatch.business_details_id', '=', 'pd.business_details_id')
             ->whereIn('tcqt1.quantity_tracking_status', $array_to_be_quantity_tracking)
             ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
             ->where('businesses.is_active', true)
@@ -101,6 +105,7 @@ public function getCompletedProductList(Request $request)
                 'businesses_details.quantity',
                 DB::raw('SUM(tcqt1.completed_quantity) as total_completed_quantity'),
                 DB::raw('MAX(tbl_dispatch.updated_at) as updated_at'),
+                 DB::raw('COALESCE(MAX(pd.total_items_used_amount), 0) as total_items_used_amount'),
                 'estimation.total_estimation_amount',
             )
             ->groupBy(
@@ -840,53 +845,120 @@ public function getConsumptionReport(Request $request)
     }
 }
 
-  public function getConsumptionMaterialList($id) {
-        try {
-            // $id = base64_decode($id); 
+//   public function getConsumptionMaterialList($id) {
+//         try {
+//             // $id = base64_decode($id); 
 
             
-            $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-                })
-                ->leftJoin('businesses_details', function($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-                })
-                ->leftJoin('production_details', function($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
-                })
-                ->where('businesses_details.id', $id)
-                ->where('businesses_details.is_active', true)
-                ->where('production_details.is_deleted', 0)
-                ->select(
-                    'businesses_details.id',
-                    // 'gatepass.id',
-                    'production_details.id',
-                    'businesses_details.product_name',
-                    'businesses_details.quantity',
-                    'businesses_details.description',
-                    'production_details.part_item_id',
-                    'production_details.quantity',
-                    'production_details.unit',
-                    'production_details.quantity_minus_status',
-                    'production_details.material_send_production',
-                    'business_application_processes.store_material_sent_date'
-                )
-                ->get(); 
-            $productDetails = $dataOutputByid->first(); // Assuming the first entry contains the product details
-            $dataGroupedById = $dataOutputByid->groupBy('business_details_id');
+//             $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function($join) {
+//                     $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+//                 })
+//                 ->leftJoin('businesses_details', function($join) {
+//                     $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+//                 })
+//                 ->leftJoin('production_details', function($join) {
+//                     $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
+//                 })
+//                 ->where('businesses_details.id', $id)
+//                 ->where('businesses_details.is_active', true)
+//                 ->where('production_details.is_deleted', 0)
+//                 ->select(
+//                     'businesses_details.id',
+//                     // 'gatepass.id',
+//                     'production_details.id',
+//                     'businesses_details.product_name',
+//                     'businesses_details.quantity',
+//                     'businesses_details.description',
+//                     'production_details.part_item_id',
+//                     'production_details.quantity',
+//                     'production_details.unit',
+//                     'production_details.quantity_minus_status',
+//                     'production_details.material_send_production',
+//                     'production_details.basic_rate',
+//                     'production_details.items_used_total_amount',
+//                         DB::raw('COALESCE(MAX(production_details.total_items_used_amount), 0) as total_items_used_amount'),
+//                     'business_application_processes.store_material_sent_date'
+//                 )
+//                 ->get(); 
+//             $productDetails = $dataOutputByid->first(); // Assuming the first entry contains the product details
+//             $dataGroupedById = $dataOutputByid->groupBy('business_details_id');
     
-            return [
-                'productDetails' => $productDetails,
-                'dataGroupedById' => $dataGroupedById
-            ]; 
-            // return  $dataOutputByid;
-        } catch (\Exception $e) {
-            return [
-                'status' => 'error',
-                'msg' => $e->getMessage()
-            ];
-        }
+//             return [
+//                 'productDetails' => $productDetails,
+//                 'dataGroupedById' => $dataGroupedById
+//             ]; 
+//             // return  $dataOutputByid;
+//         } catch (\Exception $e) {
+//             return [
+//                 'status' => 'error',
+//                 'msg' => $e->getMessage()
+//             ];
+//         }
+//     }
+public function getConsumptionMaterialList($id) {
+    try {
+        $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+            })
+            ->leftJoin('businesses_details', function($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+            })
+            ->leftJoin('production_details', function($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
+            })
+            ->where('businesses_details.id', $id)
+            ->where('businesses_details.is_active', true)
+            ->where('production_details.is_deleted', 0)
+            ->select(
+                'businesses_details.id as business_details_id',
+                'production_details.id as production_details_id',
+                'businesses_details.product_name',
+                'businesses_details.quantity as business_quantity',
+                'businesses_details.description',
+                'production_details.part_item_id',
+                'production_details.quantity as production_quantity',
+                'production_details.unit',
+                'production_details.quantity_minus_status',
+                'production_details.material_send_production',
+                'production_details.basic_rate',
+                'production_details.items_used_total_amount',
+                DB::raw('COALESCE(SUM(production_details.items_used_total_amount), 0) as total_items_used_amount'),
+                'business_application_processes.store_material_sent_date'
+            )
+            ->groupBy(
+                'businesses_details.id',
+                'production_details.id',
+                'businesses_details.product_name',
+                'businesses_details.quantity',
+                'businesses_details.description',
+                'production_details.part_item_id',
+                'production_details.quantity',
+                'production_details.unit',
+                'production_details.quantity_minus_status',
+                'production_details.material_send_production',
+                'production_details.basic_rate',
+                'production_details.items_used_total_amount',
+                'business_application_processes.store_material_sent_date'
+            )
+            ->get();
+
+        $productDetails = $dataOutputByid->first();
+        $dataGroupedById = $dataOutputByid->groupBy('business_details_id');
+
+        $totalAmount = $dataOutputByid->sum('items_used_total_amount'); // collection sum
+
+        return [
+            'productDetails' => $productDetails,
+            'dataGroupedById' => $dataGroupedById,
+            'total_items_used_amount' => $totalAmount
+        ]; 
+    } catch (\Exception $e) {
+        return [
+            'status' => 'error',
+            'msg' => $e->getMessage()
+        ];
     }
+}
 
      public function listItemStockReport() {
         try {            

@@ -313,6 +313,7 @@ public function getConsumptionMaterialList($id){
         return view('organizations.report.consumption-material-list', [
             'productDetails' => $editData['productDetails'],
             'dataGroupedById' => $editData['dataGroupedById'],
+              'total_items_used_amount' => $editData['total_items_used_amount'], 
             'dataOutputPartItem' => $dataOutputPartItem,
             'dataOutputUnitMaster' => $dataOutputUnitMaster,
             'id' => $id

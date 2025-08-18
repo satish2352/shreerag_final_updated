@@ -186,6 +186,7 @@ function fetchReport(reset = false) {
              <td>${item.quantity ?? '-'}</td>
               <td>${item.total_completed_quantity ?? '-'}</td>
                 <td>${item.total_estimation_amount ?? '-'}</td>
+                 <td>${item.total_items_used_amount ?? '-'}</td>
         
         </tr>
     `;

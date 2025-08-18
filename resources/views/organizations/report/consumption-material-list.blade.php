@@ -84,6 +84,8 @@
                                                     <th>Part Item</th>
                                                     <th>Quantity</th>
                                                     <th>Unit</th>
+                                                    <th>Basic Rate</th>
+                                                    <th>Amount</th>
 
 
                                                 </tr>
@@ -91,6 +93,7 @@
                                             <tbody>
                                                 @foreach ($dataGroupedById as $key => $items)
                                                     @foreach ($items as $index => $item)
+                                                  
                                                         <tr class="item-row">
                                                             <td>
                                                                 <input type="text"
@@ -111,7 +114,7 @@
                                                                 <input class="form-control quantity" readonly
                                                                     name="addmore[{{ $index }}][quantity]"
                                                                     type="text" step="any" required
-                                                                    value="{{ $item->quantity }}">
+                                                                    value="{{ $item->production_quantity }}">
                                                                 <span class="stock-available"></span>
                                                             </td>
                                                             <td>
@@ -120,14 +123,34 @@
                                                                 <input type="hidden"
                                                                     name="addmore[{{ $index }}][unit]"
                                                                     value="{{ $item->unit }}">
-
-
                                                             </td>
-
-
+                                                               <td>
+                                                                <input class="form-control basic_rate" readonly
+                                                                    name="addmore[{{ $index }}][basic_rate]"
+                                                                    type="text" step="any" required
+                                                                    value="{{ $item->basic_rate }}">
+                                                                <span class="stock-available"></span>
+                                                            </td>
+                                                              <td>
+                                                                <input class="form-control items_used_total_amount" readonly
+                                                                    name="addmore[{{ $index }}][items_used_total_amount]"
+                                                                    type="text" step="any" required
+                                                                    value="{{ $item->items_used_total_amount }}">
+                                                                <span class="stock-available"></span>
+                                                            </td>
                                                         </tr>
+                                                       
                                                     @endforeach
                                                 @endforeach
+                                                <tr>
+                                                    <td colspan="5" class="text-right"><b>Total</b></td>
+                                                    <td>
+                                                        <input class="form-control total_items_used_amount" readonly
+                                                            type="text" step="any"
+                                                            value="{{ $total_items_used_amount }}">
+                                                    </td>
+                                                </tr>
+
                                             </tbody>
                                         </table>
                                     </div>
