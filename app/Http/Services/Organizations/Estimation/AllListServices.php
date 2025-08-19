@@ -53,7 +53,7 @@ class AllListServices
 {
     try {
       $data_output = $this->repo->getSendToProductionList();
-   
+
        return $data_output;
     } catch (\Exception $e) {
         \Log::error('Service Error: ' . $e->getMessage());

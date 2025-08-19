@@ -184,7 +184,7 @@ public function sendToProduction($id){ //checked
                 'status' => 'error',
             ];
         }
-        
+   
         $businessDetails = BusinessDetails::where('id', $decoded_business_id)->first();
         if (!$businessDetails) {
             return [
@@ -223,11 +223,13 @@ public function sendToProduction($id){ //checked
         $production_data_details->save();
 
         $business_applications = BusinessApplicationProcesses::where('business_details_id', $dataOutputNew->business_details_id)->get();
-        foreach ($business_applications as $business_application) {
-            $business_applications->production_id = $production_data->id;
-            $business_application->estimation_send_to_production = config('constants.ESTIMATION_DEPARTMENT.UPDATED_ACCEPTED_BOM_SEND_TO_PRODUCTION');
-            $business_application->save();
-        }
+
+            foreach ($business_applications as $business_application) {
+    $business_application->production_id = $production_data->id;
+    $business_application->estimation_send_to_production = config('constants.ESTIMATION_DEPARTMENT.UPDATED_ACCEPTED_BOM_SEND_TO_PRODUCTION');
+    $business_application->off_canvas_status = 33;
+    $business_application->save();
+}
 
         // Update admin and notification view
         $update_data_admin = [
@@ -237,8 +239,7 @@ public function sendToProduction($id){ //checked
         $update_data_business = [
             'off_canvas_status' => 33
         ];
-//  dd($dataOutputNew);
-//         die();
+ 
         AdminView::where('business_details_id', $dataOutputNew->business_details_id)->update($update_data_admin);
         NotificationStatus::where('business_details_id', $dataOutputNew->business_details_id)->update($update_data_business);
 
