@@ -119,7 +119,7 @@ public function getAllEstimationSendToOwnerForApproval(){ //checked
             })
             ->where('business_application_processes.bom_estimation_send_to_owner', $array_to_be_check)
             ->whereNull('business_application_processes.owner_bom_accepted')
-            ->whereNull('business_application_processes.owner_bom_rejected')
+            // ->whereNull('business_application_processes.owner_bom_rejected')
             ->where('businesses.is_active', true)
             ->where('businesses.is_deleted', 0)
             ->select(

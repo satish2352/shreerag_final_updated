@@ -898,6 +898,7 @@ public function getRejectEstimationBOM(){ //checked
             })
             ->where('business_application_processes.owner_bom_rejected', $rejected)
             ->whereNull('business_application_processes.owner_bom_accepted')
+              ->whereNull('business_application_processes.resend_bom_estimation_send_to_owner')
             ->where('businesses.is_active', true)
             ->where('businesses.is_deleted', 0)
             ->select(
@@ -956,6 +957,7 @@ public function getRejectEstimationBOMBusinessWise($id)
               ->whereNull('business_application_processes.owner_bom_accepted')
             ->where('businesses.is_active', true)
             ->where('businesses.is_deleted', 0)
+              ->whereNull('business_application_processes.resend_bom_estimation_send_to_owner')
             ->select(
                'businesses_details.id',
                 'businesses_details.product_name',

@@ -176,6 +176,7 @@ public function updateRevisedEstimation($request){ //checked
 public function sendToProduction($id){ //checked
     try {
         $decoded_business_id = base64_decode($id);
+       
         $dataOutputNew = EstimationModel::where('business_details_id', $decoded_business_id)->first();
         if (!$dataOutputNew) {
             return [
@@ -183,6 +184,7 @@ public function sendToProduction($id){ //checked
                 'status' => 'error',
             ];
         }
+        
         $businessDetails = BusinessDetails::where('id', $decoded_business_id)->first();
         if (!$businessDetails) {
             return [
@@ -235,7 +237,8 @@ public function sendToProduction($id){ //checked
         $update_data_business = [
             'off_canvas_status' => 33
         ];
-
+//  dd($dataOutputNew);
+//         die();
         AdminView::where('business_details_id', $dataOutputNew->business_details_id)->update($update_data_admin);
         NotificationStatus::where('business_details_id', $dataOutputNew->business_details_id)->update($update_data_business);
 

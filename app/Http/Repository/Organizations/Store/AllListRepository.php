@@ -16,20 +16,76 @@ use App\Models\ {
 use Config;
 
 class AllListRepository  {
-    public function getAllListDesignRecievedForMaterial(){
-        try {
-            $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION')];
-            $array_to_be_check_store = [config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION')];
-            $array_to_be_check_store_after_quality = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
-            $array_to_be_check_production = [config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
+    // public function getAllListDesignRecievedForMaterial(){
+    //     try {
+    //         $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION')];
+    //         $array_to_be_check_store = [config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION')];
+    //         $array_to_be_check_store_after_quality = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
+    //         $array_to_be_check_production = [config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
 
-            $data_output = BusinessApplicationProcesses::leftJoin('production', function($join) {
+    //         $data_output = BusinessApplicationProcesses::leftJoin('production', function($join) {
+    //             $join->on('business_application_processes.business_id', '=', 'production.business_id');
+    //         })
+    //         ->leftJoin('businesses', function($join) {
+    //             $join->on('business_application_processes.business_id', '=', 'businesses.id');
+    //         })
+    //         ->where(function ($query) use ($array_to_be_check, $array_to_be_check_store, $array_to_be_check_store_after_quality, $array_to_be_check_production) {
+    //             $query->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store)
+    //                 ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check)
+    //                 ->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store_after_quality)
+    //                 ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check_production);
+    //         })
+    //         ->where('businesses.is_active', true)
+    //         ->where('businesses.is_deleted', 0)
+    //         ->distinct('businesses.id')
+    //         ->groupBy(
+    //             'businesses.id',
+    //             'businesses.project_name',
+    //             'businesses.customer_po_number',
+    //             'businesses.remarks',
+    //             'businesses.is_active',
+    //             'production.business_id',
+    //             'business_application_processes.updated_at',
+    //             'business_application_processes.created_at'
+    //         )
+    //         ->select(
+    //             'businesses.id',
+    //             'businesses.project_name',
+    //             'businesses.customer_po_number',
+    //             'businesses.remarks',
+    //             'businesses.is_active',
+    //             'production.business_id',
+    //             'business_application_processes.updated_at',
+    //             'business_application_processes.created_at'
+    //         )
+    //         ->orderBy('business_application_processes.updated_at', 'desc')
+    //         ->get();
+
+    //         return $data_output;
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+    public function getAllListDesignRecievedForMaterial()
+{
+    try {
+        $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION')];
+        $array_to_be_check_store = [config('constants.STORE_DEPARTMENT.LIST_BOM_PART_MATERIAL_SENT_TO_PROD_DEPT_FOR_PRODUCTION')];
+        $array_to_be_check_store_after_quality = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
+        $array_to_be_check_production = [config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
+
+        $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
                 $join->on('business_application_processes.business_id', '=', 'production.business_id');
             })
-            ->leftJoin('businesses', function($join) {
+            ->leftJoin('businesses', function ($join) {
                 $join->on('business_application_processes.business_id', '=', 'businesses.id');
             })
-            ->where(function ($query) use ($array_to_be_check, $array_to_be_check_store, $array_to_be_check_store_after_quality, $array_to_be_check_production) {
+            ->where(function ($query) use (
+                $array_to_be_check, 
+                $array_to_be_check_store, 
+                $array_to_be_check_store_after_quality, 
+                $array_to_be_check_production
+            ) {
                 $query->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store)
                     ->orWhereIn('business_application_processes.production_status_id', $array_to_be_check)
                     ->orWhereIn('business_application_processes.store_status_id', $array_to_be_check_store_after_quality)
@@ -37,17 +93,6 @@ class AllListRepository  {
             })
             ->where('businesses.is_active', true)
             ->where('businesses.is_deleted', 0)
-            ->distinct('businesses.id')
-            ->groupBy(
-                'businesses.id',
-                'businesses.project_name',
-                'businesses.customer_po_number',
-                'businesses.remarks',
-                'businesses.is_active',
-                'production.business_id',
-                'business_application_processes.updated_at',
-                'business_application_processes.created_at'
-            )
             ->select(
                 'businesses.id',
                 'businesses.project_name',
@@ -59,13 +104,17 @@ class AllListRepository  {
                 'business_application_processes.created_at'
             )
             ->orderBy('business_application_processes.updated_at', 'desc')
-            ->get();
+            ->get()
+            ->unique('id')   // ✅ Ensure only one row per business
+            ->values();      // Reset array keys
 
-            return $data_output;
-        } catch (\Exception $e) {
-            return $e;
-        }
+        return $data_output;
+
+    } catch (\Exception $e) {
+        return $e;
     }
+}
+
     public function getAllListDesignRecievedForMaterialBusinessWise($business_id){
         try {
             $decoded_business_id = base64_decode($business_id);
