@@ -71,7 +71,7 @@
                                                             <a
                                                                 href="{{ route('accept-purchase-order-payment-release', [$data->purchase_orders_id, $data->id]) }} "><button
                                                                     data-toggle="tooltip" title="Check details"
-                                                                    class="btn-bg-colour">Accept</button></a>
+                                                                    class="btn btn-sm btn-bg-colour">Accept</button></a>
                                                         </div>
                                                     </td>
                                                 </tr>

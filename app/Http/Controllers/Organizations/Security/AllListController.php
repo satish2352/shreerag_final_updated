@@ -54,7 +54,8 @@ public function getAllListMaterialRecieved(Request $request)
             'businesses.remarks',
             'businesses.is_active',
             'production.business_id',
-            'production.id as productionId'
+            'production.id as productionId',
+            \DB::raw('COUNT(gatepass.id) as gatepass_count')
         )
         ->groupBy(
             'purchase_orders.purchase_orders_id',

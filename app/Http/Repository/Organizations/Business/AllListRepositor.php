@@ -14,7 +14,9 @@ use App\Models\{
   BusinessDetails,
   Gatepass,
   CustomerProductQuantityTracking,
-  EstimationModel
+  EstimationModel,
+  User,
+  LoginHistory
 };
 use Config;
 
@@ -733,6 +735,8 @@ public function loadDesignSubmittedForEstimationBusinessWise($business_details_i
             })
             ->where('businesses_details.business_id', $decoded_business_id)
             ->where('business_application_processes.bom_estimation_send_to_owner', $array_to_be_check)
+             ->whereNull('business_application_processes.owner_bom_accepted')
+              // ->whereNull('business_application_processes.owner_bom_rejected')
             ->where('businesses_details.is_active', true)
             ->where('businesses_details.is_deleted', 0)
             ->select(
@@ -1160,9 +1164,10 @@ public function loadDesignSubmittedForProductionBusinessWise($business_id){ //ch
             ->leftJoin('businesses', function ($join) {
                 $join->on('businesses_details.business_id', '=', 'businesses.id');
             }) 
-            ->where('businesses_details.business_id', $decoded_business_id)
-            ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
-            ->where('business_application_processes.design_send_to_estimation',$send_estimation)
+            // ->where('businesses_details.business_id', $decoded_business_id)
+            // ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
+            // ->where('business_application_processes.design_send_to_estimation',$send_estimation)
+            ->whereNull('business_application_processes.owner_bom_accepted')
             ->where('businesses_details.is_active', true)
             ->where('businesses_details.is_deleted', 0)
             ->select(
@@ -1757,5 +1762,38 @@ public function listProductDispatchCompletedFromDispatch(){
   }
 }
                       
+public function listLoginHistory() {
+    $data_users = LoginHistory::where('is_active', 1)
+        ->where('is_deleted', 0)
+        ->orderBy('id', 'desc')
+        ->get();
 
+    return $data_users;
+}
+
+	public function showLoginHistory($id)
+	{
+		try {
+       $decoded_business_id = base64_decode($id);
+      // dd($decoded_business_id);
+      // die();
+			$user = LoginHistory::where('is_active', 1)
+        ->where('is_deleted', 0)
+        ->orderBy('id', 'desc')
+				->where('id', $id)
+				->select('login_history.f_name','login_history.m_name','login_history.l_name', 'login_history.latitude', 'login_history.longitude')
+				->first();
+	
+			if ($user) {
+				return $user;
+			} else {
+				return null;
+			}
+		} catch (\Exception $e) {
+			return [
+				'msg' => $e->getMessage(),
+				'status' => 'error'
+			];
+		}
+	}
 }

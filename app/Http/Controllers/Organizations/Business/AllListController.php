@@ -642,5 +642,21 @@ public function getRevisedEstimationBOMBusinessWise($id) { //checked
             return $e;
         }
     }
-  
+
+
+       public function listLoginHistory() {
+        $register_user = $this->service->listLoginHistory();
+        return view( 'organizations.hr.employees.list-login-history', compact( 'register_user' ) );
+    }
+
+    
+      public function showLoginHistory( Request $request )
+ {
+        try {
+            $user_detail = $this->service->showLoginHistory( $request->show_id );
+            return view( 'organizations.hr.employees.show-login-history', compact( 'user_detail' ) );
+        } catch ( \Exception $e ) {
+            return $e;
+        }
+    }
 }

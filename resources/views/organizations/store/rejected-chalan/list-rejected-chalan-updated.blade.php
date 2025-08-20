@@ -42,7 +42,7 @@
                                                             <a href="{{ route('list-rejected-chalan-details', 
                                                              [base64_encode($data->purchase_orders_id), base64_encode($data->id)]) }}"><button
                                                                     data-toggle="tooltip" title="Edit"
-                                                                    class="btn-bg-colour"><i class="fa fa-eye" aria-hidden="true"></i></button></a>
+                                                                    class="btn btn-sm btn-bg-colour"><i class="fa fa-eye" aria-hidden="true"></i></button></a>
                                                         </div>
                                                     </td>
                                                 </tr>

@@ -47,7 +47,7 @@
                                                             <a
                                                                 href="{{ route('list-submit-final-purchase-order', $data->id) }}"><button
                                                                     data-toggle="tooltip" title="Edit"
-                                                                    class="btn-bg-colour"><i class="fa fa-pencil-square-o"
+                                                                    class="btn btn-sm btn-bg-colour"><i class="fa fa-pencil-square-o"
                                                                         aria-hidden="true"></i> Check Details</button></a>
                                                             &nbsp; &nbsp; &nbsp;
                                                         </div>

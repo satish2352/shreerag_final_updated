@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Models\ {
-   User
+   User,
+   LoginHistory
     };
 use Session;
 use Validator;
@@ -111,19 +112,39 @@ class LoginController extends Controller
             // Assuming `checkLogin` function stores `user_id` in session on success
             $ses_userId = session()->get( 'user_id' );
 
-           if ($request->filled(['latitude', 'longitude'])) {
-            $latitude = $request->latitude;
-            $longitude = $request->longitude;
 
-            // Update lat/lng
-            User::where('id', $ses_userId)->update([
-                'latitude' => $latitude,
-                'longitude' => $longitude,
-            ]);
+           $user = User::find($ses_userId);
+
+    if (!$user) {
+        return redirect('/login')->with('error', 'User not found.');
+    }
+
+    // ✅ Update location if provided
+    if ($request->filled(['latitude', 'longitude'])) {
+        $latitude  = $request->latitude;
+        $longitude = $request->longitude;
+
+        $user->update([
+            'latitude'  => $latitude,
+            'longitude' => $longitude,
+        ]);
+
+        // Save login history
+        $loginHistory = new LoginHistory();
+        // $loginHistory->id          = $user->id;
+        $loginHistory->f_name           = $user->f_name ?? null;
+        $loginHistory->m_name           = $user->m_name ?? null;
+        $loginHistory->l_name           = $user->l_name ?? null;
+        $loginHistory->number           = $user->number ?? null;
+        $loginHistory->location_address = $request->location_address ?? null;
+        $loginHistory->latitude         = $latitude;
+        $loginHistory->longitude        = $longitude;
+        $loginHistory->save();
+    
 
             // Google Geocoding API
-            $apiKey = 'YOUR_GOOGLE_API_KEY'; // Replace this
-            $url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey";
+            // $apiKey = 'YOUR_GOOGLE_API_KEY'; // Replace this
+            // $url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey";
 
             try {
                 $response = Http::get($url);
@@ -168,6 +189,8 @@ class LoginController extends Controller
                         return redirect('/cms/dashboard');
                 case 14:
                             return redirect('/inventory/dashboard');
+                case 15:
+                        return redirect('/estimation/dashboard');            
                     default:
                     return redirect('/dashboard'); // Default dashboard
             }

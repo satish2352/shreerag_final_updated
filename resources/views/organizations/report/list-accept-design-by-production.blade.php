@@ -42,9 +42,9 @@
                 <label>Year</label>
                 <select name="year" class="form-control">
                     <option value="">All</option>
-                    @for ($i = now()->year; $i >= 2010; $i--)
-                        <option value="{{ $i }}">{{ $i }}</option>
-                    @endfor
+                      @foreach (yearOptions() as $year)
+                        <option value="{{ $year }}">{{ $year }}</option>
+                      @endforeach
                 </select>
             </div>
             <div class="col-md-3">
@@ -115,21 +115,22 @@
                                                  <th data-field="updated_at" data-editable="false">Date</th>
                                                   <th data-field="status" data-editable="false">Status</th>
                                                  <th data-field="po_number" data-editable="false">Project Name</th>
-                                                <th data-field="po_number" data-editable="false">PO Number</th>
+                                                <th data-field="customer_po_number" data-editable="false">PO Number</th>
                                                 {{-- <th data-field="grn_date" data-editable="false">Description</th> --}}
-                                                <th data-field="purchase_id" data-editable="false">Remark</th>
+                                                <th data-field="remark" data-editable="false">Remark</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 {{-- <th data-field="title" data-editable="false">Name</th> --}}
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
-                                                <th data-field="grn_date" data-editable="false">Description</th>
+                                                <th data-field="description" data-editable="false">Description</th>
                                                 {{-- <th data-field="purchase_id" data-editable="false">Remark</th>                                          --}}
-                                                <th data-field="design_image" data-editable="false">Design Layout</th>
+                                                <th data-field="reject_reason_prod" data-editable="false">Rejected Reason</th>
+                                                <th data-field="remark_by_design" data-editable="false">Design Remark</th>
                                                 <th data-field="bom_image" data-editable="false">BOM</th>
-                                                <th data-field="re_design_image" data-editable="false">Revised Design Layout
+                                                <th data-field="re_design_image" data-editable="false">Design Layout
                                                 </th>
-                                                <th data-field="re_bom_image" data-editable="false">Revised BOM</th>
+                                                <th data-field="re_bom_image" data-editable="false">Revised Design Layout</th>
                                                  <th data-field="reject_reason_prod" data-editable="false">Rejected Reason</th>
-                                                  <th data-field="remark_by_design" data-editable="false">Design Remark</th>
+                                                  
                                             </tr>
     </thead>
     <tbody id="reportBody">

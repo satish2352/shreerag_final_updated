@@ -145,7 +145,7 @@ class DesignUploadController extends Controller
                      $msg = $update_data['msg'];
                      $status = $update_data['status'];
                      if ($status == 'success') {
-                         return redirect('designdept/list-design-upload')->with(compact('msg', 'status'));
+                         return redirect('designdept/list-updated-design')->with(compact('msg', 'status'));
                      } else {
                          return redirect()->back()
                              ->withInput()

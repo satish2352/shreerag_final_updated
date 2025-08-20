@@ -372,9 +372,13 @@
                                         aria-hidden="true"></i> <span class="mini-click-non">PO Payment Release to
                                         Vendor By Fianance</span></a>
                             </li>
-                            {{-- <li><a href="{{ route('list-rules-regulations') }}" aria-expanded="false"><i
-                                        class="fa big-icon fa-file-alt  icon-wrap" aria-hidden="true"></i> <span
-                                        class="mini-click-non">Rules and Regulations</span></a></li> --}}
+
+                          <li
+                            class="nav-item {{ request()->is('owner/list-login-history') ? 'active' : '' }}">
+                            <a href="{{ route('list-login-history') }}"
+                                aria-expanded="false"><i class="fa big-icon fa-file-invoice icon-wrap"
+                                    aria-hidden="true"></i> <span class="mini-click-non">Login History</span></a>
+                        </li>
                       </ul>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.PURCHASE'))
@@ -505,6 +509,11 @@
                             <a class="" href="{{ route('list-design-upload') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-paper-plane icon-wrap"></i> <span
                                     class="mini-click-non">Designs Sent To Estimation</span></a>
+                        </li>
+                        <li class="nav-item {{ request()->is('designdept/list-updated-design') ? 'active' : '' }}">
+                            <a class="" href="{{ route('list-updated-design') }}" aria-expanded="false"><i
+                                    class="fa big-icon fa-paper-plane icon-wrap"></i> <span
+                                    class="mini-click-non">Corrected Designs Sent To Production</span></a>
                         </li>
                         <li class="nav-item {{ request()->is('designdept/list-reject-design-from-prod') || request()->is('designdept/add-re-upload-design/*') ? 'active' : '' }}">
                             <a class="" href="{{ route('list-reject-design-from-prod') }}"
@@ -736,9 +745,6 @@
                                     class="fa big-icon fa-list icon-wrap"></i> <span class="mini-click-non">All
                                     New Requirements</span></a>
                         </li>
-
-
-
                         <li
                             class="nav-item {{ request()->is('storedept/list-material-sent-to-purchase') ? 'active' : '' }}">
                             <a href="{{ route('list-material-sent-to-purchase') }}">
@@ -755,7 +761,7 @@
                         <li
                             class="nav-item {{ request()->is('storedept/list-material-received-from-quality-po-tracking') ? 'active' : '' }}">
                             <a href="{{ route('list-material-received-from-quality-po-tracking') }}">
-                                <i class="fa fa-clipboard-list icon-wrap"></i> <span class="mini-click-non">Tracking Material</span>
+                                <i class="fa fa-clipboard-list icon-wrap"></i> <span class="mini-click-non">Tracking Material</span></a>
                         </li>
                         <li class="nav-item {{ request()->is('storedept/list-rejected-chalan') || request()->is('storedept/add-rejected-chalan/*') ? 'active' : '' }}">
                         <a href="{{ route('list-rejected-chalan') }}"><i class="fa big-icon fa-ban  icon-wrap"
@@ -928,6 +934,7 @@
                                     aria-hidden="true"></i> <span class="mini-click-non">PO Payment Release to Vendor
                                     By Fianance</span></a>
                         </li>
+                        
                          <li class="nav-item {{ request()->is('financedept/recive-logistics-list') ? 'active' : '' }}">           
                             <a href="{{ route('recive-logistics-list') }}">
                                 <i class="fa big-icon fa-list-check icon-wrap"></i>

@@ -83,7 +83,7 @@
                                 <div class="col-xl-11 col-md-11 pll-0">
                                     <div class="row   ">
                                         <div class="col-xl-9 col-md-8">
-                                        <p class="mb-3 white ">Copyrights <a href="https://sumagoinfotech.com/websiteprintpark_new/index.php" target="blank" class="white">sumagoinfotech</a> 2024. All rights reserved.</p>
+                                        <p class="mb-3 white ">Copyrights <a href="https://sumagoinfotech.com" target="blank" class="white">Sumago Infotech Pvt. Ltd</a> {{ date('Y') }} All rights reserved.</p>
                                         </div>
                                         <div class="col-xl-3 col-md-4 banrimgs ftc  ">
                                             <p class=" white text-end ">Terms & Conditions</p>
@@ -182,7 +182,7 @@
                                 <div class="col-xl-10 col-md-10">
                                     <div class="row">
                                         <div class="col-xl-9 col-md-8 col-sm-10">
-                                        <p class="mb-3 white">Copyrights <a href="https://sumagoinfotech.com/websiteprintpark_new/index.php" target="blank" class="white">sumagoinfotech</a> 2024. All rights reserved.</p>
+                                        <p class="mb-3 white ">Copyrights <a href="https://sumagoinfotech.com" target="blank" class="white">Sumago Infotech Pvt. Ltd</a> {{ date('Y') }} All rights reserved.</p>
                                         </div>
                                         <div class="col-xl-3 col-md-4 col-sm-1 banrimgs justify-content-lg-end">
                                             <p class="mb-3 white">Terms & Conditions</p>

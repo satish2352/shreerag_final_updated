@@ -170,6 +170,7 @@ class AllListRepository  {
                 DB::raw('MAX(design_revision_for_prod.bom_image) as re_bom_image'), 
                 DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image'), 
                 DB::raw('MAX(design_revision_for_prod.remark_by_design) as remark_by_design'),
+                DB::raw('MAX(design_revision_for_prod.remark_by_estimation) as remark_by_estimation'),
                 'production.updated_at',              
             )
             ->groupBy(

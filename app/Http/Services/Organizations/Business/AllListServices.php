@@ -324,4 +324,19 @@ public function loadDesignSubmittedForEstimationBusinessWise($business_details_i
             return $e;
         }
     }
+    
+    public function listLoginHistory() {
+        $data_users = $this->repo->listLoginHistory();
+        return $data_users;
+    }
+       public function showLoginHistory($id){
+        try {
+            $data_output = $this->repo->showLoginHistory($id);
+            // dd($data_output);
+            // die();
+            return;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
 }

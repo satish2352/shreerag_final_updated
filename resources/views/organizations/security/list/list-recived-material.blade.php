@@ -52,6 +52,7 @@
                                                 {{-- <th data-field="store_material_sent_date" data-editable="false">Matrial Recieved Date</th> --}}
                                                 {{-- <th data-field="design_image" data-editable="false">Purchase order</th> --}}
                                                 <th data-field="" data-editable="false">Purchase Order</th>
+                                                    <th data-field="gatepass_count" data-editable="false">Count</th>
                                                 <th data-field="bom_image" data-editable="false">Genrate Gate Pass</th>
 
                                             </tr>
@@ -64,17 +65,16 @@
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
-                                                   
                                                 <td>
                                                     <div style="display: flex; align-items: center;">
                                                            
                                                             <a href="{{ route('list-po-details', [base64_encode($data->gatepass_id), base64_encode($data->purchase_orders_id)]) }}">
                                                                 <button data-toggle="tooltip"
-                                                                title="View PO" class="pd-setting-ed">Check PO Details</button></a>
+                                                                title="View PO" class="btn btn-sm btn-bg-colour">Check PO Details</button></a>
                                                         
                                                     </div>
                                                     </td>
-
+                                                  <td>{{ $data->gatepass_count }}</td>
                                                     {{-- <td>
                                                         <div style="display: flex; align-items: center;">
                                                                
@@ -86,9 +86,12 @@
                                                         </div>
                                                         </td> --}}
                                                 <td> 
-                                                    <a class="btn btn-sm btn-primary login-submit-cs" type="button"
-                                                    href="{{route('add-gatepass-with-po', base64_encode($data->purchase_orders_id))}}"
-                                                    alt="Design">Generate Gate Pass</a>
+                                                    <a  href="{{route('add-gatepass-with-po', base64_encode($data->purchase_orders_id))}}"
+                                                    alt="Design">
+                                                
+                                                 <button data-toggle="tooltip"
+                                                                title="View PO" class="btn btn-sm btn-bg-colour">Generate Gate Pass</button>
+                                                </a>
 {{-- 
                                                     <a class="btn btn-sm btn-primary login-submit-cs" type="button"
                                                     href="{{ route('add-gatepass-with-po', ['id' => base64_encode($data->purchase_orders_id), 'productionId' => base64_encode($data->productionId)]) }}"

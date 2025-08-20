@@ -133,6 +133,8 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/list-po-recived-for-approval-payment', ['as' => 'list-po-recived-for-approval-payment', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@listPOReceivedForApprovaTowardsOwner']);
         Route::get('/accept-purchase-order-payment-release/{purchase_order_id}/{business_id}', ['as' => 'accept-purchase-order-payment-release', 'uses' => 'App\Http\Controllers\Organizations\Business\BusinessController@acceptPurchaseOrderPaymentRelease']);
         Route::get('/list-release-approval-payment-by-vendor', ['as' => 'list-release-approval-payment-by-vendor', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@listPOPaymentReleaseByVendor']);
+        Route::get('/list-login-history', ['as' => 'list-login-history', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@listLoginHistory']);
+        Route::get('/show-login-history/{id}', ['as' => 'show-login-history', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@showLoginHistory']);
 
        
         Route::get('/list-product-dispatch-completed', ['as' => 'list-product-dispatch-completed', 'uses' => 'App\Http\Controllers\Organizations\Business\AllListController@listProductDispatchCompletedFromDispatch']);
@@ -173,6 +175,8 @@ Route::get('/list-product-completed-report', [ReportController::class, 'getCompl
    
     
         //ALL List
+        Route::get('/list-updated-design', ['as' => 'list-updated-design', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@getAllListCorrectedDesignSendToProduction']);
+
         Route::get('/list-reject-design-from-prod', ['as' => 'list-reject-design-from-prod', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@getAllListDesignRecievedForCorrection']);
         Route::get('/list-accept-design-by-production', ['as' => 'list-accept-design-by-production', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@acceptdesignbyProduct']);
         // Route::get('/list-design-report', ['as' => 'list-design-report', 'uses' => 'App\Http\Controllers\Organizations\Designers\AllListController@listDesignReport']);

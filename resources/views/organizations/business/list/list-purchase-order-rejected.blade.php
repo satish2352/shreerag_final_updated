@@ -44,7 +44,7 @@
                                                             <a
                                                                 href="{{ route('list-purchase-order-rejected-bussinesswise', $data->id) }}"><button
                                                                     data-toggle="tooltip" title="View Details"
-                                                                    class="btn-bg-colour"><i class="fa fa-pencil-square-o"
+                                                                    class="btn btn-sm btn-bg-colour"><i class="fa fa-pencil-square-o"
                                                                         aria-hidden="true"></i> Check Details</button></a>
                                                             &nbsp; &nbsp; &nbsp;
                                                         </div>

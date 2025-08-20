@@ -45,9 +45,9 @@
                 <label>Year</label>
                 <select name="year" class="form-control">
                     <option value="">All</option>
-                    @for ($i = now()->year; $i >= 2010; $i--)
-                        <option value="{{ $i }}">{{ $i }}</option>
-                    @endfor
+                   @foreach (yearOptions() as $year)
+                                            <option value="{{ $year }}">{{ $year }}</option>
+                                        @endforeach
                 </select>
             </div>
             <div class="col-md-2">

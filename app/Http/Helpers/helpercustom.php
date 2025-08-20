@@ -93,3 +93,14 @@ if (!function_exists('convertToWords')) {
         return $result . "rupees" . ($points ? " and " . $points . " paise" : "") . " only";
     }
 }
+
+if (!function_exists('yearOptions')) {
+    function yearOptions($startYear = 2024, $endYear = null) {
+        $endYear = $endYear ?? now()->year;
+        $years = [];
+        for ($i = $endYear; $i >= $startYear; $i--) {
+            $years[] = $i;
+        }
+        return $years;
+    }
+}

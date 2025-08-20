@@ -74,7 +74,7 @@
                                                         <div style="display: flex; align-items: center;">
                                                             <a href="{{ route('add-logistics', $data->id) }}"><button
                                                                     data-toggle="tooltip" title="Edit"
-                                                                    class="btn-bg-colour"><i class="fa fa-pencil-square-o"
+                                                                    class="btn btn-sm btn-bg-colour"><i class="fa fa-pencil-square-o"
                                                                         aria-hidden="true"></i></button></a>
                                                         </div>
                                                     </td>

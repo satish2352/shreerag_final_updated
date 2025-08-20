@@ -49,7 +49,7 @@
                                                             <a
                                                                 href="{{ route('list-submit-final-purchase-order-particular-business', $data->purchase_orders_id) }}">
                                                                 <button data-toggle="tooltip" title="Edit"
-                                                                    class="btn-bg-colour">
+                                                                    class="btn btn-sm btn-bg-colour">
                                                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                                                     Check Details
                                                                 </button>

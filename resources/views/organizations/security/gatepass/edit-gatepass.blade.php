@@ -69,9 +69,13 @@
                                             <div class="col-lg-5"></div>
                                             <div class="col-lg-7">
                                                 <div class="login-horizental cancel-wp pull-left">
-                                                    <a href="{{ route('list-hsn') }}">
-                                                        <button class="btn btn-white" style="margin-bottom:50px">Cancel</button>
-                                                    </a>
+                                                   <button type="button" 
+        onclick="window.location='{{ route('list-gatepass') }}'" 
+        class="btn btn-white" 
+        style="margin-bottom:50px">
+    Cancel
+</button>
+
                                                     <button class="btn btn-sm btn-primary login-submit-cs" type="submit" style="margin-bottom:50px">Update Data</button>
                                                 </div>
                                             </div>

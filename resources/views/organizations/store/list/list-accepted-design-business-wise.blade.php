@@ -87,12 +87,15 @@
                                                 </td>
                                                 @if ($data->reject_reason_prod == '')
                                                     <td>-</td>
-                                                    <td>-</td>
                                                 @else
                                                     <td> <a class="img-size" target="_blank"
                                                             href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_design_image'] }}"
                                                             alt="Design"> Click to view</a>
                                                     </td>
+                                                   @endif
+                                                     @if ($data->remark_by_estimation == '')
+                                                    <td>-</td>
+                                                    @else
                                                     <td> <a class="img-size"
                                                             href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_bom_image'] }}"
                                                             alt="bill of material">Click to download</a>
@@ -101,12 +104,12 @@
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
                                                             <div style="display: inline-block; align-items: center; margin-right: 10px;">
-                                                                <a href="{{route('edit-material-list-bom-wise-new-req',base64_encode($data->business_details_id))}}"><button data-toggle="tooltip" style="padding: 7px;" title="View Details" class="btn-bg-colour">Issue Product Material</button></a>
+                                                                <a href="{{route('edit-material-list-bom-wise-new-req',base64_encode($data->business_details_id))}}"><button data-toggle="tooltip" style="padding: 7px;" title="View Details" class="btn btn-sm btn-bg-colour">Issue Product Material</button></a>
                                                             </div>
                                                                     <a
                                                                     href="{{ route('need-to-create-req', base64_encode($data->business_details_id)) }} "><button
                                                                         data-toggle="tooltip" title="Need To Purchase"
-                                                                        class="btn-bg-colour" style="padding: 7px;">Need To Purchase</button></a>
+                                                                        class="btn btn-sm btn-bg-colour" style="padding: 7px;">Need To Purchase</button></a>
                                                                     
                                                         </div>
                                                     </td>

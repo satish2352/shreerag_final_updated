@@ -66,6 +66,7 @@ public function getAllNewRequirementBusinessWise($business_id) { //checked
           })
           ->where('businesses_details.business_id', $decoded_business_id)
           ->whereIn('business_application_processes.estimation_send_to_production', $array_to_be_check)
+           ->where('business_application_processes.off_canvas_status', 33)
           ->whereNull('estimation.is_approved_estimation')
           ->where('businesses_details.is_active', true)
           ->where('businesses_details.is_deleted', 0)

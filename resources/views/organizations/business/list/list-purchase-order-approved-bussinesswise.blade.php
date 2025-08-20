@@ -50,7 +50,7 @@
                                                             <a
                                                                 href="{{ route('list-submit-final-purchase-order-particular-business', $data->purchase_order_id) }} "><button
                                                                     data-toggle="tooltip" title="View Details"
-                                                                    class="btn-bg-colour">View Details</button></a>
+                                                                    class="btn btn-sm btn-bg-colour">View Details</button></a>
                                                         </div>
                                                     </td>
                                                 </tr>

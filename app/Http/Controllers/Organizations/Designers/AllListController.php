@@ -72,4 +72,29 @@ class AllListController extends Controller
         }
     }
 
+  public function getAllListCorrectedDesignSendToProduction() {
+        try {
+            $data_output = $this->service->getAllListCorrectedDesignSendToProduction();
+            if ($data_output->isNotEmpty()) {
+                $business_ids = $data_output->pluck('business_details_id')->all();
+                if (!empty($business_ids)) {
+                    $update_data = ['designer_is_view_accepted_design' => '1'];
+                    NotificationStatus::whereIn('business_details_id', $business_ids)
+                        ->where('designer_is_view_accepted_design', '0')
+                        ->update($update_data);
+                }
+    
+                return view('organizations.designer.list.list-corrected-design-send-to-production', compact('data_output'));
+            } else {
+                return view('organizations.designer.list.list-corrected-design-send-to-production', [
+                    'data_output' => [],
+                    'message' => 'No data found',
+                ]);
+            }
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+
 }

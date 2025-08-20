@@ -3,120 +3,12 @@
 <section>
       <!-- bannar start -->
       <div class="banrimgs">
-        <img src="{{ asset('website/assets/img/banner/home_bnr.png')}}" alt="">
+        <img src="{{ asset('website/assets/img/banner/home_bnr.png')}}" alt="No Image">
     </div>
     <div class="mobibanrimgs">
-    <img src="{{ asset('website/assets/img/banner/homepage.png')}}" alt="">
+    <img src="{{ asset('website/assets/img/banner/homepage.png')}}" alt="No Image">
     </div>
     <!-- bannar end -->
-
-     <!-- Slider start -->
-     {{-- <section class="slider-area-2 relative"> --}}
-
-        {{-- <div class="owl-carousel slider-2">
-            <div class="item">
-                <div class="silder-img" id="sliderbk1" style="background-image: url('{{ asset('website/assets/img/banner/HOME_PAGE.png')}}');" data-overlay="7">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-xl-7 col-lg-8">
-                                <div class="slider-content z-10">
-                                    <h5 class="line-head">
-                              25 years of experience
-                            <span class="line  after"></span>
-                          </h5>
-                                    <h1 class="banner-head-2 f-700 mt-25 mb-35 mt-xs-20 mb-xs-30">Effortless Efficiency: Transform your material handling experience</h1>
-                                    <a href="#" class="btn btn-square">Learn More<i class="fas fa-long-arrow-alt-right ml-20"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="silder-img" style="background-image: url('{{ asset('website/assets/img/banner/banner_2a.jpg')}}');" data-overlay="7">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-xl-7 col-lg-8">
-                                <div class="slider-content z-10">
-                                    <h5 class="line-head">
-                                        1000+ Happy Clients
-                                        <span class="line  after"></span>
-                                    </h5>
-                                    <h1 class="banner-head-2 f-700 mt-25 mb-35 mt-xs-20 mb-xs-30"> Discover durability like never before with our robust solutions</h1>
-                                    <a href="#" class="btn btn-square">Learn More<i class="fas fa-long-arrow-alt-right ml-20"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="silder-img" id="sliderbk1" style="background-image: url('{{ asset('website/assets/img/banner/HOME_PAGE.png')}}');" data-overlay="7">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-xl-7 col-lg-8">
-                                <div class="slider-content z-10">
-                                    <h5 class="line-head">
-                                        25 years of experience
-                                    <span class="line  after"></span>
-                                </h5>
-                                    <h1 class="banner-head-2 f-700 mt-25 mb-35 mt-xs-20 mb-xs-30">Elevate your business operations with our innovative designs</h1>
-                                    <a href="#" class="btn btn-square">Learn More<i class="fas fa-long-arrow-alt-right ml-20"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-        <!-- <div class="slide-social-outer transform-v-center z-5">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xs-12 w-100">
-                        <div class="slide-social d-none d-lg-block">
-                            <ul class="social-icons">
-                                <li>
-                                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="fab fa-twitter"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="fab fa-google-plus-g"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-        {{-- <div class="slider-control z-5">
-            <div class="container">
-                <div class="row align-items-end">
-                    <div class="col-lg-6">
-                        <div class="dots-slider">
-
-                        </div>
-                    </div>
-                    <div class="col-lg-6 text-right d-none d-lg-block">
-                        <div class="nav-slider d-flex justify-content-end">
-                            <a href="#" class="slider-btn slides-left flex-center">
-                                <i class="fas fa-chevron-left"></i>
-                            </a>
-                            <a href="#" class="slider-btn slides-right flex-center">
-                                <i class="fas fa-chevron-right"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> --}}
-    <!-- Slider end -->
-
      <!-- title start -->
      <section class="callback-area" data-overlay="9">
         <div class="container">
@@ -151,7 +43,7 @@
                     <div class="team-2-each card relative border shadow-3">
                     <div class="product_img text-center">
                         <h4 class="f-800 pt-4 fs2 clrtext">{{ $product['title'] }}</h4>
-                        <a ><img src="{{ Config::get('DocumentConstant.PRODUCT_VIEW') }}{{ $product['image'] }}" id="prodimgss" alt=""></a>
+                        <a ><img src="{{ Config::get('DocumentConstant.PRODUCT_VIEW') }}{{ $product['image'] }}" id="prodimgss" alt="No Image"></a>
                     </div>
                         <div class="team-hover-div procard text-center transition-3">
                             {{-- <h4 class="white f-700"><a href="#">TAILOR</a></h4> --}}
@@ -239,24 +131,13 @@
     <!-- services end -->
 
       <!-- How we work  -->
-      {{-- <section class="pt-50" data-overlay="9">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="fancy-head text-center relative z-5 mb-20 wow fadeInDown">
-                            <h1>How we work</h1>
-                        </div>
-                    </div>
-                </div>        
-            </div>
-        </section> --}}
       <section>
         <div class="container-fluid testmo paddiall4 bg-insta mb-3 ">
             <div class="row pb-50 pb-md-20 pb-sm-20">
                 <div class="col-xl-4 pl-60 pr-60 mt-30">
                     <div class="item">
                         <h1 class="f-800 clrtext position-absolute"><span class="btn btn-round1 pd00"><h1 class="white fs1 f-800">01 </h1></span> Request</h1>
-                        <img src="{{ asset('website/assets/img/icons/1.png')}}" alt="">
+                        <img src="{{ asset('website/assets/img/icons/1.png')}}" alt="No Image">
                         <h6 class="clrtext text-justify align-content-center  fs-18 mrtp pt-3">Lorem ipsum dolor sit Provident nam illum, maxime ipsum nostrum amet, consectetur adipisicing  aut unde officiis eveniet</h6>
                     </div>
                 </div>
@@ -264,14 +145,14 @@
                 <div class="col-xl-4 pl-60 pr-60 mt-30">
                     <div class="item">
                     <h1 class="f-800 clrtext position-absolute"><span class="btn btn-round1 pd00"><h1 class="white fs1 f-800">02 </h1></span> Develop</h1>
-                        <img src="{{ asset('website/assets/img/icons/2.png')}}"  alt="">
+                        <img src="{{ asset('website/assets/img/icons/2.png')}}"  alt="No Image">
                         <h6 class="clrtext text-justify fs-18 mrtp pt-3">Lorem ipsum dolor sit Provident nam illum, maxime ipsum nostrum amet, consectetur adipisicing  aut unde officiis eveniet</h6>
                     </div>
                 </div>
                 <div class="col-xl-4 pl-60 pr-60 mt-30">
                     <div class="item">
                     <h1 class="f-800 clrtext position-absolute"><span class="btn btn-round1 pd00"><h1 class="white fs1 f-800">03 </h1></span> Install</h1>
-                        <img src="{{ asset('website/assets/img/icons/3.png')}}"  alt="">
+                        <img src="{{ asset('website/assets/img/icons/3.png')}}"  alt="No Image">
                         <h6 class="clrtext text-justify fs-18 mrtp pt-3">Lorem ipsum dolor sit Provident nam illum, maxime ipsum nostrum amet, consectetur adipisicing  aut unde officiis eveniet</h6>
                     </div>
                 </div>
@@ -286,27 +167,9 @@
             <div class="row align-items-center mb-30">
                 <div class="col-lg-12 col-md-12 text-center text-lg-center">
                     <div class="fancy-head left-al wow fadeInLeft">
-                        {{-- <h5 class="line-head mb-15">
-                        <span class="line before d-lg-none"></span>
-                            Testimonials
-                        <span class="line after"></span>
-                        </h5> --}}
                         <h1 class="clrtext fs1">Testimonial</h1>
                     </div>
                 </div>
-                {{-- <div class="col-lg-5 text-center text-lg-right">
-                    <div class="arrow-navigation mb-15 mt-md-20 wow fadeInRight">
-                        <a href="#" class="nav-slide slide-left testi-2">
-                            <img src="{{ asset('website/assets/img/icons/ar_lt.png')}}" alt="">
-                        </a>
-                        <a href="#" class="nav-slide slide-right testi-2">
-                            <img src="{{ asset('website/assets/img/icons/ar_rt.png')}}" alt="">
-                        </a>
-                    </div>
-                </div> --}}
-                <!-- <div class="col-12">
-                    <div class="hr-2 bg-blue opacity-1 mt-45"></div> 
-                </div> -->
             </div>
             <div class="row marginleft75">
                 <div class="col-xl-12">
@@ -324,21 +187,12 @@
                 @foreach ($data_output_testimonial as $testimonial)
                         <div class="">
                             <div class="each-quote-2 pl-20 pr-sm-00 card cardwidth" style="height: 350px; border-top:15px solid #243772; background:#e2feff">
-                                <!-- <ul class="stars-rate mb-5" data-starsactive="5">
-                                    <li class="text-md-left text-center">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </li>
-                                </ul> -->
                                 <h4 class="f-700 mb-20 pt-20  icn"  id="pr"><i class="fa-solid fa-quote-left  "></i></h4>
                                 <p class="mb-35 pb-10 clrtext text-justify pr-10 lnh">{{ $testimonial['description'] }}</p>
                                 <div class="client-2-img d-flex  fixed-bottom1 justify-content-md-start justify-content-start">
                                     <div class="img-div   pb-20">
                                         <div class="client-image">
-                                            <img src="{{ Config::get('DocumentConstant.TESTIMONIAL_VIEW') }}{{ $testimonial['image'] }}" class=" rounded-circle" alt="">
+                                            <img src="{{ Config::get('DocumentConstant.TESTIMONIAL_VIEW') }}{{ $testimonial['image'] }}" class=" rounded-circle" alt="No Image">
                                         </div>
                                     </div>
                                     <div class="client-text-2 mb-30 pl-20">
@@ -363,11 +217,11 @@
            
              <!-- bannar start -->
             <div class="banrimgs">
-             <div class="   ">  <img src="{{ asset('website/assets/img/banner/contactnew.png')}}" alt="">
+             <div class="   ">  <img src="{{ asset('website/assets/img/banner/contactnew.png')}}" alt="No Image">
               </div>             
              </div> 
             <div class="mobibanrimgs">
-            <div class=" ">  <img src="{{ asset('website/assets/img/banner/contact.png')}}" alt="">
+            <div class=" ">  <img src="{{ asset('website/assets/img/banner/contact.png')}}" alt="No Image">
               </div>
             </div> 
         <!-- bannar end -->
