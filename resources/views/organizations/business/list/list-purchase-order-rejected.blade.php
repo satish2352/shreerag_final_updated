@@ -17,7 +17,7 @@
                             <div class="datatable-dashv1-list custom-datatable-overright">
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
-                                        data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true"
+                                        data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="false"
                                         data-key-events="true" data-show-toggle="true" data-resizable="true"
                                         data-cookie="true" data-cookie-id-table="saveId" data-show-export="true"
                                         data-click-to-select="true" data-toolbar="#toolbar">
