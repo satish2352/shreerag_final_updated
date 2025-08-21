@@ -2,6 +2,8 @@
 namespace App\Http\Services\Organizations\Business;
 
 use App\Http\Repository\Organizations\Business\AllListRepositor;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 use Config;
 
@@ -329,14 +331,136 @@ public function loadDesignSubmittedForEstimationBusinessWise($business_details_i
         $data_users = $this->repo->listLoginHistory();
         return $data_users;
     }
-       public function showLoginHistory($id){
-        try {
-            $data_output = $this->repo->showLoginHistory($id);
-            // dd($data_output);
-            // die();
-            return;
-        } catch (\Exception $e) {
-            return $e;
+//    public function showLoginHistory($id) {
+//     return $this->repo->showLoginHistory($id);
+// }
+// public function showLoginHistory($id)
+// {
+//     $user = $this->repo->showLoginHistory($id);
+
+//     if ($user) {
+//         $latitude = $user->latitude;
+//         $longitude = $user->longitude;
+
+//         $apiKey = config('services.google.maps_api_key');
+
+//         // Call Google Geocoding API
+//         $response = Http::get("https://maps.googleapis.com/maps/api/geocode/json", [
+//             'latlng' => "$latitude,$longitude",
+//             'key'    => $apiKey,
+//         ]);
+
+//         $responseData = $response->json();
+// dd($responseData);
+// die();
+//         // Get formatted address
+//         if (!empty($responseData['results'][0]['formatted_address'])) {
+//             $address = $responseData['results'][0]['formatted_address'];
+//         } else {
+//             $address = "Address not found";
+//         }
+
+//         // ✅ Save back to login_history table (update last login of this user)
+//         DB::table('login_history')
+//             ->where('user_id', $id)
+//             ->orderByDesc('id')
+//             ->limit(1) // update only the last login row
+//             ->update(['location_address' => $address]);
+
+//         // Also attach for showing in blade
+//         $user->location_address = $address;
+//     }
+
+//     return $user;
+// }
+
+// public function showLoginHistory($id)
+// {
+//     // Fetch login history record
+//     $user = $this->repo->showLoginHistory($id);
+
+//     if ($user) {
+//         $latitude = $user->latitude;
+//         $longitude = $user->longitude;
+
+//         $apiKey = config('services.locationiq.api_key');
+// // dd($apiKey);
+// // die();
+//         // Call LocationIQ Reverse Geocoding API
+//         $response = Http::get("https://us1.locationiq.com/v1/reverse.php", [
+//             'key'    => $apiKey,
+//             'lat'    => $latitude,
+//             'lon'    => $longitude,
+//             'format' => 'json'
+//         ]);
+
+//         $responseData = $response->json();
+
+//         // Get formatted address
+//         $address = $responseData['display_name'] ?? "Address not found";
+
+//         // ✅ Update the same login_history record
+//         DB::table('login_history')
+//             ->where('id', $id) // update by login_history record id
+//             ->update(['location_address' => $address]);
+
+//         // Attach address for returning
+//         $user->location_address = $address;
+//     }
+
+//     return $user;
+// }
+public function showLoginHistory($id)
+{
+    // Fetch login history record
+    $user = $this->repo->showLoginHistory($id);
+dd($user );
+die();
+    if ($user) {
+        $latitude = $user->latitude;
+        $longitude = $user->longitude;
+
+        $apiKey = config('services.locationiq.api_key');
+
+        // Call LocationIQ Reverse Geocoding API
+        $response = Http::get("https://us1.locationiq.com/v1/reverse.php", [
+            'key'    => $apiKey,
+            'lat'    => $latitude,
+            'lon'    => $longitude,
+            'format' => 'json'
+        ]);
+
+        $responseData = $response->json();
+
+        // ✅ Try to get detailed address instead of only display_name
+        if (isset($responseData['address'])) {
+            $addressParts = $responseData['address'];
+
+            $address = implode(', ', array_filter([
+                $addressParts['house_number'] ?? null,
+                $addressParts['road'] ?? null,
+                $addressParts['neighbourhood'] ?? null,
+                $addressParts['suburb'] ?? null,
+                $addressParts['city'] ?? $addressParts['town'] ?? $addressParts['village'] ?? null,
+                $addressParts['state_district'] ?? null,
+                $addressParts['state'] ?? null,
+                $addressParts['postcode'] ?? null,
+                $addressParts['country'] ?? null,
+            ]));
+        } else {
+            $address = $responseData['display_name'] ?? "Address not found";
         }
+
+        // ✅ Update the same login_history record
+        DB::table('login_history')
+            ->where('id', $id)
+            ->update(['location_address' => $address]);
+
+        // Attach address for returning
+        $user->location_address = $address;
     }
+
+    return $user;
+}
+
 }

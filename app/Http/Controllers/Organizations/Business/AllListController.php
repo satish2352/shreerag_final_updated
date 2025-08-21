@@ -650,13 +650,16 @@ public function getRevisedEstimationBOMBusinessWise($id) { //checked
     }
 
     
-      public function showLoginHistory( Request $request )
- {
-        try {
-            $user_detail = $this->service->showLoginHistory( $request->show_id );
-            return view( 'organizations.hr.employees.show-login-history', compact( 'user_detail' ) );
-        } catch ( \Exception $e ) {
-            return $e;
-        }
+      public function showLoginHistory($id) // directly accept from route
+{
+    try {
+        $show_id = base64_decode($id); // decode route param
+ 
+        $user_detail = $this->service->showLoginHistory($show_id); // pass decoded id
+     
+        return view('organizations.hr.employees.show-login-history', compact('user_detail'));
+    } catch (\Exception $e) {
+        return $e;
     }
 }
+ }

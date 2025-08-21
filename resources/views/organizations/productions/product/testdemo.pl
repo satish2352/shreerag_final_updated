@@ -257,7 +257,7 @@ using above addmore logic use in below form
                                                         <th>Unit</th>
                                                         <th>Send to Production</th>
                                                         <th>
-                                                            <button type="button" class="btn btn-sm btn-success" id="add_more_btn">
+                                                            <button type="button" class="btn btn-sm btn-bg-colour" id="add_more_btn">
                                                                 <i class="fa fa-plus"></i>
                                                             </button>
                                                         </th>

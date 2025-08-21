@@ -15,10 +15,7 @@ return new class extends Migration
     {
         Schema::create('login_history', function (Blueprint $table) {
           $table->bigIncrements('id');
-           $table->string('f_name')->nullable();
-            $table->string('m_name')->nullable();
-            $table->string('l_name')->nullable();
-            $table->string('number')->nullable();
+             $table->unsignedBigInteger('user_id')->nullable();
             $table->string('location_address')->nullable();
              $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();

@@ -131,11 +131,7 @@ class LoginController extends Controller
 
         // Save login history
         $loginHistory = new LoginHistory();
-        // $loginHistory->id          = $user->id;
-        $loginHistory->f_name           = $user->f_name ?? null;
-        $loginHistory->m_name           = $user->m_name ?? null;
-        $loginHistory->l_name           = $user->l_name ?? null;
-        $loginHistory->number           = $user->number ?? null;
+        $loginHistory->user_id          = $user->id;
         $loginHistory->location_address = $request->location_address ?? null;
         $loginHistory->latitude         = $latitude;
         $loginHistory->longitude        = $longitude;
@@ -189,8 +185,8 @@ class LoginController extends Controller
                         return redirect('/cms/dashboard');
                 case 14:
                             return redirect('/inventory/dashboard');
-                case 15:
-                        return redirect('/estimation/dashboard');            
+                // case 15:
+                //         return redirect('/estimation/dashboard');            
                     default:
                     return redirect('/dashboard'); // Default dashboard
             }

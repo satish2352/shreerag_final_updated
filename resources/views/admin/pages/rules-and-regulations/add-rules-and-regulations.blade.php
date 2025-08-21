@@ -71,7 +71,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-12 col-sm-12 text-center">
-                                                                <button type="submit" class="btn btn-sm btn-success"
+                                                                <button type="submit" class="btn btn-sm btn-bg-colour"
                                                                     id="submitButton">
                                                                     Save &amp; Submit
                                                                 </button>

@@ -1763,37 +1763,55 @@ public function listProductDispatchCompletedFromDispatch(){
 }
                       
 public function listLoginHistory() {
-    $data_users = LoginHistory::where('is_active', 1)
-        ->where('is_deleted', 0)
-        ->orderBy('id', 'desc')
+    $data_users = LoginHistory::leftJoin('users', function($join) {
+        $join->on('login_history.user_id', '=', 'users.id');
+    })
+       ->where('users.is_active', 1)
+        ->where('users.is_deleted', 0)
+        ->orderBy('users.id', 'desc')
+        ->select(
+							'users.u_email',
+							'users.f_name',
+							'users.m_name',
+							'users.l_name',
+              'users.u_email',
+							'users.number',
+							'users.id',
+							'users.is_active',
+            'login_history.latitude',
+                'login_history.longitude',
+						)
         ->get();
 
     return $data_users;
 }
 
 	public function showLoginHistory($id)
-	{
-		try {
-       $decoded_business_id = base64_decode($id);
-      // dd($decoded_business_id);
-      // die();
-			$user = LoginHistory::where('is_active', 1)
-        ->where('is_deleted', 0)
-        ->orderBy('id', 'desc')
-				->where('id', $id)
-				->select('login_history.f_name','login_history.m_name','login_history.l_name', 'login_history.latitude', 'login_history.longitude')
-				->first();
-	
-			if ($user) {
-				return $user;
-			} else {
-				return null;
-			}
-		} catch (\Exception $e) {
-			return [
-				'msg' => $e->getMessage(),
-				'status' => 'error'
-			];
-		}
-	}
+{
+    try {
+        $user = LoginHistory::join('users', 'users.id', '=', 'login_history.user_id')
+            ->where('users.is_active', 1)
+            ->where('users.is_deleted', 0)
+            ->orderBy('users.id', 'desc')
+            ->select(
+                'users.f_name',
+                'users.m_name',
+                'users.l_name',
+                	'login_history.id',
+                'login_history.latitude',
+                'login_history.longitude',
+                'login_history.location_address'
+            )
+              ->where('users.id', $id)
+            ->first();
+
+        return $user ?: null;
+    } catch (\Exception $e) {
+        return [
+            'msg' => $e->getMessage(),
+            'status' => 'error'
+        ];
+    }
+}
+
 }

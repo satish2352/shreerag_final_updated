@@ -68,7 +68,7 @@
                                     <div class="form-group">
                                         <label for="departments">Select Departments</label>
                                         <div class="dropdown">
-                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 Select Departments
                                             </button>
                                     
@@ -142,7 +142,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-sm-12 text-center">
-                                        <button type="submit" class="btn btn-sm btn-success" id="submitButton"  >
+                                        <button type="submit" class="btn btn-sm btn-bg-colour" id="submitButton"  >
                                             Save &amp; Submit
                                         </button>
                                         {{-- <button type="reset" class="btn btn-sm btn-danger">Cancel</button> --}}

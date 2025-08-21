@@ -32,20 +32,20 @@
                                                 <th>Name</th>
                                                 <th>latitude</th>
                                                 <th>longitude</th>
+                                                  <th>Address</th>
+                                                
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            @foreach ($user_detail as $item)
-                                                <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $item->f_name }} {{ $item->m_name }} {{ $item->l_name }}
-                                                    </td>
-                                                    <td>{{ $item->latitude }}</td>
-                                                    <td>{{ $item->longitude }}</td>
-                                                </tr>
-                                            @endforeach
-
+                                      <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                {{-- <td>{{ $user_detail->f_name }} {{ $user_detail->m_name }} {{ $user_detail->l_name }}</td> --}}
+                                                <td>{{ $user_detail->latitude }}</td>
+                                                <td>{{ $user_detail->longitude }}</td>
+                                                 <td>{{ $user_detail->location_address }}</td>
+                                            </tr>
                                         </tbody>
+
 
                                     </table>
                                 </div>

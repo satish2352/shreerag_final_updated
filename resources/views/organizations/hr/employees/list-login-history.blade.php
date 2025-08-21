@@ -32,16 +32,22 @@
                                                 <th>Name</th>
                                                 <th>latitude</th>
                                                 <th>longitude</th>
+                                                  <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <?php
+                                            // dd($register_user);
+                                            // die();
+                                            ?>
                                             @foreach ($register_user as $item)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $item->f_name }} {{ $item->m_name }} {{ $item->l_name }}
+                                                    <td>{{ $item->f_name }} {{ $item->m_name }} {{ $item->l_name }} ({{$item->u_email}})
                                                     </td>
                                                     <td>{{ $item->latitude }}</td>
                                                     <td>{{ $item->longitude }}</td>
+                                                    
                                                               <td class="d-flex">
                                                         <div style="display: flex; align-items: center;">
                                                             <a href="{{ route('show-login-history', base64_encode($item->id)) }} "><button
@@ -64,6 +70,8 @@
             </div>
         </div>
     </div>
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>   
      <script>
         $('.show-btn').click(function(e) {
             alert('hii');

@@ -122,7 +122,7 @@
                                                     class="img-fluid img-thumbnail" width="150" style="display:none">
                                             </div>
                                             <div class="col-md-12 col-sm-12 text-center">
-                                                <button type="submit" class="btn btn-sm btn-success" id="submitButton">
+                                                <button type="submit" class="btn btn-sm btn-bg-colour" id="submitButton">
                                                     Save &amp; Update
                                                 </button>
                                                 {{-- <button type="reset" class="btn btn-sm btn-danger">Cancel</button> --}}

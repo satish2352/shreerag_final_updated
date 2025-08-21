@@ -39,7 +39,7 @@
     })
 </script>
 <script src="{{ asset('js/vendor/jquery-1.11.3.min.js') }}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script> --}}
 <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/wow.min.js') }}"></script>
 <script src="{{ asset('js/jquery-price-slider.js') }}"></script>

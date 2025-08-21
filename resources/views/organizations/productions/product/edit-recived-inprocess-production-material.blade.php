@@ -113,7 +113,7 @@
                                                             <th>Unit</th>
                                                             <th>Received Material for Production</th>
                                                             <th>
-                                                                <button type="button" class="btn btn-sm btn-success"
+                                                                <button type="button" class="btn btn-sm btn-bg-colour"
                                                                     id="add_more_btn">
                                                                     <i class="fa fa-plus"></i>
                                                                 </button>

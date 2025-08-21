@@ -333,7 +333,7 @@
                                             <div class="col-md-12 col-sm-12 text-center mt-3">
                                                 <input type="hidden" class="form-check-input" name="edit_id"
                                                     id="edit_id" value="{{ $user_data['data_users']['id'] }}">
-                                                <button type="submit" class="btn btn-sm btn-success" id="submitButton">
+                                                <button type="submit" class="btn btn-sm btn-bg-colour" id="submitButton">
                                                     Save &amp; Update
                                                 </button>
                                                 {{-- <button type="reset" class="btn btn-sm btn-danger">Cancel</button> --}}

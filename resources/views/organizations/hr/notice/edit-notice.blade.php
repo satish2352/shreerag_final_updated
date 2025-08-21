@@ -127,7 +127,7 @@
                                                 </button>
                                                 {{-- <button type="reset" class="btn btn-sm btn-danger">Cancel</button> --}}
                                                 <span><a href="{{ route('list-notice') }}"
-                                                        class="btn btn-sm btn-primary">Back</a></span>
+                                                        class="btn btn-sm btn-bg-colour">Back</a></span>
                                             </div>
                                         </div>
                                         <input type="hidden" name="id" id="id" class="form-control"
