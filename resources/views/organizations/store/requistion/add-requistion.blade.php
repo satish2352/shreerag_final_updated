@@ -109,7 +109,7 @@ label.error {
                                                     <div class="col-lg-5"></div>
                                                     <div class="col-lg-7">
                                                         <div class="login-horizental cancel-wp pull-left">
-                                                            <a href="{{ route('list-requistion') }}" class="btn btn-white"
+                                                            <a href="{{ route('list-requisition') }}" class="btn btn-white"
                                                                 style="margin-bottom:50px">Cancel</a>
                                                             <button class="btn btn-sm btn-primary login-submit-cs"
                                                                 type="submit" style="margin-bottom:50px">Submit Requisition Details To Purchase 

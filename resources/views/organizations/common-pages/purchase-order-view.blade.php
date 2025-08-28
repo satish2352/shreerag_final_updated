@@ -249,7 +249,7 @@
                                     <div style="font-weight: bold;">PO. No.: {{ $purchaseOrder->purchase_orders_id }}
                                     </div>
                                     <div>Date:
-                                        {{ $purchaseOrder->created_at ? $purchaseOrder->created_at->format('Y-m-d') : 'N/A' }}
+                                        {{ $purchaseOrder->created_at ? $purchaseOrder->created_at->format('d-m-Y') : 'N/A' }}
                                     </div>
                                     <div>Quote Ref No.: {{ $purchaseOrder->quote_no }}</div>
                                     <div>Payment Terms: {{ $purchaseOrder->payment_terms }} DAYS</div>

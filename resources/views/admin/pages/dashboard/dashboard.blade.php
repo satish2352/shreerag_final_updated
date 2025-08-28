@@ -503,7 +503,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 mb-0 text-sm">
-                                                    <a href="{{ route('list-material-recived') }}">
+                                                    <a href="{{ route('list-material-received') }}">
                                                         <span class="badge badge-pill bg-soft-success text-success me-2">
                                                             <i class="fa-solid fa-arrow-right"></i> </span>
                                                         <span class="text-nowrap text-xs text-muted">View

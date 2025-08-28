@@ -119,7 +119,7 @@ class OrganizationController extends Controller
         // Ensure founding_date exists before trying to format it
         if ($editData->founding_date) {
             // Format the founding_date to 'd/m/Y' for display in the edit form
-            $editData->founding_date = \Carbon\Carbon::parse($editData->founding_date)->format('Y-m-d');
+            $editData->founding_date = \Carbon\Carbon::parse($editData->founding_date)->format('d-m-Y');
         }
     
         // Return the view with the formatted data

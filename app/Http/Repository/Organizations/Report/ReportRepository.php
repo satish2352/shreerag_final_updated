@@ -1140,7 +1140,7 @@ public function listLogisticsReport(Request $request)
         throw $e; // ✅ Let the controller catch and respond
     }
 }
-public function listFiananceReport(Request $request){
+public function listFinanceReport(Request $request){
     try {
        $array_to_be_check = [config('constants.FINANCE_DEPARTMENT.LIST_LOGISTICS_SEND_TO_DISPATCH_DEAPRTMENT')];
       $array_to_be_quantity_tracking = [ config('constants.FINANCE_DEPARTMENT.SUBMITTED_COMPLETED_QUANLTITY_FROM_FIANANCE_DEPT_TO_DISPATCH_DEPT')];

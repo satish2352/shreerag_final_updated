@@ -79,7 +79,7 @@
 
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="all-form-element-inner">
-                                        <form action="{{ route('update-recived-inprocess-production-material', $id) }}"
+                                        <form action="{{ route('update-received-inprocess-production-material', $id) }}"
                                             method="POST" id="addProductForm" enctype="multipart/form-data">
                                             @csrf
                                             <input type="hidden" name="business_details_id" id="business_details_id"
@@ -253,7 +253,7 @@
                                                 </table>
                                             </div>
                                             <div class="d-flex justify-content-center align-items-center mt-3 mb-5">
-                                            <a href="{{ route('list-material-recived') }}" class="btn btn-white me-3">
+                                            <a href="{{ route('list-material-received') }}" class="btn btn-white me-3">
                                                 Cancel
                                             </a>
                                             <button class="btn btn-sm btn-bg-colour" type="submit">

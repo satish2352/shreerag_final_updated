@@ -65,7 +65,7 @@
                                                                 </div>
                                                             @else
                                                                 <a
-                                                                    href="{{ route('edit-recived-inprocess-production-material', $data->business_details_id) }}">
+                                                                    href="{{ route('edit-received-inprocess-production-material', $data->business_details_id) }}">
                                                                     <button data-toggle="tooltip" title="Edit Product"
                                                                         class="btn btn-sm btn-bg-colour">
                                                                         <i class="fa fa-edit" aria-hidden="true"></i> Edit
@@ -75,7 +75,7 @@
                                                                 <div
                                                                     style="display: inline-block; align-items: center; margin-top: 10px;">
                                                                     <a
-                                                                        href="{{ route('edit-recived-bussinesswise-quantity-tracking', $data->business_details_id) }}">
+                                                                        href="{{ route('edit-received-businesswise-quantity-tracking', $data->business_details_id) }}">
                                                                         <button data-toggle="tooltip" title="View Details"
                                                                             class="btn btn-sm btn-bg-colour"><i class="fa fa-edit" aria-hidden="true"></i> Submit Production Competed Quantity</button>
                                                                     </a>
@@ -95,4 +95,5 @@
             </div>
         </div>
     </div>
+     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 @endsection

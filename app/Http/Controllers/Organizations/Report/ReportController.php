@@ -450,10 +450,10 @@ public function listLogisticsReportAjax(Request $request)
         return response()->json(['status' => false, 'message' => $e->getMessage()]);
     }
 }
-public function listFiananceReport(Request $request)
+public function listFinanceReport(Request $request)
 {
     try {
-        $data = $this->service->listFiananceReport($request);
+        $data = $this->service->listFinanceReport($request);
 
         $getProjectName = Business::whereNotNull('project_name')
             ->where('is_deleted', 0)
@@ -470,10 +470,10 @@ public function listFiananceReport(Request $request)
         return back()->with('error', 'Something went wrong: ' . $e->getMessage());
     }
 }
-public function listFiananceReportAjax(Request $request)
+public function listFinanceReportAjax(Request $request)
 {
     try {
-        $data = $this->service->listFiananceReport($request);
+        $data = $this->service->listFinanceReport($request);
 
         // Defensive check
         if (!is_array($data) || !isset($data['data'])) {

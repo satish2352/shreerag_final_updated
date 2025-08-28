@@ -63,6 +63,7 @@ class GRNController extends Controller
            $gatepass_id = base64_decode($id);
             $purchase_order_data = PurchaseOrdersModel::where('purchase_orders_id', '=', $purchase_ordersId)->first();
             $po_id = $purchase_order_data->id;
+            
             $purchase_order_details_data = PurchaseOrderDetailsModel::leftJoin('tbl_part_item', function ($join) {
                 $join->on('purchase_order_details.part_no_id', '=', 'tbl_part_item.id');
             })
@@ -76,6 +77,7 @@ class GRNController extends Controller
             ->where('purchase_order_details.purchase_id', $po_id)
             ->select(
                 'purchase_order_details.*',
+                'purchase_order_details.created_at as po_date',
                 'tbl_part_item.description as part_description',
                 // 'tbl_part_item.part_number as description',
                 'tbl_unit.name as unit_name',

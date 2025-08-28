@@ -272,7 +272,7 @@ class EstimationController extends Controller
             $updateData = $this->service->updateProductMaterial($request);
     
             if ($updateData['status'] == 'success') {
-                return redirect('proddept/list-material-recived')->with(['status' => 'success', 'msg' => $updateData['message']]);
+                return redirect('proddept/list-material-received')->with(['status' => 'success', 'msg' => $updateData['message']]);
             } else {
                 return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $updateData['message']]);
             }
@@ -292,7 +292,7 @@ class EstimationController extends Controller
                    $msg = $delete_record[ 'msg' ];
                    $status = $delete_record[ 'status' ];
                    if ( $status == 'success' ) {
-                       return redirect( 'proddept/list-material-recived' )->with( compact( 'msg', 'status' ) );
+                       return redirect( 'proddept/list-material-received' )->with( compact( 'msg', 'status' ) );
                    } else {
                        return redirect()->back()->withInput()->with( compact( 'msg', 'status' ) );
                    }

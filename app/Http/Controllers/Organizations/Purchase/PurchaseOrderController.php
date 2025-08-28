@@ -6,6 +6,10 @@ use App\Models\PurchaseOrdersModel;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
+use setasign\Fpdi\Fpdi;
+// use Barryvdh\DomPDF\Facade\Pdf;
+// use LynX39\LaraPdfMerger\PdfManage as PdfMerger;
+// use setasign\Fpdi\Fpdi;
 use App\Http\Services\Organizations\Purchase\PurchaseOrderServices;
 use App\Http\Controllers\Controller;
 use Validator;
@@ -627,87 +631,166 @@ class PurchaseOrderController extends Controller
     //         return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
     //     }
     // }
-    public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id)
-    {
-        try {
-            // Fetch purchase order details
-            $purchaseOrder = $this->service->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id);
+    // public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id)
+    // {
+    //     try {
+    //         // Fetch purchase order details
+    //         $purchaseOrder = $this->service->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id);
     
-            $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
-            $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
-            $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
-            $business_id = $data['purchaseOrder']->business_id;
-            $purchaseOrder = $data['purchaseOrder'];
-            $purchaseOrderDetails = $data['purchaseOrderDetails'];
+    //         $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
+    //         $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
+    //         $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
+    //         $business_id = $data['purchaseOrder']->business_id;
+    //         $purchaseOrder = $data['purchaseOrder'];
+    //         $purchaseOrderDetails = $data['purchaseOrderDetails'];
     
-            if (!$purchaseOrder) {
-                return response()->json(['status' => 'error', 'message' => 'Purchase order not found'], 404);
-            }
+    //         if (!$purchaseOrder) {
+    //             return response()->json(['status' => 'error', 'message' => 'Purchase order not found'], 404);
+    //         }
     
-            // Generate PDF for purchase order
-            $purchaseOrderPdf = Pdf::loadView('organizations.common-pages.purchase-order-view', [
-                'purchase_order_id' => $purchase_order_id,
-                'purchaseOrder' => $purchaseOrder,
-                'purchaseOrderDetails' => $purchaseOrderDetails,
-                'getOrganizationData' => $getOrganizationData,
-                'getAllRulesAndRegulations' => $getAllRulesAndRegulations,
-                'business_id' => $business_id,
-                'is_pdf' => true, // Pass this flag
-            ])
-            ->setPaper('a4', 'portrait')
-            ->setWarnings(false)
-            ->setOptions([
-                'margin-top' => 0,
-                'margin-right' => 5,
-                'margin-bottom' => 10,
-                'margin-left' => 5,
-                'isRemoteEnabled' => true,
-                'enable-local-file-access' => true,
+    //         // Generate PDF for purchase order
+    //         $purchaseOrderPdf = Pdf::loadView('organizations.common-pages.purchase-order-view', [
+    //             'purchase_order_id' => $purchase_order_id,
+    //             'purchaseOrder' => $purchaseOrder,
+    //             'purchaseOrderDetails' => $purchaseOrderDetails,
+    //             'getOrganizationData' => $getOrganizationData,
+    //             'getAllRulesAndRegulations' => $getAllRulesAndRegulations,
+    //             'business_id' => $business_id,
+    //             'is_pdf' => true, // Pass this flag
+    //         ])
+    //         ->setPaper('a4', 'portrait')
+    //         ->setWarnings(false)
+    //         ->setOptions([
+    //             'margin-top' => 0,
+    //             'margin-right' => 5,
+    //             'margin-bottom' => 10,
+    //             'margin-left' => 5,
+    //             'isRemoteEnabled' => true,
+    //             'enable-local-file-access' => true,
                 
                 
-            ]);
+    //         ]);
     
-            // Generate PDF for static terms and conditions page
-            $termsPdf = Pdf::loadView('organizations.common-pages.static-terms-condition')
-                ->setPaper('a4', 'portrait')
-                ->setWarnings(false);
+    //         // Generate PDF for static terms and conditions page
+    //         $termsPdf = Pdf::loadView('organizations.common-pages.static-terms-condition')
+    //             ->setPaper('a4', 'portrait')
+    //             ->setWarnings(false);
     
-            // Combine the two PDFs
-            $purchaseOrderPath = storage_path('app/public/purchase_order_' . $purchase_order_id . '.pdf');
-            $termsPath = storage_path('app/public/terms_conditions.pdf');
-            $finalPdfPath = storage_path('app/public/final_purchase_order_' . $purchase_order_id . '.pdf');
+    //         // Combine the two PDFs
+    //         $purchaseOrderPath = storage_path('app/public/purchase_order_' . $purchase_order_id . '.pdf');
+    //         $termsPath = storage_path('app/public/terms_conditions.pdf');
+    //         $finalPdfPath = storage_path('app/public/final_purchase_order_' . $purchase_order_id . '.pdf');
     
-            // Save individual PDFs
-            $purchaseOrderPdf->save($purchaseOrderPath);
-            $termsPdf->save($termsPath);
+    //         // Save individual PDFs
+    //         $purchaseOrderPdf->save($purchaseOrderPath);
+    //         $termsPdf->save($termsPath);
     
-            // Merge PDFs using PDFMerger
-            $pdfMerger = new \Clegginabox\PDFMerger\PDFMerger;
-            $pdfMerger->addPDF($purchaseOrderPath, 'all');
-            $pdfMerger->addPDF($termsPath, 'all');
-            $pdfMerger->merge('file', $finalPdfPath);
+    //         // Merge PDFs using PDFMerger
+    //         // $pdfMerger = new \Clegginabox\PDFMerger\PDFMerger;
+    //     //  $pdfMerger = new \LynX39\LaraPdfMerger\PdfMerger();
+    //     $pdfMerger = new Fpdi();
+    //         $pdfMerger->addPDF($purchaseOrderPath, 'all');
+    //         $pdfMerger->addPDF($termsPath, 'all');
+    //         $pdfMerger->merge('file', $finalPdfPath);
     
-            // Send email with the merged PDF as an attachment
-            $vendorName = $purchaseOrder->vendor_name;
-            Mail::send([], [], function ($message) use ($purchaseOrder, $finalPdfPath, $vendorName) {
-                $message->to($purchaseOrder->vendor_email)
-                     ->cc('purchase@shreeragengg.com')
-                    ->subject('Purchase Order Notification')
-                    ->attach($finalPdfPath)
-                    ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+    //         // Send email with the merged PDF as an attachment
+    //         $vendorName = $purchaseOrder->vendor_name;
+    //         Mail::send([], [], function ($message) use ($purchaseOrder, $finalPdfPath, $vendorName) {
+    //             $message->to($purchaseOrder->vendor_email)
+    //                  ->cc('purchase@shreeragengg.com')
+    //                 ->subject('Purchase Order Notification')
+    //                 ->attach($finalPdfPath)
+    //                 ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
     
-                $message->text("Respected $vendorName, \n\nI hope this message finds you well.\n\nWe would like to place a purchase order with your company for the following items. Please find the details of the purchase order below:\n\nThank you!");
-            });
+    //             $message->text("Respected $vendorName, \n\nI hope this message finds you well.\n\nWe would like to place a purchase order with your company for the following items. Please find the details of the purchase order below:\n\nThank you!");
+    //         });
     
-            return redirect('purchase/list-submited-po-to-vendor')
-                ->with('status', 'success')
-                ->with('msg', 'Purchase order mail sent to vendor.');
+    //         return redirect('purchase/list-submited-po-to-vendor')
+    //             ->with('status', 'success')
+    //             ->with('msg', 'Purchase order mail sent to vendor.');
     
-        } catch (\Exception $e) {
-            \Log::error($e->getMessage());
-            return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
+    //     } catch (\Exception $e) {
+    //         \Log::error($e->getMessage());
+    //         return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
+    //     }
+    // }
+    
+ public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id)
+{
+    try {
+        // Fetch purchase order details
+        $purchaseOrder = $this->service->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id);
+
+        $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
+        $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
+        $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
+        $business_id = $data['purchaseOrder']->business_id;
+        $purchaseOrder = $data['purchaseOrder'];
+        $purchaseOrderDetails = $data['purchaseOrderDetails'];
+
+        if (!$purchaseOrder) {
+            return response()->json(['status' => 'error', 'message' => 'Purchase order not found'], 404);
         }
+
+        // Generate PDF for purchase order
+        $purchaseOrderPdf = Pdf::loadView('organizations.common-pages.purchase-order-view', [
+            'purchase_order_id' => $purchase_order_id,
+            'purchaseOrder' => $purchaseOrder,
+            'purchaseOrderDetails' => $purchaseOrderDetails,
+            'getOrganizationData' => $getOrganizationData,
+            'getAllRulesAndRegulations' => $getAllRulesAndRegulations,
+            'business_id' => $business_id,
+            'is_pdf' => true,
+        ])->setPaper('a4', 'portrait')->setWarnings(false);
+
+        // Generate PDF for static terms and conditions page
+        $termsPdf = Pdf::loadView('organizations.common-pages.static-terms-condition')
+            ->setPaper('a4', 'portrait')
+            ->setWarnings(false);
+
+        // Save individual PDFs
+        $purchaseOrderPath = storage_path('app/public/purchase_order_' . $purchase_order_id . '.pdf');
+        $termsPath = storage_path('app/public/terms_conditions.pdf');
+        $finalPdfPath = storage_path('app/public/final_purchase_order_' . $purchase_order_id . '.pdf');
+
+        $purchaseOrderPdf->save($purchaseOrderPath);
+        $termsPdf->save($termsPath);
+
+        // ✅ Merge PDFs using FPDI
+        $pdf = new Fpdi();
+        $files = [$purchaseOrderPath, $termsPath];
+
+        foreach ($files as $file) {
+            $pageCount = $pdf->setSourceFile($file);
+            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                $tplIdx = $pdf->importPage($pageNo);
+                $size   = $pdf->getTemplateSize($tplIdx);
+                $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                $pdf->useTemplate($tplIdx);
+            }
+        }
+
+        $pdf->Output($finalPdfPath, 'F'); // save final merged PDF
+
+        // Send email with the merged PDF as an attachment
+        $vendorName = $purchaseOrder->vendor_name;
+        Mail::send([], [], function ($message) use ($purchaseOrder, $finalPdfPath, $vendorName) {
+            $message->to($purchaseOrder->vendor_email)
+                ->cc('purchase@shreeragengg.com')
+                ->subject('Purchase Order Notification')
+                ->attach($finalPdfPath)
+                ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+
+            $message->text("Respected $vendorName, \n\nI hope this message finds you well.\n\nWe would like to place a purchase order with your company for the following items. Please find the details of the purchase order below:\n\nThank you!");
+        });
+
+        return redirect('purchase/list-submited-po-to-vendor')
+            ->with('status', 'success')
+            ->with('msg', 'Purchase order mail sent to vendor.');
+
+    } catch (\Exception $e) {
+        \Log::error($e->getMessage());
+        return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
     }
-    
- 
+}
 }

@@ -110,10 +110,12 @@ public function listLogisticsReport($request)
         throw $e;
     }
 }
-public function listFiananceReport($request)
+public function listFinanceReport($request)
 {
     try {
-        return $this->repo->listFiananceReport($request);
+        $data_output = $this->repo->listFinanceReport($request);
+       
+        return $data_output;
     } catch (\Exception $e) {
         throw $e;
     }

@@ -965,7 +965,7 @@ $previous_unused_leaves = DB::table('tbl_leave_management')
 
                     $notifications[] = ['admin_count' => $material_received_for_production_by_store_count,
                         'message' => 'Tracking Material',
-                        'url' => $baseUrl . '/proddept/list-material-recived'
+                        'url' => $baseUrl . '/proddept/list-material-received'
                     ];
                     $count = $received_design_in_prod + $revised_received_design_count + $material_received_for_production_by_store_count;
         }

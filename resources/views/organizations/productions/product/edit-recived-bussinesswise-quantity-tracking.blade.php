@@ -136,7 +136,7 @@
 
 
                                                 <div class="login-btn-inner marg-top d-flex justify-content-center">
-                                                    <a href="{{ route('list-material-recived') }}" class="btn btn-white me-2">Cancel</a>
+                                                    <a href="{{ route('list-material-received') }}" class="btn btn-white me-2">Cancel</a>
                                                     <button class="btn btn-sm btn-bg-colour" type="submit">Submit Completed Quantity</button>
                                                 </div>
 

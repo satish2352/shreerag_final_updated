@@ -44,7 +44,7 @@
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td> {{ $data->created_at ? $data->created_at->format('Y-m-d') : 'N/A' }}
+                                                    <td> {{ $data->created_at ? $data->created_at->format('d-m-Y') : 'N/A' }}
                                                     </td>
                                                       <td>{{ \Carbon\Carbon::parse($data->tracking_updated_at)->format('d-m-Y h:i A') }}</td>
                                                     <td>{{ ucwords($data->project_name) }}</td>
@@ -68,13 +68,6 @@
                                                                 Dispatch </button>
                                                         </a>
                                                     </td>
-
-
-
-
-
-
-
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -87,4 +80,5 @@
             </div>
         </div>
     </div>
+     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 @endsection

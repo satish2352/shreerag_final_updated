@@ -23,9 +23,9 @@
                         <center>
                             <h1> GRN Details</h1><br>
                             <div class="d-flex justify-content-center align-items-center">
-                                <h4 style="display: flex; justify-content: left; color: green;padding-left: 16px;">Note:
+                                {{-- <h4 style="display: flex; justify-content: left; color: green;padding-left: 16px;">Note:
                                     First You will Add This Accepted Quantity In Inventory Department, Then Only You Can
-                                    Issue Material to Production Department.</h4>
+                                    Issue Material to Production Department.</h4> --}}
 
                         </center>
                     </div>
@@ -126,9 +126,9 @@
 
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="po_date">PO Date :</label>
-                                                        <input type="date" class="form-control" id="po_date"
+                                                        <input type="text" class="form-control" id="po_date"
                                                             name="po_date" placeholder="Enter PO Date"
-                                                            value="{{ $purchase_order_data->created_at->format('Y-m-d') }}"
+                                                            value="{{ $purchase_order_data->created_at->format('d-m-Y') }}"
                                                             readonly>
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -339,5 +339,65 @@
             });
         });
     </script>
+     <script>
+        function printGRN() {
+            var contentToPrint = document.getElementById("printableArea").innerHTML;
+            var printWindow = window.open('', '', 'height=800,width=1200');
+            printWindow.document.write('<html><head><title>GRN Details</title>');
+            printWindow.document.write('<style>');
+            printWindow.document.write(`
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            font-size: 11px;
+            text-align: center;
+            vertical-align: top;
+        }
+        th:first-child,
+        td:first-child {
+            text-align: left;
+            width: 25%; /* Give Description column more space */
+            word-wrap: break-word;
+        }
+        input, textarea {
+            border: none;
+            background: transparent;
+            font-size: 11px;
+            width: 100%;
+        }
+        img {
+            margin-top: 10px;
+            max-width: 150px;
+            height: auto;
+        }
+        @media print {
+            @page {
+                size: landscape;
+            }
+        }
+    `);
+            printWindow.document.write('</style></head><body>');
+            printWindow.document.write(contentToPrint);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+            printWindow.close();
+        }
+    </script>
+
 
 @endsection

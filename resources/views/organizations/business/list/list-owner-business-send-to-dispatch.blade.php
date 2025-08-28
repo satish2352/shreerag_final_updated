@@ -44,7 +44,7 @@
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td> {{ $data->created_at ? $data->created_at->format('Y-m-d') : 'N/A' }}
+                                                    <td> {{ $data->created_at ? $data->created_at->format('d-m-Y') : 'N/A' }}
                                                     </td>
                                                     <td>{{ ucwords($data->project_name) }}</td>
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
@@ -71,4 +71,5 @@
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 @endsection

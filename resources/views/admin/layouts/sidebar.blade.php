@@ -45,6 +45,7 @@
     display: block;
 }
 
+
 </style>
 <!-- ============= pratiksha (21/08/24) ============= change for sidebar changes and change icon -->
 
@@ -64,10 +65,10 @@
 
 
                     @if (session()->get('role_id') == config('constants.ROLE_ID.SUPER'))
-                        {{-- <li class="nav-item {{ request()->is('/dashboard') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->is('/dashboard') ? 'active' : '' }}">
                             <a href="{{ route('dashboard') }}"><i class="fa big-icon fa-envelope icon-wrap"
                                     aria-hidden="true"></i> <span class="mini-click-non">Dashboard</span></a>
-                        </li> --}}
+                        </li>
                         <li class="{{ $currentRoute === 'dashboard' ? 'active' : '' }}">
                                 <a href="{{ route('dashboard') }}">
                                     <i class="fa fa-dashboard icon-wrap"></i>
@@ -135,11 +136,11 @@
     aria-expanded="{{ $isReportActive ? 'true' : 'false' }}"
     style="{{ $isReportActive ? 'display: block; background-color: #2437720d;' : '' }}">
 
-        
         <li>
             <a title="Product Completed Report" 
                href="{{ route('list-product-completed-report') }}"
                class="{{ Route::currentRouteName() == 'list-product-completed-report' ? 'active-submenu' : '' }}">
+                <i class="fa fa-check-circle icon-wrap"></i> 
                 <span class="mini-sub-pro">Product Completed</span>
             </a>
         </li>
@@ -148,7 +149,8 @@
             <a title="Stock Item" 
                href="{{ route('stock-item') }}"
                class="{{ Route::currentRouteName() == 'stock-item' ? 'active-submenu' : '' }}">
-                <span class="mini-sub-pro">Stock Item</span>
+               <i class="fa fa-boxes icon-wrap"></i> 
+               <span class="mini-sub-pro">Stock Item</span>
             </a>
         </li>
 
@@ -156,7 +158,8 @@
             <a title="Consumption Report" 
                href="{{ route('list-consumption-report') }}"
                class="{{ Route::currentRouteName() == 'list-consumption-report' ? 'active-submenu' : '' }}">
-                <span class="mini-sub-pro">Consumption</span>
+               <i class="fa fa-chart-pie icon-wrap"></i> 
+               <span class="mini-sub-pro">Consumption</span>
             </a>
         </li>
 
@@ -164,6 +167,7 @@
             <a title="Dispatch Bar Chart" 
                href="{{ route('list-dispatch-bar-chart') }}"
                class="{{ Route::currentRouteName() == 'list-dispatch-bar-chart' ? 'active-submenu' : '' }}">
+                <i class="fa fa-truck-loading icon-wrap"></i>
                 <span class="mini-sub-pro">Dispatch Bar Chart</span>
             </a>
         </li>
@@ -172,11 +176,13 @@
             <a title="Vendor Taken Material" 
                href="{{ route('list-vendor-through-taken-material') }}"
                class="{{ Route::currentRouteName() == 'list-vendor-through-taken-material' ? 'active-submenu' : '' }}">
-                <span class="mini-sub-pro">Vendor Taken Material</span>
+               <i class="fa fa-people-carry icon-wrap"></i> 
+               <span class="mini-sub-pro">Vendor Taken Material</span>
             </a>
         </li>
     </ul>
 </li>
+
 
 
                              {{-- <li>
@@ -328,12 +334,12 @@
                                 <a href="{{ route('list-rejected-chalan-updated') }}" aria-expanded="false"><i class="fa big-icon fa-times-circle icon-wrap"></i><span
                                         class="mini-click-non">List Rejected Chalan</span></a>
                             </li>
-                            {{-- <li
+                            <li
                             class="nav-item {{ request()->is('owner/list-approved-purchase-orders-owner') ? 'active' : '' }}">
                             <a href="{{ route('list-approved-purchase-orders-owner') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-rupee-sign icon-wrap" aria-hidden="true"></i> <span
                                     class="mini-click-non">Fianance Dept Received GRN and SR</span></a>
-                        </li>  --}}
+                        </li> 
                             <li
                                 class="nav-item {{ request()->is('owner/list-po-recived-for-approval-payment') ? 'active' : '' }}">
                                 <a href="{{ route('list-po-recived-for-approval-payment') }}"
@@ -408,13 +414,13 @@
                                     <a href="{{ route('list-purchase-order-approved-sent-to-vendor') }}"><i class="fa fa-envelope icon-wrap"></i> <span
                                             class="mini-click-non">Purchase Order Sent To Vendor</span></a>
                                 </li>
-                                {{-- <li
+                                <li
                                 class="nav-item {{ Request::is('list-rejected-chalan-po-wise') ? 'active' : '' }}">
                                 <a 
                                     href="{{ route('list-rejected-chalan-po-wise') }}"><i
                                         class="fa big-icon fa-envelope icon-wrap" aria-hidden="true"></i> <span
                                         class="mini-click-non">PO wise Rejected Chalan List</span></a>
-                            </li> --}}
+                            </li>
                             </ul>
                         </li>
                         <li  class="nav-item {{ request()->is('purchase/list-submited-po-to-vendor') || request()->is('purchase/list-submited-po-to-vendor-businesswise/*') || request()->is('purchase/check-details-of-po-before-send-vendor/*') ? 'active' : '' }}">
@@ -442,10 +448,10 @@
                                                  <li class="{{ Request::is('stock-item') ? 'active' : '' }}"><a href="{{ route('stock-item') }}"><i class="fa fa-box icon-wrap"></i> <span
                                                 class="mini-click-non">Item Stock</span></a></li>
 
-                                      {{-- <li class="nav-item {{ Request::is('party-report') ? 'active' : '' }}"><a
+                                      <li class="nav-item {{ Request::is('party-report') ? 'active' : '' }}"><a
                                         href="{{ route('party-report') }}"><i
                                             class="fa big-icon fa-list-check icon-wrap" aria-hidden="true"></i> <span
-                                            class="mini-click-non">Party Wise Report</span></a></li>      --}}
+                                            class="mini-click-non">Party Wise Report</span></a></li>     
                                       <li class="nav-item {{ Request::is('follow-up-report') ? 'active' : '' }}"><a
                                         href="{{ route('follow-up-report') }}"><i class="fa fa-clipboard-check icon-wrap"></i><span
                                             class="mini-click-non">Follow Up Report</span></a></li>       
@@ -488,18 +494,18 @@
                                 <span class="mini-click-non">Design Report </span>
                             </a>
                         </li>
-                           {{-- <li class="{{ Request::is('design-report') ? 'active' : '' }}">
-                            <a class="has-arrow" href="{{ route('design-report') }}" aria-expanded="false"><i
+                           <li class="{{ Request::is('list-design-report') ? 'active' : '' }}">
+                            <a class="has-arrow" href="{{ route('list-design-report') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-file-invoice icon-wrap"></i> <span
                                     class="mini-click-non">Report</span></a>
                             <ul class="submenu-angle" aria-expanded="false">
-                                <li class="nav-item {{ Request::is('design-report') ? 'active' : '' }}"><a
-                                        href="{{ route('design-report') }}"><i
+                                <li class="nav-item {{ Request::is('list-design-report') ? 'active' : '' }}"><a
+                                        href="{{ route('list-design-report') }}"><i
                                             class="fa big-icon fa-list-check icon-wrap" aria-hidden="true"></i> <span
                                             class="mini-click-non">Design Report</span></a></li>
                                 
                             </ul>
-                        </li> --}}
+                        </li>
 
                     @endif
                       @if (session()->get('role_id') == config('constants.ROLE_ID.ESTIMATION'))
@@ -574,8 +580,8 @@
                                     <span class="mini-click-non">Revised Design List</span>
                                 </a>
                             </li>
-                            <li class="nav-item {{ request()->is('proddept/list-material-recived') || request()->is('proddept/list-final-purchase-order-production/*') || request()->is('proddept/edit-recived-inprocess-production-material/*') || request()->is('proddept/edit-recived-bussinesswise-quantity-tracking/*') ? 'active' : '' }}">                            
-                                <a href="{{ route('list-material-recived') }}">
+                            <li class="nav-item {{ request()->is('proddept/list-material-received') || request()->is('proddept/list-final-purchase-order-production/*') || request()->is('proddept/edit-recived-inprocess-production-material/*') || request()->is('proddept/edit-recived-bussinesswise-quantity-tracking/*') ? 'active' : '' }}">                            
+                                <a href="{{ route('list-material-received') }}">
                                    <i class="fa fa-boxes icon-wrap"></i>
                                     <span class="mini-click-non">Tracking Material</span>
                                 </a>
@@ -694,8 +700,8 @@
                                 <span class="mini-click-non">Material For Purchase</span>
                             </a>
                         </li>
-                        <li class="nav-item {{ request()->is('storedept/list-material-received-from-quality-bussinesswise-tracking') || request()->is('storedept/list-grn-details-po-tracking/*') ? 'active' : '' }}">
-                            <a href="{{ route('list-material-received-from-quality-bussinesswise-tracking') }}">
+                        <li class="nav-item {{ request()->is('storedept/list-material-received-from-quality') || request()->is('storedept/list-grn-details-po-tracking/*') ? 'active' : '' }}">
+                            <a href="{{ route('list-material-received-from-quality') }}">
                                 <i class="fa fa-box-open icon-wrap"></i>
                                 <span class="mini-click-non">Material Received From Quality</span>
                             </a>
@@ -1022,7 +1028,7 @@
                 @endif
 
                 
-                    {{-- @if (session()->get('user_id'))
+                    @if (session()->get('user_id'))
                         <li class="nav-item">
                             <a class="nav-item" href="{{ route('list-leaves') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-paper-plane icon-wrap"></i> <span
@@ -1041,7 +1047,7 @@
                                 <span class="mini-click-non">Notice</span>
                             </a>
                         </li>
-                    @endif --}}
+                    @endif
                 </ul>
             </nav>
         </div>
@@ -1118,7 +1124,7 @@
                                             </li>
                                             @endif
                                             <li class="nav-item">
-                                                <a href="#" data-toggle="dropdown" role="button"
+                                                {{-- <a href="#" data-toggle="dropdown" role="button"
                                                     aria-expanded="false" class="nav-link dropdown-toggle"
                                                     style="font-size: 16px !important;">
                                                     <i class="fa fa-user adminpro-user-rounded header-riht-inf"
@@ -1135,7 +1141,24 @@
                                                                 class="fa fa-lock author-log-ic"></span>
                                                             Log Out</a>
                                                     </li>
-                                                </ul>
+                                                </ul> --}}
+
+                                                <a href="#" data-bs-toggle="dropdown" role="button"
+   aria-expanded="false" class="nav-link dropdown-toggle"
+   style="font-size: 16px !important;">
+    <i class="fa fa-user adminpro-user-rounded header-riht-inf"
+       aria-hidden="true"></i>
+    {{ ucwords(config('constants.ROLE_ID_NAME.' . Session::get('role_id'))) }}
+    Department
+    <span class="admin-name"></span>
+</a>
+<ul class="dropdown-menu animated zoomIn">
+    <li>
+        <a href="{{ route('log-out') }}">
+            <span class="fa fa-lock author-log-ic"></span> Log Out
+        </a>
+    </li>
+</ul>
                                             </li>
 
                                         </ul>

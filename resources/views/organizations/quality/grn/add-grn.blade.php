@@ -124,9 +124,9 @@
 
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="po_date">PO Date :</label>
-                                                        <input type="date" class="form-control" id="po_date"
+                                                        <input type="text" class="form-control" id="po_date"
                                                             name="po_date" placeholder="Enter PO Date"
-                                                            value="{{ $purchase_order_data->created_at->format('Y-m-d') }}"
+                                                            value="{{ $purchase_order_data->created_at->format('d-m-Y') }}"
                                                             readonly>
 
                                                     </div>
@@ -298,6 +298,7 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="{{ asset('js/vendor/jquery-1.11.3.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script>
         var i = 0;

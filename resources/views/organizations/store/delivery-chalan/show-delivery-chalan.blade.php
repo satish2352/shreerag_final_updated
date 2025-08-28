@@ -150,7 +150,7 @@
                                                 {{ $showData['purchaseOrder']->dc_number }}</span>
                                             <span style="padding-right: 20px;">
                                                 <strong>Date: </strong>
-                                                {{ $showData['purchaseOrder']->dc_date ? \Carbon\Carbon::parse($showData['purchaseOrder']->dc_date)->format('Y-m-d') : 'N/A' }}
+                                                {{ $showData['purchaseOrder']->dc_date ? \Carbon\Carbon::parse($showData['purchaseOrder']->dc_date)->format('d-m-Y') : 'N/A' }}
                                             </span>
                                         </div>
 

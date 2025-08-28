@@ -16,7 +16,7 @@
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
 
-       <form id="filterForm" method="GET" action="{{ route('list-logistics-report') }}" target="_blank">
+       <form id="filterForm" method="GET" action="{{ route('list-fianance-report') }}" target="_blank">
 
     <input type="hidden" name="export_type" id="export_type" />
       
@@ -167,7 +167,7 @@ function fetchReport(reset = false) {
     const params = new URLSearchParams();
     formData.forEach((val, key) => params.append(key, val));
 
-    fetch(`{{ route('logistics-ajax') }}?${params.toString()}`)
+    fetch(`{{ route('finance-ajax') }}?${params.toString()}`)
         .then(res => res.json())
         .then(res => {
             const tbody = document.getElementById('reportBody');
