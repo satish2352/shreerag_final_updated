@@ -428,9 +428,17 @@ $(document).on('click', '.custom-dropdown .option', function () {
                     stockAvailableMessage.text('Stock is sufficient').css('color', 'green');
                 }
             },
-            error: function () {
-                stockAvailableMessage.text('Error checking stock').css('color', 'red');
-            }
+            // error: function () {
+            //     stockAvailableMessage.text('Error checking stock').css('color', 'red');
+            // }
+            error: function (xhr) {
+    let msg = 'Error checking stock';
+    if (xhr.responseJSON && xhr.responseJSON.message) {
+        msg = xhr.responseJSON.message;
+    }
+    stockAvailableMessage.text(msg).css('color', 'red');
+}
+
         });
     } else {
         stockAvailableMessage.text('');
