@@ -407,7 +407,8 @@ class AllListRepositor
             $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
           })
           ->where('businesses_details.id', $id)
-          ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check)
+            // ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check)
+          ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
           ->where('businesses.is_active', true)
           ->where('businesses.is_deleted', 0)
           ->distinct('business_application_processes.id')
