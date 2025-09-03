@@ -1,8 +1,8 @@
-@extends('admin.layouts.master')
+@extends('admin.layouts.master-add-more')
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 
-{{-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> --}}
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 @section('content')
@@ -32,36 +32,33 @@
 
         .select2-container .select2-selection--single {
             height: 34px !important;
-            width: 100% !important;
+            width:100% !important;
         }
 
         .select2-container--default .select2-selection--single {
             border: 1px solid #ccc !important;
             border-radius: 0px !important;
         }
-
         .
         /* Add this CSS to ensure error message visibility */
 
-        .reverse-label {
-            display: flex;
-            flex-direction: row-reverse;
-            /* Reverse the order of elements */
-            flex-wrap: wrap-reverse;
-            /* Allow elements to wrap onto the next line */
-            align-items: center;
-            /* Align items vertically if needed */
-        }
+.reverse-label {
+  display: flex;
+  flex-direction: row-reverse; /* Reverse the order of elements */
+  flex-wrap: wrap-reverse; /* Allow elements to wrap onto the next line */
+  align-items: center; /* Align items vertically if needed */
+}
 
-        .reverse-label span {
-            order: 2;
-            /* Place span after the label content */
-        }
+.reverse-label span {
+  order: 2; /* Place span after the label content */
+}
 
-        .reverse-label label {
-            order: 1;
-            /* Ensure label content appears before span */
-        }
+.reverse-label label {
+  order: 1; /* Ensure label content appears before span */
+}
+
+
+
     </style>
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
@@ -95,21 +92,6 @@
                                                 @foreach ($dataOutputVendor as $data)
                                                     <option value="{{ $data['id'] }}">
                                                         {{ $data['vendor_company_name'] }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-4">
-                                        <div class="form-group">
-                                            <label for="vendor_type_id">Vendor Type <span
-                                                    class="text-danger">*</span></label>
-                                            <select class="form-control mb-2 select2" name="vendor_type_id"
-                                                id="vendor_type_id">
-                                                <option value="" default>Vendor Type</option>
-
-                                                @foreach ($dataOutputVendorTyper as $data)
-                                                    <option value="{{ $data['id'] }}">
-                                                        {{ $data['name'] }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -162,7 +144,6 @@
                                             </select>
                                         </div>
                                     </div>
-
                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                         <div class="form-group">
                                             <label>Purchase Order Date <span class="text-danger">*</span></label>
@@ -172,7 +153,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                </div>
+                                <div class="row">
+
+
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label>Payment Terms <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" id="payment_terms"
@@ -187,7 +172,7 @@
                     </select> --}}
                                         </div>
                                     </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Quote Number (optional)</label>
                                             <input class="form-control" type="text" name="quote_no" value=""
@@ -219,7 +204,7 @@
                                                         <th>Amount</th>
                                                         <th>
                                                             <button type="button"
-                                                                class="btn btn-sm btn-bg-colour font-18 mr-1"
+                                                                class="btn btn-sm btn-success font-18 mr-1"
                                                                 id="add_more_btn" title="Add" data-repeater-create>
                                                                 <i class="fa fa-plus"></i>
                                                             </button>
@@ -309,12 +294,11 @@
                                                         </td>
                                                         <td>
                                                             <input class="form-control rate" name="addmore[0][rate]"
-                                                                style="min-width:100px" type="text">
+                                                            style="min-width:100px" type="text">
                                                         </td>
                                                         <td>
                                                             <select class="form-control discount"
-                                                                name="addmore[0][discount]" id="discount"
-                                                                style="width:80px">
+                                                                name="addmore[0][discount]" id="discount" style="width:80px">
                                                                 <option value="0">0 %</option>
                                                                 <option value="1">1 %</option>
                                                                 <option value="2">2 %</option>
@@ -381,20 +365,6 @@
                                                             </button>
                                                         </td>
                                                     </tr>
-
-                                                <tfoot>
-                                                    <tr class="grand-total-row">
-                                                        <td colspan="8" class="text-end"><strong>Grand Total:</strong>
-                                                        </td>
-                                                        <td colspan="4">
-                                                            <input type="text" id="po_grand_total_amount"
-                                                                name="po_grand_total_amount" class="form-control"
-                                                                readonly>
-                                                        </td>
-                                                    </tr>
-                                                </tfoot>
-
-
                                                 </tbody>
                                             </table>
                                         </div>
@@ -436,9 +406,9 @@
                             </form>
                         </div>
                     </div>
-                    {{-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> --}}
-                    {{-- <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script> --}}
-                    {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library --> --}}
+                    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
                     <script>
                         var jQuery321 = $.noConflict(true);
                     </script>
@@ -515,13 +485,13 @@
                             });
 
                             // Remove validation message when a valid option is selected
-                            $(document).on('change', '.part_no_id', function() {
-                                var currentSelect = $(this); // Get current select field
-                                if (currentSelect.val()) {
-                                    // Trigger validation check to remove the error
-                                    currentSelect.valid();
-                                }
-                            });
+        $(document).on('change', '.part_no_id', function () {
+            var currentSelect = $(this); // Get current select field
+            if (currentSelect.val()) {
+                // Trigger validation check to remove the error
+                currentSelect.valid();
+            }
+        });
                             // Custom validation method for minimum date
                             $.validator.addMethod("minDate", function(value, element) {
                                 var today = new Date();
@@ -705,7 +675,6 @@
                         </button>
                     </td>
                 </tr>
-               
             `;
                                 $("#purchase_order_table tbody").append(newRow);
                                 $('.select2').select2();
@@ -716,7 +685,7 @@
 
 
 
-
+                          
                             // Remove a row when the "Remove" button is clicked
                             $(document).on("click", ".remove-row", function() {
                                 var i_count = $('#i_id').val();
@@ -727,7 +696,6 @@
 
                                 // Reset validation state after removing row
                                 validator.resetForm();
-                                calculateGrandTotal();
                             });
 
                             // Initialize validation for the first row on page load
@@ -764,68 +732,7 @@
 
                                 // Update the total_amount field (formatted to 2 decimal places)
                                 currentRow.find('.total_amount').val(final_total_amount);
-
-                                calculateGrandTotal();
                             });
-                        });
-
-
-                        // function calculateGrandTotal() {
-                        //     let grandTotal = 0;
-                        //     document.querySelectorAll('.total_amount').forEach(function(input) {
-                        //         grandTotal += parseFloat(input.value) || 0;
-                        //     });
-                        //     document.getElementById('po_grand_total_amount').value = grandTotal.toFixed(2);
-                        // }
-
-                        // // Trigger calculation on rate or quantity change
-                        // document.addEventListener('input', function (e) {
-                        //     if (e.target.classList.contains('rate') || e.target.classList.contains('quantity')) {
-                        //         const row = e.target.closest('tr');
-                        //         const quantity = parseFloat(row.querySelector('.quantity').value) || 0;
-                        //         const rate = parseFloat(row.querySelector('.rate').value) || 0;
-                        //         row.querySelector('.total_amount').value = (quantity * rate).toFixed(2);
-                        //         calculateGrandTotal();
-                        //     }
-                        // });
-
-
-
-                        function calculateGrandTotal() {
-                            let grandTotal = 0;
-
-                            document.querySelectorAll('tr').forEach(function(row) {
-                                const quantity = parseFloat(row.querySelector('.quantity')?.value) || 0;
-                                const rate = parseFloat(row.querySelector('.rate')?.value) || 0;
-                                const taxSelect = row.querySelector('.tax_id');
-                                const taxRate = parseFloat(taxSelect?.selectedOptions[0]?.getAttribute('data-tax-rate')) || 0;
-
-                                const baseAmount = quantity * rate;
-                                const taxAmount = (baseAmount * taxRate) / 100;
-                                const totalAmount = baseAmount + taxAmount;
-
-                                const totalAmountInput = row.querySelector('.total_amount');
-                                if (totalAmountInput) {
-                                    totalAmountInput.value = totalAmount.toFixed(2);
-                                }
-
-                                grandTotal += totalAmount;
-                            });
-
-                            document.getElementById('po_grand_total_amount').value = grandTotal.toFixed(2);
-                        }
-
-                        // Trigger calculation on input or tax change
-                        document.addEventListener('input', function(e) {
-                            if (e.target.classList.contains('rate') || e.target.classList.contains('quantity')) {
-                                calculateGrandTotal();
-                            }
-                        });
-
-                        document.addEventListener('change', function(e) {
-                            if (e.target.classList.contains('tax_id')) {
-                                calculateGrandTotal();
-                            }
                         });
                     </script>
 
@@ -849,9 +756,6 @@
 
                                 rules: {
                                     vendor_id: {
-                                        required: true,
-                                    },
-                                    vendor_type_id: {
                                         required: true,
                                     },
                                     contact_person_name: {
@@ -908,9 +812,6 @@
                                 messages: {
                                     vendor_id: {
                                         required: "Please Select the Vendor Company Name",
-                                    },
-                                    vendor_type_id: {
-                                        required: "Please Select the Vendor Type",
                                     },
                                     contact_person_name: {
                                         required: "Please Enter contact person name",
@@ -970,51 +871,52 @@
                         });
                     </script>
                     <script>
-                        $(document).ready(function() {
 
-                            var jQuery321 = $.noConflict(true);
-                            // Initialize Select2
-                            // $('.select2').select2();
+$(document).ready(function() {
 
-                            // Bind the select2:select event
-                            $(document).on('change', '.part_no_id', function(e) {
-                                var partNoId = $(this).val(); // Get the selected part_no_id
-                                var currentRow = $(this).closest('tr'); // Get the current row
+var jQuery321 = $.noConflict(true);
+// Initialize Select2
+// $('.select2').select2();
 
-                                // Check if partNoId has value
-                                if (partNoId) {
-                                    console.log("Selected partNoId: ", partNoId); // Debugging the selected ID
+// Bind the select2:select event
+$(document).on('change', '.part_no_id', function(e) {
+    var partNoId = $(this).val(); // Get the selected part_no_id
+    var currentRow = $(this).closest('tr'); // Get the current row
 
-                                    // Make an AJAX request to fetch the HSN based on the part_no_id
-                                    $.ajax({
-                                        url: '{{ route('get-hsn-for-part') }}', // Ensure this route is correct in your routes file
-                                        type: 'GET',
-                                        data: {
-                                            part_no_id: partNoId
-                                        }, // Pass the part_no_id as a query parameter
-                                        success: function(response) {
-                                            console.log("HSN response:",
-                                                response); // Debug the response
+    // Check if partNoId has value
+    if (partNoId) {
+        console.log("Selected partNoId: ", partNoId); // Debugging the selected ID
 
-                                            if (response.part && response.part.length > 0) {
-                                                var hsnName = response.part[0].name;
-                                                var hsnId = response.part[0].id;
+        // Make an AJAX request to fetch the HSN based on the part_no_id
+        $.ajax({
+            url: '{{ route('get-hsn-for-part') }}', // Ensure this route is correct in your routes file
+            type: 'GET',
+            data: {
+                part_no_id: partNoId
+            }, // Pass the part_no_id as a query parameter
+            success: function(response) {
+                console.log("HSN response:",
+                response); // Debug the response
 
-                                                // Update the HSN inputs for the current row only
-                                                currentRow.find('.hsn_name').val(
-                                                    hsnName); // Set HSN name
-                                                currentRow.find('.hsn_id').val(hsnId); // Set HSN ID
-                                            } else {
-                                                alert("HSN not found for the selected part.");
-                                            }
-                                        },
-                                        error: function(xhr, status, error) {
-                                            console.error("AJAX Error: ", status, error);
-                                            alert("Error fetching HSN. Please try again.");
-                                        }
-                                    });
-                                }
-                            });
-                        });
-                    </script>
+                if (response.part && response.part.length > 0) {
+                    var hsnName = response.part[0].name;
+                    var hsnId = response.part[0].id;
+
+                    // Update the HSN inputs for the current row only
+                    currentRow.find('.hsn_name').val(
+                    hsnName); // Set HSN name
+                    currentRow.find('.hsn_id').val(hsnId); // Set HSN ID
+                } else {
+                    alert("HSN not found for the selected part.");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX Error: ", status, error);
+                alert("Error fetching HSN. Please try again.");
+            }
+        });
+    }
+});
+});
+                        </script>
                 @endsection
