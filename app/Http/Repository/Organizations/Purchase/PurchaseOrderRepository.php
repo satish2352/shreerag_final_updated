@@ -28,6 +28,7 @@ class PurchaseOrderRepository
         $purchase_orderid = date('Y') . mt_rand(100000, 999999);
 
         try {
+              
             $requistition_id = base64_decode($request->requistition_id);
             $data_for_requistition = Requisition::where('id', $requistition_id)->first();
 
@@ -43,7 +44,7 @@ class PurchaseOrderRepository
             $dataOutput->terms_condition = '';
             $dataOutput->remark = '';
             $dataOutput->image = 'null';
-            $dataOutput->po_grand_total_amount = $request->po_grand_total_amount;
+            // $dataOutput->po_grand_total_amount = $request->po_grand_total_amount;
             // $dataOutput->quote_no = $request->quote_no;
             $dataOutput->contact_person_name = $request->contact_person_name;
             $dataOutput->contact_person_number = $request->contact_person_number;
@@ -60,6 +61,7 @@ class PurchaseOrderRepository
             if ($request->has('quote_no')) {
                 $dataOutput->quote_no = $request->quote_no;
             }
+          
            
             $dataOutput->save();
             $last_insert_id = $dataOutput->id;

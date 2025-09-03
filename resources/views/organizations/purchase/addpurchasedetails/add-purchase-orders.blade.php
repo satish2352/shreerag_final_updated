@@ -71,7 +71,7 @@
                             </div><br>
 
                             <form action="{{ route('store-purchase-order') }} " id="forms" method="post"
-                                enctype="multipart/form-data" id="purchase_order_table">
+                                enctype="multipart/form-data">
                                 @csrf
                                 <input class="form-control" type="hidden" name="business_details_id"
                                     id="business_details_id" value="{{ $business_detailsId }}">
@@ -92,6 +92,22 @@
                                                 @foreach ($dataOutputVendor as $data)
                                                     <option value="{{ $data['id'] }}">
                                                         {{ $data['vendor_company_name'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                     <div class="col-lg-4 col-md-4 col-sm-4">
+                                        <div class="form-group">
+                                            <label for="vendor_type_id">Vendor Type <span
+                                                    class="text-danger">*</span></label>
+                                            <select class="form-control mb-2 select2" name="vendor_type_id"
+                                                id="vendor_type_id">
+                                                <option value="" default>Vendor Type</option>
+
+                                                @foreach ($dataOutputVendorTyper as $data)
+                                                    <option value="{{ $data['id'] }}">
+                                                        {{ $data['name'] }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -144,7 +160,10 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                    
+                                </div>
+                                <div class="row">
+<div class="col-lg-4 col-md-4 col-sm-4">
                                         <div class="form-group">
                                             <label>Purchase Order Date <span class="text-danger">*</span></label>
                                             <div class="cal-icon">
@@ -153,11 +172,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
 
-
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <div class="col-lg-4 col-md-4 col-sm-4">
                                         <div class="form-group">
                                             <label>Payment Terms <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" id="payment_terms"
@@ -172,7 +188,7 @@
                     </select> --}}
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-lg-4 col-md-4 col-sm-4">
                                         <div class="form-group">
                                             <label>Quote Number (optional)</label>
                                             <input class="form-control" type="text" name="quote_no" value=""
@@ -204,7 +220,7 @@
                                                         <th>Amount</th>
                                                         <th>
                                                             <button type="button"
-                                                                class="btn btn-sm btn-success font-18 mr-1"
+                                                                class="btn btn-sm btn-bg-colour font-18 mr-1"
                                                                 id="add_more_btn" title="Add" data-repeater-create>
                                                                 <i class="fa fa-plus"></i>
                                                             </button>
@@ -365,6 +381,8 @@
                                                             </button>
                                                         </td>
                                                     </tr>
+                                                <tfoot> <tr class="grand-total-row"> <td colspan="8" class="text-end"><strong>Grand Total:</strong> </td> <td colspan="4"> <input type="text" id="po_grand_total_amount" name="po_grand_total_amount" class="form-control" readonly> </td> </tr> </tfoot>
+
                                                 </tbody>
                                             </table>
                                         </div>
@@ -696,6 +714,7 @@
 
                                 // Reset validation state after removing row
                                 validator.resetForm();
+                                calculateGrandTotal();
                             });
 
                             // Initialize validation for the first row on page load
@@ -712,30 +731,164 @@
 
                     <script>
                         $(document).ready(function() {
-                            // Trigger calculation on 'keyup' for input fields and 'change' for dropdowns
-                            $(document).on('keyup change', '.quantity, .rate, .discount', function() {
-                                var currentRow = $(this).closest("tr");
+                            $(document).ready(function() {
+    // Trigger calculation when quantity, rate, discount, or tax_id changes
+    $(document).on('keyup change', '.quantity, .rate, .discount, #tax_id', function() {
+        calculateAllRows();
+    });
+});
 
-                                // Fetch input values (convert to numbers and default to 0 if empty)
-                                var current_row_quantity = parseFloat(currentRow.find('.quantity').val()) || 0;
-                                var current_row_rate = parseFloat(currentRow.find('.rate').val()) || 0;
-                                var current_row_discount = parseFloat(currentRow.find('.discount').val()) || 0;
+function calculateAllRows() {
+    // ✅ Global tax rate
+    var taxRate = parseFloat($('#tax_id option:selected').data('tax-rate')) || 0;
+    console.log("Global Tax Rate:", taxRate);
 
-                                // Calculate total price before discount
-                                var new_total_price = current_row_quantity * current_row_rate;
+    var grandTotal = 0;
 
-                                // Calculate the discount amount
-                                var discount_amount = (new_total_price * current_row_discount) / 100;
+    $('#purchase_order_table tbody tr').each(function() {
+        var currentRow = $(this);
 
-                                // Calculate final total amount after applying discount
-                                var final_total_amount = new_total_price - discount_amount;
+        var qty = parseFloat(currentRow.find('.quantity').val()) || 0;
+        var rate = parseFloat(currentRow.find('.rate').val()) || 0;
+        var discount = parseFloat(currentRow.find('.discount').val()) || 0;
 
-                                // Update the total_amount field (formatted to 2 decimal places)
-                                currentRow.find('.total_amount').val(final_total_amount);
-                            });
+        // Step 1: Base Amount
+        var baseAmount = qty * rate;
+
+        // Step 2: Discount
+        var discountAmount = (baseAmount * discount) / 100;
+        var afterDiscount = baseAmount - discountAmount;
+
+        // Step 3: Tax (global)
+        var taxAmount = (afterDiscount * taxRate) / 100;
+
+        // Step 4: Final row amount
+        var finalAmount = afterDiscount + taxAmount;
+
+        // Update row total
+        currentRow.find('.total_amount').val(finalAmount.toFixed(2));
+
+        // Add to grand total
+        grandTotal += finalAmount;
+    });
+
+    // Update grand total field
+    $('#po_grand_total_amount').val(grandTotal.toFixed(2));
+}
+
+                        });
+
+                        //  function calculateGrandTotal() {
+                        //     let grandTotal = 0;
+
+                        //     document.querySelectorAll('tr').forEach(function(row) {
+                        //         const quantity = parseFloat(row.querySelector('.quantity')?.value) || 0;
+                        //         const rate = parseFloat(row.querySelector('.rate')?.value) || 0;
+                        //         const taxSelect = row.querySelector('.tax_id');
+                        //         const taxRate = parseFloat(taxSelect?.selectedOptions[0]?.getAttribute('data-tax-rate')) || 0;
+
+                        //         const baseAmount = quantity * rate;
+                        //         const taxAmount = (baseAmount * taxRate) / 100;
+                        //         const totalAmount = baseAmount + taxAmount;
+
+                        //         const totalAmountInput = row.querySelector('.total_amount');
+                        //         if (totalAmountInput) {
+                        //             totalAmountInput.value = totalAmount.toFixed(2);
+                        //         }
+
+                        //         grandTotal += totalAmount;
+                        //     });
+
+                        //     document.getElementById('po_grand_total_amount').value = grandTotal.toFixed(2);
+                        // }
+
+                        // Trigger calculation on input or tax change
+                        document.addEventListener('input', function(e) {
+                            if (e.target.classList.contains('rate') || e.target.classList.contains('quantity')) {
+                                calculateGrandTotal();
+                            }
+                        });
+
+                        document.addEventListener('change', function(e) {
+                            if (e.target.classList.contains('tax_id')) {
+                                calculateGrandTotal();
+                            }
                         });
                     </script>
+          <script>
+                        $(document).ready(function() {
+                            // Trigger calculation on 'keyup' for input fields and 'change' for dropdowns
+                         $(document).on('keyup change', '.quantity, .rate, .discount, #tax_id', function() {
+    var totalAmount = 0;
 
+    // Loop through each row
+    $('#purchase_order_table tbody tr').each(function() {
+        var qty = parseFloat($(this).find('.quantity').val()) || 0;
+        var rate = parseFloat($(this).find('.rate').val()) || 0;
+        var discount = parseFloat($(this).find('.discount').val()) || 0;
+
+        var rowSubtotal = (qty * rate) - discount;
+        totalAmount += rowSubtotal;
+
+        // Show row subtotal
+        $(this).find('.row_subtotal').text(rowSubtotal.toFixed(2));
+    });
+
+    // Get tax % from main dropdown (not per row)
+    var taxRate = parseFloat($('#tax_id option:selected').data('tax-rate')) || 0;
+    var taxAmount = totalAmount * (taxRate / 100);
+    var grandTotal = totalAmount + taxAmount;
+
+    // Show totals
+    $('#total_amount').text(totalAmount.toFixed(2));
+    $('#tax_amount').text(taxAmount.toFixed(2));
+    $('#grand_total').text(grandTotal.toFixed(2));
+});
+
+function calculateGrandTotal() {
+    let grandTotal = 0;
+
+    $('#purchase_order_table tbody tr').each(function() {
+        var qty = parseFloat($(this).find('.quantity').val()) || 0;
+        var rate = parseFloat($(this).find('.rate').val()) || 0;
+        var discount = parseFloat($(this).find('.discount').val()) || 0;
+
+        // Tax per row
+        var taxRate = parseFloat($(this).find('.tax_id option:selected').data('tax-rate')) || 0;
+
+        // Base
+        var baseAmount = qty * rate;
+
+        // Discount
+        var discountAmount = (baseAmount * discount) / 100;
+        var afterDiscount = baseAmount - discountAmount;
+
+        // Tax
+        var taxAmount = (afterDiscount * taxRate) / 100;
+
+        // Row final
+        var rowTotal = afterDiscount + taxAmount;
+        $(this).find('.total_amount').val(rowTotal.toFixed(2));
+
+        grandTotal += rowTotal;
+    });
+
+    $('#po_grand_total_amount').val(grandTotal.toFixed(2));
+}
+                        });
+                        // Trigger calculation on input or tax change
+                        document.addEventListener('input', function(e) {
+                            if (e.target.classList.contains('rate') || e.target.classList.contains('quantity')) {
+                                calculateGrandTotal();
+                            }
+                        });
+
+                        document.addEventListener('change', function(e) {
+                            if (e.target.classList.contains('tax_id')) {
+                                calculateGrandTotal();
+                            }
+                        });
+                    </script>
                     <script>
                         $(document).ready(function() {
                             function setMinDate() {
@@ -756,6 +909,9 @@
 
                                 rules: {
                                     vendor_id: {
+                                        required: true,
+                                    },
+                                      vendor_type_id: {
                                         required: true,
                                     },
                                     contact_person_name: {
@@ -812,6 +968,9 @@
                                 messages: {
                                     vendor_id: {
                                         required: "Please Select the Vendor Company Name",
+                                    },
+                                      vendor_type_id: {
+                                        required: "Please Select the Vendor Type",
                                     },
                                     contact_person_name: {
                                         required: "Please Enter contact person name",

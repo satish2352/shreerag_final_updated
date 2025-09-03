@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+@extends('admin.layouts.master-add-more')
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 
@@ -434,6 +434,8 @@
                                                                         </td>
                                                                     </tr>
                                                                 @endforeach
+                                                               <tfoot> <tr class="grand-total-row"> <td colspan="8" class="text-end"><strong>Grand Total:</strong> </td> <td colspan="4"> <input type="text" id="po_grand_total_amount" name="po_grand_total_amount" class="form-control" readonly> </td> </tr> </tfoot>
+
                                                             </table>
                                                         </div>
 
@@ -664,10 +666,7 @@
                     '<td><a class="remove-tr delete-btn btn btn-danger m-1" title="Delete Tender"><i class="fas fa-archive" style="color: #fff;"></i></a></td>' +
                     '</tr>'+
                      '<tr>'+
-                    '<td colspan="6" class="text-end"><strong>Grand Total:</strong></td>'+
-                    '<td colspan="6">'+
-                        '<input type="text" id="po_grand_total_amount" name="po_grand_total_amount" class="form-control" readonly>'
-                   +'</td>'+
+                    
                 '</tr>'
                     
                 );
