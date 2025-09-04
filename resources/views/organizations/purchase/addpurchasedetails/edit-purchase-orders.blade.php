@@ -284,7 +284,9 @@
                                                                             class="form-control"
                                                                             value="{{ $editDataNew->purchase_order_details_id }}"
                                                                             placeholder="">
-                                                                        <td class="reverse-label">
+                                                                        <td class="reverse-label" style="display: flex
+;
+    justify-content: flex-end;">
                                                                             <select class="form-control part_no_id mb-2 select2" name="part_no_id_{{ $key }}" id="part_no_id">
                                                                                 <option value="" default>Select Description</option>
                                                                                 @foreach ($dataOutputPartItem as $data)
@@ -434,7 +436,7 @@
                                                                         </td>
                                                                     </tr>
                                                                 @endforeach
-                                                               <tfoot> <tr class="grand-total-row"> <td colspan="8" class="text-end"><strong>Grand Total:</strong> </td> <td colspan="4"> <input type="text" id="po_grand_total_amount" name="po_grand_total_amount" class="form-control" readonly> </td> </tr> </tfoot>
+                                                               <tfoot> <tr class="grand-total-row"> <td colspan="7" class="text-end"><strong>Grand Total:</strong> </td> <td colspan="4"> <input type="text" id="po_grand_total_amount" name="po_grand_total_amount" class="form-control" readonly> </td> </tr> </tfoot>
 
                                                             </table>
                                                         </div>

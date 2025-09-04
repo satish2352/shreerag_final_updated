@@ -360,47 +360,101 @@ function calculateGrandTotal() {
 
         var rowCount = $("#purchase_order_table tbody tr").length;
 
-        $("#add_more_btn").click(function() {
-            rowCount++;
-            const newRow = `
-                <tr>
-                    <td><input type="text" name="addmore[${rowCount}][business_id]" class="form-control" value="${rowCount}"></td>
-                    <td>
-                        <input type="hidden" name="design_id_${rowCount}" value="0">
-                        <input type="text" name="addmore[${rowCount}][product_name]" class="form-control product_name" placeholder="Enter product name" />
-                    </td>
-                    <td><input type="text" name="addmore[${rowCount}][description]" class="form-control description" placeholder="Enter description" /></td>
-                    <td><input type="text" name="addmore[${rowCount}][quantity]" class="form-control quantity" placeholder="Enter quantity" /></td>
-                    <td><input type="text" name="addmore[${rowCount}][rate]" class="form-control rate" placeholder="Enter rate" /></td>
-                    <td><input type="text" name="addmore[${rowCount}][total]" class="form-control total" readonly></td>
-                    <td>
-                        <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>`;
-            $("#purchase_order_table tbody").append(newRow);
-            const $lastRow = $("#purchase_order_table tbody tr:last-child");
-            initializeValidation($lastRow);
-        });
+        // $("#add_more_btn").click(function() {
+        //     rowCount++;
+        //     const newRow = `
+        //         <tr>
+        //             <td><input type="text" name="addmore[${rowCount}][business_id]" class="form-control" value="${rowCount}"></td>
+        //             <td>
+        //                 <input type="hidden" name="design_id_${rowCount}" value="0">
+        //                 <input type="text" name="addmore[${rowCount}][product_name]" class="form-control product_name" placeholder="Enter product name" />
+        //             </td>
+        //             <td><input type="text" name="addmore[${rowCount}][description]" class="form-control description" placeholder="Enter description" /></td>
+        //             <td><input type="text" name="addmore[${rowCount}][quantity]" class="form-control quantity" placeholder="Enter quantity" /></td>
+        //             <td><input type="text" name="addmore[${rowCount}][rate]" class="form-control rate" placeholder="Enter rate" /></td>
+        //             <td><input type="text" name="addmore[${rowCount}][total]" class="form-control total" readonly></td>
+        //             <td>
+        //                 <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete">
+        //                     <i class="fa fa-trash"></i>
+        //                 </button>
+        //             </td>
+        //         </tr>`;
+        //     $("#purchase_order_table tbody").append(newRow);
+        //     const $lastRow = $("#purchase_order_table tbody tr:last-child");
+        //     initializeValidation($lastRow);
+        // });
+function updateSerialNumbers() {
+    $("#purchase_order_table tbody tr").each(function(index) {
+        $(this).find('td:first').text(index + 1);
+    });
+}
 
+// After adding a new row
+$("#add_more_btn").click(function() {
+    rowCount++;
+    const newRow = `
+        <tr>
+            <td></td> <!-- Serial number will be updated -->
+            <td>
+                <input type="hidden" name="design_id_${rowCount}" value="0">
+                <input type="text" name="addmore[${rowCount}][product_name]" class="form-control product_name" placeholder="Enter product name" />
+            </td>
+            <td><input type="text" name="addmore[${rowCount}][description]" class="form-control description" placeholder="Enter description" /></td>
+            <td><input type="text" name="addmore[${rowCount}][quantity]" class="form-control quantity" placeholder="Enter quantity" /></td>
+            <td><input type="text" name="addmore[${rowCount}][rate]" class="form-control rate" placeholder="Enter rate" /></td>
+            <td><input type="text" name="addmore[${rowCount}][total]" class="form-control total" readonly></td>
+            <td>
+                <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+        </tr>`;
+    $("#purchase_order_table tbody").append(newRow);
+    const $lastRow = $("#purchase_order_table tbody tr:last-child");
+    initializeValidation($lastRow);
+    updateSerialNumbers(); // Update serial numbers
+});
         // $(document).on("click", ".remove-row", function() {
         //     $(this).closest("tr").remove();
         //        calculateGrandTotal();
         // });
-    $(document).on("click", ".remove-row", function(e) {
-    const id = $(this).data("id");
+//     $(document).on("click", ".remove-row", function(e) {
+//     const id = $(this).data("id");
 
-    // If no data-id, it's a new row => just remove
+//     // If no data-id, it's a new row => just remove
+//     if (!id || id === 0) {
+//         $(this).closest("tr").remove();
+//         calculateGrandTotal();
+//         return;
+//     }
+
+//     // Else it's an old row => confirm and submit delete form
+//     e.preventDefault();
+
+//     Swal.fire({
+//         title: 'Are you sure?',
+//         text: "This will permanently delete this product row!",
+//         icon: 'warning',
+//         showCancelButton: true,
+//         confirmButtonText: 'Yes, delete it!',
+//         cancelButtonText: 'Cancel'
+//     }).then((result) => {
+//         if (result.isConfirmed) {
+//             $('#delete_id').val(id);
+//             $('#deleteform').submit();
+//         }
+//     });
+// });
+// After deleting a row
+$(document).on("click", ".remove-row", function(e) {
+    const id = $(this).data("id");
     if (!id || id === 0) {
         $(this).closest("tr").remove();
         calculateGrandTotal();
+        updateSerialNumbers(); // Update serial numbers
         return;
     }
-
-    // Else it's an old row => confirm and submit delete form
     e.preventDefault();
-
     Swal.fire({
         title: 'Are you sure?',
         text: "This will permanently delete this product row!",
@@ -415,7 +469,6 @@ function calculateGrandTotal() {
         }
     });
 });
-
         $("#purchase_order_table tbody tr").each(function() {
             initializeValidation($(this));
             calculateTotalAmount($(this));
