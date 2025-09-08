@@ -488,12 +488,7 @@
                                 <span class="mini-click-non">Accepted Design List</span>
                             </a>
                         </li>
-                        <li class="nav-item {{ request()->is('designdept/list-design-report*') ? 'active' : '' }}">
-                            <a href="{{ route('list-design-report') }}">
-                                 <i class="fa fa-chart-line icon-wrap"></i>
-                                <span class="mini-click-non">Design Report </span>
-                            </a>
-                        </li>
+                       
                            <li class="{{ Request::is('list-design-report') ? 'active' : '' }}">
                             <a class="has-arrow" href="{{ route('list-design-report') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-file-invoice icon-wrap"></i> <span
@@ -1004,7 +999,7 @@
                         session()->get('role_id') != config('constants.ROLE_ID.SUPER')
                     )
                     
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                             <a class="nav-item" href="{{ route('list-leaves') }}" aria-expanded="false">
                                  <i class="fa-solid fa-calendar-days icon-wrap"></i>
                                 <span class="mini-click-non">Leaves Request</span>
@@ -1023,7 +1018,7 @@
                                 <i class="fa-solid fa-bullhorn icon-wrap"></i> 
                                 <span class="mini-click-non">Notice</span>
                             </a>
-                        </li>
+                        </li> --}}
                     @endif
                 @endif
 

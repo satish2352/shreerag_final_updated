@@ -64,7 +64,9 @@
                 <td>{{ $row['from_place'] ?? '-' }}</td>
                 <td>{{ $row['to_place'] ?? '-' }}</td>
                 <td>{{ $row['gate_entry'] ?? '-' }}</td>
-                <td>{{ $row['remark'] ?? '-' }}</td>
+                <td>{{ $row['dispatch_remark'] ?? '-' }}</td>
+                 <td>{{ $row['updated_at'] ?? '-' }}</td>
+                
             </tr>
         @endforeach
     </tbody>

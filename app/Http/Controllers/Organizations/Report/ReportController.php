@@ -860,14 +860,15 @@ public function getProductionReport(Request $request)
 {
     if ($request->filled('export_type')) {
         $data = $this->service->getProductionReport($request)['data'];
+       
         if ($request->export_type == 1) {
-            $pdf = Pdf::loadView('exports.stock-item-pdf', ['data' => $data])
+            $pdf = Pdf::loadView('exports.production-report-pdf', ['data' => $data])
                 ->setPaper('a3', 'landscape');
-            return $pdf->download('stock-item.pdf');
+            return $pdf->download('production-report-pdf.pdf');
         }
 
         if ($request->export_type == 2) {
-            return Excel::download(new ItemStockReport($data), 'stock-item.xlsx');
+            return Excel::download(new ProductionReportExport($data), 'production-report-pdf.xlsx');
         }
     }
 
@@ -876,7 +877,7 @@ public function getProductionReport(Request $request)
     ->where('is_active', 1)
     ->pluck('project_name', 'id');
     // If no export type, show the view with data (optional: fetch data for initial load)
-    $data = $this->service->getStoreItemStockList($request)['data'] ?? [];
+    $data = $this->service->getProductionReport($request)['data'] ?? [];
     return view('organizations.report.production-report', compact('data', 'getProjectName'));
 }
 public function getProductionReportAjax(Request $request)

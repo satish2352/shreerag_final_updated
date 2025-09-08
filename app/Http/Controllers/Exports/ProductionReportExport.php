@@ -29,7 +29,7 @@ class ProductionReportExport implements FromCollection, WithHeadings
                 $item['from_place'] ?? '',
                 $item['to_place'] ?? '',
                 $item['gate_entry'] ?? '',
-                $item['remark'] ?? '',
+                $item['dispatch_remark'] ?? '',
             ];
         });
     }

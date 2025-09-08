@@ -407,8 +407,12 @@ public function getProductionReport($request)
             })
             ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status', $array_to_be_quantity_tracking)
             ->where('businesses.is_active', true)
-            ->where('businesses.is_deleted', 0);
-
+            ->where('businesses.is_deleted', 0)
+  ->whereRaw('tbl_customer_product_quantity_tracking.id = (
+        SELECT MAX(id) 
+        FROM tbl_customer_product_quantity_tracking t2 
+        WHERE t2.business_details_id = businesses_details.id
+    )');   // ✅ only latest entry per product
         // Apply filters
         if ($request->filled('search')) {
             $search = $request->search;
@@ -475,7 +479,7 @@ public function getProductionReport($request)
             'tbl_logistics.truck_no',
             'tbl_dispatch.outdoor_no',
             'tbl_dispatch.gate_entry',
-            'tbl_dispatch.remark',
+            'tbl_dispatch.remark as dispatch_remark',
             'tbl_dispatch.updated_at',
             'tbl_logistics.from_place',
             'tbl_logistics.to_place',

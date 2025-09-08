@@ -95,7 +95,7 @@
 
                     <div class="text-center m-b-md custom-login">
 
-                        <a href="https://shreeragengineering.com/"> <img
+                        <a href="https://report.shreeragengineering.com/"> <img
                                 src="{{ asset('website/assets/img/logo/Layer 2.png') }}" alt=""
                                 style="width:120px;"></a>
                         <p></p>

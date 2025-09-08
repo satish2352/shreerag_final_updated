@@ -44,7 +44,9 @@ class ReportServices
       public function getProductionReport($request)
 {
     try {
-        return $this->repo->getProductionReport($request);
+        $data_output =  $this->repo->getProductionReport($request);
+        
+        return $data_output;
     } catch (\Exception $e) {
         return [
             'data' => [],

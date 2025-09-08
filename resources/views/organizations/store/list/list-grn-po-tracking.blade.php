@@ -207,10 +207,12 @@
                                                     </div>
                                                     
                                                     <div class="d-flex justify-content-center mb-5">
-                                                        <button data-toggle="tooltip" onclick="printGRN()"
+                                                         <button type="button" data-toggle="tooltip" onclick="printGRN()"
+        class="btn btn-sm btn-bg-colour mt-3">Print </button>
+                                                        {{-- <button data-toggle="tooltip" onclick="printGRN()"
                                                             class="btn btn-sm btn-bg-colour mt-3">
                                                             Print
-                                                        </button>
+                                                        </button> --}}
                                                     </div>
                                                 </div>
 </div>
