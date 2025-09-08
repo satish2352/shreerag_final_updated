@@ -56,7 +56,7 @@
                                                                 <div
                                                                     style="display: inline-block; align-items: center; margin-top: 10px;">
                                                                     <a
-                                                                        href="{{ route('edit-recived-bussinesswise-quantity-tracking', $data->business_details_id) }}">
+                                                                        href="{{ route('edit-received-businesswise-quantity-tracking', $data->business_details_id) }}">
                                                                         <button data-toggle="tooltip" title="View Details"
                                                                             class="btn btn-sm btn-lg-colour" disabled>
                                                                             Production Completed

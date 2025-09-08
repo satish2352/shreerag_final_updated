@@ -363,7 +363,29 @@
                         <li class="nav-item {{ request()->is('purchase/dashboard') ? 'active' : '' }}">
                             <a href="{{ route('dashboard') }}"> <i class="fa fa-tachometer-alt icon-wrap"></i><span class="mini-click-non">Dashboard</span></a>
                         </li>
+ <li class="{{ Request::is('purchase-report') ? 'active' : '' }}">
+                            <a class="has-arrow" href="{{ route('purchase-report') }}" aria-expanded="false"><i class="fa fa-chart-line icon-wrap"></i><span
+                                    class="mini-click-non">Report</span></a>
+                            <ul class="submenu-angle" aria-expanded="false">
+                                <li class="nav-item {{ Request::is('purchase-report') ? 'active' : '' }}"><a
+                                        href="{{ route('purchase-report') }}"> <i class="fa fa-list-alt icon-wrap"></i> <span
+                                            class="mini-click-non">Purchase Report</span></a></li>
 
+                                              <li class="{{ Request::is('list-vendor-through-taken-material') ? 'active' : '' }}"><a href="{{ route('list-vendor-through-taken-material') }}" aria-expanded="false"><i class="fa fa-users icon-wrap"></i><span
+                                                class="mini-click-non">Vendor Through Taken Material</span></a></li>
+                                                 <li class="{{ Request::is('stock-item') ? 'active' : '' }}"><a href="{{ route('stock-item') }}"><i class="fa fa-box icon-wrap"></i> <span
+                                                class="mini-click-non">Item Stock</span></a></li>
+
+                                      <li class="nav-item {{ Request::is('party-report') ? 'active' : '' }}"><a
+                                        href="{{ route('party-report') }}"><i
+                                            class="fa big-icon fa-list-check icon-wrap" aria-hidden="true"></i> <span
+                                            class="mini-click-non">Party Wise Report</span></a></li>     
+                                      <li class="nav-item {{ Request::is('follow-up-report') ? 'active' : '' }}"><a
+                                        href="{{ route('follow-up-report') }}"><i class="fa fa-clipboard-check icon-wrap"></i><span
+                                            class="mini-click-non">Follow Up Report</span></a></li>       
+                                
+                            </ul>
+                        </li>
                         <li class="{{ Request::is('list-purchase') ? 'active' : '' }}">
                             <a class="has-arrow" href="{{ route('list-purchase') }}" aria-expanded="false"><i class="fa fa-file-invoice icon-wrap"></i><span
                                     class="mini-click-non">Purchase Orders</span></a>
@@ -433,35 +455,23 @@
                                 <i class="fa fa-clipboard-list icon-wrap"></i>
                                 <span class="mini-click-non">Material Received PO Tracking</span>
                             </a>
-                        </li>
-
-                            <li class="{{ Request::is('purchase-report') ? 'active' : '' }}">
-                            <a class="has-arrow" href="{{ route('purchase-report') }}" aria-expanded="false"><i class="fa fa-chart-line icon-wrap"></i><span
-                                    class="mini-click-non">Report</span></a>
-                            <ul class="submenu-angle" aria-expanded="false">
-                                <li class="nav-item {{ Request::is('purchase-report') ? 'active' : '' }}"><a
-                                        href="{{ route('purchase-report') }}"> <i class="fa fa-list-alt icon-wrap"></i> <span
-                                            class="mini-click-non">Purchase Report</span></a></li>
-
-                                              <li class="{{ Request::is('list-vendor-through-taken-material') ? 'active' : '' }}"><a href="{{ route('list-vendor-through-taken-material') }}" aria-expanded="false"><i class="fa fa-users icon-wrap"></i><span
-                                                class="mini-click-non">Vendor Through Taken Material</span></a></li>
-                                                 <li class="{{ Request::is('stock-item') ? 'active' : '' }}"><a href="{{ route('stock-item') }}"><i class="fa fa-box icon-wrap"></i> <span
-                                                class="mini-click-non">Item Stock</span></a></li>
-
-                                      <li class="nav-item {{ Request::is('party-report') ? 'active' : '' }}"><a
-                                        href="{{ route('party-report') }}"><i
-                                            class="fa big-icon fa-list-check icon-wrap" aria-hidden="true"></i> <span
-                                            class="mini-click-non">Party Wise Report</span></a></li>     
-                                      <li class="nav-item {{ Request::is('follow-up-report') ? 'active' : '' }}"><a
-                                        href="{{ route('follow-up-report') }}"><i class="fa fa-clipboard-check icon-wrap"></i><span
-                                            class="mini-click-non">Follow Up Report</span></a></li>       
-                                
-                            </ul>
-                        </li>
+                        </li>                           
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.DESIGNER'))
                         <li class="nav-item {{ request()->is('designdept/dashboard') ? 'active' : '' }}">
                             <a href="{{ route('dashboard') }}"><i class="fa fa-tachometer-alt icon-wrap" aria-hidden="true"></i> <span class="mini-click-non">Dashboard</span></a>
+                        </li>
+                          <li class="{{ Request::is('list-design-report') ? 'active' : '' }}">
+                            <a class="has-arrow" href="{{ route('list-design-report') }}" aria-expanded="false"><i
+                                    class="fa big-icon fa-file-invoice icon-wrap"></i> <span
+                                    class="mini-click-non">Report</span></a>
+                            <ul class="submenu-angle" aria-expanded="false">
+                                <li class="nav-item {{ Request::is('list-design-report') ? 'active' : '' }}"><a
+                                        href="{{ route('list-design-report') }}"><i
+                                            class="fa big-icon fa-list-check icon-wrap" aria-hidden="true"></i> <span
+                                            class="mini-click-non">Design Report</span></a></li>
+                                
+                            </ul>
                         </li>
                          <li class="nav-item {{ request()->is('designdept/list-new-requirements-received-for-design') || request()->is('designdept/list-new-requirements-received-for-design-businesswise/*') || request()->is('designdept/add-design-upload/*') ? 'active' : '' }}">
                             <a class="" href="{{ route('list-new-requirements-received-for-design') }}"
@@ -489,18 +499,7 @@
                             </a>
                         </li>
                        
-                           <li class="{{ Request::is('list-design-report') ? 'active' : '' }}">
-                            <a class="has-arrow" href="{{ route('list-design-report') }}" aria-expanded="false"><i
-                                    class="fa big-icon fa-file-invoice icon-wrap"></i> <span
-                                    class="mini-click-non">Report</span></a>
-                            <ul class="submenu-angle" aria-expanded="false">
-                                <li class="nav-item {{ Request::is('list-design-report') ? 'active' : '' }}"><a
-                                        href="{{ route('list-design-report') }}"><i
-                                            class="fa big-icon fa-list-check icon-wrap" aria-hidden="true"></i> <span
-                                            class="mini-click-non">Design Report</span></a></li>
-                                
-                            </ul>
-                        </li>
+                         
 
                     @endif
                       @if (session()->get('role_id') == config('constants.ROLE_ID.ESTIMATION'))
@@ -549,6 +548,12 @@
                             <li class="nav-item {{ request()->is('proddept/dashboard') ? 'active' : '' }}">
                                 <a href="{{ route('dashboard') }}"><i class="fa fa-tachometer-alt icon-wrap"></i><span class="mini-click-non">Dashboard</span></a>
                             </li>
+                              <li class="nav-item {{ request()->is('proddept/list-production-report*') ? 'active' : '' }}">
+                            <a href="{{ route('list-production-report') }}">
+                               <i class="fa fa-chart-line icon-wrap"></i>
+                                <span class="mini-click-non">Production Report </span>
+                            </a>
+                        </li>
                             <li class="nav-item {{ request()->is('proddept/list-new-requirements-received-for-production') || request()->is('proddept/list-new-requirements-received-for-production-business-wise/*') || request()->is('proddept/reject-design-edit/*') ? 'active' : '' }}">
                                 <a href="{{ route('list-new-requirements-received-for-production') }}">
                                      <i class="fa fa-file-alt icon-wrap"></i>
@@ -594,18 +599,19 @@
                                     <span class="mini-click-non">Tracking Of Send Material To Logistics Dept</span>
                                 </a>
                             </li>
-                             <li class="nav-item {{ request()->is('proddept/list-production-report*') ? 'active' : '' }}">
-                            <a href="{{ route('list-production-report') }}">
-                               <i class="fa fa-chart-line icon-wrap"></i>
-                                <span class="mini-click-non">Production Report </span>
-                            </a>
-                        </li>
+                           
                         </ul>
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.SECURITY'))
                     <li class="nav-item {{ request()->is('securitydept/dashboard') ? 'active' : '' }}">
                         <a href="{{ route('dashboard') }}"><i class="fa fa-tachometer-alt icon-wrap"></i><span class="mini-click-non">Dashboard</span></a>
                     </li>
+                     <li class="nav-item {{ request()->is('security-report*') ? 'active' : '' }}">
+                            <a href="{{ route('security-report') }}">
+                                 <i class="fa fa-file-alt icon-wrap"></i>
+                                <span class="mini-click-non">Report </span>
+                            </a>
+                        </li>
                         <li class="nav-item {{ request()->is('securitydept/search-by-po-no') ? 'active' : '' }}">
                             <a href="{{ route('search-by-po-no') }}">
                                 <i class="fa fa-search icon-wrap"></i>
@@ -623,16 +629,17 @@
                                     class="mini-click-non">Closed PO List</span></a></li>
 
                         </li>
-                      <li class="nav-item {{ request()->is('security-report*') ? 'active' : '' }}">
-                            <a href="{{ route('security-report') }}">
-                                 <i class="fa fa-file-alt icon-wrap"></i>
-                                <span class="mini-click-non">Security Report </span>
-                            </a>
-                        </li>
+                     
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.QUALITY'))
                         <li class="nav-item {{ request()->is('quality/dashboard') ? 'active' : '' }}">
                             <a href="{{ route('dashboard') }}"><i class="fa fa-tachometer-alt icon-wrap"></i><span class="mini-click-non">Dashboard</span></a>
+                        </li>
+                        <li class="nav-item {{ request()->is('grn-report*') ? 'active' : '' }}">
+                            <a href="{{ route('grn-report') }}">
+                                  <i class="fa fa-chart-line icon-wrap"></i>
+                                <span class="mini-click-non">Report </span>
+                            </a>
                         </li>
                         <li>
                             <a class="has-arrow" href="{{ route('list-grn') }}" aria-expanded="false">  <i class="fa fa-file-invoice icon-wrap"></i><span
@@ -661,12 +668,7 @@
                             </a>
                         </li>
 
-                          <li class="nav-item {{ request()->is('grn-report*') ? 'active' : '' }}">
-                            <a href="{{ route('grn-report') }}">
-                                  <i class="fa fa-chart-line icon-wrap"></i>
-                                <span class="mini-click-non">GRN Report </span>
-                            </a>
-                        </li>
+                          
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.STORE'))
                         <li class="nav-item {{ request()->is('storedept/dashboard') ? 'active' : '' }}">
@@ -827,6 +829,18 @@
                         <li class="nav-item {{ request()->is('dashboard') ? 'active' : '' }}">
                             <a href="{{ route('dashboard') }}"><i class="fa fa-tachometer-alt icon-wrap"></i><span class="mini-click-non">Dashboard</span></a>
                         </li>
+
+ <li class="{{ Request::is('list-fianance-report') ? 'active' : '' }}">
+                            <a class="has-arrow" href="{{ route('list-fianance-report') }}" aria-expanded="false"><i class="fa fa-chart-line icon-wrap"></i><span
+                                    class="mini-click-non">Report</span></a>
+                            <ul class="submenu-angle" aria-expanded="false">
+                                <li class="nav-item {{ Request::is('list-fianance-report') ? 'active' : '' }}"><a
+                                        href="{{ route('list-fianance-report') }}"> <i class="fa fa-list-alt icon-wrap"></i> <span
+                                            class="mini-click-non">Fianance Report</span></a></li>
+                                              <li class="{{ Request::is('list-vendor-payment-report') ? 'active' : '' }}"><a href="{{ route('list-vendor-through-taken-material') }}" aria-expanded="false"><i class="fa fa-users icon-wrap"></i><span
+                                                class="mini-click-non">Vendor Payment Report</span></a></li>
+                               </ul>
+                        </li>                        
                         <li class="nav-item {{ request()->is('list-sr-and-gr-genrated-business') ? 'active' : '' }}">
                             <a href="{{ route('list-sr-and-gr-genrated-business') }}">
                                   <i class="fa fa-wallet icon-wrap"></i>
@@ -868,18 +882,7 @@
                                 <span class="mini-click-non">Product Submited to Dispatch</span>
                             </a>
                         </li>
-                           <li class="nav-item {{ request()->is('list-fianance-report*') ? 'active' : '' }}">
-                            <a href="{{ route('list-fianance-report') }}">
-                               <i class="fa fa-file-alt icon-wrap"></i>
-                                <span class="mini-click-non">Fianance Report </span>
-                            </a>
-                        </li>
-                           <li class="nav-item {{ request()->is('list-vendor-payment-report*') ? 'active' : '' }}">
-                            <a href="{{ route('list-vendor-payment-report') }}">
-                                <i class="fa fa-file-invoice icon-wrap"></i>
-                                <span class="mini-click-non">Vendor Payment Report </span>
-                            </a>
-                        </li>
+                          
                         
                     @endif
 
@@ -887,6 +890,12 @@
                     @if (session()->get('role_id') == config('constants.ROLE_ID.LOGISTICS'))
                         <li class="nav-item {{ request()->is('logisticsdept/dashboard') ? 'active' : '' }}">
                             <a href="{{ route('dashboard') }}"> <i class="fa fa-tachometer-alt icon-wrap"></i><span class="mini-click-non">Dashboard</span></a>
+                        </li>
+                         <li class="nav-item {{ request()->is('list-logistics-report*') ? 'active' : '' }}">
+                            <a href="{{ route('list-logistics-report') }}">
+                                <i class="fa fa-file-alt icon-wrap"></i>
+                                <span class="mini-click-non">Logistics Report </span>
+                            </a>
                         </li>
                         <li class="nav-item {{ request()->is('logisticsdept/list-final-production-completed-recive-to-logistics') || request()->is('logisticsdept/add-logistics/*') ? 'active' : '' }}">
                             <a href="{{ route('list-final-production-completed-recive-to-logistics') }}">
@@ -914,18 +923,24 @@
                             <a class="" href="{{ route('list-transport-name') }}" aria-expanded="false"><i class="fa fa-shipping-fast icon-wrap"></i><span class="mini-click-non">Transport
                                     Name</span></a>
                         </li>
-                        <li class="nav-item {{ request()->is('list-logistics-report*') ? 'active' : '' }}">
-                            <a href="{{ route('list-logistics-report') }}">
-                                <i class="fa fa-file-alt icon-wrap"></i>
-                                <span class="mini-click-non">Logistics Report </span>
-                            </a>
-                        </li>
+                       
                     @endif
 
                     @if (session()->get('role_id') == config('constants.ROLE_ID.DISPATCH'))
                         <li class="nav-item {{ request()->is('dispatchdept/dashboard') ? 'active' : '' }}">
                             <a href="{{ route('dashboard') }}"><i class="fa fa-tachometer-alt icon-wrap"></i><span class="mini-click-non">Dashboard</span></a>
                         </li>
+                        <li class="{{ Request::is('list-dispatch-report') ? 'active' : '' }}">
+                            <a class="has-arrow" href="{{ route('list-dispatch-report') }}" aria-expanded="false"><i class="fa fa-chart-line icon-wrap"></i><span
+                                    class="mini-click-non">Report</span></a>
+                            <ul class="submenu-angle" aria-expanded="false">
+                                <li class="nav-item {{ Request::is('list-dispatch-report') ? 'active' : '' }}"><a
+                                        href="{{ route('list-dispatch-report') }}"> <i class="fa fa-list-alt icon-wrap"></i> <span
+                                            class="mini-click-non">Completed Dispatch Report</span></a></li>
+                                              <li class="{{ Request::is('dispatch-pending-report') ? 'active' : '' }}"><a href="{{ route('list-vendor-through-taken-material') }}" aria-expanded="false"><i class="fa fa-users icon-wrap"></i><span
+                                                class="mini-click-non">Pending Dispatch Report</span></a></li>
+                               </ul>
+                        </li>                          
                         <li class="nav-item {{ request()->is('dispatchdept/list-final-production-completed-received-from-fianance') || request()->is('dispatchdept/add-dispatch/*') ? 'active' : '' }}">
                             <a href="{{ route('list-final-production-completed-received-from-fianance') }}">
                                 <i class="fa fa-money-bill-wave icon-wrap"></i>
@@ -946,18 +961,7 @@
                                 <span class="mini-click-non">Product Dispatch Completed (Close Product)</span>
                             </a>
                         </li>
-                         <li class="nav-item {{ request()->is('list-dispatch-report*') ? 'active' : '' }}">
-                            <a href="{{ route('list-dispatch-report') }}">
-                                <i class="fa fa-file-alt icon-wrap"></i>
-                                <span class="mini-click-non">Dispatch Report </span>
-                            </a>
-                        </li>
-                          <li class="nav-item {{ request()->is('dispatch-pending-report*') ? 'active' : '' }}">
-                            <a href="{{ route('dispatch-pending-report') }}">
-                                <i class="fa fa-hourglass-half icon-wrap"></i>
-                                <span class="mini-click-non">Pending Dispatch Report </span>
-                            </a>
-                        </li>
+                       
                         
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.CMS'))
