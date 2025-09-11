@@ -103,6 +103,7 @@
                                                     <span class="red-text"><?php echo $errors->first('leave_count', ':message'); ?></span>
                                                 @endif
                                                 </div>
+                                                </div>
                                             <div class="login-btn-inner">
                                                 <div class="row">
                                                     <div class="col-lg-5"></div>
@@ -114,7 +115,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        
                                     </form>
                                 </div>
                             </div>
