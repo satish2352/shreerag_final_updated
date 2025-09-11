@@ -69,8 +69,9 @@
                                     <form action="{{ route('update-leaves') }}" id="editEmployeeForm" method="POST"
                                         enctype="multipart/form-data">
                                         @csrf
+                                        
                                         <div class="form-group-inner">
-                                            <input type="hidden" class="form-control" value="{{ $editData->id }}"
+                                            <input type="hidden" class="form-control" value="{{ $editData['leave_details']->id }}"
                                                 id="id" name="id">
                                             <div class="row">
                                                 <div class="col-lg-6 col-md-6 col-sm-6">
@@ -79,7 +80,7 @@
                                                             class="text-danger">*</span></label>
                                                         <input type="text" class="form-control mb-2" name="other_employee_name"
                                                             id="other_employee_name" placeholder=""
-                                                            value="{{ $editData->other_employee_name }}"
+                                                            value="{{ $editData['leave_details']->other_employee_name }}"
                                                             oninput="this.value = this.value.replace(/[^a-zA-Z\s.]/g, '').replace(/(\..*)\./g, '$1');">
                                                         @if ($errors->has('other_employee_name'))
                                                             <span class="red-text"><?php echo $errors->first('other_employee_name', ':message'); ?></span>
@@ -114,12 +115,8 @@
                                                         <select class="form-control custom-select-value" name="leave_day"
                                                             id="leave_day">
                                                             <option value="">Select Leave Day</option>
-                                                            <option value="full_day"
-                                                                {{ $editData->leave_day == 'full_day' ? 'selected' : '' }}>
-                                                                Full Day</option>
-                                                            <option value="half_day"
-                                                                {{ $editData->leave_day == 'half_day' ? 'selected' : '' }}>
-                                                                Half Day</option>
+                                                              <option value="full_day" {{ $editData['leave_details']->leave_day == 'full_day' ? 'selected' : '' }}>Full Day</option>
+    <option value="half_day" {{ $editData['leave_details']->leave_day == 'half_day' ? 'selected' : '' }}>Half Day</option>
                                                         </select>
 
                                                     </div>
@@ -130,7 +127,7 @@
                                                             class="text-danger">*</span></label>
                                                     <div class="calendar-icon">
                                                         <input type="text" class="form-control custom-select-value"
-                                                            value="{{ $editData->leave_start_date }}" id="leave_start_date"
+                                                            value="{{ $editData['leave_details']->leave_start_date }}" id="leave_start_date"
                                                             name="leave_start_date" placeholder="Enter foundation date">
                                                     </div>
                                                 </div>
@@ -140,14 +137,14 @@
                                                             class="text-danger">*</span></label>
                                                     <div class="calendar-icon">
                                                         <input type="text" class="form-control" id="leave_end_date"
-                                                            value="{{ $editData->leave_end_date }}" name="leave_end_date"
+                                                            value="{{ $editData['leave_details']->leave_end_date }}" name="leave_end_date"
                                                             placeholder="Enter foundation date">
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <label for="name">Reason <span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" id="reason" name="reason"
-                                                        value="{{ $editData->reason }}" placeholder="Enter reason">
+                                                        value="{{ $editData['leave_details']->reason }}" placeholder="Enter reason">
                                                 </div>
                                             </div>
 

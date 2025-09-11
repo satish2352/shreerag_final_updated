@@ -119,26 +119,57 @@ class LoginController extends Controller
         return redirect('/login')->with('error', 'User not found.');
     }
 
-    // ✅ Update location if provided
-    if ($request->filled(['latitude', 'longitude'])) {
-        $latitude  = $request->latitude;
-        $longitude = $request->longitude;
+   // ✅ Update location if provided
+        if ($request->filled(['latitude', 'longitude'])) {
+            $latitude  = $request->latitude;
+            $longitude = $request->longitude;
 
-        $user->update([
-            'latitude'  => $latitude,
-            'longitude' => $longitude,
-        ]);
+            $user->update([
+                'latitude'  => $latitude,
+                'longitude' => $longitude,
+            ]);
 
-        // Save login history
-        $loginHistory = new LoginHistory();
-        $loginHistory->user_id          = $user->id;
-        $loginHistory->location_address = $request->location_address ?? null;
-        $loginHistory->latitude         = $latitude;
-        $loginHistory->longitude        = $longitude;
-        $loginHistory->save();
-    
+            $address = null;
 
-          
+            // 🔑 LocationIQ Reverse Geocoding (with addressdetails=1)
+            try {
+                $apiKey = "pk.1657d640f433dbcd0b009e097699adc6"; // your token
+                $url = "https://us1.locationiq.com/v1/reverse.php?key={$apiKey}&lat={$latitude}&lon={$longitude}&format=json&addressdetails=1";
+
+                $response = Http::get($url);
+                $json = $response->json();
+
+                if (!empty($json['address'])) {
+                    $addressParts = [
+                        $json['address']['house_number'] ?? null,
+                        $json['address']['road'] ?? null,
+                        $json['address']['neighbourhood'] ?? null,
+                        $json['address']['suburb'] ?? null,
+                        $json['address']['city'] ?? null,
+                        $json['address']['state'] ?? null,
+                        $json['address']['postcode'] ?? null,
+                        $json['address']['country'] ?? null,
+                    ];
+
+                    $address = implode(', ', array_filter($addressParts));
+                } else {
+                    $address = $json['display_name'] ?? null;
+                }
+
+                if ($address) {
+                    $user->update(['location_address' => $address]);
+                }
+            } catch (\Exception $e) {
+                Log::error("LocationIQ Reverse Geocoding failed: " . $e->getMessage());
+            }
+
+            // ✅ Save login history AFTER fetching address
+            $loginHistory = new LoginHistory();
+            $loginHistory->user_id          = $user->id;
+            $loginHistory->latitude         = $latitude;
+            $loginHistory->longitude        = $longitude;
+            $loginHistory->location_address = $address;
+            $loginHistory->save();
         }
 
             // Route based on the user's role

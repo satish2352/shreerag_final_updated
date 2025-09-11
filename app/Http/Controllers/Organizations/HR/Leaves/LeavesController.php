@@ -51,7 +51,7 @@ class LeavesController extends Controller
                     }
                 }
             } else {
-                return view( 'organizations.logistics.logisticsdept.list-production-completed', [
+                return view( 'organizations.hr.leaves.list-leaves-accepted', [
                     'getOutput' => [],
                     'message' => 'No data found for designs received for correction'
                 ] );
@@ -306,6 +306,7 @@ class LeavesController extends Controller
 
     $edit_data_id = base64_decode($request->id);
     $editData = $this->service->getById($edit_data_id);
+   
     $dept=DepartmentsModel::get();
     // $roles=RolesModel::get();
     return view('organizations.hr.leaves.edit-leaves', compact('editData','dept','leaveManagment'));

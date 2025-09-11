@@ -18,23 +18,19 @@ class LeavesRepository {
         try {
             $data_output = Leaves::where( 'employee_id', session()->get( 'user_id' ) )
             ->join( 'tbl_leave_management', 'tbl_leaves.leave_type_id', '=', 'tbl_leave_management.id' )
-            ->select(
-                'tbl_leaves.id',
-                'tbl_leaves.other_employee_name',
-                'tbl_leaves.leave_start_date',
-                'tbl_leaves.employee_id',
-                'tbl_leaves.leave_end_date',
-                'tbl_leaves.leave_day',
-                // 'tbl_leaves.leave_count',
-                DB::raw("STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y') as leave_start_date"),
-                'tbl_leaves.employee_id',
-                DB::raw("STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y') as leave_end_date"),
-                'tbl_leaves.leave_day',
-                DB::raw("DATEDIFF(STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y'), STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y')) + 1 as leave_count"),
-                'tbl_leave_management.name as leave_type_name',
-                'tbl_leaves.reason',
-                'tbl_leaves.is_approved'
-            )
+           ->select(
+    'tbl_leaves.id',
+    'tbl_leaves.other_employee_name',
+    'tbl_leaves.leave_start_date',
+    'tbl_leaves.leave_end_date',
+    'tbl_leaves.employee_id',
+    'tbl_leaves.leave_day',
+    DB::raw("DATEDIFF(tbl_leaves.leave_end_date, tbl_leaves.leave_start_date) + 1 as leave_count"),
+    'tbl_leave_management.name as leave_type_name',
+    'tbl_leaves.reason',
+    'tbl_leaves.is_approved'
+)
+
             ->orderBy( 'tbl_leaves.updated_at', 'desc' )
             ->get();
 
@@ -64,9 +60,9 @@ class LeavesRepository {
                 'tbl_leaves.employee_id',
                 'tbl_leaves.leave_end_date',
                 'tbl_leaves.leave_day',
-                DB::raw("STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y') as leave_start_date"),
-                DB::raw("STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y') as leave_end_date"),
-                DB::raw("DATEDIFF(STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y'), STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y')) + 1 as leave_count"),
+                // DB::raw("STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y') as leave_start_date"),
+                // DB::raw("STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y') as leave_end_date"),
+                DB::raw("DATEDIFF(tbl_leaves.leave_end_date, tbl_leaves.leave_start_date) + 1 as leave_count"),
                 'tbl_leaves.leave_type_id',
                 'tbl_leave_management.name as leave_type_name',
                 'tbl_leaves.reason',
@@ -130,11 +126,12 @@ class LeavesRepository {
                 'tbl_leaves.leave_end_date',
                 'tbl_leaves.leave_day',
                 // 'tbl_leaves.leave_count',
-                DB::raw("STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y') as leave_start_date"),
+                // DB::raw("STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y') as leave_start_date"),
                 'tbl_leaves.employee_id',
-                DB::raw("STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y') as leave_end_date"),
+                // DB::raw("STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y') as leave_end_date"),
                 'tbl_leaves.leave_day',
-                DB::raw("DATEDIFF(STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y'), STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y')) + 1 as leave_count"),
+                // DB::raw("DATEDIFF(STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y'), STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y')) + 1 as leave_count"),
+               DB::raw("DATEDIFF(tbl_leaves.leave_end_date, tbl_leaves.leave_start_date) + 1 as leave_count"),
                 'tbl_leave_management.name as leave_type_name',
                 'tbl_leaves.reason',
                 'tbl_leaves.is_approved'
@@ -171,9 +168,9 @@ class LeavesRepository {
                 'tbl_leaves.leave_end_date',
                 'tbl_leaves.leave_day',
                 // 'tbl_leaves.leave_count',
-                DB::raw("STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y') as leave_start_date"),
+                // DB::raw("STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y') as leave_start_date"),
                 'tbl_leaves.employee_id',
-                DB::raw("STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y') as leave_end_date"),
+                // DB::raw("STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y') as leave_end_date"),
                 'tbl_leaves.leave_day',
                 DB::raw("DATEDIFF(STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y'), STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y')) + 1 as leave_count"),
                 'tbl_leave_management.name as leave_type_name',
@@ -210,11 +207,11 @@ class LeavesRepository {
                 'tbl_leaves.leave_end_date',
                 'tbl_leaves.leave_day',
                 // 'tbl_leaves.leave_count',
-                DB::raw("STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y') as leave_start_date"),
+                // DB::raw("STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y') as leave_start_date"),
                 'tbl_leaves.employee_id',
-                DB::raw("STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y') as leave_end_date"),
+                // DB::raw("STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y') as leave_end_date"),
                 'tbl_leaves.leave_day',
-                DB::raw("DATEDIFF(STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y'), STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y')) + 1 as leave_count"),
+                DB::raw("DATEDIFF(tbl_leaves.leave_end_date, tbl_leaves.leave_start_date) + 1 as leave_count"),
                 'tbl_leave_management.name as leave_type_name',
                 'tbl_leaves.reason',
                 'tbl_leaves.is_approved',

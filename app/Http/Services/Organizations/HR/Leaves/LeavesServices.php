@@ -15,7 +15,8 @@ class LeavesServices
     }
     public function getAll(){
         try {
-            return $this->repo->getAll();
+            $data_output =  $this->repo->getAll();
+            return  $data_output;
         } catch (\Exception $e) {
             return $e;
         }

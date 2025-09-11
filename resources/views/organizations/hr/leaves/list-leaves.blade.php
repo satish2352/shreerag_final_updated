@@ -70,6 +70,7 @@
 
                                         </thead>
                                         <tbody>
+                                         
                                             @foreach ($getOutput as $data)
                                                 <tr>
 
