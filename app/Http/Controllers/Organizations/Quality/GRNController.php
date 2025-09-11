@@ -32,6 +32,7 @@ class GRNController extends Controller
     {
         try {
             $all_gatepass = $this->service->getAll();
+            
             if ( $all_gatepass instanceof \Illuminate\Support\Collection && $all_gatepass->isNotEmpty() ) {
                 foreach ( $all_gatepass as $data ) {
                     $business_id = $data->business_details_id;

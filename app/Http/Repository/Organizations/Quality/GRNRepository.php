@@ -29,7 +29,7 @@ class GRNRepository
             $data_output = Gatepass::leftJoin('purchase_orders', function ($join) {
                 $join->on('gatepass.purchase_orders_id', '=', 'purchase_orders.purchase_orders_id');
             })
-            ->where('gatepass.po_tracking_status', 4001)
+            // ->where('gatepass.po_tracking_status', 4001)
             ->select(
                 'gatepass.id',
                 'purchase_orders.business_details_id',

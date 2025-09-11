@@ -84,7 +84,7 @@
             </div>
         </div>
     </div>
-
+ <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     {{-- <form method="POST" action="{{ url('/delete-notice') }}" id="deleteform">
         @csrf
         <input type="hidden" name="delete_id" id="delete_id" value="">

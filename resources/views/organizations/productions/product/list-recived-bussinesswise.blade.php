@@ -77,7 +77,7 @@
                                                                     <a
                                                                         href="{{ route('edit-received-businesswise-quantity-tracking', $data->business_details_id) }}">
                                                                         <button data-toggle="tooltip" title="View Details"
-                                                                            class="btn btn-sm btn-bg-colour"><i class="fa fa-edit" aria-hidden="true"></i> Submit Production Competed Quantity</button>
+                                                                            class="btn btn-sm btn-bg-colour"><i class="fa fa-edit" aria-hidden="true"></i> Submit Production Completed Quantity</button>
                                                                     </a>
                                                                 </div>
                                                             @endif
