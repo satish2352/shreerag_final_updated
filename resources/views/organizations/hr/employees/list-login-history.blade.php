@@ -29,10 +29,11 @@
                                         <thead>
                                             <tr>
                                                 <th>Sr. No.</th>
+                                                <th>Date</th>
                                                 <th>Name</th>
                                                 <th>latitude</th>
                                                 <th>longitude</th>
-                                                  <th>Action</th>
+                                                  <th>Location Address</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -43,19 +44,21 @@
                                             @foreach ($register_user as $item)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
+                                                     <td> {{ $item->updated_at ? $item->updated_at->format('d-m-Y') : 'N/A' }}
+                                                    </td>
                                                     <td>{{ $item->f_name }} {{ $item->m_name }} {{ $item->l_name }} ({{$item->u_email}})
                                                     </td>
                                                     <td>{{ $item->latitude }}</td>
                                                     <td>{{ $item->longitude }}</td>
-                                                    
-                                                              <td class="d-flex">
+                                                     <td>{{ $item->location_address }}</td>
+                                                              {{-- <td class="d-flex">
                                                         <div style="display: flex; align-items: center;">
                                                             <a href="{{ route('show-login-history', base64_encode($item->id)) }} "><button
                                                                     data-toggle="tooltip" title="Trash"
                                                                     class="pd-setting-ed"><i class="fa fa-eye"
                                                                         aria-hidden="true"></i></button></a>
                                                         </div>
-                                                    </td>
+                                                    </td> --}}
                                                 </tr>
                                             @endforeach
 

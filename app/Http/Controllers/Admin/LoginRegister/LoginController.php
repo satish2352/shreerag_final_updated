@@ -138,23 +138,7 @@ class LoginController extends Controller
         $loginHistory->save();
     
 
-            // Google Geocoding API
-            // $apiKey = 'YOUR_GOOGLE_API_KEY'; // Replace this
-            // $url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey";
-
-            try {
-                $response = Http::get($url);
-                $json = $response->json();
-                $address = $json['results'][0]['formatted_address'] ?? null;
-
-                if ($address) {
-                    User::where('id', $ses_userId)->update([
-                        'location_address' => $address
-                    ]);
-                }
-            } catch (\Exception $e) {
-                Log::error('Geocoding failed: ' . $e->getMessage());
-            }
+          
         }
 
             // Route based on the user's role

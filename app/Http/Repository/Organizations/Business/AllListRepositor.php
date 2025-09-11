@@ -1771,7 +1771,7 @@ public function listLoginHistory() {
     })
        ->where('users.is_active', 1)
         ->where('users.is_deleted', 0)
-        ->orderBy('users.id', 'desc')
+        ->orderBy('login_history.id', 'desc')
         ->select(
 							'users.u_email',
 							'users.f_name',
@@ -1783,38 +1783,40 @@ public function listLoginHistory() {
 							'users.is_active',
             'login_history.latitude',
                 'login_history.longitude',
+                 'login_history.location_address',
+                  'login_history.updated_at',
 						)
         ->get();
 
     return $data_users;
 }
 
-	public function showLoginHistory($id)
-{
-    try {
-        $user = LoginHistory::join('users', 'users.id', '=', 'login_history.user_id')
-            ->where('users.is_active', 1)
-            ->where('users.is_deleted', 0)
-            ->orderBy('users.id', 'desc')
-            ->select(
-                'users.f_name',
-                'users.m_name',
-                'users.l_name',
-                	'login_history.id',
-                'login_history.latitude',
-                'login_history.longitude',
-                'login_history.location_address'
-            )
-              ->where('users.id', $id)
-            ->first();
+// 	public function showLoginHistory($id)
+// {
+//     try {
+//         $user = LoginHistory::join('users', 'users.id', '=', 'login_history.user_id')
+//             ->where('users.is_active', 1)
+//             ->where('users.is_deleted', 0)
+//             ->orderBy('users.id', 'desc')
+//             ->select(
+//                 'users.f_name',
+//                 'users.m_name',
+//                 'users.l_name',
+//                 	'login_history.id',
+//                 'login_history.latitude',
+//                 'login_history.longitude',
+//                 'login_history.location_address'
+//             )
+//               ->where('users.id', $id)
+//             ->first();
 
-        return $user ?: null;
-    } catch (\Exception $e) {
-        return [
-            'msg' => $e->getMessage(),
-            'status' => 'error'
-        ];
-    }
-}
+//         return $user ?: null;
+//     } catch (\Exception $e) {
+//         return [
+//             'msg' => $e->getMessage(),
+//             'status' => 'error'
+//         ];
+//     }
+// }
 
 }

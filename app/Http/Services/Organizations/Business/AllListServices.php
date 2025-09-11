@@ -411,56 +411,56 @@ public function loadDesignSubmittedForEstimationBusinessWise($business_details_i
 
 //     return $user;
 // }
-public function showLoginHistory($id)
-{
-    // Fetch login history record
-    $user = $this->repo->showLoginHistory($id);
+// public function showLoginHistory($id)
+// {
+//     // Fetch login history record
+//     $user = $this->repo->showLoginHistory($id);
 
-    if ($user) {
-        $latitude = $user->latitude;
-        $longitude = $user->longitude;
+//     if ($user) {
+//         $latitude = $user->latitude;
+//         $longitude = $user->longitude;
 
-        $apiKey = config('services.locationiq.api_key');
+//         $apiKey = config('services.locationiq.api_key');
 
-        // Call LocationIQ Reverse Geocoding API
-        $response = Http::get("https://us1.locationiq.com/v1/reverse.php", [
-            'key'    => $apiKey,
-            'lat'    => $latitude,
-            'lon'    => $longitude,
-            'format' => 'json'
-        ]);
+//         // Call LocationIQ Reverse Geocoding API
+//         $response = Http::get("https://us1.locationiq.com/v1/reverse.php", [
+//             'key'    => $apiKey,
+//             'lat'    => $latitude,
+//             'lon'    => $longitude,
+//             'format' => 'json'
+//         ]);
 
-        $responseData = $response->json();
+//         $responseData = $response->json();
 
-        // ✅ Try to get detailed address instead of only display_name
-        if (isset($responseData['address'])) {
-            $addressParts = $responseData['address'];
+//         // ✅ Try to get detailed address instead of only display_name
+//         if (isset($responseData['address'])) {
+//             $addressParts = $responseData['address'];
 
-            $address = implode(', ', array_filter([
-                $addressParts['house_number'] ?? null,
-                $addressParts['road'] ?? null,
-                $addressParts['neighbourhood'] ?? null,
-                $addressParts['suburb'] ?? null,
-                $addressParts['city'] ?? $addressParts['town'] ?? $addressParts['village'] ?? null,
-                $addressParts['state_district'] ?? null,
-                $addressParts['state'] ?? null,
-                $addressParts['postcode'] ?? null,
-                $addressParts['country'] ?? null,
-            ]));
-        } else {
-            $address = $responseData['display_name'] ?? "Address not found";
-        }
+//             $address = implode(', ', array_filter([
+//                 $addressParts['house_number'] ?? null,
+//                 $addressParts['road'] ?? null,
+//                 $addressParts['neighbourhood'] ?? null,
+//                 $addressParts['suburb'] ?? null,
+//                 $addressParts['city'] ?? $addressParts['town'] ?? $addressParts['village'] ?? null,
+//                 $addressParts['state_district'] ?? null,
+//                 $addressParts['state'] ?? null,
+//                 $addressParts['postcode'] ?? null,
+//                 $addressParts['country'] ?? null,
+//             ]));
+//         } else {
+//             $address = $responseData['display_name'] ?? "Address not found";
+//         }
 
-        // ✅ Update the same login_history record
-        DB::table('login_history')
-            ->where('id', $id)
-            ->update(['location_address' => $address]);
+//         // ✅ Update the same login_history record
+//         DB::table('login_history')
+//             ->where('id', $id)
+//             ->update(['location_address' => $address]);
 
-        // Attach address for returning
-        $user->location_address = $address;
-    }
+//         // Attach address for returning
+//         $user->location_address = $address;
+//     }
 
-    return $user;
-}
+//     return $user;
+// }
 
 }
