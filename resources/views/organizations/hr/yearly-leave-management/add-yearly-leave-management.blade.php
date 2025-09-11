@@ -131,17 +131,18 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
     $(function() {
-    var currentYear = new Date().getFullYear();
-    var startYear = 2024; // Show years only after 2023
-    var endYear = currentYear + 10; // Future years limit
+        var currentYear = new Date().getFullYear();
+        var startYear = 1980;
+        var endYear = currentYear + 10; // Change this to the desired number of future years
 
-    for (var year = startYear; year <= endYear; year++) {
-        var option = $("<option>").val(year).text(year);
-        $("#dYear").append(option);
-    }
-});
-
-
+        for (var year = startYear; year <= endYear; year++) {
+            var option = $("<option>").val(year).text(year);
+            if (year < currentYear) {
+                option.prop("disabled", true);
+            }
+            $("#dYear").append(option);
+        }
+    });
 </script>
 <script>
     jQuery.noConflict();
