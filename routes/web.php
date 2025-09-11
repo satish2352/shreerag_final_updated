@@ -345,6 +345,9 @@ Route::get('/list-product-completed-report-ajax', [ReportController::class, 'get
 
     Route::get('/store-item-stock-list', [ReportController::class, 'getStoreItemStockList'])->name('store-item-stock-list');
     Route::get('/store-item-stock-list-ajax', [ReportController::class, 'getStoreItemStockListAjax'])->name('store-item-stock-list-ajax');
+    
+      Route::get('/item-stock-history-list', [ReportController::class, 'getItemStockHistoryList'])->name('item-stock-history-list');
+    Route::get('/item-stock-history-list-ajax', [ReportController::class, 'getItemStockListHistoryAjax'])->name('item-stock-history-list-ajax');
 });
    
     // ===================== ESTIMATION DEPT =====================
@@ -1038,15 +1041,15 @@ Route::group(['prefix' => 'dispatchdept', 'middleware' => 'admin'], function () 
 
     // ================= HR MODULE =================
 Route::group(['prefix' => 'hr', 'middleware' => 'admin'], function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('hr.dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Employees
-    Route::get('/list-employees', [EmployeesHrController::class, 'index'])->name('hr.list-employees');
-    Route::get('/add-employees', [EmployeesHrController::class, 'add'])->name('hr.add-employees');
-    Route::post('/store-employees', [EmployeesHrController::class, 'store'])->name('hr.store-employees');
-    Route::get('/edit-employees/{id}', [EmployeesHrController::class, 'edit'])->name('hr.edit-employees');
-    Route::post('/update-employees', [EmployeesHrController::class, 'update'])->name('hr.update-employees');
-    Route::any('/delete-employees/{id}', [EmployeesHrController::class, 'destroy'])->name('hr.delete-employees');
+    Route::get('/list-employees', [EmployeesHrController::class, 'index'])->name('list-employees');
+    Route::get('/add-employees', [EmployeesHrController::class, 'add'])->name('add-employees');
+    Route::post('/store-employees', [EmployeesHrController::class, 'store'])->name('store-employees');
+    Route::get('/edit-employees/{id}', [EmployeesHrController::class, 'edit'])->name('edit-employees');
+    Route::post('/update-employees', [EmployeesHrController::class, 'update'])->name('update-employees');
+    Route::any('/delete-employees/{id}', [EmployeesHrController::class, 'destroy'])->name('delete-employees');
 
     // Users
     
@@ -1063,12 +1066,12 @@ Route::group(['prefix' => 'hr', 'middleware' => 'admin'], function () {
     Route::get('/states', [EmployeesHrController::class, 'getState'])->name('states');
 
     // Yearly Leave Management
-    Route::get('/list-yearly-leave-management', [LeaveManagmentController::class, 'index'])->name('hr.list-yearly-leave-management');
-    Route::get('/add-yearly-leave-management', [LeaveManagmentController::class, 'add'])->name('hr.add-yearly-leave-management');
-    Route::post('/store-yearly-leave-management', [LeaveManagmentController::class, 'store'])->name('hr.store-yearly-leave-management');
-    Route::get('/edit-yearly-leave-management/{id}', [LeaveManagmentController::class, 'edit'])->name('hr.edit-yearly-leave-management');
-    Route::post('/update-yearly-leave-management', [LeaveManagmentController::class, 'update'])->name('hr.update-yearly-leave-management');
-    Route::any('/delete-yearly-leave-management/{id}', [LeaveManagmentController::class, 'destroy'])->name('hr.delete-yearly-leave-management');
+    Route::get('/list-yearly-leave-management', [LeaveManagmentController::class, 'index'])->name('list-yearly-leave-management');
+    Route::get('/add-yearly-leave-management', [LeaveManagmentController::class, 'add'])->name('add-yearly-leave-management');
+    Route::post('/store-yearly-leave-management', [LeaveManagmentController::class, 'store'])->name('store-yearly-leave-management');
+    Route::get('/edit-yearly-leave-management/{id}', [LeaveManagmentController::class, 'edit'])->name('edit-yearly-leave-management');
+    Route::post('/update-yearly-leave-management', [LeaveManagmentController::class, 'update'])->name('update-yearly-leave-management');
+    Route::any('/delete-yearly-leave-management/{id}', [LeaveManagmentController::class, 'destroy'])->name('delete-yearly-leave-management');
 
     // Leaves
     Route::get('/list-leaves', [LeavesController::class, 'index'])->name('list-leaves');
@@ -1078,13 +1081,24 @@ Route::group(['prefix' => 'hr', 'middleware' => 'admin'], function () {
     Route::post('/update-leaves', [LeavesController::class, 'update'])->name('update-leaves');
     Route::any('/delete-leaves/{id}', [LeavesController::class, 'destroy'])->name('delete-leaves');
 
+
+
+        Route::get('/list-leaves-acceptedby-hr', [LeavesController::class, 'getAllLeavesRequest'])->name('list-leaves-acceptedby-hr');
+        Route::any('/show-leaves/{id}', [LeavesController::class, 'show'])->name('show-leaves');
+        Route::get('/list-leaves-not-approvedby-hr', [LeavesController::class, 'getAllNotApprovedRequest'])->name('list-leaves-not-approvedby-hr');
+
+        Route::get('/list-leaves-approvedby-hr', [LeavesController::class, 'getAllApprovedRequest'])->name('list-leaves-approvedby-hr');
+        Route::post('/check-dates', [LeavesController::class, 'checkDates'])->name('check-dates');
+        Route::post('/update-status', [LeavesController::class, 'updateLabourStatus'])->name('update-status');
+        Route::post('/update-status-not-approved', [LeavesController::class, 'updateLabourStatusNotApproved'])->name('update-status-not-approved');
+
     // Notices
-    Route::get('/list-notice', [NoticeController::class, 'index'])->name('hr.list-notice');
-    Route::get('/add-notice', [NoticeController::class, 'add'])->name('hr.add-notice');
-    Route::post('/add-notice', [NoticeController::class, 'store'])->name('hr.store-notice');
-    Route::get('/edit-notice/{id}', [NoticeController::class, 'edit'])->name('hr.edit-notice');
-    Route::post('/update-notice', [NoticeController::class, 'update'])->name('hr.update-notice');
-    Route::any('/delete-notice/{id}', [NoticeController::class, 'destroy'])->name('hr.delete-notice');
+    Route::get('/list-notice', [NoticeController::class, 'index'])->name('list-notice');
+    Route::get('/add-notice', [NoticeController::class, 'add'])->name('add-notice');
+    Route::post('/add-notice', [NoticeController::class, 'store'])->name('store-notice');
+    Route::get('/edit-notice/{id}', [NoticeController::class, 'edit'])->name('edit-notice');
+    Route::post('/update-notice', [NoticeController::class, 'update'])->name('update-notice');
+    Route::any('/delete-notice/{id}', [NoticeController::class, 'destroy'])->name('delete-notice');
     Route::get('/particular-notice-department-wise', [NoticeController::class, 'departmentWiseNotice'])
     ->name('particular-notice-department-wise');
 });

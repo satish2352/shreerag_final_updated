@@ -39,7 +39,7 @@
                                       <tbody>
                                             <tr>
                                                 <td>1</td>
-                                                {{-- <td>{{ $user_detail->f_name }} {{ $user_detail->m_name }} {{ $user_detail->l_name }}</td> --}}
+                                                <td>{{ $user_detail->f_name }} {{ $user_detail->m_name }} {{ $user_detail->l_name }}</td>
                                                 <td>{{ $user_detail->latitude }}</td>
                                                 <td>{{ $user_detail->longitude }}</td>
                                                  <td>{{ $user_detail->location_address }}</td>
@@ -56,4 +56,5 @@
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 @endsection

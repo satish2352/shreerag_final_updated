@@ -67,6 +67,7 @@ class EmployeesHrController extends Controller
     }
 
     public function getCities( Request $request ) {
+       
         $stateId = $request->input( 'stateId' );
         $city = TblArea::where( 'location_type', 2 ) // 4 represents cities
         ->where( 'parent_id', $stateId )

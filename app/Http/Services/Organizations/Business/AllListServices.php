@@ -415,8 +415,7 @@ public function showLoginHistory($id)
 {
     // Fetch login history record
     $user = $this->repo->showLoginHistory($id);
-dd($user );
-die();
+
     if ($user) {
         $latitude = $user->latitude;
         $longitude = $user->longitude;
