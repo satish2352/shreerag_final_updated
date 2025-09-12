@@ -149,7 +149,7 @@ Route::prefix('owner')->middleware('admin')->group(function () {
         Route::post('/store-business', [BusinessController::class, 'store'])->name('store-business');
         Route::get('/edit-business/{id}', [BusinessController::class, 'edit'])->name('edit-business');
         Route::post('/update-business', [BusinessController::class, 'update'])->name('update-business');
-        Route::delete('/delete-business/{id}', [BusinessController::class, 'destroy'])->name('delete-business');
+        Route::any('/delete-business/{id}', [BusinessController::class, 'deleteBusiness'])->name('delete-business');
 
     // Reports
     Route::get('/list-product-completed-report', [ReportController::class, 'getCompletedProductList'])->name('list-product-completed-report');
@@ -745,7 +745,7 @@ Route::group(['prefix' => 'purchase', 'middleware' => 'admin'], function () {
     Route::get('/purchase-report', [PurchaseAllListController::class, 'getPurchaseReport'])->name('purchase-report');
     Route::get('/ajax', [PurchaseAllListController::class, 'getPurchaseReportAjax'])->name('ajax');
     Route::get('/party-report', [PurchaseAllListController::class, 'getPurchasePartyReport'])->name('party-report');
-    Route::get('/party-report-ajax', [PurchaseAllListController::class, 'getPurchasePartyReportAjax'])->name('party-report-ajax');
+    Route::get('/party-ajax', [PurchaseAllListController::class, 'getPurchasePartyReportAjax'])->name('party-ajax');
     Route::get('/follow-up-report', [PurchaseAllListController::class, 'FollowUpReport'])->name('follow-up-report');
     Route::get('/follow-up-report-ajax', [PurchaseAllListController::class, 'FollowUpReportAjax'])->name('follow-up-report-ajax');
 

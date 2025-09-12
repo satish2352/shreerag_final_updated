@@ -168,8 +168,9 @@ class BusinessController extends Controller
                 ->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
-    public function destroy( Request $request ){
+    public function deleteBusiness( Request $request ){
             $delete_data_id = base64_decode( $request->id );
+            
             try {
                 $delete_record = $this->service->deleteById( $delete_data_id );
                 if ( $delete_record ) {

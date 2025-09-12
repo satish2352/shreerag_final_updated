@@ -115,35 +115,49 @@
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="{{ asset('js/password-meter/pwstrength-bootstrap.min.js') }}"></script>
-    <script src="{{ asset('js/password-meter/zxcvbn.js') }}"></script>
-    <script src="{{ asset('js/password-meter/password-meter-active.js') }}"></script>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
-    <script>
-        $.noConflict();
-        jQuery(document).ready(function($) {
-            $(".delete-button").click(function(event) {
-                event.preventDefault(); // Prevent default button behavior
-                var deleteUrl = $(this).data('url'); // Get the delete URL from data attribute
 
-                // Show SweetAlert confirmation
-                Swal.fire({
-                    icon: 'question',
-                    title: 'Are you sure?',
-                    text: 'Do you want to delete this Business Entry?',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, Delete it',
-                    cancelButtonText: 'No, Keep it',
-                }).then(function(result) {
-                    if (result.isConfirmed) {
-                        // If confirmed, navigate to the delete URL
-                        window.location.href = deleteUrl;
+   <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+jQuery(document).ready(function($) {
+    $(document).on('click', '.delete-button', function(e) {
+        e.preventDefault();
+
+        var deleteUrl = $(this).data('url');
+
+        Swal.fire({
+            icon: 'question',
+            title: 'Are you sure?',
+            text: 'Do you want to delete this Business Entry?',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Delete it',
+            cancelButtonText: 'No, Keep it',
+        }).then(function(result) {
+            if (result.isConfirmed) {
+                // If your route is GET based (not recommended):
+                window.location.href = deleteUrl;
+
+                // If your route expects DELETE request:
+                /*
+                $.ajax({
+                    url: deleteUrl,
+                    type: 'DELETE',
+                    data: { _token: '{{ csrf_token() }}' },
+                    success: function(response) {
+                        Swal.fire('Deleted!', response.message, 'success').then(() => {
+                            location.reload();
+                        });
+                    },
+                    error: function() {
+                        Swal.fire('Error!', 'Something went wrong', 'error');
                     }
                 });
-            });
+                */
+            }
         });
-    </script>
+    });
+});
+</script>
+
 @endsection

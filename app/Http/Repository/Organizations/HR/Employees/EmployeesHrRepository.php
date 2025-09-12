@@ -117,10 +117,12 @@ class EmployeesHrRepository  {
 			->select('id', 'role_name')
 			->get()
 			->toArray();
+
+	
 			$data_users_data = User::join('tbl_roles', function ($join) {
 				$join->on('users.role_id', '=', 'tbl_roles.id');
 			})
-			->where('users.id', '=', base64_decode($reuest->edit_id))
+			// ->where('users.id', '=', base64_decode($reuest->edit_id))
 			->select(
 				'tbl_roles.id as role_id',
 				'users.u_password',
@@ -138,7 +140,8 @@ class EmployeesHrRepository  {
 				'users.is_active',
 			)->get()
 			->toArray();
-
+// 		dd($data_users_data);
+// die();
 	      $data_users_data = User::join('tbl_roles', function($join) {
 						$join->on('users.role_id', '=', 'tbl_roles.id');
 					})

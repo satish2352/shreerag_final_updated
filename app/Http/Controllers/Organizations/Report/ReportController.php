@@ -184,9 +184,9 @@ public function getGRNReport( Request $request ) {
             ->where('is_active', 1)
             ->pluck('vendor_name', 'id');
              $getPurchaseOrder = PurchaseOrdersModel::whereNotNull('purchase_orders_id')
-    ->where('is_deleted', 0)
-    ->where('is_active', 1)
-    ->pluck('purchase_orders_id', 'purchase_orders_id');
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->pluck('purchase_orders_id', 'purchase_orders_id');
             return view( 'organizations.report.grn-report', compact( 'data','getProjectName','getPurchaseOrder' ) );
         } catch ( \Exception $e ) {
             return $e;

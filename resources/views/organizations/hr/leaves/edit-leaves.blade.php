@@ -189,11 +189,22 @@
             }
 
             // Apply the function to your date picker inputs
-            $('#leave_start_date, #leave_end_date').datepicker({
-                dateFormat: 'yy-mm-dd',
-                minDate: 0, // Disable past dates from today
-                beforeShowDay: disablePastDates
-            });
+            // $('#leave_start_date, #leave_end_date').datepicker({
+            //     dateFormat: 'yy-mm-dd',
+            //     minDate: 0, // Disable past dates from today
+            //     beforeShowDay: disablePastDates
+            // });
+            $(function() {
+    $('#leave_start_date, #leave_end_date').datepicker({
+        dateFormat: 'yy-mm-dd',
+        minDate: 0,
+        showOn: "both",              // show when input is focused OR button is clicked
+        buttonImage: "https://jqueryui.com/resources/demos/datepicker/images/calendar.gif", // calendar icon
+        buttonImageOnly: true,       // only show the image, no extra button
+        buttonText: "Select date"    // accessibility text
+    });
+});
+
         });
     </script>
     <script>

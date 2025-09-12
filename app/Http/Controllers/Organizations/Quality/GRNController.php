@@ -44,12 +44,8 @@ class GRNController extends Controller
                         ->update( $update_data );
                     }
                 }
-            } else {
-                return view( 'organizations.quality.grn.list-grn', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ] );
-            }       
+            } 
+                
             return view('organizations.quality.grn.list-grn', compact('all_gatepass'));
         } catch (\Exception $e) {
             return $e;

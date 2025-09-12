@@ -125,7 +125,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function() {
-        $('.approve-btn, .notapprove-btn').click(function(e) {
+               $(document).on('click', '.approve-btn, .notapprove-btn', function() {
             var leaveId = $(this).data('id');
             var action = $(this).data('action');
             $("#active_id").val(leaveId);

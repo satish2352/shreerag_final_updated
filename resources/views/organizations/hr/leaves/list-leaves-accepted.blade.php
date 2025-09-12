@@ -92,14 +92,16 @@
     </div>
 </div>
 
-{{-- jQuery + SweetAlert --}}
-{{-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> --}}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
 $(document).ready(function() {
 
+
     function updateLeaveStatus(leaveId, action) {
+     
         $.ajax({
             url: "{{ route('update-status') }}",
             type: "POST",
@@ -132,7 +134,7 @@ $(document).ready(function() {
         });
     }
 
-    $('.approve-btn, .notapprove-btn').click(function() {
+   $(document).on('click', '.approve-btn, .notapprove-btn', function() {
         var leaveId = $(this).data('id');
         var action = $(this).data('action');
 
