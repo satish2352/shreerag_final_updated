@@ -136,7 +136,8 @@ public function listVendorPaymentReport($request)
 public function listDispatchReport($request)
 {
     try {
-        return $this->repo->listDispatchReport($request);
+        $data_output = $this->repo->listDispatchReport($request);
+        return $data_output;
     } catch (\Exception $e) {
         throw $e;
     }
@@ -199,6 +200,18 @@ public function getStoreItemStockList($request)
 {
     try {
         return $this->repo->getStoreItemStockList($request);
+    } catch (\Exception $e) {
+        throw $e;
+    }
+}
+
+public function listStockDailyReport($request)
+{
+    try {
+        $data_output =  $this->repo->listStockDailyReport($request);
+    dd($data_output);
+    die();
+        return $data_output;
     } catch (\Exception $e) {
         throw $e;
     }

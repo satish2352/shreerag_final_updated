@@ -177,7 +177,6 @@ function fetchReport(reset = false) {
            if (res.status && Array.isArray(res.data)) {
           
  const rows = res.data.map((item, i) => {
-    const poUrl = `${window.APP_URL}securitydept/list-po-details/${btoa(item.purchase_id)}/${btoa(item.purchase_orders_id)}`;
 
     return `
         <tr>

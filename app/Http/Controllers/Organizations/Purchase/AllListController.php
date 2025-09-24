@@ -36,6 +36,7 @@ class AllListController extends Controller
 
         try {
             $data_output = $this->service->getAllListMaterialReceivedForPurchase();
+          
             if ( $data_output->isNotEmpty() ) {
                 foreach ( $data_output as $data ) {
                     $business_details = $data->business_details_id;
@@ -47,12 +48,7 @@ class AllListController extends Controller
                         ->update( $update_data );
                     }
                 }
-            } else {
-                return view( 'organizations.purchase.list.list-bom-material-recived-for-purchase', [
-                    'data_output' => [],
-                    'message' => 'No data found for designs received for correction'
-                ] );
-            }
+            } 
 
             return view( 'organizations.purchase.list.list-bom-material-recived-for-purchase', compact( 'data_output' ) );
             // return view( 'organizations.purchase.forms.send-vendor-details-for-purchase', compact( 'data_output' ) );

@@ -22,9 +22,9 @@ class AllListRepository
           $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
               $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
           })
-              ->leftJoin('designs', function ($join) {
-                  $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-              })
+              // ->leftJoin('designs', function ($join) {
+              //     $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+              // })
               ->leftJoin('requisition', function ($join) {
                   $join->on('business_application_processes.business_details_id', '=', 'requisition.business_details_id');
               })
@@ -34,9 +34,9 @@ class AllListRepository
               ->leftJoin('businesses_details', function($join) {
                   $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
               })
-              ->leftJoin('design_revision_for_prod', function ($join) {
-                  $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-              })
+              // ->leftJoin('design_revision_for_prod', function ($join) {
+              //     $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+              // })
               ->leftJoin('purchase_orders', function($join) {
                   $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
               })
@@ -63,8 +63,8 @@ class AllListRepository
                   'businesses_details.is_active',
                   'production.business_id',
                   'production.id',
-                  'designs.bom_image',
-                  'designs.design_image',
+                  // 'designs.bom_image',
+                  // 'designs.design_image',
                   'req2.id',   
                   'req2.bom_file',
                   'req2.updated_at'
@@ -83,8 +83,8 @@ class AllListRepository
                   'businesses_details.is_active',
                   'production.id',
                   'production.id as productionId',
-                  'designs.bom_image',
-                  'designs.design_image',
+                  // 'designs.bom_image',
+                  // 'designs.design_image',
                   'req2.id as requistition_id',
                   'req2.bom_file',
                   'req2.updated_at'

@@ -16,8 +16,7 @@
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
 
-       <form id="filterForm" method="GET" action="{{ route('list-logistics-report') }}" target="_blank">
-
+       <form id="filterForm" method="GET" action="{{ route('dispatch-ajax') }}" target="_blank">
     <input type="hidden" name="export_type" id="export_type" />
       
         <div class="row mb-3">
@@ -173,8 +172,6 @@ function fetchReport(reset = false) {
            if (res.status && Array.isArray(res.data)) {
           
  const rows = res.data.map((item, i) => {
-    const poUrl = `${window.APP_URL}securitydept/list-po-details/${btoa(item.purchase_id)}/${btoa(item.purchase_orders_id)}`;
-
     return `
         <tr>
             <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>

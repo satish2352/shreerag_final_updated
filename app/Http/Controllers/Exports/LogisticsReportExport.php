@@ -37,7 +37,7 @@ class LogisticsReportExport implements FromCollection, WithHeadings
     {
         return [
             'Date',
-            '>Project Name',
+            'Project Name',
             'Customer PO Number',
             'customer Name',
             'Product Name',

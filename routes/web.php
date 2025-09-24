@@ -333,6 +333,9 @@ Route::get('/list-product-completed-report-ajax', [ReportController::class, 'get
     Route::get('/dispatch-pending-report', [ReportController::class, 'listPendingDispatchReport'])->name('dispatch-pending-report');
     Route::get('/pending-dispatch-ajax', [ReportController::class, 'listPendingDispatchReportAjax'])->name('pending-dispatch-ajax');
 
+    Route::get('/stock-daily-report', [ReportController::class, 'listStockDailyReport'])->name('stock-daily-report');
+    Route::get('/stock-daily-report-ajax', [ReportController::class, 'listStockDailyReportAjax'])->name('stock-daily-report-ajax');
+
     Route::get('/list-dispatch-bar-chart', [ReportController::class, 'listDispatchBarChart'])->name('list-dispatch-bar-chart');
 
     Route::get('/list-vendor-through-taken-material', [ReportController::class, 'listVendorThroughTakenMaterial'])->name('list-vendor-through-taken-material');

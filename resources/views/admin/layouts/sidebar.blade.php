@@ -683,6 +683,9 @@
 
                                  <li class="{{ Request::is('list-consumption-report') ? 'active' : '' }}"><a href="{{ route('list-consumption-report') }}"><i class="fa fa-chart-line icon-wrap"></i><span
                                                 class="mini-click-non">Consumption Report</span></a></li>    
+                                
+                                 <li class="{{ Request::is('stock-daily-report') ? 'active' : '' }}"><a href="{{ route('stock-daily-report') }}"><i class="fa fa-chart-line icon-wrap"></i><span
+                                                class="mini-click-non">Stock Item Report</span></a></li>    
 
                             </ul>
                         </li>
@@ -837,7 +840,7 @@
                                 <li class="nav-item {{ Request::is('list-fianance-report') ? 'active' : '' }}"><a
                                         href="{{ route('list-fianance-report') }}"> <i class="fa fa-list-alt icon-wrap"></i> <span
                                             class="mini-click-non">Fianance Report</span></a></li>
-                                              <li class="{{ Request::is('list-vendor-payment-report') ? 'active' : '' }}"><a href="{{ route('list-vendor-through-taken-material') }}" aria-expanded="false"><i class="fa fa-users icon-wrap"></i><span
+                                              <li class="{{ Request::is('list-vendor-payment-report') ? 'active' : '' }}"><a href="{{ route('list-vendor-payment-report') }}" aria-expanded="false"><i class="fa fa-users icon-wrap"></i><span
                                                 class="mini-click-non">Vendor Payment Report</span></a></li>
                                </ul>
                         </li>                        
@@ -937,7 +940,7 @@
                                 <li class="nav-item {{ Request::is('list-dispatch-report') ? 'active' : '' }}"><a
                                         href="{{ route('list-dispatch-report') }}"> <i class="fa fa-list-alt icon-wrap"></i> <span
                                             class="mini-click-non">Completed Dispatch Report</span></a></li>
-                                              <li class="{{ Request::is('dispatch-pending-report') ? 'active' : '' }}"><a href="{{ route('list-vendor-through-taken-material') }}" aria-expanded="false"><i class="fa fa-users icon-wrap"></i><span
+                                              <li class="{{ Request::is('dispatch-pending-report') ? 'active' : '' }}"><a href="{{ route('dispatch-pending-report') }}" aria-expanded="false"><i class="fa fa-users icon-wrap"></i><span
                                                 class="mini-click-non">Pending Dispatch Report</span></a></li>
                                </ul>
                         </li>                          

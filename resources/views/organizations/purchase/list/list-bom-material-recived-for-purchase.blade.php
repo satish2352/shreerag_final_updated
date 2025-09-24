@@ -27,7 +27,7 @@
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
                                                 <th data-field="grn_date" data-editable="false">Description</th>
-                                                <th data-field="bom_image" data-editable="false">BOM</th>
+                                                <th data-field="bom_file" data-editable="false">BOM</th>
                                                  <th data-field="total_estimation_amount" data-editable="false">Estimated Amount</th>
                                                 <th data-field="bom" data-editable="false">Action</th>
                                             </tr>

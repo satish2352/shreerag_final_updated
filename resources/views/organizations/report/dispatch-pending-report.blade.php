@@ -16,8 +16,7 @@
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
 
-       <form id="filterForm" method="GET" action="{{ route('list-dispatch-report') }}" target="_blank">
-
+      <form id="filterForm" method="GET" action="{{ route('pending-dispatch-ajax') }}" target="_blank">
     <input type="hidden" name="export_type" id="export_type" />
       
         <div class="row mb-3">
@@ -101,15 +100,23 @@
       <tr>
 
                                                 <th data-field="id">ID</th>
-                                               <th data-field="last_updated_at" data-editable="false">Dispatch Completed Date</th>
+                                               <th data-field="updated_at" data-editable="false"> Date</th>
                                                 <th data-field="project_name" data-editable="false">Project Name</th>
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
                                                 <th data-field="title" data-editable="false">customer Name</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="total_quantity" data-editable="false">Total Product Quantity
                                                 </th>
-                                                <th data-field="total_completed_quantity" data-editable="false">Total
+                                                <th data-field="cumulative_completed_quantity" data-editable="false">Total
                                                     Production Done Quantity</th>
+                                                         <th data-field="remaining_quantity" data-editable="false">Total
+                                                    Balance Quantity</th>
+
+                                                      <th data-field="from_place" data-editable="false">Form Place</th>
+                                                <th data-field="to_place" data-editable="false">To Place</th>
+                                                <th data-field="transport_name" data-editable="false">Transport Name</th>
+                                                <th data-field="vehicle_name" data-editable="false">Vehicle Type</th>
+                                                <th data-field="truck_no" data-editable="false">Truck No.</th>
                                                 
                                              
                                             </tr>
@@ -146,101 +153,148 @@
     window.APP_URL = "{{ config('app.url') }}";
 </script>
 
-    <script>
-let currentPage = 1, pageSize = 10;
+  <script>
+    window.APP_URL = "{{ config('app.url') }}";
 
+    let currentPage = 1, pageSize = 10;
+    let isExport = false; // flag to detect export mode
 
+    // Fetch Report (AJAX for filter/search/pagination)
+    function fetchReport(reset = false) {
+        if (reset) currentPage = 1;
 
-function fetchReport(reset = false) {
-    if (reset) currentPage = 1;
+        const form = document.getElementById('filterForm');
+        const formData = new FormData(form);
+        formData.append('pageSize', pageSize);
+        formData.append('currentPage', currentPage);
+        formData.append('search', document.getElementById('searchKeyword').value);
 
-    const form = document.getElementById('filterForm');
-    const formData = new FormData(form);
-    formData.append('pageSize', pageSize);
-    formData.append('currentPage', currentPage);
-    formData.append('search', document.getElementById('searchKeyword').value);
+        const params = new URLSearchParams();
+        formData.forEach((val, key) => params.append(key, val));
 
-    const params = new URLSearchParams();
-    formData.forEach((val, key) => params.append(key, val));
+        fetch(`{{ route('pending-dispatch-ajax') }}?${params.toString()}`)
+            .then(res => res.json())
+            .then(res => {
+                const tbody = document.getElementById('reportBody');
+                const pagLinks = document.getElementById('paginationLinks');
+                const pagInfo = document.getElementById('paginationInfo');
 
-    fetch(`{{ route('pending-dispatch-ajax') }}?${params.toString()}`)
-        .then(res => res.json())
-        .then(res => {
-            const tbody = document.getElementById('reportBody');
-            const pagLinks = document.getElementById('paginationLinks');
-            const pagInfo = document.getElementById('paginationInfo');
+                if (res.status && Array.isArray(res.data)) {
+                    const rows = res.data.map((item, i) => {
+                        return `
+                            <tr>
+                                <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
+                                <td>${item.updated_at ? new Date(item.updated_at).toLocaleDateString('en-IN') : '-'}</td>
+                                <td>${item.project_name ?? '-'}</td>
+                                <td>${item.customer_po_number ?? '-'}</td>
+                                <td>${item.title ?? '-'}</td>
+                                <td>${item.product_name ?? '-'}</td>
+                                <td>${item.quantity ?? '-'}</td>
+                                <td>${item.cumulative_completed_quantity ?? '-'}</td>
+                                <td>${item.remaining_quantity ?? '-'}</td>
+                                <td>${item.from_place ?? '-'}</td>
+                                <td>${item.to_place ?? '-'}</td>
+                                <td>${item.transport_name ?? '-'}</td>
+                                <td>${item.vehicle_name ?? '-'}</td>
+                                <td>${item.truck_no ?? '-'}</td>
+                            </tr>
+                        `;
+                    }).join('');
 
-           if (res.status && Array.isArray(res.data)) {
-          
- const rows = res.data.map((item, i) => {
-    const poUrl = `${window.APP_URL}securitydept/list-po-details/${btoa(item.purchase_id)}/${btoa(item.purchase_orders_id)}`;
+                    tbody.innerHTML = rows || '<tr><td colspan="14">No records found.</td></tr>';
 
-    return `
-        <tr>
-            <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
-            <td>${item.last_updated_at ? new Date(item.last_updated_at).toLocaleDateString('en-IN') : '-'}</td>
-            <td>${item.project_name ?? '-'}</td>
-            <td>${item.customer_po_number ?? '-'}</td>
-            <td>${item.title ?? '-'}</td>
-            <td>${item.product_name ?? '-'}</td>
-             <td>${item.quantity ?? '-'}</td>
-              <td>${item.total_completed_quantity ?? '-'}</td>
-          
-            
-          
-        </tr>
-    `;
-}).join('');
+                    // Pagination
+                    let pagHtml = '', totalPages = res.pagination.totalPages;
+                    let start = Math.max(1, currentPage - 2), end = Math.min(totalPages, start + 4);
 
+                    if (start > 1) pagHtml += `<li><a class="page-link" onclick="goToPage(1)">1</a></li><li>...</li>`;
+                    for (let i = start; i <= end; i++) {
+                        pagHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+                                        <a class="page-link" onclick="goToPage(${i})">${i}</a>
+                                    </li>`;
+                    }
+                    if (end < totalPages) pagHtml += `<li>...</li><li><a class="page-link" onclick="goToPage(${totalPages})">${totalPages}</a></li>`;
 
-
-    tbody.innerHTML = rows || '<tr><td colspan="6">No records found.</td></tr>';
-
-                // Pagination
-                let pagHtml = '', totalPages = res.pagination.totalPages;
-                let start = Math.max(1, currentPage - 2), end = Math.min(totalPages, start + 4);
-
-                if (start > 1) pagHtml += `<li><a class="page-link" onclick="goToPage(1)">1</a></li><li>...</li>`;
-                for (let i = start; i <= end; i++) {
-                    pagHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
-                                    <a class="page-link" onclick="goToPage(${i})">${i}</a>
-                                </li>`;
+                    pagLinks.innerHTML = pagHtml;
+                    pagInfo.innerHTML = `Showing ${res.pagination.from} to ${res.pagination.to} of ${res.pagination.totalItems}`;
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="14">Failed to fetch data.</td></tr>';
                 }
-                if (end < totalPages) pagHtml += `<li>...</li><li><a class="page-link" onclick="goToPage(${totalPages})">${totalPages}</a></li>`;
+            });
+    }
 
-                pagLinks.innerHTML = pagHtml;
-                pagInfo.innerHTML = `Showing ${res.pagination.from} to ${res.pagination.to} of ${res.pagination.totalItems}`;
-            } else {
-                tbody.innerHTML = '<tr><td colspan="6">Failed to fetch data.</td></tr>';
-            }
-        });
-}
+    // Go to page
+    function goToPage(page) {
+        currentPage = page;
+        fetchReport();
+    }
 
-function goToPage(page) {
-    currentPage = page;
-    fetchReport();
-}
+    // Form Submit (Filter/Search)
+    document.getElementById('filterForm').addEventListener('submit', e => {
+        if (isExport) {
+            // allow normal submission for export
+            return;
+        }
+        e.preventDefault(); // stop normal form submission
+        fetchReport(true);  // run AJAX
+    });
 
-document.getElementById('filterForm').addEventListener('submit', e => {
-    e.preventDefault();
+    // Search Input Live Filter
+    document.getElementById('searchKeyword').addEventListener('input', () => fetchReport(true));
+
+    // Export PDF
+    document.getElementById('exportPdf').addEventListener('click', () => {
+        isExport = true;
+        document.getElementById('export_type').value = 1;
+        document.getElementById('filterForm').submit();
+
+        // Reset flag after some delay (so submit completes)
+        setTimeout(() => { isExport = false; }, 1500);
+    });
+
+    // Export Excel
+    document.getElementById('exportExcel').addEventListener('click', () => {
+        isExport = true;
+        document.getElementById('export_type').value = 2;
+        document.getElementById('filterForm').submit();
+
+        // Reset flag after some delay (so submit completes)
+        setTimeout(() => { isExport = false; }, 1500);
+    });
+
+    // Project Dropdown → Fetch Products
+    document.getElementById('project_name').addEventListener('change', function () {
+        let projectId = this.value;
+        let productSelect = document.getElementById('business_details_id');
+
+        // Reset product dropdown
+        productSelect.innerHTML = '<option value="">All Product Name</option>';
+
+        if (!projectId) return;
+
+        let url = '{{ url("designdept/get-products-by-project") }}/' + projectId;
+
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                if (data.status) {
+                    data.products.forEach(product => {
+                        const option = document.createElement('option');
+                        option.value = product.id;
+                        option.textContent = product.name;
+                        productSelect.appendChild(option);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Failed to load products:", error);
+            });
+    });
+
+    // Initial Load
     fetchReport(true);
-});
-
-document.getElementById('searchKeyword').addEventListener('input', () => fetchReport(true));
-
-document.getElementById('exportPdf').addEventListener('click', () => {
-    document.getElementById('export_type').value = 1;
-    document.getElementById('filterForm').submit();
-});
-
-document.getElementById('exportExcel').addEventListener('click', () => {
-    document.getElementById('export_type').value = 2;
-    document.getElementById('filterForm').submit();
-});
-
-// Initial load
-fetchReport(true);
 </script>
+
 <script>
     document.getElementById('project_name').addEventListener('change', function () {
         let projectId = this.value;

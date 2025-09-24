@@ -11,6 +11,10 @@ use App\Http\Controllers\Exports\ProductionReportExport;
 use App\Http\Controllers\Exports\SecurityReportExport;
 use App\Http\Controllers\Exports\GRNReportExport;
 use App\Http\Controllers\Exports\LogisticsReportExport;
+use App\Http\Controllers\Exports\DispatchExportReport;
+use App\Http\Controllers\Exports\DispatchPendingExportReport;
+use App\Http\Controllers\Exports\FiananceExportReport;
+use App\Http\Controllers\Exports\ItemStockReportExport;
 
 
 
@@ -24,7 +28,9 @@ use App\Models\ {
 PurchaseOrdersModel,
 BusinessDetails,
 PartItem,
-UnitMaster
+UnitMaster,
+Dispatch,
+BusinessApplicationProcesses
 }
 ;
 
@@ -90,10 +96,16 @@ public function listDesignReport( Request $request ) {
         try {
             $data = $this->service->listDesignReport($request);
        
-          $getProjectName = Business::whereNotNull('project_name')
-            ->where('is_deleted', 0)
-            ->where('is_active', 1)
-            ->pluck('project_name', 'id');
+          $getProjectName =  BusinessApplicationProcesses::leftJoin('production', function ($join) {
+            $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+        })
+          ->leftJoin('businesses', function ($join) {
+            $join->on('business_application_processes.business_id', '=', 'businesses.id');
+        })
+            ->where('businesses.is_deleted', 0)
+            ->where('businesses.is_active', 1)
+            ->pluck('businesses.project_name', 'businesses.id');
+            
             return view( 'organizations.report.list-accept-design-by-production', compact( 'data','getProjectName' ) );
         } catch ( \Exception $e ) {
             return $e;
@@ -127,7 +139,8 @@ public function listDesignReportAjax(Request $request){
             return response()->json(['status' => false, 'message' => $e->getMessage()]);
         }
     }
-public function getSecurityReport( Request $request ) {
+
+    public function getSecurityReport( Request $request ) {
         try {
             $data = $this->service->getSecurityReport($request);
        
@@ -485,12 +498,12 @@ public function listFinanceReportAjax(Request $request)
             $pdf = Pdf::loadView('exports.fianance-report-pdf', ['data' => $data['data']])
                 ->setPaper('a4');
 
-            return $pdf->download('LogisticsReport.pdf');
+            return $pdf->download('FiananceReport.pdf');
         }
 
         // Excel Export
         if ($request->filled('export_type') && $request->export_type == 2) {
-            return Excel::download(new SecurityReportExport($data['data']), 'LogisticsReport.xlsx');
+            return Excel::download(new FiananceExportReport($data['data']), 'FiananceReport.xlsx');
         }
 
         // Normal AJAX response
@@ -562,15 +575,23 @@ public function listDispatchReport(Request $request)
     try {
         $data = $this->service->listDispatchReport($request);
 
-        $getProjectName = Business::whereNotNull('project_name')
-            ->where('is_deleted', 0)
-            ->where('is_active', 1)
-            ->pluck('project_name', 'id');
+        $getProjectName = Business::leftJoin('business_application_processes', function ($join) {
+                $join->on('businesses.id', '=', 'business_application_processes.business_id');
+            })
+        ->whereNotNull('businesses.project_name')
+            ->where('businesses.is_deleted', 0)
+            ->where('businesses.is_active', 1)
+              ->where('business_application_processes.off_canvas_status', 22)
+            ->pluck('businesses.project_name', 'businesses.id');
 
-        $getProductName = BusinessDetails::whereNotNull('product_name')
-            ->where('is_deleted', 0)
-            ->where('is_active', 1)
-            ->pluck('product_name', 'id');
+        $getProductName = BusinessDetails::leftJoin('business_application_processes as bap', function ($join) {
+                $join->on(' businesses_details.id', '=', 'bap.business_details_id');
+            })
+        // ->whereNotNull('businesses_details.product_name')
+            ->where('businesses_details.is_deleted', 0)
+            ->where('businesses_details.is_active', 1)
+            ->where('bap.off_canvas_status', 22)
+            ->select('businesses_details.product_name', 'businesses_details.id');
 
         return view('organizations.report.dispatch-report', compact('data', 'getProjectName', 'getProductName'));
     } catch (\Exception $e) {
@@ -592,12 +613,12 @@ public function listDispatchReportAjax(Request $request)
             $pdf = Pdf::loadView('exports.dispatch-report-pdf', ['data' => $data['data']])
                 ->setPaper('a4');
 
-            return $pdf->download('LogisticsReport.pdf');
+            return $pdf->download('DispatchReport.pdf');
         }
 
         // Excel Export
         if ($request->filled('export_type') && $request->export_type == 2) {
-            return Excel::download(new SecurityReportExport($data['data']), 'LogisticsReport.xlsx');
+            return Excel::download(new DispatchExportReport($data['data']), 'DispatchReport.xlsx');
         }
 
         // Normal AJAX response
@@ -616,10 +637,14 @@ public function listPendingDispatchReport(Request $request)
     try {
         $data = $this->service->listPendingDispatchReport($request);
 
-        $getProjectName = Business::whereNotNull('project_name')
-            ->where('is_deleted', 0)
-            ->where('is_active', 1)
-            ->pluck('project_name', 'id');
+        $getProjectName = Business::leftJoin('business_application_processes', function ($join) {
+                $join->on('businesses.id', '=', 'business_application_processes.business_id');
+            })
+        ->whereNotNull('businesses.project_name')
+            ->where('businesses.is_deleted', 0)
+            ->where('businesses.is_active', 1)
+              ->where('business_application_processes.off_canvas_status', 21)
+            ->pluck('businesses.project_name', 'businesses.id');
 
         $getProductName = BusinessDetails::whereNotNull('product_name')
             ->where('is_deleted', 0)
@@ -643,15 +668,15 @@ public function listPendingDispatchReportAjax(Request $request)
 
         // PDF Export
         if ($request->filled('export_type') && $request->export_type == 1) {
-            $pdf = Pdf::loadView('exports.dispatch-report-pdf', ['data' => $data['data']])
+            $pdf = Pdf::loadView('exports.dispatch-pending-report-pdf', ['data' => $data['data']])
                 ->setPaper('a4');
 
-            return $pdf->download('LogisticsReport.pdf');
+            return $pdf->download('DispatchPendingReport.pdf');
         }
 
         // Excel Export
         if ($request->filled('export_type') && $request->export_type == 2) {
-            return Excel::download(new SecurityReportExport($data['data']), 'LogisticsReport.xlsx');
+            return Excel::download(new DispatchPendingExportReport($data['data']), 'DispatchPendingReport.xlsx');
         }
 
         // Normal AJAX response
@@ -884,6 +909,53 @@ public function getProductionReportAjax(Request $request)
 {
     try {
         $response = $this->service->getProductionReport($request);
+
+        if (isset($response['status']) && $response['status'] === false) {
+            return response()->json([
+                'status' => false,
+                'message' => $response['message']
+            ]);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => $response['data'],
+            'pagination' => $response['pagination']
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['status' => false, 'message' => $e->getMessage()]);
+    }
+}
+public function listStockDailyReport(Request $request)
+{
+    if ($request->filled('export_type')) {
+        $data = $this->service->listStockDailyReport($request)['data'];
+      
+        if ($request->export_type == 1) {
+            $pdf = Pdf::loadView('exports.item-stock-report-pdf', ['data' => $data])
+                ->setPaper('a3', 'landscape');
+            return $pdf->download('item-stock-report-pdf.pdf');
+        }
+
+        if ($request->export_type == 2) {
+            return Excel::download(new ItemStockReportExport($data), 'item-stock-report-pdf.xlsx');
+        }
+    }
+
+    $getPartItemName = PartItem::whereNotNull('description')
+    ->where('is_deleted', 0)
+    ->where('is_active', 1)
+    ->pluck('description', 'id');
+
+    // If no export type, show the view with data (optional: fetch data for initial load)
+    $data = $this->service->listStockDailyReport($request)['data'] ?? [];
+
+    return view('organizations.report.item-stock-report', compact('data', 'getPartItemName'));
+}
+public function listStockDailyReportAjax(Request $request)
+{
+    try {
+        $response = $this->service->listStockDailyReport($request);
 
         if (isset($response['status']) && $response['status'] === false) {
             return response()->json([

@@ -296,14 +296,22 @@ public function listDesignReport(Request $request)
             $query->where('businesses.id', $request->project_name);
         }
 
-        if ($request->filled('from_date')) {
-            $query->whereDate('production.created_at', '>=', $request->from_date);
+        // if ($request->filled('from_date')) {
+        //     $query->whereDate('production.created_at', '>=', $request->from_date);
+        // }
+
+        // if ($request->filled('to_date')) {
+        //     $query->whereDate('production.created_at', '<=', $request->to_date);
+        // }
+         if ($request->filled('from_date')) {
+            $from = Carbon::parse($request->from_date)->startOfDay();
+            $query->where('production.updated_at', '>=', $from);
         }
 
         if ($request->filled('to_date')) {
-            $query->whereDate('production.created_at', '<=', $request->to_date);
+            $to = Carbon::parse($request->to_date)->endOfDay();
+            $query->where('production.updated_at', '<=', $to);
         }
-
         if ($request->filled('year')) {
             $query->whereYear('production.updated_at', $request->year);
         }
@@ -1055,14 +1063,15 @@ public function listLogisticsReport(Request $request)
             $query->where('businesses_details.id', $request->product_name);
         }
 
-        // 🗓️ Date filters
-        if ($request->filled('from_date')) {
-            $query->whereDate('tbl_logistics.gatepass_date', '>=', $request->from_date);
-        }
+         if ($request->filled('from_date')) {
+                $from = Carbon::parse($request->from_date)->startOfDay(); // 00:00:00
+                $query->where('tbl_logistics.updated_at', '>=', $from);
+            }
 
-        if ($request->filled('to_date')) {
-            $query->whereDate('tbl_logistics.gatepass_date', '<=', $request->to_date);
-        }
+            if ($request->filled('to_date')) {
+                $to = Carbon::parse($request->to_date)->endOfDay(); // 23:59:59
+                $query->where('tbl_logistics.updated_at', '<=', $to);
+            }
 
         if ($request->filled('year')) {
             $query->whereYear('tbl_logistics.updated_at', $request->year);
@@ -1394,7 +1403,7 @@ public function listVendorPaymentReport(Request $request){
         throw $e; // ✅ Let the controller catch and respond
     }
 }
-public function listDispatchReport(Request $request)
+public function listDispatchReport(Request $request )
 {
     try {
       $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.LIST_DISPATCH_COMPLETED_FROM_DISPATCH_DEPARTMENT')];
@@ -1417,6 +1426,7 @@ public function listDispatchReport(Request $request)
             })
             ->whereIn('tcqt1.quantity_tracking_status', $array_to_be_quantity_tracking)
             ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
+            ->where('bap1.off_canvas_status', 22)
             ->where('businesses.is_active', true)
             ->where('businesses.is_deleted', 0);
         // 🔍 Search filter
@@ -1435,19 +1445,19 @@ public function listDispatchReport(Request $request)
             $query->where('businesses.id', $request->project_name);
         }
 
-        // 📁 Filter by Product
-        if ($request->filled('product_name')) {
-            $query->where('businesses_details.id', $request->product_name);
-        }
+         // 📁 Filter by Product
+            if ($request->filled('product_name')) {
+                $query->where('businesses_details.id', $request->product_name);
+            }
+            if ($request->filled('from_date')) {
+                $from = Carbon::parse($request->from_date)->startOfDay(); // 00:00:00
+                $query->where('tbl_dispatch.updated_at', '>=', $from);
+            }
 
-        // 🗓️ Date filters
-        if ($request->filled('from_date')) {
-            $query->whereDate('tbl_dispatch.gatepass_date', '>=', $request->from_date);
-        }
-
-        if ($request->filled('to_date')) {
-            $query->whereDate('tbl_dispatch.gatepass_date', '<=', $request->to_date);
-        }
+            if ($request->filled('to_date')) {
+                $to = Carbon::parse($request->to_date)->endOfDay(); // 23:59:59
+                $query->where('tbl_dispatch.updated_at', '<=', $to);
+            }
 
         if ($request->filled('year')) {
             $query->whereYear('tbl_dispatch.updated_at', $request->year);
@@ -1524,31 +1534,39 @@ public function listDispatchReport(Request $request)
         throw $e; // ✅ Let the controller catch and respond
     }
 }
+
+
 public function listPendingDispatchReport(Request $request)
 {
     try {
-      $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.RECEIVED_COMPLETED_QUANLTITY_FROM_FIANANCE_DEPT_TO_DISPATCH_DEPT')];
-        // $array_to_be_quantity_tracking = [config('constants.DISPATCH_DEPARTMENT.RECEIVED_COMPLETED_QUANLTITY_FROM_FIANANCE_DEPT_TO_DISPATCH_DEPT')];
+        $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.LIST_RECEIVED_FROM_FINANCE_ACCORDING_TO_LOGISTICS')];
+        $array_to_be_quantity_tracking = [config('constants.DISPATCH_DEPARTMENT.RECEIVED_COMPLETED_QUANLTITY_FROM_FIANANCE_DEPT_TO_DISPATCH_DEPT')];
 
-        $query = Logistics::leftJoin('tbl_customer_product_quantity_tracking as tcqt1', function ($join) {
-                $join->on('tbl_logistics.quantity_tracking_id', '=', 'tcqt1.id');
+        $query = CustomerProductQuantityTracking::leftJoin('tbl_logistics', function ($join) {
+                $join->on('tbl_customer_product_quantity_tracking.id', '=', 'tbl_logistics.quantity_tracking_id');
             })
             ->leftJoin('businesses', function ($join) {
-                $join->on('tbl_logistics.business_id', '=', 'businesses.id');
+                $join->on('tbl_customer_product_quantity_tracking.business_id', '=', 'businesses.id');
             })
             ->leftJoin('business_application_processes as bap1', function ($join) {
-                $join->on('tbl_logistics.business_application_processes_id', '=', 'bap1.id');
+                $join->on('tbl_customer_product_quantity_tracking.business_application_processes_id', '=', 'bap1.id');
             })
             ->leftJoin('businesses_details', function ($join) {
-                $join->on('tbl_logistics.business_details_id', '=', 'businesses_details.id');
+                $join->on('tbl_customer_product_quantity_tracking.business_details_id', '=', 'businesses_details.id');
             })
-            ->leftJoin('tbl_dispatch', function ($join) {
-                $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_dispatch.quantity_tracking_id');
+            ->leftJoin('tbl_transport_name', function ($join) {
+                $join->on('tbl_logistics.transport_name_id', '=', 'tbl_transport_name.id');
             })
-            // ->whereIn('tcqt1.quantity_tracking_status', $array_to_be_quantity_tracking)
-            ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
+            ->leftJoin('tbl_vehicle_type', function ($join) {
+                $join->on('tbl_logistics.vehicle_type_id', '=', 'tbl_vehicle_type.id');
+            })
+            ->leftJoin('production', function ($join) {
+                $join->on('tbl_customer_product_quantity_tracking.production_id', '=', 'production.id');
+            })
+            ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status', $array_to_be_quantity_tracking)
             ->where('businesses.is_active', true)
             ->where('businesses.is_deleted', 0);
+
         // 🔍 Search filter
         if ($request->filled('search')) {
             $search = $request->search;
@@ -1572,56 +1590,59 @@ public function listPendingDispatchReport(Request $request)
 
         // 🗓️ Date filters
         if ($request->filled('from_date')) {
-            $query->whereDate('tbl_dispatch.gatepass_date', '>=', $request->from_date);
+            $from = Carbon::parse($request->from_date)->startOfDay();
+            $query->where('bap1.updated_at', '>=', $from);
         }
 
         if ($request->filled('to_date')) {
-            $query->whereDate('tbl_dispatch.gatepass_date', '<=', $request->to_date);
+            $to = Carbon::parse($request->to_date)->endOfDay();
+            $query->where('bap1.updated_at', '<=', $to);
         }
 
         if ($request->filled('year')) {
-            $query->whereYear('tbl_dispatch.updated_at', $request->year);
+            $query->whereYear('bap1.updated_at', $request->year);
         }
 
         if ($request->filled('month')) {
-            $query->whereMonth('tbl_dispatch.updated_at', $request->month);
+            $query->whereMonth('bap1.updated_at', $request->month);
         }
 
         // 🔽 Select columns
-        $query ->select(
-                'businesses_details.id as business_details_id',
-                'businesses.project_name',
-                'businesses.customer_po_number',
-                'businesses.title',
-                'businesses.created_at',
-                'businesses_details.product_name',
-                'businesses_details.description',
-                'businesses_details.quantity',
-                DB::raw('SUM(tcqt1.completed_quantity) as total_completed_quantity'),
-                DB::raw('MAX(tbl_dispatch.updated_at) as last_updated_at') // Alias for MAX(updated_at)
-            )
+        $query->select(
+            'tbl_customer_product_quantity_tracking.id',
+            'tbl_customer_product_quantity_tracking.business_details_id',
+            'businesses.title',
+            'businesses.project_name',
+            'businesses.created_at',
+            'businesses.customer_po_number',
+            'businesses_details.product_name',
+            'businesses_details.quantity',
+            'businesses.remarks',
+            'businesses.is_active',
+            'tbl_customer_product_quantity_tracking.completed_quantity',
+            DB::raw('(SELECT SUM(t2.completed_quantity)
+                FROM tbl_customer_product_quantity_tracking AS t2
+                WHERE t2.business_details_id = businesses_details.id
+                  AND t2.id <= tbl_customer_product_quantity_tracking.id
+               ) AS cumulative_completed_quantity'),
+            DB::raw('(businesses_details.quantity - (SELECT SUM(t2.completed_quantity)
+                FROM tbl_customer_product_quantity_tracking AS t2
+                WHERE t2.business_details_id = businesses_details.id
+                  AND t2.id <= tbl_customer_product_quantity_tracking.id
+               )) AS remaining_quantity'),
+            'production.business_id',
+            'production.id as productionId',
+            'bap1.store_material_sent_date',
+            'tbl_customer_product_quantity_tracking.updated_at',
+            'tbl_transport_name.name as transport_name',
+            'tbl_vehicle_type.name as vehicle_name',
+            'tbl_logistics.truck_no',
+            'tbl_logistics.from_place',
+            'tbl_logistics.to_place'
+        )
+        ->orderBy('bap1.updated_at', 'desc');
 
-            ->groupBy(
-                'businesses_details.id',
-                'businesses.project_name',
-                'businesses.customer_po_number',
-                'businesses.title',
-                'businesses.created_at',
-                'businesses_details.product_name',
-                'businesses_details.description',
-                'businesses_details.quantity'
-            )
-
-            ->havingRaw('SUM(tcqt1.completed_quantity) = businesses_details.quantity')
-            ->orderBy('last_updated_at', 'desc') // Use the alias instead of tbl_dispatch.last_updated_at
-            ->get()
-            ->map(function ($data) {
-                $data->last_updated_at = Carbon::parse($data->last_updated_at);
-                return $data;
-            });
-     
-
-        // 📤 Export full data (PDF/Excel)
+        // 📤 Export full data
         if ($request->filled('export_type')) {
             return [
                 'data' => $query->get(),
@@ -1651,9 +1672,10 @@ public function listPendingDispatchReport(Request $request)
             ]
         ];
     } catch (\Exception $e) {
-        throw $e; // ✅ Let the controller catch and respond
+        throw $e;
     }
 }
+
 
 
 public function listDispatchBarChartProductWise(Request $request)
@@ -2190,5 +2212,85 @@ public function getStoreItemStockList($request)
         ];
     }
 }
+public function listStockDailyReport($request)
+{
+    try {
+        $query = ItemStock::leftJoin('tbl_part_item', function ($join) {
+                $join->on('tbl_item_stock.part_item_id', '=', 'tbl_part_item.id');
+            })
+            ->leftJoin('production_details', function ($join) {
+                $join->on('tbl_part_item.id', '=', 'production_details.part_item_id');
+            })
+            ->leftJoin('tbl_grn_po_quantity_tracking', function ($join) {
+                $join->on('tbl_part_item.id', '=', 'tbl_grn_po_quantity_tracking.part_no_id');
+            });
+         
 
+        // 🗓️ Date filters — make sure to use correct table columns, not tbl_dispatch
+        if ($request->filled('from_date')) {
+            $query->whereDate('tbl_item_stock.updated_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('tbl_item_stock.updated_at', '<=', $request->to_date);
+        }
+
+        if ($request->filled('year')) {
+            $query->whereYear('tbl_item_stock.updated_at', $request->year);
+        }
+
+        if ($request->filled('month')) {
+            $query->whereMonth('tbl_item_stock.updated_at', $request->month);
+        }
+        $query->orderBy('tbl_item_stock.quantity', 'desc');
+        $query->select(
+             'tbl_part_item.id',
+             'tbl_part_item.description',
+             'tbl_grn_po_quantity_tracking.part_no_id',
+             'tbl_grn_po_quantity_tracking.quantity',
+              'tbl_item_stock.quantity as balance_quantity',
+             'tbl_item_stock.part_item_id',
+               'production_details.quantity as used_quantity',
+            // 'tbl_item_stock.updated_at'
+        );
+
+        // 📤 Export full data
+        if ($request->filled('export_type')) {
+            return [
+                'status' => true,
+                'data' => $query->get(),
+                'pagination' => null
+            ];
+        }
+
+        // 📄 Pagination setup
+        $perPage = $request->input('pageSize', 10);
+        $currentPage = $request->input('currentPage', 1);
+
+        $totalItems = (clone $query)->count();
+
+        $data = (clone $query)
+            ->skip(($currentPage - 1) * $perPage)
+            ->take($perPage)
+            ->get();
+
+        return [
+            'status' => true,
+            'data' => $data,
+            'pagination' => [
+                'currentPage' => $currentPage,
+                'pageSize' => $perPage,
+                'totalItems' => $totalItems,
+                'totalPages' => ceil($totalItems / $perPage),
+                'from' => ($currentPage - 1) * $perPage + 1,
+                'to' => min($currentPage * $perPage, $totalItems),
+            ]
+        ];
+    } catch (\Exception $e) {
+        return [
+            'status' => false,
+            'message' => $e->getMessage()
+        ];
+    }
+}
 }
