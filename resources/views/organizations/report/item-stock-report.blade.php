@@ -20,7 +20,7 @@
 
     <input type="hidden" name="export_type" id="export_type" />
       
-        <div class="row mb-3">
+        <div class="row mb-5">
             <div class="col-md-2">
                 <label>Project Name</label>
                 <select class="form-control select2" name="project_name">
@@ -102,10 +102,11 @@
       <tr>
 
                                                 <th data-field="id">Sr.No.</th>
-                                                <th data-field="date" data-editable="false">Transaction Date</th>
+                                                <th data-field="issue_updated_at" data-editable="false">Issue Date</th>
+                                                 <th data-field="received_updated_at" data-editable="false">Received Date</th>
                                                 <th data-field="description" data-editable="false">Entry No/Particulars</th>
                                                 <th data-field="received_quantity" data-editable="false">Received Qty</th>
-                                                <th data-field="used_quantity" data-editable="false">Issue Qty</th>
+                                                <th data-field="issue_quantity" data-editable="false">Issue Qty</th>
                                                 <th data-field="balance_quantity" data-editable="false">Balance Qty</th>
                                                
                                             </tr>
@@ -169,11 +170,11 @@ function fetchReport(reset = false) {
     return `
         <tr>
             <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
-            <td>${item.updated_at ? new Date(item.updated_at).toLocaleDateString('en-IN') : '-'}</td>
-          
+            <td>${item.issue_updated_at ? new Date(item.issue_updated_at).toLocaleDateString('en-IN') : '-'}</td>
+            <td>${item.received_updated_at ? new Date(item.received_updated_at).toLocaleDateString('en-IN') : '-'}</td>
             <td>${item.description || '-'}</td>
             <td>${item.received_quantity || '-'}</td>
-             <td>${item.used_quantity || '-'}</td>            
+             <td>${item.issue_quantity || '-'}</td>            
             <td>${item.balance_quantity || '-'}</td>
            
                            

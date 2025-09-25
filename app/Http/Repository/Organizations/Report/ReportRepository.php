@@ -15,7 +15,8 @@ use App\Models\ {
     Gatepass,
     CustomerProductQuantityTracking,
     GrnPOQuantityTracking,
-    ItemStock
+    ItemStock,
+    PartItem
     };
 use Config;
 
@@ -2212,49 +2213,136 @@ public function getStoreItemStockList($request)
         ];
     }
 }
+// public function listStockDailyReport($request)
+// {
+//     try {
+//        $query = PartItem::leftJoin('production_details', 'tbl_part_item.id', '=', 'production_details.part_item_id');
+//     // ->leftJoin('production_details', 'tbl_part_item.id', '=', 'production_details.part_item_id')
+//     // ->leftJoin('tbl_grn_po_quantity_tracking', 'tbl_part_item.id', '=', 'tbl_grn_po_quantity_tracking.part_no_id');
+
+//         // 🗓️ Date filters — make sure to use correct table columns, not tbl_dispatch
+//         if ($request->filled('from_date')) {
+//             $query->whereDate('tbl_item_stock.updated_at', '>=', $request->from_date);
+//         }
+
+//         if ($request->filled('to_date')) {
+//             $query->whereDate('tbl_item_stock.updated_at', '<=', $request->to_date);
+//         }
+
+//         if ($request->filled('year')) {
+//             $query->whereYear('tbl_item_stock.updated_at', $request->year);
+//         }
+
+//         if ($request->filled('month')) {
+//             $query->whereMonth('tbl_item_stock.updated_at', $request->month);
+//         }
+//         // $query->orderBy('tbl_item_stock.quantity', 'desc');
+//         // $query->select(
+//         //      'tbl_part_item.id',
+//         //      'tbl_part_item.description',
+//         //      'tbl_grn_po_quantity_tracking.part_no_id',
+//         //      'tbl_grn_po_quantity_tracking.quantity',
+//         //       'tbl_item_stock.quantity as balance_quantity',
+//         //      'tbl_item_stock.part_item_id',
+//         //        'production_details.quantity as used_quantity',
+//         //     // 'tbl_item_stock.updated_at'
+//         // );
+
+//         $query->select(
+//     'tbl_part_item.id',
+//     'tbl_part_item.description',
+//     DB::raw('COALESCE(SUM(production_details.quantity), 0) as issue_quantity')
+//         )
+// ->groupBy(
+//     'tbl_part_item.id',
+//     'tbl_part_item.description'
+// );
+
+//     // ->orderBy('tbl_item_stock.quantity', 'desc');
+//         // 📤 Export full data
+//         if ($request->filled('export_type')) {
+//             return [
+//                 'status' => true,
+//                 'data' => $query->get(),
+//                 'pagination' => null
+//             ];
+//         }
+
+//         // 📄 Pagination setup
+//         $perPage = $request->input('pageSize', 10);
+//         $currentPage = $request->input('currentPage', 1);
+
+//         $totalItems = (clone $query)->count();
+
+//         $data = (clone $query)
+//             ->skip(($currentPage - 1) * $perPage)
+//             ->take($perPage)
+//             ->get();
+
+//         return [
+//             'status' => true,
+//             'data' => $data,
+//             'pagination' => [
+//                 'currentPage' => $currentPage,
+//                 'pageSize' => $perPage,
+//                 'totalItems' => $totalItems,
+//                 'totalPages' => ceil($totalItems / $perPage),
+//                 'from' => ($currentPage - 1) * $perPage + 1,
+//                 'to' => min($currentPage * $perPage, $totalItems),
+//             ]
+//         ];
+//     } catch (\Exception $e) {
+//         return [
+//             'status' => false,
+//             'message' => $e->getMessage()
+//         ];
+//     }
+// }
+
 public function listStockDailyReport($request)
 {
     try {
-        $query = ItemStock::leftJoin('tbl_part_item', function ($join) {
-                $join->on('tbl_item_stock.part_item_id', '=', 'tbl_part_item.id');
-            })
-            ->leftJoin('production_details', function ($join) {
-                $join->on('tbl_part_item.id', '=', 'production_details.part_item_id');
-            })
-            ->leftJoin('tbl_grn_po_quantity_tracking', function ($join) {
-                $join->on('tbl_part_item.id', '=', 'tbl_grn_po_quantity_tracking.part_no_id');
-            });
-         
+        $query = PartItem::leftJoin('tbl_item_stock', 'tbl_part_item.id', '=', 'tbl_item_stock.part_item_id')
+            ->leftJoin('production_details', 'tbl_part_item.id', '=', 'production_details.part_item_id')
+              ->leftJoin('tbl_grn_po_quantity_tracking', 'tbl_part_item.id', '=', 'tbl_grn_po_quantity_tracking.part_no_id');
 
-        // 🗓️ Date filters — make sure to use correct table columns, not tbl_dispatch
+               // 🔍 Search filter
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('tbl_part_item.description', 'like', "%{$search}%")
+                    ->orWhere('production_details.quantity', 'like', "%{$search}%")
+                    ->orWhere('tbl_item_stock.quantity', 'like', "%{$search}%")
+                    ->orWhere('tbl_grn_po_quantity_tracking.quantity', 'like', "%{$search}%");
+            });
+        }
+
+
+        if ($request->filled('description')) {
+            $query->where('tbl_part_item.id', $request->description);
+        }
         if ($request->filled('from_date')) {
             $query->whereDate('tbl_item_stock.updated_at', '>=', $request->from_date);
         }
-
         if ($request->filled('to_date')) {
             $query->whereDate('tbl_item_stock.updated_at', '<=', $request->to_date);
         }
-
         if ($request->filled('year')) {
             $query->whereYear('tbl_item_stock.updated_at', $request->year);
         }
-
         if ($request->filled('month')) {
             $query->whereMonth('tbl_item_stock.updated_at', $request->month);
         }
-        $query->orderBy('tbl_item_stock.quantity', 'desc');
-        $query->select(
-             'tbl_part_item.id',
-             'tbl_part_item.description',
-             'tbl_grn_po_quantity_tracking.part_no_id',
-             'tbl_grn_po_quantity_tracking.quantity',
-              'tbl_item_stock.quantity as balance_quantity',
-             'tbl_item_stock.part_item_id',
-               'production_details.quantity as used_quantity',
-            // 'tbl_item_stock.updated_at'
-        );
 
-        // 📤 Export full data
+        $query->select(
+    'tbl_part_item.id',
+    'tbl_part_item.description',
+      'production_details.updated_at as issue_updated_at',
+    'production_details.quantity as issue_quantity',
+    'tbl_item_stock.quantity as balance_quantity',
+    'tbl_grn_po_quantity_tracking.quantity as received_quantity',
+    'tbl_grn_po_quantity_tracking.updated_at as received_updated_at'
+);
         if ($request->filled('export_type')) {
             return [
                 'status' => true,
@@ -2263,11 +2351,11 @@ public function listStockDailyReport($request)
             ];
         }
 
-        // 📄 Pagination setup
+        // 📄 Pagination
         $perPage = $request->input('pageSize', 10);
         $currentPage = $request->input('currentPage', 1);
 
-        $totalItems = (clone $query)->count();
+        $totalItems = (clone $query)->get()->count();
 
         $data = (clone $query)
             ->skip(($currentPage - 1) * $perPage)
@@ -2293,4 +2381,5 @@ public function listStockDailyReport($request)
         ];
     }
 }
+
 }

@@ -209,8 +209,6 @@ public function listStockDailyReport($request)
 {
     try {
         $data_output =  $this->repo->listStockDailyReport($request);
-    dd($data_output);
-    die();
         return $data_output;
     } catch (\Exception $e) {
         throw $e;

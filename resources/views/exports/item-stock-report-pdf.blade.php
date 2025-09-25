@@ -29,7 +29,8 @@
         <thead>
             <tr>
                 <th>S.No</th>
-                <th>Sent Date</th>
+                <th>Issue Date</th>
+                 <th>Received Date</th>
                 <th>Project Name</th>
                 <th>PO Number</th>
                 <th>Customer Name</th>
@@ -42,7 +43,8 @@
             @foreach ($data as $index => $row)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $row['updated_at'] ?? '-' }}</td>
+                    <td>{{ $row['issue_updated_at'] ?? '-' }}</td>
+                     <td>{{ $row['received_updated_at'] ?? '-' }}</td>
                     <td>{{ ucwords($row['description'] ?? '-') }}</td>
                     <td>{{ $row['received_quantity'] ?? '-' }}</td>
                     <td>{{ $row['balance_quantity'] ?? '-' }}</td>
