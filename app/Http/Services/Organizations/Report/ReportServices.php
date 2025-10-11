@@ -116,7 +116,7 @@ public function listFinanceReport($request)
 {
     try {
         $data_output = $this->repo->listFinanceReport($request);
-       
+    
         return $data_output;
     } catch (\Exception $e) {
         throw $e;
@@ -209,6 +209,7 @@ public function listStockDailyReport($request)
 {
     try {
         $data_output =  $this->repo->listStockDailyReport($request);
+      
         return $data_output;
     } catch (\Exception $e) {
         throw $e;

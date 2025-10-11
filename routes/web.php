@@ -351,6 +351,7 @@ Route::get('/list-product-completed-report-ajax', [ReportController::class, 'get
     
       Route::get('/item-stock-history-list', [ReportController::class, 'getItemStockHistoryList'])->name('item-stock-history-list');
     Route::get('/item-stock-history-list-ajax', [ReportController::class, 'getItemStockListHistoryAjax'])->name('item-stock-history-list-ajax');
+
 });
    
     // ===================== ESTIMATION DEPT =====================
@@ -929,6 +930,11 @@ Route::group(['prefix' => 'quality', 'middleware' => 'admin'], function () {
     Route::get('/list-rejected-chalan-po-wise', [GRNController::class, 'getAllListMaterialSentFromQuality'])->name('list-rejected-chalan-po-wise');
     Route::get('/grn-report', [ReportController::class, 'getGRNReport'])->name('grn-report');
     Route::get('/grn-report-ajax', [ReportController::class, 'getGRNReportAjax'])->name('grn-report-ajax');
+
+ Route::get('/get-vendor-by-purchase_order/{id}', [ReportController::class, 'getVendorbyPurchaseOrder'])
+    ->name('get-vendor-by-purchase_order');
+
+
 });
 
 // ================= FINANCE DEPT =================
@@ -1082,7 +1088,9 @@ Route::group(['prefix' => 'hr', 'middleware' => 'admin'], function () {
     Route::post('/store-leaves', [LeavesController::class, 'store'])->name('store-leaves');
     Route::get('/edit-leaves/{id}', [LeavesController::class, 'edit'])->name('edit-leaves');
     Route::post('/update-leaves', [LeavesController::class, 'update'])->name('update-leaves');
-    Route::any('/delete-leaves/{id}', [LeavesController::class, 'destroy'])->name('delete-leaves');
+    // Route::any('/delete-leaves/{id}', [LeavesController::class, 'destroy'])->name('delete-leaves');
+Route::delete('/delete-leaves/{id}', [LeavesController::class, 'destroy'])->name('delete-leaves');
+
 
 
 

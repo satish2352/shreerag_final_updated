@@ -60,7 +60,8 @@
                                                         <td>
                                                             <form action="{{ route('send-to-production', $data->id) }}"
                                                                 method="POST"
-                                                                onsubmit="return confirm('Are you sure you want to send this to production?');">
+                                                                class="send-to-production-form"
+                                                               >
                                                                 @csrf
                                                                 <button class="btn btn-sm btn-bg-colour" type="submit">Send
                                                                     to Production</button>
@@ -81,4 +82,29 @@
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+$(document).on('submit', '.send-to-production-form', function(e) {
+    e.preventDefault(); // prevent default form submission
+    let form = this;
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to send this to production?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, send it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            form.submit(); // submit the form if confirmed
+        }
+    });
+});
+
+</script>
+
+
 @endsection

@@ -119,6 +119,10 @@ class LoginController extends Controller
         return redirect('/login')->with('error', 'User not found.');
     }
 
+     // ✅ Get user IP address
+        // $ipAddress = $request->ip();
+            $systemIp = getHostByName(getHostName());
+            $ipAddress = getHostByName(getHostName());
    // ✅ Update location if provided
         if ($request->filled(['latitude', 'longitude'])) {
             $latitude  = $request->latitude;
@@ -167,6 +171,7 @@ class LoginController extends Controller
             $loginHistory = new LoginHistory();
             $loginHistory->user_id          = $user->id;
             $loginHistory->latitude         = $latitude;
+             $loginHistory->ip_address         = $ipAddress;
             $loginHistory->longitude        = $longitude;
             $loginHistory->location_address = $address;
             $loginHistory->save();

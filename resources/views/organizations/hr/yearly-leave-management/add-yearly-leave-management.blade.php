@@ -132,19 +132,22 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
     $(function() {
-        var currentYear = new Date().getFullYear();
-        var startYear = 1980;
-        var endYear = currentYear + 10; // Change this to the desired number of future years
+        // Clear any existing options first
+        $("#dYear").empty();
 
-        for (var year = startYear; year <= endYear; year++) {
+        var currentYear = new Date().getFullYear();
+        var years = [currentYear - 1, currentYear]; // Previous year and current year only
+
+        years.forEach(function(year) {
             var option = $("<option>").val(year).text(year);
-            if (year < currentYear) {
-                option.prop("disabled", true);
-            }
             $("#dYear").append(option);
-        }
+        });
+
+        // Optional: set current year as selected by default
+        $("#dYear").val(currentYear);
     });
 </script>
+
 <script>
     jQuery.noConflict();
     jQuery(document).ready(function ($) {

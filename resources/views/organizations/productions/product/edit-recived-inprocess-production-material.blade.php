@@ -18,7 +18,7 @@
          .custom-dropdown .dropdown-options {
         position: absolute;
         width:600px !important;
-        top: 700px;
+        /* top: 700px; */
         left: 193px;
         right: 0;
         background: white;

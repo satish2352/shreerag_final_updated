@@ -15,7 +15,7 @@ use App\Http\Controllers\Exports\DispatchExportReport;
 use App\Http\Controllers\Exports\DispatchPendingExportReport;
 use App\Http\Controllers\Exports\FiananceExportReport;
 use App\Http\Controllers\Exports\ItemStockReportExport;
-
+use App\Http\Controllers\Exports\VendorThroughTakenMaterialListDetailsReport;
 
 
 use Session;
@@ -169,12 +169,12 @@ public function getSecurityReportAjax(Request $request)
                 $pdf = Pdf::loadView('exports.security-report-pdf', ['data' => $data['data']])
                     ->setPaper('a4'); // <-- Landscape
 
-                return $pdf->download('DesignReport.pdf');
+                return $pdf->download('SecurityReport.pdf');
             }
 
             // Excel Export
             if ($request->filled('export_type') && $request->export_type == 2) {
-                return Excel::download(new SecurityReportExport($data['data']), 'DesignReport.xlsx');
+                return Excel::download(new SecurityReportExport($data['data']), 'SecurityReport.xlsx');
             }
 
             // Normal AJAX response
@@ -212,11 +212,11 @@ public function getGRNReportAjax(Request $request){
         if ($request->filled('export_type') && $request->export_type == 1) {
             $pdf = Pdf::loadView('exports.grn-report-pdf', ['data' => $data['data']])
                 ->setPaper('a3', 'landscape');
-            return $pdf->download('DesignReport.pdf');
+            return $pdf->download('GRNReport.pdf');
         }
 
         if ($request->filled('export_type') && $request->export_type == 2) {
-            return Excel::download(new GRNReportExport($data['data']), 'DesignReport.xlsx');
+            return Excel::download(new GRNReportExport($data['data']), 'GRNReport.xlsx');
         }
 
         return response()->json([
@@ -231,6 +231,43 @@ public function getGRNReportAjax(Request $request){
         ]);
     }
 }
+
+public function getVendorbyPurchaseOrder($id)
+{
+    try {
+        \Log::info("Fetching POs for vendor ID: " . $id);
+
+        $purchaseOrders = PurchaseOrdersModel::select('id', 'purchase_orders_id')
+            ->where('vendor_id', $id)
+            ->where('is_active', 1)
+            ->where('is_deleted', 0)
+            ->get();
+
+        // Format response
+        $response = $purchaseOrders->map(function($po) {
+            return [
+                'id' => $po->id,
+                'name' => $po->purchase_orders_id
+            ];
+        });
+
+        \Log::info("Found POs: " . $response);
+
+        return response()->json([
+            'status' => true,
+            'purchaseOrders' => $response
+        ]);
+    } catch (\Exception $e) {
+        \Log::error("Error fetching POs: " . $e->getMessage());
+        return response()->json([
+            'status' => false,
+            'message' => $e->getMessage()
+        ]);
+    }
+}
+
+
+
 // public function listConsumptionReport( Request $request ) {
 //         try {
 //             $data = $this->service->getConsumptionReport($request);
@@ -768,7 +805,6 @@ public function listVendorThroughTakenMaterialVendorIdAjax(Request $request, $id
 {
     try {
         $data = $this->service->listVendorThroughTakenMaterialVendorId($request, $id);
-
         // Defensive check
         if (!is_array($data) || !isset($data['data'])) {
             throw new \Exception("Invalid response format from service.");
@@ -776,15 +812,15 @@ public function listVendorThroughTakenMaterialVendorIdAjax(Request $request, $id
 
         // PDF Export
         if ($request->filled('export_type') && $request->export_type == 1) {
-            $pdf = Pdf::loadView('exports.logistics-report-pdf', ['data' => $data['data']])
+            $pdf = Pdf::loadView('exports.vendor-through-taken-material-report-pdf', ['data' => $data['data']])
                 ->setPaper('a4');
 
-            return $pdf->download('LogisticsReport.pdf');
+            return $pdf->download('VendorThroughTakenMaterialReport.pdf');
         }
 
         // Excel Export
         if ($request->filled('export_type') && $request->export_type == 2) {
-            return Excel::download(new SecurityReportExport($data['data']), 'LogisticsReport.xlsx');
+            return Excel::download(new VendorThroughTakenMaterialListDetailsReport($data['data']), 'VendorThroughTakenMaterialReport.xlsx');
         }
 
         // Normal AJAX response
@@ -967,7 +1003,8 @@ public function listStockDailyReportAjax(Request $request)
         return response()->json([
             'status' => true,
             'data' => $response['data'],
-            'pagination' => $response['pagination']
+            'pagination' => $response['pagination'],
+            'totals' => $response['totals'] ?? ['received'=>0,'issue'=>0,'balance'=>0],
         ]);
     } catch (\Exception $e) {
         return response()->json(['status' => false, 'message' => $e->getMessage()]);

@@ -117,7 +117,7 @@
                                                         <label for="po_date">PO Date :</label>
                                                         <!-- <input type="date" class="form-control" id="po_date"
                                                                 name="po_date" placeholder="Enter PO Date"> -->
-                                                        <input type="date" class="form-control" id="po_date"
+                                                        <input type="text" class="form-control" id="po_date"
                                                             name="po_date" placeholder="Enter PO Date"
                                                             value="{{ $purchase_order_data->created_at->format('d-m-Y') }}"
                                                             readonly>
@@ -134,7 +134,7 @@
                                                         <label for="grn_date">GRN Date:</label>
                                                         <input type="date" class="form-control" id="grn_date"
                                                             name="grn_date" placeholder="Enter GRN Date"
-                                                            value="{{ date('Y-m-d') }}" readonly>
+                                                            value="{{ $gatepass_data->grn_date }}" readonly>
 
                                                     </div>
                                                 </div>

@@ -7,7 +7,7 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Design Sent For Production <span class="table-project-n"></span></h1>
+                                <h1>Design Sent For Estimation <span class="table-project-n"></span></h1>
                             </div>
                         </div>                      
                         <div class="sparkline13-graph">
@@ -28,7 +28,7 @@
                                                 <th data-field="bom_image" data-editable="false">BOM</th>
                                                 <th data-field="design_image_re" data-editable="false">Revised Design Layout
                                                 </th>
-                                                <th data-field="bom_image_re" data-editable="false">Revised BOM</th>
+                                                <th data-field="re_bom_image" data-editable="false">Estimation BOM</th>
                                             </tr>
                                         </thead>
                                         <tbody>

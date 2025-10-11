@@ -67,7 +67,9 @@ class RejectedChalanController extends Controller
                     'grn_tbl.grn_date'
                 )
                 ->first();
-                $po_id = $purchase_order_data->id;              
+                $po_id = $purchase_order_data->id;       
+                
+               
                      $purchase_order_details_data = GrnPOQuantityTracking::leftJoin('tbl_part_item', function ($join) {
                 $join->on('tbl_grn_po_quantity_tracking.part_no_id', '=', 'tbl_part_item.id');
               })

@@ -1162,14 +1162,14 @@ public function loadDesignSubmittedForProductionBusinessWise($business_id){ //ch
                 $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
             })
             ->leftJoin('design_revision_for_prod', function ($join) {
-                $join->on('designs.id', '=', 'design_revision_for_prod.design_id');
+                $join->on('business_application_processes.business_details_id','=', 'design_revision_for_prod.business_details_id');
             })
             ->leftJoin('businesses', function ($join) {
                 $join->on('businesses_details.business_id', '=', 'businesses.id');
             }) 
-            // ->where('businesses_details.business_id', $decoded_business_id)
+            ->where('businesses_details.business_id', $decoded_business_id)
             // ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
-            // ->where('business_application_processes.design_send_to_estimation',$send_estimation)
+            ->where('business_application_processes.design_send_to_estimation',$send_estimation)
             ->whereNull('business_application_processes.owner_bom_accepted')
             ->where('businesses_details.is_active', true)
             ->where('businesses_details.is_deleted', 0)
@@ -1183,6 +1183,7 @@ public function loadDesignSubmittedForProductionBusinessWise($business_id){ //ch
                 'businesses_details.quantity',
                 'businesses_details.description',
                 'businesses.remarks',
+                
                 DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'),
                 DB::raw('MAX(designs.bom_image) as bom_image'),
                 DB::raw('MAX(designs.design_image) as design_image'),
@@ -1784,6 +1785,7 @@ public function listLoginHistory() {
             'login_history.latitude',
                 'login_history.longitude',
                  'login_history.location_address',
+                 'login_history.ip_address',
                   'login_history.updated_at',
 						)
         ->get();

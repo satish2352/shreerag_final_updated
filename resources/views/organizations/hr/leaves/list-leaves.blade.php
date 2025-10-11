@@ -115,7 +115,7 @@
                                                                             aria-hidden="true"></i>
                                                                     </button>
                                                                 </a>
-                                                                <a
+                                                                {{-- <a
                                                                     href="{{ route('delete-leaves', base64_encode($data->id)) }}">
                                                                     <button data-toggle="tooltip" title="Trash"
                                                                         class="pd-setting-ed"
@@ -123,7 +123,22 @@
                                                             border: 1px solid;">
                                                                         <i class="fa fa-trash" aria-hidden="true"></i>
                                                                     </button>
-                                                                </a>
+                                                                </a> --}}
+
+                                                                {{-- <button data-toggle="tooltip" title="Trash"
+                                                        class="pd-setting-ed delete-btn"
+                                                        data-url="{{ route('delete-leaves', base64_encode($data->id)) }}"
+                                                        style="color: red; border: 1px solid;">
+                                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                                    </button> --}}
+                                                    <form class="delete-form" action="{{ route('delete-leaves', base64_encode($data->id)) }}" method="POST" style="display:inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" class="pd-setting-ed delete-btn" style="color: red; border: 1px solid;" title="Delete">
+                                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                                        </button>
+                                                    </form>
+
                                                             @else
                                                                 <button data-toggle="tooltip" title="Edit"
                                                                     class="pd-setting-ed" disabled>
@@ -149,4 +164,28 @@
         </div>
     </div>
      <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function() {
+        $('.delete-btn').click(function(e) {
+            e.preventDefault();
+            var url = $(this).data('url');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            });
+        });
+    });
+</script>
+
 @endsection

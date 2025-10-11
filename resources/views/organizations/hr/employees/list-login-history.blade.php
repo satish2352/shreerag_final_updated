@@ -34,6 +34,7 @@
                                                 <th>latitude</th>
                                                 <th>longitude</th>
                                                   <th>Location Address</th>
+                                                   <th>IP Address</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -51,6 +52,7 @@
                                                     <td>{{ $item->latitude }}</td>
                                                     <td>{{ $item->longitude }}</td>
                                                      <td>{{ $item->location_address }}</td>
+                                                      <td>{{ $item->ip_address }}</td>
                                                               {{-- <td class="d-flex">
                                                         <div style="display: flex; align-items: center;">
                                                             <a href="{{ route('show-login-history', base64_encode($item->id)) }} "><button

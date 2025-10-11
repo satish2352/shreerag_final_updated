@@ -175,7 +175,7 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                                @if (session('role_id') === 9)
+                                                @if (session('role_id') == 9)
                                                 {{-- Change Password --}}
                                                 <div class="col-lg-6 col-md-6 col-sm-6">
                                                     <div class="form-group">

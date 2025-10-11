@@ -35,7 +35,7 @@
 </head>
 
 <body>
-    <h3 style="text-align:center;">Design Report</h3>
+    <h3 style="text-align:center;">Security Report</h3>
     <table>
         <thead>
             <tr>

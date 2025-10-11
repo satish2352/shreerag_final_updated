@@ -568,9 +568,13 @@ public function getSecurityReport(Request $request)
             });
         }
 
+        if ($request->filled('vendor_name')) {
+            $query->where('vendors.id', $request->vendor_name);
+        }
+
         if ($request->filled('purchase_orders_id')) {
             $query->where('purchase_orders.purchase_orders_id', $request->purchase_orders_id);
-        }
+        }       
         if ($request->filled('from_date')) {
             $query->whereDate('gatepass.gatepass_date', '>=', $request->from_date);
         }
@@ -633,31 +637,135 @@ public function getSecurityReport(Request $request)
         ]);
     }
 }
+// public function getGRNReport(Request $request)
+// {
+//     try {
+//         $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
+//             $query = PurchaseOrdersModel::leftJoin('grn_tbl', 'purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id')
+//                 ->leftJoin('businesses_details', 'purchase_orders.business_details_id', '=', 'businesses_details.id')
+//                 ->leftJoin('purchase_order_details', 'purchase_orders.id', '=', 'purchase_order_details.purchase_id')
+//                 ->leftJoin('tbl_grn_po_quantity_tracking', 'purchase_orders.id', '=', 'tbl_grn_po_quantity_tracking.purchase_order_id')
+//                 ->leftJoin('vendors', 'purchase_orders.vendor_id', '=', 'vendors.id')
+//                 ->where('businesses_details.is_deleted', 0);
+               
+//         if ($request->filled('search')) {
+//             $search = $request->search;
+//             $query->where(function ($q) use ($search) {
+//                 $q->Where('businesses_details.product_name', 'like', "%{$search}%")
+//                 ->orWhere('vendors.vendor_name', 'like', "%{$search}%") 
+//                  ->orWhere('vendors.vendor_company_name', 'like', "%{$search}%")      
+//                    ->orWhere('purchase_orders.purchase_orders_id', 'like', "%{$search}%");           
+//             });
+//         }
+
+//         if ($request->filled('vendor_name')) {
+//             $query->where('vendors.id', $request->vendor_name);
+//         }
+//         if ($request->filled('purchase_orders_id')) {
+//             $query->where('purchase_orders.purchase_orders_id', $request->purchase_orders_id);
+//         }
+//         if ($request->filled('from_date')) {
+//             $query->whereDate('grn_tbl.created_at', '>=', $request->from_date);
+//         }
+
+//         if ($request->filled('to_date')) {
+//             $query->whereDate('grn_tbl.created_at', '<=', $request->to_date);
+//         }
+
+//         if ($request->filled('year')) {
+//             $query->whereYear('grn_tbl.updated_at', $request->year);
+//         }
+
+//         if ($request->filled('month')) {
+//             $query->whereMonth('grn_tbl.updated_at', $request->month);
+//         }
+//         $query->select(
+//                     'purchase_orders.business_details_id',
+//                     'purchase_orders.purchase_orders_id',
+//                     'tbl_grn_po_quantity_tracking.grn_id', 
+//                     'businesses_details.product_name', 
+//                     'businesses_details.description',
+//                     'grn_tbl.updated_at',
+//                     'grn_tbl.grn_no_generate',
+//                     'vendors.vendor_name',
+//                     'vendors.vendor_company_name',
+                    
+//                     'tbl_grn_po_quantity_tracking.grn_id as tracking_grn_id' // GRN ID from tracking table
+//                 )->groupBy(
+//                     'purchase_orders.purchase_orders_id',
+//                     'tbl_grn_po_quantity_tracking.grn_id',
+//                     'purchase_orders.business_details_id',
+//                     'businesses_details.product_name',
+//                     'businesses_details.description',
+//                    'grn_tbl.updated_at',
+//                     'grn_tbl.grn_no_generate',
+//                     'vendors.vendor_name',
+//                     'vendors.vendor_company_name',
+//                 )->orderBy('tbl_grn_po_quantity_tracking.grn_id', 'desc')
+//                 ->get(); 
+
+//         // ✅ Export data (no pagination)
+//         if ($request->filled('export_type')) {
+//             return [
+//                 'data' => $query->get(),
+//                 'pagination' => null,
+//             ];
+//         }
+
+//         // ✅ Paginated data
+//         $perPage = $request->input('pageSize', 10);
+//         $currentPage = $request->input('currentPage', 1);
+//         $totalItems = (clone $query)->count();
+
+//         $data = (clone $query)
+//             ->skip(($currentPage - 1) * $perPage)
+//             ->take($perPage)
+//             ->get();
+
+//         return [
+//             'data' => $data,
+//             'pagination' => [
+//                 'currentPage' => $currentPage,
+//                 'pageSize' => $perPage,
+//                 'totalItems' => $totalItems,
+//                 'totalPages' => ceil($totalItems / $perPage),
+//                 'from' => ($currentPage - 1) * $perPage + 1,
+//                 'to' => (($currentPage - 1) * $perPage) + count($data),
+//             ]
+//         ];
+//     } catch (\Exception $e) {
+//     throw $e; // Let controller handle it
+// }
+// }
 public function getGRNReport(Request $request)
 {
     try {
         $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
-            $query = PurchaseOrdersModel::leftJoin('grn_tbl', 'purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id')
-                ->leftJoin('businesses_details', 'purchase_orders.business_details_id', '=', 'businesses_details.id')
-                ->leftJoin('purchase_order_details', 'purchase_orders.id', '=', 'purchase_order_details.purchase_id')
-                ->leftJoin('tbl_grn_po_quantity_tracking', 'purchase_orders.id', '=', 'tbl_grn_po_quantity_tracking.purchase_order_id')
-                ->leftJoin('vendors', 'purchase_orders.vendor_id', '=', 'vendors.id')
-                // ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
-                // ->where('businesses_details.id', $id)
-                ->where('businesses_details.is_deleted', 0);
-               
-              
 
+        $query = PurchaseOrdersModel::leftJoin('grn_tbl', 'purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id')
+            ->leftJoin('businesses_details', 'purchase_orders.business_details_id', '=', 'businesses_details.id')
+            ->leftJoin('purchase_order_details', 'purchase_orders.id', '=', 'purchase_order_details.purchase_id')
+            ->leftJoin('tbl_grn_po_quantity_tracking', 'purchase_orders.id', '=', 'tbl_grn_po_quantity_tracking.purchase_order_id')
+            ->leftJoin('vendors', 'purchase_orders.vendor_id', '=', 'vendors.id')
+            ->where('businesses_details.is_deleted', 0);
 
+        // 🔹 Filters
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->Where('businesses_details.product_name', 'like', "%{$search}%");                    
+                $q->where('businesses_details.product_name', 'like', "%{$search}%")
+                  ->orWhere('vendors.vendor_name', 'like', "%{$search}%")
+                  ->orWhere('vendors.vendor_company_name', 'like', "%{$search}%")
+                  ->orWhere('purchase_orders.purchase_orders_id', 'like', "%{$search}%");
             });
         }
 
         if ($request->filled('vendor_name')) {
             $query->where('vendors.id', $request->vendor_name);
+        }
+
+        if ($request->filled('purchase_orders_id')) {
+            $query->where('purchase_orders.purchase_orders_id', $request->purchase_orders_id);
         }
 
         if ($request->filled('from_date')) {
@@ -675,35 +783,34 @@ public function getGRNReport(Request $request)
         if ($request->filled('month')) {
             $query->whereMonth('grn_tbl.updated_at', $request->month);
         }
- 
 
-
+        // 🔹 Select & GroupBy
         $query->select(
-                    'purchase_orders.business_details_id',
-                    'purchase_orders.purchase_orders_id',
-                    'tbl_grn_po_quantity_tracking.grn_id', 
-                    'businesses_details.product_name', 
-                    'businesses_details.description',
-                    'grn_tbl.updated_at',
-                    'grn_tbl.grn_no_generate',
-                    'vendors.vendor_name',
-                    'vendors.vendor_company_name',
-                    
-                    'tbl_grn_po_quantity_tracking.grn_id as tracking_grn_id' // GRN ID from tracking table
-                )->groupBy(
-                    'purchase_orders.purchase_orders_id',
-                    'tbl_grn_po_quantity_tracking.grn_id',
-                    'purchase_orders.business_details_id',
-                    'businesses_details.product_name',
-                    'businesses_details.description',
-                   'grn_tbl.updated_at',
-                    'grn_tbl.grn_no_generate',
-                    'vendors.vendor_name',
-                    'vendors.vendor_company_name',
-                )->orderBy('tbl_grn_po_quantity_tracking.grn_id', 'desc')
-                ->get(); 
+            'purchase_orders.business_details_id',
+            'purchase_orders.purchase_orders_id',
+            'tbl_grn_po_quantity_tracking.grn_id',
+            'businesses_details.product_name',
+            'businesses_details.description',
+            'grn_tbl.updated_at',
+            'grn_tbl.grn_no_generate',
+            'vendors.vendor_name',
+            'vendors.vendor_company_name',
+            'tbl_grn_po_quantity_tracking.grn_id as tracking_grn_id'
+        )
+        ->groupBy(
+            'purchase_orders.purchase_orders_id',
+            'tbl_grn_po_quantity_tracking.grn_id',
+            'purchase_orders.business_details_id',
+            'businesses_details.product_name',
+            'businesses_details.description',
+            'grn_tbl.updated_at',
+            'grn_tbl.grn_no_generate',
+            'vendors.vendor_name',
+            'vendors.vendor_company_name',
+        )
+        ->orderBy('tbl_grn_po_quantity_tracking.grn_id', 'desc');
 
-        // ✅ Export data (no pagination)
+        // 🔹 Export
         if ($request->filled('export_type')) {
             return [
                 'data' => $query->get(),
@@ -711,15 +818,14 @@ public function getGRNReport(Request $request)
             ];
         }
 
-        // ✅ Paginated data
+        // 🔹 Pagination
         $perPage = $request->input('pageSize', 10);
         $currentPage = $request->input('currentPage', 1);
-        $totalItems = (clone $query)->count();
+        $totalItems = $query->count();
 
-        $data = (clone $query)
-            ->skip(($currentPage - 1) * $perPage)
-            ->take($perPage)
-            ->get();
+        $data = $query->skip(($currentPage - 1) * $perPage)
+                      ->take($perPage)
+                      ->get();
 
         return [
             'data' => $data,
@@ -732,10 +838,12 @@ public function getGRNReport(Request $request)
                 'to' => (($currentPage - 1) * $perPage) + count($data),
             ]
         ];
+
     } catch (\Exception $e) {
-    throw $e; // Let controller handle it
+        throw $e;
+    }
 }
-}
+
 public function getConsumptionReport(Request $request)
 {
     try {
@@ -1054,7 +1162,7 @@ public function listLogisticsReport(Request $request)
             });
         }
 
-        // 📁 Filter by Project
+        // Filter by Project
         if ($request->filled('project_name')) {
             $query->where('businesses.id', $request->project_name);
         }
@@ -2044,7 +2152,16 @@ public function getStockItem($request)
                 $join->on('tbl_part_item.rack_id', '=', 'tbl_rack_master.id');
             });
 
-        // 🗓️ Date filters — make sure to use correct table columns, not tbl_dispatch
+           // Search filter
+            if ($request->filled('search')) {
+                $s = $request->search;
+                $query->where(function ($q) use ($s) {
+                    $q->where('tbl_part_item.description', 'like', "%{$s}%")
+                        ->orWhere('tbl_item_stock.quantity', 'like', "%{$s}%")
+                        ->orWhere('tbl_hsn.name', 'like', "%{$s}%");
+                });
+            }
+        //  Date filters — make sure to use correct table columns, not tbl_dispatch
         if ($request->filled('from_date')) {
             $query->whereDate('tbl_item_stock.updated_at', '>=', $request->from_date);
         }
@@ -2343,6 +2460,12 @@ public function listStockDailyReport($request)
     'tbl_grn_po_quantity_tracking.quantity as received_quantity',
     'tbl_grn_po_quantity_tracking.updated_at as received_updated_at'
 );
+
+   // 📄 Calculate totals for filtered data
+        $totalReceived = (clone $query)->sum('tbl_grn_po_quantity_tracking.quantity');
+        $totalIssue = (clone $query)->sum('production_details.quantity');
+        $totalBalance = (clone $query)->sum('tbl_item_stock.quantity');
+
         if ($request->filled('export_type')) {
             return [
                 'status' => true,
@@ -2372,8 +2495,16 @@ public function listStockDailyReport($request)
                 'totalPages' => ceil($totalItems / $perPage),
                 'from' => ($currentPage - 1) * $perPage + 1,
                 'to' => min($currentPage * $perPage, $totalItems),
+            ],
+            'totals' => [
+                'received' => $totalReceived,
+                'issue' => $totalIssue,
+                'balance' => $totalBalance,
             ]
+
+           
         ];
+      
     } catch (\Exception $e) {
         return [
             'status' => false,

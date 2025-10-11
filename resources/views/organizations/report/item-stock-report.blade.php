@@ -14,13 +14,13 @@
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
 
-                                <form id="filterForm" method="GET" action="{{ route('list-production-report') }}">
+                                <form id="filterForm" method="GET" action="{{ route('stock-daily-report') }}">
 
                                     <input type="hidden" name="export_type" id="export_type" />
                                     <div class="row mb-5">
                                         <div class="col-md-2">
-                                            <label>Project Name</label>
-                                            <select class="form-control select2" name="project_name">
+                                            <label>Part Item</label>
+                                            <select class="form-control select2" name="description">
                                                 <option value="">All Part Item</option>
                                                 @foreach ($getPartItemName as $id => $name)
                                                     <option value="{{ $id }}">{{ $name }}</option>
@@ -153,6 +153,10 @@
             return '-';
         }
 
+        
+        // let currentPage = 1;
+        // const pageSize = 10;
+
         function fetchReport(reset = false) {
             if (reset) currentPage = 1;
 
@@ -174,47 +178,162 @@
 
                     if (res.status) {
                         document.getElementById('totalCount').innerText = res.pagination.totalItems || 0;
-                        const rows = res.data.map((item, i) => {
-                            return `
-        <tr>
-            <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
-            <td>${item.issue_updated_at ? new Date(item.issue_updated_at).toLocaleDateString('en-IN') : '-'}</td>
-            <td>${item.received_updated_at ? new Date(item.received_updated_at).toLocaleDateString('en-IN') : '-'}</td>
-            <td>${item.description || '-'}</td>
-            <td>${item.received_quantity || '-'}</td>
-             <td>${item.issue_quantity || '-'}</td>            
-            <td>${item.balance_quantity || '-'}</td>
-           
-                           
-        </tr>
-    `;
-                        }).join('');
-                        tbody.innerHTML = rows || '<tr><td colspan="6">No records found.</td></tr>';
+
+                        if (res.data.length > 0) {
+                            let rows = '';
+                            res.data.forEach((item, i) => {
+                                rows += `
+                                    <tr>
+                                        <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
+                                        <td>${item.issue_updated_at ? new Date(item.issue_updated_at).toLocaleDateString('en-IN') : '-'}</td>
+                                        <td>${item.received_updated_at ? new Date(item.received_updated_at).toLocaleDateString('en-IN') : '-'}</td>
+                                        <td>${item.description || '-'}</td>
+                                        <td>${item.received_quantity || '-'}</td>
+                                        <td>${item.issue_quantity || '-'}</td>
+                                        <td>${item.balance_quantity || '-'}</td>
+                                    </tr>
+                                `;
+                            });
+
+                            // Totals row
+                            const totals = res.totals;
+                            const totalsRow = `
+                                <tr style="font-weight:bold; background:#f2f2f2;">
+                                    <td colspan="4" style="text-align:right;">Total:</td>
+                                    <td>${totals.received}</td>
+                                    <td>${totals.issue}</td>
+                                    <td>${totals.balance}</td>
+                                </tr>
+                            `;
+
+                            tbody.innerHTML = rows + totalsRow;
+
+                        } else {
+                            tbody.innerHTML = '<tr><td colspan="7">No records found.</td></tr>';
+                        }
 
                         // Pagination
-                        let pagHtml = '',
-                            totalPages = res.pagination.totalPages;
-                        let start = Math.max(1, currentPage - 2),
-                            end = Math.min(totalPages, start + 4);
+                        const totalPages = res.pagination.totalPages;
+                        let pagHtml = '';
+                        let start = Math.max(1, currentPage - 2);
+                        let end = Math.min(totalPages, start + 4);
 
-                        if (start > 1) pagHtml +=
-                            `<li><a class="page-link" onclick="goToPage(1)">1</a></li><li>...</li>`;
+                        if (start > 1) pagHtml += `<li><a class="page-link" onclick="goToPage(1)">1</a></li><li>...</li>`;
                         for (let i = start; i <= end; i++) {
-                            pagHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
-                                    <a class="page-link" onclick="goToPage(${i})">${i}</a>
-                                </li>`;
+                            pagHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" onclick="goToPage(${i})">${i}</a></li>`;
                         }
-                        if (end < totalPages) pagHtml +=
-                            `<li>...</li><li><a class="page-link" onclick="goToPage(${totalPages})">${totalPages}</a></li>`;
+                        if (end < totalPages) pagHtml += `<li>...</li><li><a class="page-link" onclick="goToPage(${totalPages})">${totalPages}</a></li>`;
 
                         pagLinks.innerHTML = pagHtml;
-                        pagInfo.innerHTML =
-                            `Showing ${res.pagination.from} to ${res.pagination.to} of ${res.pagination.totalItems}`;
+                        pagInfo.innerHTML = `Showing ${res.pagination.from} to ${res.pagination.to} of ${res.pagination.totalItems}`;
+
                     } else {
-                        tbody.innerHTML = '<tr><td colspan="6">Failed to fetch data.</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="7">Failed to fetch data.</td></tr>';
                     }
                 });
         }
+
+        function goToPage(page) {
+            currentPage = page;
+            fetchReport();
+        }
+
+        document.getElementById('filterForm').addEventListener('submit', e => {
+            e.preventDefault();
+            fetchReport(true);
+        });
+
+        document.getElementById('searchKeyword').addEventListener('input', () => fetchReport(true));
+
+        document.getElementById('exportPdf').addEventListener('click', () => {
+            document.getElementById('export_type').value = 1;
+            document.getElementById('filterForm').submit();
+        });
+
+        document.getElementById('exportExcel').addEventListener('click', () => {
+            document.getElementById('export_type').value = 2;
+            document.getElementById('filterForm').submit();
+        });
+
+        // Initial load
+        fetchReport(true);
+    
+    //     function fetchReport(reset = false) {
+    //         if (reset) currentPage = 1;
+
+    //         const form = document.getElementById('filterForm');
+    //         const formData = new FormData(form);
+    //         formData.append('pageSize', pageSize);
+    //         formData.append('currentPage', currentPage);
+    //         formData.append('search', document.getElementById('searchKeyword').value);
+
+    //         const params = new URLSearchParams();
+    //         formData.forEach((val, key) => params.append(key, val));
+
+    //         fetch(`{{ route('stock-daily-report-ajax') }}?${params.toString()}`)
+    //             .then(res => res.json())
+    //             .then(res => {
+    //                 const tbody = document.getElementById('reportBody');
+    //                 const pagLinks = document.getElementById('paginationLinks');
+    //                 const pagInfo = document.getElementById('paginationInfo');
+
+    //                 if (res.status) {
+    //                     document.getElementById('totalCount').innerText = res.pagination.totalItems || 0;
+    //                     const rows = res.data.map((item, i) => {
+    //                         return `
+    //     <tr>
+    //         <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
+    //         <td>${item.issue_updated_at ? new Date(item.issue_updated_at).toLocaleDateString('en-IN') : '-'}</td>
+    //         <td>${item.received_updated_at ? new Date(item.received_updated_at).toLocaleDateString('en-IN') : '-'}</td>
+    //         <td>${item.description || '-'}</td>
+    //         <td>${item.received_quantity || '-'}</td>
+    //          <td>${item.issue_quantity || '-'}</td>            
+    //         <td>${item.balance_quantity || '-'}</td>
+           
+                           
+    //     </tr>
+    // `;
+    //                     }).join('');
+
+    //                       // ✅ Totals row
+    //             const totals = res.totals;
+    //             const totalsRow = `
+    //                 <tr style="font-weight:bold; background:#f2f2f2;">
+    //                     <td colspan="4" style="text-align:right;">Total:</td>
+    //                     <td>${totals.received}</td>
+    //                     <td>${totals.issue}</td>
+    //                     <td>${totals.balance}</td>
+    //                 </tr>
+    //             `;
+
+    //             tbody.innerHTML = rows + totalsRow;
+                
+    //                     tbody.innerHTML = rows || '<tr><td colspan="6">No records found.</td></tr>';
+
+    //                     // Pagination
+    //                     let pagHtml = '',
+    //                         totalPages = res.pagination.totalPages;
+    //                     let start = Math.max(1, currentPage - 2),
+    //                         end = Math.min(totalPages, start + 4);
+
+    //                     if (start > 1) pagHtml +=
+    //                         `<li><a class="page-link" onclick="goToPage(1)">1</a></li><li>...</li>`;
+    //                     for (let i = start; i <= end; i++) {
+    //                         pagHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+    //                                 <a class="page-link" onclick="goToPage(${i})">${i}</a>
+    //                             </li>`;
+    //                     }
+    //                     if (end < totalPages) pagHtml +=
+    //                         `<li>...</li><li><a class="page-link" onclick="goToPage(${totalPages})">${totalPages}</a></li>`;
+
+    //                     pagLinks.innerHTML = pagHtml;
+    //                     pagInfo.innerHTML =
+    //                         `Showing ${res.pagination.from} to ${res.pagination.to} of ${res.pagination.totalItems}`;
+    //                 } else {
+    //                     tbody.innerHTML = '<tr><td colspan="6">Failed to fetch data.</td></tr>';
+    //                 }
+    //             });
+    //     }
 
         function goToPage(page) {
             currentPage = page;

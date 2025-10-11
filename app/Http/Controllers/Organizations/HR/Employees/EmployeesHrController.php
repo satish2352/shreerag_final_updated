@@ -172,8 +172,11 @@ class EmployeesHrController extends Controller
 
     }
 
-    public function editUsers( Request $request ) {
+    public function editUsers($id, Request $request ) {
+         $request->merge(['edit_id' => $id]);
+         
         $user_data = $this->service->editUsers( $request );
+      
         return view( 'organizations.hr.employees.edit-employees', compact( 'user_data' ) );
     }
 

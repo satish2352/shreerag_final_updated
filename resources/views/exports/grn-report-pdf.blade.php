@@ -31,10 +31,10 @@
                 <th>Sr.No</th>
                 <th>Issue Date</th>
                  <th>Received Date</th>
-                <th>Entry No/Particulars</th>
-                <th>Received Qty</th>
-                <th>Issue Qty</th>
-                <th>Balance Qty</th>
+                <th>Project Name</th>
+                <th>PO Number</th>
+                <th>Customer Name</th>
+                <th>Product Name</th>
             
             </tr>
         </thead>
@@ -47,8 +47,8 @@
                      <td>{{ $row['received_updated_at'] ?? '-' }}</td>
                     <td>{{ ucwords($row['description'] ?? '-') }}</td>
                     <td>{{ $row['received_quantity'] ?? '-' }}</td>
-                    <td>{{ $row['issue_quantity'] ?? '-' }}</td>
                     <td>{{ $row['balance_quantity'] ?? '-' }}</td>
+                    <td>{{ $row['used_quantity'] ?? '-' }}</td>
                   
                 </tr>
             @endforeach

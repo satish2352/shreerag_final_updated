@@ -1,70 +1,62 @@
-<!DOCTYPE html>
-<html>
+@php
+    // ✅ Get totals dynamically from data
+    $totalReceived = $data->sum('received_quantity');
+    $totalIssue = $data->sum('issue_quantity');
+    $totalBalance = $data->sum('balance_quantity');
+    $totalCount = $data->count();
+@endphp
 
-<head>
-    <style>
-        @page {
-            size: A3 landscape;
-            margin: 10px;
-        }
+<h3>Item Stock Report</h3>
+<p><strong>Total Records: {{ $totalCount }}</strong></p>
 
-        table {
-            width: 100%;
-            table-layout: fixed;
-            border-collapse: collapse;
-            font-size: 10px;
-            word-wrap: break-word;
-        }
-
-        th,
-        td {
-            border: 1px solid black;
-            padding: 4px;
-            text-align: left;
-        }
-
-        body {
-            font-family: sans-serif;
-        }
-
-        /* body { font-family: sans-serif; font-size: 12px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #000; padding: 5px; text-align: center; }
-        th { background-color: #f2f2f2; } */
-    </style>
-</head>
-
-<body>
-    <h3 style="text-align:center;">Item Stock Report</h3>
-    <table>
-        <thead>
+<table>
+    <thead>
+        <tr>
+            <th style="width: 4%;">Sr No.</th>
+            <th style="width: 10%;">Issue Date</th>
+            <th style="width: 10%;">Received Date</th>
+            <th style="width: 25%;">Entry No / Particulars</th>
+            <th style="width: 10%;">Received Qty</th>
+            <th style="width: 10%;">Issue Qty</th>
+            <th style="width: 10%;">Balance Qty</th>
+            <th style="width: 8%;">Unit</th>
+            <th style="width: 8%;">HSN</th>
+            <th style="width: 8%;">Group</th>
+            <th style="width: 8%;">Rack No.</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($data as $index => $row)
+            @php
+                $issueDate = $row['issue_updated_at'] 
+                    ? \Carbon\Carbon::parse($row['issue_updated_at'])->format('d-m-Y H:i') 
+                    : '-';
+                $receivedDate = $row['received_updated_at'] 
+                    ? \Carbon\Carbon::parse($row['received_updated_at'])->format('d-m-Y H:i') 
+                    : '-';
+            @endphp
             <tr>
-                <th style="width: 4%;">Sr No.</th>
-                <th style="width: 30px;">Date</th>
-                <th style="width: 100px;">Item Name</th>
-                <th style="width: 120px;">Stock</th>
-                <th style="width: 100px;">Unit</th>
-                <th style="width: 100px;">HSN</th>
-                <th style="width: 100px;">Group</th>
-                 <th style="width: 100px;">Rack No.</th>
+                <td>{{ $loop->iteration }}</td>
+                <td>{{ $issueDate }}</td>
+                <td>{{ $receivedDate }}</td>
+                <td>{{ ucwords($row['description'] ?? '-') }}</td>
+                <td>{{ $row['received_quantity'] ?? 0 }}</td>
+                <td>{{ $row['issue_quantity'] ?? 0 }}</td>
+                <td>{{ $row['balance_quantity'] ?? 0 }}</td>
+                <td>{{ $row['unit_name'] ?? '-' }}</td>
+                <td>{{ $row['hsn_name'] ?? '-' }}</td>
+                <td>{{ $row['group_name'] ?? '-' }}</td>
+                <td>{{ $row['rack_name'] ?? '-' }}</td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach ($data as $index => $row)
-                <tr>
-
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ ucwords($row['updated_at'] ?? '-') }}</td>
-                    <td>{{ ucwords($row['description'] ?? '-') }}</td>
-                    <td>{{ $row['quantity'] ?? '-' }}</td>
-                    <td>{{ $row['unit_name'] ?? '-' }}</td>
-                    <td>{{ $row['hsn_name'] ?? '-' }}</td>
-                    <td>{{ $row['group_name'] ?? '-' }}</td>
-                       <td>{{ $row['rack_name'] ?? '-' }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-</body>
-
-</html>
+        @endforeach
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4" style="text-align:right;">Total:</td>
+            <td>{{ $totalReceived }}</td>
+            <td>{{ $totalIssue }}</td>
+            <td>{{ $totalBalance }}</td>
+            <td colspan="4"></td>
+        </tr>
+    </tfoot>
+</table>

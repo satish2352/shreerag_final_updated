@@ -17,11 +17,11 @@ class GRNReportExport implements FromCollection, WithHeadings
         return $this->data->map(function ($item) {
             return [
                 $item['updated_at'],
-                //  $item['production_status_id'],
-                // $item['project_name'],
-                // $item['customer_po_number'],
-                // $item['product_name'],
-                // $item['description'],
+                 $item['vendor_name'],
+                $item['purchase_orders_id'],
+                $item['gatepass_name'],
+                $item['remark'],
+                
             ];
         });
     }
@@ -30,11 +30,10 @@ class GRNReportExport implements FromCollection, WithHeadings
     {
         return [
             'Date',
-            // 'Status',
-            // 'Project Name',
-            // 'Customer PO Number',
-            // 'Product Name',
-            // 'Description',
+            'Vendor Name',
+            'PO Number',
+            'Gatepass Name',
+            'Remarks',
         ];
     }
 }

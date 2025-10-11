@@ -109,65 +109,109 @@ class EmployeesHrRepository  {
 	}
 	
 
-    public function editUsers($reuest){
+//     public function editUsers($reuest){
 
-		$data_users = [];
+// 		$data_users = [];
 
-		$data_users['roles'] = RolesModel::where('is_active', true)
-			->select('id', 'role_name')
-			->get()
-			->toArray();
-
+// 		$data_users['roles'] = RolesModel::where('is_active', true)
+// 			->select('id', 'role_name')
+// 			->get()
+// 			->toArray();
 	
-			$data_users_data = User::join('tbl_roles', function ($join) {
-				$join->on('users.role_id', '=', 'tbl_roles.id');
-			})
-			// ->where('users.id', '=', base64_decode($reuest->edit_id))
-			->select(
-				'tbl_roles.id as role_id',
-				'users.u_password',
-				'users.u_email',
-				'users.f_name',
-				'users.m_name',
-				'users.l_name',
-				'users.number',
-				'users.designation',
-				'users.address',
-				'users.state',
-				'users.city',
-				'users.pincode',
-				'users.id',
-				'users.is_active',
-			)->get()
-			->toArray();
-// 		dd($data_users_data);
-// die();
-	      $data_users_data = User::join('tbl_roles', function($join) {
-						$join->on('users.role_id', '=', 'tbl_roles.id');
-					})
-					->where('users.id','=',base64_decode($reuest->edit_id))
-					->select('tbl_roles.id as role_id',
-							'users.u_password',
-							'users.u_email',
-							'users.f_name',
-							'users.m_name',
-							'users.l_name',
-							'users.number',
-							'users.designation',
-							'users.address',
-							'users.state',
-							'users.city',
-							'users.pincode',
-							'users.id',
-							'users.is_active',
-						)->get()
-						->toArray();
-						
-		$data_users['data_users'] = $data_users_data[0];
-		
+	
+// 			$data_users_data = User::join('tbl_roles', function ($join) {
+// 				$join->on('users.role_id', '=', 'tbl_roles.id');
+// 			})
+// 			// ->where('users.id', '=', base64_decode($reuest->edit_id))
+// 			->select(
+// 				'tbl_roles.id as role_id',
+// 				'users.u_password',
+// 				'users.u_email',
+// 				'users.f_name',
+// 				'users.m_name',
+// 				'users.l_name',
+// 				'users.number',
+// 				'users.designation',
+// 				'users.address',
+// 				'users.state',
+// 				'users.city',
+// 				'users.pincode',
+// 				'users.id',
+// 				'users.is_active',
+// 			)->get()
+// 			->toArray();
+// // 		dd($data_users_data);
+// // die();
+// 	      $data_users_data = User::join('tbl_roles', function($join) {
+// 						$join->on('users.role_id', '=', 'tbl_roles.id');
+// 					})
+// 					->where('users.id','=',base64_decode($reuest->edit_id))
+// 					->select('tbl_roles.id as role_id',
+// 							'users.u_password',
+// 							'users.u_email',
+// 							'users.f_name',
+// 							'users.m_name',
+// 							'users.l_name',
+// 							'users.number',
+// 							'users.designation',
+// 							'users.address',
+// 							'users.state',
+// 							'users.city',
+// 							'users.pincode',
+// 							'users.id',
+// 							'users.is_active',
+// 						)->get()
+// 						->toArray();
+								
+// 		$data_users['data_users'] = $data_users_data[0];
+	
 
-		return $data_users;
-	}
+// 		return $data_users;
+// 	}
+public function editUsers($request)
+{
+    $data_users = [];
+
+    $data_users['roles'] = RolesModel::where('is_active', true)
+        ->select('id', 'role_name')
+        ->get()
+        ->toArray();
+
+    $userId = base64_decode($request->edit_id ?? '');
+    if (empty($userId)) {
+        throw new \Exception('Missing user ID.');
+    }
+
+    $data_users_data = User::join('tbl_roles', function ($join) {
+            $join->on('users.role_id', '=', 'tbl_roles.id');
+        })
+        ->where('users.id', '=', $userId)
+        ->select(
+            'tbl_roles.id as role_id',
+            'users.u_password',
+            'users.u_email',
+            'users.f_name',
+            'users.m_name',
+            'users.l_name',
+            'users.number',
+            'users.designation',
+            'users.address',
+            'users.state',
+            'users.city',
+            'users.pincode',
+            'users.id',
+            'users.is_active',
+        )
+        ->get()
+        ->toArray();
+
+    if (empty($data_users_data)) {
+        throw new \Exception('No user found with the provided ID.');
+    }
+
+    $data_users['data_users'] = $data_users_data[0];
+    return $data_users;
+}
 
     public function update($request){
 		$updateData = [

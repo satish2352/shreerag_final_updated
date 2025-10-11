@@ -16,16 +16,31 @@ class ItemStockReportExport implements FromCollection, WithHeadings
 
     public function collection()
     {
-        return $this->data->map(function ($item) {
+        $rows = $this->data->map(function ($item) {
             return [
                 $item['updated_at'] ?? '',
                 $item['description'] ?? '',
-                $item['received_quantity'] ?? '',
-                $item['balance_quantity'] ?? '',
-                $item['used_quantity'] ?? '',
-               
+                $item['received_quantity'] ?? 0,
+                $item['used_quantity'] ?? 0,
+                $item['balance_quantity'] ?? 0,
             ];
         });
+
+        // ✅ Calculate totals
+        $totalReceived = $this->data->sum('received_quantity');
+        $totalIssue = $this->data->sum('used_quantity');
+        $totalBalance = $this->data->sum('balance_quantity');
+
+        // ✅ Add total row at bottom
+        $rows->push([
+            '', // Date
+            'Total', // Label
+            $totalReceived,
+            $totalIssue,
+            $totalBalance,
+        ]);
+
+        return $rows;
     }
 
     public function headings(): array
@@ -33,9 +48,9 @@ class ItemStockReportExport implements FromCollection, WithHeadings
         return [
             'Date',
             'Item Name',
-            'Received Qantity',
-          'Issue Qantity',
-          'Balance Qantity',
+            'Received Quantity',
+            'Issue Quantity',
+            'Balance Quantity',
         ];
     }
 }

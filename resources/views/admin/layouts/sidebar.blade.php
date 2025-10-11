@@ -839,9 +839,9 @@
                             <ul class="submenu-angle" aria-expanded="false">
                                 <li class="nav-item {{ Request::is('list-fianance-report') ? 'active' : '' }}"><a
                                         href="{{ route('list-fianance-report') }}"> <i class="fa fa-list-alt icon-wrap"></i> <span
-                                            class="mini-click-non">Fianance Report</span></a></li>
+                                            class="mini-click-non">Product Submitted to Dispatch</span></a></li>
                                               <li class="{{ Request::is('list-vendor-payment-report') ? 'active' : '' }}"><a href="{{ route('list-vendor-payment-report') }}" aria-expanded="false"><i class="fa fa-users icon-wrap"></i><span
-                                                class="mini-click-non">Vendor Payment Report</span></a></li>
+                                                class="mini-click-non">PO Payment Vendor List</span></a></li>
                                </ul>
                         </li>                        
                         <li class="nav-item {{ request()->is('list-sr-and-gr-genrated-business') ? 'active' : '' }}">
@@ -897,7 +897,7 @@
                          <li class="nav-item {{ request()->is('list-logistics-report*') ? 'active' : '' }}">
                             <a href="{{ route('list-logistics-report') }}">
                                 <i class="fa fa-file-alt icon-wrap"></i>
-                                <span class="mini-click-non">Logistics Report </span>
+                                <span class="mini-click-non">Report </span>
                             </a>
                         </li>
                         <li class="nav-item {{ request()->is('logisticsdept/list-final-production-completed-recive-to-logistics') || request()->is('logisticsdept/add-logistics/*') ? 'active' : '' }}">

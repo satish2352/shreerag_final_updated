@@ -222,6 +222,21 @@
                         valid = !response.exists;
                     }
                 });
+
+                // $.ajax({
+                //     type: "POST",
+                //     url: "{{ route('check-dates') }}",
+                //     data: {
+                //         leave_start_date: $("#leave_start_date").val(),
+                //         leave_end_date: $("#leave_end_date").val(),
+                //         _token: "{{ csrf_token() }}"
+                //     },
+                //     dataType: "json",
+                //     async: false,
+                //     success: function(response) {
+                //         valid = !response.exists;
+                //     }
+                // });
                 return valid;
             }, "These dates are already taken.");
 
