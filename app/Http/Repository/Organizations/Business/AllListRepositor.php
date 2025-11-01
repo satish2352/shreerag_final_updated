@@ -1188,7 +1188,9 @@ public function loadDesignSubmittedForProductionBusinessWise($business_id){ //ch
                 DB::raw('MAX(designs.bom_image) as bom_image'),
                 DB::raw('MAX(designs.design_image) as design_image'),
                 DB::raw('MAX(design_revision_for_prod.bom_image) as re_bom_image'),
-                DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image')
+                DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image'),
+                DB::raw('MAX(design_revision_for_prod.remark_by_estimation) as remark_by_estimation')
+                
             )
             ->groupBy(
                 'business_application_processes.id',

@@ -369,6 +369,7 @@ public function editProduct($id){
                 $join->on('business_application_processes.business_details_id', '=', 'pd.business_details_id');
             })
             ->leftJoin('tbl_unit', 'pd.unit', '=', 'tbl_unit.id')
+                ->leftJoin('tbl_part_item', 'pd.part_item_id', '=', 'tbl_part_item.id')
             ->where('businesses_details.id', $id)
             ->where('businesses_details.is_active', true)
             ->where('pd.is_deleted', 0)
@@ -384,6 +385,7 @@ public function editProduct($id){
                 'pd.business_details_id',
                 'pd.material_send_production',
                 'pd.basic_rate',
+                'tbl_part_item.description as part_description',
                 'designs.bom_image',
                 'designs.design_image',
                 'business_application_processes.store_material_sent_date'

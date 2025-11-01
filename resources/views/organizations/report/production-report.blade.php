@@ -78,7 +78,7 @@
         </div>
 
         {{-- 🔹 Search and Export --}}
-        <div class="row mb-2">
+        <div class="row mb-2 ">
             <div class="col-md-6 d-flex justify-content-center">
                
                 <button type="submit" class="btn btn-primary filterbg">Filter</button>
@@ -206,6 +206,11 @@ function fetchReport(reset = false) {
                         <td>${item.to_place || '-'}</td>
                          <td>${item.gate_entry || '-'}</td>
                           <td>${item.remark || '-'}</td>
+                           <td>${item.dispatch_remark || '-'}</td>
+                            <td>${item.dispatch_updated_at ? new Date(item.dispatch_updated_at).toLocaleDateString('en-IN') : '-'}</td>
+                           
+
+                          
                            
         </tr>
     `;

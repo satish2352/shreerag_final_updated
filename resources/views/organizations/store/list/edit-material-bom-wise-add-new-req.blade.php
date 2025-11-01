@@ -196,7 +196,7 @@
                                                             <td>
                                                                 @if($item->material_send_production == 0)
                                                                 <a data-id="{{ $item->id }}"
-                                                                    class="delete-btn btn btn-danger"
+                                                                    class="delete-btn btn btn-sm btn-danger"
                                                                     title="Delete"><i class="fa fa-trash"></i></a>
                                                                 @else
                                                                 <button type="button" class="delete-btn btn btn-sm btn-danger remove-row" disabled>

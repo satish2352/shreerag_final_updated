@@ -46,10 +46,12 @@
             <th>From</th>
             <th>To</th>
             <th>Gate Entry</th>
-            <th>Remark</th>
+            <th>Dispatch Remark</th>
+             <th>Dispatch Date</th>
         </tr>
     </thead>
     <tbody>
+      
         @foreach ($data as $index => $row)
             <tr>
                 <td>{{ $loop->iteration }}</td>

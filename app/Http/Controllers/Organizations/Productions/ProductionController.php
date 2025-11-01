@@ -87,6 +87,8 @@ class ProductionController extends Controller
     public function editProduct($id) {
         try {
             $editData = $this->service->editProduct($id);
+
+          
             $dataOutputPartItem = PartItem::where('is_active', true)->get();
             // $dataOutputUser = User::where('is_active', true)->get();
             $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
