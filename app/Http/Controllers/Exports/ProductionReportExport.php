@@ -11,25 +11,25 @@ class ProductionReportExport implements FromCollection, WithHeadings
 
     public function __construct($data)
     {
-        $this->data = collect($data);
+        $this->data = $data;  // no collect() again
     }
 
     public function collection()
     {
-        return $this->data->map(function ($item) {
+        return $this->data->get()->map(function ($item) {
             return [
-                $item['updated_at'] ?? '',
-                $item['project_name'] ?? '',
-                $item['customer_po_number'] ?? '',
-                $item['product_name'] ?? '',
-                $item['description'] ?? '',
-                $item['quantity'] ?? '',
-                $item['cumulative_completed_quantity'] ?? '',
-                $item['remaining_quantity'] ?? '',
-                $item['from_place'] ?? '',
-                $item['to_place'] ?? '',
-                $item['gate_entry'] ?? '',
-                $item['dispatch_remark'] ?? '',
+                $item->updated_at ?? '',
+                $item->project_name ?? '',
+                $item->customer_po_number ?? '',
+                $item->product_name ?? '',
+                $item->description ?? '',
+                $item->quantity ?? '',
+                $item->cumulative_completed_quantity ?? '',
+                $item->remaining_quantity ?? '',
+                $item->from_place ?? '',
+                $item->to_place ?? '',
+                $item->gate_entry ?? '',
+                $item->dispatch_remark ?? '',
             ];
         });
     }
@@ -48,7 +48,7 @@ class ProductionReportExport implements FromCollection, WithHeadings
             'From Place',
             'To Place',
             'Gate Entry',
-            'Remark',
+            'Dispatch Remark',
         ];
     }
 }

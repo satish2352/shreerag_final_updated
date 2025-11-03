@@ -49,7 +49,7 @@
                                                             alt="Design"> Click to view</a>
                                                     </td>
                                                     <td> <a class="img-size"
-                                                            href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
+                                                            href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_bom_image'] }}"
                                                             alt="bill of material">Click to download</a>
                                                     </td>
                                                 </tr>

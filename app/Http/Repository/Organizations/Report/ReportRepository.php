@@ -421,7 +421,7 @@ public function getProductionReport($request)
         SELECT MAX(id) 
         FROM tbl_customer_product_quantity_tracking t2 
         WHERE t2.business_details_id = businesses_details.id
-    )');   // ✅ only latest entry per product
+    )');   // only latest entry per product
         // Apply filters
         if ($request->filled('search')) {
             $search = $request->search;
@@ -454,7 +454,7 @@ public function getProductionReport($request)
 
         // Handle Production Status (Pending / Completed)
         if ($request->filled('production_status_id')) {
-            if ($request->production_status_id === 'Completed') {
+            if ($request->production_status_id == 'Completed') {
                 $query->whereRaw('
                     (businesses_details.quantity - (
                         SELECT SUM(t2.completed_quantity)
@@ -463,7 +463,7 @@ public function getProductionReport($request)
                           AND t2.id <= tbl_customer_product_quantity_tracking.id
                     )) <= 0
                 ');
-            } elseif ($request->production_status_id === 'Pending') {
+            } elseif ($request->production_status_id == 'Pending') {
                 $query->whereRaw('
                     (businesses_details.quantity - (
                         SELECT SUM(t2.completed_quantity)
@@ -489,7 +489,7 @@ public function getProductionReport($request)
             'tbl_dispatch.outdoor_no',
             'tbl_dispatch.gate_entry',
             'tbl_dispatch.remark as dispatch_remark',
-            'tbl_dispatch.updated_at',
+            'tbl_dispatch.updated_at as dispatch_updated_at',
             'tbl_logistics.from_place',
             'tbl_logistics.to_place',
             'tbl_customer_product_quantity_tracking.completed_quantity',

@@ -64,6 +64,9 @@ public function getAllNewRequirementBusinessWise($business_id) { //checked
           ->leftJoin('designs', function($join) {
               $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
           })
+           ->leftJoin('design_revision_for_prod', function($join) {
+          $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+      })
           ->where('businesses_details.business_id', $decoded_business_id)
           ->whereIn('business_application_processes.estimation_send_to_production', $array_to_be_check)
            ->where('business_application_processes.off_canvas_status', 33)
@@ -80,6 +83,7 @@ public function getAllNewRequirementBusinessWise($business_id) { //checked
               'estimation.id as productionId',
               'designs.bom_image',
               'designs.design_image',
+                'design_revision_for_prod.bom_image as re_bom_image',
               'business_application_processes.estimation_send_to_production',
               'business_application_processes.business_status_id',
               'business_application_processes.design_status_id',
@@ -276,6 +280,7 @@ public function getAllNewRequirementBusinessWise($business_id) { //checked
           'businesses_details.is_active',
           'production.business_id',
           DB::raw('MAX(COALESCE(design_revision_for_prod.reject_reason_prod, "")) as reject_reason_prod'),
+            DB::raw('MAX(COALESCE(design_revision_for_prod.bom_image, "")) as re_bom_image'),
           'businesses.updated_at',
           'designs.bom_image',
           'designs.design_image'

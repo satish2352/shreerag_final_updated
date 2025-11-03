@@ -132,14 +132,14 @@
                                                                         @if ($item->material_send_production == 0)
                                                                            <div class="custom-dropdown">
         <input type="hidden" name="addmore[{{ $index }}][part_item_id]" class="part_no" value="{{ $item->part_item_id ?? '' }}">
-        <input type="text" class="dropdown-input form-control" placeholder="Select Part Item..." value="{{ $item->description ?? '' }}" readonly required>
+        <input type="text" class="dropdown-input form-control" placeholder="Select Part Item..." value="{{ $item->part_description ?? '' }}" readonly required>
 
        
         <div class="dropdown-options dropdown-height" style="display: none;">
             <input type="text" class="search-box form-control" placeholder="Search...">
             <div class="options-list">
                 @foreach ($dataOutputPartItem as $data)
-                    <div class="option" data-id="{{ $data->id }}">{{ $data->description }}</div>
+                    <div class="option" data-id="{{ $data->id }}">{{ $data->part_description }}</div>
                 @endforeach
             </div>
         </div>
@@ -160,13 +160,13 @@
                                                                         @else
                                                                                <div class="custom-dropdown">
         <input type="hidden" name="addmore[{{ $index }}][part_item_id]" class="part_no" value="{{ $item->part_item_id ?? '' }}">
-        <input type="text" class="dropdown-input form-control" placeholder="Select Part Item..." value="{{ $item->description ?? '' }}" readonly required>
+        <input type="text" class="dropdown-input form-control" placeholder="Select Part Item..." value="{{ $item->part_description ?? '' }}" readonly required>
 
         <div class="dropdown-options dropdown-height" style="display: none;">
             <input type="text" class="search-box form-control" placeholder="Search...">
             <div class="options-list">
                 @foreach ($dataOutputPartItem as $data)
-                    <div class="option" data-id="{{ $data->id }}">{{ $data->description }}</div>
+                    <div class="option" data-id="{{ $data->id }}">{{ $data->part_description }}</div>
                 @endforeach
             </div>
         </div>
@@ -235,12 +235,12 @@
                                                                     <td>
                                                                         @if ($item->material_send_production == 0)
                                                                             <a data-id="{{ $item->pd_id }}"
-                                                                                class="delete-btn btn btn-danger m-1"
+                                                                                class="delete-btn btn btn-danger btn-sm remove-row "
                                                                                 title="Delete Tender"><i
                                                                                     class="fas fa-archive"></i></a>
                                                                         @else
                                                                             <button type="button"
-                                                                                class="btn btn-danger remove-row disabled-btn"
+                                                                                class="btn btn-danger btn-sm remove-row disabled-btn"
                                                                                 disabled>
                                                                                 <i class="fa fa-trash"></i>
                                                                             </button>
@@ -391,7 +391,7 @@ $(document).ready(function () {
                  -
                 </td>
                 <td>
-                    <button type="button" class="btn btn-danger remove-row"><i class="fa fa-trash"></i></button>
+                    <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fa fa-trash"></i></button>
                 </td>
             </tr>`;
         table.find("tbody").append(newRow);

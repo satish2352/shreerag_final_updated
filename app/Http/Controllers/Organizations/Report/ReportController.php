@@ -922,19 +922,19 @@ public function getStoreItemStockListAjax(Request $request)
 public function getProductionReport(Request $request)
 {
     if ($request->filled('export_type')) {
-        $data = $this->service->getProductionReport($request)['data'];
-       
+
+       $data = $this->service->getProductionReport($request)['data']; // ✅ corrected
+
         if ($request->export_type == 1) {
             $pdf = Pdf::loadView('exports.production-report-pdf', ['data' => $data])
                 ->setPaper('a3', 'landscape');
-            return $pdf->download('ProductionReport.pdf');
+            return $pdf->download('production-report.pdf');
         }
 
         if ($request->export_type == 2) {
-            return Excel::download(new ProductionReportExport($data), 'ProductionReport.xlsx');
+            return Excel::download(new ProductionReportExport($data), 'production-report.xlsx');
         }
     }
-
     $getProjectName = Business::whereNotNull('project_name')
     ->where('is_deleted', 0)
     ->where('is_active', 1)

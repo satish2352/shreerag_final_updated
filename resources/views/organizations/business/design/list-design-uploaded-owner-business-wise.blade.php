@@ -48,18 +48,24 @@
                                                     </td>
                                                    
                                                     @if ($data->reject_reason_prod == '')
-                                                        <td>-</td>
-                                                    @else
-                                                        <td> <a class="img-size" target="_blank"
-                                                                href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_design_image'] }}"
-                                                                alt="Design"> Click to view</a>
-                                                        </td>
-                                                       
-                                                    @endif 
-                                                     <td> <a class="img-size"
-                                                                href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_bom_image'] }}"
-                                                                alt="bill of material">Click to download</a>
-                                                        </td>
+                                                            <td>-</td>
+                                                        @else
+                                                            <td>
+                                                                <a class="img-size" target="_blank"
+                                                                    href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_design_image'] }}"
+                                                                    alt="Design">Click to view</a>
+                                                            </td>
+@endif
+                                                            @if ($data->remark_by_estimation == '')
+                                                                <td>-</td>
+                                                            @else
+                                                                <td>
+                                                                    <a class="img-size"
+                                                                        href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_bom_image'] }}"
+                                                                        alt="bill of material">Click to download</a>
+                                                                </td>
+                                                            
+                                                        @endif
                                                 </tr>
                                             @endforeach
                                         </tbody>
