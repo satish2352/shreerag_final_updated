@@ -16,8 +16,9 @@ use App\Http\Controllers\Exports\DispatchPendingExportReport;
 use App\Http\Controllers\Exports\FiananceExportReport;
 use App\Http\Controllers\Exports\ItemStockReportExport;
 use App\Http\Controllers\Exports\VendorThroughTakenMaterialListDetailsReport;
-
-
+use App\Http\Controllers\Exports\ItemStockReport;
+use App\Http\Controllers\Exports\ConsumptionReportExport;
+use App\Http\Controllers\Exports\VendorPaymentReportExport;
 use Session;
 use Validator;
 use Config;
@@ -69,15 +70,15 @@ public function getCompletedProductListAjax(Request $request){
 
             // PDF Export
             if ($request->filled('export_type') && $request->export_type == 1) {
-                $pdf = Pdf::loadView('exports.design-report-pdf', ['data' => $data['data']])
+                $pdf = Pdf::loadView('exports.complete-product-report-pdf', ['data' => $data['data']])
                     ->setPaper('a3', 'landscape'); // <-- Landscape
 
-                return $pdf->download('DesignReport.pdf');
+                return $pdf->download('CompleteProductReport.pdf');
             }
 
             // Excel Export
             if ($request->filled('export_type') && $request->export_type == 2) {
-                return Excel::download(new DesignReportExport($data['data']), 'DesignReport.xlsx');
+                return Excel::download(new CompleteProductReportExport($data['data']), 'CompleteProductReport.xlsx');
             }
 
             // Normal AJAX response
@@ -208,6 +209,7 @@ public function getGRNReport( Request $request ) {
 public function getGRNReportAjax(Request $request){
     try {
         $data = $this->service->getGRNReport($request);
+
 
         if ($request->filled('export_type') && $request->export_type == 1) {
             $pdf = Pdf::loadView('exports.grn-report-pdf', ['data' => $data['data']])
@@ -585,15 +587,15 @@ public function listVendorPaymentReportAjax(Request $request)
 
         // PDF Export
         if ($request->filled('export_type') && $request->export_type == 1) {
-            $pdf = Pdf::loadView('exports.logistics-report-pdf', ['data' => $data['data']])
+            $pdf = Pdf::loadView('exports.vendor-payment-report-pdf', ['data' => $data['data']])
                 ->setPaper('a4');
 
-            return $pdf->download('LogisticsReport.pdf');
+            return $pdf->download('VendorPaymentReport.pdf');
         }
 
         // Excel Export
         if ($request->filled('export_type') && $request->export_type == 2) {
-            return Excel::download(new SecurityReportExport($data['data']), 'LogisticsReport.xlsx');
+            return Excel::download(new VendorPaymentReportExport($data['data']), 'VendorPaymentReport.xlsx');
         }
 
         // Normal AJAX response
@@ -840,13 +842,13 @@ public function getStockItem(Request $request)
         $data = $this->service->getStockItem($request)['data'];
 
         if ($request->export_type == 1) {
-            $pdf = Pdf::loadView('exports.stock-item-pdf', ['data' => $data])
-                ->setPaper('a3', 'landscape');
-            return $pdf->download('stock-item.pdf');
+            $pdf = Pdf::loadView('exports.list-item-stock-pdf', ['data' => $data])
+                ->setPaper('a4', 'landscape');
+            return $pdf->download('ItemStock.pdf');
         }
 
         if ($request->export_type == 2) {
-            return Excel::download(new ItemStockReport($data), 'stock-item.xlsx');
+            return Excel::download(new ItemStockReport($data), 'ItemStock.xlsx');
         }
     }
 
@@ -925,11 +927,11 @@ public function getProductionReport(Request $request)
         if ($request->export_type == 1) {
             $pdf = Pdf::loadView('exports.production-report-pdf', ['data' => $data])
                 ->setPaper('a3', 'landscape');
-            return $pdf->download('production-report-pdf.pdf');
+            return $pdf->download('ProductionReport.pdf');
         }
 
         if ($request->export_type == 2) {
-            return Excel::download(new ProductionReportExport($data), 'production-report-pdf.xlsx');
+            return Excel::download(new ProductionReportExport($data), 'ProductionReport.xlsx');
         }
     }
 

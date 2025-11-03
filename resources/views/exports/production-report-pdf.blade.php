@@ -34,19 +34,24 @@
    <table>
     <thead>
         <tr>
-            <th>Sr</th>
-            <th>Date</th>
-            <th>Project Name</th>
-            <th>Customer PO No.</th>
-            <th>Product</th>
-            <th>Description</th>
-            <th>Total Quantity</th>
-            <th>Completed</th>
-            <th>Remaining</th>
-            <th>From</th>
-            <th>To</th>
-            <th>Gate Entry</th>
-            <th>Remark</th>
+            <th data-field="id">Sr.No.</th>
+                                                <th data-field="date" data-editable="false">Sent Date</th>
+                                                <th data-field="project_name" data-editable="false">Project Name</th>
+                                                <th data-field="customer_po_number" data-editable="false">PO Number</th>
+                                                <th data-field="title" data-editable="false">customer Name</th>
+                                                <th data-field="product_name" data-editable="false">Product Name</th>
+                                                <th data-field="quantity" data-editable="false">Quantity</th>
+                                                <th data-field="completed_quantity" data-editable="false">Completed
+                                                    Production</th>
+                                                <th data-field="remaining_quantity" data-editable="false">Balance Quantity
+                                                </th>
+                                                <th data-field="from_place" data-editable="false">From Place</th>
+                                                <th data-field="to_place" data-editable="false">To Place</th>
+                                                <th data-field="truck_no" data-editable="false">Truck Number</th>
+                                                <th data-field="outdoor_no" data-editable="false">Outdoor Number</th>
+                                                <th data-field="gate_entry" data-editable="false">Gate Entry</th>
+                                                <th data-field="remark" data-editable="false">Dispatch Remark</th>
+                                                <th data-field="updated_at" data-editable="false">Dispatch Date</th>
         </tr>
     </thead>
     <tbody>

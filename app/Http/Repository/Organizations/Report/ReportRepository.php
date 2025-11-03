@@ -73,26 +73,26 @@ public function getCompletedProductList(Request $request)
             $query->where('tbl_logistics.business_details_id', $request->business_details_id);
         }
 
-        // if ($request->filled('from_date')) {
-        //     $query->whereDate('tbl_dispatch.created_at', '>=', $request->from_date);
-        // }
+        if ($request->filled('from_date')) {
+            $query->whereDate('tbl_dispatch.created_at', '>=', $request->from_date);
+        }
 
-        // if ($request->filled('to_date')) {
-        //     $query->whereDate('tbl_dispatch.created_at', '<=', $request->to_date);
-        // }
+        if ($request->filled('to_date')) {
+            $query->whereDate('tbl_dispatch.created_at', '<=', $request->to_date);
+        }
 
-        // if ($request->filled('year')) {
-        //     $query->whereYear('tbl_dispatch.updated_at', $request->year);
-        // }
+        if ($request->filled('year')) {
+            $query->whereYear('tbl_dispatch.updated_at', $request->year);
+        }
 
-        // if ($request->filled('month')) {
-        //     $query->whereMonth('tbl_dispatch.updated_at', $request->month);
-        // }
+        if ($request->filled('month')) {
+            $query->whereMonth('tbl_dispatch.updated_at', $request->month);
+        }
 
-        // if ($request->filled('production_status_id')) {
-        //     $statusIds = explode(',', $request->production_status_id);
-        //     $query->whereIn('bap1.production_status_id', $statusIds);
-        // }
+        if ($request->filled('production_status_id')) {
+            $statusIds = explode(',', $request->production_status_id);
+            $query->whereIn('bap1.production_status_id', $statusIds);
+        }
 
         // SELECT, GROUP, HAVING
         $query->select(
@@ -1470,9 +1470,10 @@ public function listVendorPaymentReport(Request $request){
       'vendors.vendor_email',
       'vendors.contact_no',   
       'purchase_orders.invoice_date',
-      'grn_tbl.grn_status_sanction',
-     'grn_tbl.grn_no_generate',
-      'grn_tbl.updated_at'
+          'grn_tbl.*'
+    //   'grn_tbl.grn_status_sanction',
+    //  'grn_tbl.grn_no_generate',
+    //   'grn_tbl.updated_at'
       
   ) 
   ->orderBy('grn_tbl.updated_at', 'desc')

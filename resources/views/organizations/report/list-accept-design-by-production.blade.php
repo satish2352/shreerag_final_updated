@@ -34,8 +34,8 @@
               <label>Status</label>
             <select name="production_status_id" class="form-control" id="production_status_id">
                 <option value="">Select Status</option>
-                <option value="1115,1121,1117">Accepted</option>
-                <option value="1114">Rejected</option>
+                <option value="1114,1121,1117">Accepted</option>
+                <option value="1115">Rejected</option>
             </select>
         </div>
          <div class="col-md-3">
@@ -162,8 +162,8 @@
 let currentPage = 1, pageSize = 10;
 
 function getStatusLabel(id) {
-    if (id == 1114) return 'Rejected';
-    if ([1115, 1121, 1117].includes(id)) return 'Accepted';
+    if (id == 1115) return 'Rejected';
+    if ([1114, 1121, 1117].includes(id)) return 'Accepted';
     return '-';
 }
 

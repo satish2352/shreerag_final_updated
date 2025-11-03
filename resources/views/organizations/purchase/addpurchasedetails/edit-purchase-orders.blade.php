@@ -1,6 +1,7 @@
 @extends('admin.layouts.master-add-more')
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -432,12 +433,19 @@
                                                                             <a data-id="{{ $editDataNew->id }}"
                                                                                 class="delete-btn btn btn-danger m-1" style="color: #fff;"
                                                                                 title="Delete Tender"><i
-                                                                                    class="fas fa-archive"></i></a>
+                                                                                    class="fa-solid fa-trash"></i></a>
                                                                         </td>
                                                                     </tr>
                                                                 @endforeach
-                                                               <tfoot> <tr class="grand-total-row"> <td colspan="7" class="text-end"><strong>Grand Total:</strong> </td> <td colspan="4"> <input type="text" id="po_grand_total_amount" name="po_grand_total_amount" class="form-control" readonly> </td> </tr> </tfoot>
-
+                                                               {{-- <tfoot> <tr class="grand-total-row"> <td colspan="7" class="text-end"><strong>Grand Total:</strong> </td> <td colspan="4"> <input type="text" id="po_grand_total_amount" name="po_grand_total_amount" class="form-control" readonly> </td> </tr> </tfoot> --}}
+<tfoot>
+  <tr class="grand-total-row">
+    <td colspan="7" class="text-end"><strong>Grand Total:</strong></td>
+    <td colspan="4">
+      <input type="text" id="po_grand_total_amount" name="po_grand_total_amount" class="form-control" readonly>
+    </td>
+  </tr>
+</tfoot>
                                                             </table>
                                                         </div>
 
@@ -491,7 +499,8 @@
         <input type="hidden" name="delete_id" id="delete_id" value="">
     </form>
 
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    {{-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> --}}
+     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
     <script>
@@ -665,7 +674,7 @@
                       +
                     '<td><input type="text" class="form-control amount" name="addmore[' + i +
                     '][amount]" placeholder=" Amount" readonly  required  style="width:100px"/></td>' +
-                    '<td><a class="remove-tr delete-btn btn btn-danger m-1" title="Delete Tender"><i class="fas fa-archive" style="color: #fff;"></i></a></td>' +
+                    '<td><a class="remove-tr delete-btn btn btn-danger m-1" title="Delete Tender"><i class="fa-solid fa-trash" style="color: #fff;"></i></a></td>' +
                     '</tr>'+
                      '<tr>'+
                     
@@ -843,6 +852,11 @@ $(document).on('input', '.quantity, .rate, .discount', function () {
 // Trigger when tax dropdown changes
 $('#tax_id').on('change', function () {
     calculateGrandTotal();
+});
+
+// 👇 Add this at the end of the <script> block
+$(document).ready(function() {
+    calculateGrandTotal(); // Run once on page load
 });
 </script>
 

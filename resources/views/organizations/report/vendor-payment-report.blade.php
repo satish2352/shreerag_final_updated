@@ -158,7 +158,11 @@
     <script>
 let currentPage = 1, pageSize = 10;
 
-
+function getStatusLabel(id) {
+    if (id == '6003') return 'Paid';
+    if (['6000', '6001', '6002'].includes(id)) return 'Pending';
+    return '-';
+}
 
 function fetchReport(reset = false) {
     if (reset) currentPage = 1;
@@ -190,15 +194,7 @@ function fetchReport(reset = false) {
             <td>${item.updated_at ? new Date(item.updated_at).toLocaleDateString('en-IN') : '-'}</td>
              <td>${item.purchase_orders_id ?? '-'}</td>
               <td>${item.grn_no_generate ?? '-'}</td>
-                <td>
-            ${
-                item.grn_status_sanction == '6003'
-                    ? 'Paid'
-                    : ['6000', '6001', '6002'].includes(item.grn_status_sanction)
-                    ? 'Pending'
-                    : '-'
-            }
-        </td>
+              <td>${getStatusLabel(item.grn_status_sanction)}</td>
             <td>${item.vendor_name ?? '-'}</td>
             <td>${item.vendor_company_name ?? '-'}</td>
             <td>${item.vendor_email ?? '-'}</td>

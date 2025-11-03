@@ -18,19 +18,23 @@
                                     <h1 class="mb-4">Product-wise Dispatch Status</h1>
                                       <form method="GET" action="{{ url()->current() }}">
                                         <div class="row mb-4">
-                                            <div class="col-md-4">
-                                                <label for="project_name">Project Name</label>
-                                                <select name="project_name" id="project_name" class="form-control">
-                                                    <option value="">All Project Name</option>
-                                                    @foreach($getProjectName as $id => $name)
-                                                        <option value="{{ $id }}" {{ request('project_name') == $id ? 'selected' : '' }}>
-                                                            {{ $name }}
-                                                        </option>
-                                                    @endforeach
+                                               <div class="col-md-4">
+    <label>Project Name</label>
+    <select class="form-control select2" name="project_name" id="project_name">
+        <option value="">All Projects</option>
+        @foreach($getProjectName as $id => $name)
+            <option value="{{ $id }}">{{ $name }}</option>
+        @endforeach
+    </select>
+</div>
+                                             <div class="col-md-2">
+                                                <label>Product Name</label>
+                                                <select class="form-control select2" name="business_details_id" id="business_details_id">
+                                                    <option value="">All Product Name</option>
+                                                    {{-- Product options will be populated via JS --}}
                                                 </select>
                                             </div>
-
-                                            <div class="col-md-4">
+                                            {{-- <div class="col-md-4">
                                                 <label for="business_details_id">Product Name</label>
                                                 <select name="product_name" id="business_details_id" class="form-control">
                                                     <option value="">All Product Name</option>
@@ -40,7 +44,7 @@
                                                         </option>
                                                     @endforeach
                                                 </select>
-                                            </div>
+                                            </div> --}}
 
                                             <div class="col-md-4 d-flex align-items-end">
                                                 <button type="submit" class="btn btn-primary filterbg">Filter</button>
@@ -76,7 +80,9 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+<script>
+    window.APP_URL = "{{ config('app.url') }}";
+</script>
     <script>
         $(document).ready(function () {
             // === Month-wise Dispatch Bar Chart ===
@@ -237,4 +243,5 @@
             });
         });
     </script>
+  
 

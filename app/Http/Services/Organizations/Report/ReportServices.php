@@ -35,7 +35,8 @@ class ReportServices
       public function listDesignReport($request){
         try {
             $data_output = $this->repo->listDesignReport($request);
-          
+        //   dd($data_output);
+        //   die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -126,8 +127,6 @@ public function listVendorPaymentReport($request)
 {
     try {
         $data_output = $this->repo->listVendorPaymentReport($request);
-    //   dd($data_output);
-    //   die();
         return $data_output;
     } catch (\Exception $e) {
         throw $e;
