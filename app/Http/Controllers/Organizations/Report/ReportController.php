@@ -1015,9 +1015,13 @@ public function listStockDailyReport(Request $request)
         }
 
         // ---- EXCEL EXPORT ----
-        if ($request->export_type == 2) {
-            return Excel::download(new ItemStockReportExport($data, $totals), 'item-stock-report.xlsx');
-        }
+       if ($request->export_type == 2) {
+    return Excel::download(
+        new ItemStockReportExport($response['data'], $response['totals']),
+        'item-stock-report.xlsx'
+    );
+}
+
     }
 
     // --------------------------------------------
