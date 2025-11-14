@@ -91,7 +91,7 @@
 
                                                     <td>{{ $loop->iteration }}</td>
                                                     {{-- <td>{{ucwords($data->customer_po_number)}}</td> --}}
-                                                    <td>{{ucwords($data->updated_at)}}</td>
+                                                    <td>  {{ \Carbon\Carbon::parse($data->updated_at)->format('d-m-Y h:i:s A') }}</td>
                                                     <td>{{ucwords($data->dc_number)}}</td>
                                                     <td>
                                                         {{ $data->customer_po_number ? ucwords($data->customer_po_number) : 'N/A' }}
