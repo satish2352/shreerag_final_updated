@@ -2542,13 +2542,16 @@ public function listStockDailyReport($request)
         /* -----------------------------------------
            1. RECEIVED TRANSACTIONS (GRN)
         ------------------------------------------*/
-        $received = DB::table('tbl_grn_po_quantity_tracking')
+       $received = DB::table('tbl_grn_po_quantity_tracking')
             ->join('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_grn_po_quantity_tracking.part_no_id')
+            ->join('grn_tbl', 'grn_tbl.id', '=', 'tbl_grn_po_quantity_tracking.grn_id')
             ->selectRaw("
                 tbl_grn_po_quantity_tracking.updated_at AS date,
                 tbl_part_item.description AS part_name,
                 tbl_grn_po_quantity_tracking.quantity AS received_qty,
-                0 AS issue_qty
+                0 AS issue_qty,
+                grn_tbl.grn_no_generate AS grn_no,
+                '' AS product_name
             ");
 
         if ($partId) {
@@ -2570,14 +2573,29 @@ public function listStockDailyReport($request)
         /* -----------------------------------------
            2. ISSUE TRANSACTIONS (PRODUCTION)
         ------------------------------------------*/
-        $issued = DB::table('production_details')
-            ->join('tbl_part_item', 'tbl_part_item.id', '=', 'production_details.part_item_id')
-            ->selectRaw("
-                production_details.updated_at AS date,
-                tbl_part_item.description AS part_name,
-                0 AS received_qty,
-                production_details.quantity AS issue_qty
-            ");
+        // $issued = DB::table('production_details')
+        //     ->join('tbl_part_item', 'tbl_part_item.id', '=', 'production_details.part_item_id')
+        //     ->join('tbl_part_item', 'businesses_details.id', '=', 'production_details.business_details_id')
+        //     ->selectRaw("
+        //         production_details.updated_at AS date,
+        //         tbl_part_item.description AS part_name,
+        //         0 AS received_qty,
+        //         production_details.quantity AS issue_qty,
+        //         '' AS grn_no,
+        //         businesses_details.product_name AS product_name 
+        //     ");
+$issued = DB::table('production_details')
+    ->leftJoin('tbl_part_item', 'tbl_part_item.id', '=', 'production_details.part_item_id')
+    ->leftJoin('businesses_details', 'businesses_details.id', '=', 'production_details.business_details_id')
+    ->selectRaw("
+        production_details.updated_at AS date,
+        tbl_part_item.description AS part_name,
+        0 AS received_qty,
+        production_details.quantity AS issue_qty,
+        '' AS grn_no,
+        businesses_details.product_name AS product_name
+    ");
+
 
         if ($partId) {
             $issued->where('tbl_part_item.id', $partId);

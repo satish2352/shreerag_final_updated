@@ -182,13 +182,22 @@
                         if (res.data.length > 0) {
                             let rows = '';
                             res.data.forEach((item, i) => {
+                                 let particulars = '-';
+
+                                if (item.received_qty > 0) {
+                                    particulars = `Supplier GRN No.${item.grn_no} ${item.part_name}`;
+                                } 
+                                else if (item.issue_qty > 0) {
+                                    particulars = `FOR PRODUCTION ISSUE  ${item.product_name}  ${item.part_name}`;
+                                }
+
                                 rows += `
                                     <tr>
                                         <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
                                         <td>${item.date ? new Date(item.date).toLocaleDateString('en-IN') : '-'}</td>
-                                        <td>${item.part_name || '-'}</td>
-                                        <td>${item.received_qty || '-'}</td>
-                                        <td>${item.issue_qty || '-'}</td>
+                                        <td>${particulars}</td>
+                                        <td> ${item.received_qty || '-'}</td>
+                                        <td> ${item.issue_qty || '-'}</td>
                                         <td>${item.balance || '-'}</td>
                                     </tr>
                                 `;

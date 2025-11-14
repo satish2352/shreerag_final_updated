@@ -16,7 +16,7 @@ class ReportServices
     public function getAllReceivedFromFianance(){
         try {
           $data_output = $this->repo->getAllReceivedFromFianance();
-     
+   
           return $data_output;
         } catch (\Exception $e) {
             return $e;
