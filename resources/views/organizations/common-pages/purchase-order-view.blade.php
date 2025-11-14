@@ -430,6 +430,8 @@
                         <div><span
                                 style="padding: 10px 10px 10px 8px;font-family: 'Play', sans-serif!important; font-size:13px;">This
                                 is a computer-generated document No signature is required</span></div>
+                                <div><span
+                                style="padding: 10px 10px 10px 8px;font-family: 'Play', sans-serif!important; font-size:13px;">Subject To Nashik Jurisdiction. PO Terms and Conditions As per attached PO Annexture</span></div>
                         @if (empty($is_pdf))
                             <a>
                                 <button onclick="printInvoice()" style="margin: 20px;" type="button"

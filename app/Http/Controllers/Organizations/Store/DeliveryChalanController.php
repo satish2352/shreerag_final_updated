@@ -95,14 +95,14 @@ class DeliveryChalanController extends Controller
     {
         $rules = [
             'vendor_id' => 'required',
-            'transport_id' => 'required',
+            // 'transport_id' => 'required',
             'vehicle_id' => 'required',
             // 'business_id' => 'nullable|exists:businesses,id',
             'customer_po_no' => 'nullable|string|max:255',
             'plant_id' => 'required|string|max:255',
             'tax_type' => 'required',
             'tax_id' => 'required',
-            'vehicle_number' => 'required|string',
+            // 'vehicle_number' => 'required|string',
             'po_date' => 'required',
             'lr_number' => 'nullable|string|max:255',
             'remark' => 'required|string',
@@ -117,13 +117,13 @@ class DeliveryChalanController extends Controller
         ];
         $messages = [
             'vendor_id.required' => 'The vendor company name is required.',
-            'transport_id.required' => 'The transport name is required.',
+            // 'transport_id.required' => 'The transport name is required.',
             'vehicle_id.required' => 'The vehicle type is required.',
             // 'business_id.exists' => 'The selected PO number is invalid.',
             'plant_id.required' => 'The plant name is required.',
             'tax_type.required' => 'The tax type is required.',
             'tax_id.required' => 'The tax field is required.',
-            'vehicle_number.required' => 'The vehicle number is required.',
+            // 'vehicle_number.required' => 'The vehicle number is required.',
             'po_date.required' => 'The PO date is required.',
             'remark.required' => 'The remark field is required.',
             'addmore.*.part_item_id.required' => 'The part item is required.',
@@ -144,6 +144,7 @@ class DeliveryChalanController extends Controller
                     ->withErrors($validation);
             } else {
                 $add_record = $this->service->submitBOMToOwner($request);
+            
                 if ($add_record) {
                     $msg = $add_record['msg'];
                     $status = $add_record['status'];
@@ -256,14 +257,14 @@ class DeliveryChalanController extends Controller
                 
                 $rules = [
              'vendor_id' => 'required',
-            'transport_id' => 'required',
+            // 'transport_id' => 'required',
             'vehicle_id' => 'required',
             // 'business_id' => 'nullable|exists:businesses,id',
             'customer_po_no' => 'nullable|string|max:255',
             'plant_id' => 'required|string|max:255',
             'tax_type' => 'required',
             'tax_id' => 'required',
-            'vehicle_number' => 'required|string',
+            // 'vehicle_number' => 'required|string',
             'po_date' => 'required',
             'lr_number' => 'nullable|string|max:255',
             'remark' => 'required|string',
@@ -279,8 +280,8 @@ class DeliveryChalanController extends Controller
                 ];
                 $messages = [
                     'vendor_id.required' => 'The vendor company name is required.',
-                    'transport_id.required' => 'The transport name is required.',
-                    'vehicle_id.required' => 'The vehicle type is required.',
+                    // 'transport_id.required' => 'The transport name is required.',
+                    // 'vehicle_id.required' => 'The vehicle type is required.',
                     // 'business_id.exists' => 'The selected PO number is invalid.',
                     'plant_id.required' => 'The plant name is required.',
                     'tax_type.required' => 'The tax type is required.',

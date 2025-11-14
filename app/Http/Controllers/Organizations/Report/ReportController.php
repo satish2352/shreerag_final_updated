@@ -964,32 +964,77 @@ public function getProductionReportAjax(Request $request)
         return response()->json(['status' => false, 'message' => $e->getMessage()]);
     }
 }
+// public function listStockDailyReport(Request $request)
+// {
+//     if ($request->filled('export_type')) {
+//         $data = $this->service->listStockDailyReport($request)['data'];
+      
+//         if ($request->export_type == 1) {
+//             $pdf = Pdf::loadView('exports.item-stock-report-pdf', ['data' => $data])
+//                 ->setPaper('a3', 'landscape');
+//             return $pdf->download('item-stock-report-pdf.pdf');
+//         }
+
+//         if ($request->export_type == 2) {
+//             return Excel::download(new ItemStockReportExport($data), 'item-stock-report-pdf.xlsx');
+//         }
+//     }
+
+//     $getPartItemName = PartItem::whereNotNull('description')
+//     ->where('is_deleted', 0)
+//     ->where('is_active', 1)
+//     ->pluck('description', 'id');
+
+//     // If no export type, show the view with data (optional: fetch data for initial load)
+//     $data = $this->service->listStockDailyReport($request)['data'] ?? [];
+
+//     return view('organizations.report.item-stock-report', compact('data', 'getPartItemName'));
+// }
 public function listStockDailyReport(Request $request)
 {
+    // First get full response from service
+    $response = $this->service->listStockDailyReport($request);
+
+    // --------------------------------------------
+    // EXPORT REQUEST
+    // --------------------------------------------
     if ($request->filled('export_type')) {
-        $data = $this->service->listStockDailyReport($request)['data'];
-      
+
+        $data   = $response['data'] ?? [];
+        $totals = $response['totals'] ?? ['received'=>0, 'issue'=>0, 'balance'=>0];
+
+        // ---- PDF EXPORT ----
         if ($request->export_type == 1) {
-            $pdf = Pdf::loadView('exports.item-stock-report-pdf', ['data' => $data])
-                ->setPaper('a3', 'landscape');
-            return $pdf->download('item-stock-report-pdf.pdf');
+
+            $pdf = Pdf::loadView('exports.item-stock-report-pdf', [
+                'data'   => $data,
+                'totals' => $totals
+            ])->setPaper('a3', 'landscape');
+
+            return $pdf->download('item-stock-report.pdf');
         }
 
+        // ---- EXCEL EXPORT ----
         if ($request->export_type == 2) {
-            return Excel::download(new ItemStockReportExport($data), 'item-stock-report-pdf.xlsx');
+            return Excel::download(new ItemStockReportExport($data, $totals), 'item-stock-report.xlsx');
         }
     }
 
+    // --------------------------------------------
+    // NORMAL PAGE LOAD
+    // --------------------------------------------
     $getPartItemName = PartItem::whereNotNull('description')
-    ->where('is_deleted', 0)
-    ->where('is_active', 1)
-    ->pluck('description', 'id');
+        ->where('is_deleted', 0)
+        ->where('is_active', 1)
+        ->pluck('description', 'id');
 
-    // If no export type, show the view with data (optional: fetch data for initial load)
-    $data = $this->service->listStockDailyReport($request)['data'] ?? [];
+    // load default data (optional)
+    $data = $response['data'] ?? [];
 
     return view('organizations.report.item-stock-report', compact('data', 'getPartItemName'));
 }
+
+
 public function listStockDailyReportAjax(Request $request)
 {
     try {

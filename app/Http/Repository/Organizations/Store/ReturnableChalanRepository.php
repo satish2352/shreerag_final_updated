@@ -23,18 +23,24 @@ class ReturnableChalanRepository
         try {
             $dataOutput = new ReturnableChalan();
            $dataOutput->vendor_id = $request->vendor_id;
-            $dataOutput->transport_id = $request->transport_id;
+        //     $dataOutput->transport_id = $request->transport_id;
             $dataOutput->vehicle_id = $request->vehicle_id;
             $dataOutput->plant_id = $request->plant_id;
             $dataOutput->tax_id = $request->tax_id;
             $dataOutput->tax_type = $request->tax_type;
-            $dataOutput->vehicle_number = $request->vehicle_number;
+            // $dataOutput->vehicle_number = $request->vehicle_number;
             $dataOutput->po_date = $request->po_date;
             $dataOutput->dc_date = now();
             $lastChalan = ReturnableChalan::orderBy('dc_number', 'desc')->first();
             $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
             $dataOutput->lr_number = $request->lr_number;
             $dataOutput->remark = $request->remark;
+             if ($request->has('transport_id')) {
+                $dataOutput->transport_id = $request->transport_id;
+            }
+            if ($request->has('vehicle_number')) {
+                $dataOutput->vehicle_number = $request->vehicle_number;
+            }
             if ($request->has('business_id')) {
                 $dataOutput->business_id = $request->business_id;
             }
@@ -221,17 +227,23 @@ class ReturnableChalanRepository
             $dataOutput->tax_type = $request->tax_type;
             $dataOutput->tax_id = $request->tax_id;
             // $dataOutput->business_id = $request->business_id;
-            $dataOutput->transport_id = $request->transport_id;
+            // $dataOutput->transport_id = $request->transport_id;
             $dataOutput->vehicle_id = $request->vehicle_id;
             $dataOutput->customer_po_no = $request->customer_po_no;
             $dataOutput->plant_id = $request->plant_id;
-            $dataOutput->vehicle_number = $request->vehicle_number;
+            // $dataOutput->vehicle_number = $request->vehicle_number;
             $dataOutput->po_date = $request->po_date;
             $dataOutput->lr_number = $request->lr_number;
         // $lastChalan = ReturnableChalan::orderBy('dc_number', 'desc')->first();
         // $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
             $dataOutput->remark = $request->remark;
             // $dataOutput->image = $imageName;
+             if ($request->has('transport_id')) {
+                $dataOutput->transport_id = $request->transport_id;
+            }
+            if ($request->has('vehicle_number')) {
+                $dataOutput->vehicle_number = $request->vehicle_number;
+            }
             if ($request->has('business_id')) {
                 $dataOutput->business_id = $request->business_id;
             }

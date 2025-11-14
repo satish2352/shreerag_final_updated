@@ -111,8 +111,7 @@
                                                             </div>
                                                             <div class="col-lg-4 col-md-4 col-sm-4">
                                                                     <div class="form-group">
-                                                                        <label for="transport_id">Transport Name<span
-                                                                                class="text-danger">*</span></label>
+                                                                        <label for="transport_id">Transport Name (Optional)</label>
                                                                         <select class="form-control mb-2"
                                                                             name="transport_id" id="transport_id">
                                                                             <option value="" default>Select Transport
@@ -213,8 +212,7 @@
                                                         </div>
                                                          <div class="row">
                                                             <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                <label for="vehicle_number">Vehicle Number <span
-                                                                        class="text-danger">*</span></label>
+                                                                <label for="vehicle_number">Vehicle Number (Optional)</label>
                                                                 <input type="text" class="form-control"
                                                                     id="vehicle_number"
                                                                     value="{{ old('vehicle_number') }}"
@@ -564,9 +562,9 @@
                         vendor_id: {
                             required: true
                         },
-                        transport_id: {
-                            required: true
-                        },
+                        // transport_id: {
+                        //     required: true
+                        // },
                         vehicle_id: {
                             required: true
                         },
@@ -579,9 +577,9 @@
                         plant_id: {
                             required: true
                         },
-                        vehicle_number: {
-                            required: true
-                        },
+                        // vehicle_number: {
+                        //     required: true
+                        // },
                         po_date: {
                             required: true,
                         },
@@ -614,9 +612,9 @@
                         vendor_id: {
                             required: "Select vendor name."
                         },
-                        transport_id: {
-                            required: "Select transport name."
-                        },
+                        // transport_id: {
+                        //     required: "Select transport name."
+                        // },
                         vehicle_id: {
                             required: "Select vehicle type."
                         },
@@ -626,9 +624,9 @@
                         tax_id: {
                             required: "Select tax name."
                         },
-                        vehicle_number: {
-                            required: "Enter vehicle number."
-                        },
+                        // vehicle_number: {
+                        //     required: "Enter vehicle number."
+                        // },
                         plant_id: {
                             required: "Enter plant name."
                         },
@@ -919,10 +917,10 @@
                     //     required: true,
                    
                     // },
-                    transport_id: {
-                        required: true,
+                    // transport_id: {
+                    //     required: true,
                        
-                    },
+                    // },
                     vehicle_id:{
                         required: true,
                     },
@@ -936,10 +934,10 @@
                         required: true,
                    
                     },
-                    vehicle_number: {
-                        required: true,
+                    // vehicle_number: {
+                    //     required: true,
                    
-                    },
+                    // },
                     po_date: {
                         required: true,
                     },
@@ -995,10 +993,10 @@
                         required: "seclect vendor name.",
                    
                     },
-                    transport_id: {
-                        required: "seclect transport name.",
+                    // transport_id: {
+                    //     required: "seclect transport name.",
                        
-                    },
+                    // },
                     // business_id: {
                     //     required: "seclect po number.",
                         
@@ -1013,10 +1011,10 @@
                     tax_id:{
                         required: "seclect tax name.",
                     },
-                    vehicle_number: {
-                        required: "enter vehicle number.",
+                    // vehicle_number: {
+                    //     required: "enter vehicle number.",
                    
-                    },
+                    // },
                     plant_id: {
                         required: "enter plant name.",
                    
@@ -1314,10 +1312,10 @@
 
                         },
 
-                        transport_id: {
-                            required: true,
+                        // transport_id: {
+                        //     required: true,
 
-                        },
+                        // },
                         vehicle_id: {
                             required: true,
                         },
@@ -1331,10 +1329,10 @@
                             required: true,
 
                         },
-                        vehicle_number: {
-                            required: true,
+                        // vehicle_number: {
+                        //     required: true,
 
-                        },
+                        // },
                         po_date: {
                             required: true,
                         },
@@ -1390,10 +1388,10 @@
                             required: "seclect vendor name.",
 
                         },
-                        transport_id: {
-                            required: "seclect transport name.",
+                        // transport_id: {
+                        //     required: "seclect transport name.",
 
-                        },
+                        // },
 
                         vehicle_id: {
                             required: "seclect vehicle type.",
@@ -1405,10 +1403,10 @@
                         tax_id: {
                             required: "seclect tax name.",
                         },
-                        vehicle_number: {
-                            required: "enter vehicle number.",
+                        // vehicle_number: {
+                        //     required: "enter vehicle number.",
 
-                        },
+                        // },
                         plant_id: {
                             required: "enter plant name.",
 

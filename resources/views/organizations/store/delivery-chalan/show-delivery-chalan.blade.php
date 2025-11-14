@@ -262,13 +262,15 @@
                                         <td colspan="2" style="border: 1px solid black;" class="text-right">
                                             {{ $taxAmount > 0 ? number_format($taxAmount, 2) : '-' }}
                                         </td>
+                                        
                                     </tr>
                                     
                                     <tr style="border-bottom: 1px solid black;">
                                         <td class="no-border" colspan="6">
                                             <div>
-                                                <p style="font-size: 15px;"> <strong>Vehicle
-                                                        No.:-{{ $showData['purchaseOrder']->vehicle_number }}</strong> </p>
+                                                <span style="font-size: 15px;"> <strong>Vehicle
+                                                        No.:-{{ $showData['purchaseOrder']->vehicle_number }}</strong> </span><br>
+                                                <span style="font-size: 15px;"> <strong>Transport Name :-{{ $showData['purchaseOrder']->transport_name}}</strong> </span>       
                                             </div>
                                         </td>
 

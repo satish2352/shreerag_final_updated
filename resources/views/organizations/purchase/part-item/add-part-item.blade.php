@@ -4,6 +4,7 @@
     .form-control {
       border: 2px solid #ced4da;
       border-radius: 4px;
+      background-color:#fff !important;
     }
     .error {
       color: red !important;
@@ -16,6 +17,43 @@
     }
     .form-control  {
         color: #303030 !important;
+    }
+
+      .custom-dropdown {
+        position: relative;
+        width: 100%;
+    }
+.dropdown-height{
+    height: 280px !important;
+}
+    .custom-dropdown .dropdown-options {
+        position: absolute;
+        width:600px !important;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #ccc;
+        z-index: 999;
+        /* max-height: 200px; */
+        overflow-y: auto;
+    }
+
+    .custom-dropdown .option {
+        padding: 6px 10px;
+        cursor: pointer;
+    }
+
+    .custom-dropdown .option:hover {
+        background: #f0f0f0;
+    }
+
+    .custom-dropdown .search-box {
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 5px;
+    }
+    .margin-bottom{
+        margin-bottom: 100px !important;
     }
 </style>
 <div class="row">
@@ -71,10 +109,31 @@
                                                 <span class="red-text">{{ $errors->first('unit_id') }}</span>
                                                 @endif
                                             </div>
-
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
+      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
                                                 <label for="hsn_id">HSN/SAC No <span class="text-danger">*</span></label>
-                                                <select class="form-control" name="hsn_id" id="hsn_id">
+
+                                            
+                                                                    <div class="custom-dropdown">
+                                                                        <input type="hidden" name="hsn_id" class="part_no" value="{{ old('hsn_id') }}">
+@php
+    $selectedPartItem = $dataOutputHSNMaster->firstWhere('id', old('hsn_id'));
+@endphp
+<input type="text" class="dropdown-input form-control part-no" placeholder="Select HSN/SAC No..." readonly value="{{ $selectedPartItem->name ?? '' }}">
+
+
+                                                                        <div class="dropdown-options dropdown-height" style="display: none;">
+                                                                            <input type="text" class="search-box form-control" placeholder="Search...">
+                                                                            <div class="options-list">
+                                                                                @foreach ($dataOutputHSNMaster as $data)
+                                                                                    <div class="option" data-id="{{ $data->id }}">{{ $data->name }}</div>
+                                                                                @endforeach
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                               </div>
+
+                                      
+                                                <!-- <select class="form-control" name="hsn_id" id="hsn_id">
                                                     <option value="">Select HSN/SAC No</option>
                                                     @foreach ($dataOutputHSNMaster as $HSNMaster)
                                                         <option value="{{ $HSNMaster['id'] }}" {{ old('hsn_id') == $HSNMaster['id'] ? 'selected' : '' }}>{{ $HSNMaster['name'] }}</option>
@@ -83,7 +142,7 @@
                                                 @if ($errors->has('hsn_id'))
                                                 <span class="red-text">{{ $errors->first('hsn_id') }}</span>
                                                 @endif
-                                            </div>
+                                            </div> -->
 
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
                                                 <label for="group_type_id">Group Master <span class="text-danger">*</span></label>
@@ -233,5 +292,52 @@
             }
         });
     });
+
+
+
+    // ✅ Custom dropdown (HSN/SAC No) functionality
+$(document).ready(function () {
+    const dropdownInput = $(".dropdown-input");
+    const dropdownOptions = $(".dropdown-options");
+    const searchBox = $(".search-box");
+
+    // Toggle dropdown visibility on input click
+    dropdownInput.on("click", function () {
+        const options = $(this).siblings(".dropdown-options");
+        $(".dropdown-options").not(options).hide(); // close others
+        options.toggle();
+        searchBox.val("").trigger("keyup"); // reset search when opening
+    });
+
+    // Select an option
+    $(document).on("click", ".option", function () {
+        const id = $(this).data("id");
+        const name = $(this).text();
+        const dropdown = $(this).closest(".custom-dropdown");
+
+        dropdown.find(".part_no").val(id); // hidden input value
+        dropdown.find(".dropdown-input").val(name); // show text
+        dropdown.find(".dropdown-options").hide(); // close dropdown
+    });
+
+    // Filter options by search
+    $(document).on("keyup", ".search-box", function () {
+        const search = $(this).val().toLowerCase();
+        const optionsList = $(this).siblings(".options-list").find(".option");
+
+        optionsList.each(function () {
+            const text = $(this).text().toLowerCase();
+            $(this).toggle(text.includes(search));
+        });
+    });
+
+    // Close dropdown when clicking outside
+    $(document).on("click", function (e) {
+        if (!$(e.target).closest(".custom-dropdown").length) {
+            $(".dropdown-options").hide();
+        }
+    });
+});
+
 </script>
 @endsection

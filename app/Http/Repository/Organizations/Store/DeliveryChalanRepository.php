@@ -20,13 +20,14 @@ class DeliveryChalanRepository
     }
     public function submitBOMToOwner($request){
         try {
+
             $dataOutput = new DeliveryChalan();
             $dataOutput->vendor_id = $request->vendor_id;
-            $dataOutput->transport_id = $request->transport_id;
+            // $dataOutput->transport_id = $request->transport_id;
             $dataOutput->vehicle_id = $request->vehicle_id;
             $dataOutput->customer_po_no = $request->customer_po_no;
             $dataOutput->plant_id = $request->plant_id;
-            $dataOutput->vehicle_number = $request->vehicle_number;
+            // $dataOutput->vehicle_number = $request->vehicle_number;
             $dataOutput->po_date = $request->po_date;
             $dataOutput->dc_date = now();
 
@@ -36,7 +37,12 @@ class DeliveryChalanRepository
             $dataOutput->tax_type = $request->tax_type;
             $dataOutput->tax_id = $request->tax_id;
             $dataOutput->remark = $request->remark;
-
+            if ($request->has('transport_id')) {
+                $dataOutput->transport_id = $request->transport_id;
+            }
+            if ($request->has('vehicle_number')) {
+                $dataOutput->vehicle_number = $request->vehicle_number;
+            }
             if ($request->has('business_id')) {
                 $dataOutput->business_id = $request->business_id;
             }
@@ -130,6 +136,9 @@ class DeliveryChalanRepository
             ->leftJoin('tbl_tax', function($join) {
                 $join->on('tbl_delivery_chalan.tax_id', '=', 'tbl_tax.id');
             })    
+             ->leftJoin('tbl_transport_name', function($join) {
+                $join->on('tbl_delivery_chalan.transport_id', '=', 'tbl_transport_name.id');
+            }) 
             ->where('tbl_delivery_chalan.id', $Id)   
             ->select('tbl_delivery_chalan.id',
                     'tbl_delivery_chalan.vendor_id',
@@ -146,7 +155,8 @@ class DeliveryChalanRepository
                     'tbl_delivery_chalan.remark',
                     'tbl_delivery_chalan.dc_number',
                     'tbl_delivery_chalan.dc_date',
-                     'tbl_delivery_chalan.remark'
+                     'tbl_delivery_chalan.remark',
+                     'tbl_transport_name.name as transport_name'
                 )
                 ->first();
             if (!$purchaseOrder) {
@@ -223,14 +233,21 @@ class DeliveryChalanRepository
             $dataOutput->vendor_id = $request->vendor_id;
             $dataOutput->tax_type = $request->tax_type;
             $dataOutput->tax_id = $request->tax_id;
-            $dataOutput->transport_id = $request->transport_id;
+            // $dataOutput->transport_id = $request->transport_id;
             $dataOutput->vehicle_id = $request->vehicle_id;
             $dataOutput->customer_po_no = $request->customer_po_no;
             $dataOutput->plant_id = $request->plant_id;
-            $dataOutput->vehicle_number = $request->vehicle_number;
+            // $dataOutput->vehicle_number = $request->vehicle_number;
             $dataOutput->po_date = $request->po_date;
             $dataOutput->lr_number = $request->lr_number;
             $dataOutput->remark = $request->remark;
+              if ($request->has('transport_id')) {
+                $dataOutput->transport_id = $request->transport_id;
+            }
+            if ($request->has('vehicle_number')) {
+                $dataOutput->vehicle_number = $request->vehicle_number;
+            }
+
             if ($request->has('business_id')) {
                 $dataOutput->business_id = $request->business_id;
             }

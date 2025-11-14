@@ -661,8 +661,8 @@
                         <a href="{{ route('list-rejected-chalan-updated') }}">
                             <i class="fa fa-ban icon-wrap"></i> <span
                                     class="mini-click-non">List Rejected Chalan</span></a></li>
-                        <li class="nav-item {{ request()->is('storedept/list-material-received-from-quality-po-tracking')  || request()->is('storedept/list-grn-details-po-tracking/*') ? 'active' : '' }}">
-                            <a href="{{ route('list-material-received-from-quality-po-tracking') }}">
+                        <li class="nav-item {{ request()->is('storedept/list-material-received-from-quality-bussinesswise-tracking')  || request()->is('storedept/list-grn-details-po-tracking/*') ? 'active' : '' }}">
+                            <a href="{{ route('list-material-received-from-quality-bussinesswise-tracking') }}">
                                 <i class="fa fa-clipboard-check icon-wrap"></i>
                                 <span class="mini-click-non">GRN List</span>
                             </a>
@@ -679,13 +679,13 @@
                                 </span></a>
                             <ul class="submenu-angle" aria-expanded="false">
                                <li class="{{ Request::is('store-item-stock-list') ? 'active' : '' }}"><a href="{{ route('store-item-stock-list') }}"> <i class="fa fa-boxes icon-wrap"></i><span
-                                                class="mini-click-non">Item Stock Report</span></a></li>    
+                                                class="mini-click-non">Item Balance</span></a></li>    
 
                                  <li class="{{ Request::is('list-consumption-report') ? 'active' : '' }}"><a href="{{ route('list-consumption-report') }}"><i class="fa fa-chart-line icon-wrap"></i><span
-                                                class="mini-click-non">Consumption Report</span></a></li>    
+                                                class="mini-click-non">Product Consumption</span></a></li>    
                                 
                                  <li class="{{ Request::is('stock-daily-report') ? 'active' : '' }}"><a href="{{ route('stock-daily-report') }}"><i class="fa fa-chart-line icon-wrap"></i><span
-                                                class="mini-click-non">Stock Item Report</span></a></li>    
+                                                class="mini-click-non">Inward</span></a></li>    
 
                             </ul>
                         </li>
@@ -700,8 +700,8 @@
                                 <span class="mini-click-non">Material For Purchase</span>
                             </a>
                         </li>
-                        <li class="nav-item {{ request()->is('storedept/list-material-received-from-quality') || request()->is('storedept/list-grn-details-po-tracking/*') ? 'active' : '' }}">
-                            <a href="{{ route('list-material-received-from-quality') }}">
+                        <li class="nav-item {{ request()->is('storedept/list-material-received-from-quality-bussinesswise') || request()->is('storedept/list-grn-details-po-tracking/*') ? 'active' : '' }}">
+                            <a href="{{ route('list-material-received-from-quality-bussinesswise') }}">
                                 <i class="fa fa-box-open icon-wrap"></i>
                                 <span class="mini-click-non">Material Received From Quality</span>
                             </a>
@@ -750,6 +750,8 @@
                          <li class="nav-item {{ request()->is('storedept/list-returnable-chalan') || request()->is('storedept/add-returnable-chalan/*') || request()->is('storedept/edit-returnable-chalan/*') || request()->is('storedept/show-returnable-chalan/*') ? 'active' : '' }}">           
                         <a href="{{ route('list-returnable-chalan') }}"><i class="fa fa-undo-alt icon-wrap"></i> <span
                                     class="mini-click-non">Returnable Challan</span></a></li>
+                         <li class="nav-item {{ Request::is('purchase/vendor/list-vendor') || request()->is('purchase/vendor/add-vendor') || request()->is('purchase/vendor/edit-vendor/*') ? 'active' : '' }}">
+                            <a href="{{ route('list-vendor') }}"> <i class="fa fa-users icon-wrap"></i><span class="mini-click-non">Vendor List</span></a></li>            
                                     
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.INVENTORY'))

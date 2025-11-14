@@ -207,7 +207,7 @@
                                                                         <label>Purchase Order Date <span class="text-danger">*</span></label>
                                                                         <div class="cal-icon">
                                                                             <input class="form-control datetimepicker"
-                                                                                type="text" name="invoice_date"
+                                                                                type="date" name="invoice_date"
                                                                                 id="invoice_date"
                                                                                 value="{{ $editDataNew->invoice_date }}">
                                                                         </div>

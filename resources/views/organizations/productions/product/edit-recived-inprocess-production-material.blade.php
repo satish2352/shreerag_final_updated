@@ -354,7 +354,9 @@ $(document).ready(function () {
     // ========================
     let rowCount = table.find("tbody tr").length;
     $("#add_more_btn").click(function () {
-        rowCount++;
+            rowCount = table.find("tbody tr").length + 1;
+            
+        // rowCount++;
         let newRow = `
             <tr>
                 <td><input type="text" class="form-control" value="${rowCount}" readonly></td>

@@ -475,7 +475,7 @@ $(document).on('click', '.custom-dropdown .option', function () {
                                                                     </div>
                                                                 </td>
                                                                    <td>
-    <input class="form-control basic_rate" name="addmore[${rowCount}][basic_rate]" type="number" step="any" required>
+    <input class="form-control basic_rate" name="addmore[${rowCount}][basic_rate]" type="number" step="any" readonly required>
     <input type="hidden" class="total_amount" name="addmore[${rowCount}][items_used_total_amount]" value="0">
 </td>
 
@@ -497,7 +497,7 @@ $(document).on('click', '.custom-dropdown .option', function () {
                     <input type="checkbox" class="material-send-checkbox" name="addmore[${rowCount}][material_send_production]" value="1">
                 </td>
                 <td>
-                    <button type="button" class="btn btn-danger remove-row delete-btn">
+                    <button type="button" class="btn btn-danger remove-row btn-sm delete-btn">
                         <i class="fa fa-trash"></i>
                     </button>
                 </td>

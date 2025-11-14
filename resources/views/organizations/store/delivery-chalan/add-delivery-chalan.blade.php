@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+@extends('admin.layouts.master-add-more')
 @section('content')
     <style>
         label {
@@ -134,8 +134,7 @@
                                                                 </div>
                                                                 <div class="col-lg-4 col-md-4 col-sm-4">
                                                                     <div class="form-group">
-                                                                        <label for="transport_id">Transport Name<span
-                                                                                class="text-danger">*</span></label>
+                                                                        <label for="transport_id">Transport Name (Optional)</label>
                                                                         <select class="form-control mb-2"
                                                                             name="transport_id" id="transport_id">
                                                                             <option value="" default>Select Transport
@@ -149,7 +148,7 @@
                                                                 </div>
                                                                 <div class="col-lg-4 col-md-4 col-sm-4">
                                                                     <div class="form-group">
-                                                                        <label for="vehicle_id">Vehicle Type<span
+                                                                        <label for="vehicle_id">Vehicle Type <span
                                                                                 class="text-danger">*</span></label>
                                                                         <select class="form-control mb-2" name="vehicle_id"
                                                                             id="vehicle_id">
@@ -204,8 +203,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                    <label for="vehicle_number">Vehicle Number <span
-                                                                            class="text-danger">*</span></label>
+                                                                    <label for="vehicle_number">Vehicle Number (Optional)</label>
                                                                     <input type="text" class="form-control"
                                                                         id="vehicle_number"
                                                                         value="{{ old('vehicle_number') }}"
@@ -466,11 +464,10 @@
                 </div>
             </div>
         </div>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+        <script>
 $(document).ready(function () {
 
     /* -----------------------------------------
@@ -560,9 +557,9 @@ $(document).ready(function () {
                         vendor_id: {
                             required: true
                         },
-                        transport_id: {
-                            required: true
-                        },
+                        // transport_id: {
+                        //     required: true
+                        // },
                         vehicle_id: {
                             required: true
                         },
@@ -575,9 +572,9 @@ $(document).ready(function () {
                         plant_id: {
                             required: true
                         },
-                        vehicle_number: {
-                            required: true
-                        },
+                        // vehicle_number: {
+                        //     required: true
+                        // },
                         po_date: {
                             required: true,
                         },
@@ -610,9 +607,9 @@ $(document).ready(function () {
                         vendor_id: {
                             required: "Select vendor name."
                         },
-                        transport_id: {
-                            required: "Select transport name."
-                        },
+                        // transport_id: {
+                        //     required: "Select transport name."
+                        // },
                         vehicle_id: {
                             required: "Select vehicle type."
                         },
@@ -622,9 +619,9 @@ $(document).ready(function () {
                         tax_id: {
                             required: "Select tax name."
                         },
-                        vehicle_number: {
-                            required: "Enter vehicle number."
-                        },
+                        // vehicle_number: {
+                        //     required: "Enter vehicle number."
+                        // },
                         plant_id: {
                             required: "Enter plant name."
                         },

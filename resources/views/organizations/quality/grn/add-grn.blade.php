@@ -140,7 +140,7 @@
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <div class="form-group">
-                                                            <label>Bill No. : <span class="text-danger">*</span></label>
+                                                            <label>Bill No. (Optional) :</label>
                                                             <input type="text" class="form-control" id="bill_no"
                                                                 value="{{ old('bill_no') }}" name="bill_no"
                                                                 placeholder="Enter Bill Number">
@@ -151,7 +151,7 @@
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <div class="form-group">
-                                                            <label>Bill Date. : <span class="text-danger">*</span></label>
+                                                            <label>Bill Date. (Optional) : </label>
                                                             <input type="date" class="form-control" id="bill_date"
                                                                 value="{{ old('bill_date') }}" name="bill_date"
                                                                 placeholder="Enter Bill Number">
@@ -360,12 +360,12 @@
                     invoice_date: {
                         required: true,
                     },
-                    bill_no: {
-                        required: true,
-                    },
-                    bill_date: {
-                        required: true,
-                    },
+                    // bill_no: {
+                    //     required: true,
+                    // },
+                    // bill_date: {
+                    //     required: true,
+                    // },
                     remark: {
                         required: true,
                     },
@@ -399,12 +399,12 @@
                     purchase_orders_id: {
                         required: "Please Enter PO No",
                     },
-                    bill_no: {
-                        required: "Please Enter Bill No.",
-                    },
-                    bill_date: {
-                        required: "Please select bill Date.",
-                    },
+                    // bill_no: {
+                    //     required: "Please Enter Bill No.",
+                    // },
+                    // bill_date: {
+                    //     required: "Please select bill Date.",
+                    // },
                     po_date: {
                         required: "Please select PO Date.",
                     },

@@ -891,16 +891,16 @@ function calculateGrandTotal() {
                     </script>
                     <script>
                         $(document).ready(function() {
-                            function setMinDate() {
-                                var today = new Date();
-                                var day = String(today.getDate()).padStart(2, '0');
-                                var month = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-                                var year = today.getFullYear();
-                                var todayDate = year + '-' + month + '-' + day;
+                            // function setMinDate() {
+                            //     var today = new Date();
+                            //     var day = String(today.getDate()).padStart(2, '0');
+                            //     var month = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                            //     var year = today.getFullYear();
+                            //     var todayDate = year + '-' + month + '-' + day;
 
-                                $('#invoice_date').attr('min', todayDate);
+                            //     $('#invoice_date').attr('min', todayDate);
 
-                            }
+                            // }
 
                             // Call the function to set the minimum date
                             setMinDate();

@@ -106,9 +106,9 @@
                                             <tr>
 
                                                 <th data-field="id">Sr.No.</th>
-                                                <th data-field="issue_updated_at" data-editable="false">Issue Date</th>
-                                                <th data-field="received_updated_at" data-editable="false">Received Date
-                                                </th>
+                                                <!-- <th data-field="received_updated_at" data-editable="false">Received Date
+                                                </th> -->
+                                                <th data-field="issue_updated_at" data-editable="false">Transaction Date</th>
                                                 <th data-field="description" data-editable="false">Entry No/Particulars</th>
                                                 <th data-field="received_quantity" data-editable="false">Received Qty</th>
                                                 <th data-field="issue_quantity" data-editable="false">Issue Qty</th>
@@ -185,12 +185,11 @@
                                 rows += `
                                     <tr>
                                         <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
-                                        <td>${item.issue_updated_at ? new Date(item.issue_updated_at).toLocaleDateString('en-IN') : '-'}</td>
-                                        <td>${item.received_updated_at ? new Date(item.received_updated_at).toLocaleDateString('en-IN') : '-'}</td>
-                                        <td>${item.description || '-'}</td>
-                                        <td>${item.received_quantity || '-'}</td>
-                                        <td>${item.issue_quantity || '-'}</td>
-                                        <td>${item.balance_quantity || '-'}</td>
+                                        <td>${item.date ? new Date(item.date).toLocaleDateString('en-IN') : '-'}</td>
+                                        <td>${item.part_name || '-'}</td>
+                                        <td>${item.received_qty || '-'}</td>
+                                        <td>${item.issue_qty || '-'}</td>
+                                        <td>${item.balance || '-'}</td>
                                     </tr>
                                 `;
                             });
@@ -199,7 +198,7 @@
                             const totals = res.totals;
                             const totalsRow = `
                                 <tr style="font-weight:bold; background:#f2f2f2;">
-                                    <td colspan="4" style="text-align:right;">Total:</td>
+                                    <td colspan="3" style="text-align:right;">Total:</td>
                                     <td>${totals.received}</td>
                                     <td>${totals.issue}</td>
                                     <td>${totals.balance}</td>

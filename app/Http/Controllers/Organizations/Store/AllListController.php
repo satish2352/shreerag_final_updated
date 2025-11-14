@@ -101,20 +101,20 @@ class AllListController extends Controller
             return $e;
         }
     }
-    public function getAllListMaterialReceivedFromQuality()
-    {
-        try {
-            $data_output = $this->service->getAllListMaterialReceivedFromQuality();
-            return view('organizations.store.list.list-material-received-from-quality', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
+    // public function getAllListMaterialReceivedFromQuality()
+    // {
+    //     try {
+    //         $data_output = $this->service->getAllListMaterialReceivedFromQuality();
+    //         return view('organizations.store.list.list-material-received-from-quality', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
     
   
-    public function submitFinalPurchaseOrder($id){
+    public function submitFinalPurchaseOrder(){
         try {
-            $data_output = $this->service->getPurchaseOrderBusinessWise($id);
+            $data_output = $this->service->getPurchaseOrderBusinessWise();
             if (is_array($data_output) && count($data_output) > 0 || $data_output instanceof \Illuminate\Support\Collection && $data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
                     $business_id = $data->business_details_id; 

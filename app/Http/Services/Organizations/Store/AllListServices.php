@@ -41,17 +41,17 @@ class AllListServices
             return $e;
         }
     }
-    public function getAllListMaterialReceivedFromQuality(){
+    // public function getAllListMaterialReceivedFromQuality(){
+    //     try {
+    //         $return_data = $this->repo->getAllListMaterialReceivedFromQuality();
+    //         return $return_data;
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+    public function getPurchaseOrderBusinessWise(){
         try {
-            $return_data = $this->repo->getAllListMaterialReceivedFromQuality();
-            return $return_data;
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
-    public function getPurchaseOrderBusinessWise($purchase_order_id){
-        try {
-            $data_output = $this->repo->getPurchaseOrderBusinessWise($purchase_order_id);
+            $data_output = $this->repo->getPurchaseOrderBusinessWise();
             return $data_output;
         } catch (\Exception $e) {
             return $e;

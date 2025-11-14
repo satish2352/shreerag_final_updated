@@ -90,14 +90,20 @@ class GRNRepository
         $dataOutput->gatepass_id = $gatepass->id;
         $dataOutput->po_date = $request->po_date;
         $dataOutput->grn_date = $request->grn_date;
-        $dataOutput->bill_no = $request->bill_no;
-        $dataOutput->bill_date = $request->bill_date;
+        // $dataOutput->bill_no = $request->bill_no;
+        // $dataOutput->bill_date = $request->bill_date;
         $dataOutput->remark = $request->remark;
         $dataOutput->grn_no_generate = $grn_no_generate;
         $dataOutput->image = 'null';
         $dataOutput->is_approve = '0';
         $dataOutput->is_active = '1';
         $dataOutput->is_deleted = '0';
+        if ($request->has('bill_no')) {
+            $dataOutput->bill_no = $request->bill_no;
+        }
+            if ($request->has('bill_date')) {
+            $dataOutput->bill_date = $request->bill_date;
+        }
         $dataOutput->save();
 
         $last_insert_id = $dataOutput->id;

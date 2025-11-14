@@ -294,51 +294,51 @@ class AllListRepository  {
             return $e;
         }
     }
-    public function getAllListMaterialReceivedFromQuality()
-    {
-        try {
-            $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
-            $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-                })
-                ->leftJoin('businesses', function ($join) {
-                    $join->on('business_application_processes.business_id', '=', 'businesses.id');
-                })
-                ->leftJoin('businesses_details', function ($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-                })
-                ->leftJoin('purchase_orders', function ($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-                })
-                ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
-                ->where('businesses.is_active', true)
-                ->where('businesses.is_deleted', 0)
-                ->select(
-                    'businesses_details.id',
-                    'businesses.title',
-                    'businesses_details.product_name',
-                    'businesses_details.description',
-                    'businesses.remarks',
-                    'businesses.is_active',
-                    'production.business_id',
-                    'production.id as productionId',
-                    'business_application_processes.store_receipt_no',
-                    'businesses.updated_at'
-                )
-                ->distinct() 
-                ->orderBy('businesses.updated_at', 'desc')
-                ->get();
+    // public function getAllListMaterialReceivedFromQuality()
+    // {
+    //     try {
+    //         $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
+    //         $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+    //                 $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+    //             })
+    //             ->leftJoin('businesses', function ($join) {
+    //                 $join->on('business_application_processes.business_id', '=', 'businesses.id');
+    //             })
+    //             ->leftJoin('businesses_details', function ($join) {
+    //                 $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+    //             })
+    //             ->leftJoin('purchase_orders', function ($join) {
+    //                 $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+    //             })
+    //             ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
+    //             ->where('businesses.is_active', true)
+    //             ->where('businesses.is_deleted', 0)
+    //             ->select(
+    //                 'businesses_details.id',
+    //                 'businesses.title',
+    //                 'businesses_details.product_name',
+    //                 'businesses_details.description',
+    //                 'businesses.remarks',
+    //                 'businesses.is_active',
+    //                 'production.business_id',
+    //                 'production.id as productionId',
+    //                 'business_application_processes.store_receipt_no',
+    //                 'businesses.updated_at'
+    //             )
+    //             ->distinct() 
+    //             ->orderBy('businesses.updated_at', 'desc')
+    //             ->get();
 
-            if ($data_output->isNotEmpty()) {
-                return $data_output;
-            } else {
-                return []; 
-            }
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
-    public function getPurchaseOrderBusinessWise($id)
+    //         if ($data_output->isNotEmpty()) {
+    //             return $data_output;
+    //         } else {
+    //             return []; 
+    //         }
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => $e->getMessage()], 500);
+    //     }
+    // }
+    public function getPurchaseOrderBusinessWise()
     {
         try {
             $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
@@ -364,7 +364,7 @@ class AllListRepository  {
             ->leftJoin('production_details', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
             })
-            ->where('businesses_details.id', $id)
+            // ->where('businesses_details.id', $id)
             ->where('businesses_details.is_deleted', 0)
             ->select(
                 'grn_tbl.id',

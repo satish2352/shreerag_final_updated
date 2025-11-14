@@ -89,7 +89,7 @@ class StoreController extends Controller
         try {
             $id = $id;
             $editData = $this->service->editProductMaterialWiseAddNewReq($id);
-            $dataOutputPartItem = PartItem::where('is_active', true)->get();
+            $dataOutputPartItem = PartItem::where('is_active', true)->orderByRaw('LOWER(description) ASC')->get();
             $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
             return view('organizations.store.list.edit-material-bom-wise-add-new-req', [
                 'productDetails' => $editData['productDetails'],
@@ -290,7 +290,7 @@ class StoreController extends Controller
             
             $business_id = base64_decode($business_id);
             $editData = $this->service->editProductMaterialWiseAdd($purchase_orders_id, $business_id);          
-            $dataOutputPartItem = PartItem::where('is_active', true)->get();
+            $dataOutputPartItem = PartItem::where('is_active', true)->orderByRaw('LOWER(description) ASC')->get();
             $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
             return view('organizations.store.list.edit-material-bom-wise-add', [
                 'productDetails' => $editData['productDetails'],

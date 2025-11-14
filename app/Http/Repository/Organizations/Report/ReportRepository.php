@@ -2416,102 +2416,263 @@ public function getStoreItemStockList($request)
 //         ];
 //     }
 // }
+// public function listStockDailyReport($request)
+// {
+//     try {
 
+//         // PART ITEM FILTER (Required for ledger)
+//         $partId = $request->description ?? null;
+
+//         // ------------------------------------------------------
+//         // 1. RECEIVED TRANSACTIONS (GRN)
+//         // ------------------------------------------------------
+//         $received = DB::table('tbl_grn_po_quantity_tracking')
+//             ->join('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_grn_po_quantity_tracking.part_no_id')
+//             ->selectRaw("
+//                 tbl_grn_po_quantity_tracking.updated_at AS date,
+//                 tbl_part_item.description AS part_name,
+//                 tbl_grn_po_quantity_tracking.quantity AS received_qty,
+//                 0 AS issue_qty
+//             ");
+
+//         if ($partId) {
+//             $received->where('tbl_part_item.id', $partId);
+//         }
+
+//         // Filters
+//         if ($request->filled('from_date')) {
+//             $received->whereDate('tbl_grn_po_quantity_tracking.updated_at', '>=', $request->from_date);
+//         }
+//         if ($request->filled('to_date')) {
+//             $received->whereDate('tbl_grn_po_quantity_tracking.updated_at', '<=', $request->to_date);
+//         }
+//         if ($request->filled('year')) {
+//             $received->whereYear('tbl_grn_po_quantity_tracking.updated_at', $request->year);
+//         }
+//         if ($request->filled('month')) {
+//             $received->whereMonth('tbl_grn_po_quantity_tracking.updated_at', $request->month);
+//         }
+
+//         // ------------------------------------------------------
+//         // 2. ISSUE TRANSACTIONS (PRODUCTION)
+//         // ------------------------------------------------------
+//         $issued = DB::table('production_details')
+//             ->join('tbl_part_item', 'tbl_part_item.id', '=', 'production_details.part_item_id')
+//             ->selectRaw("
+//                 production_details.updated_at AS date,
+//                 tbl_part_item.description AS part_name,
+//                 0 AS received_qty,
+//                 production_details.quantity AS issue_qty
+//             ");
+
+//         if ($partId) {
+//             $issued->where('tbl_part_item.id', $partId);
+//         }
+
+//         // Filters
+//         if ($request->filled('from_date')) {
+//             $issued->whereDate('production_details.updated_at', '>=', $request->from_date);
+//         }
+//         if ($request->filled('to_date')) {
+//             $issued->whereDate('production_details.updated_at', '<=', $request->to_date);
+//         }
+//         if ($request->filled('year')) {
+//             $issued->whereYear('production_details.updated_at', $request->year);
+//         }
+//         if ($request->filled('month')) {
+//             $issued->whereMonth('production_details.updated_at', $request->month);
+//         }
+
+//         // ------------------------------------------------------
+//         // 3. UNION BOTH (RECEIVED + ISSUED)
+//         // ------------------------------------------------------
+//         $ledger = $received->unionAll($issued)
+//             ->orderBy('date', 'asc')
+//             ->get();
+
+//         // ------------------------------------------------------
+//         // 4. RUNNING BALANCE LOGIC
+//         // ------------------------------------------------------
+//         $runningBalance = 0;
+//         foreach ($ledger as $row) {
+//             $runningBalance = $runningBalance + $row->received_qty - $row->issue_qty;
+//             $row->balance = $runningBalance;
+//         }
+
+//         // ------------------------------------------------------
+//         // 5. PAGINATION (MANUAL)
+//         // ------------------------------------------------------
+//         $currentPage = $request->input('currentPage', 1);
+//         $pageSize = $request->input('pageSize', 10);
+
+//         $totalItems = count($ledger);
+//         $pagedData = array_slice($ledger->toArray(), ($currentPage - 1) * $pageSize, $pageSize);
+
+//         return [
+//             'status' => true,
+//             'data' => $pagedData,
+//             'pagination' => [
+//                 'currentPage' => $currentPage,
+//                 'pageSize' => $pageSize,
+//                 'totalItems' => $totalItems,
+//                 'totalPages' => ceil($totalItems / $pageSize),
+//                 'from' => ($currentPage - 1) * $pageSize + 1,
+//                 'to' => min($currentPage * $pageSize, $totalItems),
+//             ],
+//             'totals' => [
+//                 'received' => $ledger->sum('received_qty'),
+//                 'issue' => $ledger->sum('issue_qty'),
+//                 'balance' => $runningBalance,
+//             ]
+//         ];
+
+//     } catch (\Exception $e) {
+//         return [
+//             'status' => false,
+//             'message' => $e->getMessage(),
+//         ];
+//     }
+// }
 public function listStockDailyReport($request)
 {
     try {
-        $query = PartItem::leftJoin('tbl_item_stock', 'tbl_part_item.id', '=', 'tbl_item_stock.part_item_id')
-            ->leftJoin('production_details', 'tbl_part_item.id', '=', 'production_details.part_item_id')
-              ->leftJoin('tbl_grn_po_quantity_tracking', 'tbl_part_item.id', '=', 'tbl_grn_po_quantity_tracking.part_no_id');
 
-               // 🔍 Search filter
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('tbl_part_item.description', 'like', "%{$search}%")
-                    ->orWhere('production_details.quantity', 'like', "%{$search}%")
-                    ->orWhere('tbl_item_stock.quantity', 'like', "%{$search}%")
-                    ->orWhere('tbl_grn_po_quantity_tracking.quantity', 'like', "%{$search}%");
-            });
-        }
+        $partId = $request->description ?? null;
 
+        /* -----------------------------------------
+           1. RECEIVED TRANSACTIONS (GRN)
+        ------------------------------------------*/
+        $received = DB::table('tbl_grn_po_quantity_tracking')
+            ->join('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_grn_po_quantity_tracking.part_no_id')
+            ->selectRaw("
+                tbl_grn_po_quantity_tracking.updated_at AS date,
+                tbl_part_item.description AS part_name,
+                tbl_grn_po_quantity_tracking.quantity AS received_qty,
+                0 AS issue_qty
+            ");
 
-        if ($request->filled('description')) {
-            $query->where('tbl_part_item.id', $request->description);
+        if ($partId) {
+            $received->where('tbl_part_item.id', $partId);
         }
         if ($request->filled('from_date')) {
-            $query->whereDate('tbl_item_stock.updated_at', '>=', $request->from_date);
+            $received->whereDate('tbl_grn_po_quantity_tracking.updated_at', '>=', $request->from_date);
         }
         if ($request->filled('to_date')) {
-            $query->whereDate('tbl_item_stock.updated_at', '<=', $request->to_date);
+            $received->whereDate('tbl_grn_po_quantity_tracking.updated_at', '<=', $request->to_date);
         }
         if ($request->filled('year')) {
-            $query->whereYear('tbl_item_stock.updated_at', $request->year);
+            $received->whereYear('tbl_grn_po_quantity_tracking.updated_at', $request->year);
         }
         if ($request->filled('month')) {
-            $query->whereMonth('tbl_item_stock.updated_at', $request->month);
+            $received->whereMonth('tbl_grn_po_quantity_tracking.updated_at', $request->month);
         }
 
-        $query->select(
-    'tbl_part_item.id',
-    'tbl_part_item.description',
-      'production_details.updated_at as issue_updated_at',
-    'production_details.quantity as issue_quantity',
-    'tbl_item_stock.quantity as balance_quantity',
-    'tbl_grn_po_quantity_tracking.quantity as received_quantity',
-    'tbl_grn_po_quantity_tracking.updated_at as received_updated_at'
-);
+        /* -----------------------------------------
+           2. ISSUE TRANSACTIONS (PRODUCTION)
+        ------------------------------------------*/
+        $issued = DB::table('production_details')
+            ->join('tbl_part_item', 'tbl_part_item.id', '=', 'production_details.part_item_id')
+            ->selectRaw("
+                production_details.updated_at AS date,
+                tbl_part_item.description AS part_name,
+                0 AS received_qty,
+                production_details.quantity AS issue_qty
+            ");
 
-   // 📄 Calculate totals for filtered data
-        $totalReceived = (clone $query)->sum('tbl_grn_po_quantity_tracking.quantity');
-        $totalIssue = (clone $query)->sum('production_details.quantity');
-        $totalBalance = (clone $query)->sum('tbl_item_stock.quantity');
-
-        if ($request->filled('export_type')) {
-            return [
-                'status' => true,
-                'data' => $query->get(),
-                'pagination' => null
-            ];
+        if ($partId) {
+            $issued->where('tbl_part_item.id', $partId);
+        }
+        if ($request->filled('from_date')) {
+            $issued->whereDate('production_details.updated_at', '>=', $request->from_date);
+        }
+        if ($request->filled('to_date')) {
+            $issued->whereDate('production_details.updated_at', '<=', $request->to_date);
+        }
+        if ($request->filled('year')) {
+            $issued->whereYear('production_details.updated_at', $request->year);
+        }
+        if ($request->filled('month')) {
+            $issued->whereMonth('production_details.updated_at', $request->month);
         }
 
-        // 📄 Pagination
-        $perPage = $request->input('pageSize', 10);
-        $currentPage = $request->input('currentPage', 1);
-
-        $totalItems = (clone $query)->get()->count();
-
-        $data = (clone $query)
-            ->skip(($currentPage - 1) * $perPage)
-            ->take($perPage)
+        /* -----------------------------------------
+           3. MERGE BOTH (UNION ALL)
+        ------------------------------------------*/
+        $ledger = $received->unionAll($issued)
+            ->orderBy('date', 'asc')
             ->get();
+
+        /* -----------------------------------------
+           4. RUNNING BALANCE LOGIC
+        ------------------------------------------*/
+        $runningBalance = 0;
+
+        foreach ($ledger as $row) {
+            $runningBalance = $runningBalance + $row->received_qty - $row->issue_qty;
+            $row->balance = $runningBalance;
+        }
+
+        // Prepare totals
+        $totals = [
+            'received' => $ledger->sum('received_qty'),
+            'issue'    => $ledger->sum('issue_qty'),
+            'balance'  => $runningBalance
+        ];
+
+        /* -----------------------------------------
+           5. EXPORT PDF / EXCEL
+        ------------------------------------------*/
+        if ($request->filled('export_type')) {
+
+            // PDF EXPORT
+            if ($request->export_type == 1) {
+                return [
+                    'export_pdf' => true,
+                    'data'       => $ledger,
+                    'totals'     => $totals
+                ];
+            }
+
+            // EXCEL EXPORT → implement as needed
+            if ($request->export_type == 2) {
+                return [
+                    'export_excel' => true,
+                    'data'         => $ledger,
+                    'totals'       => $totals
+                ];
+            }
+        }
+
+        /* -----------------------------------------
+           6. PAGINATION
+        ------------------------------------------*/
+        $currentPage = $request->input('currentPage', 1);
+        $pageSize    = $request->input('pageSize', 10);
+
+        $totalItems = count($ledger);
+        $pagedData  = array_slice($ledger->toArray(), ($currentPage - 1) * $pageSize, $pageSize);
 
         return [
             'status' => true,
-            'data' => $data,
+            'data' => $pagedData,
             'pagination' => [
                 'currentPage' => $currentPage,
-                'pageSize' => $perPage,
+                'pageSize' => $pageSize,
                 'totalItems' => $totalItems,
-                'totalPages' => ceil($totalItems / $perPage),
-                'from' => ($currentPage - 1) * $perPage + 1,
-                'to' => min($currentPage * $perPage, $totalItems),
+                'totalPages' => ceil($totalItems / $pageSize),
+                'from' => ($currentPage - 1) * $pageSize + 1,
+                'to' => min($currentPage * $pageSize, $totalItems),
             ],
-            'totals' => [
-                'received' => $totalReceived,
-                'issue' => $totalIssue,
-                'balance' => $totalBalance,
-            ]
-
-           
+            'totals' => $totals
         ];
-      
+
     } catch (\Exception $e) {
         return [
-            'status' => false,
-            'message' => $e->getMessage()
+            'status'  => false,
+            'message' => $e->getMessage(),
         ];
     }
 }
+
 
 }
