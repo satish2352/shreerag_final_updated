@@ -1,53 +1,53 @@
 <?php
 
 namespace App\Http\Controllers\Organizations\Logistics;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Services\Organizations\Logistics\LogisticsServices;
 use App\Http\Services\Organizations\Business\BusinessServices;
-use App\Models\ {
-    
-    BusinessApplicationProcesses,
+use App\Models\{
     Vendors,
-    Business,
     VehicleType,
     TransportName,
     Logistics
-    };
-use Session;
-use Validator;
-use Config;
-use Carbon;
+};
+use Illuminate\Support\Facades\Validator;
+use Exception;
 
 class LogisticsController extends Controller
-{ 
-    public function __construct(){
+{
+    protected $service;
+    protected $business_service;
+    public function __construct()
+    {
         $this->service = new LogisticsServices();
         $this->business_service = new BusinessServices();
     }
-  
+
     public function addLogistics($business_id)
     {
         try {
             $purchase_order_data = Logistics::where('quantity_tracking_id', $business_id)
-            ->leftJoin('tbl_customer_product_quantity_tracking', function ($join) {
-                $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_customer_product_quantity_tracking.id');
-            })
-            ->leftJoin('businesses', function($join) {
-                $join->on('tbl_logistics.business_id', '=', 'businesses.id');
-            })
-             ->leftJoin('businesses_details', function($join) {
-                $join->on('tbl_logistics.business_details_id', '=', 'businesses_details.id');
-            })
-            ->first();
-           
+                ->leftJoin('tbl_customer_product_quantity_tracking', function ($join) {
+                    $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_customer_product_quantity_tracking.id');
+                })
+                ->leftJoin('businesses', function ($join) {
+                    $join->on('tbl_logistics.business_id', '=', 'businesses.id');
+                })
+                ->leftJoin('businesses_details', function ($join) {
+                    $join->on('tbl_logistics.business_details_id', '=', 'businesses_details.id');
+                })
+                ->first();
+
             $dataOutputVendor = Vendors::where('is_active', 1)->get();
             $dataOutputVehicleType = VehicleType::where('is_active', 1)->get();
             $dataOutputTransportName = TransportName::where('is_active', 1)->get();
             $editData = $purchase_order_data;
-            return view('organizations.logistics.logisticsdept.add-logistics'
-            , compact('dataOutputVendor', 'editData', 'dataOutputVehicleType', 'dataOutputTransportName')
-        );
+            return view(
+                'organizations.logistics.logisticsdept.add-logistics',
+                compact('dataOutputVendor', 'editData', 'dataOutputVehicleType', 'dataOutputTransportName')
+            );
         } catch (\Exception $e) {
             return $e;
         }
@@ -56,11 +56,11 @@ class LogisticsController extends Controller
     public function storeLogistics(Request $request)
     {
         $rules = [
-        'vehicle_type_id' => 'required',
-        'transport_name_id' => 'required',
-        'truck_no' => 'required',
-        'from_place' => 'required',
-        'to_place' => 'required',
+            'vehicle_type_id' => 'required',
+            'transport_name_id' => 'required',
+            'truck_no' => 'required',
+            'from_place' => 'required',
+            'to_place' => 'required',
         ];
 
         $messages = [
@@ -95,9 +95,10 @@ class LogisticsController extends Controller
             return redirect('logisticsdept/add-logistics')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
-    
-    
-    public function sendToFianance($id,  $business_details_id){
+
+
+    public function sendToFianance($id,  $business_details_id)
+    {
         try {
             $accepted = base64_decode($id);
             $update_data = $this->service->sendToFianance($accepted,  $business_details_id);
@@ -105,5 +106,5 @@ class LogisticsController extends Controller
         } catch (\Exception $e) {
             return $e;
         }
-    } 
+    }
 }

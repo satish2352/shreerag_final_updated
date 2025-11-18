@@ -1,19 +1,19 @@
 <?php
+
 namespace App\Http\Repository\Organizations\Master;
-use Illuminate\Database\QueryException;
-use DB;
-use Illuminate\Support\Carbon;
-use App\Models\ {
-GroupMaster
+
+use App\Models\{
+    GroupMaster
 };
-use Config;
 
-class GroupRepository  {
+class GroupRepository
+{
 
 
-    public function getAll(){
+    public function getAll()
+    {
         try {
-          $data_output = GroupMaster::orderBy('updated_at', 'desc')->get();
+            $data_output = GroupMaster::orderBy('updated_at', 'desc')->get();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -22,7 +22,7 @@ class GroupRepository  {
 
 
     public function addAll($request)
-    {   
+    {
         try {
 
             $dataOutput = new GroupMaster();
@@ -32,7 +32,6 @@ class GroupRepository  {
             return [
                 'status' => 'success'
             ];
-
         } catch (\Exception $e) {
             return [
                 'msg' => $e->getMessage(),
@@ -41,8 +40,9 @@ class GroupRepository  {
         }
     }
 
-    public function getById($id){
-    try {
+    public function getById($id)
+    {
+        try {
             $dataOutputByid = GroupMaster::find($id);
             if ($dataOutputByid) {
                 return $dataOutputByid;
@@ -57,45 +57,45 @@ class GroupRepository  {
         }
     }
 
-      public function updateAll($request)
-{
-    try {
-        $return_data = array();
+    public function updateAll($request)
+    {
+        try {
+            $return_data = array();
 
-        $dataOutput = GroupMaster::find($request->id);
+            $dataOutput = GroupMaster::find($request->id);
 
-        if (!$dataOutput) {
+            if (!$dataOutput) {
+                return [
+                    'msg' => 'Update Data not found.',
+                    'status' => 'error'
+                ];
+            }
+
+            $dataOutput->name = $request->name;
+            $dataOutput->save();
+            $return_data['data'] = $dataOutput;
+            $return_data['status'] = 'success';
+
+            return $return_data;
+        } catch (\Exception $e) {
             return [
-                'msg' => 'Update Data not found.',
-                'status' => 'error'
+                'msg' => 'Failed to Update Data.',
+                'status' => 'error',
+                'error' => $e->getMessage()
             ];
         }
-
-        $dataOutput->name = $request->name;
-        $dataOutput->save();
-        $return_data['data'] = $dataOutput;
-        $return_data['status'] = 'success';
-
-        return $return_data;
-    } catch (\Exception $e) {
-        return [
-            'msg' => 'Failed to Update Data.',
-            'status' => 'error',
-            'error' => $e->getMessage()
-        ];
     }
-}
 
 
 
-    public function deleteById($id){
-            try {
-                $deleteDataById = GroupMaster::find($id);
-                $deleteDataById->delete();
-                return $deleteDataById;
-            
-            } catch (\Exception $e) {
-                return $e;
-            }    }
-
+    public function deleteById($id)
+    {
+        try {
+            $deleteDataById = GroupMaster::find($id);
+            $deleteDataById->delete();
+            return $deleteDataById;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
 }

@@ -1,222 +1,220 @@
 <?php
+
 namespace App\Http\Repository\Organizations\Designers;
-use Illuminate\Database\QueryException;
-use DB;
-use Illuminate\Support\Carbon;
-use App\Models\ {
-    Business, 
-    DesignModel,
+
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use App\Models\{
     BusinessApplicationProcesses,
-    ProductionModel,
-    DesignRevisionForProd
-    };
-use Config;
+};
 
-class AllListRepositor  {
+class AllListRepositor
+{
 
-  public function acceptdesignbyProduct(){
-    try {
-        $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION')];
-      
-      $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
-        $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-      })
-        ->leftJoin('designs', function ($join) {
-          $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-        })
+    public function acceptdesignbyProduct()
+    {
+        try {
+            $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION')];
 
-        ->leftJoin('businesses', function ($join) {
-          $join->on('business_application_processes.business_id', '=', 'businesses.id');
-        })
-        ->leftJoin('businesses_details', function($join) {
-          $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-      })
-        ->leftJoin('design_revision_for_prod', function ($join) {
-          $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-        })
-       
-         ->where('production.is_approved_production', 1)
-          ->whereIn('business_application_processes.production_status_id',$array_to_be_check)
-         
-          ->where('businesses_details.is_active', true)
-          ->where('businesses_details.is_deleted', 0)
-          ->distinct('businesses_details.id')
-          // ->where('businesses.is_active',true)
-          ->groupBy(
-            'businesses.id',
-            'designs.business_details_id',
-            'businesses.project_name',
-            'businesses.customer_po_number',
-            'businesses.title',
-            'businesses.created_at',
-            'businesses_details.id',
-            'businesses_details.product_name',
-            'businesses_details.description',
-            'businesses_details.quantity',
-            'businesses_details.rate',
-            'designs.bom_image',
-            'designs.design_image',
-            'design_revision_for_prod.id',
-            'design_revision_for_prod.design_image',
-            'design_revision_for_prod.bom_image',
-            'design_revision_for_prod.reject_reason_prod',
-            'production.updated_at'
-        )
-        ->select(
-            'businesses.id',
-            'designs.business_details_id',
-            'businesses_details.id',
-            'businesses.title',
-            'businesses.created_at',
-            'businesses.project_name',
-            'businesses.customer_po_number',
-            'businesses_details.product_name',
-            'businesses_details.description',
-            'businesses_details.quantity',
-            'designs.bom_image',
-            'designs.design_image',
-            'design_revision_for_prod.reject_reason_prod',
-            'design_revision_for_prod.id as design_revision_for_prod_id',
-            'design_revision_for_prod.design_image as re_design_image',
-            'design_revision_for_prod.bom_image as re_bom_image',
-            'production.updated_at'
-        )->orderBy('production.updated_at', 'desc')->get();
-   
-        return $data_output;
-      
-    } catch (\Exception $e) {
-        return $e;
-    }
-}
-public function getAllListDesignRecievedForCorrection() { //checked
-  try {
-      $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.DESIGN_SENT_TO_DESIGN_DEPT_FOR_REVISED')];
-
-      $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
-              $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-          })
-          ->leftJoin('designs', function ($join) {
-              $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-          })
-          ->leftJoin('businesses_details', function ($join) {
-              $join->on('production.business_details_id', '=', 'businesses_details.id');
-          })
-          ->leftJoin('businesses', function ($join) {
-              $join->on('business_application_processes.business_id', '=', 'businesses.id');
-          })
-          ->leftJoin('design_revision_for_prod', function ($join) {
-              $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-          })
-          ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
-          ->where('businesses.is_active', true)
-          ->where('businesses.is_deleted', 0)
-          ->select(
-            'businesses.id',
-            'businesses_details.id',
-            'businesses.project_name',
-            'businesses.customer_po_number',
-            'businesses.created_at',
-            'businesses_details.product_name',
-            'businesses_details.description',
-            'businesses_details.quantity',
-            'businesses_details.is_active',
-            'production.business_id',
-            DB::raw('MAX(design_revision_for_prod.id) as design_revision_for_prod_id'),
-            DB::raw('MAX(COALESCE(design_revision_for_prod.reject_reason_prod, "")) as reject_reason_prod'),
-            'businesses.updated_at',
-            'design_revision_for_prod.bom_image',
-            'designs.design_image'
-        )
-        ->groupBy(
-            'businesses.id',
-            'businesses_details.id',
-            'businesses.project_name',
-            'businesses.customer_po_number',
-            'businesses.created_at',
-            'businesses_details.product_name',
-            'businesses_details.description',
-            'businesses_details.quantity',
-            'businesses_details.is_active',
-            'production.business_id',
-            'businesses.updated_at',
-            'design_revision_for_prod.bom_image',
-            'designs.design_image'
-        )
-          ->orderBy('businesses.updated_at', 'desc')
-          ->get();
-
-      return $data_output;
-  } catch (\Exception $e) {
-      return $e;
-  }
-}
-
-public function getAllListCorrectedDesignSendToProduction() { //checked
-  try {
-       
-        $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECIVED_FROM_PRODUCTION_DEPT_REVISED')];
-
-        $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+            $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
             })
-            ->leftJoin('designs', function ($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-            })
-            ->leftJoin('businesses_details', function ($join) {
-                $join->on('production.business_details_id', '=', 'businesses_details.id');
-            })
-            ->leftJoin('businesses', function ($join) {
-                $join->on('business_application_processes.business_id', '=', 'businesses.id');
-            })
-            ->leftJoin('design_revision_for_prod', function ($join) {
-                $join->on('designs.id', '=', 'design_revision_for_prod.design_id');
-            })
-            ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
-            ->where('businesses.is_active', true)
-            ->where('businesses.is_deleted', 0)
-            ->select(
-                'business_application_processes.id',
-                'businesses.id as business_id',
-                'businesses.project_name',
-                'businesses.customer_po_number',
-                'businesses.title',
-                'businesses.created_at',
-                'businesses_details.id as business_details_id',
-                'businesses_details.product_name',
-                'businesses_details.quantity',
-                'businesses_details.description',
-                'businesses.remarks',
-                DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'), // Aggregated
-                DB::raw('MAX(designs.bom_image) as bom_image'), // Aggregated
-                DB::raw('MAX(designs.design_image) as design_image'), // Aggregated
-                DB::raw('MAX(design_revision_for_prod.bom_image) as re_bom_image'), // Aggregated
-                DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image'), // Aggregated
-                DB::raw('MAX(design_revision_for_prod.remark_by_design) as remark_by_design'), // Aggregated    
-                DB::raw('MAX(design_revision_for_prod.updated_at) as updated_at'), // Aggregated                
+                ->leftJoin('designs', function ($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+                })
+
+                ->leftJoin('businesses', function ($join) {
+                    $join->on('business_application_processes.business_id', '=', 'businesses.id');
+                })
+                ->leftJoin('businesses_details', function ($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+                })
+                ->leftJoin('design_revision_for_prod', function ($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+                })
+
+                ->where('production.is_approved_production', 1)
+                ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
+
+                ->where('businesses_details.is_active', true)
+                ->where('businesses_details.is_deleted', 0)
+                ->distinct('businesses_details.id')
+                // ->where('businesses.is_active',true)
+                ->groupBy(
+                    'businesses.id',
+                    'designs.business_details_id',
+                    'businesses.project_name',
+                    'businesses.customer_po_number',
+                    'businesses.title',
+                    'businesses.created_at',
+                    'businesses_details.id',
+                    'businesses_details.product_name',
+                    'businesses_details.description',
+                    'businesses_details.quantity',
+                    'businesses_details.rate',
+                    'designs.bom_image',
+                    'designs.design_image',
+                    'design_revision_for_prod.id',
+                    'design_revision_for_prod.design_image',
+                    'design_revision_for_prod.bom_image',
+                    'design_revision_for_prod.reject_reason_prod',
+                    'production.updated_at'
                 )
-            ->groupBy(
-                'business_application_processes.id',
-                'businesses.id',
-                'businesses.project_name',
-                'businesses.customer_po_number',
-                'businesses.title',
-                'businesses.created_at',
-                'businesses_details.id',
-                'businesses_details.product_name',
-                'businesses_details.quantity',
-                'businesses_details.description',
-                'businesses.remarks',
-                'design_revision_for_prod.updated_at',
-            )
-            ->orderBy('design_revision_for_prod.updated_at', 'desc')
-            ->get();
+                ->select(
+                    'businesses.id',
+                    'designs.business_details_id',
+                    'businesses_details.id',
+                    'businesses.title',
+                    'businesses.created_at',
+                    'businesses.project_name',
+                    'businesses.customer_po_number',
+                    'businesses_details.product_name',
+                    'businesses_details.description',
+                    'businesses_details.quantity',
+                    'designs.bom_image',
+                    'designs.design_image',
+                    'design_revision_for_prod.reject_reason_prod',
+                    'design_revision_for_prod.id as design_revision_for_prod_id',
+                    'design_revision_for_prod.design_image as re_design_image',
+                    'design_revision_for_prod.bom_image as re_bom_image',
+                    'production.updated_at'
+                )->orderBy('production.updated_at', 'desc')->get();
 
-        return $data_output;
-
-    } catch (\Exception $e) {
-        // Log the exception for debugging
-        \Log::error('Error in getAllRevisedDesign: ' . $e->getMessage());
-        return response()->json(['error' => $e->getMessage()], 500);
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
     }
-}
+    public function getAllListDesignRecievedForCorrection()
+    { //checked
+        try {
+            $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.DESIGN_SENT_TO_DESIGN_DEPT_FOR_REVISED')];
+
+            $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+            })
+                ->leftJoin('designs', function ($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+                })
+                ->leftJoin('businesses_details', function ($join) {
+                    $join->on('production.business_details_id', '=', 'businesses_details.id');
+                })
+                ->leftJoin('businesses', function ($join) {
+                    $join->on('business_application_processes.business_id', '=', 'businesses.id');
+                })
+                ->leftJoin('design_revision_for_prod', function ($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+                })
+                ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
+                ->where('businesses.is_active', true)
+                ->where('businesses.is_deleted', 0)
+                ->select(
+                    'businesses.id',
+                    'businesses_details.id',
+                    'businesses.project_name',
+                    'businesses.customer_po_number',
+                    'businesses.created_at',
+                    'businesses_details.product_name',
+                    'businesses_details.description',
+                    'businesses_details.quantity',
+                    'businesses_details.is_active',
+                    'production.business_id',
+                    DB::raw('MAX(design_revision_for_prod.id) as design_revision_for_prod_id'),
+                    DB::raw('MAX(COALESCE(design_revision_for_prod.reject_reason_prod, "")) as reject_reason_prod'),
+                    'businesses.updated_at',
+                    'design_revision_for_prod.bom_image',
+                    'designs.design_image'
+                )
+                ->groupBy(
+                    'businesses.id',
+                    'businesses_details.id',
+                    'businesses.project_name',
+                    'businesses.customer_po_number',
+                    'businesses.created_at',
+                    'businesses_details.product_name',
+                    'businesses_details.description',
+                    'businesses_details.quantity',
+                    'businesses_details.is_active',
+                    'production.business_id',
+                    'businesses.updated_at',
+                    'design_revision_for_prod.bom_image',
+                    'designs.design_image'
+                )
+                ->orderBy('businesses.updated_at', 'desc')
+                ->get();
+
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function getAllListCorrectedDesignSendToProduction()
+    { //checked
+        try {
+
+            $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECIVED_FROM_PRODUCTION_DEPT_REVISED')];
+
+            $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+            })
+                ->leftJoin('designs', function ($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+                })
+                ->leftJoin('businesses_details', function ($join) {
+                    $join->on('production.business_details_id', '=', 'businesses_details.id');
+                })
+                ->leftJoin('businesses', function ($join) {
+                    $join->on('business_application_processes.business_id', '=', 'businesses.id');
+                })
+                ->leftJoin('design_revision_for_prod', function ($join) {
+                    $join->on('designs.id', '=', 'design_revision_for_prod.design_id');
+                })
+                ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
+                ->where('businesses.is_active', true)
+                ->where('businesses.is_deleted', 0)
+                ->select(
+                    'business_application_processes.id',
+                    'businesses.id as business_id',
+                    'businesses.project_name',
+                    'businesses.customer_po_number',
+                    'businesses.title',
+                    'businesses.created_at',
+                    'businesses_details.id as business_details_id',
+                    'businesses_details.product_name',
+                    'businesses_details.quantity',
+                    'businesses_details.description',
+                    'businesses.remarks',
+                    DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'), // Aggregated
+                    DB::raw('MAX(designs.bom_image) as bom_image'), // Aggregated
+                    DB::raw('MAX(designs.design_image) as design_image'), // Aggregated
+                    DB::raw('MAX(design_revision_for_prod.bom_image) as re_bom_image'), // Aggregated
+                    DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image'), // Aggregated
+                    DB::raw('MAX(design_revision_for_prod.remark_by_design) as remark_by_design'), // Aggregated    
+                    DB::raw('MAX(design_revision_for_prod.updated_at) as updated_at'), // Aggregated                
+                )
+                ->groupBy(
+                    'business_application_processes.id',
+                    'businesses.id',
+                    'businesses.project_name',
+                    'businesses.customer_po_number',
+                    'businesses.title',
+                    'businesses.created_at',
+                    'businesses_details.id',
+                    'businesses_details.product_name',
+                    'businesses_details.quantity',
+                    'businesses_details.description',
+                    'businesses.remarks',
+                    'design_revision_for_prod.updated_at',
+                )
+                ->orderBy('design_revision_for_prod.updated_at', 'desc')
+                ->get();
+
+            return $data_output;
+        } catch (\Exception $e) {
+            // Log the exception for debugging
+            Log::error('Error in getAllRevisedDesign: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

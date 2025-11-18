@@ -1,18 +1,14 @@
 <?php
+
 namespace App\Http\Repository\Organizations\Store;
 
-use Illuminate\Database\QueryException;
-use DB;
-use Illuminate\Support\Carbon;
 use App\Models\{
     ReturnableChalan,
     ReturnableChalanItemDetails,
-    BusinessApplicationProcesses,
     ItemStock
 };
-use Config;
 
-class ReturnableChalanRepository 
+class ReturnableChalanRepository
 {
     public function getDetailsForPurchase($id)
     {
@@ -22,8 +18,8 @@ class ReturnableChalanRepository
     {
         try {
             $dataOutput = new ReturnableChalan();
-           $dataOutput->vendor_id = $request->vendor_id;
-        //     $dataOutput->transport_id = $request->transport_id;
+            $dataOutput->vendor_id = $request->vendor_id;
+            //     $dataOutput->transport_id = $request->transport_id;
             $dataOutput->vehicle_id = $request->vehicle_id;
             $dataOutput->plant_id = $request->plant_id;
             $dataOutput->tax_id = $request->tax_id;
@@ -35,7 +31,7 @@ class ReturnableChalanRepository
             $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
             $dataOutput->lr_number = $request->lr_number;
             $dataOutput->remark = $request->remark;
-             if ($request->has('transport_id')) {
+            if ($request->has('transport_id')) {
                 $dataOutput->transport_id = $request->transport_id;
             }
             if ($request->has('vehicle_number')) {
@@ -62,61 +58,64 @@ class ReturnableChalanRepository
                 $designDetails->amount = $item['amount'];
                 $designDetails->save();
 
-            $partItemId = $item['part_item_id'];
-            $itemStock = ItemStock::where('part_item_id', $partItemId)->first();
+                $partItemId = $item['part_item_id'];
+                $itemStock = ItemStock::where('part_item_id', $partItemId)->first();
 
-            if ($itemStock) {
-                if ($itemStock->quantity >= $item['quantity']) {
-                    $itemStock->quantity -= $item['quantity'];
-                    $itemStock->save();
+                if ($itemStock) {
+                    if ($itemStock->quantity >= $item['quantity']) {
+                        $itemStock->quantity -= $item['quantity'];
+                        $itemStock->save();
+                    } else {
+                        throw new \Exception("Not enough stock for part item ID: " . $partItemId);
+                    }
                 } else {
-                    throw new \Exception("Not enough stock for part item ID: " . $partItemId);
+                    throw new \Exception("Item stock not found for part item ID: " . $partItemId);
                 }
-            } else {
-                throw new \Exception("Item stock not found for part item ID: " . $partItemId);
             }
-            }
-           
+
             return [
                 'status' => 'success'
             ];
         } catch (\Exception $e) {
-            
+
             return [
                 'msg' => $e->getMessage(),
                 'status' => 'error'
             ];
         }
     }
-    public function getById($id) {
+    public function getById($id)
+    {
         try {
             $designData = ReturnableChalan::leftJoin('tbl_returnable_chalan_item_details as retd1', 'tbl_returnable_chalan.id', '=', 'retd1.returnable_chalan_id')
-            // leftJoin('tbl_returnable_chalan_item_details', 'tbl_returnable_chalan.id', '=', 'tbl_returnable_chalan_item_details.returnable_chalan_id')
-            ->leftJoin('tbl_hsn as hsn', 'hsn.id', '=', 'retd1.hsn_id')  
-            ->where('retd1.is_deleted', 0)   
-            ->select( 'retd1.*',
-            'retd1.id as tbl_returnable_chalan_item_details_id',
-                
-            //     'tbl_returnable_chalan_item_details.*', 
-            // 'tbl_returnable_chalan_item_details.id as tbl_returnable_chalan_item_details_id', 
-                'tbl_returnable_chalan.id as purchase_main_id', 
-                'tbl_returnable_chalan.vendor_id',
-                'tbl_returnable_chalan.transport_id',
-                 'tbl_returnable_chalan.vehicle_id',
-                  'tbl_returnable_chalan.business_id',
-                  'tbl_returnable_chalan.tax_type', 
-                  'tbl_returnable_chalan.tax_id',
-                  'tbl_returnable_chalan.po_date',
-                  'tbl_returnable_chalan.customer_po_no', 
-                'tbl_returnable_chalan.vehicle_number',
-                'tbl_returnable_chalan.plant_id', 
-                'tbl_returnable_chalan.vehicle_number',
-                'tbl_returnable_chalan.remark',
-                // 'tbl_returnable_chalan.image',
-                'tbl_returnable_chalan.id',
-                'hsn.name as hsn_name')
+                // leftJoin('tbl_returnable_chalan_item_details', 'tbl_returnable_chalan.id', '=', 'tbl_returnable_chalan_item_details.returnable_chalan_id')
+                ->leftJoin('tbl_hsn as hsn', 'hsn.id', '=', 'retd1.hsn_id')
+                ->where('retd1.is_deleted', 0)
+                ->select(
+                    'retd1.*',
+                    'retd1.id as tbl_returnable_chalan_item_details_id',
+
+                    //     'tbl_returnable_chalan_item_details.*', 
+                    // 'tbl_returnable_chalan_item_details.id as tbl_returnable_chalan_item_details_id', 
+                    'tbl_returnable_chalan.id as purchase_main_id',
+                    'tbl_returnable_chalan.vendor_id',
+                    'tbl_returnable_chalan.transport_id',
+                    'tbl_returnable_chalan.vehicle_id',
+                    'tbl_returnable_chalan.business_id',
+                    'tbl_returnable_chalan.tax_type',
+                    'tbl_returnable_chalan.tax_id',
+                    'tbl_returnable_chalan.po_date',
+                    'tbl_returnable_chalan.customer_po_no',
+                    'tbl_returnable_chalan.vehicle_number',
+                    'tbl_returnable_chalan.plant_id',
+                    'tbl_returnable_chalan.vehicle_number',
+                    'tbl_returnable_chalan.remark',
+                    // 'tbl_returnable_chalan.image',
+                    'tbl_returnable_chalan.id',
+                    'hsn.name as hsn_name'
+                )
                 ->where('tbl_returnable_chalan.id', $id)
-               
+
                 ->get();
             if ($designData->isEmpty()) {
                 return null;
@@ -127,7 +126,7 @@ class ReturnableChalanRepository
             return [
                 'msg' => 'Failed to get by id Citizen Volunteer.',
                 'status' => 'error',
-                'error' => $e->getMessage(), 
+                'error' => $e->getMessage(),
             ];
         }
     }
@@ -137,15 +136,15 @@ class ReturnableChalanRepository
 
             $return_id = $id;
             $purchaseOrder = ReturnableChalan::join('vendors', 'vendors.id', '=', 'tbl_returnable_chalan.vendor_id')
-            ->join('tbl_tax', 'tbl_tax.id', '=', 'tbl_returnable_chalan.tax_id')
+                ->join('tbl_tax', 'tbl_tax.id', '=', 'tbl_returnable_chalan.tax_id')
                 ->select(
                     'tbl_returnable_chalan.id',
                     'tbl_returnable_chalan.vendor_id',
-                    'vendors.vendor_name', 
-                    'vendors.vendor_company_name', 
-                    'vendors.vendor_email', 
-                    'vendors.vendor_address', 
-                    'vendors.gst_no', 
+                    'vendors.vendor_name',
+                    'vendors.vendor_company_name',
+                    'vendors.vendor_email',
+                    'vendors.vendor_address',
+                    'vendors.gst_no',
                     'vendors.contact_no',
                     'vendors.quote_no',
                     'tbl_returnable_chalan.tax_type',
@@ -154,7 +153,7 @@ class ReturnableChalanRepository
                     'tbl_returnable_chalan.dc_number',
                     // 'tbl_returnable_chalan.image',
                     'tbl_returnable_chalan.dc_date',
-                      'tbl_returnable_chalan.remark'
+                    'tbl_returnable_chalan.remark'
                 )
                 ->where('tbl_returnable_chalan.id', $return_id)
                 ->where('tbl_returnable_chalan.is_deleted', 0)
@@ -162,7 +161,7 @@ class ReturnableChalanRepository
             if (!$purchaseOrder) {
                 throw new \Exception('Purchase order not found.');
             }
-                $purchaseOrderDetails = ReturnableChalanItemDetails::join('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_returnable_chalan_item_details.part_item_id')
+            $purchaseOrderDetails = ReturnableChalanItemDetails::join('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_returnable_chalan_item_details.part_item_id')
                 ->join('tbl_unit', 'tbl_unit.id', '=', 'tbl_returnable_chalan_item_details.unit_id')
                 ->join('tbl_process_master', 'tbl_process_master.id', '=', 'tbl_returnable_chalan_item_details.process_id')
                 ->join('tbl_hsn', 'tbl_hsn.id', '=', 'tbl_returnable_chalan_item_details.hsn_id')
@@ -170,19 +169,19 @@ class ReturnableChalanRepository
                 ->where('tbl_returnable_chalan_item_details.is_deleted', 0)
                 ->select(
                     'tbl_returnable_chalan_item_details.part_item_id',
-                     'tbl_part_item.description',
-                     'tbl_part_item.part_number',
-                     'tbl_returnable_chalan_item_details.unit_id',
-                     'tbl_unit.name',
-                     'tbl_returnable_chalan_item_details.process_id',
-                     'tbl_process_master.name as process_name',
-                     'tbl_returnable_chalan_item_details.hsn_id',
-                     'tbl_hsn.name as hsn_name',
-                     'tbl_returnable_chalan_item_details.quantity',
-                     'tbl_returnable_chalan_item_details.rate',
-                     'tbl_returnable_chalan_item_details.size',
-                     'tbl_returnable_chalan_item_details.amount',
-                     
+                    'tbl_part_item.description',
+                    'tbl_part_item.part_number',
+                    'tbl_returnable_chalan_item_details.unit_id',
+                    'tbl_unit.name',
+                    'tbl_returnable_chalan_item_details.process_id',
+                    'tbl_process_master.name as process_name',
+                    'tbl_returnable_chalan_item_details.hsn_id',
+                    'tbl_hsn.name as hsn_name',
+                    'tbl_returnable_chalan_item_details.quantity',
+                    'tbl_returnable_chalan_item_details.rate',
+                    'tbl_returnable_chalan_item_details.size',
+                    'tbl_returnable_chalan_item_details.amount',
+
                 )
                 ->get();
             return [
@@ -193,8 +192,9 @@ class ReturnableChalanRepository
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    
-    public function updateAll($request){
+
+    public function updateAll($request)
+    {
         try {
             $return_data = array();
             $edit_id = $request->id;
@@ -217,10 +217,10 @@ class ReturnableChalanRepository
                 // $designDetails->rate = $request->input("rate_" . $i);
                 $rate = $request->input("rate_" . $i);
                 $designDetails->rate = isset($rate) && $rate !== '' ? $rate : null;
-                $designDetails->amount = $request->input("amount_" . $i);           
+                $designDetails->amount = $request->input("amount_" . $i);
                 $designDetails->save();
             }
-           
+
             // Update main design data
             $dataOutput = ReturnableChalan::findOrFail($request->purchase_main_id);
             $dataOutput->vendor_id = $request->vendor_id;
@@ -234,11 +234,11 @@ class ReturnableChalanRepository
             // $dataOutput->vehicle_number = $request->vehicle_number;
             $dataOutput->po_date = $request->po_date;
             $dataOutput->lr_number = $request->lr_number;
-        // $lastChalan = ReturnableChalan::orderBy('dc_number', 'desc')->first();
-        // $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
+            // $lastChalan = ReturnableChalan::orderBy('dc_number', 'desc')->first();
+            // $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
             $dataOutput->remark = $request->remark;
             // $dataOutput->image = $imageName;
-             if ($request->has('transport_id')) {
+            if ($request->has('transport_id')) {
                 $dataOutput->transport_id = $request->transport_id;
             }
             if ($request->has('vehicle_number')) {
@@ -252,7 +252,7 @@ class ReturnableChalanRepository
             if ($request->has('addmore')) {
                 foreach ($request->addmore as $key => $item) {
                     $designDetails = new ReturnableChalanItemDetails();
-              
+
                     // Assuming 'returnable_chalan_id' is a foreign key related to 'PurchaseOrderModel'
                     $designDetails->returnable_chalan_id = $request->purchase_main_id; // Set the parent design ID
                     $designDetails->part_item_id = $item['part_item_id'];
@@ -271,23 +271,21 @@ class ReturnableChalanRepository
                     // $designDetails->actual_quantity = '0';
                     // $designDetails->accepted_quantity = '0';
                     // $designDetails->rejected_quantity = '0';
-                  
-                    $designDetails->save();
-                    
-                    $itemStock = ItemStock::where('part_item_id', $item['part_item_id'])->first();
-                if ($itemStock) {
-                    $itemStock->quantity -= $item['quantity'];
-                    $itemStock->save();
-                }
-                 
 
+                    $designDetails->save();
+
+                    $itemStock = ItemStock::where('part_item_id', $item['part_item_id'])->first();
+                    if ($itemStock) {
+                        $itemStock->quantity -= $item['quantity'];
+                        $itemStock->save();
+                    }
                 }
             }
             $last_insert_id = $dataOutput->id;
 
             $return_data['last_insert_id'] = $last_insert_id;
             return  $return_data;
-                return [
+            return [
                 'msg' => 'Data updated successfully.',
                 'status' => 'success',
                 'designDetails' => $request->all()
@@ -300,74 +298,69 @@ class ReturnableChalanRepository
             ];
         }
     }
-       public function deleteById($id)
-       {
-           try {
-               $deleteDataById = ReturnableChalan::find($id);
-   
-               if (!$deleteDataById) {
-                   return [
-                       'msg' => 'Delivery Chalan not found.',
-                       'status' => 'error',
-                   ];
-               }
-               $itemDetails = ReturnableChalanItemDetails::where('returnable_chalan_id', $id)->get();
-   
-               foreach ($itemDetails as $item) {
-                   $itemStock = ItemStock::where('part_item_id', $item->part_item_id)->first();
-   
-                   if ($itemStock) {
-                       $itemStock->quantity += $item->quantity;
-                       $itemStock->save();
-                   }
-                   $item->is_deleted = 1;
-                   $item->save();
-               }
-               $deleteDataById->is_deleted = 1;
-               $deleteDataById->save();
-               return [
-                   'msg' => 'Record marked as deleted and stock updated successfully.',
-                   'status' => 'success',
-               ];
-   
-           } catch (\Exception $e) {
-               return [
-                   'msg' => 'Failed to delete the record.',
-                   'status' => 'error',
-                   'error' => $e->getMessage()
-               ];
-           }
-       }
-       public function deleteByIdAddmore($id)
-       {
-           try {
-               $deleteDataById = ReturnableChalanItemDetails::where('id', $id)
-                   ->where('is_deleted', 0)
-                   ->firstOrFail();
-               $itemStock = ItemStock::where('part_item_id', $deleteDataById->part_item_id)->first();
-       
-               if ($itemStock) {
-                   $itemStock->quantity += $deleteDataById->quantity;
-                   $itemStock->save();
-               }
-       
-               $deleteDataById->is_deleted = 1;
-               $deleteDataById->save();
-       
-               return [
-                   'msg' => 'Record marked as deleted and stock updated successfully.',
-                   'status' => 'success',
-               ];
-           } catch (\Exception $e) {
-               return [
-                   'msg' => 'Failed to delete the record.',
-                   'status' => 'error',
-                   'error' => $e->getMessage()
-               ];
-           }
-       }
-   
+    public function deleteById($id)
+    {
+        try {
+            $deleteDataById = ReturnableChalan::find($id);
 
+            if (!$deleteDataById) {
+                return [
+                    'msg' => 'Delivery Chalan not found.',
+                    'status' => 'error',
+                ];
+            }
+            $itemDetails = ReturnableChalanItemDetails::where('returnable_chalan_id', $id)->get();
 
+            foreach ($itemDetails as $item) {
+                $itemStock = ItemStock::where('part_item_id', $item->part_item_id)->first();
 
+                if ($itemStock) {
+                    $itemStock->quantity += $item->quantity;
+                    $itemStock->save();
+                }
+                $item->is_deleted = 1;
+                $item->save();
+            }
+            $deleteDataById->is_deleted = 1;
+            $deleteDataById->save();
+            return [
+                'msg' => 'Record marked as deleted and stock updated successfully.',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            return [
+                'msg' => 'Failed to delete the record.',
+                'status' => 'error',
+                'error' => $e->getMessage()
+            ];
+        }
+    }
+    public function deleteByIdAddmore($id)
+    {
+        try {
+            $deleteDataById = ReturnableChalanItemDetails::where('id', $id)
+                ->where('is_deleted', 0)
+                ->firstOrFail();
+            $itemStock = ItemStock::where('part_item_id', $deleteDataById->part_item_id)->first();
+
+            if ($itemStock) {
+                $itemStock->quantity += $deleteDataById->quantity;
+                $itemStock->save();
+            }
+
+            $deleteDataById->is_deleted = 1;
+            $deleteDataById->save();
+
+            return [
+                'msg' => 'Record marked as deleted and stock updated successfully.',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            return [
+                'msg' => 'Failed to delete the record.',
+                'status' => 'error',
+                'error' => $e->getMessage()
+            ];
+        }
+    }
 }

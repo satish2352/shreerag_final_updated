@@ -14,17 +14,19 @@
                             <div class="datatable-dashv1-list custom-datatable-overright">
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
-                                        data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="false"
-                                        data-key-events="true" data-show-toggle="true" data-resizable="true"
-                                        data-cookie="true" data-cookie-id-table="saveId" data-show-export="true"
-                                        data-click-to-select="true" data-toolbar="#toolbar">
+                                        data-show-columns="true" data-show-pagination-switch="true"
+                                        data-show-refresh="false" data-key-events="true" data-show-toggle="true"
+                                        data-resizable="true" data-cookie="true" data-cookie-id-table="saveId"
+                                        data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
                                         <thead>
                                             <tr>
                                                 <th data-field="id">ID</th>
-                                                 <th data-field="product_name" data-editable="false">Product Name</th>
+                                                <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="grn_number" data-editable="false">PO Number</th>
-                                                <th data-field="grn_date" data-editable="false">Title</th>
-                                                <th data-field="grn_date" data-editable="false">Description</th>
+                                                <th data-field="Title" data-editable="false">Title</th>
+                                                <th data-field="description" data-editable="false">Description</th>
+                                                <th data-field="grn_no_generate" data-editable="false">GRN No.</th>
+                                                <th data-field="vendor_name" data-editable="false">Vendor Name</th>
                                                 <th data-field="grn" data-editable="false">GRN</th>
                                             </tr>
                                         </thead>
@@ -32,17 +34,21 @@
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                     <td>{{ ucwords($data->product_name) }}</td>
+                                                    <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->purchase_orders_id) }}</td>
                                                     <td>{{ ucwords($data->Title) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
-                                                <td>
-                                                    <div style="display: flex; align-items: center;">
-                                                        <a href="{{ route('list-grn-details-po-tracking', [base64_encode($data->purchase_orders_id), base64_encode($data->business_details_id), base64_encode($data->grn_id)]) }}">
-                                                            <button data-toggle="tooltip" title="GRN Details" class="btn btn-sm btn-bg-colour">GRN Details</button>
-                                                        </a>
-                                                    </div>
-                                                </td>
+                                                    <td>{{ ucwords($data->grn_no_generate) }}</td>
+                                                    <td>{{ ucwords($data->vendor_name) }}</td>
+                                                    <td>
+                                                        <div style="display: flex; align-items: center;">
+                                                            <a
+                                                                href="{{ route('list-grn-details-po-tracking', [base64_encode($data->purchase_orders_id), base64_encode($data->business_details_id), base64_encode($data->grn_id)]) }}">
+                                                                <button data-toggle="tooltip" title="GRN Details"
+                                                                    class="btn btn-sm btn-bg-colour">GRN Details</button>
+                                                            </a>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -55,5 +61,5 @@
             </div>
         </div>
     </div>
-     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 @endsection

@@ -59,11 +59,10 @@
                                         <form action="{{ route('store-grn') }}" method="POST" id="addDesignsForm"
                                             enctype="multipart/form-data" autocomplete="off">
                                             @csrf
-                                            <input type="hidden" name="id" id=""
-                                            class="form-control" value="{{ $gatepassId->id }}"
-                                            placeholder="">
+                                            <input type="hidden" name="id" id="" class="form-control"
+                                                value="{{ $gatepassId->id }}" placeholder="">
 
-                                            
+
                                             <div class="form-group-inner">
 
                                                 {{-- ========================== --}}
@@ -107,7 +106,7 @@
 
                                                 {{-- =================== --}}
                                                 <div class="row">
-                                                                                                       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="grn_date">GRN Date:</label>
                                                         <input type="date" class="form-control" id="grn_date"
                                                             name="grn_date" placeholder="Enter GRN Date"
@@ -134,13 +133,12 @@
                                                         <label for="gatepass_name">Customer Name :</label>
                                                         <input type="text" class="form-control" id="gatepass_name"
                                                             name="gatepass_name" placeholder="Enter PO Date"
-                                                            value="{{ $gatepassId->gatepass_name }}"
-                                                            readonly>
+                                                            value="{{ $gatepassId->gatepass_name }}" readonly>
 
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <div class="form-group">
-                                                            <label>Bill No. (Optional) :</label>
+                                                            <label>Bill No. <span class="text-danger">*</span> :</label>
                                                             <input type="text" class="form-control" id="bill_no"
                                                                 value="{{ old('bill_no') }}" name="bill_no"
                                                                 placeholder="Enter Bill Number">
@@ -151,7 +149,7 @@
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <div class="form-group">
-                                                            <label>Bill Date. (Optional) : </label>
+                                                            <label>Bill Date. <span class="text-danger">*</span> : </label>
                                                             <input type="date" class="form-control" id="bill_date"
                                                                 value="{{ old('bill_date') }}" name="bill_date"
                                                                 placeholder="Enter Bill Number">
@@ -161,7 +159,8 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="image">Signature :</label>
+                                                        <label for="image">Signature <span class="text-danger">*</span>
+                                                            :</label>
                                                         <input type="file" class="form-control" accept="image/*"
                                                             id="image" name="image">
                                                     </div>
@@ -184,20 +183,23 @@
                                                         </tr>
                                                         @foreach ($purchase_order_details_data as $index => $item)
                                                             <tr>
-                                                                <input type="hidden" name="addmore[{{ $index }}][edit_id]"
+                                                                <input type="hidden"
+                                                                    name="addmore[{{ $index }}][edit_id]"
                                                                     placeholder="Enter Description" class="form-control"
                                                                     value="{{ $item->id }}" readonly />
-                                                                <td><input type="text" name="addmore[{{ $index }}][part_description]"
+                                                                <td><input type="text"
+                                                                        name="addmore[{{ $index }}][part_description]"
                                                                         placeholder="Enter Description"
                                                                         class="form-control"
                                                                         value="{{ $item->part_description }}" readonly />
                                                                 </td>
-                                                                <td><input type="text" name="addmore[{{ $index }}][description]"
-                                                                    placeholder="Enter description"
-                                                                    class="form-control"
-                                                                    value="{{ $item->description }}" readonly />
-                                                            </td>
-                                                                
+                                                                <td><input type="text"
+                                                                        name="addmore[{{ $index }}][description]"
+                                                                        placeholder="Enter description"
+                                                                        class="form-control"
+                                                                        value="{{ $item->description }}" readonly />
+                                                                </td>
+
                                                                 <td><input type="text"
                                                                         name="addmore[{{ $index }}][chalan_quantity]"
                                                                         placeholder="Enter Chalan Qty"
@@ -205,29 +207,26 @@
                                                                         value="{{ $item->quantity }}" readonly />
                                                                 </td>
                                                                 <td><input type="text"
-                                                                    name="addmore[{{ $index }}][unit_name]"
-                                                                    placeholder="Enter"
-                                                                    class="form-control unit_name" 
-                                                                    value="{{ $item->unit_name }}" readonly/>
-                                                            {{-- </td>
+                                                                        name="addmore[{{ $index }}][unit_name]"
+                                                                        placeholder="Enter" class="form-control unit_name"
+                                                                        value="{{ $item->unit_name }}" readonly />
+                                                                    {{-- </td>
                                                                 <td><input type="text"
                                                                     name="addmore[{{ $index }}][hsn_name]"
                                                                     placeholder="Enter"
                                                                     class="form-control hsn_name" 
                                                                     value="{{ $item->hsn_name }}" readonly />
                                                             </td> --}}
-                                                            <td><input type="text"
-                                                                name="addmore[{{ $index }}][rate]"
-                                                                placeholder="Enter"
-                                                                class="form-control rate" 
-                                                                value="{{ $item->rate }}" readonly />
-                                                        </td>
-                                                        <td><input type="text"
-                                                            name="addmore[{{ $index }}][discount]"
-                                                            placeholder="Enter"
-                                                            class="form-control discount" 
-                                                            value="{{ $item->discount }}%" readonly />
-                                                    </td>
+                                                                <td><input type="text"
+                                                                        name="addmore[{{ $index }}][rate]"
+                                                                        placeholder="Enter" class="form-control rate"
+                                                                        value="{{ $item->rate }}" readonly />
+                                                                </td>
+                                                                <td><input type="text"
+                                                                        name="addmore[{{ $index }}][discount]"
+                                                                        placeholder="Enter" class="form-control discount"
+                                                                        value="{{ $item->discount }}%" readonly />
+                                                                </td>
 
 
                                                                 <td><input type="text"
@@ -235,15 +234,15 @@
                                                                         placeholder="Enter Actual Qty"
                                                                         class="form-control actual_quantity" />
                                                                 </td>
-                                                               
-                                                           
-                                                       
+
+
+
                                                                 <td><input type="text"
                                                                         name="addmore[{{ $index }}][accepted_quantity]"
                                                                         placeholder="Enter Accepted Qty"
                                                                         class="form-control accepted_quantity" />
                                                                 </td>
-                                                               
+
                                                                 <td><input type="text"
                                                                         name="addmore[{{ $index }}][rejected_quantity]"
                                                                         placeholder="Enter Rejected Qty"
@@ -251,24 +250,26 @@
                                                                 </td>
 
                                                                 <td><input type="text"
-                                                                    name="addmore[{{ $index }}][remaining_quantity]"
-                                                                    placeholder="0" value="{{ $item->remaining_quantity }}"
-                                                                    class="form-control remaining_quantity" readonly />
-                                                            </td>
+                                                                        name="addmore[{{ $index }}][remaining_quantity]"
+                                                                        placeholder="0"
+                                                                        value="{{ $item->remaining_quantity }}"
+                                                                        class="form-control remaining_quantity" readonly />
+                                                                </td>
                                                                 {{-- <td><button type="button" name="add" id="add"
                                                                         class="btn btn-success">Add More</button></td> --}}
                                                             </tr>
                                                         @endforeach
                                                     </table>
                                                 </div>
-                                                
+
                                                 <div class="row">
                                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                        <label for="remark">Remark:</label>
+                                                        <label for="remark">Remark <span
+                                                                class="text-danger">*</span>:</label>
                                                         <textarea class="form-control" rows="3" type="text" class="form-control" id="remark" name="remark"
                                                             placeholder="Enter Remark"></textarea>
                                                     </div>
-                                      
+
                                                 </div>
 
                                                 <div class="login-btn-inner">
@@ -325,21 +326,21 @@
             $(this).parents("tr").remove();
         });
     </script>
-<script>
-    $(document).ready(function() {
-        $(document).on('keyup', '.actual_quantity, .accepted_quantity', function(e) {
-            var currentRow = $(this).closest("tr");
-            var current_row_actual_quantity = currentRow.find('.actual_quantity').val();
-            var current_row_accepted_quantity = currentRow.find('.accepted_quantity').val();
-            var new_rejected_quantity = '0';
-            if (current_row_actual_quantity != '' && current_row_accepted_quantity != '') {
-                var new_rejected_quantity = current_row_actual_quantity - current_row_accepted_quantity;
-            }
+    <script>
+        $(document).ready(function() {
+            $(document).on('keyup', '.actual_quantity, .accepted_quantity', function(e) {
+                var currentRow = $(this).closest("tr");
+                var current_row_actual_quantity = currentRow.find('.actual_quantity').val();
+                var current_row_accepted_quantity = currentRow.find('.accepted_quantity').val();
+                var new_rejected_quantity = '0';
+                if (current_row_actual_quantity != '' && current_row_accepted_quantity != '') {
+                    var new_rejected_quantity = current_row_actual_quantity - current_row_accepted_quantity;
+                }
 
-            currentRow.find('.rejected_quantity').val(new_rejected_quantity);
+                currentRow.find('.rejected_quantity').val(new_rejected_quantity);
+            });
         });
-    });
-</script>
+    </script>
     <script>
         jQuery.noConflict();
         jQuery(document).ready(function($) {
@@ -360,12 +361,12 @@
                     invoice_date: {
                         required: true,
                     },
-                    // bill_no: {
-                    //     required: true,
-                    // },
-                    // bill_date: {
-                    //     required: true,
-                    // },
+                    bill_no: {
+                        required: true,
+                    },
+                    bill_date: {
+                        required: true,
+                    },
                     remark: {
                         required: true,
                     },
@@ -399,12 +400,12 @@
                     purchase_orders_id: {
                         required: "Please Enter PO No",
                     },
-                    // bill_no: {
-                    //     required: "Please Enter Bill No.",
-                    // },
-                    // bill_date: {
-                    //     required: "Please select bill Date.",
-                    // },
+                    bill_no: {
+                        required: "Please Enter Bill No.",
+                    },
+                    bill_date: {
+                        required: "Please select bill Date.",
+                    },
                     po_date: {
                         required: "Please select PO Date.",
                     },

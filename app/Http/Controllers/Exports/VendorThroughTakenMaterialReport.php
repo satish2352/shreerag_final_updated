@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Exports;
 
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -15,24 +16,33 @@ class VendorThroughTakenMaterialReport implements FromCollection, WithHeadings
 
     public function collection()
     {
-        return $this->data->map(function ($item) {
+        $serial = 1; // Start serial number
+
+        return $this->data->map(function ($item) use (&$serial) {
             return [
-                $item['vendor_name'] ?? '-',
-                $item['vendor_company_name'] ?? '-',
-                $item['vendor_email'] ?? '-',
-                $item['contact_no'] ?? '-',
+                'serial_no'            => $serial++,
+                'latest_update'           => isset($item['latest_update'])
+                    ? date('d-m-Y H:i:s', strtotime($item['latest_update']))
+                    : '-',
+                'vendor_name'          => $item['vendor_name'] ?? '-',
+                'vendor_company_name'  => $item['vendor_company_name'] ?? '-',
+                'vendor_email'         => $item['vendor_email'] ?? '-',
+                'contact_no'           => $item['contact_no'] ?? '-',
+
             ];
         });
     }
- 
+
     public function headings(): array
     {
         return [
+            'Sr No',
+            'Date',
             'Vendor Name',
             'Vendor Company Name',
             'Vendor Email',
             'Vendor Contact Number',
-            
+
         ];
     }
 }

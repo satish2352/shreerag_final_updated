@@ -1,21 +1,26 @@
 <?php
+
 namespace App\Http\Services\Website;
+
 use App\Http\Repository\Website\IndexRepository;
-use Carbon\Carbon;
+use Exception;
 
 class IndexServices
 {
 
-	protected $repo;
+    protected $repo;
+    protected $service;
+
     public function __construct()
     {
         $this->repo = new IndexRepository();
-    } 
-    public function getAllTestimonial(){
+    }
+    public function getAllTestimonial()
+    {
         try {
             return $this->repo->getAllTestimonial();
         } catch (\Exception $e) {
             return $e;
         }
-    }     
+    }
 }

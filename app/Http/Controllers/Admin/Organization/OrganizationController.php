@@ -5,37 +5,44 @@ namespace App\Http\Controllers\Admin\Organization;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Services\Admin\Organization\OrganizationServices;
-use Session;
-use Validator;
-use Config;
-use Carbon;
-use App\Models\
- {
-    OrganizationModel, DepartmentsModel, RolesModel, EmployeesModel, HREmployee
-}
-;
+use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
+use Exception;
+use App\Models\{
+    OrganizationModel,
+    DepartmentsModel,
+    RolesModel,
+    EmployeesModel,
+    HREmployee
+};
 
 class OrganizationController extends Controller
- {
+{
 
-    public function __construct() {
+    protected $service;
+
+    public function __construct()
+    {
         $this->service = new OrganizationServices();
     }
 
-    public function index() {
+    public function index()
+    {
         try {
             $getOutput = $this->service->getAll();
-            return view( 'admin.pages.organizations.list-organizations', compact( 'getOutput' ) );
-        } catch ( \Exception $e ) {
+            return view('admin.pages.organizations.list-organizations', compact('getOutput'));
+        } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function add() {
-        return view( 'admin.pages.organizations.add-organizations' );
+    public function add()
+    {
+        return view('admin.pages.organizations.add-organizations');
     }
 
-    public function store( Request $request ) {
+    public function store(Request $request)
+    {
         $rules = [
             'company_name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:tbl_organizations,email',
@@ -78,27 +85,27 @@ class OrganizationController extends Controller
         ];
 
         try {
-            $validation = Validator::make( $request->all(), $rules, $messages );
+            $validation = Validator::make($request->all(), $rules, $messages);
 
-            if ( $validation->fails() ) {
-                return redirect( 'add-organizations' )
-                ->withInput()
-                ->withErrors( $validation );
+            if ($validation->fails()) {
+                return redirect('add-organizations')
+                    ->withInput()
+                    ->withErrors($validation);
             } else {
-                $add_record = $this->service->addAll( $request );
-                if ( $add_record ) {
-                    $msg = $add_record[ 'msg' ];
-                    $status = $add_record[ 'status' ];
+                $add_record = $this->service->addAll($request);
+                if ($add_record) {
+                    $msg = $add_record['msg'];
+                    $status = $add_record['status'];
 
-                    if ( $status == 'success' ) {
-                        return redirect( 'list-organizations' )->with( compact( 'msg', 'status' ) );
+                    if ($status == 'success') {
+                        return redirect('list-organizations')->with(compact('msg', 'status'));
                     } else {
-                        return redirect( 'add-organizations' )->withInput()->with( compact( 'msg', 'status' ) );
+                        return redirect('add-organizations')->withInput()->with(compact('msg', 'status'));
                     }
                 }
             }
-        } catch ( Exception $e ) {
-            return redirect( 'add-organizations' )->withInput()->with( [ 'msg' => $e->getMessage(), 'status' => 'error' ] );
+        } catch (Exception $e) {
+            return redirect('add-organizations')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
 
@@ -109,24 +116,26 @@ class OrganizationController extends Controller
 
     //     return view( 'admin.pages.organizations.edit-organizations', compact( 'editData' ) );
     // }
-    public function edit(Request $request) {
+    public function edit(Request $request)
+    {
         // Decode the ID from the request
         $edit_data_id = base64_decode($request->id);
-        
+
         // Retrieve the data using the service
         $editData = $this->service->getById($edit_data_id);
-        
+
         // Ensure founding_date exists before trying to format it
         if ($editData->founding_date) {
             // Format the founding_date to 'd/m/Y' for display in the edit form
             $editData->founding_date = \Carbon\Carbon::parse($editData->founding_date)->format('d-m-Y');
         }
-    
+
         // Return the view with the formatted data
         return view('admin.pages.organizations.edit-organizations', compact('editData'));
     }
-    
-    public function update( Request $request ) {
+
+    public function update(Request $request)
+    {
         $rules = [
             // 'company_name' => 'required|string|max:255',
             // 'email' => 'required|email|max:255',
@@ -140,66 +149,43 @@ class OrganizationController extends Controller
         //     $rules[ 'image' ] = 'required|image|mimes:jpeg,png,jpg|max:10240|min:5';
         //     //|dimensions:min_width = 100, min_height = 100, max_width = 5000, max_height = 5000';
         //     }
-           
-            $messages = [
-                    // 'company_name.required' => 'Please enter the company name.',
-                    // 'company_name.string' => 'The company name must be a valid string.',
-                    // 'company_name.max' => 'The company name must not exceed 255 characters.',
-                    // 'email.required' => 'Please enter the email.',
-                    // 'email.email' => 'Please enter a valid email address.',
-                    // 'email.max' => 'The email must not exceed 255 characters.',
-                    // 'gst_no.required' => 'The gst number is required.',
-                    // 'mobile_number.required' => 'Please enter the mobile number.',
-                    // 'mobile_number.string' => 'The mobile number must be a valid string.',
-                    // 'mobile_number.max' => 'The mobile number must not exceed 20 characters.',
-                    // 'address.required' => 'Please enter the address.',
-                    // 'address.string' => 'The address must be a valid string.',
-                    // 'address.max' => 'The address must not exceed 255 characters.',
-                    // 'employee_count.integer' => 'The employee count must be an integer.',
-                    // // 'founding_date.date' => 'Please enter a valid founding date.',
-                    // 'website_link.url' => 'Please enter a valid website URL.',
-                    // 'website_link.max' => 'The website must not exceed 255 characters.',
-                    // 'image.required' => 'The image is required.',
-                    // 'image.image' => 'The image must be a valid image file.',
-                    // 'image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
-                    // 'image.max' => 'The image size must not exceed 10MB.',
-                    // 'image.min' => 'The image size must not be less than 5KB.',
-                ];
-    
-            try {
-                $validation = Validator::make($request->all(),$rules, $messages);
-                if ($validation->fails()) {
-                    return redirect()->back()
-                        ->withInput()
-                        ->withErrors($validation);
-                } else {
-                    $update_data = $this->service->updateAll($request);
-                    if ($update_data) {
-                        $msg = $update_data['msg'];
-                        $status = $update_data['status'];
-                        if ($status == 'success') {
-                            return redirect('list-organizations')->with(compact('msg', 'status'));
-                        } else {
-                            return redirect()->back()
-                                ->withInput()
-                                ->with(compact('msg', 'status'));
-                        }
-                    }
-                }
-            } catch (Exception $e) {
+
+        $messages = [
+            // 'company_name.required' => 'Please enter the company name.',
+            // 'company_name.string' => 'The company name must be a valid string.',
+            // 'company_name.max' => 'The company name must not exceed 255 characters.',
+            // 'email.required' => 'Please enter the email.',
+            // 'email.email' => 'Please enter a valid email address.',
+            // 'email.max' => 'The email must not exceed 255 characters.',
+            // 'gst_no.required' => 'The gst number is required.',
+            // 'mobile_number.required' => 'Please enter the mobile number.',
+            // 'mobile_number.string' => 'The mobile number must be a valid string.',
+            // 'mobile_number.max' => 'The mobile number must not exceed 20 characters.',
+            // 'address.required' => 'Please enter the address.',
+            // 'address.string' => 'The address must be a valid string.',
+            // 'address.max' => 'The address must not exceed 255 characters.',
+            // 'employee_count.integer' => 'The employee count must be an integer.',
+            // // 'founding_date.date' => 'Please enter a valid founding date.',
+            // 'website_link.url' => 'Please enter a valid website URL.',
+            // 'website_link.max' => 'The website must not exceed 255 characters.',
+            // 'image.required' => 'The image is required.',
+            // 'image.image' => 'The image must be a valid image file.',
+            // 'image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
+            // 'image.max' => 'The image size must not exceed 10MB.',
+            // 'image.min' => 'The image size must not be less than 5KB.',
+        ];
+
+        try {
+            $validation = Validator::make($request->all(), $rules, $messages);
+            if ($validation->fails()) {
                 return redirect()->back()
                     ->withInput()
-                    ->with(['msg' => $e->getMessage(), 'status' => 'error']);
-            }
-        }
-        
-        public function destroy(Request $request){
-            $delete_data_id = base64_decode($request->id);
-            try {
-                $delete_record = $this->service->deleteById($delete_data_id);
-                if ($delete_record) {
-                    $msg = $delete_record['msg'];
-                    $status = $delete_record['status'];
+                    ->withErrors($validation);
+            } else {
+                $update_data = $this->service->updateAll($request);
+                if ($update_data) {
+                    $msg = $update_data['msg'];
+                    $status = $update_data['status'];
                     if ($status == 'success') {
                         return redirect('list-organizations')->with(compact('msg', 'status'));
                     } else {
@@ -208,32 +194,56 @@ class OrganizationController extends Controller
                             ->with(compact('msg', 'status'));
                     }
                 }
-            } catch (\Exception $e) {
-                return $e;
             }
+        } catch (Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
+    }
 
-    public function details(Request $request){
-        $id=base64_decode($request->id);
-        $detailsData = OrganizationModel::where('id',$id)->get();
-        $dept=DepartmentsModel::get();
-        $roles=RolesModel::get();
+    public function destroy(Request $request)
+    {
+        $delete_data_id = base64_decode($request->id);
+        try {
+            $delete_record = $this->service->deleteById($delete_data_id);
+            if ($delete_record) {
+                $msg = $delete_record['msg'];
+                $status = $delete_record['status'];
+                if ($status == 'success') {
+                    return redirect('list-organizations')->with(compact('msg', 'status'));
+                } else {
+                    return redirect()->back()
+                        ->withInput()
+                        ->with(compact('msg', 'status'));
+                }
+            }
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function details(Request $request)
+    {
+        $id = base64_decode($request->id);
+        $detailsData = OrganizationModel::where('id', $id)->get();
+        $dept = DepartmentsModel::get();
+        $roles = RolesModel::get();
         $employees = EmployeesModel::get();
 
-        return view('admin.pages.organizations.detail-organizations',compact('detailsData','dept','roles','employees'));
+        return view('admin.pages.organizations.detail-organizations', compact('detailsData', 'dept', 'roles', 'employees'));
     }
-    
 
 
-     public function filterEmployees(Request $request)
+
+    public function filterEmployees(Request $request)
     {
-          try {
-        $roleId = $request->id;
-        $data = EmployeesModel::where('department_id', $roleId)->get();
-        return response()->json($data);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage() ], 500 );
+        try {
+            $roleId = $request->id;
+            $data = EmployeesModel::where('department_id', $roleId)->get();
+            return response()->json($data);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-
     }
 }

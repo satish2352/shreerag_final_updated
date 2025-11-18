@@ -107,8 +107,9 @@
 
                                                 <th data-field="id">Sr.No.</th>
                                                 <!-- <th data-field="received_updated_at" data-editable="false">Received Date
-                                                </th> -->
-                                                <th data-field="issue_updated_at" data-editable="false">Transaction Date</th>
+                                                    </th> -->
+                                                <th data-field="issue_updated_at" data-editable="false">Transaction Date
+                                                </th>
                                                 <th data-field="description" data-editable="false">Entry No/Particulars</th>
                                                 <th data-field="received_quantity" data-editable="false">Received Qty</th>
                                                 <th data-field="issue_quantity" data-editable="false">Issue Qty</th>
@@ -153,7 +154,7 @@
             return '-';
         }
 
-        
+
         // let currentPage = 1;
         // const pageSize = 10;
 
@@ -182,13 +183,13 @@
                         if (res.data.length > 0) {
                             let rows = '';
                             res.data.forEach((item, i) => {
-                                 let particulars = '-';
+                                let particulars = '-';
 
                                 if (item.received_qty > 0) {
                                     particulars = `Supplier GRN No.${item.grn_no} ${item.part_name}`;
-                                } 
-                                else if (item.issue_qty > 0) {
-                                    particulars = `FOR PRODUCTION ISSUE  ${item.product_name}  ${item.part_name}`;
+                                } else if (item.issue_qty > 0) {
+                                    particulars =
+                                        `FOR PRODUCTION ISSUE  ${item.product_name}  ${item.part_name}`;
                                 }
 
                                 rows += `
@@ -226,14 +227,18 @@
                         let start = Math.max(1, currentPage - 2);
                         let end = Math.min(totalPages, start + 4);
 
-                        if (start > 1) pagHtml += `<li><a class="page-link" onclick="goToPage(1)">1</a></li><li>...</li>`;
+                        if (start > 1) pagHtml +=
+                            `<li><a class="page-link" onclick="goToPage(1)">1</a></li><li>...</li>`;
                         for (let i = start; i <= end; i++) {
-                            pagHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" onclick="goToPage(${i})">${i}</a></li>`;
+                            pagHtml +=
+                                `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" onclick="goToPage(${i})">${i}</a></li>`;
                         }
-                        if (end < totalPages) pagHtml += `<li>...</li><li><a class="page-link" onclick="goToPage(${totalPages})">${totalPages}</a></li>`;
+                        if (end < totalPages) pagHtml +=
+                            `<li>...</li><li><a class="page-link" onclick="goToPage(${totalPages})">${totalPages}</a></li>`;
 
                         pagLinks.innerHTML = pagHtml;
-                        pagInfo.innerHTML = `Showing ${res.pagination.from} to ${res.pagination.to} of ${res.pagination.totalItems}`;
+                        pagInfo.innerHTML =
+                            `Showing ${res.pagination.from} to ${res.pagination.to} of ${res.pagination.totalItems}`;
 
                     } else {
                         tbody.innerHTML = '<tr><td colspan="7">Failed to fetch data.</td></tr>';
@@ -265,30 +270,30 @@
 
         // Initial load
         fetchReport(true);
-    
-    //     function fetchReport(reset = false) {
-    //         if (reset) currentPage = 1;
 
-    //         const form = document.getElementById('filterForm');
-    //         const formData = new FormData(form);
-    //         formData.append('pageSize', pageSize);
-    //         formData.append('currentPage', currentPage);
-    //         formData.append('search', document.getElementById('searchKeyword').value);
+        //     function fetchReport(reset = false) {
+        //         if (reset) currentPage = 1;
 
-    //         const params = new URLSearchParams();
-    //         formData.forEach((val, key) => params.append(key, val));
+        //         const form = document.getElementById('filterForm');
+        //         const formData = new FormData(form);
+        //         formData.append('pageSize', pageSize);
+        //         formData.append('currentPage', currentPage);
+        //         formData.append('search', document.getElementById('searchKeyword').value);
 
-    //         fetch(`{{ route('stock-daily-report-ajax') }}?${params.toString()}`)
-    //             .then(res => res.json())
-    //             .then(res => {
-    //                 const tbody = document.getElementById('reportBody');
-    //                 const pagLinks = document.getElementById('paginationLinks');
-    //                 const pagInfo = document.getElementById('paginationInfo');
+        //         const params = new URLSearchParams();
+        //         formData.forEach((val, key) => params.append(key, val));
 
-    //                 if (res.status) {
-    //                     document.getElementById('totalCount').innerText = res.pagination.totalItems || 0;
-    //                     const rows = res.data.map((item, i) => {
-    //                         return `
+        //         fetch(`{{ route('stock-daily-report-ajax') }}?${params.toString()}`)
+        //             .then(res => res.json())
+        //             .then(res => {
+        //                 const tbody = document.getElementById('reportBody');
+        //                 const pagLinks = document.getElementById('paginationLinks');
+        //                 const pagInfo = document.getElementById('paginationInfo');
+
+        //                 if (res.status) {
+        //                     document.getElementById('totalCount').innerText = res.pagination.totalItems || 0;
+        //                     const rows = res.data.map((item, i) => {
+        //                         return `
     //     <tr>
     //         <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
     //         <td>${item.issue_updated_at ? new Date(item.issue_updated_at).toLocaleDateString('en-IN') : '-'}</td>
@@ -297,15 +302,15 @@
     //         <td>${item.received_quantity || '-'}</td>
     //          <td>${item.issue_quantity || '-'}</td>            
     //         <td>${item.balance_quantity || '-'}</td>
-           
-                           
+
+
     //     </tr>
     // `;
-    //                     }).join('');
+        //                     }).join('');
 
-    //                       // ✅ Totals row
-    //             const totals = res.totals;
-    //             const totalsRow = `
+        //                       // ✅ Totals row
+        //             const totals = res.totals;
+        //             const totalsRow = `
     //                 <tr style="font-weight:bold; background:#f2f2f2;">
     //                     <td colspan="4" style="text-align:right;">Total:</td>
     //                     <td>${totals.received}</td>
@@ -314,34 +319,34 @@
     //                 </tr>
     //             `;
 
-    //             tbody.innerHTML = rows + totalsRow;
-                
-    //                     tbody.innerHTML = rows || '<tr><td colspan="6">No records found.</td></tr>';
+        //             tbody.innerHTML = rows + totalsRow;
 
-    //                     // Pagination
-    //                     let pagHtml = '',
-    //                         totalPages = res.pagination.totalPages;
-    //                     let start = Math.max(1, currentPage - 2),
-    //                         end = Math.min(totalPages, start + 4);
+        //                     tbody.innerHTML = rows || '<tr><td colspan="6">No records found.</td></tr>';
 
-    //                     if (start > 1) pagHtml +=
-    //                         `<li><a class="page-link" onclick="goToPage(1)">1</a></li><li>...</li>`;
-    //                     for (let i = start; i <= end; i++) {
-    //                         pagHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+        //                     // Pagination
+        //                     let pagHtml = '',
+        //                         totalPages = res.pagination.totalPages;
+        //                     let start = Math.max(1, currentPage - 2),
+        //                         end = Math.min(totalPages, start + 4);
+
+        //                     if (start > 1) pagHtml +=
+        //                         `<li><a class="page-link" onclick="goToPage(1)">1</a></li><li>...</li>`;
+        //                     for (let i = start; i <= end; i++) {
+        //                         pagHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
     //                                 <a class="page-link" onclick="goToPage(${i})">${i}</a>
     //                             </li>`;
-    //                     }
-    //                     if (end < totalPages) pagHtml +=
-    //                         `<li>...</li><li><a class="page-link" onclick="goToPage(${totalPages})">${totalPages}</a></li>`;
+        //                     }
+        //                     if (end < totalPages) pagHtml +=
+        //                         `<li>...</li><li><a class="page-link" onclick="goToPage(${totalPages})">${totalPages}</a></li>`;
 
-    //                     pagLinks.innerHTML = pagHtml;
-    //                     pagInfo.innerHTML =
-    //                         `Showing ${res.pagination.from} to ${res.pagination.to} of ${res.pagination.totalItems}`;
-    //                 } else {
-    //                     tbody.innerHTML = '<tr><td colspan="6">Failed to fetch data.</td></tr>';
-    //                 }
-    //             });
-    //     }
+        //                     pagLinks.innerHTML = pagHtml;
+        //                     pagInfo.innerHTML =
+        //                         `Showing ${res.pagination.from} to ${res.pagination.to} of ${res.pagination.totalItems}`;
+        //                 } else {
+        //                     tbody.innerHTML = '<tr><td colspan="6">Failed to fetch data.</td></tr>';
+        //                 }
+        //             });
+        //     }
 
         function goToPage(page) {
             currentPage = page;

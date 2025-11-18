@@ -15,42 +15,45 @@ use Carbon;
 //     };
 
 class StoreReceiptController extends Controller
-{ 
+{
     // public function __construct(){
     //     $this->service = new ProductionServices();
     // }
 
 
 
-    public function index(){
+    public function index()
+    {
         try {
-          
-          
+
+
             return view('organizations.store.store-receipt.list-store-receipt');
         } catch (\Exception $e) {
             return $e;
         }
-    }  
-    
-    public function add(){
+    }
+
+    public function add()
+    {
         try {
-          
-          
+
+
             return view('organizations.store.store-receipt.add-store-receipt');
         } catch (\Exception $e) {
             return $e;
         }
-    } 
-    public function edit(){
+    }
+    public function edit()
+    {
         try {
-          
-          
+
+
             return view('organizations.store.store-receipt.edit-store-receipt');
         } catch (\Exception $e) {
             return $e;
         }
-    } 
-    
+    }
+
 
     // public function add(){
     //     return view('organizations.store.products.add-products');

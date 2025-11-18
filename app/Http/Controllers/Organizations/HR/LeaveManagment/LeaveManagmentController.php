@@ -6,37 +6,38 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Services\Organizations\HR\LeaveManagment\LeaveManagmentServices;
 use Illuminate\Validation\Rule;
-use Session;
-use Validator;
-use Config;
-use Carbon;
+use Illuminate\Support\Facades\Validator;
+use Exception;
 use App\Models\DepartmentsModel;
-use App\Models\
- {
-    RolesModel, EmployeesModel, LeaveManagement
-}
-;
+use App\Models\{
+    RolesModel,
+};
 
 class LeaveManagmentController extends Controller
- {
+{
 
-    public function __construct() {
+    protected $service;
+
+    public function __construct()
+    {
         $this->service = new LeaveManagmentServices();
     }
 
-    public function index() {
+    public function index()
+    {
         try {
             $getOutput = $this->service->getAll();
-            return view( 'organizations.hr.yearly-leave-management.list-yearly-leave-management', compact( 'getOutput' ) );
-        } catch ( \Exception $e ) {
+            return view('organizations.hr.yearly-leave-management.list-yearly-leave-management', compact('getOutput'));
+        } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function add() {
+    public function add()
+    {
         $dept = DepartmentsModel::get();
         $roles = RolesModel::get();
-        return view( 'organizations.hr.yearly-leave-management.add-yearly-leave-management', compact( 'dept', 'roles' ) );
+        return view('organizations.hr.yearly-leave-management.add-yearly-leave-management', compact('dept', 'roles'));
     }
 
     // public function store( Request $request ) {
@@ -83,73 +84,75 @@ class LeaveManagmentController extends Controller
     //         return redirect( 'hr/add-yearly-leave-management' )->withInput()->with( [ 'msg' => $e->getMessage(), 'status' => 'error' ] );
     //     }
     // }
-public function store(Request $request)
-{
-    $rules = [
-        'leave_year' => 'required',
-        'name' => [
-            'required',
-            'regex:/^[a-zA-Z\s]+$/u',
-            'max:255',
-            function ($attribute, $value, $fail) use ($request) {
-                $exists = \App\Models\LeaveManagement::where('leave_year', $request->leave_year)
-                    ->where('name', $value)
-                    ->exists();
+    public function store(Request $request)
+    {
+        $rules = [
+            'leave_year' => 'required',
+            'name' => [
+                'required',
+                'regex:/^[a-zA-Z\s]+$/u',
+                'max:255',
+                function ($attribute, $value, $fail) use ($request) {
+                    $exists = \App\Models\LeaveManagement::where('leave_year', $request->leave_year)
+                        ->where('name', $value)
+                        ->exists();
 
-                if ($exists) {
-                    $fail('Name already exist for this year.');
-                }
-            },
-        ],
-        'leave_count' => 'required|integer',
-    ];
+                    if ($exists) {
+                        $fail('Name already exist for this year.');
+                    }
+                },
+            ],
+            'leave_count' => 'required|integer',
+        ];
 
-    $messages = [
-        'leave_year.required' => 'Please select year.',
-        'name.required' => 'Please enter name.',
-        'name.regex' => 'Please enter text only.',
-        'name.max' => 'Please enter text length up to 255 characters only.',
-        'leave_count.required' => 'Please enter leave count.',
-        'leave_count.integer' => 'Please enter a valid number for leave count.',
-    ];
+        $messages = [
+            'leave_year.required' => 'Please select year.',
+            'name.required' => 'Please enter name.',
+            'name.regex' => 'Please enter text only.',
+            'name.max' => 'Please enter text length up to 255 characters only.',
+            'leave_count.required' => 'Please enter leave count.',
+            'leave_count.integer' => 'Please enter a valid number for leave count.',
+        ];
 
-    try {
-        $validation = Validator::make($request->all(), $rules, $messages);
+        try {
+            $validation = Validator::make($request->all(), $rules, $messages);
 
-        if ($validation->fails()) {
-            return redirect('hr/add-yearly-leave-management')
-                ->withInput()
-                ->withErrors($validation);
-        } else {
-            $add_record = $this->service->addAll($request);
+            if ($validation->fails()) {
+                return redirect('hr/add-yearly-leave-management')
+                    ->withInput()
+                    ->withErrors($validation);
+            } else {
+                $add_record = $this->service->addAll($request);
 
-            if ($add_record) {
-                $msg = $add_record['msg'];
-                $status = $add_record['status'];
+                if ($add_record) {
+                    $msg = $add_record['msg'];
+                    $status = $add_record['status'];
 
-                if ($status == 'success') {
-                    return redirect('hr/list-yearly-leave-management')->with(compact('msg', 'status'));
-                } else {
-                    return redirect('hr/add-yearly-leave-management')->withInput()->with(compact('msg', 'status'));
+                    if ($status == 'success') {
+                        return redirect('hr/list-yearly-leave-management')->with(compact('msg', 'status'));
+                    } else {
+                        return redirect('hr/add-yearly-leave-management')->withInput()->with(compact('msg', 'status'));
+                    }
                 }
             }
+        } catch (Exception $e) {
+            return redirect('hr/add-yearly-leave-management')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
-    } catch (Exception $e) {
-        return redirect('hr/add-yearly-leave-management')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
-    }
-}
-
-    public function edit( Request $request ) {
-        $edit_data_id = base64_decode( $request->id );
-        $editData = $this->service->getById( $edit_data_id );
-        return view( 'organizations.hr.yearly-leave-management.edit-yearly-leave-management', compact( 'editData' ) );
     }
 
-    public function update( Request $request ) {
+    public function edit(Request $request)
+    {
+        $edit_data_id = base64_decode($request->id);
+        $editData = $this->service->getById($edit_data_id);
+        return view('organizations.hr.yearly-leave-management.edit-yearly-leave-management', compact('editData'));
+    }
+
+    public function update(Request $request)
+    {
         $id = $request->id;
 
         $rules = [
-            'name' => [ 'required', 'max:255', 'regex:/^[a-zA-Z\s]+$/u', Rule::unique( 'tbl_leave_management', 'name' )->ignore( $id, 'id' ) ],
+            'name' => ['required', 'max:255', 'regex:/^[a-zA-Z\s]+$/u', Rule::unique('tbl_leave_management', 'name')->ignore($id, 'id')],
             'leave_year' => 'required',
             'leave_count' => 'required',
 
@@ -166,65 +169,64 @@ public function store(Request $request)
         ];
 
         try {
-            $validation = Validator::make( $request->all(), $rules, $messages );
-            if ( $validation->fails() ) {
+            $validation = Validator::make($request->all(), $rules, $messages);
+            if ($validation->fails()) {
                 return redirect()->back()
-                ->withInput()
-                ->withErrors( $validation );
+                    ->withInput()
+                    ->withErrors($validation);
             } else {
-                $update_data = $this->service->updateAll( $request );
+                $update_data = $this->service->updateAll($request);
 
-                if ( $update_data ) {
-                    $msg = $update_data[ 'msg' ];
-                    $status = $update_data[ 'status' ];
-                    if ( $status == 'success' ) {
-                        return redirect( 'hr/list-yearly-leave-management' )->with( compact( 'msg', 'status' ) );
+                if ($update_data) {
+                    $msg = $update_data['msg'];
+                    $status = $update_data['status'];
+                    if ($status == 'success') {
+                        return redirect('hr/list-yearly-leave-management')->with(compact('msg', 'status'));
                     } else {
                         return redirect()->back()
-                        ->withInput()
-                        ->with( compact( 'msg', 'status' ) );
+                            ->withInput()
+                            ->with(compact('msg', 'status'));
                     }
                 }
             }
-        } catch ( Exception $e ) {
+        } catch (Exception $e) {
             return redirect()->back()
-            ->withInput()
-            ->with( [ 'msg' => $e->getMessage(), 'status' => 'error' ] );
+                ->withInput()
+                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
 
-    public function updateOne( Request $request ) {
+    public function updateOne(Request $request)
+    {
         try {
             $active_id = $request->active_id;
-            $result = $this->service->updateOne( $active_id );
-            return redirect( 'hr/list-yearly-leave-management' )->with( 'flash_message', 'Updated!' );
-
-        } catch ( \Exception $e ) {
+            $result = $this->service->updateOne($active_id);
+            return redirect('hr/list-yearly-leave-management')->with('flash_message', 'Updated!');
+        } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function destroy( Request $request )
- {
-        $delete_data_year = base64_decode( $request->id );
+    public function destroy(Request $request)
+    {
+        $delete_data_year = base64_decode($request->id);
 
         try {
-            $delete_record = $this->service->deleteByYear( $delete_data_year );
+            $delete_record = $this->service->deleteByYear($delete_data_year);
 
-            if ( $delete_record ) {
-                $msg = $delete_record[ 'msg' ];
-                $status = $delete_record[ 'status' ];
-                if ( $status == 'success' ) {
-                    return redirect( 'hr/list-yearly-leave-management' )->with( compact( 'msg', 'status' ) );
+            if ($delete_record) {
+                $msg = $delete_record['msg'];
+                $status = $delete_record['status'];
+                if ($status == 'success') {
+                    return redirect('hr/list-yearly-leave-management')->with(compact('msg', 'status'));
                 } else {
                     return redirect()->back()
-                    ->withInput()
-                    ->with( compact( 'msg', 'status' ) );
+                        ->withInput()
+                        ->with(compact('msg', 'status'));
                 }
             }
-        } catch ( \Exception $e ) {
-            return redirect()->back()->with( [ 'status' => 'error', 'msg' => $e->getMessage() ] );
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
         }
     }
-
 }

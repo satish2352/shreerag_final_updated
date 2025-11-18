@@ -1,80 +1,88 @@
 <?php
-namespace App\Http\Repository\Organizations\Designers;
-use Illuminate\Database\QueryException;
-use DB;
-use Illuminate\Support\Carbon;
-use App\Models\ {
-Business, 
-DesignModel,
-BusinessApplicationProcesses,
-ProductionModel,
-DesignRevisionForProd,
-AdminView,
-ProductionDetails,
-BusinessDetails,
-NotificationStatus,
-EstimationModel,
-EstimationDetails
-};
-use Config;
 
-class DesignsRepository  {
-    
-    public function getAllNewRequirement(){ //checked
+namespace App\Http\Repository\Organizations\Designers;
+
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use App\Models\{
+    DesignModel,
+    BusinessApplicationProcesses,
+    DesignRevisionForProd,
+    AdminView,
+    BusinessDetails,
+    NotificationStatus,
+    EstimationModel,
+};
+
+class DesignsRepository
+{
+
+    public function getAllNewRequirement()
+    { //checked
         try {
             $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN')];
-            $data_output= DesignModel::leftJoin('businesses', function($join) {
+            $data_output = DesignModel::leftJoin('businesses', function ($join) {
                 $join->on('designs.business_id', '=', 'businesses.id');
-              })
-              ->leftJoin('business_application_processes', function($join) {
-                $join->on('designs.business_id', '=', 'business_application_processes.business_id');
-              })
-              ->whereIn('business_application_processes.design_status_id',$array_to_be_check)
-              ->where('businesses.is_active',true)
-              ->where('businesses.is_deleted', 0)
-              ->distinct('businesses.id')
-              ->select(
-                  'businesses.id',
-                  'businesses.project_name',
-                  'businesses.customer_po_number',
-                  'businesses.title',
-                  'businesses.created_at',
-                  'businesses.remarks',
-                  'businesses.grand_total_amount',
-                  'businesses.is_active',
-                  'designs.business_id',
-                  'businesses.updated_at'
-              )
-              ->orderBy('businesses.updated_at', 'desc')
-              ->get();
+            })
+                ->leftJoin('business_application_processes', function ($join) {
+                    $join->on('designs.business_id', '=', 'business_application_processes.business_id');
+                })
+                ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
+                ->where('businesses.is_active', true)
+                ->where('businesses.is_deleted', 0)
+                ->distinct('businesses.id')
+                ->select(
+                    'businesses.id',
+                    'businesses.project_name',
+                    'businesses.customer_po_number',
+                    'businesses.title',
+                    'businesses.created_at',
+                    'businesses.remarks',
+                    'businesses.grand_total_amount',
+                    'businesses.is_active',
+                    'designs.business_id',
+                    'businesses.updated_at'
+                )
+                ->orderBy('businesses.updated_at', 'desc')
+                ->get();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
-    public function getAllNewRequirementBusinessWise($id){ //checked
+    public function getAllNewRequirementBusinessWise($id)
+    { //checked
         try {
             $decoded_business_id = base64_decode($id);
-            $dataOutputNew = DesignModel::where('business_id', $decoded_business_id)->get();       
+            $dataOutputNew = DesignModel::where('business_id', $decoded_business_id)->get();
             $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN')];
-            $data_output = DesignModel::leftJoin('businesses', function($join) {
-                    $join->on('designs.business_id', '=', 'businesses.id');
-                })
-                ->leftJoin('businesses_details', function($join) {
+            $data_output = DesignModel::leftJoin('businesses', function ($join) {
+                $join->on('designs.business_id', '=', 'businesses.id');
+            })
+                ->leftJoin('businesses_details', function ($join) {
                     $join->on('designs.business_details_id', '=', 'businesses_details.id');
                 })
-                ->leftJoin('business_application_processes', function($join) {
+                ->leftJoin('business_application_processes', function ($join) {
                     $join->on('designs.business_details_id', '=', 'business_application_processes.business_details_id');
                 })
-                ->where('business_application_processes.production_status_id', 0) 
+                ->where('business_application_processes.production_status_id', 0)
                 ->where('business_application_processes.production_id', 0)
                 ->where('designs.business_id', $decoded_business_id)
                 ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
-                ->groupBy('businesses_details.product_name', 'designs.business_id', 'designs.business_details_id','businesses_details.description',
-                    'businesses_details.quantity',  'businesses_details.total_amount','businesses_details.business_id','business_application_processes.production_id',
-                    'business_application_processes.production_status_id','designs.updated_at')
+                ->groupBy(
+                    'businesses_details.product_name',
+                    'designs.business_id',
+                    'designs.business_details_id',
+                    'businesses_details.description',
+                    'businesses_details.quantity',
+                    'businesses_details.total_amount',
+                    'businesses_details.business_id',
+                    'business_application_processes.production_id',
+                    'business_application_processes.production_status_id',
+                    'designs.updated_at'
+                )
                 ->select(
-                'businesses_details.business_id',
+                    'businesses_details.business_id',
                     'designs.business_id',
                     'designs.business_details_id',
                     'businesses_details.business_id',
@@ -92,27 +100,29 @@ class DesignsRepository  {
             return $e;
         }
     }
-    public function getById($id){
+    public function getById($id)
+    {
         try {
-                $dataOutputByid = DesignModel::find($id);
-                
-                if ($dataOutputByid) {
-                    return $dataOutputByid;
-                } else {
-                    return null;
-                }
-            } catch (\Exception $e) {
-                return [
-                    'msg' => $e,
-                    'status' => 'error'
-                ];
+            $dataOutputByid = DesignModel::find($id);
+
+            if ($dataOutputByid) {
+                return $dataOutputByid;
+            } else {
+                return null;
             }
+        } catch (\Exception $e) {
+            return [
+                'msg' => $e,
+                'status' => 'error'
+            ];
+        }
     }
-    public function updateAll($request){  //checked
+    public function updateAll($request)
+    {  //checked
         try {
             $return_data = array();
             $edit_id = $request->business_id;
-        
+
             $dataOutputNew = DesignModel::where('business_details_id', $edit_id)->first();
             if (!$dataOutputNew) {
                 return [
@@ -134,13 +144,13 @@ class DesignsRepository  {
 
             if ($request->hasFile('design_image')) {
                 $formattedProductName = preg_replace('/_+/', '_', $productName);
-                $designImageName = $dataOutputNew->id . '_'. $formattedProductName .'_'. rand(100000, 999999) . '.' . $request->file('design_image')->getClientOriginalExtension();
+                $designImageName = $dataOutputNew->id . '_' . $formattedProductName . '_' . rand(100000, 999999) . '.' . $request->file('design_image')->getClientOriginalExtension();
                 $dataOutputNew->design_image = $designImageName;
             }
 
             if ($request->hasFile('bom_image')) {
                 $formattedProductName = preg_replace('/_+/', '_', $productName);
-                $bomImageName = $dataOutputNew->id . '_'. $formattedProductName .'_'. rand(100000, 999999) . '.' . $request->file('bom_image')->getClientOriginalExtension();
+                $bomImageName = $dataOutputNew->id . '_' . $formattedProductName . '_' . rand(100000, 999999) . '.' . $request->file('bom_image')->getClientOriginalExtension();
                 $dataOutputNew->bom_image = $bomImageName;
             }
 
@@ -152,7 +162,7 @@ class DesignsRepository  {
             $estimation_data->business_details_id = $dataOutputNew->business_details_id;
             $estimation_data->design_id = $dataOutputNew->id;
             $estimation_data->save();
-        
+
             // Store design and production IDs
             $designIds[] = $dataOutputNew->id;
             $estimationIds[] = $estimation_data->id;
@@ -177,24 +187,23 @@ class DesignsRepository  {
                 $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_ESTIMATION_DEPT_FIRST_TIME');
                 $business_application->design_send_to_estimation = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_ESTIMATION_DEPT_FIRST_TIME');
                 $business_application->estimation_id = $estimation_data->id ?? null; // Use first element if available
-                $business_application->	off_canvas_status = 12;
+                $business_application->off_canvas_status = 12;
                 $business_application->save();
             }
             $update_data_admin['off_canvas_status'] = 12;
             $update_data_business['off_canvas_status'] = 12;
             $update_data_admin['is_view'] = '0';
             AdminView::where('business_details_id', $dataOutputNew->business_details_id)
-                    ->update($update_data_admin);
+                ->update($update_data_admin);
             NotificationStatus::where('business_details_id', $dataOutputNew->business_details_id)
-                    ->update($update_data_business);
+                ->update($update_data_business);
 
-            $last_insert_id = $dataOutputNew->id; 
+            $last_insert_id = $dataOutputNew->id;
             $return_data['last_insert_id'] = $last_insert_id;
             $return_data['design_image'] = $designImageName;
             $return_data['bom_image'] = $bomImageName;
             $return_data['product_name'] = $productName;
             return $return_data;
-
         } catch (\Exception $e) {
             return [
                 'msg' => 'Failed to update design.',
@@ -203,14 +212,15 @@ class DesignsRepository  {
             ];
         }
     }
-    public function getUploadedDesignSendEstimation(){ //checked
+    public function getUploadedDesignSendEstimation()
+    { //checked
         try {
             $array_to_be_check = [
                 config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_ESTIMATION_DEPT_FIRST_TIME')
             ];
             $data_output = EstimationModel::leftJoin('businesses', function ($join) {
-                    $join->on('estimation.business_id', '=', 'businesses.id');
-                })
+                $join->on('estimation.business_id', '=', 'businesses.id');
+            })
                 ->leftJoin('business_application_processes', function ($join) {
                     $join->on('estimation.business_id', '=', 'business_application_processes.business_id');
                 })
@@ -251,13 +261,13 @@ class DesignsRepository  {
                 ->get();
 
             return $data_output;
-
         } catch (\Exception $e) {
-            \Log::error('Error in getAll(): ' . $e->getMessage());
+            Log::error('Error in getAll(): ' . $e->getMessage());
             return collect(); // return an empty collection to avoid type errors
         }
     }
-    public function updateReUploadDesign($request){ //checked
+    public function updateReUploadDesign($request)
+    { //checked
         try {
             $return_data = array();
             $edit_id = $request->design_revision_for_prod_id;
@@ -277,22 +287,21 @@ class DesignsRepository  {
             }
             $productName = $businessDetails->product_name;
             $formattedProductName = preg_replace('/_+/', '_', $productName);
-            $designRevisionForProd = DesignRevisionForProd::where('id', $request->design_revision_for_prod_id)->orderBy('id','desc')->first();
-            if($designRevisionForProd) {
+            $designRevisionForProd = DesignRevisionForProd::where('id', $request->design_revision_for_prod_id)->orderBy('id', 'desc')->first();
+            if ($designRevisionForProd) {
 
                 $designRevisionForProd->remark_by_design = $request->remark_by_design;
 
-                $designImageName = $designRevisionForProd->id . '_'. $formattedProductName . '_' . rand(100000, 999999) . '_re_design.' . $request->design_image->getClientOriginalExtension();
+                $designImageName = $designRevisionForProd->id . '_' . $formattedProductName . '_' . rand(100000, 999999) . '_re_design.' . $request->design_image->getClientOriginalExtension();
                 // $bomImageName = $designRevisionForProd->id . '_'. $formattedProductName . '_' . rand(100000, 999999) . '_re_bom.' . $request->bom_image->getClientOriginalExtension();
-                
+
                 // Update the design image and bom image fields in the DesignModel
                 $designRevisionForProd->design_image = $designImageName;
                 // $designRevisionForProd->bom_image = $bomImageName;
 
                 $designRevisionForProd->save();
+            }
 
-            } 
-    
             // Update BusinessApplicationProcesses if record exists
             $business_application = BusinessApplicationProcesses::where('business_details_id', $designRevisionForProd->business_details_id)->first();
 
@@ -304,7 +313,7 @@ class DesignsRepository  {
                 $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_REVISED');
                 // $business_application->production_id = $designRevisionForProd->production_id;
                 $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECIVED_FROM_PRODUCTION_DEPT_REVISED');
-                $business_application->	off_canvas_status = 14;
+                $business_application->off_canvas_status = 14;
                 $business_application->save();
 
                 // $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
@@ -312,18 +321,18 @@ class DesignsRepository  {
                 $update_data_business['off_canvas_status'] = 14;
                 $update_data_admin['is_view'] = '0';
                 AdminView::where('business_details_id', $business_application->business_details_id)
-                ->update($update_data_admin);
+                    ->update($update_data_admin);
                 NotificationStatus::where('business_details_id', $business_application->business_details_id)
-                ->update($update_data_business);
+                    ->update($update_data_business);
             }
-    
+
             $return_data['designImageName'] = $designImageName;
             // $return_data['bomImageName'] = $bomImageName;
             $return_data['last_insert_id'] = $designRevisionForProd->business_id;
-    
+
             return $return_data;
         } catch (\Exception $e) {
-            
+
             return [
                 'msg' => 'Failed to update Report Incident Crowdsourcing.',
                 'status' => 'error',
@@ -331,6 +340,4 @@ class DesignsRepository  {
             ];
         }
     }
-    
-
-    }
+}

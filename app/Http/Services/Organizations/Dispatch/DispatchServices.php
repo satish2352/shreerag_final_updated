@@ -1,16 +1,19 @@
 <?php
-namespace App\Http\Services\Organizations\Dispatch;
-use App\Http\Repository\Organizations\Dispatch\DispatchRepository;
-use Carbon\Carbon;
 
-use Config;
+namespace App\Http\Services\Organizations\Dispatch;
+
+use App\Http\Repository\Organizations\Dispatch\DispatchRepository;
+use Exception;
+
 class DispatchServices
 {
     protected $repo;
-    public function __construct() {
+    protected $service;
+
+    public function __construct()
+    {
 
         $this->repo = new DispatchRepository();
-
     }
     public function storeDispatch($request)
     {
@@ -25,5 +28,4 @@ class DispatchServices
             return $e;
         }
     }
-    
 }

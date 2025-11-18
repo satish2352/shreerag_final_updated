@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers\Exports;
+
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
@@ -17,11 +19,11 @@ class GRNReportExport implements FromCollection, WithHeadings
         return $this->data->map(function ($item) {
             return [
                 $item['updated_at'],
-                 $item['vendor_name'],
                 $item['purchase_orders_id'],
-                $item['gatepass_name'],
-                $item['remark'],
-                
+                $item['grn_no_generate'],
+                $item['vendor_name'],
+                $item['vendor_company_name'],
+
             ];
         });
     }
@@ -30,10 +32,11 @@ class GRNReportExport implements FromCollection, WithHeadings
     {
         return [
             'Date',
-            'Vendor Name',
             'PO Number',
-            'Gatepass Name',
-            'Remarks',
+            'GRN No.',
+            'Vendor Name',
+            'Vendor Company Name',
+
         ];
     }
 }

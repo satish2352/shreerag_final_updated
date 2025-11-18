@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Exports;
 
 use Carbon\Carbon;
+use Exception;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;

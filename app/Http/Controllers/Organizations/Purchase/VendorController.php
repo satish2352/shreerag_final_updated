@@ -5,43 +5,50 @@ namespace App\Http\Controllers\Organizations\Purchase;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Services\Organizations\Purchase\VendorServices;
-use Session;
-use Validator;
-use Config;
-use Carbon;
-// use App\Models\ {
-//     DesignModel,
-//     DesignDetailsModel
-//     }
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Config;
+use Carbon\Carbon;
+use Exception;
+    // use App\Models\ {
+    //     DesignModel,
+    //     DesignDetailsModel
+    //     }
 ;
 
 class VendorController extends Controller
- {
+{
 
-    public function __construct() {
+    protected $service;
+
+    public function __construct()
+    {
         $this->service = new VendorServices();
     }
 
-    public function index() {
+    public function index()
+    {
         try {
 
             $data_output = $this->service->getAll();
-            return view( 'organizations.purchase.vendor.list-vendor', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
+            return view('organizations.purchase.vendor.list-vendor', compact('data_output'));
+        } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function add() {
+    public function add()
+    {
         try {
 
-            return view( 'organizations.purchase.vendor.add-vendor' );
-        } catch ( \Exception $e ) {
+            return view('organizations.purchase.vendor.add-vendor');
+        } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function store( Request $request ) {
+    public function store(Request $request)
+    {
         $rules = [
             'vendor_name' => 'required|string|max:255',
             'vendor_email' => 'required',
@@ -65,43 +72,45 @@ class VendorController extends Controller
         ];
 
         try {
-            $validation = Validator::make( $request->all(), $rules, $messages );
+            $validation = Validator::make($request->all(), $rules, $messages);
 
-            if ( $validation->fails() ) {
-                return redirect( 'purchase/add-vendor' )
-                ->withInput()
-                ->withErrors( $validation );
+            if ($validation->fails()) {
+                return redirect('purchase/add-vendor')
+                    ->withInput()
+                    ->withErrors($validation);
             } else {
-                $add_record = $this->service->addAll( $request );
+                $add_record = $this->service->addAll($request);
 
-                if ( $add_record ) {
-                    $msg = $add_record[ 'msg' ];
-                    $status = $add_record[ 'status' ];
+                if ($add_record) {
+                    $msg = $add_record['msg'];
+                    $status = $add_record['status'];
 
-                    if ( $status == 'success' ) {
-                        return redirect( 'purchase/list-vendor' )->with( compact( 'msg', 'status' ) );
+                    if ($status == 'success') {
+                        return redirect('purchase/list-vendor')->with(compact('msg', 'status'));
                     } else {
-                        return redirect( 'purchase/add-vendor' )->withInput()->with( compact( 'msg', 'status' ) );
+                        return redirect('purchase/add-vendor')->withInput()->with(compact('msg', 'status'));
                     }
                 }
             }
-        } catch ( Exception $e ) {
-            return redirect( 'purchase/add-vendor' )->withInput()->with( [ 'msg' => $e->getMessage(), 'status' => 'error' ] );
+        } catch (Exception $e) {
+            return redirect('purchase/add-vendor')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
 
-    public function edit( Request $request ) {
+    public function edit(Request $request)
+    {
         try {
 
-            $edit_data_id = base64_decode( $request->id );
-            $editData = $this->service->getById( $edit_data_id );
-            return view( 'organizations.purchase.vendor.edit-vendor', compact( 'editData' ) );
-        } catch ( \Exception $e ) {
+            $edit_data_id = base64_decode($request->id);
+            $editData = $this->service->getById($edit_data_id);
+            return view('organizations.purchase.vendor.edit-vendor', compact('editData'));
+        } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function update( Request $request ) {
+    public function update(Request $request)
+    {
         $rules = [
             'vendor_name' => 'required|string|max:255',
             'vendor_email' => 'required',
@@ -125,51 +134,51 @@ class VendorController extends Controller
         ];
 
         try {
-            $validation = Validator::make( $request->all(), $rules, $messages );
-            if ( $validation->fails() ) {
+            $validation = Validator::make($request->all(), $rules, $messages);
+            if ($validation->fails()) {
                 return redirect()->back()
-                ->withInput()
-                ->withErrors( $validation );
+                    ->withInput()
+                    ->withErrors($validation);
             } else {
-                $update_data = $this->service->updateAll( $request );
-                if ( $update_data ) {
-                    $msg = $update_data[ 'msg' ];
-                    $status = $update_data[ 'status' ];
-                    if ( $status == 'success' ) {
-                        return redirect( 'purchase/list-vendor' )->with( compact( 'msg', 'status' ) );
+                $update_data = $this->service->updateAll($request);
+                if ($update_data) {
+                    $msg = $update_data['msg'];
+                    $status = $update_data['status'];
+                    if ($status == 'success') {
+                        return redirect('purchase/list-vendor')->with(compact('msg', 'status'));
                     } else {
                         return redirect()->back()
-                        ->withInput()
-                        ->with( compact( 'msg', 'status' ) );
+                            ->withInput()
+                            ->with(compact('msg', 'status'));
                     }
                 }
             }
-        } catch ( Exception $e ) {
+        } catch (Exception $e) {
             return redirect()->back()
-            ->withInput()
-            ->with( [ 'msg' => $e->getMessage(), 'status' => 'error' ] );
+                ->withInput()
+                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
 
-    public function destroy( Request $request ) {
-        $delete_data_id = base64_decode( $request->id );
+    public function destroy(Request $request)
+    {
+        $delete_data_id = base64_decode($request->id);
         try {
-            $delete_record = $this->service->deleteById( $delete_data_id );
+            $delete_record = $this->service->deleteById($delete_data_id);
 
-            if ( $delete_record ) {
-                $msg = $delete_record[ 'msg' ];
-                $status = $delete_record[ 'status' ];
-                if ( $status == 'success' ) {
-                    return redirect( 'purchase/list-vendor' )->with( compact( 'msg', 'status' ) );
+            if ($delete_record) {
+                $msg = $delete_record['msg'];
+                $status = $delete_record['status'];
+                if ($status == 'success') {
+                    return redirect('purchase/list-vendor')->with(compact('msg', 'status'));
                 } else {
                     return redirect()->back()
-                    ->withInput()
-                    ->with( compact( 'msg', 'status' ) );
+                        ->withInput()
+                        ->with(compact('msg', 'status'));
                 }
             }
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             return $e;
         }
     }
-
 }

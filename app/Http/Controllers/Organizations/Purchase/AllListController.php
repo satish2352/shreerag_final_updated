@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Organizations\Purchase;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Services\Organizations\Purchase\AllListServices;
@@ -8,183 +9,186 @@ use App\Http\Services\Organizations\Purchase\AllListServices;
 use App\Http\Controllers\Exports\PurchaseReportExport;
 use App\Http\Controllers\Exports\PurchasePartyReportExport;
 use App\Http\Controllers\Exports\FollowUpReportExport;
-
+use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
-use Session;
-use Validator;
-use Config;
-use Carbon;
-use App\Models\ {
+use Exception;
+use App\Models\{
     Business,
-    BusinessApplicationProcesses,
-    AdminView,
     NotificationStatus,
     Vendors
-
-}
-;
+};
 
 class AllListController extends Controller
- {
+{
 
-    public function __construct() {
+    protected $service;
+
+    public function __construct()
+    {
         $this->service = new AllListServices();
     }
 
-    public function getAllListMaterialReceivedForPurchase() {
+    public function getAllListMaterialReceivedForPurchase()
+    {
 
         try {
             $data_output = $this->service->getAllListMaterialReceivedForPurchase();
-          
-            if ( $data_output->isNotEmpty() ) {
-                foreach ( $data_output as $data ) {
+
+            if ($data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
                     $business_details = $data->business_details_id;
 
-                    if ( !empty( $business_details ) ) {
-                        $update_data[ 'purchase_is_view' ] = '1';
-                        NotificationStatus::where( 'purchase_is_view', '0' )
-                        ->where( 'business_details_id', $business_details )
-                        ->update( $update_data );
+                    if (!empty($business_details)) {
+                        $update_data['purchase_is_view'] = '1';
+                        NotificationStatus::where('purchase_is_view', '0')
+                            ->where('business_details_id', $business_details)
+                            ->update($update_data);
                     }
                 }
-            } 
+            }
 
-            return view( 'organizations.purchase.list.list-bom-material-recived-for-purchase', compact( 'data_output' ) );
+            return view('organizations.purchase.list.list-bom-material-recived-for-purchase', compact('data_output'));
             // return view( 'organizations.purchase.forms.send-vendor-details-for-purchase', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
 
             return $e;
         }
     }
 
-    public function getAllListApprovedPurchaseOrder( Request $request ) {
+    public function getAllListApprovedPurchaseOrder(Request $request)
+    {
         try {
             $data_output = $this->service->getAllListApprovedPurchaseOrder();
-            if ( $data_output instanceof \Illuminate\Support\Collection && $data_output->isNotEmpty() ) {
-                foreach ( $data_output as $data ) {
+            if ($data_output instanceof \Illuminate\Support\Collection && $data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
                     $business_id = $data->id;
 
-                    if ( !empty( $business_id ) ) {
-                        $update_data[ 'purchase_order_is_accepted_by_view' ] = '1';
-                        NotificationStatus::where( 'purchase_order_is_accepted_by_view', '0' )
-                        ->where( 'business_details_id', $business_id )
-                        ->update( $update_data );
+                    if (!empty($business_id)) {
+                        $update_data['purchase_order_is_accepted_by_view'] = '1';
+                        NotificationStatus::where('purchase_order_is_accepted_by_view', '0')
+                            ->where('business_details_id', $business_id)
+                            ->update($update_data);
                     }
                 }
             } else {
-                return view( 'organizations.purchase.list.list-purchase-order-approved-need-to-check', [
+                return view('organizations.purchase.list.list-purchase-order-approved-need-to-check', [
                     'data_output' => [],
                     'message' => 'No data found'
-                ] );
+                ]);
             }
-            return view( 'organizations.purchase.list.list-purchase-order-approved-need-to-check', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
+            return view('organizations.purchase.list.list-purchase-order-approved-need-to-check', compact('data_output'));
+        } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function getPurchaseOrderSentToOwnerForApprovalBusinesWise( $id ) {
+    public function getPurchaseOrderSentToOwnerForApprovalBusinesWise($id)
+    {
         try {
-            $data_output = $this->service->getPurchaseOrderSentToOwnerForApprovalBusinesWise( $id );
-         
-            if ( $data_output instanceof \Illuminate\Support\Collection && $data_output->isNotEmpty() ) {
-                foreach ( $data_output as $data ) {
+            $data_output = $this->service->getPurchaseOrderSentToOwnerForApprovalBusinesWise($id);
+
+            if ($data_output instanceof \Illuminate\Support\Collection && $data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
                     $business_details_id = $data->business_details_id;
-                   
-                    if ( !empty( $business_details_id ) ) {
-                        $update_data[ 'purchase_is_view' ] = '1';
-                        NotificationStatus::where( 'purchase_is_view', '0' )
-                        ->where( 'business_details_id', $business_details_id )
-                        ->update( $update_data );
+
+                    if (!empty($business_details_id)) {
+                        $update_data['purchase_is_view'] = '1';
+                        NotificationStatus::where('purchase_is_view', '0')
+                            ->where('business_details_id', $business_details_id)
+                            ->update($update_data);
                     }
                 }
             } else {
-                return view( 'organizations.purchase.list.list-purchase-order-need-to-check', [
+                return view('organizations.purchase.list.list-purchase-order-need-to-check', [
                     'data_output' => [],
                     'message' => 'No data found for designs received for correction',
-                ] );
+                ]);
             }
-            return view( 'organizations.purchase.list.list-purchase-order-approved-need-to-check-businesswise', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
+            return view('organizations.purchase.list.list-purchase-order-approved-need-to-check-businesswise', compact('data_output'));
+        } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function getAllListPurchaseOrderMailSentToVendor( Request $request ) {
+    public function getAllListPurchaseOrderMailSentToVendor(Request $request)
+    {
         try {
 
             $data_output = $this->service->getAllListPurchaseOrderMailSentToVendor();
 
-            return view( 'organizations.purchase.list.list-purchase-order-approved-sent-to-vendor', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
+            return view('organizations.purchase.list.list-purchase-order-approved-sent-to-vendor', compact('data_output'));
+        } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function getAllListPurchaseOrderMailSentToVendorBusinessWise( $id ) {
+    public function getAllListPurchaseOrderMailSentToVendorBusinessWise($id)
+    {
         try {
-            $data_output = $this->service->getAllListPurchaseOrderMailSentToVendorBusinessWise( $id );
+            $data_output = $this->service->getAllListPurchaseOrderMailSentToVendorBusinessWise($id);
 
-            return view( 'organizations.purchase.list.list-purchase-order-approved-sent-to-vendor-businesswise', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
+            return view('organizations.purchase.list.list-purchase-order-approved-sent-to-vendor-businesswise', compact('data_output'));
+        } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function getAllListSubmitedPurchaeOrderByVendor( Request $request ) {
+    public function getAllListSubmitedPurchaeOrderByVendor(Request $request)
+    {
         try {
 
             $data_output = $this->service->getAllListSubmitedPurchaeOrderByVendor();
 
-           
-            return view( 'organizations.purchase.list.list-all-po-sent-to-vendor', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
+
+            return view('organizations.purchase.list.list-all-po-sent-to-vendor', compact('data_output'));
+        } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function getAllListSubmitedPurchaeOrderByVendorBusinessWise( $id ) {
+    public function getAllListSubmitedPurchaeOrderByVendorBusinessWise($id)
+    {
         try {
-            $data_output = $this->service->getAllListSubmitedPurchaeOrderByVendorBusinessWise( $id );
-            if ( $data_output instanceof \Illuminate\Support\Collection && $data_output->isNotEmpty() ) {
-                foreach ( $data_output as $data ) {
+            $data_output = $this->service->getAllListSubmitedPurchaeOrderByVendorBusinessWise($id);
+            if ($data_output instanceof \Illuminate\Support\Collection && $data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
                     $business_id = $data->id;
 
-                    if ( !empty( $business_id ) ) {
-                        $update_data[ 'po_send_to_vendor' ] = '1';
-                        NotificationStatus::where( 'po_send_to_vendor', '0' )
-                        ->where( 'business_details_id', $business_id )
-                        ->update( $update_data );
+                    if (!empty($business_id)) {
+                        $update_data['po_send_to_vendor'] = '1';
+                        NotificationStatus::where('po_send_to_vendor', '0')
+                            ->where('business_details_id', $business_id)
+                            ->update($update_data);
                     }
                 }
             } else {
-                return view( 'organizations.purchase.list.list-all-po-sent-to-vendor-businesswise', [
+                return view('organizations.purchase.list.list-all-po-sent-to-vendor-businesswise', [
                     'data_output' => [],
                     'message' => 'No data found'
-                ] );
+                ]);
             }
-            return view( 'organizations.purchase.list.list-all-po-sent-to-vendor-businesswise', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
+            return view('organizations.purchase.list.list-all-po-sent-to-vendor-businesswise', compact('data_output'));
+        } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function getAllListPurchaseOrderTowardsOwner( Request $request )
- {
+    public function getAllListPurchaseOrderTowardsOwner(Request $request)
+    {
         try {
             $data_output = $this->service->getAllListPurchaseOrderTowardsOwner();
 
-           
 
-            return view( 'organizations.purchase.list.list-purchase-order-need-to-check', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
+
+            return view('organizations.purchase.list.list-purchase-order-need-to-check', compact('data_output'));
+        } catch (\Exception $e) {
             // Log the error for debugging
-            \Log::error( 'Error fetching purchase orders: ' . $e->getMessage() );
-            return view( 'organizations.purchase.list.list-purchase-order-need-to-check', [
+            Log::error('Error fetching purchase orders: ' . $e->getMessage());
+            return view('organizations.purchase.list.list-purchase-order-need-to-check', [
                 'data_output' => [],
                 'message' => 'An error occurred while fetching purchase orders.',
-            ] );
+            ]);
         }
     }
 
@@ -236,118 +240,101 @@ class AllListController extends Controller
                 'data' => $data['data'],
                 'pagination' => $data['pagination']
             ]);
-
         } catch (\Exception $e) {
             return response()->json(['status' => false, 'message' => $e->getMessage()]);
         }
     }
 
-public function getPurchasePartyReport(Request $request)
-{
-    $getVendorName = Vendors::whereNotNull('vendor_name')
-        ->where('is_deleted', 0)
-        ->where('is_active', 1)
-        ->pluck('vendor_name', 'id');
+    public function getPurchasePartyReport(Request $request)
+    {
+        $getVendorName = Vendors::whereNotNull('vendor_name')
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->pluck('vendor_name', 'id');
 
-    if ($request->filled('export_type')) {
-        $data = $this->service->getPurchasePartyReport($request)['data'];
+        if ($request->filled('export_type')) {
+            $data = $this->service->getPurchasePartyReport($request)['data'];
 
-        if ($request->export_type == 1) {
-            $pdf = Pdf::loadView('exports.party-wise-report', ['data' => $data])
-                ->setPaper('a3', 'landscape');
-            return $pdf->download('party-wise-report.pdf');
+            if ($request->export_type == 1) {
+                $pdf = Pdf::loadView('exports.party-wise-report', ['data' => $data])
+                    ->setPaper('a3', 'landscape');
+                return $pdf->download('party-wise-report.pdf');
+            }
+
+            if ($request->export_type == 2) {
+                return Excel::download(new PurchasePartyReportExport($data), 'party-wise-report.xlsx');
+            }
         }
 
-        if ($request->export_type == 2) {
-            return Excel::download(new PurchasePartyReportExport($data), 'party-wise-report.xlsx');
-        }
+        return view('organizations.report.party-wise-report', compact('getVendorName'));
     }
 
-    return view('organizations.report.party-wise-report', compact('getVendorName'));
-}
+    public function getPurchasePartyReportAjax(Request $request)
+    {
+        try {
+            $response = $this->service->getPurchasePartyReport($request);
 
-public function getPurchasePartyReportAjax(Request $request)
-{
-    try {
-        $response = $this->service->getPurchasePartyReport($request);
+            if (isset($response['status']) && $response['status'] === false) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $response['message']
+                ]);
+            }
 
-        if (isset($response['status']) && $response['status'] === false) {
             return response()->json([
-                'status' => false,
-                'message' => $response['message']
+                'status' => true,
+                'data' => $response['data'],
+                'pagination' => $response['pagination']
             ]);
-        }
-
-        return response()->json([
-            'status' => true,
-            'data' => $response['data'],
-            'pagination' => $response['pagination']
-        ]);
-    } catch (\Exception $e) {
-        return response()->json(['status' => false, 'message' => $e->getMessage()]);
-    }
-}
-public function FollowUpReport(Request $request)
-{
-    // dd($request);
-    // die();
-    $getVendorName = Vendors::whereNotNull('vendor_name')
-        ->where('is_deleted', 0)
-        ->where('is_active', 1)
-        ->pluck('vendor_name', 'id');
-
-    if ($request->filled('export_type')) {
-        $data = $this->service->getPurchasePartyReport($request)['data'];
-
-        if ($request->export_type == 1) {
-            $pdf = Pdf::loadView('exports.follow-up-report', ['data' => $data])
-                ->setPaper('a3', 'landscape');
-            return $pdf->download('follow-up-report.pdf');
-        }
-
-        if ($request->export_type == 2) {
-            return Excel::download(new FollowUpReportExport($data), 'follow-up-report.xlsx');
+        } catch (\Exception $e) {
+            return response()->json(['status' => false, 'message' => $e->getMessage()]);
         }
     }
+    public function FollowUpReport(Request $request)
+    {
+        // dd($request);
+        // die();
+        $getVendorName = Vendors::whereNotNull('vendor_name')
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->pluck('vendor_name', 'id');
 
-    return view('organizations.report.follow-up-report', compact('getVendorName'));
-}
+        if ($request->filled('export_type')) {
+            $data = $this->service->getPurchasePartyReport($request)['data'];
 
-public function FollowUpReportAjax(Request $request)
-{
-    try {
-        $response = $this->service->getFollowUpReport($request);
+            if ($request->export_type == 1) {
+                $pdf = Pdf::loadView('exports.follow-up-report', ['data' => $data])
+                    ->setPaper('a3', 'landscape');
+                return $pdf->download('follow-up-report.pdf');
+            }
 
-        if (isset($response['status']) && $response['status'] === false) {
+            if ($request->export_type == 2) {
+                return Excel::download(new FollowUpReportExport($data), 'follow-up-report.xlsx');
+            }
+        }
+
+        return view('organizations.report.follow-up-report', compact('getVendorName'));
+    }
+
+    public function FollowUpReportAjax(Request $request)
+    {
+        try {
+            $response = $this->service->getFollowUpReport($request);
+
+            if (isset($response['status']) && $response['status'] === false) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $response['message']
+                ]);
+            }
+
             return response()->json([
-                'status' => false,
-                'message' => $response['message']
+                'status' => true,
+                'data' => $response['data'],
+                'pagination' => $response['pagination']
             ]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => false, 'message' => $e->getMessage()]);
         }
-
-        return response()->json([
-            'status' => true,
-            'data' => $response['data'],
-            'pagination' => $response['pagination']
-        ]);
-    } catch (\Exception $e) {
-        return response()->json(['status' => false, 'message' => $e->getMessage()]);
     }
-
-    
-}
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
 }

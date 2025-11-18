@@ -1,8 +1,7 @@
-
 @extends('admin.layouts.master')
 @section('content')
     <style>
-        .btn-colour{
+        .btn-colour {
             color: gray !important;
         }
     </style>
@@ -21,10 +20,10 @@
                             <div class="datatable-dashv1-list custom-datatable-overright">
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
-                                        data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="false"
-                                        data-key-events="true" data-show-toggle="true" data-resizable="true"
-                                        data-cookie="true" data-cookie-id-table="saveId" data-show-export="true"
-                                        data-click-to-select="true" data-toolbar="#toolbar">
+                                        data-show-columns="true" data-show-pagination-switch="true"
+                                        data-show-refresh="false" data-key-events="true" data-show-toggle="true"
+                                        data-resizable="true" data-cookie="true" data-cookie-id-table="saveId"
+                                        data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
 
                                         <thead>
                                             <tr>
@@ -33,8 +32,8 @@
                                                 <th>Name</th>
                                                 <th>latitude</th>
                                                 <th>longitude</th>
-                                                  <th>Location Address</th>
-                                                   <th>IP Address</th>
+                                                <th>Location Address</th>
+                                                <th>IP Address</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -45,15 +44,17 @@
                                             @foreach ($register_user as $item)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                     <td> {{ $item->updated_at ? $item->updated_at->format('d-m-Y') : 'N/A' }}
+                                                    <td>
+                                                        {{ $item->updated_at ? $item->updated_at->format('d-m-Y h:i:s A') : 'N/A' }}
                                                     </td>
-                                                    <td>{{ $item->f_name }} {{ $item->m_name }} {{ $item->l_name }} ({{$item->u_email}})
+                                                    <td>{{ $item->f_name }} {{ $item->m_name }} {{ $item->l_name }}
+                                                        ({{ $item->u_email }})
                                                     </td>
                                                     <td>{{ $item->latitude }}</td>
                                                     <td>{{ $item->longitude }}</td>
-                                                     <td>{{ $item->location_address }}</td>
-                                                      <td>{{ $item->ip_address }}</td>
-                                                              {{-- <td class="d-flex">
+                                                    <td>{{ $item->location_address }}</td>
+                                                    <td>{{ $item->ip_address }}</td>
+                                                    {{-- <td class="d-flex">
                                                         <div style="display: flex; align-items: center;">
                                                             <a href="{{ route('show-login-history', base64_encode($item->id)) }} "><button
                                                                     data-toggle="tooltip" title="Trash"
@@ -75,16 +76,16 @@
             </div>
         </div>
     </div>
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>   
-     <script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
         $('.show-btn').click(function(e) {
             alert('hii');
             $("#show_id").val($(this).attr("data-id"));
             $("#showform").submit();
         })
     </script>
-       <form method="POST" action="{{ url('/show-login-history') }}" id="showform">
+    <form method="POST" action="{{ url('/show-login-history') }}" id="showform">
         @csrf
         <input type="hidden" name="show_id" id="show_id" value="">
     </form>

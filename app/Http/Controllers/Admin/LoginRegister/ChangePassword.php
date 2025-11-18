@@ -4,10 +4,8 @@ namespace App\Http\Controllers\Admin\LoginRegister;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Services\Admin\LoginRegister\LoginService;
-use Session;
-use Validator;
-use PDO;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 
 class ChangePassword extends Controller
@@ -17,32 +15,32 @@ class ChangePassword extends Controller
         return view('admin.change-password');
     }
 
-   
-    public function updatePassword(Request $request)
-    {   
-        $validator = Validator::make($request->all(), [
-        'new_password' => [
-            'required',
-            'string',
-            'min:8',
-        ],
-    ]);
 
-    if ($validator->fails()) {
-        return redirect()->back()->withErrors($validator)->withInput();
-    }
+    public function updatePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'new_password' => [
+                'required',
+                'string',
+                'min:8',
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
         $userId = Session::get('user_id');
         if (!$userId) {
-           return redirect()->back()->with('error', 'Password not updated !');
+            return redirect()->back()->with('error', 'Password not updated !');
         }
         $user = User::find($userId);
         if (!$user) {
             return redirect()->back()->with('error', 'Password not updated !');
         }
-        if ($request->new_password != $request-> confirm_password) {
+        if ($request->new_password != $request->confirm_password) {
             return redirect()->back()->with('error', 'New Password & Confirm Password not match  !');
         }
-    User::where('id', $userId)->update([
+        User::where('id', $userId)->update([
             'u_password' => bcrypt($request->new_password),
         ]);
         return redirect()->back()->with('success', 'Password updated successfully!');

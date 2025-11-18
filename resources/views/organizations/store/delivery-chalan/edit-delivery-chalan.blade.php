@@ -65,12 +65,12 @@
                                                     <div class="container-fluid">
                                                         <!-- @if ($errors->any())
     <div class="alert alert-danger">
-                                                                                    <ul>
-                                                                                        @foreach ($errors->all() as $error)
+                                                                                            <ul>
+                                                                                                @foreach ($errors->all() as $error)
     <li>{{ $error }}</li>
     @endforeach
-                                                                                    </ul>
-                                                                                </div>
+                                                                                            </ul>
+                                                                                        </div>
     @endif -->
 
 
@@ -133,7 +133,8 @@
                                                                     </div>
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
-                                                                            <label for="transport_id">Transport Name (Optional)</label>
+                                                                            <label for="transport_id">Transport Name
+                                                                                (Optional)</label>
                                                                             <select class="form-control" id="transport_id"
                                                                                 name="transport_id"
                                                                                 onchange="myFunction(this.value)">
@@ -253,10 +254,11 @@
                                                                     </div>
                                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                                         <div class="form-group">
-                                                                            <label>PO Date <span
+                                                                            <label>Delivery Chalan Date <span
                                                                                     class="text-danger">*</span></label>
                                                                             <div class="cal-icon">
-                                                                                <input class="form-control editdatetimepicker"
+                                                                                <input
+                                                                                    class="form-control editdatetimepicker"
                                                                                     type="date" name="po_date"
                                                                                     id="po_date"
                                                                                     value="{{ $editDataNew->po_date }}">
@@ -430,8 +432,8 @@
                                                                                         class="text-danger">*</span></label>
                                                                                 <textarea class="form-control" name="remark">
                                                                                 @if (old('remark'))
-                                                                                {{ old('remark') }}@else{{ $editDataNew->remark }}
-                                                                                @endif
+{{ old('remark') }}@else{{ $editDataNew->remark }}
+@endif
                                                                                 </textarea>
                                                                             </div>
                                                             @endif
@@ -464,21 +466,21 @@
         @csrf
         <input type="hidden" name="delete_id" id="delete_id" value="">
     </form>
-   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-$(document).ready(function() {
-    $('.editdatetimepicker').datepicker({
-        format: 'yyyy-mm-dd',
-        autoclose: true,
-        todayHighlight: true
-    });
-});
-</script>
+        $(document).ready(function() {
+            $('.editdatetimepicker').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                todayHighlight: true
+            });
+        });
+    </script>
 
     <script>
         $(document).ready(function() {
@@ -490,7 +492,7 @@ $(document).ready(function() {
                 $('.dropdown-options').hide(); // close other dropdowns
                 $(this).siblings('.dropdown-options').toggle();
                 $(this).siblings('.dropdown-options').find('.search-box').val('').trigger(
-                'keyup'); // reset search
+                    'keyup'); // reset search
             });
 
             $(document).on('keyup', '.search-box', function() {
@@ -642,7 +644,7 @@ $(document).ready(function() {
                         required: "Enter plant name."
                     },
                     po_date: {
-                        required: "Please select PO date.",
+                        required: "Please select Delivery Chalan Date.",
                         date: "Please select a valid date."
                     },
                     'addmore[0][part_item_id]': {
@@ -863,5 +865,3 @@ $(document).ready(function() {
     </script>
 
 @endsection
-
-

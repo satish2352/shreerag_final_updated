@@ -1,27 +1,26 @@
 <?php
+
 namespace App\Http\Repository\Organizations\Logistics;
-use Illuminate\Database\QueryException;
-use DB;
-use Illuminate\Support\Carbon;
-use App\Models\ {
+
+use App\Models\{
     TransportName
-}
-;
-use Config;
+};
 
-class NameOfTransportRepository {
+class NameOfTransportRepository
+{
 
-    public function getAll() {
+    public function getAll()
+    {
         try {
             $data_output = TransportName::get();
             return $data_output;
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function addAll( $request )
- {
+    public function addAll($request)
+    {
 
         try {
 
@@ -32,8 +31,7 @@ class NameOfTransportRepository {
             return [
                 'status' => 'success'
             ];
-
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             return [
                 'msg' => $e->getMessage(),
                 'status' => 'error'
@@ -41,15 +39,16 @@ class NameOfTransportRepository {
         }
     }
 
-    public function getById( $id ) {
+    public function getById($id)
+    {
         try {
-            $dataOutputByid = TransportName::find( $id );
-            if ( $dataOutputByid ) {
+            $dataOutputByid = TransportName::find($id);
+            if ($dataOutputByid) {
                 return $dataOutputByid;
             } else {
                 return null;
             }
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             return [
                 'msg' => $e,
                 'status' => 'error'
@@ -57,14 +56,14 @@ class NameOfTransportRepository {
         }
     }
 
-    public function updateAll( $request )
- {
+    public function updateAll($request)
+    {
         try {
             $return_data = array();
 
-            $dataOutput = TransportName::find( $request->id );
+            $dataOutput = TransportName::find($request->id);
 
-            if ( !$dataOutput ) {
+            if (!$dataOutput) {
                 return [
                     'msg' => 'Update Data not found.',
                     'status' => 'error'
@@ -73,11 +72,11 @@ class NameOfTransportRepository {
 
             $dataOutput->name = $request->name;
             $dataOutput->save();
-            $return_data[ 'data' ] = $dataOutput;
-            $return_data[ 'status' ] = 'success';
+            $return_data['data'] = $dataOutput;
+            $return_data['status'] = 'success';
 
             return $return_data;
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             return [
                 'msg' => 'Failed to Update Data.',
                 'status' => 'error',
@@ -86,15 +85,14 @@ class NameOfTransportRepository {
         }
     }
 
-    public function deleteById( $id ) {
+    public function deleteById($id)
+    {
         try {
-            $deleteDataById = TransportName::find( $id );
+            $deleteDataById = TransportName::find($id);
             $deleteDataById->delete();
             return $deleteDataById;
-
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             return $e;
         }
     }
-
 }

@@ -1,32 +1,33 @@
 <?php
+
 namespace App\Http\Repository\Admin\CMS;
-use Illuminate\Database\QueryException;
-use DB;
-use Illuminate\Support\Carbon;
-use App\Models\ {
+
+use App\Models\{
     ContactUs
 };
-use Config;
 
-class ContactUsListRepository {
+class ContactUsListRepository
+{
 
-    public function getAll() {
+    public function getAll()
+    {
         try {
-            return ContactUs::orderBy( 'id', 'desc' )->get();
-        } catch ( \Exception $e ) {
+            return ContactUs::orderBy('id', 'desc')->get();
+        } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function getById( $id ){
+    public function getById($id)
+    {
         try {
-            $contactus_data = ContactUs::find( $id );
-            if ( $contactus_data ) {
+            $contactus_data = ContactUs::find($id);
+            if ($contactus_data) {
                 return $contactus_data;
             } else {
                 return null;
             }
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             return $e;
             return [
                 'msg' => 'Failed to get by id Scolarship List.',
@@ -34,17 +35,18 @@ class ContactUsListRepository {
             ];
         }
     }
-    public function deleteById( $id ) {
+    public function deleteById($id)
+    {
         try {
-            $deleteDataById = ContactUs::find( $id );
+            $deleteDataById = ContactUs::find($id);
 
-            if ( $deleteDataById ) {
+            if ($deleteDataById) {
                 $deleteDataById->delete();
                 return $deleteDataById;
             } else {
                 return null;
             }
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             return $e;
         }
     }

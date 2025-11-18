@@ -1,30 +1,28 @@
 <?php
+
 namespace App\Http\Repository\Organizations\HR\LeaveManagment;
-use Illuminate\Database\QueryException;
-use DB;
-use Illuminate\Support\Carbon;
-use App\Models\ {
 
-    HREmployee, User, EmployeesModel, LeaveManagement
-}
-;
-use Config;
+use App\Models\{
+    LeaveManagement
+};
 
-class LeaveManagmentRepository {
+class LeaveManagmentRepository
+{
 
-    public function getAll() {
+    public function getAll()
+    {
         try {
-            $data_output = LeaveManagement::where( 'is_deleted', 0 )
-            ->orderBy( 'updated_at', 'desc' )
-            ->get();
+            $data_output = LeaveManagement::where('is_deleted', 0)
+                ->orderBy('updated_at', 'desc')
+                ->get();
             return $data_output;
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function addAll( $request )
- {
+    public function addAll($request)
+    {
 
         try {
             $dataOutput = new LeaveManagement();
@@ -33,13 +31,13 @@ class LeaveManagmentRepository {
             $dataOutput->leave_count = $request->leave_count;
             $dataOutput->save();
             $last_insert_id = $dataOutput->id;
-            $finalOutput = LeaveManagement::find( $last_insert_id );
+            $finalOutput = LeaveManagement::find($last_insert_id);
             $finalOutput->save();
 
             return [
                 'status' => 'success'
             ];
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             return [
                 'msg' => $e->getMessage(),
                 'status' => 'error'
@@ -47,15 +45,16 @@ class LeaveManagmentRepository {
         }
     }
 
-    public function getById( $id ) {
+    public function getById($id)
+    {
         try {
-            $dataOutputByid = LeaveManagement::find( $id );
-            if ( $dataOutputByid ) {
+            $dataOutputByid = LeaveManagement::find($id);
+            if ($dataOutputByid) {
                 return $dataOutputByid;
             } else {
                 return null;
             }
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             return [
                 'msg' => $e,
                 'status' => 'error'
@@ -63,12 +62,12 @@ class LeaveManagmentRepository {
         }
     }
 
-    public function updateAll( $request )
- {
+    public function updateAll($request)
+    {
         try {
-            $dataOutput = LeaveManagement::find( $request->id );
+            $dataOutput = LeaveManagement::find($request->id);
 
-            if ( !$dataOutput ) {
+            if (!$dataOutput) {
                 return [
                     'msg' => 'Update Data not found.',
                     'status' => 'error'
@@ -81,10 +80,9 @@ class LeaveManagmentRepository {
             $dataOutput->save();
             $last_insert_id = $dataOutput->id;
 
-            $return_data[ 'last_insert_id' ] = $last_insert_id;
+            $return_data['last_insert_id'] = $last_insert_id;
             return  $return_data;
-
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             return [
                 'msg' => 'Failed to Update Data.',
                 'status' => 'error',
@@ -93,23 +91,22 @@ class LeaveManagmentRepository {
         }
     }
 
-    public function deleteByYear( $leaveYear )
- {
+    public function deleteByYear($leaveYear)
+    {
 
         try {
             // Find records based on leave_year
-            $records = LeaveManagement::where( 'id', $leaveYear )->get();
+            $records = LeaveManagement::where('id', $leaveYear)->get();
 
             // Update is_deleted flag to 1 for soft delete
-            foreach ( $records as $record ) {
+            foreach ($records as $record) {
                 $record->is_deleted = 1;
                 $record->save();
             }
 
             return $records;
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             return $e->getMessage();
         }
     }
-
 }

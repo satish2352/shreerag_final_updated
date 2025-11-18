@@ -1,24 +1,22 @@
 <?php
+
 namespace App\Http\Repository\Organizations\Store;
 
-use Illuminate\Database\QueryException;
-use DB;
-use Illuminate\Support\Carbon;
 use App\Models\{
     DeliveryChalan,
     DeliveryChalanItemDetails,
-    BusinessApplicationProcesses,
     ItemStock
 };
-use Config;
 
 class DeliveryChalanRepository
 {
 
-    public function getDetailsForPurchase($id){
+    public function getDetailsForPurchase($id)
+    {
         return DeliveryChalan::where('id', '=', $id)->first();
     }
-    public function submitBOMToOwner($request){
+    public function submitBOMToOwner($request)
+    {
         try {
 
             $dataOutput = new DeliveryChalan();
@@ -89,26 +87,31 @@ class DeliveryChalanRepository
             ];
         }
     }
-    public function getById($id) {
+    public function getById($id)
+    {
         try {
             $designData = DeliveryChalan::leftJoin('tbl_delivery_chalan_item_details as deld1', 'tbl_delivery_chalan.id', '=', 'deld1.delivery_chalan_id')
-            ->leftJoin('tbl_hsn as hsn', 'hsn.id', '=', 'deld1.hsn_id')   
-            ->where('deld1.is_deleted', 0)
-            ->select(  'deld1.*',
-            'deld1.id as tbl_delivery_chalan_item_details_id',            
-                'tbl_delivery_chalan.id as purchase_main_id', 
-                'tbl_delivery_chalan.vendor_id',
-                'tbl_delivery_chalan.transport_id', 
-                'tbl_delivery_chalan.vehicle_id', 'tbl_delivery_chalan.business_id',
-                'tbl_delivery_chalan.tax_type', 
-                'tbl_delivery_chalan.tax_id',
-                'tbl_delivery_chalan.po_date','tbl_delivery_chalan.customer_po_no', 
-                'tbl_delivery_chalan.vehicle_number',
-                'tbl_delivery_chalan.plant_id', 
-                'tbl_delivery_chalan.vehicle_number',
-                'tbl_delivery_chalan.remark',
-                'tbl_delivery_chalan.id',
-                'hsn.name as hsn_name')
+                ->leftJoin('tbl_hsn as hsn', 'hsn.id', '=', 'deld1.hsn_id')
+                ->where('deld1.is_deleted', 0)
+                ->select(
+                    'deld1.*',
+                    'deld1.id as tbl_delivery_chalan_item_details_id',
+                    'tbl_delivery_chalan.id as purchase_main_id',
+                    'tbl_delivery_chalan.vendor_id',
+                    'tbl_delivery_chalan.transport_id',
+                    'tbl_delivery_chalan.vehicle_id',
+                    'tbl_delivery_chalan.business_id',
+                    'tbl_delivery_chalan.tax_type',
+                    'tbl_delivery_chalan.tax_id',
+                    'tbl_delivery_chalan.po_date',
+                    'tbl_delivery_chalan.customer_po_no',
+                    'tbl_delivery_chalan.vehicle_number',
+                    'tbl_delivery_chalan.plant_id',
+                    'tbl_delivery_chalan.vehicle_number',
+                    'tbl_delivery_chalan.remark',
+                    'tbl_delivery_chalan.id',
+                    'hsn.name as hsn_name'
+                )
                 ->where('tbl_delivery_chalan.id', $id)
                 ->get();
 
@@ -121,7 +124,7 @@ class DeliveryChalanRepository
             return [
                 'msg' => 'Failed to get by id Citizen Volunteer.',
                 'status' => 'error',
-                'error' => $e->getMessage(), 
+                'error' => $e->getMessage(),
             ];
         }
     }
@@ -129,25 +132,26 @@ class DeliveryChalanRepository
     {
         try {
             $Id = (int)$id;
-           
-            $purchaseOrder = DeliveryChalan::leftJoin('vendors', function($join) {
+
+            $purchaseOrder = DeliveryChalan::leftJoin('vendors', function ($join) {
                 $join->on('tbl_delivery_chalan.vendor_id', '=', 'vendors.id');
             })
-            ->leftJoin('tbl_tax', function($join) {
-                $join->on('tbl_delivery_chalan.tax_id', '=', 'tbl_tax.id');
-            })    
-             ->leftJoin('tbl_transport_name', function($join) {
-                $join->on('tbl_delivery_chalan.transport_id', '=', 'tbl_transport_name.id');
-            }) 
-            ->where('tbl_delivery_chalan.id', $Id)   
-            ->select('tbl_delivery_chalan.id',
+                ->leftJoin('tbl_tax', function ($join) {
+                    $join->on('tbl_delivery_chalan.tax_id', '=', 'tbl_tax.id');
+                })
+                ->leftJoin('tbl_transport_name', function ($join) {
+                    $join->on('tbl_delivery_chalan.transport_id', '=', 'tbl_transport_name.id');
+                })
+                ->where('tbl_delivery_chalan.id', $Id)
+                ->select(
+                    'tbl_delivery_chalan.id',
                     'tbl_delivery_chalan.vendor_id',
-                    'vendors.vendor_name', 
-                    'vendors.vendor_company_name', 
-                    'vendors.vendor_email', 
-                    'vendors.contact_no', 
-                    'vendors.vendor_address', 
-                    'vendors.gst_no', 
+                    'vendors.vendor_name',
+                    'vendors.vendor_company_name',
+                    'vendors.vendor_email',
+                    'vendors.contact_no',
+                    'vendors.vendor_address',
+                    'vendors.gst_no',
                     'vendors.quote_no',
                     'tbl_delivery_chalan.tax_type',
                     'tbl_tax.name as tax_number',
@@ -155,42 +159,42 @@ class DeliveryChalanRepository
                     'tbl_delivery_chalan.remark',
                     'tbl_delivery_chalan.dc_number',
                     'tbl_delivery_chalan.dc_date',
-                     'tbl_delivery_chalan.remark',
-                     'tbl_transport_name.name as transport_name'
+                    'tbl_delivery_chalan.remark',
+                    'tbl_transport_name.name as transport_name'
                 )
                 ->first();
             if (!$purchaseOrder) {
                 throw new \Exception('Purchase order not found.');
             }
-                $purchaseOrderDetails = DeliveryChalanItemDetails::leftJoin('tbl_part_item', function($join) {
+            $purchaseOrderDetails = DeliveryChalanItemDetails::leftJoin('tbl_part_item', function ($join) {
                 $join->on('tbl_delivery_chalan_item_details.part_item_id', '=', 'tbl_part_item.id');
             })
-            ->leftJoin('tbl_unit', function($join) {
-                $join->on('tbl_delivery_chalan_item_details.unit_id', '=', 'tbl_unit.id');
-            })    
-            ->leftJoin('tbl_process_master', function($join) {
-                $join->on('tbl_delivery_chalan_item_details.process_id', '=', 'tbl_process_master.id');
-            })      
-            ->leftJoin('tbl_hsn', function($join) {
-                $join->on('tbl_delivery_chalan_item_details.hsn_id', '=', 'tbl_hsn.id');
-            })   
+                ->leftJoin('tbl_unit', function ($join) {
+                    $join->on('tbl_delivery_chalan_item_details.unit_id', '=', 'tbl_unit.id');
+                })
+                ->leftJoin('tbl_process_master', function ($join) {
+                    $join->on('tbl_delivery_chalan_item_details.process_id', '=', 'tbl_process_master.id');
+                })
+                ->leftJoin('tbl_hsn', function ($join) {
+                    $join->on('tbl_delivery_chalan_item_details.hsn_id', '=', 'tbl_hsn.id');
+                })
                 ->where('delivery_chalan_id', $purchaseOrder->id)
                 ->where('tbl_delivery_chalan_item_details.is_deleted', 0)
                 ->select(
                     'tbl_delivery_chalan_item_details.part_item_id',
-                     'tbl_part_item.description',
-                     'tbl_part_item.part_number',
-                     'tbl_delivery_chalan_item_details.unit_id',
-                     'tbl_unit.name',
-                     'tbl_delivery_chalan_item_details.process_id',
-                     'tbl_process_master.name as process_name',
-                     'tbl_delivery_chalan_item_details.hsn_id',
-                     'tbl_hsn.name as hsn_name',
-                     'tbl_delivery_chalan_item_details.quantity',
-                     'tbl_delivery_chalan_item_details.rate',
-                     'tbl_delivery_chalan_item_details.size',
-                     'tbl_delivery_chalan_item_details.amount',
-                     
+                    'tbl_part_item.description',
+                    'tbl_part_item.part_number',
+                    'tbl_delivery_chalan_item_details.unit_id',
+                    'tbl_unit.name',
+                    'tbl_delivery_chalan_item_details.process_id',
+                    'tbl_process_master.name as process_name',
+                    'tbl_delivery_chalan_item_details.hsn_id',
+                    'tbl_hsn.name as hsn_name',
+                    'tbl_delivery_chalan_item_details.quantity',
+                    'tbl_delivery_chalan_item_details.rate',
+                    'tbl_delivery_chalan_item_details.size',
+                    'tbl_delivery_chalan_item_details.amount',
+
                 )
                 ->get();
             return [
@@ -201,13 +205,14 @@ class DeliveryChalanRepository
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    public function updateAll($request) {
+    public function updateAll($request)
+    {
         try {
             $return_data = array();
             $edit_id = $request->id;
-        
+
             $dataOutputNew = DeliveryChalan::where('id', $edit_id)->first();
-            
+
             if (!$dataOutputNew) {
                 return [
                     'msg' => 'Delivery Chalan not found.',
@@ -216,7 +221,7 @@ class DeliveryChalanRepository
             }
             for ($i = 0; $i < $request->design_count; $i++) {
                 $designId = $request->input("design_id_" . $i);
-                if ($designId) {  
+                if ($designId) {
                     $designDetails = DeliveryChalanItemDetails::findOrFail($designId);
                     $designDetails->part_item_id = $request->input("part_item_id_" . $i);
                     $designDetails->hsn_id = $request->input("hsn_id_" . $i);
@@ -241,7 +246,7 @@ class DeliveryChalanRepository
             $dataOutput->po_date = $request->po_date;
             $dataOutput->lr_number = $request->lr_number;
             $dataOutput->remark = $request->remark;
-              if ($request->has('transport_id')) {
+            if ($request->has('transport_id')) {
                 $dataOutput->transport_id = $request->transport_id;
             }
             if ($request->has('vehicle_number')) {
@@ -252,7 +257,7 @@ class DeliveryChalanRepository
                 $dataOutput->business_id = $request->business_id;
             }
             $dataOutput->save();
-    
+
             if ($request->has('addmore')) {
                 foreach ($request->addmore as $item) {
                     $designDetails = new DeliveryChalanItemDetails();
@@ -263,10 +268,10 @@ class DeliveryChalanRepository
                     $designDetails->quantity = $item['quantity'];
                     $designDetails->unit_id = $item['unit_id'];
                     $designDetails->size = $item['size'];
-                    $designDetails->rate = $item['rate'] ?? null;  
+                    $designDetails->rate = $item['rate'] ?? null;
                     $designDetails->amount = $item['amount'];
                     $designDetails->save();
-    
+
                     $itemStock = ItemStock::where('part_item_id', $item['part_item_id'])->first();
                     if ($itemStock) {
                         $itemStock->quantity -= $item['quantity'];
@@ -274,12 +279,11 @@ class DeliveryChalanRepository
                     }
                 }
             }
-    
+
             $last_insert_id = $dataOutput->id;
             $return_data['last_insert_id'] = $last_insert_id;
-    
+
             return $return_data;
-    
         } catch (\Exception $e) {
             return [
                 'msg' => 'Failed to update data.',
@@ -317,7 +321,6 @@ class DeliveryChalanRepository
                 'msg' => 'Record marked as deleted and stock updated successfully.',
                 'status' => 'success',
             ];
-
         } catch (\Exception $e) {
             return [
                 'msg' => 'Failed to delete the record.',
@@ -333,15 +336,15 @@ class DeliveryChalanRepository
                 ->where('is_deleted', 0)
                 ->firstOrFail();
             $itemStock = ItemStock::where('part_item_id', $deleteDataById->part_item_id)->first();
-    
+
             if ($itemStock) {
                 $itemStock->quantity += $deleteDataById->quantity;
                 $itemStock->save();
             }
-    
+
             $deleteDataById->is_deleted = 1;
             $deleteDataById->save();
-    
+
             return [
                 'msg' => 'Record marked as deleted and stock updated successfully.',
                 'status' => 'success',
@@ -354,5 +357,4 @@ class DeliveryChalanRepository
             ];
         }
     }
-
 }

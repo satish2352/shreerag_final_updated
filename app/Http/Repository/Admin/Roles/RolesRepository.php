@@ -1,27 +1,30 @@
 <?php
+
 namespace App\Http\Repository\Admin\Roles;
+
 use Illuminate\Database\QueryException;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
-use App\Models\ {
+use App\Models\{
     RolesModel
-}
-;
-use Config;
+};
+use Illuminate\Support\Facades\Config;
 
-class RolesRepository {
+class RolesRepository
+{
 
-    public function getAll() {
+    public function getAll()
+    {
         try {
             $data_output = RolesModel::get();
             return $data_output;
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function addAll( $request )
- {
+    public function addAll($request)
+    {
 
         try {
 
@@ -32,8 +35,7 @@ class RolesRepository {
             return [
                 'status' => 'success'
             ];
-
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             return [
                 'msg' => $e->getMessage(),
                 'status' => 'error'
@@ -41,15 +43,16 @@ class RolesRepository {
         }
     }
 
-    public function getById( $id ) {
+    public function getById($id)
+    {
         try {
-            $dataOutputByid = RolesModel::find( $id );
-            if ( $dataOutputByid ) {
+            $dataOutputByid = RolesModel::find($id);
+            if ($dataOutputByid) {
                 return $dataOutputByid;
             } else {
                 return null;
             }
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             return [
                 'msg' => $e,
                 'status' => 'error'
@@ -57,14 +60,14 @@ class RolesRepository {
         }
     }
 
-    public function updateAll( $request )
- {
+    public function updateAll($request)
+    {
         try {
             $return_data = array();
 
-            $dataOutput = RolesModel::find( $request->id );
+            $dataOutput = RolesModel::find($request->id);
 
-            if ( !$dataOutput ) {
+            if (!$dataOutput) {
                 return [
                     'msg' => 'Update Data not found.',
                     'status' => 'error'
@@ -73,11 +76,11 @@ class RolesRepository {
 
             $dataOutput->role_name = $request->role_name;
             $dataOutput->save();
-            $return_data[ 'data' ] = $dataOutput;
-            $return_data[ 'status' ] = 'success';
+            $return_data['data'] = $dataOutput;
+            $return_data['status'] = 'success';
 
             return $return_data;
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             return [
                 'msg' => 'Failed to Update Data.',
                 'status' => 'error',
@@ -86,15 +89,14 @@ class RolesRepository {
         }
     }
 
-    public function deleteById( $id ) {
+    public function deleteById($id)
+    {
         try {
-            $deleteDataById = RolesModel::find( $id );
+            $deleteDataById = RolesModel::find($id);
             $deleteDataById->delete();
             return $deleteDataById;
-
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             return $e;
         }
     }
-
 }

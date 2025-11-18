@@ -1,16 +1,19 @@
 <?php
-namespace App\Http\Services\Organizations\Logistics;
-use App\Http\Repository\Organizations\Logistics\LogisticsRepository;
-use Carbon\Carbon;
 
-use Config;
+namespace App\Http\Services\Organizations\Logistics;
+
+use App\Http\Repository\Organizations\Logistics\LogisticsRepository;
+use Exception;
+
 class LogisticsServices
 {
     protected $repo;
-    public function __construct() {
+    protected $service;
+
+    public function __construct()
+    {
 
         $this->repo = new LogisticsRepository();
-
     }
     public function storeLogistics($request)
     {
@@ -25,14 +28,14 @@ class LogisticsServices
             return $e;
         }
     }
-    public function sendToFianance($id,  $business_details_id){
+    public function sendToFianance($id,  $business_details_id)
+    {
         try {
-           $update_data = $this->repo->sendToFianance($id,  $business_details_id);
-          
-           return $update_data;
+            $update_data = $this->repo->sendToFianance($id,  $business_details_id);
+
+            return $update_data;
         } catch (\Exception $e) {
             return $e;
         }
-    } 
-    
+    }
 }

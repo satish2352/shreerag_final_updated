@@ -7,38 +7,28 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1> Production Report</h1>
+                                <h1> Item Stock Report</h1>
 
                             </div>
                         </div>
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
 
-                                <form id="filterForm" method="GET" action="{{ route('production-report-ajax') }}">
+                                <form id="filterForm" method="GET"
+                                    action="{{ route('list-itemwise-vendor-rate-report') }}">
 
                                     <input type="hidden" name="export_type" id="export_type" />
-
-                                    <div class="row mb-3">
-                                        <div class="col-md-3">
-                                            <label>Project Name</label>
-                                            <select class="form-control select2" name="project_name">
-                                                <option value="">All Projects</option>
-                                                @foreach ($getProjectName as $id => $name)
+                                    <div class="row mb-5">
+                                        <div class="col-md-2">
+                                            <label>Part Item</label>
+                                            <select class="form-control select2" name="description">
+                                                <option value="">All Part Item</option>
+                                                @foreach ($getPartItemName as $id => $name)
                                                     <option value="{{ $id }}">{{ $name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-md-3">
-                                            <label>Status</label>
-                                            <select name="production_status_id" class="form-control">
-                                                <option value="">Select Status</option>
-                                                <option value="Completed">Completed</option>
-                                                <option value="Inprocess">Inprocess</option>
-                                            </select>
-                                        </div>
-
-
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <label>Year</label>
                                             <select name="year" class="form-control">
                                                 <option value="">All</option>
@@ -47,7 +37,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <label>Month</label>
                                             <select name="month" class="form-control">
                                                 <option value="">All</option>
@@ -59,25 +49,23 @@
                                         </div>
 
 
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <label>From Date</label>
                                             <input type="date" name="from_date" class="form-control">
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <label>To Date</label>
                                             <input type="date" name="to_date" class="form-control">
                                         </div>
 
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <label>Total Records</label>
                                             <div> <span id="totalCount">0</span></div>
                                         </div>
                                     </div>
 
                                     {{-- 🔹 Search and Export --}}
-                                    <div class="row mb-2 ">
+                                    <div class="row mb-2">
                                         <div class="col-md-6 d-flex justify-content-center">
 
                                             <button type="submit" class="btn btn-primary filterbg">Filter</button>
@@ -119,23 +107,18 @@
                                             <tr>
 
                                                 <th data-field="id">Sr.No.</th>
-                                                <th data-field="date" data-editable="false">Sent Date</th>
-                                                <th data-field="project_name" data-editable="false">Project Name</th>
-                                                <th data-field="customer_po_number" data-editable="false">PO Number</th>
-                                                <th data-field="title" data-editable="false">customer Name</th>
-                                                <th data-field="product_name" data-editable="false">Product Name</th>
-                                                <th data-field="quantity" data-editable="false">Quantity</th>
-                                                <th data-field="completed_quantity" data-editable="false">Completed
-                                                    Production</th>
-                                                <th data-field="remaining_quantity" data-editable="false">Balance Quantity
+                                                <!-- <th data-field="received_updated_at" data-editable="false">Received Date
+                                                                                                            </th> -->
+                                                <th data-field="issue_updated_at" data-editable="false">Date
                                                 </th>
-                                                <th data-field="from_place" data-editable="false">From Place</th>
-                                                <th data-field="to_place" data-editable="false">To Place</th>
-                                                <th data-field="truck_no" data-editable="false">Truck Number</th>
-                                                <th data-field="outdoor_no" data-editable="false">Outdoor Number</th>
-                                                <th data-field="gate_entry" data-editable="false">Gate Entry</th>
-                                                <th data-field="remark" data-editable="false">Dispatch Remark</th>
-                                                <th data-field="updated_at" data-editable="false">Dispatch Date</th>
+                                                <th data-field="balance_quantity" data-editable="false">Item Name</th>
+                                                <th data-field="description" data-editable="false">Vendor Name</th>
+                                                <th data-field="received_quantity" data-editable="false">Vendor Company Name
+                                                </th>
+
+                                                <th data-field="issue_quantity" data-editable="false">Rate</th>
+
+
                                             </tr>
                                         </thead>
                                         <tbody id="reportBody">
@@ -170,10 +153,14 @@
             pageSize = 10;
 
         function getStatusLabel(id) {
-            if (id == 1148) return 'Completed';
-            if ([11201, 1146].includes(id)) return 'Inprocess';
+            if (id == 1114) return 'Rejected';
+            if ([1115, 1121, 1117].includes(id)) return 'Accepted';
             return '-';
         }
+
+
+        // let currentPage = 1;
+        // const pageSize = 10;
 
         function fetchReport(reset = false) {
             if (reset) currentPage = 1;
@@ -187,7 +174,7 @@
             const params = new URLSearchParams();
             formData.forEach((val, key) => params.append(key, val));
 
-            fetch(`{{ route('production-report-ajax') }}?${params.toString()}`)
+            fetch(`{{ route('list-itemwise-vendor-rate-report-ajax') }}?${params.toString()}`)
                 .then(res => res.json())
                 .then(res => {
                     const tbody = document.getElementById('reportBody');
@@ -196,47 +183,41 @@
 
                     if (res.status) {
                         document.getElementById('totalCount').innerText = res.pagination.totalItems || 0;
-                        const rows = res.data.map((item, i) => {
-                            return `
-        <tr>
-            <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
-            <td>${item.updated_at ? new Date(item.updated_at).toLocaleDateString('en-IN') : '-'}</td>
-          
-            <td>${item.project_name || '-'}</td>
-            <td>${item.customer_po_number || '-'}</td>
-             <td>${item.title || '-'}</td>            
-            <td>${item.product_name || '-'}</td>
-            <td>${item.quantity || '-'}</td>
-               <td>${item.cumulative_completed_quantity || '-'}</td>
-                   <td>${item.remaining_quantity || '-'}</td>
-                  <td>${item.from_place || '-'}</td>
-                     <td>${item.to_place || '-'}</td>
-                        <td>${item.to_place || '-'}</td>
-                        <td>${item.outdoor_no || '-'}</td>
-                         <td>${item.gate_entry || '-'}</td>
-                           <td>${item.dispatch_remark || '-'}</td>
-                            <td>${item.dispatch_updated_at ? new Date(item.dispatch_updated_at).toLocaleDateString('en-IN') : '-'}</td>
-                           
 
-                          
-                           
-        </tr>
-    `;
-                        }).join('');
-                        tbody.innerHTML = rows || '<tr><td colspan="6">No records found.</td></tr>';
+                        if (res.data.length > 0) {
+                            let rows = '';
+                            res.data.forEach((item, i) => {
+
+
+                                rows += `
+                                    <tr>
+                                        <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
+                                        <td>${item.updated_at ? new Date(item.updated_at).toLocaleDateString('en-IN') : '-'}</td>
+                                         <td>${item.description|| '-'}</td>
+                                        <td>${item.vendor_name|| '-'}</td>
+                                        <td> ${item.vendor_company_name || '-'}</td>
+                                        <td> ${item.rate || '-'}</td>
+                                        
+                                    </tr>
+                                `;
+                            });
+                            tbody.innerHTML = rows;
+
+                        } else {
+                            tbody.innerHTML = '<tr><td colspan="7">No records found.</td></tr>';
+                        }
 
                         // Pagination
-                        let pagHtml = '',
-                            totalPages = res.pagination.totalPages;
-                        let start = Math.max(1, currentPage - 2),
-                            end = Math.min(totalPages, start + 4);
+                        const totalPages = res.pagination.totalPages;
+                        let pagHtml = '';
+                        let start = Math.max(1, currentPage - 2);
+                        let end = Math.min(totalPages, start + 4);
 
                         if (start > 1) pagHtml +=
                             `<li><a class="page-link" onclick="goToPage(1)">1</a></li><li>...</li>`;
                         for (let i = start; i <= end; i++) {
-                            pagHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
-                                    <a class="page-link" onclick="goToPage(${i})">${i}</a>
-                                </li>`;
+                            pagHtml +=
+                                `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" onclick="goToPage(${i})">${i}</a></li>`;
                         }
                         if (end < totalPages) pagHtml +=
                             `<li>...</li><li><a class="page-link" onclick="goToPage(${totalPages})">${totalPages}</a></li>`;
@@ -244,8 +225,9 @@
                         pagLinks.innerHTML = pagHtml;
                         pagInfo.innerHTML =
                             `Showing ${res.pagination.from} to ${res.pagination.to} of ${res.pagination.totalItems}`;
+
                     } else {
-                        tbody.innerHTML = '<tr><td colspan="6">Failed to fetch data.</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="7">Failed to fetch data.</td></tr>';
                     }
                 });
         }
@@ -267,6 +249,107 @@
             document.getElementById('filterForm').submit();
         });
 
+        document.getElementById('exportExcel').addEventListener('click', () => {
+            document.getElementById('export_type').value = 2;
+            document.getElementById('filterForm').submit();
+        });
+
+        // Initial load
+        fetchReport(true);
+
+        //     function fetchReport(reset = false) {
+        //         if (reset) currentPage = 1;
+
+        //         const form = document.getElementById('filterForm');
+        //         const formData = new FormData(form);
+        //         formData.append('pageSize', pageSize);
+        //         formData.append('currentPage', currentPage);
+        //         formData.append('search', document.getElementById('searchKeyword').value);
+
+        //         const params = new URLSearchParams();
+        //         formData.forEach((val, key) => params.append(key, val));
+
+        //         fetch(`{{ route('stock-daily-report-ajax') }}?${params.toString()}`)
+        //             .then(res => res.json())
+        //             .then(res => {
+        //                 const tbody = document.getElementById('reportBody');
+        //                 const pagLinks = document.getElementById('paginationLinks');
+        //                 const pagInfo = document.getElementById('paginationInfo');
+
+        //                 if (res.status) {
+        //                     document.getElementById('totalCount').innerText = res.pagination.totalItems || 0;
+        //                     const rows = res.data.map((item, i) => {
+        //                         return `
+    //     <tr>
+    //         <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
+    //         <td>${item.issue_updated_at ? new Date(item.issue_updated_at).toLocaleDateString('en-IN') : '-'}</td>
+    //         <td>${item.received_updated_at ? new Date(item.received_updated_at).toLocaleDateString('en-IN') : '-'}</td>
+    //         <td>${item.description || '-'}</td>
+    //         <td>${item.received_quantity || '-'}</td>
+    //          <td>${item.issue_quantity || '-'}</td>            
+    //         <td>${item.balance_quantity || '-'}</td>
+
+
+    //     </tr>
+    // `;
+        //                     }).join('');
+
+        //                       // ✅ Totals row
+        //             const totals = res.totals;
+        //             const totalsRow = `
+    //                 <tr style="font-weight:bold; background:#f2f2f2;">
+    //                     <td colspan="4" style="text-align:right;">Total:</td>
+    //                     <td>${totals.received}</td>
+    //                     <td>${totals.issue}</td>
+    //                     <td>${totals.balance}</td>
+    //                 </tr>
+    //             `;
+
+        //             tbody.innerHTML = rows + totalsRow;
+
+        //                     tbody.innerHTML = rows || '<tr><td colspan="6">No records found.</td></tr>';
+
+        //                     // Pagination
+        //                     let pagHtml = '',
+        //                         totalPages = res.pagination.totalPages;
+        //                     let start = Math.max(1, currentPage - 2),
+        //                         end = Math.min(totalPages, start + 4);
+
+        //                     if (start > 1) pagHtml +=
+        //                         `<li><a class="page-link" onclick="goToPage(1)">1</a></li><li>...</li>`;
+        //                     for (let i = start; i <= end; i++) {
+        //                         pagHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+    //                                 <a class="page-link" onclick="goToPage(${i})">${i}</a>
+    //                             </li>`;
+        //                     }
+        //                     if (end < totalPages) pagHtml +=
+        //                         `<li>...</li><li><a class="page-link" onclick="goToPage(${totalPages})">${totalPages}</a></li>`;
+
+        //                     pagLinks.innerHTML = pagHtml;
+        //                     pagInfo.innerHTML =
+        //                         `Showing ${res.pagination.from} to ${res.pagination.to} of ${res.pagination.totalItems}`;
+        //                 } else {
+        //                     tbody.innerHTML = '<tr><td colspan="6">Failed to fetch data.</td></tr>';
+        //                 }
+        //             });
+        //     }
+
+        function goToPage(page) {
+            currentPage = page;
+            fetchReport();
+        }
+
+        document.getElementById('filterForm').addEventListener('submit', e => {
+            e.preventDefault();
+            fetchReport(true);
+        });
+
+        document.getElementById('searchKeyword').addEventListener('input', () => fetchReport(true));
+
+        document.getElementById('exportPdf').addEventListener('click', () => {
+            document.getElementById('export_type').value = 1;
+            document.getElementById('filterForm').submit();
+        });
 
         document.getElementById('exportExcel').addEventListener('click', () => {
             document.getElementById('export_type').value = 2;

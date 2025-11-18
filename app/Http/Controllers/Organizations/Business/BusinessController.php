@@ -1,42 +1,46 @@
 <?php
 
 namespace App\Http\Controllers\Organizations\Business;
+
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Services\Organizations\Business\BusinessServices;
-use Session;
-use Validator;
-use Config;
-use Carbon;
-use Illuminate\Validation\Rule;
-use App\Models\ {
-    Business,AdminView
-}
-;
+use Illuminate\Support\Facades\Validator;
+use Exception;
+use App\Models\{
+    AdminView
+};
 use App\Http\Controllers\Organizations\CommanController;
 
 class BusinessController extends Controller
- {
-    public function __construct() {
+{
+    protected $service;
+    protected $serviceCommon;
+    public function __construct()
+    {
         $this->service = new BusinessServices();
         $this->serviceCommon = new CommanController();
     }
-    public function index(){
+    public function index()
+    {
         try {
             $data_output = $this->service->getAll();
-            return view( 'organizations.business.business.list-business', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
+            return view('organizations.business.business.list-business', compact('data_output'));
+        } catch (\Exception $e) {
             return $e;
         }
     }
-    public function add(){
+    public function add()
+    {
         try {
-            return view( 'organizations.business.business.add-business' );
-        } catch ( \Exception $e ) {
+            return view('organizations.business.business.add-business');
+        } catch (\Exception $e) {
             return $e;
         }
     }
-    public function store( Request $request ){
+    public function store(Request $request)
+    {
         $rules = [
             'title' => 'required|string|max:255',
             'project_name' => 'required',
@@ -69,48 +73,50 @@ class BusinessController extends Controller
         ];
 
         try {
-            $validation = Validator::make( $request->all(), $rules, $messages );
+            $validation = Validator::make($request->all(), $rules, $messages);
 
-            if ( $validation->fails() ) {
-                return redirect( 'owner/add-business' )
-                ->withInput()
-                ->withErrors( $validation );
+            if ($validation->fails()) {
+                return redirect('owner/add-business')
+                    ->withInput()
+                    ->withErrors($validation);
             } else {
-                $add_record = $this->service->addAll( $request );
+                $add_record = $this->service->addAll($request);
 
-                if ( $add_record ) {
-                    $msg = $add_record[ 'msg' ];
-                    $status = $add_record[ 'status' ];
+                if ($add_record) {
+                    $msg = $add_record['msg'];
+                    $status = $add_record['status'];
 
-                    if ( $status == 'success' ) {
-                        return redirect( 'owner/list-forwarded-to-design' )->with( compact( 'msg', 'status' ) );
+                    if ($status == 'success') {
+                        return redirect('owner/list-forwarded-to-design')->with(compact('msg', 'status'));
                     } else {
-                        return redirect( 'owner/add-business' )->withInput()->with( compact( 'msg', 'status' ) );
+                        return redirect('owner/add-business')->withInput()->with(compact('msg', 'status'));
                     }
                 }
             }
-        } catch ( Exception $e ) {
-            return redirect( 'owner/add-business' )->withInput()->with( [ 'msg' => $e->getMessage(), 'status' => 'error' ] );
+        } catch (Exception $e) {
+            return redirect('owner/add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
-    public function edit( Request $request ){
-            try {
+    public function edit(Request $request)
+    {
+        try {
             $editDataId = base64_decode($request->id);
             $response = $this->service->getById($editDataId);
-                if (isset($response['status']) && $response['status'] == 'error') {
-                    return redirect()->back()->with('msg', $response['msg'])->with('status', 'error');
-                }
-                        return view('organizations.business.business.edit-business', [
-                    'editData' => $response['designData'],
-                    'totalAmount' => $response['total_amount'],
-                    'grandTotalAmount' => $response['grand_total_amount'],
-                ]);
-                } catch ( \Exception $e ) {
-                    return $e;
-                }
+            if (isset($response['status']) && $response['status'] == 'error') {
+                return redirect()->back()->with('msg', $response['msg'])->with('status', 'error');
+            }
+            return view('organizations.business.business.edit-business', [
+                'editData' => $response['designData'],
+                'totalAmount' => $response['total_amount'],
+                'grandTotalAmount' => $response['grand_total_amount'],
+            ]);
+        } catch (\Exception $e) {
+            return $e;
+        }
     }
-    public function update(Request $request){
-    
+    public function update(Request $request)
+    {
+
         $rules = [
             'design_count' => 'required|integer',
             'business_main_id' => 'required|integer|exists:businesses,id',
@@ -161,34 +167,35 @@ class BusinessController extends Controller
                     ->with('msg', $update_data['msg'])
                     ->with('status', $update_data['status']);
             }
-
         } catch (Exception $e) {
             return redirect()->back()
                 ->withInput()
                 ->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
-    public function deleteBusiness( Request $request ){
-            $delete_data_id = base64_decode( $request->id );
-            
-            try {
-                $delete_record = $this->service->deleteById( $delete_data_id );
-                if ( $delete_record ) {
-                    $msg = $delete_record[ 'msg' ];
-                    $status = $delete_record[ 'status' ];
-                    if ( $status == 'success' ) {
-                        return redirect( 'owner/list-business' )->with( compact( 'msg', 'status' ) );
-                    } else {
-                        return redirect()->back()
+    public function deleteBusiness(Request $request)
+    {
+        $delete_data_id = base64_decode($request->id);
+
+        try {
+            $delete_record = $this->service->deleteById($delete_data_id);
+            if ($delete_record) {
+                $msg = $delete_record['msg'];
+                $status = $delete_record['status'];
+                if ($status == 'success') {
+                    return redirect('owner/list-business')->with(compact('msg', 'status'));
+                } else {
+                    return redirect()->back()
                         ->withInput()
-                        ->with( compact( 'msg', 'status' ) );
-                    }
+                        ->with(compact('msg', 'status'));
                 }
-            } catch ( \Exception $e ) {
-                return $e;
             }
+        } catch (\Exception $e) {
+            return $e;
+        }
     }
-    public function destroyAddmore(Request $request){
+    public function destroyAddmore(Request $request)
+    {
         try {
             $delete_rti = $this->service->deleteByIdAddmore($request->delete_id);
 
@@ -208,32 +215,33 @@ class BusinessController extends Controller
             return back()->with('status', 'error')->with('msg', $e->getMessage());
         }
     }
-    public function acceptEstimationBOM($id){
-    try {
-        $data_output = $this->service->acceptEstimationBOM($id);
-        
-        if ( $data_output ) {
-            $status = 'success';
-            $msg = 'Purchase order accepted.';
-        } else {
-            $status = 'success';
-            $msg = 'Purchase order accepted.';
-        }
-            return redirect( 'owner/list-accept-bom-estimation' )->with( compact( 'msg', 'status' ) );
-        
-    } catch ( Exception $e ) {
-        return [ 'status' => 'error', 'msg' => $e->getMessage() ];
-    }
+    public function acceptEstimationBOM($id)
+    {
+        try {
+            $data_output = $this->service->acceptEstimationBOM($id);
 
+            if ($data_output) {
+                $status = 'success';
+                $msg = 'Purchase order accepted.';
+            } else {
+                $status = 'success';
+                $msg = 'Purchase order accepted.';
+            }
+            return redirect('owner/list-accept-bom-estimation')->with(compact('msg', 'status'));
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
     }
-    public function editRejectEstimation( $idtoedit ){ //checked
-    try {
-        return view( 'organizations.business.business.reject-estimation-owner-side', compact( 'idtoedit' ) );
-    } catch ( \Exception $e ) {
-        return $e;
+    public function editRejectEstimation($idtoedit)
+    { //checked
+        try {
+            return view('organizations.business.business.reject-estimation-owner-side', compact('idtoedit'));
+        } catch (\Exception $e) {
+            return $e;
+        }
     }
-    }
-    public function addRejectedEstimationBOM(Request $request){ //checked
+    public function addRejectedEstimationBOM(Request $request)
+    { //checked
         try {
             $rules = [
                 'rejected_remark_by_owner' => 'required',
@@ -243,7 +251,7 @@ class BusinessController extends Controller
                 'rejected_remark_by_owner.required' => 'The owner remark is required.',
             ];
 
-            $this->validate($request, $rules, $messages); 
+            $this->validate($request, $rules, $messages);
 
             // Step 2: Pass data to service
             $update_data = $this->service->addRejectedEstimationBOM($request);
@@ -252,9 +260,8 @@ class BusinessController extends Controller
             return redirect('owner/list-rejected-bom-estimation')
                 ->with('status', 'success')
                 ->with('msg', 'Estimation rejected and sent for correction successfully.');
-
         } catch (\Exception $e) {
-            \Log::error("Error in addRejectedEstimationBOM: " . $e->getMessage());
+            Log::error("Error in addRejectedEstimationBOM: " . $e->getMessage());
 
             return redirect()->back()
                 ->withInput()
@@ -262,55 +269,57 @@ class BusinessController extends Controller
                 ->with('msg', 'Something went wrong. ' . $e->getMessage());
         }
     }
-    public function submitFinalPurchaseOrder( $id ){
+    public function submitFinalPurchaseOrder($id)
+    {
         try {
-            $data_output = $this->service->getPurchaseOrderBusinessWise( $id );
-            
-            if ( $data_output->isNotEmpty() ) {
-                foreach ( $data_output as $data ) {
+            $data_output = $this->service->getPurchaseOrderBusinessWise($id);
+
+            if ($data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
                     $business_id = $data->business_details_id;
 
-                    if ( !empty( $business_id ) ) {
-                        $update_data[ 'is_view' ] = '1';
-                        AdminView::where( 'is_view', '0' )
-                        ->where( 'business_details_id', $business_id )
-                        ->update( $update_data );
+                    if (!empty($business_id)) {
+                        $update_data['is_view'] = '1';
+                        AdminView::where('is_view', '0')
+                            ->where('business_details_id', $business_id)
+                            ->update($update_data);
                     }
                 }
             } else {
-                return view( 'organizations.business.list.list-purchase-order-particular-po', [
+                return view('organizations.business.list.list-purchase-order-particular-po', [
                     'data_output' => [],
                     'message' => 'No data found'
-                ] );
+                ]);
             }
-            return view( 'organizations.business.list.list-purchase-order-particular-po', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
+            return view('organizations.business.list.list-purchase-order-particular-po', compact('data_output'));
+        } catch (\Exception $e) {
             return $e;
         }
     }
-    public function getPurchaseOrderDetails( $purchase_order_id ){
+    public function getPurchaseOrderDetails($purchase_order_id)
+    {
 
         try {
             $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
             $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
 
-            $data = $this->serviceCommon->getPurchaseOrderDetails( $purchase_order_id );
+            $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
             // $business_id = $data[ 'purchaseOrder' ]->business_id;
-            $business_id = $data[ 'purchaseOrder' ]->business_id;
+            $business_id = $data['purchaseOrder']->business_id;
 
-            $purchaseOrder = $data[ 'purchaseOrder' ];
-            $purchaseOrderDetails = $data[ 'purchaseOrderDetails' ];
+            $purchaseOrder = $data['purchaseOrder'];
+            $purchaseOrderDetails = $data['purchaseOrderDetails'];
 
-            return view( 'organizations.business.purchase-order.purchase-order-details', compact( 'purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData', 'business_id', 'getAllRulesAndRegulations' ) );
-
-        } catch ( \Exception $e ) {
+            return view('organizations.business.purchase-order.purchase-order-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData', 'business_id', 'getAllRulesAndRegulations'));
+        } catch (\Exception $e) {
             return $e;
         }
     }
-    public function acceptPurchaseOrder( $purchase_order_id, $business_id ){
+    public function acceptPurchaseOrder($purchase_order_id, $business_id)
+    {
         try {
-            $delete = $this->service->acceptPurchaseOrder( $purchase_order_id, $business_id );
-            if ( $delete ) {
+            $delete = $this->service->acceptPurchaseOrder($purchase_order_id, $business_id);
+            if ($delete) {
                 $status = 'success';
                 $msg = 'Purchase order accepted.';
             } else {
@@ -318,44 +327,43 @@ class BusinessController extends Controller
                 $msg = 'Purchase order accepted.';
             }
 
-            return redirect( 'owner/list-approved-purchase-orders-owner' )->with( compact( 'msg', 'status' ) );
-        } catch ( Exception $e ) {
-            return [ 'status' => 'error', 'msg' => $e->getMessage() ];
+            return redirect('owner/list-approved-purchase-orders-owner')->with(compact('msg', 'status'));
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
         }
-
     }
-    public function rejectedPurchaseOrder( $purchase_order_id, $business_id ){
-            try {
-                $delete = $this->service->rejectedPurchaseOrder( $purchase_order_id, $business_id );
-                if ( $delete ) {
-                    $status = 'success';
-                    $msg = 'Purchase order accepted.';
-                } else {
-                    $status = 'success';
-                    $msg = 'Purchase order accepted.';
-                }
-
-                return redirect( 'owner/list-rejected-purchase-orders-owner' )->with( compact( 'msg', 'status' ) );
-            } catch ( Exception $e ) {
-                return [ 'status' => 'error', 'msg' => $e->getMessage() ];
+    public function rejectedPurchaseOrder($purchase_order_id, $business_id)
+    {
+        try {
+            $delete = $this->service->rejectedPurchaseOrder($purchase_order_id, $business_id);
+            if ($delete) {
+                $status = 'success';
+                $msg = 'Purchase order accepted.';
+            } else {
+                $status = 'success';
+                $msg = 'Purchase order accepted.';
             }
 
+            return redirect('owner/list-rejected-purchase-orders-owner')->with(compact('msg', 'status'));
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
     }
-    public function acceptPurchaseOrderPaymentRelease( $purchase_order_id, $business_id ){
-            try {
-                $delete = $this->service->acceptPurchaseOrderPaymentRelease( $purchase_order_id, $business_id );
-                if ( $delete ) {
-                    $status = 'success';
-                    $msg = 'Purchase order accepted.';
-                } else {
-                    $status = 'success';
-                    $msg = 'Purchase order accepted.';
-                }
-
-                return redirect( 'owner/list-po-recived-for-approval-payment' )->with( compact( 'msg', 'status' ) );
-            } catch ( Exception $e ) {
-                return [ 'status' => 'error', 'msg' => $e->getMessage() ];
+    public function acceptPurchaseOrderPaymentRelease($purchase_order_id, $business_id)
+    {
+        try {
+            $delete = $this->service->acceptPurchaseOrderPaymentRelease($purchase_order_id, $business_id);
+            if ($delete) {
+                $status = 'success';
+                $msg = 'Purchase order accepted.';
+            } else {
+                $status = 'success';
+                $msg = 'Purchase order accepted.';
             }
 
-    }  
+            return redirect('owner/list-po-recived-for-approval-payment')->with(compact('msg', 'status'));
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
+    }
 }

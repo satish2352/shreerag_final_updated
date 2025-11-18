@@ -1,9 +1,8 @@
 <?php
+
 namespace App\Http\Repository\Organizations\Business;
 
-use Illuminate\Database\QueryException;
-use DB;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use App\Models\{
     Business,
     DesignModel,
@@ -11,7 +10,6 @@ use App\Models\{
     PurchaseOrderDetailsModel,
     PurchaseOrdersModel,
     OrganizationModel,
-    Vendors,
     BusinessDetails,
     AdminView,
     NotificationStatus,
@@ -22,33 +20,37 @@ use App\Models\{
     EstimationModel,
     DesignRevisionForProd
 };
-use Config;
 use App\Http\Controllers\Organizations\CommanController;
 
 class BusinessRepository
 {
 
-    public function __construct(){
+    protected $serviceCommon;
+
+    public function __construct()
+    {
         $this->serviceCommon = new CommanController();
     }
-    public function getAll(){
+    public function getAll()
+    {
         try {
             $data_output = Business::orderBy('businesses.updated_at', 'desc')
-            ->where('is_deleted', 0)
-            ->get();
+                ->where('is_deleted', 0)
+                ->get();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
-    public function addAll($request){
+    public function addAll($request)
+    {
         try {
-                
+
             $data_output = OrganizationModel::pluck('id')->first();
-        
-               if (!$data_output) {
-                   throw new \Exception('No organization found');
-               }
+
+            if (!$data_output) {
+                throw new \Exception('No organization found');
+            }
             $business_data = new Business();
             $business_data->customer_po_number = $request->customer_po_number;
             $business_data->project_name = $request->project_name;
@@ -58,15 +60,15 @@ class BusinessRepository
             $business_data->organization_id = $data_output;
             if (isset($request['customer_payment_terms'])) {
                 $business_data->customer_payment_terms = $request['customer_payment_terms'];
-            } 
+            }
             if (isset($request['customer_terms_condition'])) {
                 $business_data->customer_terms_condition = $request['customer_terms_condition'];
-            }  
+            }
 
-            
+
             $business_data->save();
             $last_insert_id = $business_data->id;
-        
+
             $grandTotal = 0;
 
             foreach ($request->addmore as $index => $item) {
@@ -77,9 +79,9 @@ class BusinessRepository
                     isset($item['quantity']) && !empty($item['quantity']) &&
                     isset($item['rate']) && !empty($item['rate'])
                 ) {
-                      // Calculate total_amount for this row
-                        $totalAmount = $item['quantity'] * $item['rate'];
-                        $grandTotal += $totalAmount;
+                    // Calculate total_amount for this row
+                    $totalAmount = $item['quantity'] * $item['rate'];
+                    $grandTotal += $totalAmount;
 
                     $businessDetails = new BusinessDetails();
                     $businessDetails->business_id = $last_insert_id;
@@ -120,7 +122,7 @@ class BusinessRepository
                     $business_application->production_status_id = '0';
                     $business_application->save();
                 } else {
-                    \Log::warning("Missing required fields in row $index", $item);
+                    Log::warning("Missing required fields in row $index", $item);
                 }
                 $business_data->grand_total_amount = $grandTotal;
                 $business_data->save();
@@ -129,16 +131,16 @@ class BusinessRepository
                 'msg' => 'This business send to Design Department Successfully',
                 'status' => 'success'
             ];
-
         } catch (\Exception $e) {
-            
+
             return [
                 'msg' => $e->getMessage(),
                 'status' => 'error'
             ];
         }
     }
-    public function getById($id){
+    public function getById($id)
+    {
         try {
             $designData = Business::leftJoin('businesses_details', 'businesses.id', '=', 'businesses_details.business_id')
                 ->leftJoin('business_application_processes', 'business_application_processes.business_details_id', '=', 'businesses_details.id')
@@ -183,9 +185,10 @@ class BusinessRepository
             ];
         }
     }
-    public function updateAll($request){
+    public function updateAll($request)
+    {
         try {
-            \Log::info('Request Data:', $request->all());
+            Log::info('Request Data:', $request->all());
 
             $dataOutput = Business::findOrFail($request->business_main_id);
             $dataOutput->customer_po_number = $request->customer_po_number;
@@ -227,7 +230,7 @@ class BusinessRepository
                     $designDetails->total_amount = $total_amount;
                     $designDetails->save();
 
-                    $grandTotal += $total_amount; 
+                    $grandTotal += $total_amount;
                 }
             }
 
@@ -272,7 +275,7 @@ class BusinessRepository
                     $admin_view_data->save();
 
                     $notification_status = new NotificationStatus();
-                    $notification_status->business_id= $dataOutput->id;
+                    $notification_status->business_id = $dataOutput->id;
                     $notification_status->business_details_id = $addDetails->id;
                     $notification_status->off_canvas_status = 11;
                     $notification_status->save();
@@ -290,7 +293,7 @@ class BusinessRepository
                 'total_amount' => $grandTotal
             ];
         } catch (\Exception $e) {
-            \Log::error('Update Failed: ' . $e->getMessage());
+            Log::error('Update Failed: ' . $e->getMessage());
             return [
                 'msg' => 'Failed to update data.',
                 'status' => 'error',
@@ -298,7 +301,8 @@ class BusinessRepository
             ];
         }
     }
-    public function deleteByIdAddmore(){
+    public function deleteByIdAddmore()
+    {
         try {
             $rti = BusinessDetails::find($id);
             if ($rti) {
@@ -311,7 +315,8 @@ class BusinessRepository
             return false;
         }
     }
-    public function deleteById($id){
+    public function deleteById($id)
+    {
         try {
             $business = Business::find($id);
 
@@ -332,7 +337,7 @@ class BusinessRepository
                 $business->notificationStatus()->update(['is_deleted' => 1]);
                 $business->returnableChalan()->update(['is_deleted' => 1]);
                 $business->AdminView()->update(['is_deleted' => 1]);
-            
+
                 $businessDetails = $business->businessDetails;
                 foreach ($businessDetails as $businessDetail) {
                     // Update is_deleted in purchase_orders based on business_details_id
@@ -358,11 +363,12 @@ class BusinessRepository
                 return false; // Record not found
             }
         } catch (\Exception $e) {
-            \Log::error('Error deleting business: ' . $e->getMessage());
+            Log::error('Error deleting business: ' . $e->getMessage());
             throw $e; // Re-throw the exception to be handled by the service
         }
     }
-    public function acceptEstimationBOM($id){
+    public function acceptEstimationBOM($id)
+    {
         try {
             $decoded_business_id = base64_decode($id);
 
@@ -372,7 +378,7 @@ class BusinessRepository
             if ($business_application) {
                 // Update owner BOM accepted status
                 $business_application->owner_bom_accepted = config('constants.HIGHER_AUTHORITY.OWNER_BOM_ESTIMATION_ACCEPTED');
-                
+
                 // Optional: update off_canvas_status if needed
                 $business_application->off_canvas_status = 32;
 
@@ -380,7 +386,7 @@ class BusinessRepository
                 $business_application->save();
 
                 // Optional updates for admin and notification views
-                
+
                 // $update_data_admin = [
                 //     'off_canvas_status' => 29,
                 //     'is_view' => '0',
@@ -396,17 +402,16 @@ class BusinessRepository
 
                 NotificationStatus::where('business_details_id', $business_application->business_details_id)
                     ->update($update_data_business);
-                
             }
 
             return $business_application;
-
         } catch (\Exception $e) {
-            \Log::error('Error in acceptEstimationBOM: ' . $e->getMessage());
+            Log::error('Error in acceptEstimationBOM: ' . $e->getMessage());
             return response()->json(['error' => 'Something went wrong.'], 500);
         }
     }
-    public function addRejectedEstimationBOM($request){
+    public function addRejectedEstimationBOM($request)
+    {
         try {
             $idtoedit = base64_decode($request->business_id);
 
@@ -445,19 +450,19 @@ class BusinessRepository
 
             NotificationStatus::where('business_details_id', $estimation_data->business_details_id)
                 ->update($update_data_business);
-
         } catch (\Exception $e) {
-            \Log::error('Error in rejectedEstimationBOM: ' . $e->getMessage());
+            Log::error('Error in rejectedEstimationBOM: ' . $e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-     public function acceptPurchaseOrder($purchase_order_id, $business_id){
+    public function acceptPurchaseOrder($purchase_order_id, $business_id)
+    {
         try {
             $business_application = BusinessApplicationProcesses::where('business_details_id', $business_id)->first();
             $po_count = $this->serviceCommon->getNumberOfPOCount($business_id, $purchase_order_id);
             if ($business_application) {
 
-                if($po_count > 0) {
+                if ($po_count > 0) {
                     $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.HALF_APPROVED_PO_FROM_PURCHASE');
                     $business_application->off_canvas_status = 24;
                 } else {
@@ -466,7 +471,7 @@ class BusinessRepository
                 $business_application->save();
             }
             $PurchaseOrdersData = PurchaseOrdersModel::where('purchase_orders_id', $purchase_order_id)->first();
-            $PurchaseOrdersData->owner_po_action_date= date('Y-m-d');
+            $PurchaseOrdersData->owner_po_action_date = date('Y-m-d');
             $PurchaseOrdersData->finanace_store_receipt_status_id = config('constants.FINANCE_DEPARTMENT.INVOICE_APPROVED_FROM_HIGHER_AUTHORITY');
             $PurchaseOrdersData->save();
             $update_data_admin['off_canvas_status'] = 24;
@@ -475,22 +480,22 @@ class BusinessRepository
             $update_data_business['purchase_order_is_accepted_by_view'] = 0;
             AdminView::where('business_details_id', $business_application->business_details_id)
                 ->update($update_data_admin);
-                NotificationStatus::where('business_details_id', $business_application->business_details_id)
+            NotificationStatus::where('business_details_id', $business_application->business_details_id)
                 ->update($update_data_business);
-            
-            return $business_application;
 
+            return $business_application;
         } catch (\Exception $e) {
             return $e;
         }
     }
-    public function rejectedPurchaseOrder($purchase_order_id, $business_id){
+    public function rejectedPurchaseOrder($purchase_order_id, $business_id)
+    {
         try {
             $business_application = BusinessApplicationProcesses::where('business_details_id', $business_id)->first();
             $po_count = $this->serviceCommon->getNumberOfPOCount($business_id, $purchase_order_id);
             if ($business_application) {
 
-                if($po_count > 0) {
+                if ($po_count > 0) {
                     // $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.REJECTED_PO_FROM_OWNER');
                     $business_application->off_canvas_status = 23;
                 } else {
@@ -499,7 +504,7 @@ class BusinessRepository
                 $business_application->save();
             }
             $PurchaseOrdersData = PurchaseOrdersModel::where('purchase_orders_id', $purchase_order_id)->first();
-            $PurchaseOrdersData->owner_po_action_date= date('Y-m-d');
+            $PurchaseOrdersData->owner_po_action_date = date('Y-m-d');
             $PurchaseOrdersData->purchase_status_from_owner = config('constants.HIGHER_AUTHORITY.REJECTED_PO_FROM_OWNER');
             // $PurchaseOrdersData->finanace_store_receipt_status_id = config('constants.FINANCE_DEPARTMENT.INVOICE_APPROVED_FROM_HIGHER_AUTHORITY');
             $PurchaseOrdersData->save();
@@ -509,21 +514,21 @@ class BusinessRepository
             $update_data_business['purchase_order_is_rejected_view'] = 0;
             AdminView::where('business_details_id', $business_application->business_details_id)
                 ->update($update_data_admin);
-                NotificationStatus::where('business_details_id', $business_application->business_details_id)
+            NotificationStatus::where('business_details_id', $business_application->business_details_id)
                 ->update($update_data_business);
-            
-            return $business_application;
 
+            return $business_application;
         } catch (\Exception $e) {
             return $e;
         }
     }
-    public function acceptPurchaseOrderPaymentRelease($purchase_order_id, $business_id){
+    public function acceptPurchaseOrderPaymentRelease($purchase_order_id, $business_id)
+    {
         try {
             // Retrieve the purchase order and GRN models
             $purchase_order = PurchaseOrdersModel::where('purchase_orders_id', $purchase_order_id)->first();
             $grn_update = GRNModel::where('id', $business_id)->first(); // Ensure you're fetching the correct GRN based on the business_id
-            if ($grn_update) {               
+            if ($grn_update) {
                 $grn_update->grn_status_sanction = config('constants.HIGHER_AUTHORITY.INVOICE_RECEIVED_FOR_BILL_APPROVAL_TO_HIGHER_AUTHORITY_GRN_WISE');
                 $grn_update->save();
                 return [
@@ -533,13 +538,12 @@ class BusinessRepository
                     // 'purchase_order' => $purchase_order
                 ];
             }
-    
+
             // If either the GRN or purchase order does not exist
             return [
                 'status' => 'error',
                 'message' => 'GRN or Purchase Order not found.',
             ];
-    
         } catch (\Exception $e) {
             // Catch and return any exceptions
             return [
@@ -549,24 +553,50 @@ class BusinessRepository
             ];
         }
     }
-    public function getPurchaseOrderDetails($purchase_order_id){
+    public function getPurchaseOrderDetails($purchase_order_id)
+    {
         try {
             // Fetch the Purchase Order
             $purchaseOrder = PurchaseOrdersModel::where('purchase_orders_id', $purchase_order_id)
                 ->select(
-                    'id', 'purchase_orders_id', 'requisition_id', 'business_id', 'production_id',
-                    'po_date', 'vendor_id', 'terms_condition', 'transport_dispatch', 'image',
-                    'client_name', 'phone_number', 'email', 'tax_type','tax_id', 'invoice_date', 'gst_number',
-                    'payment_terms', 'client_address', 'discount', 'note','created_at'
+                    'id',
+                    'purchase_orders_id',
+                    'requisition_id',
+                    'business_id',
+                    'production_id',
+                    'po_date',
+                    'vendor_id',
+                    'terms_condition',
+                    'transport_dispatch',
+                    'image',
+                    'client_name',
+                    'phone_number',
+                    'email',
+                    'tax_type',
+                    'tax_id',
+                    'invoice_date',
+                    'gst_number',
+                    'payment_terms',
+                    'client_address',
+                    'discount',
+                    'note',
+                    'created_at'
                 )
                 ->first();
-            
+
             // Fetch related Purchase Order Details
             $purchaseOrderDetails = PurchaseOrderDetailsModel::where('purchase_id', $purchaseOrder->id)
                 ->select(
-                    'purchase_id', 'part_no_id', 'description','due_date',
-                    'quantity', 'actual_quantity', 'accepted_quantity',
-                    'rejected_quantity', 'rate', 'amount'
+                    'purchase_id',
+                    'part_no_id',
+                    'description',
+                    'due_date',
+                    'quantity',
+                    'actual_quantity',
+                    'accepted_quantity',
+                    'rejected_quantity',
+                    'rate',
+                    'amount'
                 )
                 ->get();
 
@@ -578,54 +608,57 @@ class BusinessRepository
             return $e;
         }
     }
-    public function getPurchaseOrderBusinessWise($id){
+    public function getPurchaseOrderBusinessWise($id)
+    {
         try {
             $data_output = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
-            ->select(
-                'purchase_orders.id',
-                'purchase_orders.business_details_id',
-                'purchase_orders.purchase_orders_id',         
-                'vendors.vendor_name', 
-                'vendors.vendor_company_name', 
-                'vendors.vendor_email', 
-                'vendors.vendor_address', 
-                'vendors.contact_no', 
-                'vendors.gst_no', 
-                'purchase_orders.is_active'
-            )
-            ->where('purchase_orders.business_details_id', $id)
-            // ->get(); 
+                ->select(
+                    'purchase_orders.id',
+                    'purchase_orders.business_details_id',
+                    'purchase_orders.purchase_orders_id',
+                    'vendors.vendor_name',
+                    'vendors.vendor_company_name',
+                    'vendors.vendor_email',
+                    'vendors.vendor_address',
+                    'vendors.contact_no',
+                    'vendors.gst_no',
+                    'purchase_orders.is_active'
+                )
+                ->where('purchase_orders.business_details_id', $id)
+                // ->get(); 
 
-            // ->where('business_id', $id)
-            ->whereNull('purchase_status_from_owner')
-            ->orWhere('purchase_status_from_owner', config('constants.HIGHER_AUTHORITY.HALF_APPROVED_PO_FROM_PURCHASE'))
-            ->orderBy('purchase_orders.updated_at', 'desc')
-            ->get(); // Added to execute the query and get results
-        
+                // ->where('business_id', $id)
+                ->whereNull('purchase_status_from_owner')
+                ->orWhere('purchase_status_from_owner', config('constants.HIGHER_AUTHORITY.HALF_APPROVED_PO_FROM_PURCHASE'))
+                ->orderBy('purchase_orders.updated_at', 'desc')
+                ->get(); // Added to execute the query and get results
+
             return $data_output;
         } catch (\Exception $e) {
             return $e->getMessage(); // Changed to return the error message string
         }
     }
-    public function getAllOrganizationData(){
+    public function getAllOrganizationData()
+    {
         try {
             $dataOutputCategory = Business::join('tbl_organizations', 'tbl_organizations.id', '=', 'businesses.organization_id')
                 ->select(
                     'tbl_organizations.id',
-                    'tbl_organizations.company_name', 
-                    'tbl_organizations.email', 
-                    'tbl_organizations.mobile_number', 
+                    'tbl_organizations.company_name',
+                    'tbl_organizations.email',
+                    'tbl_organizations.mobile_number',
                     'tbl_organizations.address',
                     'tbl_organizations.image',
                 )
                 ->first();
-                
+
             return $dataOutputCategory;
         } catch (\Exception $e) {
             return $e;
         }
     }
-    public function getByIdOrg($id){
+    public function getByIdOrg($id)
+    {
         try {
             $dataOutputByid = OrganizationModel::find($id);
             if ($dataOutputByid) {

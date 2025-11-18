@@ -1,18 +1,23 @@
 <?php
-namespace App\Http\Services\Organizations\Estimation;
-use App\Http\Repository\Organizations\Estimation\AllListRepository;
-use Carbon\Carbon;
 
-use Config;
+namespace App\Http\Services\Organizations\Estimation;
+
+use App\Http\Repository\Organizations\Estimation\AllListRepository;
+use Exception;
+use Illuminate\Support\Facades\Log;
+
 class AllListServices
 {
     protected $repo;
-    public function __construct() {
+    protected $service;
+
+    public function __construct()
+    {
 
         $this->repo = new AllListRepository();
-
     }
-    public function getAllNewRequirement(){ //checked
+    public function getAllNewRequirement()
+    { //checked
         try {
             $data_output = $this->repo->getAllNewRequirement();
             return $data_output;
@@ -20,50 +25,53 @@ class AllListServices
             return $e;
         }
     }
-    public function getAllNewRequirementBusinessWise($business_id){ //checked
+    public function getAllNewRequirementBusinessWise($business_id)
+    { //checked
         try {
-        $data_output = $this->repo->getAllNewRequirementBusinessWise($business_id);
-            
-        return $data_output;
+            $data_output = $this->repo->getAllNewRequirementBusinessWise($business_id);
+
+            return $data_output;
         } catch (\Exception $e) {
-            \Log::error('Service Error: ' . $e->getMessage());
-            return []; 
+            Log::error('Service Error: ' . $e->getMessage());
+            return [];
         }
     }
- public function getAllEstimationSendToOwnerForApproval(){ //checked
+    public function getAllEstimationSendToOwnerForApproval()
+    { //checked
         try {
             $data_output = $this->repo->getAllEstimationSendToOwnerForApproval();
-           
+
             return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
-   public function getAllEstimationSendToOwnerForApprovalBusinessWise($business_id){ //checked
-    try {
-      $data_output = $this->repo->getAllEstimationSendToOwnerForApprovalBusinessWise($business_id);
-    
-       return $data_output;
-    } catch (\Exception $e) {
-        \Log::error('Service Error: ' . $e->getMessage());
-        return []; // Return safe fallback
-    }
-}
-   public function getSendToProductionList()
-{
-    try {
-      $data_output = $this->repo->getSendToProductionList();
+    public function getAllEstimationSendToOwnerForApprovalBusinessWise($business_id)
+    { //checked
+        try {
+            $data_output = $this->repo->getAllEstimationSendToOwnerForApprovalBusinessWise($business_id);
 
-       return $data_output;
-    } catch (\Exception $e) {
-        \Log::error('Service Error: ' . $e->getMessage());
-        return []; // Return safe fallback
+            return $data_output;
+        } catch (\Exception $e) {
+            Log::error('Service Error: ' . $e->getMessage());
+            return []; // Return safe fallback
+        }
     }
-}
+    public function getSendToProductionList()
+    {
+        try {
+            $data_output = $this->repo->getSendToProductionList();
+
+            return $data_output;
+        } catch (\Exception $e) {
+            Log::error('Service Error: ' . $e->getMessage());
+            return []; // Return safe fallback
+        }
+    }
     // public function acceptBOMlist(){
     //     try {
     //         $data_output = $this->repo->acceptBOMlist();
-          
+
     //         return $data_output;
     //     } catch (\Exception $e) {
     //         return $e;
@@ -80,14 +88,15 @@ class AllListServices
     // public function getAllrejectdesign(){
     //     try {
     //         $data_output = $this->repo->getAllrejectdesign();
-            
+
     //         return $data_output; 
     //     } catch (\Exception $e) {
     //         return $e;
     //     }
     // }
 
-    public function getAllreviseddesign(){
+    public function getAllreviseddesign()
+    {
         try {
             $data_output = $this->repo->getAllreviseddesign();
             return $data_output;
@@ -96,10 +105,11 @@ class AllListServices
         }
     }
 
-    public function getAllListMaterialRecievedToProduction(){
+    public function getAllListMaterialRecievedToProduction()
+    {
         try {
-          $data_output = $this->repo->getAllListMaterialRecievedToProduction();
-          return $data_output;
+            $data_output = $this->repo->getAllListMaterialRecievedToProduction();
+            return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
@@ -108,18 +118,18 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->getAllListMaterialRecievedToProductionBusinessWise($id);
-            
+
             return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
-    
+
     // public function getAllListMaterialRecievedToProductionBusinessWise($id)
     // {
     //     try {
     //         $data_output = $this->repo->getAllListMaterialRecievedToProductionBusinessWise($id);
-    
+
     //         return $data_output;
 
     //     } catch (\Exception $e) {
@@ -136,20 +146,20 @@ class AllListServices
     //     }
     // }
 
-//     public function getAllCompletedProductionSendToLogistics(){
-//         try {
-//           $data_output = $this->repo->getAllCompletedProductionSendToLogistics();
-//           return $data_output;
-//         } catch (\Exception $e) {
-//             return $e;
-//         }
-//     }
-//     public function getAllCompletedProductionSendToLogisticsProductWise($id) {
-//         try {
-//             $data_output = $this->repo->getAllCompletedProductionSendToLogisticsProductWise($id);
-// return $data_output;
-//         } catch (\Exception $e) {
-//             return ['status' => 'error', 'msg' => $e->getMessage()];
-//         }
-//     }
+    //     public function getAllCompletedProductionSendToLogistics(){
+    //         try {
+    //           $data_output = $this->repo->getAllCompletedProductionSendToLogistics();
+    //           return $data_output;
+    //         } catch (\Exception $e) {
+    //             return $e;
+    //         }
+    //     }
+    //     public function getAllCompletedProductionSendToLogisticsProductWise($id) {
+    //         try {
+    //             $data_output = $this->repo->getAllCompletedProductionSendToLogisticsProductWise($id);
+    // return $data_output;
+    //         } catch (\Exception $e) {
+    //             return ['status' => 'error', 'msg' => $e->getMessage()];
+    //         }
+    //     }
 }

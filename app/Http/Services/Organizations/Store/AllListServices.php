@@ -1,23 +1,32 @@
 <?php
+
 namespace App\Http\Services\Organizations\Store;
+
 use App\Http\Repository\Organizations\Store\AllListRepository;
-use Carbon\Carbon;
-use Config;
+use Exception;
+
 class AllListServices
 {
     protected $repo;
-    public function __construct() {
+    protected $service;
+
+    public function __construct()
+    {
         $this->repo = new AllListRepository();
     }
-    public function getAllListDesignRecievedForMaterial(){
+    public function getAllListDesignRecievedForMaterial()
+    {
         try {
             $data_output = $this->repo->getAllListDesignRecievedForMaterial();
+            // dd($data_output);
+            // die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
-    public function getAllListDesignRecievedForMaterialBusinessWise($business_id){
+    public function getAllListDesignRecievedForMaterialBusinessWise($business_id)
+    {
         try {
             $data_output = $this->repo->getAllListDesignRecievedForMaterialBusinessWise($business_id);
             return $data_output;
@@ -25,7 +34,8 @@ class AllListServices
             return $e;
         }
     }
-    public function getAllListMaterialSentToProduction(){
+    public function getAllListMaterialSentToProduction()
+    {
         try {
             $data_output = $this->repo->getAllListMaterialSentToProduction();
             return $data_output;
@@ -33,7 +43,8 @@ class AllListServices
             return $e;
         }
     }
-    public function getAllListMaterialSentToPurchase(){
+    public function getAllListMaterialSentToPurchase()
+    {
         try {
             $data_output = $this->repo->getAllListMaterialSentToPurchase();
             return $data_output;
@@ -41,15 +52,17 @@ class AllListServices
             return $e;
         }
     }
-    // public function getAllListMaterialReceivedFromQuality(){
-    //     try {
-    //         $return_data = $this->repo->getAllListMaterialReceivedFromQuality();
-    //         return $return_data;
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
-    public function getPurchaseOrderBusinessWise(){
+    public function getAllListMaterialReceivedFromQuality()
+    {
+        try {
+            $return_data = $this->repo->getAllListMaterialReceivedFromQuality();
+            return $return_data;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getPurchaseOrderBusinessWise()
+    {
         try {
             $data_output = $this->repo->getPurchaseOrderBusinessWise();
             return $data_output;
@@ -57,7 +70,8 @@ class AllListServices
             return $e;
         }
     }
-    public function getAllListMaterialReceivedFromQualityPOTracking(){
+    public function getAllListMaterialReceivedFromQualityPOTracking()
+    {
         try {
             $return_data = $this->repo->getAllListMaterialReceivedFromQualityPOTracking();
             return $return_data;
@@ -65,7 +79,8 @@ class AllListServices
             return $e;
         }
     }
-    public function getAllListMaterialReceivedFromQualityPOTrackingBusinessWise(){
+    public function getAllListMaterialReceivedFromQualityPOTrackingBusinessWise()
+    {
         try {
             $data_output = $this->repo->getAllListMaterialReceivedFromQualityPOTrackingBusinessWise();
             return $data_output;
@@ -73,7 +88,8 @@ class AllListServices
             return $e;
         }
     }
-    public function getAllInprocessProductProduction(){
+    public function getAllInprocessProductProduction()
+    {
         try {
             $data_output = $this->repo->getAllInprocessProductProduction();
             return $data_output;

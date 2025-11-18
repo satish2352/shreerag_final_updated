@@ -1,57 +1,54 @@
 <?php
+
 namespace App\Http\Repository\Organizations\Purchase;
-use Illuminate\Database\QueryException;
-use DB;
-use Illuminate\Support\Carbon;
-use App\Models\ {
-Business,
-DesignModel,
-BusinessApplicationProcesses,
-Vendors,
+
+use App\Models\{
+    Vendors,
 };
-use Config;
 
-class VendorRepository  {
+class VendorRepository
+{
 
 
-    public function getAll(){
+    public function getAll()
+    {
         try {
-            $data_output= Vendors::get();
+            $data_output = Vendors::get();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
 
-public function addAll($request)
-{
-    try {
-        $vendor_data = new Vendors();
-        $vendor_data->vendor_name = $request->vendor_name;
-        $vendor_data->vendor_company_name = $request->vendor_company_name;
-        $vendor_data->vendor_email = $request->vendor_email;
-        $vendor_data->contact_no = $request->contact_no;
-        $vendor_data->gst_no = $request->gst_no;
-        $vendor_data->quote_no = $request->quote_no;
-        $vendor_data->payment_terms = $request->payment_terms;
-        $vendor_data->vendor_address = $request->vendor_address;
-        $vendor_data->save();
-        return [
-            'msg' => 'This business send to Design Department Successfully',
-            'status' => 'success'
-        ];
-
-    } catch (\Exception $e) {
-        // 
-        return [
-            'msg' => $e->getMessage(),
-            'status' => 'error'
-        ];
+    public function addAll($request)
+    {
+        try {
+            $vendor_data = new Vendors();
+            $vendor_data->vendor_name = $request->vendor_name;
+            $vendor_data->vendor_company_name = $request->vendor_company_name;
+            $vendor_data->vendor_email = $request->vendor_email;
+            $vendor_data->contact_no = $request->contact_no;
+            $vendor_data->gst_no = $request->gst_no;
+            $vendor_data->quote_no = $request->quote_no;
+            $vendor_data->payment_terms = $request->payment_terms;
+            $vendor_data->vendor_address = $request->vendor_address;
+            $vendor_data->save();
+            return [
+                'msg' => 'This business send to Design Department Successfully',
+                'status' => 'success'
+            ];
+        } catch (\Exception $e) {
+            // 
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error'
+            ];
+        }
     }
-}
 
-    public function getById($id){
-    try {
+    public function getById($id)
+    {
+        try {
             $dataOutputByid = Vendors::find($id);
             if ($dataOutputByid) {
                 return $dataOutputByid;
@@ -66,8 +63,9 @@ public function addAll($request)
         }
     }
 
-        public function updateAll($request){
-        try { 
+    public function updateAll($request)
+    {
+        try {
             $vendor_data = Vendors::find($request->id);
 
             if (!$vendor_data) {
@@ -85,15 +83,14 @@ public function addAll($request)
             $vendor_data->quote_no = $request->quote_no;
             $vendor_data->payment_terms = $request->payment_terms;
             $vendor_data->vendor_address = $request->vendor_address;
-            
+
 
             $vendor_data->save();
 
             return [
-            'msg' => 'This business send to Design Department Successfully',
-            'status' => 'success'
-        ];
-        
+                'msg' => 'This business send to Design Department Successfully',
+                'status' => 'success'
+            ];
         } catch (\Exception $e) {
             return [
                 'msg' => 'Failed to Update Data.',
@@ -104,19 +101,19 @@ public function addAll($request)
     }
 
 
-    public function deleteById($id){
-            try {   
-                $deleteDataById = Vendors::find($id);
-               
-                if ($deleteDataById) {
-                    $deleteDataById->delete();
-                    return $deleteDataById;
-                } else {
-                    return null;
-                }
-            } catch (\Exception $e) {
-                return $e;
-            }
-    }
+    public function deleteById($id)
+    {
+        try {
+            $deleteDataById = Vendors::find($id);
 
+            if ($deleteDataById) {
+                $deleteDataById->delete();
+                return $deleteDataById;
+            } else {
+                return null;
+            }
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
 }

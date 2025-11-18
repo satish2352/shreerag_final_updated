@@ -12,7 +12,7 @@ use setasign\Fpdi\Fpdi;
 // use setasign\Fpdi\Fpdi;
 use App\Http\Services\Organizations\Purchase\PurchaseOrderServices;
 use App\Http\Controllers\Controller;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use App\Models\{
     BusinessApplicationProcesses,
     Vendors,
@@ -29,47 +29,48 @@ use App\Http\Controllers\Organizations\CommanController;
 
 class PurchaseOrderController extends Controller
 {
+    protected $service;
+
     public function __construct()
     {
         $this->service = new PurchaseOrderServices();
         $this->serviceCommon = new CommanController();
-
     }
 
     public function index($requistition_id, $business_details_id)
     {
         $getOutput = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
-       ->join('tbl_vendor_type', 'tbl_vendor_type.id', '=', 'purchase_orders.vendor_type_id')
-        ->whereNull('purchase_status_from_owner')
-        ->where('requisition_id', base64_decode($requistition_id))
-        ->where('business_details_id', base64_decode($business_details_id))
-         ->select(
-            'purchase_orders.id',
-            'purchase_orders.purchase_orders_id',
-            'purchase_orders.requisition_id',
-            'purchase_orders.business_id',
-            'business_details_id',
-            'purchase_orders.production_id',
-            'purchase_orders.po_date',
-            'purchase_orders.vendor_id',
-            'purchase_orders.payment_terms as purchase_payment_terms',
-            'purchase_orders.quote_no',
-            'purchase_orders.contact_person_name',
-            'purchase_orders.contact_person_number',
-            'purchase_orders.po_date',
-            'purchase_orders.invoice_date',
-            'vendors.vendor_name',
-            'vendors.vendor_company_name',
-            'vendors.vendor_email',
-            'vendors.contact_no',
-            'vendors.vendor_address',
-            'vendors.gst_no',
-            'tbl_vendor_type.name as vendor_type_name'
+            ->join('tbl_vendor_type', 'tbl_vendor_type.id', '=', 'purchase_orders.vendor_type_id')
+            ->whereNull('purchase_status_from_owner')
+            ->where('requisition_id', base64_decode($requistition_id))
+            ->where('business_details_id', base64_decode($business_details_id))
+            ->select(
+                'purchase_orders.id',
+                'purchase_orders.purchase_orders_id',
+                'purchase_orders.requisition_id',
+                'purchase_orders.business_id',
+                'business_details_id',
+                'purchase_orders.production_id',
+                'purchase_orders.po_date',
+                'purchase_orders.vendor_id',
+                'purchase_orders.payment_terms as purchase_payment_terms',
+                'purchase_orders.quote_no',
+                'purchase_orders.contact_person_name',
+                'purchase_orders.contact_person_number',
+                'purchase_orders.po_date',
+                'purchase_orders.invoice_date',
+                'vendors.vendor_name',
+                'vendors.vendor_company_name',
+                'vendors.vendor_email',
+                'vendors.contact_no',
+                'vendors.vendor_address',
+                'vendors.gst_no',
+                'tbl_vendor_type.name as vendor_type_name'
             )
-        ->orderBy('purchase_orders.updated_at', 'desc')
-        ->get();
-       
-               return view(
+            ->orderBy('purchase_orders.updated_at', 'desc')
+            ->get();
+
+        return view(
             'organizations.purchase.addpurchasedetails.list-purchase-orders',
             compact(
                 'getOutput',
@@ -83,53 +84,53 @@ class PurchaseOrderController extends Controller
     {
         $array_to_be_check = [config('constants.HIGHER_AUTHORITY.REJECTED_PO_FROM_OWNER')];
         $getOutput = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
-        // ->whereNull('purchase_status_from_owner')
-        ->where('purchase_orders.purchase_status_from_owner', $array_to_be_check)
-        // ->where('businesses_details.id', $id)
-        // ->where('requisition_id', base64_decode($requistition_id))
-        // ->where('business_details_id', base64_decode($business_details_id))
-         ->select(
-            'purchase_orders.id',
-            'purchase_orders.purchase_orders_id',
-            'purchase_orders.requisition_id',
-            'purchase_orders.business_id',
-            'business_details_id',
-            'purchase_orders.production_id',
-            'purchase_orders.po_date',
-            'purchase_orders.vendor_id',
-            'purchase_orders.payment_terms as purchase_payment_terms',
-            'purchase_orders.quote_no',
-            'purchase_orders.contact_person_name',
-            'purchase_orders.contact_person_number',
-            'purchase_orders.purchase_status_from_owner',
-            'purchase_orders.po_date',
-            'purchase_orders.invoice_date',
-            'vendors.vendor_name',
-            'vendors.vendor_company_name',
-            'vendors.vendor_email',
-            'vendors.contact_no',
-            'vendors.vendor_address',
-            'vendors.gst_no'
+            // ->whereNull('purchase_status_from_owner')
+            ->where('purchase_orders.purchase_status_from_owner', $array_to_be_check)
+            // ->where('businesses_details.id', $id)
+            // ->where('requisition_id', base64_decode($requistition_id))
+            // ->where('business_details_id', base64_decode($business_details_id))
+            ->select(
+                'purchase_orders.id',
+                'purchase_orders.purchase_orders_id',
+                'purchase_orders.requisition_id',
+                'purchase_orders.business_id',
+                'business_details_id',
+                'purchase_orders.production_id',
+                'purchase_orders.po_date',
+                'purchase_orders.vendor_id',
+                'purchase_orders.payment_terms as purchase_payment_terms',
+                'purchase_orders.quote_no',
+                'purchase_orders.contact_person_name',
+                'purchase_orders.contact_person_number',
+                'purchase_orders.purchase_status_from_owner',
+                'purchase_orders.po_date',
+                'purchase_orders.invoice_date',
+                'vendors.vendor_name',
+                'vendors.vendor_company_name',
+                'vendors.vendor_email',
+                'vendors.contact_no',
+                'vendors.vendor_address',
+                'vendors.gst_no'
             )
-        ->orderBy('purchase_orders.updated_at', 'desc')
-        ->get();
-        if ( $getOutput instanceof \Illuminate\Support\Collection && $getOutput->isNotEmpty() ) {
-            foreach ( $getOutput as $data ) {
+            ->orderBy('purchase_orders.updated_at', 'desc')
+            ->get();
+        if ($getOutput instanceof \Illuminate\Support\Collection && $getOutput->isNotEmpty()) {
+            foreach ($getOutput as $data) {
                 $business_id = $data->business_details_id;
-                if ( !empty( $business_id ) ) {
-                    $update_data[ 'purchase_order_is_rejected_view' ] = '1';
-                    NotificationStatus::where( 'purchase_order_is_rejected_view', '0' )
-                    ->where( 'business_details_id', $business_id )
-                    ->update( $update_data );
+                if (!empty($business_id)) {
+                    $update_data['purchase_order_is_rejected_view'] = '1';
+                    NotificationStatus::where('purchase_order_is_rejected_view', '0')
+                        ->where('business_details_id', $business_id)
+                        ->update($update_data);
                 }
             }
         } else {
-            return view( 'organizations.purchase.list.list-all-po-sent-to-vendor-businesswise', [
+            return view('organizations.purchase.list.list-all-po-sent-to-vendor-businesswise', [
                 'data_output' => [],
                 'message' => 'No data found'
-            ] );
+            ]);
         }
-               return view(
+        return view(
             'organizations.purchase.addpurchasedetails.list-purchase-order-rejected',
             compact(
                 'getOutput',
@@ -144,7 +145,7 @@ class PurchaseOrderController extends Controller
         $business_detailsId = $request->business_details_id;
         $requistitionId = base64_decode($request->requistition_id);
         $title = 'create invoice';
-        
+
         $dataPurchaseOrder = PurchaseOrdersModel::where('requisition_id', $requistitionId)->first();
         $dataOutputVendor = Vendors::where('is_active', true)->get();
         $dataOutputTax = Tax::where('is_active', true)->get();
@@ -193,7 +194,7 @@ class PurchaseOrderController extends Controller
 
         $messages = [
             'vendor_id.required' => 'The select vendor comapny name is required.',
-             'vendor_type_id.required' => 'The select vendor type is required.',
+            'vendor_type_id.required' => 'The select vendor type is required.',
             'tax_id.required' => 'The Tax is required.',
             'invoice_date.required' => 'The Invoice Date is required.',
             'payment_terms.required' => 'The Payment Terms is required.',
@@ -220,8 +221,7 @@ class PurchaseOrderController extends Controller
                     $status = $add_record['status'];
                     if ($status == 'success') {
                         return redirect('purchase/list-purchase-order/' . $requi_id . '/' . $businessId)
-                        ->with(['msg' => $msg, 'status' => $status]);
-                    
+                            ->with(['msg' => $msg, 'status' => $status]);
                     } else {
                         return redirect('purchase/add-purchase-order')->withInput()->with(compact('msg', 'status'));
                     }
@@ -233,36 +233,35 @@ class PurchaseOrderController extends Controller
     }
     public function getHsnForPart(Request $request)
     {
-    
+
         // $partNoId = $request->input('part-no'); // Get the part_no from the request
         // $partNoId = $request->id;
-     
+
         // // Fetch HSN details based on the part_no_id
         // $part = PartItem::where('description', $partNoId)->first(['hsn_id', 'hsn_id']);
-    try{
+        try {
 
-        $partNoId = $request->part_no_id;
-    
-        // Fetch PO numbers based on the selected vendor
-        $part = PartItem::leftJoin('tbl_hsn', function($join) {
-            $join->on('tbl_part_item.hsn_id', '=', 'tbl_hsn.id');
-        })
-        ->where('tbl_part_item.id', $partNoId)
-                              ->where('tbl_hsn.is_active', true)
-                              ->get(['tbl_hsn.id', 'name']); // Adjust column names as needed
-                             
+            $partNoId = $request->part_no_id;
 
-        // if ($part) {
-        //     return response()->json(['hsn_id' => $part->hsn_id, 'hsn_id' => $part->hsn_id]);
-        // }
-    
-        return response()->json(['part' => $part]);
+            // Fetch PO numbers based on the selected vendor
+            $part = PartItem::leftJoin('tbl_hsn', function ($join) {
+                $join->on('tbl_part_item.hsn_id', '=', 'tbl_hsn.id');
+            })
+                ->where('tbl_part_item.id', $partNoId)
+                ->where('tbl_hsn.is_active', true)
+                ->get(['tbl_hsn.id', 'name']); // Adjust column names as needed
+
+
+            // if ($part) {
+            //     return response()->json(['hsn_id' => $part->hsn_id, 'hsn_id' => $part->hsn_id]);
+            // }
+
+            return response()->json(['part' => $part]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
-    catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
-    }
-    }
-    
+
 
     // public function store_old(Request $request)
     // {
@@ -363,14 +362,14 @@ class PurchaseOrderController extends Controller
     {
         try {
             $requistition_id = base64_decode($request->requistition_id);
-            
+
             $data_purchase_orders_id = PurchaseOrdersModel::where('requisition_id', $requistition_id)->pluck('purchase_orders_id');
-            
+
             $data_purchase_orders_update = PurchaseOrdersModel::where('requisition_id', $requistition_id)->first();
             $data_purchase_orders_update->purchase_status_from_purchase = config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL');
             $data_purchase_orders_update->po_send_owner_status = 'send_owner';
 
-            
+
             $data_purchase_orders_update->save();
 
             $business_application = BusinessApplicationProcesses::where('requisition_id', $requistition_id)->first();
@@ -383,7 +382,6 @@ class PurchaseOrderController extends Controller
                 // $business_application->grn_no = '0';
                 // $business_application->store_receipt_no = '0';
                 $business_application->save();
-
             }
 
             $msg = 'Purchase order submitted successfully';
@@ -411,7 +409,7 @@ class PurchaseOrderController extends Controller
 
             return view(
                 'organizations.purchase.purchase.purchase-order-details',
-                compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData', 'getAllRulesAndRegulations','business_id')
+                compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData', 'getAllRulesAndRegulations', 'business_id')
             );
 
 
@@ -438,7 +436,6 @@ class PurchaseOrderController extends Controller
             }
 
             return redirect('purchase/list-purchase-order-approved-sent-to-vendor')->with(compact('msg', 'status'));
-
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
@@ -455,15 +452,16 @@ class PurchaseOrderController extends Controller
             $purchaseOrder = $data['purchaseOrder'];
             $purchaseOrderDetails = $data['purchaseOrderDetails'];
 
-            return view('organizations.purchase.addpurchasedetails.view-purchase-orders-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData', 'getAllRulesAndRegulations','business_id'));
+            return view('organizations.purchase.addpurchasedetails.view-purchase-orders-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData', 'getAllRulesAndRegulations', 'business_id'));
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
 
-    public function edit(Request $request){
+    public function edit(Request $request)
+    {
         $edit_data_id = $request->id;
-      
+
         // $edit_data_id = base64_decode($request->id);
         $editData = $this->service->getById($edit_data_id);
         $dataOutputVendor = Vendors::where('is_active', true)->get();
@@ -472,78 +470,87 @@ class PurchaseOrderController extends Controller
         $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
         $dataOutputHSNMaster = HSNMaster::where('is_active', true)->get();
         $dataOutputVendorType = VendorType::where('is_active', true)->get();
-        return view('organizations.purchase.addpurchasedetails.edit-purchase-orders', compact('editData', 'dataOutputVendor', 'dataOutputTax', 'dataOutputPartItem',  'dataOutputUnitMaster',
-        'dataOutputHSNMaster','dataOutputVendorType'));
+        return view('organizations.purchase.addpurchasedetails.edit-purchase-orders', compact(
+            'editData',
+            'dataOutputVendor',
+            'dataOutputTax',
+            'dataOutputPartItem',
+            'dataOutputUnitMaster',
+            'dataOutputHSNMaster',
+            'dataOutputVendorType'
+        ));
     }
-    
-    
-            public function update(Request $request){
-                
-               $rules = [
-                    // 'design_name' => 'required|string|max:255',
-                    // 'design_page' => 'required|max:255',
-                    // 'project_name' => 'required|string|max:20',
-                    // 'time_allocation' => 'required|string|max:255',
-                    // 'image' => 'image|mimes:jpeg,png,jpg|max:10240|min:5',
-                ];
-    
-                $messages = [
-                            // 'design_name.required' => 'The design name is required.',
-                            // 'design_name.string' => 'The design name must be a valid string.',
-                            // 'design_name.max' => 'The design name must not exceed 255 characters.',
-                            
-                            // 'design_page.required' => 'The design page is required.',
-                            // 'design_page.max' => 'The design page must not exceed 255 characters.',
-                            
-                            // 'project_name.required' => 'The project name is required.',
-                            // 'project_name.string' => 'The project name must be a valid string.',
-                            // 'project_name.max' => 'The project name must not exceed 20 characters.',
-                            
-                            // 'time_allocation.required' => 'The time allocation is required.',
-                            // 'time_allocation.string' => 'The time allocation must be a valid string.',
-                            // 'time_allocation.max' => 'The time allocation must not exceed 255 characters.',
-                            
-                            // 'image.required' => 'The image is required.',
-                            // 'image.image' => 'The image must be a valid image file.',
-                            // 'image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
-                            // 'image.max' => 'The image size must not exceed 10MB.',
-                            // 'image.min' => 'The image size must not be less than 5KB.',
-                        ];
-        
-                try {
-                    $validation = Validator::make($request->all(),$rules, $messages);
-                    if ($validation->fails()) {
+
+
+    public function update(Request $request)
+    {
+
+        $rules = [
+            // 'design_name' => 'required|string|max:255',
+            // 'design_page' => 'required|max:255',
+            // 'project_name' => 'required|string|max:20',
+            // 'time_allocation' => 'required|string|max:255',
+            // 'image' => 'image|mimes:jpeg,png,jpg|max:10240|min:5',
+        ];
+
+        $messages = [
+            // 'design_name.required' => 'The design name is required.',
+            // 'design_name.string' => 'The design name must be a valid string.',
+            // 'design_name.max' => 'The design name must not exceed 255 characters.',
+
+            // 'design_page.required' => 'The design page is required.',
+            // 'design_page.max' => 'The design page must not exceed 255 characters.',
+
+            // 'project_name.required' => 'The project name is required.',
+            // 'project_name.string' => 'The project name must be a valid string.',
+            // 'project_name.max' => 'The project name must not exceed 20 characters.',
+
+            // 'time_allocation.required' => 'The time allocation is required.',
+            // 'time_allocation.string' => 'The time allocation must be a valid string.',
+            // 'time_allocation.max' => 'The time allocation must not exceed 255 characters.',
+
+            // 'image.required' => 'The image is required.',
+            // 'image.image' => 'The image must be a valid image file.',
+            // 'image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
+            // 'image.max' => 'The image size must not exceed 10MB.',
+            // 'image.min' => 'The image size must not be less than 5KB.',
+        ];
+
+        try {
+            $validation = Validator::make($request->all(), $rules, $messages);
+            if ($validation->fails()) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors($validation);
+            } else {
+
+                $update_data = $this->service->updateAll($request);
+                // $requisition_id = $request->input('requisition_id');
+
+                if ($update_data) {
+                    $msg = $update_data['msg'];
+                    $status = $update_data['status'];
+                    if ($status == 'success') {
+                        return redirect('purchase/list-purchase')->with(compact('msg', 'status'));
+                    } else {
                         return redirect()->back()
                             ->withInput()
-                            ->withErrors($validation);
-                    } else {
-                        
-                        $update_data = $this->service->updateAll($request);
-                        // $requisition_id = $request->input('requisition_id');
-                       
-                        if ($update_data) {
-                            $msg = $update_data['msg'];
-                            $status = $update_data['status'];
-                            if ($status == 'success') {
-                                return redirect('purchase/list-purchase')->with(compact('msg', 'status'));
-                            } else {
-                                return redirect()->back()
-                                    ->withInput()
-                                    ->with(compact('msg', 'status'));
-                            }
-                        }
+                            ->with(compact('msg', 'status'));
                     }
-                } catch (Exception $e) {
-                    return redirect()->back()
-                        ->withInput()
-                        ->with(['msg' => $e->getMessage(), 'status' => 'error']);
                 }
             }
+        } catch (Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+        }
+    }
 
-    public function destroyAddmore(Request $request){
+    public function destroyAddmore(Request $request)
+    {
         try {
             $delete_rti = $this->service->deleteByIdAddmore($request->delete_id);
-         
+
             if ($delete_rti) {
                 $msg = $delete_rti['msg'];
                 $status = $delete_rti['status'];
@@ -562,25 +569,25 @@ class PurchaseOrderController extends Controller
         } catch (\Exception $e) {
             return $e;
         }
-    } 
+    }
     // public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id)
     // {
     //     try {
     //         // Fetch purchase order details
     //         $purchaseOrder = $this->service->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id);
-    
+
     //         $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
-    
+
     //         $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
     //         $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
     //         $business_id = $data['purchaseOrder']->business_id;
     //         $purchaseOrder = $data['purchaseOrder'];
     //         $purchaseOrderDetails = $data['purchaseOrderDetails'];
-    
+
     //         if (!$purchaseOrder) {
     //             return response()->json(['status' => 'error', 'message' => 'Purchase order not found'], 404);
     //         }
-    
+
     //         // Generate PDF with specific settings
     //         $pdf = Pdf::loadView('organizations.common-pages.purchase-order-view', [
     //             'purchase_order_id' => $purchase_order_id,
@@ -600,9 +607,9 @@ class PurchaseOrderController extends Controller
     //             'margin-left' => 10,    // Adjust left margin
     //         ])
     //         ->save(storage_path('app/public/purchase_order_' . $purchase_order_id . '.pdf')); // Save the PDF
-    
+
     //         $pdfPath = storage_path('app/public/purchase_order_' . $purchase_order_id . '.pdf');
-    
+
     //         // Send email with PDF attachment
     //         // Mail::send([], [], function ($message) use ($purchaseOrder, $pdfPath) {
     //         //     $message->to($purchaseOrder->vendor_email)
@@ -616,16 +623,16 @@ class PurchaseOrderController extends Controller
     //                 ->subject('Purchase Order Notification')
     //                 ->attach($pdfPath)
     //                 ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-            
+
     //             // Set plain text body
     //             $message->text("Respected $vendorName, \n\n I hope this message finds you well.\n\nWe would like to place a purchase order with your company for the following items. Please find the details of the purchase order below:\n\nThank you!");
-        
+
     //             // \Log::info($this->getStaticContent());
 
     //         });
-            
+
     //         return redirect('purchase/list-purchase-order-approved-sent-to-vendor')->with('status', 'success')->with('msg', 'Purchase order mail sent to vendor.');
-    
+
     //     } catch (\Exception $e) {
     //         \Log::error($e->getMessage());
     //         return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
@@ -636,18 +643,18 @@ class PurchaseOrderController extends Controller
     //     try {
     //         // Fetch purchase order details
     //         $purchaseOrder = $this->service->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id);
-    
+
     //         $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
     //         $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
     //         $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
     //         $business_id = $data['purchaseOrder']->business_id;
     //         $purchaseOrder = $data['purchaseOrder'];
     //         $purchaseOrderDetails = $data['purchaseOrderDetails'];
-    
+
     //         if (!$purchaseOrder) {
     //             return response()->json(['status' => 'error', 'message' => 'Purchase order not found'], 404);
     //         }
-    
+
     //         // Generate PDF for purchase order
     //         $purchaseOrderPdf = Pdf::loadView('organizations.common-pages.purchase-order-view', [
     //             'purchase_order_id' => $purchase_order_id,
@@ -667,24 +674,24 @@ class PurchaseOrderController extends Controller
     //             'margin-left' => 5,
     //             'isRemoteEnabled' => true,
     //             'enable-local-file-access' => true,
-                
-                
+
+
     //         ]);
-    
+
     //         // Generate PDF for static terms and conditions page
     //         $termsPdf = Pdf::loadView('organizations.common-pages.static-terms-condition')
     //             ->setPaper('a4', 'portrait')
     //             ->setWarnings(false);
-    
+
     //         // Combine the two PDFs
     //         $purchaseOrderPath = storage_path('app/public/purchase_order_' . $purchase_order_id . '.pdf');
     //         $termsPath = storage_path('app/public/terms_conditions.pdf');
     //         $finalPdfPath = storage_path('app/public/final_purchase_order_' . $purchase_order_id . '.pdf');
-    
+
     //         // Save individual PDFs
     //         $purchaseOrderPdf->save($purchaseOrderPath);
     //         $termsPdf->save($termsPath);
-    
+
     //         // Merge PDFs using PDFMerger
     //         // $pdfMerger = new \Clegginabox\PDFMerger\PDFMerger;
     //     //  $pdfMerger = new \LynX39\LaraPdfMerger\PdfMerger();
@@ -692,7 +699,7 @@ class PurchaseOrderController extends Controller
     //         $pdfMerger->addPDF($purchaseOrderPath, 'all');
     //         $pdfMerger->addPDF($termsPath, 'all');
     //         $pdfMerger->merge('file', $finalPdfPath);
-    
+
     //         // Send email with the merged PDF as an attachment
     //         $vendorName = $purchaseOrder->vendor_name;
     //         Mail::send([], [], function ($message) use ($purchaseOrder, $finalPdfPath, $vendorName) {
@@ -701,96 +708,95 @@ class PurchaseOrderController extends Controller
     //                 ->subject('Purchase Order Notification')
     //                 ->attach($finalPdfPath)
     //                 ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-    
+
     //             $message->text("Respected $vendorName, \n\nI hope this message finds you well.\n\nWe would like to place a purchase order with your company for the following items. Please find the details of the purchase order below:\n\nThank you!");
     //         });
-    
+
     //         return redirect('purchase/list-submited-po-to-vendor')
     //             ->with('status', 'success')
     //             ->with('msg', 'Purchase order mail sent to vendor.');
-    
+
     //     } catch (\Exception $e) {
     //         \Log::error($e->getMessage());
     //         return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
     //     }
     // }
-    
- public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id)
-{
-    try {
-        // Fetch purchase order details
-        $purchaseOrder = $this->service->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id);
 
-        $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
-        $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
-        $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
-        $business_id = $data['purchaseOrder']->business_id;
-        $purchaseOrder = $data['purchaseOrder'];
-        $purchaseOrderDetails = $data['purchaseOrderDetails'];
+    public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id)
+    {
+        try {
+            // Fetch purchase order details
+            $purchaseOrder = $this->service->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id);
 
-        if (!$purchaseOrder) {
-            return response()->json(['status' => 'error', 'message' => 'Purchase order not found'], 404);
-        }
+            $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
+            $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
+            $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
+            $business_id = $data['purchaseOrder']->business_id;
+            $purchaseOrder = $data['purchaseOrder'];
+            $purchaseOrderDetails = $data['purchaseOrderDetails'];
 
-        // Generate PDF for purchase order
-        $purchaseOrderPdf = Pdf::loadView('organizations.common-pages.purchase-order-view', [
-            'purchase_order_id' => $purchase_order_id,
-            'purchaseOrder' => $purchaseOrder,
-            'purchaseOrderDetails' => $purchaseOrderDetails,
-            'getOrganizationData' => $getOrganizationData,
-            'getAllRulesAndRegulations' => $getAllRulesAndRegulations,
-            'business_id' => $business_id,
-            'is_pdf' => true,
-        ])->setPaper('a4', 'portrait')->setWarnings(false);
-
-        // Generate PDF for static terms and conditions page
-        $termsPdf = Pdf::loadView('organizations.common-pages.static-terms-condition')
-            ->setPaper('a4', 'portrait')
-            ->setWarnings(false);
-
-        // Save individual PDFs
-        $purchaseOrderPath = storage_path('app/public/purchase_order_' . $purchase_order_id . '.pdf');
-        $termsPath = storage_path('app/public/terms_conditions.pdf');
-        $finalPdfPath = storage_path('app/public/final_purchase_order_' . $purchase_order_id . '.pdf');
-
-        $purchaseOrderPdf->save($purchaseOrderPath);
-        $termsPdf->save($termsPath);
-
-        // ✅ Merge PDFs using FPDI
-        $pdf = new Fpdi();
-        $files = [$purchaseOrderPath, $termsPath];
-
-        foreach ($files as $file) {
-            $pageCount = $pdf->setSourceFile($file);
-            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-                $tplIdx = $pdf->importPage($pageNo);
-                $size   = $pdf->getTemplateSize($tplIdx);
-                $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
-                $pdf->useTemplate($tplIdx);
+            if (!$purchaseOrder) {
+                return response()->json(['status' => 'error', 'message' => 'Purchase order not found'], 404);
             }
+
+            // Generate PDF for purchase order
+            $purchaseOrderPdf = Pdf::loadView('organizations.common-pages.purchase-order-view', [
+                'purchase_order_id' => $purchase_order_id,
+                'purchaseOrder' => $purchaseOrder,
+                'purchaseOrderDetails' => $purchaseOrderDetails,
+                'getOrganizationData' => $getOrganizationData,
+                'getAllRulesAndRegulations' => $getAllRulesAndRegulations,
+                'business_id' => $business_id,
+                'is_pdf' => true,
+            ])->setPaper('a4', 'portrait')->setWarnings(false);
+
+            // Generate PDF for static terms and conditions page
+            $termsPdf = Pdf::loadView('organizations.common-pages.static-terms-condition')
+                ->setPaper('a4', 'portrait')
+                ->setWarnings(false);
+
+            // Save individual PDFs
+            $purchaseOrderPath = storage_path('app/public/purchase_order_' . $purchase_order_id . '.pdf');
+            $termsPath = storage_path('app/public/terms_conditions.pdf');
+            $finalPdfPath = storage_path('app/public/final_purchase_order_' . $purchase_order_id . '.pdf');
+
+            $purchaseOrderPdf->save($purchaseOrderPath);
+            $termsPdf->save($termsPath);
+
+            // ✅ Merge PDFs using FPDI
+            $pdf = new Fpdi();
+            $files = [$purchaseOrderPath, $termsPath];
+
+            foreach ($files as $file) {
+                $pageCount = $pdf->setSourceFile($file);
+                for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                    $tplIdx = $pdf->importPage($pageNo);
+                    $size   = $pdf->getTemplateSize($tplIdx);
+                    $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                    $pdf->useTemplate($tplIdx);
+                }
+            }
+
+            $pdf->Output($finalPdfPath, 'F'); // save final merged PDF
+
+            // Send email with the merged PDF as an attachment
+            $vendorName = $purchaseOrder->vendor_name;
+            Mail::send([], [], function ($message) use ($purchaseOrder, $finalPdfPath, $vendorName) {
+                $message->to($purchaseOrder->vendor_email)
+                    ->cc('purchase@shreeragengg.com')
+                    ->subject('Purchase Order Notification')
+                    ->attach($finalPdfPath)
+                    ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+
+                $message->text("Respected $vendorName, \n\nI hope this message finds you well.\n\nWe would like to place a purchase order with your company for the following items. Please find the details of the purchase order below:\n\nThank you!");
+            });
+
+            return redirect('purchase/list-submited-po-to-vendor')
+                ->with('status', 'success')
+                ->with('msg', 'Purchase order mail sent to vendor.');
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
         }
-
-        $pdf->Output($finalPdfPath, 'F'); // save final merged PDF
-
-        // Send email with the merged PDF as an attachment
-        $vendorName = $purchaseOrder->vendor_name;
-        Mail::send([], [], function ($message) use ($purchaseOrder, $finalPdfPath, $vendorName) {
-            $message->to($purchaseOrder->vendor_email)
-                ->cc('purchase@shreeragengg.com')
-                ->subject('Purchase Order Notification')
-                ->attach($finalPdfPath)
-                ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-
-            $message->text("Respected $vendorName, \n\nI hope this message finds you well.\n\nWe would like to place a purchase order with your company for the following items. Please find the details of the purchase order below:\n\nThank you!");
-        });
-
-        return redirect('purchase/list-submited-po-to-vendor')
-            ->with('status', 'success')
-            ->with('msg', 'Purchase order mail sent to vendor.');
-
-    } catch (\Exception $e) {
-        \Log::error($e->getMessage());
-        return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
     }
-}
 }

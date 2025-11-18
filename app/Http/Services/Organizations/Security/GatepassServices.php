@@ -1,31 +1,31 @@
 <?php
+
 namespace App\Http\Services\Organizations\Security;
 
 use App\Http\Repository\Organizations\Security\GatepassRepository;
-use Carbon\Carbon;
-use App\Models\{
-    Gatepass
-};
-
-use Config;
+use Exception;
 
 class GatepassServices
 {
     protected $repo;
+    protected $service;
+
     public function __construct()
     {
         $this->repo = new GatepassRepository();
     }
-    public function getAll(){
+    public function getAll()
+    {
         try {
             $data = $this->repo->getAll();
-            
-            return $data; 
+
+            return $data;
         } catch (\Exception $e) {
             return $e;
         }
     }
-    public function addAll($request){
+    public function addAll($request)
+    {
         try {
             $last_id = $this->repo->addAll($request);
             if ($last_id) {
@@ -37,7 +37,8 @@ class GatepassServices
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
-    public function getById($id){
+    public function getById($id)
+    {
         try {
             $result = $this->repo->getById($id);
             return $result;
@@ -45,7 +46,8 @@ class GatepassServices
             return $e;
         }
     }
-    public function updateAll($request){
+    public function updateAll($request)
+    {
         try {
             $return_data = $this->repo->updateAll($request);
 
@@ -58,7 +60,8 @@ class GatepassServices
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
-    public function deleteById($id){
+    public function deleteById($id)
+    {
         try {
             $delete = $this->repo->deleteById($id);
             if ($delete) {

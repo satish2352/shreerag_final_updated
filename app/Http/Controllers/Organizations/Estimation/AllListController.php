@@ -1,98 +1,105 @@
 <?php
 
 namespace App\Http\Controllers\Organizations\Estimation;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Services\Organizations\Estimation\AllListServices;
-use Session;
-use Validator;
-use Config;
-use Carbon;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Config;
+use Carbon\Carbon;
+use Exception;
 
-use App\Models\ {
+use App\Models\{
     BusinessApplicationProcesses,
     NotificationStatus,
     PartItem,
     UnitMaster,
     AdminView
-}
-;
+};
 
 class AllListController extends Controller
- {
+{
 
-    public function __construct() {
+    protected $service;
+
+    public function __construct()
+    {
         $this->service = new AllListServices();
     }
 
-    public function getAllNewRequirement( Request $request ) { //checked
+    public function getAllNewRequirement(Request $request)
+    { //checked
         try {
             $data_output = $this->service->getAllNewRequirement();
 
-            return view( 'organizations.estimation.list.list-new-requirements-received-for-estimation', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
+            return view('organizations.estimation.list.list-new-requirements-received-for-estimation', compact('data_output'));
+        } catch (\Exception $e) {
             return $e;
         }
     }
-    public function getAllNewRequirementBusinessWise( $business_id ) { //checked
+    public function getAllNewRequirementBusinessWise($business_id)
+    { //checked
         try {
-            $data_output = $this->service->getAllNewRequirementBusinessWise( $business_id );
-             if ( $data_output->isNotEmpty() ) {
-                 foreach ($data_output as $data) {
-            if (isset($data->business_details_id)) {
-                NotificationStatus::where('estimation_view', '0')
-                    ->where('business_details_id', $data->business_details_id)
-                    ->update(['estimation_view' => '1']);
-                  AdminView::where('is_view', '0')
-                    ->where('business_details_id', $data->business_details_id)
-                    ->update(['is_view' => '1']);
-
-            }
-        }
-            } else {
-                return view( 'organizations.estimation.list.list_design_received_for_estimation_business_wise', [
-                    'data_output' => [],
-                    'message' => 'No data found for designs received for correction'
-                ] );
-            }
-            return view( 'organizations.estimation.list.list_design_received_for_estimation_business_wise', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
-            return $e;
-        }
-    }
-     public function getAllEstimationSendToOwnerForApproval( Request $request ){ //checked
-        try {
-            $data_output = $this->service->getAllEstimationSendToOwnerForApproval();
-
-            return view( 'organizations.estimation.list.list-updated-estimation-send-to-owner', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
-            return $e;
-        }
-    }
-
-    public function getAllEstimationSendToOwnerForApprovalBusinessWise( $business_id ){ //checked
-        try {
-            $data_output = $this->service->getAllEstimationSendToOwnerForApprovalBusinessWise( $business_id );
-             if ( $data_output->isNotEmpty() ) {
-                foreach ( $data_output as $data ) {
-                    $business_details_id = $data->business_details_id;
-
-                    if ( !empty( $business_details_id ) ) {
-                        $update_data[ 'estimation_view' ] = '1';
-                        NotificationStatus::where( 'estimation_view', '0' )
-                        ->where( 'business_details_id', $business_details_id )
-                        ->update( $update_data );
+            $data_output = $this->service->getAllNewRequirementBusinessWise($business_id);
+            if ($data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
+                    if (isset($data->business_details_id)) {
+                        NotificationStatus::where('estimation_view', '0')
+                            ->where('business_details_id', $data->business_details_id)
+                            ->update(['estimation_view' => '1']);
+                        AdminView::where('is_view', '0')
+                            ->where('business_details_id', $data->business_details_id)
+                            ->update(['is_view' => '1']);
                     }
                 }
             } else {
-                return view( 'organizations.estimation.list.list-updated-estimation-send-to-owner_business_wise', [
+                return view('organizations.estimation.list.list_design_received_for_estimation_business_wise', [
                     'data_output' => [],
                     'message' => 'No data found for designs received for correction'
-                ] );
+                ]);
+            }
+            return view('organizations.estimation.list.list_design_received_for_estimation_business_wise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getAllEstimationSendToOwnerForApproval(Request $request)
+    { //checked
+        try {
+            $data_output = $this->service->getAllEstimationSendToOwnerForApproval();
+
+            return view('organizations.estimation.list.list-updated-estimation-send-to-owner', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function getAllEstimationSendToOwnerForApprovalBusinessWise($business_id)
+    { //checked
+        try {
+            $data_output = $this->service->getAllEstimationSendToOwnerForApprovalBusinessWise($business_id);
+            if ($data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
+                    $business_details_id = $data->business_details_id;
+
+                    if (!empty($business_details_id)) {
+                        $update_data['estimation_view'] = '1';
+                        NotificationStatus::where('estimation_view', '0')
+                            ->where('business_details_id', $business_details_id)
+                            ->update($update_data);
+                    }
+                }
+            } else {
+                return view('organizations.estimation.list.list-updated-estimation-send-to-owner_business_wise', [
+                    'data_output' => [],
+                    'message' => 'No data found for designs received for correction'
+                ]);
             }
 
-            return view( 'organizations.estimation.list.list-updated-estimation-send-to-owner_business_wise', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
+            return view('organizations.estimation.list.list-updated-estimation-send-to-owner_business_wise', compact('data_output'));
+        } catch (\Exception $e) {
             return $e;
         }
     }
@@ -166,46 +173,49 @@ class AllListController extends Controller
     //     }
     // }
 
-    public function reviseddesignlist() {
+    public function reviseddesignlist()
+    {
         try {
             $data_output = $this->service->getAllreviseddesign();
-            if ( $data_output->isNotEmpty() ) {
-                foreach ( $data_output as $data ) {
+            if ($data_output->isNotEmpty()) {
+                foreach ($data_output as $data) {
                     $business_details_id = $data->id;
 
-                    if ( !empty( $business_details_id ) ) {
-                        $update_data[ 'prod_is_view_revised' ] = '1';
-                        NotificationStatus::where( 'prod_is_view_revised', '0' )
-                        ->where( 'business_details_id', $business_details_id )
-                        ->update( $update_data );
+                    if (!empty($business_details_id)) {
+                        $update_data['prod_is_view_revised'] = '1';
+                        NotificationStatus::where('prod_is_view_revised', '0')
+                            ->where('business_details_id', $business_details_id)
+                            ->update($update_data);
                     }
                 }
             } else {
-                return view( 'organizations.productions.product.list-design-revised', [
+                return view('organizations.productions.product.list-design-revised', [
                     'data_output' => [],
                     'message' => 'No data found for designs received for correction'
-                ] );
+                ]);
             }
-            return view( 'organizations.productions.product.list-design-revised', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
+            return view('organizations.productions.product.list-design-revised', compact('data_output'));
+        } catch (\Exception $e) {
             return $e;
         }
     }
- public function getSendToProductionList() {
+    public function getSendToProductionList()
+    {
         try {
             $data_output = $this->service->getSendToProductionList();
 
-            return view( 'organizations.estimation.list.list-send-to-production', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
+            return view('organizations.estimation.list.list-send-to-production', compact('data_output'));
+        } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function getAllListMaterialRecievedToProduction() {
+    public function getAllListMaterialRecievedToProduction()
+    {
         try {
-            $data_output = $this->service->getAllListMaterialRecievedToProduction();           
-            return view( 'organizations.productions.product.list-recived-material', compact( 'data_output' ) );
-        } catch ( \Exception $e ) {
+            $data_output = $this->service->getAllListMaterialRecievedToProduction();
+            return view('organizations.productions.product.list-recived-material', compact('data_output'));
+        } catch (\Exception $e) {
             return $e;
         }
     }
@@ -213,7 +223,7 @@ class AllListController extends Controller
     {
         try {
             $data_output = $this->service->getAllListMaterialRecievedToProductionBusinessWise($id);
-    
+
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {
                     if (!empty($data->business_details_id)) {
@@ -228,7 +238,7 @@ class AllListController extends Controller
                     'message' => 'No data found for designs received for correction'
                 ]);
             }
-    
+
             return view('organizations.productions.product.list-recived-bussinesswise', compact('data_output'));
         } catch (\Exception $e) {
             return $e;

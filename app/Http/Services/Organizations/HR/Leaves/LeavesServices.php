@@ -1,19 +1,21 @@
 <?php
-namespace App\Http\Services\Organizations\HR\Leaves;
-use App\Http\Repository\Organizations\HR\Leaves\LeavesRepository;
-use Carbon\Carbon;
-use App\Models\ {
-    EmployeesModel
-    };
 
-use Config;
+namespace App\Http\Services\Organizations\HR\Leaves;
+
+use App\Http\Repository\Organizations\HR\Leaves\LeavesRepository;
+use Exception;
+
 class LeavesServices
 {
-	protected $repo;
-    public function __construct(){
+    protected $repo;
+    protected $service;
+
+    public function __construct()
+    {
         $this->repo = new LeavesRepository();
     }
-    public function getAll(){
+    public function getAll()
+    {
         try {
             $data_output =  $this->repo->getAll();
             return  $data_output;
@@ -21,7 +23,8 @@ class LeavesServices
             return $e;
         }
     }
-    public function getById($id){
+    public function getById($id)
+    {
         try {
             $data_output = $this->repo->getById($id);
             return $data_output;
@@ -29,69 +32,74 @@ class LeavesServices
             return $e;
         }
     }
-    public function getAllLeavesRequest(){
+    public function getAllLeavesRequest()
+    {
         try {
-           $data_output =  $this->repo->getAllLeavesRequest();
-        //    dd($data_output);
-        //    die();
-           return $data_output;
+            $data_output =  $this->repo->getAllLeavesRequest();
+            //    dd($data_output);
+            //    die();
+            return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
-    public function getAllNotApprovedRequest(){
+    public function getAllNotApprovedRequest()
+    {
         try {
             return $this->repo->getAllNotApprovedRequest();
         } catch (\Exception $e) {
             return $e;
         }
     }
-    public function getAllApprovedRequest(){
+    public function getAllApprovedRequest()
+    {
         try {
             return $this->repo->getAllApprovedRequest();
         } catch (\Exception $e) {
             return $e;
         }
     }
-    public function addAll($request){
+    public function addAll($request)
+    {
         try {
             $last_id = $this->repo->addAll($request);
-        
+
             if ($last_id) {
                 return ['status' => 'success', 'msg' => 'Data Added Successfully.'];
             } else {
                 return ['status' => 'error', 'msg' => ' Data Not Added.'];
-            }  
+            }
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
-        }      
+        }
     }
-    public function updateAll($request){
+    public function updateAll($request)
+    {
         try {
             $return_data = $this->repo->updateAll($request);
-                
+
             if ($return_data) {
                 return ['status' => 'success', 'msg' => 'Data Updated Successfully.'];
             } else {
                 return ['status' => 'error', 'msg' => 'Data  Not Updated.'];
-            }  
+            }
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
-        }      
+        }
     }
 
     public function deleteById($id)
     {
         try {
             $delete = $this->repo->deleteById($id);
-       
+
             if ($delete) {
                 return ['status' => 'success', 'msg' => 'Deleted Successfully.'];
             } else {
                 return ['status' => 'error', 'msg' => ' Not Deleted.'];
-            }  
+            }
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
-        } 
+        }
     }
 }

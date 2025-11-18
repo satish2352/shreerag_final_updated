@@ -2,50 +2,53 @@
 
 namespace App\Http\Controllers\Organizations\Designers;
 
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Services\Organizations\Designers\DesignsServices;
-use Illuminate\Validation\Rule;
-use Session;
-use Validator;
-use Config;
-use Carbon;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Config;
+use Exception;
 use App\Models\{
-    Business,
     BusinessDetails,
-    BusinessApplicationProcesses,
-    AdminView,
     NotificationStatus
 };
+
 class DesignUploadController extends Controller
-{ 
-    public function __construct(){
+{
+    protected $service;
+
+    public function __construct()
+    {
         $this->service = new DesignsServices();
     }
-    public function getAllNewRequirement(Request $request){ //checked
+    public function getAllNewRequirement(Request $request)
+    { //checked
         try {
             $data_output = $this->service->getAllNewRequirement();
             $first_business_id = optional($data_output->first())->id;
             if ($first_business_id) {
-            $update_data['design_is_view'] = '1';
-            NotificationStatus::where('design_is_view', '0')
-                ->where('business_id', $first_business_id) 
-                ->update($update_data);
-        }
+                $update_data['design_is_view'] = '1';
+                NotificationStatus::where('design_is_view', '0')
+                    ->where('business_id', $first_business_id)
+                    ->update($update_data);
+            }
             return view('organizations.designer.design-upload.list-new-requirements-received-for-design', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
         }
-    } 
-    public function getAllNewRequirementBusinessWise($id){ //checked
+    }
+    public function getAllNewRequirementBusinessWise($id)
+    { //checked
         try {
-            $data_output = $this->service->getAllNewRequirementBusinessWise($id);     
+            $data_output = $this->service->getAllNewRequirementBusinessWise($id);
             return view('organizations.designer.design-upload.list-new-requirements-received-for-design-businesswise', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
         }
-    }      
-    public function add($id){ //checked
+    }
+    public function add($id)
+    { //checked
         try {
             $addData = base64_decode($id);
             $business_details_data = BusinessDetails::findOrFail($addData);
@@ -57,7 +60,8 @@ class DesignUploadController extends Controller
             return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
         }
     }
-    public function update(Request $request){ //checked
+    public function update(Request $request)
+    { //checked
         $rules = [
             'design_image' => 'required|mimes:pdf|max:' . Config::get("AllFileValidation.DESIGNS_PDF_MAX_SIZE") . '|min:' . Config::get("AllFileValidation.DESIGNS_PDF_MIN_SIZE"),
             'bom_image' => 'required|mimes:xls,xlsx|max:' . Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE") . '|min:' . Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE")
@@ -95,68 +99,71 @@ class DesignUploadController extends Controller
                 ->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
-    public function getUploadedDesignSendEstimation() { //checked
+    public function getUploadedDesignSendEstimation()
+    { //checked
         try {
             $data_output = $this->service->getUploadedDesignSendEstimation();
             return view('organizations.designer.design-upload.list-design-upload', compact('data_output'));
         } catch (\Exception $e) {
-            \Log::error('Controller index() error: ' . $e->getMessage());
+            Log::error('Controller index() error: ' . $e->getMessage());
             return back()->with('status', 'error')->with('msg', 'Something went wrong while fetching data.');
         }
-    } 
-    public function addReUploadDesing($id){ //checked
+    }
+    public function addReUploadDesing($id)
+    { //checked
         try {
             $design_revision_for_prod_id = base64_decode($id);
             return view('organizations.designer.design-upload.add-design-re-submit-upload', compact('design_revision_for_prod_id'));
         } catch (\Exception $e) {
             return $e;
         }
-    } 
-     public function updateReUploadDesign(Request $request){ //checked
-            
-        $rules = [
-            'design_image' => 'required|mimes:pdf|max:'.Config::get("AllFileValidation.DESIGNS_PDF_MAX_SIZE").'|min:'.Config::get("AllFileValidation.DESIGNS_PDF_MIN_SIZE").'',
-            // 'bom_image' => 'required|mimes:xls,xlsx|max:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'',
-            
-         ];
+    }
+    public function updateReUploadDesign(Request $request)
+    { //checked
 
-         $messages = [
+        $rules = [
+            'design_image' => 'required|mimes:pdf|max:' . Config::get("AllFileValidation.DESIGNS_PDF_MAX_SIZE") . '|min:' . Config::get("AllFileValidation.DESIGNS_PDF_MIN_SIZE") . '',
+            // 'bom_image' => 'required|mimes:xls,xlsx|max:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'',
+
+        ];
+
+        $messages = [
             'design_image.required' => 'The design file is required.',
             'design_image.mimes' => 'The design file must be in PDF format.',
-            'design_image.max' => 'The design file size must not exceed'.Config::get("AllFileValidation.DESIGNS_PDF_MAX_SIZE").'KB .',
-            'design_image.min' => 'The design file size must not be less than'.Config::get("AllFileValidation.DESIGNS_PDF_MIN_SIZE").'KB .',
+            'design_image.max' => 'The design file size must not exceed' . Config::get("AllFileValidation.DESIGNS_PDF_MAX_SIZE") . 'KB .',
+            'design_image.min' => 'The design file size must not be less than' . Config::get("AllFileValidation.DESIGNS_PDF_MIN_SIZE") . 'KB .',
             // 'bom_image.required' => 'The BOM file is required.',
             // 'bom_image.mimes' => 'The BOM file must be in XLS or XLSX format.',
             // 'bom_image.max' => 'The BOM file size must not exceed'.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'KB .',
             // 'bom_image.min' => 'The BOM file size must not be less than'.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'KB .',
-                 ];
- 
-         try {
-             $validation = Validator::make($request->all(),$rules, $messages);
-             if ($validation->fails()) {
-                 return redirect()->back()
-                     ->withInput()
-                     ->withErrors($validation);
-             } else {
-                 
-                 $update_data = $this->service->updateReUploadDesign($request);
-                 
-                 if ($update_data) {
-                     $msg = $update_data['msg'];
-                     $status = $update_data['status'];
-                     if ($status == 'success') {
-                         return redirect('designdept/list-updated-design')->with(compact('msg', 'status'));
-                     } else {
-                         return redirect()->back()
-                             ->withInput()
-                             ->with(compact('msg', 'status'));
-                     }
-                 }
-             }
-         } catch (Exception $e) {
-             return redirect()->back()
-                 ->withInput()
-                 ->with(['msg' => $e->getMessage(), 'status' => 'error']);
-         }
-     }
+        ];
+
+        try {
+            $validation = Validator::make($request->all(), $rules, $messages);
+            if ($validation->fails()) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors($validation);
+            } else {
+
+                $update_data = $this->service->updateReUploadDesign($request);
+
+                if ($update_data) {
+                    $msg = $update_data['msg'];
+                    $status = $update_data['status'];
+                    if ($status == 'success') {
+                        return redirect('designdept/list-updated-design')->with(compact('msg', 'status'));
+                    } else {
+                        return redirect()->back()
+                            ->withInput()
+                            ->with(compact('msg', 'status'));
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+        }
+    }
 }

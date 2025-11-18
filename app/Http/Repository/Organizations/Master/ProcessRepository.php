@@ -1,19 +1,19 @@
 <?php
+
 namespace App\Http\Repository\Organizations\Master;
-use Illuminate\Database\QueryException;
-use DB;
-use Illuminate\Support\Carbon;
-use App\Models\ {
-ProcessMaster
+
+use App\Models\{
+    ProcessMaster
 };
-use Config;
 
-class ProcessRepository  {
+class ProcessRepository
+{
 
 
-    public function getAll(){
+    public function getAll()
+    {
         try {
-          $data_output = ProcessMaster::orderBy('updated_at', 'desc')->get();
+            $data_output = ProcessMaster::orderBy('updated_at', 'desc')->get();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -22,7 +22,7 @@ class ProcessRepository  {
 
 
     public function addAll($request)
-    {   
+    {
         try {
 
             $dataOutput = new ProcessMaster();
@@ -32,7 +32,6 @@ class ProcessRepository  {
             return [
                 'status' => 'success'
             ];
-
         } catch (\Exception $e) {
             return [
                 'msg' => $e->getMessage(),
@@ -41,8 +40,9 @@ class ProcessRepository  {
         }
     }
 
-    public function getById($id){
-    try {
+    public function getById($id)
+    {
+        try {
             $dataOutputByid = ProcessMaster::find($id);
             if ($dataOutputByid) {
                 return $dataOutputByid;
@@ -57,45 +57,45 @@ class ProcessRepository  {
         }
     }
 
-      public function updateAll($request)
-{
-    try {
-        $return_data = array();
+    public function updateAll($request)
+    {
+        try {
+            $return_data = array();
 
-        $dataOutput = ProcessMaster::find($request->id);
+            $dataOutput = ProcessMaster::find($request->id);
 
-        if (!$dataOutput) {
+            if (!$dataOutput) {
+                return [
+                    'msg' => 'Update Data not found.',
+                    'status' => 'error'
+                ];
+            }
+
+            $dataOutput->name = $request->name;
+            $dataOutput->save();
+            $return_data['data'] = $dataOutput;
+            $return_data['status'] = 'success';
+
+            return $return_data;
+        } catch (\Exception $e) {
             return [
-                'msg' => 'Update Data not found.',
-                'status' => 'error'
+                'msg' => 'Failed to Update Data.',
+                'status' => 'error',
+                'error' => $e->getMessage()
             ];
         }
-
-        $dataOutput->name = $request->name;
-        $dataOutput->save();
-        $return_data['data'] = $dataOutput;
-        $return_data['status'] = 'success';
-
-        return $return_data;
-    } catch (\Exception $e) {
-        return [
-            'msg' => 'Failed to Update Data.',
-            'status' => 'error',
-            'error' => $e->getMessage()
-        ];
     }
-}
 
 
 
-    public function deleteById($id){
-            try {
-                $deleteDataById = ProcessMaster::find($id);
-                $deleteDataById->delete();
-                return $deleteDataById;
-            
-            } catch (\Exception $e) {
-                return $e;
-            }    }
-
+    public function deleteById($id)
+    {
+        try {
+            $deleteDataById = ProcessMaster::find($id);
+            $deleteDataById->delete();
+            return $deleteDataById;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
 }

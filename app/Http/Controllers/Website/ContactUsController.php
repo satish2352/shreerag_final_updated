@@ -1,30 +1,34 @@
 <?php
 
 namespace App\Http\Controllers\Website;
+
+use Exception;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Services\Website\ContactUsServices;
-use Session;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class ContactUsController extends Controller
- {
+{
+    protected $service;
+
     public function __construct()
- {
+    {
         $this->service = new ContactUsServices();
     }
 
     public function getContactUs()
- {
+    {
 
         try {
-            return view( 'website.pages.contactus' );
-        } catch ( \Exception $e ) {
+            return view('website.pages.contactus');
+        } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function addContactUs( Request $request ) {
+    public function addContactUs(Request $request)
+    {
         $rules = [
             'full_name' => 'required',
             'email' => 'required|email',
@@ -33,6 +37,7 @@ class ContactUsController extends Controller
             'message' => 'required',
             'g-recaptcha-response' => 'required|captcha',
         ];
+
         $messages = [
             'full_name.required' => 'Please Enter Full Name.',
             'email.required' => 'Please Enter Email.',
@@ -42,33 +47,31 @@ class ContactUsController extends Controller
             'subject.required' => 'Please Enter Company Name.',
             'message.required' => 'Please Enter Message.',
             'g-recaptcha-response.captcha' => 'Captcha error! try again later or contact site admin.',
-            'g-recaptcha-response.required' =>'Please verify that you are not a robot.',
+            'g-recaptcha-response.required' => 'Please verify that you are not a robot.',
         ];
+
         try {
-            // Validate request data
-            $validation = Validator::make( $request->all(), $rules, $messages );
+            $validation = Validator::make($request->all(), $rules, $messages);
 
-            if ( $validation->fails() ) {
-                return redirect( 'contactus' )
-                ->withInput()
-                ->withErrors( $validation );
+            if ($validation->fails()) {
+                return redirect('contactus')
+                    ->withInput()
+                    ->withErrors($validation);
             }
 
-            // Save the contact us data using your service
-            $add_contact = $this->service->addAll( $request );
+            $add_contact = $this->service->addAll($request);
 
-            if ( $add_contact ) {
-                $request->session()->flash( 'success', 'Contact Us Information Submitted Successfully!!' );
-                return redirect( 'contactus' )->with( 'sweet_success', 'Contact Us Information Submitted Successfully!!' );
+            if ($add_contact) {
+                $request->session()->flash('success', 'Contact Us Information Submitted Successfully!!');
+                return redirect('contactus')->with('sweet_success', 'Contact Us Information Submitted Successfully!!');
             } else {
-                $request->session()->flash( 'error', 'Failed to Submit Contact Us Information.' );
-                return redirect( 'contactus' )->with( 'sweet_error', 'Failed to Submit Contact Us Information.' );
+                $request->session()->flash('error', 'Failed to Submit Contact Us Information.');
+                return redirect('contactus')->with('sweet_error', 'Failed to Submit Contact Us Information.');
             }
-        } catch ( Exception $e ) {
-            return redirect( 'contactus' )->withInput()->with( [
+        } catch (Exception $e) {
+            return redirect('contactus')->withInput()->with([
                 'sweet_error' => 'An error occurred: ' . $e->getMessage(),
-            ] );
+            ]);
         }
     }
-
 }

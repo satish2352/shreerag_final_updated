@@ -1,14 +1,11 @@
 <?php
+
 namespace App\Http\Repository\Admin\LoginRegister;
 
-use Illuminate\Database\QueryException;
-use DB;
-use Illuminate\Support\Carbon;
-use Session;
 use App\Models\{
 	User,
 	Permissions,
-	RolesPermissions,
+
 	Roles
 };
 use Illuminate\Support\Facades\Mail;
@@ -16,26 +13,28 @@ use Illuminate\Support\Facades\Mail;
 class RegisterRepository
 {
 
-	public function getUsersList() {
-        $data_users = User::join('roles', function($join) {
-							$join->on('users.role_id', '=', 'roles.id');
-						})
-						// ->where('users.is_active','=',true)
-						->select('roles.role_name',
-								'users.u_email',
-								'users.f_name',
-								'users.m_name',
-								'users.l_name',
-								'users.number',
-								'users.designation',
-								'users.address',
-								'users.state',
-								'users.city',
-								'users.pincode',
-								'users.id',
-								'users.is_active'
-							)->get();
-							// ->toArray();
+	public function getUsersList()
+	{
+		$data_users = User::join('roles', function ($join) {
+			$join->on('users.role_id', '=', 'roles.id');
+		})
+			// ->where('users.is_active','=',true)
+			->select(
+				'roles.role_name',
+				'users.u_email',
+				'users.f_name',
+				'users.m_name',
+				'users.l_name',
+				'users.number',
+				'users.designation',
+				'users.address',
+				'users.state',
+				'users.city',
+				'users.pincode',
+				'users.id',
+				'users.is_active'
+			)->get();
+		// ->toArray();
 
 		return $data_users;
 	}
@@ -64,34 +63,33 @@ class RegisterRepository
 		// $this->insertRolesPermissions($request, $last_insert_id);
 
 		$imageProfile = $last_insert_id . '_english.' . $request->user_profile->getClientOriginalExtension();
-        
-        $user_detail = User::find($last_insert_id); // Assuming $request directly contains the ID
-        $user_detail->user_profile = $imageProfile; // Save the image filename to the database
-        $user_detail->save();
-        return $last_insert_id;
 
+		$user_detail = User::find($last_insert_id); // Assuming $request directly contains the ID
+		$user_detail->user_profile = $imageProfile; // Save the image filename to the database
+		$user_detail->save();
+		return $last_insert_id;
 	}
 
 	public function update($request)
 	{
-        $ipAddress = getIPAddress($request);
-		$user_data = User::where('id',$request['edit_id']) 
-						->update([
-							// 'u_uname' => $request['u_uname'],
-							'role_id' => $request['role_id'],
-							'f_name' => $request['f_name'],
-							'm_name' => $request['m_name'],
-							'l_name' => $request['l_name'],
-							'number' => $request['number'],
-							'designation' => $request['designation'],
-							'address' => $request['address'],
-							'state' => $request['state'],
-							'city' => $request['city'],
-							'pincode' => $request['pincode'],
-							'is_active' => isset($request['is_active']) ? true :false,
-						]);
-		
-		
+		$ipAddress = getIPAddress($request);
+		$user_data = User::where('id', $request['edit_id'])
+			->update([
+				// 'u_uname' => $request['u_uname'],
+				'role_id' => $request['role_id'],
+				'f_name' => $request['f_name'],
+				'm_name' => $request['m_name'],
+				'l_name' => $request['l_name'],
+				'number' => $request['number'],
+				'designation' => $request['designation'],
+				'address' => $request['address'],
+				'state' => $request['state'],
+				'city' => $request['city'],
+				'pincode' => $request['pincode'],
+				'is_active' => isset($request['is_active']) ? true : false,
+			]);
+
+
 		return $request->edit_id;
 	}
 	public function checkDupCredentials($request)
@@ -143,53 +141,54 @@ class RegisterRepository
 			)->get()
 			->toArray();
 
-	$data_users_data = User::join('roles', function($join) {
-						$join->on('users.role_id', '=', 'roles.id');
-					})
-					// ->join('roles_permissions', function($join) {
-					// 	$join->on('users.id', '=', 'roles_permissions.user_id');
-					// })
-					->where('users.id','=',$reuest->edit_id)
-					// ->where('roles_permissions.is_active','=',true)
-					// ->where('users.is_active','=',true)
-					->select('roles.id as role_id',
-							// 'users.u_uname',
-							'users.u_password',
-							'users.u_email',
-							'users.f_name',
-							'users.m_name',
-							'users.l_name',
-							'users.number',
-							'users.designation',
-							'users.address',
-							'users.state',
-							'users.city',
-							'users.pincode',
-							'users.id',
-							'users.is_active',
-						)->get()
-						->toArray();
-						
+		$data_users_data = User::join('roles', function ($join) {
+			$join->on('users.role_id', '=', 'roles.id');
+		})
+			// ->join('roles_permissions', function($join) {
+			// 	$join->on('users.id', '=', 'roles_permissions.user_id');
+			// })
+			->where('users.id', '=', $reuest->edit_id)
+			// ->where('roles_permissions.is_active','=',true)
+			// ->where('users.is_active','=',true)
+			->select(
+				'roles.id as role_id',
+				// 'users.u_uname',
+				'users.u_password',
+				'users.u_email',
+				'users.f_name',
+				'users.m_name',
+				'users.l_name',
+				'users.number',
+				'users.designation',
+				'users.address',
+				'users.state',
+				'users.city',
+				'users.pincode',
+				'users.id',
+				'users.is_active',
+			)->get()
+			->toArray();
+
 		$data_users['data_users'] = $data_users_data[0];
 		return $data_users;
 	}
 
 	public function delete($id)
-    {
-        try {
-            $user = User::find($id);
-            if ($user) {
-              
-                $user->delete();
-               
-                return $user;
-            } else {
-                return null;
-            }
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
+	{
+		try {
+			$user = User::find($id);
+			if ($user) {
+
+				$user->delete();
+
+				return $user;
+			} else {
+				return null;
+			}
+		} catch (\Exception $e) {
+			return $e;
+		}
+	}
 
 	public function getById($id)
 	{
@@ -198,9 +197,9 @@ class RegisterRepository
 				->leftJoin('tbl_area as state_user', 'users.state', '=', 'state_user.location_id')
 				->leftJoin('tbl_area as city_user', 'users.city', '=', 'city_user.location_id')
 				->where('users.id', $id)
-				->select('users.f_name','users.m_name','users.l_name','users.u_email','users.number','users.designation','users.address','users.pincode','users.user_profile','roles.role_name','state_user.name as state','city_user.name as city')
+				->select('users.f_name', 'users.m_name', 'users.l_name', 'users.u_email', 'users.number', 'users.designation', 'users.address', 'users.pincode', 'users.user_profile', 'roles.role_name', 'state_user.name as state', 'city_user.name as city')
 				->first();
-	
+
 			if ($user) {
 				return $user;
 			} else {
@@ -214,39 +213,40 @@ class RegisterRepository
 		}
 	}
 
-	public function updateOne($request){
-        try {
-            $user = User::find($request); // Assuming $request directly contains the ID
+	public function updateOne($request)
+	{
+		try {
+			$user = User::find($request); // Assuming $request directly contains the ID
 
-            // Assuming 'is_active' is a field in the userr model
-            if ($user) {
-                $is_active = $user->is_active === 1 ? 0 : 1;
-                $user->is_active = $is_active;
-                $user->save();
+			// Assuming 'is_active' is a field in the userr model
+			if ($user) {
+				$is_active = $user->is_active === 1 ? 0 : 1;
+				$user->is_active = $is_active;
+				$user->save();
 
-                return [
-                    'msg' => 'User updated successfully.',
-                    'status' => 'success'
-                ];
-            }
+				return [
+					'msg' => 'User updated successfully.',
+					'status' => 'success'
+				];
+			}
 
-            return [
-                'msg' => 'User not found.',
-                'status' => 'error'
-            ];
-        } catch (\Exception $e) {
-            return [
-                'msg' => 'Failed to update User.',
-                'status' => 'error'
-            ];
-        }
-    }
+			return [
+				'msg' => 'User not found.',
+				'status' => 'error'
+			];
+		} catch (\Exception $e) {
+			return [
+				'msg' => 'Failed to update User.',
+				'status' => 'error'
+			];
+		}
+	}
 
 	public function getProfile()
 	{
 		$user_detail = User::where('is_active', true)
 			->where('id', session()->get('user_id'))
-			->select('id', 'f_name', 'm_name', 'l_name', 'u_email', 'u_password', 'number', 'designation','user_profile')
+			->select('id', 'f_name', 'm_name', 'l_name', 'u_email', 'u_password', 'number', 'designation', 'user_profile')
 			->first();
 		return $user_detail;
 	}
@@ -255,18 +255,18 @@ class RegisterRepository
 	public function updateProfile($request)
 	{
 		try {
-			
+
 			$return_data = array();
 			$otp = rand(6, 999999);
 
-			
+
 			$update_data = [
 				'f_name' => $request->f_name,
 				'm_name' => $request->m_name,
 				'l_name' => $request->l_name,
 				'designation' => $request->designation,
 			];
-			
+
 			if (isset($return_data['user_profile'])) {
 				$previousUserProfile = $update_data->user_profile;
 			}
@@ -281,7 +281,6 @@ class RegisterRepository
 				$return_data['u_password_new'] = '';
 				$return_data['msg'] = "OTP sent on registered on email";
 				$return_data['msg_alert'] = "green";
-
 			}
 
 			if ((isset($request->u_password) && $request->u_password !== '') && ($request->number == $request->old_number)) {
@@ -312,18 +311,16 @@ class RegisterRepository
 
 				$this->sendOTPEMAIL($otp, $request);
 			}
-			
+
 			User::where('id', $request->edit_user_id)->update($update_data);
 
 			$user_data = User::find($request->edit_user_id);
 			$previousUserProfile = $user_data->english_image;
 			$last_insert_id = $user_data->id;
 
-            $return_data['last_insert_id'] = $last_insert_id;
-            $return_data['user_profile'] = $previousUserProfile;
+			$return_data['last_insert_id'] = $last_insert_id;
+			$return_data['user_profile'] = $previousUserProfile;
 			return $return_data;
-
-
 		} catch (\Exception $e) {
 			info($e);
 		}
@@ -331,7 +328,8 @@ class RegisterRepository
 		// return $update_data;
 	}
 
-	public function sendOTPEMAIL($otp, $request) {
+	public function sendOTPEMAIL($otp, $request)
+	{
 		try {
 			$email_data = [
 				'otp' => $otp,
@@ -348,5 +346,4 @@ class RegisterRepository
 			info($e);
 		}
 	}
-	
 }

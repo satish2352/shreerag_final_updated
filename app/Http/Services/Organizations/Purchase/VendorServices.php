@@ -1,16 +1,21 @@
 <?php
-namespace App\Http\Services\Organizations\Purchase;
-use App\Http\Repository\Organizations\Purchase\VendorRepository;
-use Carbon\Carbon;
 
-use Config;
-    class VendorServices
+namespace App\Http\Services\Organizations\Purchase;
+
+use App\Http\Repository\Organizations\Purchase\VendorRepository;
+use Exception;
+
+class VendorServices
+{
+    protected $repo;
+    protected $service;
+
+    public function __construct()
     {
-        protected $repo;
-        public function __construct(){
         $this->repo = new VendorRepository();
     }
-    public function getAll(){
+    public function getAll()
+    {
         try {
             return $this->repo->getAll();
         } catch (\Exception $e) {
@@ -25,42 +30,44 @@ use Config;
                 return ['status' => 'success', 'msg' => 'This business send to Design Department Successfully.'];
             } else {
                 return ['status' => 'error', 'msg' => 'Failed to Add Data.'];
-            }  
+            }
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
-        }      
+        }
     }
-    public function getById($id){
+    public function getById($id)
+    {
         try {
             return $this->repo->getById($id);
         } catch (\Exception $e) {
             return $e;
         }
     }
-    public function updateAll($request){
+    public function updateAll($request)
+    {
         try {
             $return_data = $this->repo->updateAll($request);
             if ($return_data) {
                 return ['status' => 'success', 'msg' => 'Data Updated Successfully.'];
             } else {
                 return ['status' => 'error', 'msg' => 'Data  Not Updated.'];
-            }  
+            }
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
-        }      
+        }
     }
     public function deleteById($id)
     {
         try {
             $delete = $this->repo->deleteById($id);
-           
+
             if ($delete) {
                 return ['status' => 'success', 'msg' => 'Deleted Successfully.'];
             } else {
                 return ['status' => 'error', 'msg' => ' Not Deleted.'];
-            }  
+            }
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
-        } 
+        }
     }
 }

@@ -1,18 +1,22 @@
 <?php
-namespace App\Http\Services\Organizations\Designers;
-use App\Http\Repository\Organizations\Designers\AllListRepositor;
-use Carbon\Carbon;
 
-use Config;
+namespace App\Http\Services\Organizations\Designers;
+
+use App\Http\Repository\Organizations\Designers\AllListRepositor;
+use Exception;
+
 class AllListServices
 {
     protected $repo;
-    public function __construct() {
+    protected $service;
+
+    public function __construct()
+    {
 
         $this->repo = new AllListRepositor();
-
     }
-    public function acceptdesignbyProduct(){
+    public function acceptdesignbyProduct()
+    {
         try {
             $data_output = $this->repo->acceptdesignbyProduct();
             return $data_output;
@@ -20,7 +24,8 @@ class AllListServices
             return $e;
         }
     }
-        public function getAllListCorrectedDesignSendToProduction(){
+    public function getAllListCorrectedDesignSendToProduction()
+    {
         try {
             $data_output = $this->repo->getAllListCorrectedDesignSendToProduction();
             return $data_output;
@@ -28,22 +33,22 @@ class AllListServices
             return $e;
         }
     }
-    public function getAllListDesignRecievedForCorrection(){
+    public function getAllListDesignRecievedForCorrection()
+    {
         try {
             $data_output =  $this->repo->getAllListDesignRecievedForCorrection();
-           return $data_output;
+            return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
-    } 
+    }
 
-    public function getAllListCorrectionToDesignFromProduction(){
+    public function getAllListCorrectionToDesignFromProduction()
+    {
         try {
             return $this->repo->getAllListCorrectionToDesignFromProduction();
         } catch (\Exception $e) {
             return $e;
         }
-    } 
-
-
+    }
 }

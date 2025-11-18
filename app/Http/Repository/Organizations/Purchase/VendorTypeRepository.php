@@ -1,19 +1,19 @@
 <?php
+
 namespace App\Http\Repository\Organizations\Purchase;
-use Illuminate\Database\QueryException;
-use DB;
-use Illuminate\Support\Carbon;
-use App\Models\ {
-VendorType
+
+use App\Models\{
+    VendorType
 };
-use Config;
 
-class VendorTypeRepository  {
+class VendorTypeRepository
+{
 
 
-    public function getAll(){
+    public function getAll()
+    {
         try {
-          $data_output = VendorType::get();
+            $data_output = VendorType::get();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -22,7 +22,7 @@ class VendorTypeRepository  {
 
 
     public function addAll($request)
-    {   
+    {
         try {
 
             $dataOutput = new VendorType();
@@ -32,7 +32,6 @@ class VendorTypeRepository  {
             return [
                 'status' => 'success'
             ];
-
         } catch (\Exception $e) {
             return [
                 'msg' => $e->getMessage(),
@@ -41,8 +40,9 @@ class VendorTypeRepository  {
         }
     }
 
-    public function getById($id){
-    try {
+    public function getById($id)
+    {
+        try {
             $dataOutputByid = VendorType::find($id);
             if ($dataOutputByid) {
                 return $dataOutputByid;
@@ -57,45 +57,45 @@ class VendorTypeRepository  {
         }
     }
 
-      public function updateAll($request)
-{
-    try {
-        $return_data = array();
+    public function updateAll($request)
+    {
+        try {
+            $return_data = array();
 
-        $dataOutput = VendorType::find($request->id);
+            $dataOutput = VendorType::find($request->id);
 
-        if (!$dataOutput) {
+            if (!$dataOutput) {
+                return [
+                    'msg' => 'Update Data not found.',
+                    'status' => 'error'
+                ];
+            }
+
+            $dataOutput->name = $request->name;
+            $dataOutput->save();
+            $return_data['data'] = $dataOutput;
+            $return_data['status'] = 'success';
+
+            return $return_data;
+        } catch (\Exception $e) {
             return [
-                'msg' => 'Update Data not found.',
-                'status' => 'error'
+                'msg' => 'Failed to Update Data.',
+                'status' => 'error',
+                'error' => $e->getMessage()
             ];
         }
-
-        $dataOutput->name = $request->name;
-        $dataOutput->save();
-        $return_data['data'] = $dataOutput;
-        $return_data['status'] = 'success';
-
-        return $return_data;
-    } catch (\Exception $e) {
-        return [
-            'msg' => 'Failed to Update Data.',
-            'status' => 'error',
-            'error' => $e->getMessage()
-        ];
     }
-}
 
 
 
-    public function deleteById($id){
-            try {
-                $deleteDataById = VendorType::find($id);
-                $deleteDataById->delete();
-                return $deleteDataById;
-            
-            } catch (\Exception $e) {
-                return $e;
-            }    }
-
+    public function deleteById($id)
+    {
+        try {
+            $deleteDataById = VendorType::find($id);
+            $deleteDataById->delete();
+            return $deleteDataById;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
 }

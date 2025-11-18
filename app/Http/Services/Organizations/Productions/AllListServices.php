@@ -1,27 +1,32 @@
 <?php
-namespace App\Http\Services\Organizations\Productions;
-use App\Http\Repository\Organizations\Productions\AllListRepository;
-use Carbon\Carbon;
 
-use Config;
+namespace App\Http\Services\Organizations\Productions;
+
+use App\Http\Repository\Organizations\Productions\AllListRepository;
+use Exception;
+
 class AllListServices
 {
     protected $repo;
-    public function __construct() {
+    protected $service;
+
+    public function __construct()
+    {
 
         $this->repo = new AllListRepository();
-
     }
-    public function getAllNewRequirement(){ //checked
+    public function getAllNewRequirement()
+    { //checked
         try {
             $data_output = $this->repo->getAllNewRequirement();
-          
+
             return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
-    public function getAllNewRequirementBusinessWise($business_id){ //checked
+    public function getAllNewRequirementBusinessWise($business_id)
+    { //checked
         try {
             $data_output = $this->repo->getAllNewRequirementBusinessWise($business_id);
             return $data_output;
@@ -29,16 +34,18 @@ class AllListServices
             return $e;
         }
     }
-    public function getAllacceptdesign(){ //checked
+    public function getAllacceptdesign()
+    { //checked
         try {
             $data_output = $this->repo->getAllacceptdesign();
-          
+
             return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
-    public function acceptdesignlistBusinessWise($business_id){ //checked
+    public function acceptdesignlistBusinessWise($business_id)
+    { //checked
         try {
             $data_output = $this->repo->acceptdesignlistBusinessWise($business_id);
             return $data_output;
@@ -46,17 +53,19 @@ class AllListServices
             return $e;
         }
     }
-    public function getAllrejectdesign(){
+    public function getAllrejectdesign()
+    {
         try {
             $data_output = $this->repo->getAllrejectdesign();
-            
-            return $data_output; 
+
+            return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function getAllreviseddesign(){//checked
+    public function getAllreviseddesign()
+    { //checked
         try {
             $data_output = $this->repo->getAllreviseddesign();
             return $data_output;
@@ -65,10 +74,11 @@ class AllListServices
         }
     }
 
-    public function getAllListMaterialRecievedToProduction(){
+    public function getAllListMaterialRecievedToProduction()
+    {
         try {
-          $data_output = $this->repo->getAllListMaterialRecievedToProduction();
-          return $data_output;
+            $data_output = $this->repo->getAllListMaterialRecievedToProduction();
+            return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
@@ -77,18 +87,18 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->getAllListMaterialRecievedToProductionBusinessWise($id);
-            
+
             return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
-    
+
     // public function getAllListMaterialRecievedToProductionBusinessWise($id)
     // {
     //     try {
     //         $data_output = $this->repo->getAllListMaterialRecievedToProductionBusinessWise($id);
-    
+
     //         return $data_output;
 
     //     } catch (\Exception $e) {
@@ -96,27 +106,30 @@ class AllListServices
     //     }
     // }
 
-    public function getAllCompletedProduction(){ //checked
+    public function getAllCompletedProduction()
+    { //checked
         try {
-          $data_output = $this->repo->getAllCompletedProduction();
-          return $data_output;
+            $data_output = $this->repo->getAllCompletedProduction();
+            return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function getAllCompletedProductionSendToLogistics(){
+    public function getAllCompletedProductionSendToLogistics()
+    {
         try {
-          $data_output = $this->repo->getAllCompletedProductionSendToLogistics();
-          return $data_output;
+            $data_output = $this->repo->getAllCompletedProductionSendToLogistics();
+            return $data_output;
         } catch (\Exception $e) {
             return $e;
         }
     }
-    public function getAllCompletedProductionSendToLogisticsProductWise($id) {
+    public function getAllCompletedProductionSendToLogisticsProductWise($id)
+    {
         try {
             $data_output = $this->repo->getAllCompletedProductionSendToLogisticsProductWise($id);
-return $data_output;
+            return $data_output;
         } catch (\Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }

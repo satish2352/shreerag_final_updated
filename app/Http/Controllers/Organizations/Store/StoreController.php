@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers\Organizations\Store;
 
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Services\Organizations\Store\StoreServices;
-use Session;
-use Validator;
-use Config;
-use Carbon;
-use App\Models\ {
+use Illuminate\Support\Facades\Validator;
+use Exception;
+use App\Models\{
     PartItem,
     User,
     UnitMaster,
     ItemStock,
     GRNModel
-
 };
 
 
 class StoreController extends Controller
 {
+    protected $service;
+
     public function __construct()
     {
         $this->service = new StoreServices();
@@ -53,7 +53,7 @@ class StoreController extends Controller
 
     public function storeRequesition(Request $request)
     {
-               try {
+        try {
             $add_record = $this->service->storeRequesition($request);
 
             if ($add_record) {
@@ -85,7 +85,8 @@ class StoreController extends Controller
             return $e;
         }
     }
-    public function editProductMaterialWiseAddNewReq($id) { //checked
+    public function editProductMaterialWiseAddNewReq($id)
+    { //checked
         try {
             $id = $id;
             $editData = $this->service->editProductMaterialWiseAddNewReq($id);
@@ -95,8 +96,8 @@ class StoreController extends Controller
                 'productDetails' => $editData['productDetails'],
                 'dataGroupedById' => $editData['dataGroupedById'],
                 'dataOutputPartItem' => $dataOutputPartItem,
-                'dataOutputUnitMaster'=>$dataOutputUnitMaster,
-              
+                'dataOutputUnitMaster' => $dataOutputUnitMaster,
+
                 'id' => $id
             ]);
         } catch (\Exception $e) {
@@ -104,165 +105,167 @@ class StoreController extends Controller
         }
     }
     public function checkStockQuantity(Request $request)
-{
-    try {
-        $partItemId = $request->input('part_item_id');
-        $quantity = $request->input('quantity');
-        $materialSendProduction = $request->input('material_send_production');
-        $quantityMinusStatus = $request->input('quantity_minus_status');
-        $isInsertOrUpdate = $request->input('is_insert_or_update', false); // Add a flag to check if it's a new submission
+    {
+        try {
+            $partItemId = $request->input('part_item_id');
+            $quantity = $request->input('quantity');
+            $materialSendProduction = $request->input('material_send_production');
+            $quantityMinusStatus = $request->input('quantity_minus_status');
+            $isInsertOrUpdate = $request->input('is_insert_or_update', false); // Add a flag to check if it's a new submission
 
-        \Log::info('Checking stock quantity', [
-            'part_item_id' => $partItemId,
-            'quantity' => $quantity,
-            'material_send_production' => $materialSendProduction,
-            'quantity_minus_status' => $quantityMinusStatus,
-            'is_insert_or_update' => $isInsertOrUpdate
-        ]);
+            Log::info('Checking stock quantity', [
+                'part_item_id' => $partItemId,
+                'quantity' => $quantity,
+                'material_send_production' => $materialSendProduction,
+                'quantity_minus_status' => $quantityMinusStatus,
+                'is_insert_or_update' => $isInsertOrUpdate
+            ]);
 
-        // **Bypass stock validation if it's a new insert or update request**
-        if ($isInsertOrUpdate) {
+            // **Bypass stock validation if it's a new insert or update request**
+            if ($isInsertOrUpdate) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Stock check skipped (Insert/Update Mode)',
+                ]);
+            }
+
+            // If already processed, SKIP checking stock
+            if ($materialSendProduction == 1 && $quantityMinusStatus == 'done') {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Stock check skipped (already processed)',
+                ]);
+            }
+
+            // Validate inputs
+            if (!$partItemId || !$quantity) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Invalid inputs. Please provide both part_item_id and quantity.',
+                ], 400);
+            }
+
+            // Fetch the part item stock
+            $partItem = ItemStock::find($partItemId);
+
+            if (!$partItem) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Part Item not found',
+                ], 404);
+            }
+
+            // Get the available quantity
+            $availableQuantity = $partItem->quantity ?? 0;
+
+            if ($quantity > $availableQuantity) {
+                return response()->json([
+                    'status' => 'error',
+                    'available_quantity' => $availableQuantity,
+                    'message' => 'Insufficient stock',
+                ]);
+            }
+
+            // Sufficient stock
             return response()->json([
                 'status' => 'success',
-                'message' => 'Stock check skipped (Insert/Update Mode)',
-            ]);
-        }
-
-        // If already processed, SKIP checking stock
-        if ($materialSendProduction == 1 && $quantityMinusStatus == 'done') {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Stock check skipped (already processed)',
-            ]);
-        }
-
-        // Validate inputs
-        if (!$partItemId || !$quantity) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Invalid inputs. Please provide both part_item_id and quantity.',
-            ], 400);
-        }
-
-        // Fetch the part item stock
-        $partItem = ItemStock::find($partItemId);
-
-        if (!$partItem) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Part Item not found',
-            ], 404);
-        }
-
-        // Get the available quantity
-        $availableQuantity = $partItem->quantity ?? 0;
-
-        if ($quantity > $availableQuantity) {
-            return response()->json([
-                'status' => 'error',
                 'available_quantity' => $availableQuantity,
-                'message' => 'Insufficient stock',
             ]);
+        } catch (\Exception $e) {
+            Log::error('Error in checkStockQuantity:', ['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Internal Server Error',
+            ], 500);
         }
-
-        // Sufficient stock
-        return response()->json([
-            'status' => 'success',
-            'available_quantity' => $availableQuantity,
-        ]);
-    } catch (\Exception $e) {
-        \Log::error('Error in checkStockQuantity:', ['error' => $e->getMessage()]);
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Internal Server Error',
-        ], 500);
     }
-}
-// public function checkStockQuantity(Request $request)
-// {
-//     try {
-//         $partItemId = $request->input('part_item_id');
-//         $quantity = $request->input('quantity');
-//         $materialSendProduction = $request->input('material_send_production');
-//         $quantityMinusStatus = $request->input('quantity_minus_status');
+    // public function checkStockQuantity(Request $request)
+    // {
+    //     try {
+    //         $partItemId = $request->input('part_item_id');
+    //         $quantity = $request->input('quantity');
+    //         $materialSendProduction = $request->input('material_send_production');
+    //         $quantityMinusStatus = $request->input('quantity_minus_status');
 
-//         \Log::info('Checking stock quantity', [
-//             'part_item_id' => $partItemId,
-//             'quantity' => $quantity,
-//             'material_send_production' => $materialSendProduction,
-//             'quantity_minus_status' => $quantityMinusStatus
-//         ]);
+    //         \Log::info('Checking stock quantity', [
+    //             'part_item_id' => $partItemId,
+    //             'quantity' => $quantity,
+    //             'material_send_production' => $materialSendProduction,
+    //             'quantity_minus_status' => $quantityMinusStatus
+    //         ]);
 
-//         // If already processed, SKIP checking stock
-//         if ($materialSendProduction == 1 && $quantityMinusStatus == 'done') {
-//             return response()->json([
-//                 'status' => 'success',
-//                 'message' => 'Stock check skipped (already processed)',
-//             ]);
-//         }
+    //         // If already processed, SKIP checking stock
+    //         if ($materialSendProduction == 1 && $quantityMinusStatus == 'done') {
+    //             return response()->json([
+    //                 'status' => 'success',
+    //                 'message' => 'Stock check skipped (already processed)',
+    //             ]);
+    //         }
 
-//         // Validate inputs
-//         if (!$partItemId || !$quantity) {
-//             return response()->json([
-//                 'status' => 'error',
-//                 'message' => 'Invalid inputs. Please provide both part_item_id and quantity.',
-//             ], 400);
-//         }
+    //         // Validate inputs
+    //         if (!$partItemId || !$quantity) {
+    //             return response()->json([
+    //                 'status' => 'error',
+    //                 'message' => 'Invalid inputs. Please provide both part_item_id and quantity.',
+    //             ], 400);
+    //         }
 
-//         // Fetch the part item stock
-//         $partItem = ItemStock::find($partItemId);
+    //         // Fetch the part item stock
+    //         $partItem = ItemStock::find($partItemId);
 
-//         if (!$partItem) {
-//             return response()->json([
-//                 'status' => 'error',
-//                 'message' => 'Part Item not found',
-//             ], 404);
-//         }
+    //         if (!$partItem) {
+    //             return response()->json([
+    //                 'status' => 'error',
+    //                 'message' => 'Part Item not found',
+    //             ], 404);
+    //         }
 
-//         // Get the available quantity
-//         $availableQuantity = $partItem->quantity ?? 0;
+    //         // Get the available quantity
+    //         $availableQuantity = $partItem->quantity ?? 0;
 
-//         if ($quantity > $availableQuantity) {
-//             return response()->json([
-//                 'status' => 'error',
-//                 'available_quantity' => $availableQuantity,
-//                 'message' => 'Insufficient stock',
-//             ]);
-//         }
+    //         if ($quantity > $availableQuantity) {
+    //             return response()->json([
+    //                 'status' => 'error',
+    //                 'available_quantity' => $availableQuantity,
+    //                 'message' => 'Insufficient stock',
+    //             ]);
+    //         }
 
-//         // Sufficient stock
-//         return response()->json([
-//             'status' => 'success',
-//             'available_quantity' => $availableQuantity,
-//         ]);
-//     } catch (\Exception $e) {
-//         \Log::error('Error in checkStockQuantity:', ['error' => $e->getMessage()]);
-//         return response()->json([
-//             'status' => 'error',
-//             'message' => 'Internal Server Error',
-//         ], 500);
-//     }
-// }
+    //         // Sufficient stock
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'available_quantity' => $availableQuantity,
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         \Log::error('Error in checkStockQuantity:', ['error' => $e->getMessage()]);
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Internal Server Error',
+    //         ], 500);
+    //     }
+    // }
 
-    
-    public function updateProductMaterialWiseAddNewReq(Request $request) {
-        $rules = [
-        ];
-        
-        $messages = [
-        ];
-        
+
+    public function updateProductMaterialWiseAddNewReq(Request $request)
+    {
+        $rules = [];
+
+        $messages = [];
+
         $validation = Validator::make($request->all(), $rules, $messages);
-        
+
         if ($validation->fails()) {
             return redirect()->back()->withInput()->withErrors($validation);
         }
-    
+
         try {
-                       $updateData = $this->service->updateProductMaterialWiseAddNewReq($request);
-    
+            $updateData = $this->service->updateProductMaterialWiseAddNewReq($request);
+
             if ($updateData['status'] == 'success') {
-                return redirect('storedept/list-accepted-design-from-prod')->with(['status' => 'success', 'msg' => $updateData['message']]);
+
+                // return redirect('storedept/list-accepted-design-from-prod')->with(['status' => 'success', 'msg' => $updateData['message']]);
+                return redirect()->back()
+                    ->with(['status' => 'success', 'msg' => $updateData['message']]);
             } else {
                 return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $updateData['message']]);
             }
@@ -270,33 +273,34 @@ class StoreController extends Controller
             return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $e->getMessage()]);
         }
     }
-   public function getPartItemRate(Request $request)
-{
-    $partItem = PartItem::find($request->part_item_id);
+    public function getPartItemRate(Request $request)
+    {
+        $partItem = PartItem::find($request->part_item_id);
 
-    if ($partItem) {
-        return response()->json([
-            'status' => 'success',
-            'basic_rate' => $partItem->basic_rate // adjust field name if different
-        ]);
-    } else {
-        return response()->json(['status' => 'error', 'message' => 'Part item not found']);
+        if ($partItem) {
+            return response()->json([
+                'status' => 'success',
+                'basic_rate' => $partItem->basic_rate // adjust field name if different
+            ]);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Part item not found']);
+        }
     }
-}
 
-    public function editProductMaterialWiseAdd($purchase_orders_id, $business_id) {
+    public function editProductMaterialWiseAdd($purchase_orders_id, $business_id)
+    {
         try {
             $purchase_orders_id = base64_decode($purchase_orders_id);
-            
+
             $business_id = base64_decode($business_id);
-            $editData = $this->service->editProductMaterialWiseAdd($purchase_orders_id, $business_id);          
+            $editData = $this->service->editProductMaterialWiseAdd($purchase_orders_id, $business_id);
             $dataOutputPartItem = PartItem::where('is_active', true)->orderByRaw('LOWER(description) ASC')->get();
             $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
             return view('organizations.store.list.edit-material-bom-wise-add', [
                 'productDetails' => $editData['productDetails'],
                 'dataGroupedById' => $editData['dataGroupedById'],
                 'dataOutputPartItem' => $dataOutputPartItem,
-                'dataOutputUnitMaster'=>$dataOutputUnitMaster,
+                'dataOutputUnitMaster' => $dataOutputUnitMaster,
                 'purchase_orders_id' => $purchase_orders_id,
                 'business_id' => $business_id
             ]);
@@ -304,22 +308,21 @@ class StoreController extends Controller
             return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
         }
     }
-    public function updateProductMaterialWiseAdd(Request $request) {
-        $rules = [
-        ];
-        
-        $messages = [
-        ];
-        
+    public function updateProductMaterialWiseAdd(Request $request)
+    {
+        $rules = [];
+
+        $messages = [];
+
         $validation = Validator::make($request->all(), $rules, $messages);
-        
+
         if ($validation->fails()) {
             return redirect()->back()->withInput()->withErrors($validation);
         }
-    
+
         try {
-                       $updateData = $this->service->updateProductMaterialWiseAdd($request);
-    
+            $updateData = $this->service->updateProductMaterialWiseAdd($request);
+
             if ($updateData['status'] == 'success') {
                 return redirect('storedept/list-accepted-design-from-prod')->with(['status' => 'success', 'msg' => $updateData['message']]);
             } else {
@@ -336,7 +339,7 @@ class StoreController extends Controller
                 return redirect()->back()->with('error', 'GRN ID is required.');
             }
             $gatepass = GRNModel::where('id', $request->id)->first();
-        
+
             if (!$gatepass) {
                 return redirect()->back()->with('error', 'GRN not found.');
             }
@@ -352,30 +355,30 @@ class StoreController extends Controller
             return redirect()->back()->with('error', 'Failed to update GRN.');
         } catch (\Exception $e) {
             // Log the exception
-            \Log::error('Error in storeGRN: ' . $e->getMessage());
+            Log::error('Error in storeGRN: ' . $e->getMessage());
 
             return redirect()->back()->with('error', 'An error occurred while updating GRN.');
         }
     }
-    public function destroyAddmoreStoreItem( Request $request )
+    public function destroyAddmoreStoreItem(Request $request)
     {
-   
-           $delete_data_id = $request->delete_id;
-           // Get the delete ID from the request
-   
-           try {
-               $delete_record = $this->service->destroyAddmoreStoreItem( $delete_data_id );
-               if ( $delete_record ) {
-                   $msg = $delete_record[ 'msg' ];
-                   $status = $delete_record[ 'status' ];
-                   if ( $status == 'success' ) {
-                       return redirect( 'storedept/list-accepted-design-from-prod' )->with( compact( 'msg', 'status' ) );
-                   } else {
-                       return redirect()->back()->withInput()->with( compact( 'msg', 'status' ) );
-                   }
-               }
-           } catch ( \Exception $e ) {
-               return $e;
-           }
-       }
+
+        $delete_data_id = $request->delete_id;
+        // Get the delete ID from the request
+
+        try {
+            $delete_record = $this->service->destroyAddmoreStoreItem($delete_data_id);
+            if ($delete_record) {
+                $msg = $delete_record['msg'];
+                $status = $delete_record['status'];
+                if ($status == 'success') {
+                    return redirect('storedept/list-accepted-design-from-prod')->with(compact('msg', 'status'));
+                } else {
+                    return redirect()->back()->withInput()->with(compact('msg', 'status'));
+                }
+            }
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
 }

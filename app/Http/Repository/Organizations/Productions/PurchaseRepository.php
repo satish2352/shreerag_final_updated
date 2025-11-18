@@ -1,19 +1,19 @@
 <?php
+
 namespace App\Http\Repository\Organizations\Productions;
-use Illuminate\Database\QueryException;
-use DB;
-use Illuminate\Support\Carbon;
-use App\Models\ {
-PurchaseModel
+
+use App\Models\{
+    PurchaseModel
 };
-use Config;
 
-class PurchaseRepository  {
+class PurchaseRepository
+{
 
 
-    public function getAll(){
+    public function getAll()
+    {
         try {
-            $data_output= PurchaseModel::get();
+            $data_output = PurchaseModel::get();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -21,32 +21,32 @@ class PurchaseRepository  {
     }
 
 
-public function addAll($request)
-{
-    try {
-        $dataOutput = new PurchaseModel();
-        $dataOutput->name = $request->name;
-        $dataOutput->email = $request->email;
-        $dataOutput->price = $request->price;
-        $dataOutput->contact=$request->contact;
-        $dataOutput->save();
+    public function addAll($request)
+    {
+        try {
+            $dataOutput = new PurchaseModel();
+            $dataOutput->name = $request->name;
+            $dataOutput->email = $request->email;
+            $dataOutput->price = $request->price;
+            $dataOutput->contact = $request->contact;
+            $dataOutput->save();
 
-        return [
-            'msg' => 'Data Added Successfully',
-            'status' => 'success'
-        ];
-
-    } catch (\Exception $e) {
-        return [
-            'msg' => $e->getMessage(),
-            'status' => 'error'
-        ];
+            return [
+                'msg' => 'Data Added Successfully',
+                'status' => 'success'
+            ];
+        } catch (\Exception $e) {
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error'
+            ];
+        }
     }
-}
-    
 
-    public function getById($id){
-    try {
+
+    public function getById($id)
+    {
+        try {
             $dataOutputByid = PurchaseModel::find($id);
             if ($dataOutputByid) {
                 return $dataOutputByid;
@@ -61,8 +61,9 @@ public function addAll($request)
         }
     }
 
-        public function updateAll($request){
-        try { 
+    public function updateAll($request)
+    {
+        try {
             $dataOutput = PurchaseModel::find($request->id);
             if (!$dataOutput) {
                 return [
@@ -74,16 +75,15 @@ public function addAll($request)
             $dataOutput->name = $request->name;
             $dataOutput->email = $request->email;
             $dataOutput->price = $request->price;
-            $dataOutput->contact=$request->contact;
-            
+            $dataOutput->contact = $request->contact;
+
 
             $dataOutput->save();
 
             return [
-            'msg' => 'Data Added Successfully',
-            'status' => 'success'
-        ];
-        
+                'msg' => 'Data Added Successfully',
+                'status' => 'success'
+            ];
         } catch (\Exception $e) {
             return [
                 'msg' => 'Failed to Update Data.',
@@ -94,19 +94,19 @@ public function addAll($request)
     }
 
 
-    public function deleteById($id){
-            try {
-                $deleteDataById = PurchaseModel::find($id);
-                
-                if ($deleteDataById) {
-                    $deleteDataById->delete();
-                    return $deleteDataById;
-                } else {
-                    return null;
-                }
-            } catch (\Exception $e) {
-                return $e;
-            }
-    }
+    public function deleteById($id)
+    {
+        try {
+            $deleteDataById = PurchaseModel::find($id);
 
+            if ($deleteDataById) {
+                $deleteDataById->delete();
+                return $deleteDataById;
+            } else {
+                return null;
+            }
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
 }

@@ -9,24 +9,28 @@ use App\Http\Services\Admin\LoginRegister\LoginService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use App\Models\ {
-   User,
-   LoginHistory
-    };
-use Session;
-use Validator;
+use App\Models\{
+    User,
+    LoginHistory
+};
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 use PDO;
 
 class LoginController extends Controller
- {
+{
     public static $loginServe, $masterApi;
 
-    public function __construct(){
+    protected $service;
+
+    public function __construct()
+    {
         self::$loginServe = new LoginService();
     }
-    public function index() {
+    public function index()
+    {
 
-        return view( 'admin.login' );
+        return view('admin.login');
     }
     // public function submitLogin( Request $request ) {
     //     $rules = [
@@ -87,7 +91,8 @@ class LoginController extends Controller
     //         return redirect('/login')->with('error', $resp['msg']);
     //     }
     // }
-     public function submitLogin( Request $request ) {
+    public function submitLogin(Request $request)
+    {
         $rules = [
             'email' => 'required|email',
             'password' => 'required',
@@ -101,81 +106,81 @@ class LoginController extends Controller
             'g-recaptcha-response.required' => 'Please verify that you are not a robot.',
         ];
 
-        $validation = Validator::make( $request->all(), $rules, $messages );
-        if ( $validation->fails() ) {
-            return redirect( 'login' )->withInput()->withErrors( $validation );
+        $validation = Validator::make($request->all(), $rules, $messages);
+        if ($validation->fails()) {
+            return redirect('login')->withInput()->withErrors($validation);
         }
 
         // Check login credentials
-        $resp = self::$loginServe->checkLogin( $request );
-        if ( $resp[ 'status' ] == 'success' ) {
+        $resp = self::$loginServe->checkLogin($request);
+        if ($resp['status'] == 'success') {
             // Assuming `checkLogin` function stores `user_id` in session on success
-            $ses_userId = session()->get( 'user_id' );
+            $ses_userId = session()->get('user_id');
 
 
-           $user = User::find($ses_userId);
+            $user = User::find($ses_userId);
 
-    if (!$user) {
-        return redirect('/login')->with('error', 'User not found.');
-    }
-
-     // ✅ Get user IP address
-        // $ipAddress = $request->ip();
-            $systemIp = getHostByName(getHostName());
-            $ipAddress = getHostByName(getHostName());
-   // ✅ Update location if provided
-        if ($request->filled(['latitude', 'longitude'])) {
-            $latitude  = $request->latitude;
-            $longitude = $request->longitude;
-
-            $user->update([
-                'latitude'  => $latitude,
-                'longitude' => $longitude,
-            ]);
-
-            $address = null;
-
-            // 🔑 LocationIQ Reverse Geocoding (with addressdetails=1)
-            try {
-                $apiKey = "pk.1657d640f433dbcd0b009e097699adc6"; // your token
-                $url = "https://us1.locationiq.com/v1/reverse.php?key={$apiKey}&lat={$latitude}&lon={$longitude}&format=json&addressdetails=1";
-
-                $response = Http::get($url);
-                $json = $response->json();
-
-                if (!empty($json['address'])) {
-                    $addressParts = [
-                        $json['address']['house_number'] ?? null,
-                        $json['address']['road'] ?? null,
-                        $json['address']['neighbourhood'] ?? null,
-                        $json['address']['suburb'] ?? null,
-                        $json['address']['city'] ?? null,
-                        $json['address']['state'] ?? null,
-                        $json['address']['postcode'] ?? null,
-                        $json['address']['country'] ?? null,
-                    ];
-
-                    $address = implode(', ', array_filter($addressParts));
-                } else {
-                    $address = $json['display_name'] ?? null;
-                }
-
-                if ($address) {
-                    $user->update(['location_address' => $address]);
-                }
-            } catch (\Exception $e) {
-                Log::error("LocationIQ Reverse Geocoding failed: " . $e->getMessage());
+            if (!$user) {
+                return redirect('/login')->with('error', 'User not found.');
             }
 
-            // ✅ Save login history AFTER fetching address
-            $loginHistory = new LoginHistory();
-            $loginHistory->user_id          = $user->id;
-            $loginHistory->latitude         = $latitude;
-             $loginHistory->ip_address         = $ipAddress;
-            $loginHistory->longitude        = $longitude;
-            $loginHistory->location_address = $address;
-            $loginHistory->save();
-        }
+            // ✅ Get user IP address
+            // $ipAddress = $request->ip();
+            $systemIp = getHostByName(getHostName());
+            $ipAddress = getHostByName(getHostName());
+            // ✅ Update location if provided
+            if ($request->filled(['latitude', 'longitude'])) {
+                $latitude  = $request->latitude;
+                $longitude = $request->longitude;
+
+                $user->update([
+                    'latitude'  => $latitude,
+                    'longitude' => $longitude,
+                ]);
+
+                $address = null;
+
+                // 🔑 LocationIQ Reverse Geocoding (with addressdetails=1)
+                try {
+                    $apiKey = "pk.1657d640f433dbcd0b009e097699adc6"; // your token
+                    $url = "https://us1.locationiq.com/v1/reverse.php?key={$apiKey}&lat={$latitude}&lon={$longitude}&format=json&addressdetails=1";
+
+                    $response = Http::get($url);
+                    $json = $response->json();
+
+                    if (!empty($json['address'])) {
+                        $addressParts = [
+                            $json['address']['house_number'] ?? null,
+                            $json['address']['road'] ?? null,
+                            $json['address']['neighbourhood'] ?? null,
+                            $json['address']['suburb'] ?? null,
+                            $json['address']['city'] ?? null,
+                            $json['address']['state'] ?? null,
+                            $json['address']['postcode'] ?? null,
+                            $json['address']['country'] ?? null,
+                        ];
+
+                        $address = implode(', ', array_filter($addressParts));
+                    } else {
+                        $address = $json['display_name'] ?? null;
+                    }
+
+                    if ($address) {
+                        $user->update(['location_address' => $address]);
+                    }
+                } catch (\Exception $e) {
+                    Log::error("LocationIQ Reverse Geocoding failed: " . $e->getMessage());
+                }
+
+                // ✅ Save login history AFTER fetching address
+                $loginHistory = new LoginHistory();
+                $loginHistory->user_id          = $user->id;
+                $loginHistory->latitude         = $latitude;
+                $loginHistory->ip_address         = $ipAddress;
+                $loginHistory->longitude        = $longitude;
+                $loginHistory->location_address = $address;
+                $loginHistory->save();
+            }
 
             // Route based on the user's role
             switch ($ses_userId) {
@@ -202,12 +207,12 @@ class LoginController extends Controller
                 case 12:
                     return redirect('/dispatchdept/dashboard');
                 case 13:
-                        return redirect('/cms/dashboard');
+                    return redirect('/cms/dashboard');
                 case 14:
-                            return redirect('/inventory/dashboard');
-                // case 15:
-                //         return redirect('/estimation/dashboard');            
-                    default:
+                    return redirect('/inventory/dashboard');
+                    // case 15:
+                    //         return redirect('/estimation/dashboard');            
+                default:
                     return redirect('/dashboard'); // Default dashboard
             }
         } else {
@@ -217,15 +222,15 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         $email = session()->get('u_email');
-    
+
         if ($email) {
             Cache::forget("dashboard_{$email}");
             Cache::forget("user_id_{$email}");
         }
-    
+
         Auth::logout();
         session()->flush();
-    
+
         return redirect('/login');
     }
 }
