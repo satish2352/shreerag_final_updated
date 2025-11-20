@@ -7,17 +7,17 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                            <h1>BOM Received For <span class="table-project-n">Purchase</span></h1>
+                                <h1>BOM Received For <span class="table-project-n">Purchase</span></h1>
                             </div>
                         </div>
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
-                                        data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="false"
-                                        data-key-events="true" data-show-toggle="true" data-resizable="true"
-                                        data-cookie="true" data-cookie-id-table="saveId" data-show-export="true"
-                                        data-click-to-select="true" data-toolbar="#toolbar">
+                                        data-show-columns="true" data-show-pagination-switch="true"
+                                        data-show-refresh="false" data-key-events="true" data-show-toggle="true"
+                                        data-resizable="true" data-cookie="true" data-cookie-id-table="saveId"
+                                        data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
@@ -27,8 +27,11 @@
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
                                                 <th data-field="grn_date" data-editable="false">Description</th>
+                                                <th data-field="total_estimation_amount" data-editable="false"> <span
+                                                        style="margin-right:20px">Estimation
+                                                        Amount</span></th>
                                                 <th data-field="bom_file" data-editable="false">BOM</th>
-                                                 <th data-field="total_estimation_amount" data-editable="false">Estimated Amount</th>
+
                                                 <th data-field="bom" data-editable="false">Action</th>
                                             </tr>
                                         </thead>
@@ -40,18 +43,26 @@
                                                     </td>
                                                     <td>{{ ucwords($data->project_name) }}</td>
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
-                                                    <td>{{ucwords($data->product_name)}}</td>
-                                                    <td>{{ucwords($data->quantity)}}</td>
+                                                    <td>{{ ucwords($data->product_name) }}</td>
+                                                    <td>{{ ucwords($data->quantity) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
+                                                    <td>{{ ucwords($data->total_estimation_amount) }}</td>
                                                     <td> <a class="img-size"
                                                             href="{{ Config::get('FileConstant.REQUISITION_VIEW') }}{{ $data['bom_file'] }}"
-                                                            alt="bill of material" >Click to download</a>
+                                                            alt="bill of material">Click to download</a>
                                                     </td>
-                                                     <td>{{ ucwords($data->total_estimation_amount) }}</td>
+
                                                     <td>
                                                         <div style="display: inline-block; align-items: center;">
-                                                            <a href="{{route('list-purchase-order', [base64_encode($data->requistition_id), base64_encode($data->business_details_id)]
-                                                            )}} "><button data-toggle="tooltip" title="Accept and Send For Purchase " class="btn btn-sm btn-bg-colour"> Accept and Send For Purchase </button></a>
+                                                            <a
+                                                                href="{{ route('list-purchase-order', [
+                                                                    base64_encode($data->requistition_id),
+                                                                    base64_encode($data->business_details_id),
+                                                                ]) }} "><button
+                                                                    data-toggle="tooltip"
+                                                                    title="Accept and Send For Purchase "
+                                                                    class="btn btn-sm btn-bg-colour"> Accept and Send For
+                                                                    Purchase </button></a>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -66,5 +77,5 @@
             </div>
         </div>
     </div>
-     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 @endsection

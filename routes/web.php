@@ -768,7 +768,8 @@
         Route::post('/delete-addmore', [PurchaseOrderController::class, 'destroyAddmore'])->name('delete-addmore');
 
         Route::get('/get-hsn-for-part', [PurchaseOrderController::class, 'getHsnForPart'])->name('get-hsn-for-part');
-
+        Route::get('/get-tax-value', [PurchaseOrderController::class, 'getTaxValue'])
+            ->name('get-tax-value');
         // Vendor CRUD
 
         Route::get('/list-vendor', [VendorController::class, 'index'])->name('list-vendor');

@@ -401,7 +401,12 @@ class AllListRepositor
         })
         ->where('businesses_details.id', $id)
         // ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check)
-        ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
+        ->where(function ($q) use ($array_to_be_check) {
+          $q->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check)
+            ->orWhereNull('purchase_orders.purchase_status_from_owner');
+        })
+
+        // ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
         ->where('businesses.is_active', true)
         ->where('businesses.is_deleted', 0)
         ->distinct('business_application_processes.id')
@@ -1156,6 +1161,7 @@ class AllListRepositor
   { //checked
     try {
       $decoded_business_id = base64_decode($business_id);
+
       $array_to_be_check = [
         config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN'),
         config('constants.ESTIMATION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_ESTIMATION'),
@@ -1179,7 +1185,7 @@ class AllListRepositor
         ->where('businesses_details.business_id', $decoded_business_id)
         // ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
         ->where('business_application_processes.design_send_to_estimation', $send_estimation)
-        ->whereNull('business_application_processes.owner_bom_accepted')
+        // ->whereNull('business_application_processes.owner_bom_accepted')
         ->where('businesses_details.is_active', true)
         ->where('businesses_details.is_deleted', 0)
         ->select(

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
 use setasign\Fpdi\Fpdi;
+use Exception;
 // use Barryvdh\DomPDF\Facade\Pdf;
 // use LynX39\LaraPdfMerger\PdfManage as PdfMerger;
 // use setasign\Fpdi\Fpdi;
@@ -30,7 +31,7 @@ use App\Http\Controllers\Organizations\CommanController;
 class PurchaseOrderController extends Controller
 {
     protected $service;
-
+    protected $serviceCommon;
     public function __construct()
     {
         $this->service = new PurchaseOrderServices();
@@ -231,6 +232,16 @@ class PurchaseOrderController extends Controller
             return redirect('purchase/add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
+    public function getTaxValue(Request $request)
+    {
+        $tax = Tax::find($request->tax_id);
+
+        return response()->json([
+            'tax_value' => $tax ? floatval($tax->name) : 0
+        ]);
+    }
+
+
     public function getHsnForPart(Request $request)
     {
 

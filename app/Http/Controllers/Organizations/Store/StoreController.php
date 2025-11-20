@@ -55,7 +55,6 @@ class StoreController extends Controller
     {
         try {
             $add_record = $this->service->storeRequesition($request);
-
             if ($add_record) {
                 $msg = $add_record['msg'];
                 $status = $add_record['status'];

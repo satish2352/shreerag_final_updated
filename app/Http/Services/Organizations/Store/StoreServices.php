@@ -28,6 +28,7 @@ class StoreServices
     {
         try {
             $last_id = $this->repo->storeRequesition($request);
+
             $path = Config::get('FileConstant.REQUISITION_ADD');
             $ImageName = $last_id['ImageName'];
 

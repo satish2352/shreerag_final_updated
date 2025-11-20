@@ -38,11 +38,84 @@ class StoreRepository
         }
     }
 
+    // public function storeRequesition($request)
+    // {
+    //     try {
+
+    //         $production_id = base64_decode($request->production_id);
+    //         $businessDetails = BusinessDetails::where('id', $production_id)->first();
+    //         if (!$businessDetails) {
+    //             return [
+    //                 'msg' => 'Business details not found.',
+    //                 'status' => 'error',
+    //             ];
+    //         }
+
+    //         $productName = $businessDetails->product_name;
+    //         // $business_application = BusinessApplicationProcesses::where('design_id', $production_id)->first();
+    //         $business_application = BusinessApplicationProcesses::where('business_details_id', $businessDetails->id)->first();
+    //         $dataOutput = new Requisition();
+    //         $dataOutput->business_id = $business_application->business_id;
+    //         $dataOutput->business_details_id = $business_application->business_details_id;
+    //         $dataOutput->design_id = $business_application->design_id;
+    //         $dataOutput->production_id = $business_application->production_id;
+    //         $dataOutput->req_name = "";
+    //         $dataOutput->req_date = date('Y-m-d');
+    //         $dataOutput->bom_file = 'null';
+    //         $dataOutput->save();
+    //         $last_insert_id = $dataOutput->id;
+
+    //         // Updating image name in requisition
+    //         $imageName = $last_insert_id . '_' . $productName . '_' . rand(100000, 999999) . '_requisition_bom.' . $request->bom_file_req->getClientOriginalExtension();
+    //         $finalOutput = Requisition::find($last_insert_id);
+    //         $finalOutput->bom_file = $imageName;
+    //         $finalOutput->save();
+    //         if ($business_application) {
+    //             $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE');
+    //             $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.ACCEPTED_DESIGN_BY_PRODUCTION');
+    //             $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.BOM_SENT_TO_STORE_DEPT_FOR_CHECKING');
+    //             $business_application->store_status_id = config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE');
+    //             $business_application->requisition_id = $last_insert_id;
+    //             $business_application->purchase_order_id = '0';
+    //             $dataOutput->purchase_dept_req_sent_date = date('Y-m-d');
+    //             $business_application->save();
+
+    //             $update_data_admin['off_canvas_status'] = 16;
+    //             $update_data_admin['is_view'] = '0';
+    //             $update_data_business['off_canvas_status'] = 16;
+    //             $update_data_business['purchase_is_view'] = 0;
+    //             AdminView::where('business_details_id', $business_application->business_details_id)
+    //                 // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
+    //                 ->update($update_data_admin);
+
+    //             NotificationStatus::where('business_details_id', $business_application->business_details_id)
+    //                 // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
+    //                 ->update($update_data_business);
+    //         }
+    //         // Updating off_canvas_status for the business application
+    //         $business_application->off_canvas_status = 16;
+    //         $business_application->save();
+
+    //         // PurchaseOrderModel::where('business_id', $business_application->business_id)->update(['purchase_status_from_purchase', config('constants.PUCHASE_DEPARTMENT.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE')]);
+
+    //         return [
+    //             'ImageName' => $imageName,
+    //             'status' => 'success'
+    //         ];
+    //     } catch (\Exception $e) {
+    //         return [
+    //             'msg' => $e->getMessage(),
+    //             'status' => 'error'
+    //         ];
+    //     }
+    // }
+
     public function storeRequesition($request)
     {
         try {
 
             $production_id = base64_decode($request->production_id);
+
             $businessDetails = BusinessDetails::where('id', $production_id)->first();
             if (!$businessDetails) {
                 return [
@@ -52,54 +125,85 @@ class StoreRepository
             }
 
             $productName = $businessDetails->product_name;
-            // $business_application = BusinessApplicationProcesses::where('design_id', $production_id)->first();
+
             $business_application = BusinessApplicationProcesses::where('business_details_id', $businessDetails->id)->first();
-            $dataOutput = new Requisition();
-            $dataOutput->business_id = $business_application->business_id;
-            $dataOutput->business_details_id = $business_application->business_details_id;
-            $dataOutput->design_id = $business_application->design_id;
-            $dataOutput->production_id = $business_application->production_id;
-            $dataOutput->req_name = "";
-            $dataOutput->req_date = date('Y-m-d');
-            $dataOutput->bom_file = 'null';
-            $dataOutput->save();
-            $last_insert_id = $dataOutput->id;
-
-            // Updating image name in requisition
-            $imageName = $last_insert_id . '_' . $productName . '_' . rand(100000, 999999) . '_requisition_bom.' . $request->bom_file_req->getClientOriginalExtension();
-            $finalOutput = Requisition::find($last_insert_id);
-            $finalOutput->bom_file = $imageName;
-            $finalOutput->save();
-            if ($business_application) {
-                $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE');
-                $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.ACCEPTED_DESIGN_BY_PRODUCTION');
-                $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.BOM_SENT_TO_STORE_DEPT_FOR_CHECKING');
-                $business_application->store_status_id = config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE');
-                $business_application->requisition_id = $last_insert_id;
-                $business_application->purchase_order_id = '0';
-                $dataOutput->purchase_dept_req_sent_date = date('Y-m-d');
-                $business_application->save();
-
-                $update_data_admin['off_canvas_status'] = 16;
-                $update_data_admin['is_view'] = '0';
-                $update_data_business['off_canvas_status'] = 16;
-                $update_data_business['purchase_is_view'] = 0;
-                AdminView::where('business_details_id', $business_application->business_details_id)
-                    // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
-                    ->update($update_data_admin);
-
-                NotificationStatus::where('business_details_id', $business_application->business_details_id)
-                    // ->where('business_details_id', $production_data->business_details_id) // Corrected the condition here
-                    ->update($update_data_business);
+            if (!$business_application) {
+                return [
+                    'msg' => 'Business application not found.',
+                    'status' => 'error',
+                ];
             }
-            // Updating off_canvas_status for the business application
+
+            //----------------------------------------------------------------
+            // 1️⃣ CHECK IF REQUISITION ALREADY EXISTS
+            //----------------------------------------------------------------
+            $requisition = Requisition::where('business_details_id', $business_application->business_details_id)->first();
+
+            if ($requisition) {
+                // existing requisition → update
+                $last_insert_id = $requisition->id;
+            } else {
+                // create new requisition
+                $requisition = new Requisition();
+                $requisition->business_id = $business_application->business_id;
+                $requisition->business_details_id = $business_application->business_details_id;
+                $requisition->design_id = $business_application->design_id;
+                $requisition->production_id = $business_application->production_id;
+                $requisition->req_name = "";
+                $requisition->req_date = date('Y-m-d');
+                $requisition->bom_file = null;  // file set later
+                $requisition->save();
+
+                $last_insert_id = $requisition->id;
+            }
+
+            //----------------------------------------------------------------
+            // 2️⃣ GENERATE FILE NAME ONLY (NO UPLOAD HERE)
+            //----------------------------------------------------------------
+            $imageName = $requisition->bom_file; // default old file name
+
+            if ($request->hasFile('bom_file_req')) {
+
+                $imageName = $last_insert_id . '_' . $productName . '_' . rand(100000, 999999)
+                    . '_requisition_bom.' . $request->bom_file_req->getClientOriginalExtension();
+
+                // store new file name
+                $requisition->bom_file = $imageName;
+            }
+
+            $requisition->save();
+
+            //----------------------------------------------------------------
+            // 3️⃣ UPDATE BUSINESS APPLICATION STATUS
+            //----------------------------------------------------------------
+            $business_application->business_status_id   = config('constants.HIGHER_AUTHORITY.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE');
+            $business_application->design_status_id     = config('constants.DESIGN_DEPARTMENT.ACCEPTED_DESIGN_BY_PRODUCTION');
+            $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.BOM_SENT_TO_STORE_DEPT_FOR_CHECKING');
+            $business_application->store_status_id      = config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE');
+
+            $business_application->requisition_id = $last_insert_id;
+            $business_application->purchase_order_id = 0;
             $business_application->off_canvas_status = 16;
             $business_application->save();
 
-            // PurchaseOrderModel::where('business_id', $business_application->business_id)->update(['purchase_status_from_purchase', config('constants.PUCHASE_DEPARTMENT.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE')]);
+            //----------------------------------------------------------------
+            // 4️⃣ UPDATE ADMIN VIEW & NOTIFICATION
+            //----------------------------------------------------------------
+            AdminView::where('business_details_id', $business_application->business_details_id)
+                ->update([
+                    'off_canvas_status' => 16,
+                    'is_view' => 0
+                ]);
+
+            NotificationStatus::where('business_details_id', $business_application->business_details_id)
+                ->update([
+                    'off_canvas_status' => 16,
+                    'purchase_is_view' => 0
+                ]);
+
 
             return [
-                'ImageName' => $imageName,
+                'ImageName' => $imageName, // return file name to service
                 'status' => 'success'
             ];
         } catch (\Exception $e) {
@@ -109,6 +213,8 @@ class StoreRepository
             ];
         }
     }
+
+
     public function genrateStoreReciptAndForwardMaterialToTheProduction($purchase_orders_id, $business_id)
     {
         try {

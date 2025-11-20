@@ -3,6 +3,12 @@
         box-sizing: border-box;
     }
 
+    td.description-column,
+    th.description-column {
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+    }
 
     .font-family-page {
         font-family: 'Play', sans-serif !important;
@@ -292,7 +298,7 @@
                                     <tr style="bold; font-family: 'Play', sans-serif!important;">
                                         <td style="border: 1px solid black; padding: 5px; text-align: center;">
                                             {{ $index + 1 }}</td>
-                                        <td
+                                        <td class="description-column"
                                             style="border: 1px solid black; padding: 5px; max-width: 200px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-all;">
                                             {{ $item->item_description }}</td>
                                         <td style="border: 1px solid black; padding: 5px;">{{ $item->hsn_name }}</td>
@@ -324,7 +330,8 @@
                                     <td class="no-border" colspan="6"></td>
                                     <td style="border: 1px solid black;"><b>Freight</b></td>
                                     <td style="border: 1px solid black; text-align:right;" class="text-right">
-                                        <b>0.00</b></td>
+                                        <b>0.00</b>
+                                    </td>
                                 </tr>
                                 <tr style="bold; font-family: 'Play', sans-serif!important; font-size:12px;">
                                     <td class="no-border" colspan="6"></td>
@@ -430,8 +437,10 @@
                         <div><span
                                 style="padding: 10px 10px 10px 8px;font-family: 'Play', sans-serif!important; font-size:13px;">This
                                 is a computer-generated document No signature is required</span></div>
-                                <div><span
-                                style="padding: 10px 10px 10px 8px;font-family: 'Play', sans-serif!important; font-size:13px;">Subject To Nashik Jurisdiction. PO Terms and Conditions As per attached PO Annexture</span></div>
+                        <div><span
+                                style="padding: 10px 10px 10px 8px;font-family: 'Play', sans-serif!important; font-size:13px;">Subject
+                                To Nashik Jurisdiction. PO Terms and Conditions As per attached PO Annexture</span>
+                        </div>
                         @if (empty($is_pdf))
                             <a>
                                 <button onclick="printInvoice()" style="margin: 20px;" type="button"

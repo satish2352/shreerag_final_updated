@@ -31,7 +31,7 @@
         }
 
         .custom-dropdown .dropdown-options {
-            position: absolute;
+            /* position: absolute; */
             width: 600px !important;
             top: 100%;
             left: 0;

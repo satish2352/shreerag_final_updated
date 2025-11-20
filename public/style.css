@@ -3460,3 +3460,24 @@ font-size: 14px;
 margin-top: 5px;
 display: block;
 }
+
+  /* Prevent wrapping everywhere */
+        table th,
+        table td {
+            white-space: nowrap !important;
+        }
+
+        /* Automatically set minimum width so columns don't merge */
+        table th {
+            min-width: 120px !important;
+        }
+
+        table td {
+            min-width: 120px !important;
+        }
+
+        /* Ensure horizontal scroll works */
+        .table-responsive,
+        .bootstrap-table .fixed-table-body {
+            /* overflow-x: auto !important; */
+        }
