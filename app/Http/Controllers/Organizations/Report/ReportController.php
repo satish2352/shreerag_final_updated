@@ -51,10 +51,18 @@ class ReportController extends Controller
     {
         try {
             $data_output = $this->service->getCompletedProductList($request);
-            $getProjectName = Business::whereNotNull('project_name')
-                ->where('is_deleted', 0)
-                ->where('is_active', 1)
-                ->pluck('project_name', 'id');
+            // $getProjectName = Business::whereNotNull('project_name')
+            //     ->where('is_deleted', 0)
+            //     ->where('is_active', 1)
+            //     ->pluck('project_name', 'id');
+
+
+            $getProjectName = Business::where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->whereNotNull('project_name')
+            ->where('project_name', '!=', '')
+            ->pluck('project_name', 'id');
+
 
             $getProductName = BusinessDetails::whereNotNull('product_name')
                 ->where('is_deleted', 0)
@@ -331,6 +339,10 @@ class ReportController extends Controller
         $getProjectName = Business::whereNotNull('project_name')
             ->where('is_deleted', 0)
             ->where('is_active', 1)
+
+            ->whereNotNull('project_name')
+             ->where('project_name', '!=', '')
+
             ->pluck('project_name', 'id');
 
         if ($request->filled('export_type')) {
@@ -496,6 +508,9 @@ class ReportController extends Controller
             $getProjectName = Business::whereNotNull('project_name')
                 ->where('is_deleted', 0)
                 ->where('is_active', 1)
+                ->whereNotNull('project_name')
+                ->where('project_name', '!=', '')
+
                 ->pluck('project_name', 'id');
 
             $getProductName = BusinessDetails::whereNotNull('product_name')
@@ -684,6 +699,7 @@ class ReportController extends Controller
                 $join->on('businesses.id', '=', 'business_application_processes.business_id');
             })
                 ->whereNotNull('businesses.project_name')
+                    ->where('businesses.project_name', '!=', '')
                 ->where('businesses.is_deleted', 0)
                 ->where('businesses.is_active', 1)
                 ->where('business_application_processes.off_canvas_status', 22)

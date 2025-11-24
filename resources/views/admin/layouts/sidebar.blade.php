@@ -235,7 +235,75 @@
                                 $isReportActive = in_array(Route::currentRouteName(), $reportRoutes);
                             @endphp
 
-                            <li class="{{ $isReportActive ? 'active' : '' }}">
+ <li>
+                            <a class="has-arrow" href="{{ route('list-unit') }}" aria-expanded="false"><i
+                                   class="fa fa-chart-bar icon-wrap"></i><span class="mini-click-non">Report
+                                </span></a>
+                            <ul class="submenu-angle" aria-expanded="false">
+                                <li>
+                                        <a title="Product Completed Report"
+                                            href="{{ route('list-product-completed-report') }}"
+                                            class="{{ Route::currentRouteName() == 'list-product-completed-report' ? 'active-submenu' : '' }}">
+                                            <i class="fa fa-check-circle icon-wrap"></i>
+                                            <span class="mini-sub-pro">Product Completed</span>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a title="Stock Item" href="{{ route('stock-item') }}"
+                                            class="{{ Route::currentRouteName() == 'stock-item' ? 'active-submenu' : '' }}">
+                                            <i class="fa fa-boxes icon-wrap"></i>
+                                            <span class="mini-sub-pro">Stock Item</span>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a title="Consumption Report" href="{{ route('list-consumption-report') }}"
+                                            class="{{ Route::currentRouteName() == 'list-consumption-report' ? 'active-submenu' : '' }}">
+                                            <i class="fa fa-chart-pie icon-wrap"></i>
+                                            <span class="mini-sub-pro">Consumption</span>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a title="Dispatch Bar Chart" href="{{ route('list-dispatch-bar-chart') }}"
+                                            class="{{ Route::currentRouteName() == 'list-dispatch-bar-chart' ? 'active-submenu' : '' }}">
+                                            <i class="fa fa-truck-loading icon-wrap"></i>
+                                            <span class="mini-sub-pro">Dispatch Bar Chart</span>
+                                        </a>
+                                    </li>
+                                      <li>
+                                        <a title="Vendor Taken Material"
+                                            href="{{ route('list-vendor-through-taken-material') }}"
+                                            class="{{ Route::currentRouteName() == 'list-vendor-through-taken-material' ? 'active-submenu' : '' }}">
+                                            <i class="fa fa-people-carry icon-wrap"></i>
+                                            <span class="mini-sub-pro">Vendor Taken Material</span>
+                                        </a>
+                                    </li>
+
+                            </ul>
+                        </li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            {{-- <li class="{{ $isReportActive ? 'active' : '' }}">
                                 <a class="has-arrow" href="javascript:void(0);"
                                     aria-expanded="{{ $isReportActive ? 'true' : 'false' }}">
                                     <i class="fa fa-chart-bar icon-wrap"></i>
@@ -275,8 +343,8 @@
                                             <i class="fa fa-truck-loading icon-wrap"></i>
                                             <span class="mini-sub-pro">Dispatch Bar Chart</span>
                                         </a>
-                                    </li>
-
+                                    </li> --}}
+{{-- 
                                     <li>
                                         <a title="Vendor Taken Material"
                                             href="{{ route('list-vendor-through-taken-material') }}"
@@ -286,7 +354,7 @@
                                         </a>
                                     </li>
                                 </ul>
-                            </li>
+                            </li> --}}
 
 
 
