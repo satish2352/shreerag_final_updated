@@ -778,7 +778,8 @@
         // Route::any('/delete-leaves/{id}', [LeavesController::class, 'destroy'])->name('delete-leaves');
         Route::delete('/delete-leaves/{id}', [LeavesController::class, 'destroy'])->name('delete-leaves');
 
-
+Route::post('/check-leave-balance', [LeavesController::class, 'checkLeaveBalance'])
+    ->name('check-leave-balance');
 
 
         Route::get('/list-leaves-acceptedby-hr', [LeavesController::class, 'getAllLeavesRequest'])->name('list-leaves-acceptedby-hr');

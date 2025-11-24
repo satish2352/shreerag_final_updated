@@ -50,13 +50,20 @@
                                         </thead>
                                         <tbody>
                                             @foreach($user_detail as $index => $leave)
-                                            <tr>
+                                           <tr>
                                                 <td>{{ $index + 1 }}</td>
-                                                 <td>{{ $leave->leave_year ?? '-' }}</td>
+                                                <td>{{ $leave->leave_year ?? '-' }}</td>
                                                 <td>{{ $leave->leave_type_name ?? '-' }}</td>
-                                                <td>{{ $leave->leave_count ?? '0' }}</td>
+
+                                                <!-- Total Leaves = current_year_leave + carry_forward -->
+                                                <td>{{ $leave->total_available_leaves ?? '0' }}</td>
+
+                                                <!-- Leaves Taken -->
                                                 <td>{{ $leave->total_leaves_taken ?? '0' }}</td>
+
+                                                <!-- Final Remaining Leaves -->
                                                 <td><b>{{ $leave->remaining_leaves ?? '0' }}</b></td>
+
                                                 <td>{{ $leave->month_name ?? '-' }}</td>
                                             </tr>
                                             @endforeach

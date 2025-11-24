@@ -71,6 +71,12 @@
                                                     @endif
                                                 </td>
                                                 <td>
+                                                      <a href="{{ route('show-leaves', base64_encode($data->id)) }} "><button
+                                                                data-toggle="tooltip" title="Trash"
+                                                                class="pd-setting-ed"><i class="fa fa-eye"
+                                                                    aria-hidden="true"></i></button></a>
+
+                                                                    
                                                     <button type="button" class="approve-btn pd-setting-ed" data-id="{{ $data->id }}" data-action="approve" style="color: green; border: 1px solid;">
                                                         <i class="fa fa-check" aria-hidden="true"></i>
                                                     </button>

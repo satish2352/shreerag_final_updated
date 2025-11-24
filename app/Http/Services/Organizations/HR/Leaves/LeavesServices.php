@@ -27,6 +27,7 @@ class LeavesServices
     {
         try {
             $data_output = $this->repo->getById($id);
+          
             return $data_output;
         } catch (\Exception $e) {
             return $e;

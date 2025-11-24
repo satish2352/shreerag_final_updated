@@ -184,41 +184,75 @@ document.addEventListener("DOMContentLoaded", function () {
         container.appendChild(chartCard);
 
         const ctx = document.getElementById(chartId).getContext('2d');
+new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Total Leaves', 'Taken Leaves', 'Remaining Leaves'],
+        datasets: [{
+            data: [
+                Number(leave.total_available_leaves) || 0,   // Current + Carry Forward
+                Number(leave.total_leaves_taken) || 0,
+                Number(leave.remaining_leaves) || 0
+            ],
+            backgroundColor: ['#2D4E59', '#33B78C', '#34BAB8'],
+            borderWidth: 2
+        }]
+    },
+    options: {
+        cutout: '80%',
+        plugins: {
+            legend: { position: 'right' },
+            title: {
+                display: true,
+                text: leave.leave_type_name || "Leave Status",
+                font: { size: 16 }
+            },
+            datalabels: {
+                color: '#fff',
+                font: { weight: 'bold', size: 14 },
+                formatter: (value) => value
+            }
+        },
+        responsive: true,
+        maintainAspectRatio: false
+    },
+    plugins: [ChartDataLabels]
+});
 
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Total Leaves', 'Taken Leaves', 'Remaining Leaves'],
-                datasets: [{
-                    data: [
-                        Number(leave.leave_count) || 0,
-                        Number(leave.total_leaves_taken) || 0,
-                        Number(leave.remaining_leaves) || 0
-                    ],
-                    backgroundColor: ['#2D4E59', '#33B78C', '#34BAB8'],
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                cutout: '80%',
-                plugins: {
-                    legend: { position: 'right' },
-                    title: {
-                        display: true,
-                        text: leave.leave_type_name || "Leave Status",
-                        font: { size: 16 }
-                    },
-                    datalabels: {
-                        color: '#fff',
-                        font: { weight: 'bold', size: 14 },
-                        formatter: (value) => value // show the number
-                    }
-                },
-                responsive: true,
-                maintainAspectRatio: false
-            },
-            plugins: [ChartDataLabels] // Enable plugin
-        });
+        // new Chart(ctx, {
+        //     type: 'doughnut',
+        //     data: {
+        //         labels: ['Total Leaves', 'Taken Leaves', 'Remaining Leaves'],
+        //         datasets: [{
+        //             data: [
+        //                 Number(leave.leave_count) || 0,
+        //                 Number(leave.total_leaves_taken) || 0,
+        //                 Number(leave.remaining_leaves) || 0
+        //             ],
+        //             backgroundColor: ['#2D4E59', '#33B78C', '#34BAB8'],
+        //             borderWidth: 2
+        //         }]
+        //     },
+        //     options: {
+        //         cutout: '80%',
+        //         plugins: {
+        //             legend: { position: 'right' },
+        //             title: {
+        //                 display: true,
+        //                 text: leave.leave_type_name || "Leave Status",
+        //                 font: { size: 16 }
+        //             },
+        //             datalabels: {
+        //                 color: '#fff',
+        //                 font: { weight: 'bold', size: 14 },
+        //                 formatter: (value) => value // show the number
+        //             }
+        //         },
+        //         responsive: true,
+        //         maintainAspectRatio: false
+        //     },
+        //     plugins: [ChartDataLabels] // Enable plugin
+        // });
     });
 });
 </script>

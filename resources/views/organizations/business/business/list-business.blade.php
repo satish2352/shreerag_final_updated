@@ -94,12 +94,31 @@
                                                                         <i class="fas fa-pen-square"
                                                                             aria-hidden="true"></i>
                                                                     </button>
-                                                                </a>
+                                                                </a>                                                                
+                                                                {{-- 
+                                                                    @if ($data->dispatch_status_id == 1148)
+                                                                
+                                                                        <button type="button"
+                                                                                class="btn btn-sm btn-danger remove-row"
+                                                                                data-url="{{ route('delete-business', base64_encode($data->id)) }}"
+                                                                                title="Delete">
+                                                                            <i class="fa fa-trash"></i>
+                                                                        </button>
+                                                                    @else
+                                                                    
+                                                                        <button type="button"
+                                                                                class="btn btn-sm btn-danger"
+                                                                                title="Delete Not Allowed"
+                                                                                disabled>
+                                                                            <i class="fa fa-trash"></i>
+                                                                        </button>
+                                                                    @endif --}}
                                                                 <button data-toggle="tooltip" title="Trash"
                                                                     class="pd-setting-ed delete-button"
                                                                     data-url="{{ route('delete-business', base64_encode($data->id)) }}">
                                                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                                                 </button>
+
                                                             </div>
                                                         @endif
                                                     </td>

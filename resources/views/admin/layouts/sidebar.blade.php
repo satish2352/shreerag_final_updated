@@ -1,5 +1,10 @@
 <style>
     /* ============= pratiksha (21/08/24) ============= */
+    .dropdown-menu {
+    list-style: none !important;
+    padding-left: 0 !important;
+}
+
     .navbar-btn-wb {
         color: #fff !important;
         border: 1px solid #fff !important;
@@ -1092,43 +1097,43 @@
                                     class="mini-click-non">Employee</span></a>
                             <ul class="submenu-angle" aria-expanded="false">
                                 <li><a href="{{ route('list-users') }}"> <i
-                                            class="fa-solid fa-user-plus icon-wrap"></i> <span
+                                            class="fas fa-user-plus icon-wrap"></i> <span
                                             class="mini-click-non">Add
                                             Employee</span></a></li>
                             </ul>
                         </li>
                         <li><a href="{{ route('list-yearly-leave-management') }}"><i
-                                    class="fa-solid fa-calendar-days icon-wrap"></i> <span class="mini-click-non">Add
+                                    class="fas fa-calendar-alt icon-wrap"></i> <span class="mini-click-non">Add
                                     Yearly Leave</span></a></li>
 
 
 
                         <li>
                             <a class="has-arrow" href="{{ route('list-leaves-acceptedby-hr') }}"
-                                aria-expanded="false"> <i class="fa-solid fa-calendar-check icon-wrap"></i> <span
+                                aria-expanded="false"> <i class="fas fa-calendar-check icon-wrap"></i> <span
                                     class="mini-click-non">Leave Management</span></a>
                             <ul class="submenu-angle" aria-expanded="false">
                                 <li><a href="{{ route('list-leaves-acceptedby-hr') }}"> <i
-                                            class="fa-solid fa-envelope-open-text icon-wrap"></i> <span
+                                            class="fas fa-envelope-open-text icon-wrap"></i> <span
                                             class="mini-click-non">Leave Request</span></a></li>
 
                                 <li><a href="{{ route('list-leaves-approvedby-hr') }}"><i
-                                            class="fa-solid fa-circle-check icon-wrap"></i>
+                                            class="fas fa-check-circle icon-wrap"></i>
                                         <span class="mini-click-non">Leave Approved</span></a></li>
 
                                 <li><a href="{{ route('list-leaves-not-approvedby-hr') }}"><i
-                                            class="fa-solid fa-circle-xmark icon-wrap"></i>
+                                            class="fas fa-times-circle icon-wrap"></i>
                                         <span class="mini-click-non">Leave Not Approved</span></a></li>
                             </ul>
                         </li>
                         <li class="nav-item {{ request()->is('list-notice') ? 'active' : '' }}">
                             <a href="{{ route('list-notice') }}">
-                                <i class="fa-solid fa-bell icon-wrap"></i>
+                                <i class="fas fa-bell icon-wrap"></i>
                                 <span class="mini-click-non">Add Notice</span>
                             </a>
                         </li>
 
-                        <li><a href="{{ route('list-notice') }}"> <i class="fa-solid fa-bullhorn icon-wrap"></i>
+                        <li><a href="{{ route('list-notice') }}"> <i class="fas fa-bullhorn icon-wrap"></i>
                                 <span class="mini-click-non">Notice</span>
                             </a></li>
                     @endif
@@ -1476,7 +1481,7 @@
                                                     Department
                                                     <span class="admin-name"></span>
                                                 </a>
-                                                <ul class="dropdown-menu animated zoomIn">
+                                                <ul class="dropdown-menu  shadow-lg rounded zoomIn">
                                                     <li>
                                                         <a href="{{ route('log-out') }}" style="color: black; padding-left: 10px;">
                                                             <span class="fa fa-lock author-log-ic"></span> Log Out

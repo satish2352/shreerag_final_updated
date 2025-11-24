@@ -349,55 +349,153 @@ class EmployeesHrRepository
 	//     }
 	// }
 
-	public function usersLeavesDetails($id)
-	{
-		try {
-			$currentYear = date('Y');
-			$user = User::leftJoin('tbl_roles', 'tbl_roles.id', '=', 'users.role_id')
-				->crossJoin('tbl_leave_management')
-				->leftJoin('tbl_leaves', function ($join) use ($id) {
-					$join->on('users.id', '=', 'tbl_leaves.employee_id')
-						->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
-						->where('tbl_leaves.is_approved', 2);
-				})
-				->where('users.id', $id)
-				->where('tbl_leave_management.is_active', 1)
-				->where('tbl_leave_management.is_deleted', 0)
-				->select(
-					'users.f_name',
-					'users.m_name',
-					'users.l_name',
-					'tbl_roles.role_name',
-					'tbl_leave_management.name as leave_type_name',
-					'tbl_leave_management.leave_count',
-					'tbl_leave_management.leave_year',
-					DB::raw('COALESCE(SUM(tbl_leaves.leave_count), 0) as total_leaves_taken'),
-					DB::raw('tbl_leave_management.leave_count - COALESCE(SUM(tbl_leaves.leave_count), 0) as remaining_leaves'),
-					DB::raw('IFNULL(MONTHNAME(MIN(STR_TO_DATE(tbl_leaves.leave_end_date, "%m/%d/%Y"))), "-") as month_name')
-				)
-				->groupBy(
-					'users.f_name',
-					'users.m_name',
-					'users.l_name',
-					'tbl_roles.role_name',
-					'tbl_leave_management.id',
-					'tbl_leave_management.name',
-					'tbl_leave_management.leave_count',
-					'tbl_leave_management.leave_year',
-				)
-				->orderByRaw("CASE WHEN tbl_leave_management.leave_year = ? THEN 0 ELSE 1 END", [$currentYear])
-				->orderBy('month_name', 'asc')
-				->get();
+	// public function usersLeavesDetails($id)
+	// {
+	// 	try {
+	// 		$currentYear = date('Y');
+	// 		$user = User::leftJoin('tbl_roles', 'tbl_roles.id', '=', 'users.role_id')
+	// 			->crossJoin('tbl_leave_management')
+	// 			->leftJoin('tbl_leaves', function ($join) use ($id) {
+	// 				$join->on('users.id', '=', 'tbl_leaves.employee_id')
+	// 					->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
+	// 					->where('tbl_leaves.is_approved', 2);
+	// 			})
+	// 			->where('users.id', $id)
+	// 			->where('tbl_leave_management.is_active', 1)
+	// 			->where('tbl_leave_management.is_deleted', 0)
+	// 			->select(
+	// 				'users.f_name',
+	// 				'users.m_name',
+	// 				'users.l_name',
+	// 				'tbl_roles.role_name',
+	// 				'tbl_leave_management.name as leave_type_name',
+	// 				'tbl_leave_management.leave_count',
+	// 				'tbl_leave_management.leave_year',
+	// 				DB::raw('COALESCE(SUM(tbl_leaves.leave_count), 0) as total_leaves_taken'),
+	// 				DB::raw('tbl_leave_management.leave_count - COALESCE(SUM(tbl_leaves.leave_count), 0) as remaining_leaves'),
+	// 				DB::raw('IFNULL(MONTHNAME(MIN(STR_TO_DATE(tbl_leaves.leave_end_date, "%m/%d/%Y"))), "-") as month_name')
+	// 			)
+	// 			->groupBy(
+	// 				'users.f_name',
+	// 				'users.m_name',
+	// 				'users.l_name',
+	// 				'tbl_roles.role_name',
+	// 				'tbl_leave_management.id',
+	// 				'tbl_leave_management.name',
+	// 				'tbl_leave_management.leave_count',
+	// 				'tbl_leave_management.leave_year',
+	// 			)
+	// 			->orderByRaw("CASE WHEN tbl_leave_management.leave_year = ? THEN 0 ELSE 1 END", [$currentYear])
+	// 			->orderBy('month_name', 'asc')
+	// 			->get();
 
-			return $user->isNotEmpty() ? $user : null;
-		} catch (\Exception $e) {
-			return [
-				'msg' => $e->getMessage(),
-				'status' => 'error'
-			];
-		}
-	}
+	// 		return $user->isNotEmpty() ? $user : null;
+	// 	} catch (\Exception $e) {
+	// 		return [
+	// 			'msg' => $e->getMessage(),
+	// 			'status' => 'error'
+	// 		];
+	// 	}
+	// }
 
+public function usersLeavesDetails($id)
+{
+    try {
+        $currentYear = date('Y');
+        $previousYear = $currentYear - 1;
+
+        /* ======================================================
+            STEP 1: GET PREVIOUS YEAR PENDING LEAVES
+        ====================================================== */
+        $previousYearLeaves = DB::table('tbl_leave_management')
+            ->leftJoin('tbl_leaves', function ($join) use ($id, $previousYear) {
+                $join->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
+                    ->where('tbl_leaves.employee_id', $id)
+                    ->where('tbl_leaves.is_approved', 2)
+                    ->whereYear('tbl_leaves.leave_start_date', $previousYear);
+            })
+            ->where('tbl_leave_management.leave_year', $previousYear)
+            ->select(
+                'tbl_leave_management.name',
+                DB::raw('tbl_leave_management.leave_count - COALESCE(SUM(tbl_leaves.leave_count),0) AS pending_carry_forward')
+            )
+            ->groupBy('tbl_leave_management.name', 'tbl_leave_management.leave_count')
+            ->get()
+            ->keyBy('name');
+
+        /* ======================================================
+            STEP 2: GET CURRENT YEAR LEAVES
+        ====================================================== */
+        $userLeaves = User::leftJoin('tbl_roles', 'tbl_roles.id', '=', 'users.role_id')
+            ->crossJoin('tbl_leave_management')
+            ->leftJoin('tbl_leaves', function ($join) use ($id) {
+                $join->on('users.id', '=', 'tbl_leaves.employee_id')
+                    ->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
+                    ->where('tbl_leaves.is_approved', 2);
+            })
+            ->where('users.id', $id)
+            ->where('tbl_leave_management.is_active', 1)
+            ->where('tbl_leave_management.is_deleted', 0)
+            ->select(
+                'users.f_name',
+                'users.m_name',
+                'users.l_name',
+                'tbl_roles.role_name',
+                'tbl_leave_management.name as leave_type_name',
+                'tbl_leave_management.leave_count as current_year_leave',
+                'tbl_leave_management.leave_year',
+                DB::raw('COALESCE(SUM(tbl_leaves.leave_count), 0) AS total_leaves_taken'),
+                DB::raw('tbl_leave_management.leave_count - COALESCE(SUM(tbl_leaves.leave_count), 0) AS remaining_leaves'),
+                DB::raw('IFNULL(MONTHNAME(MIN(STR_TO_DATE(tbl_leaves.leave_end_date, "%m/%d/%Y"))), "-") as month_name')
+            )
+            ->groupBy(
+                'users.f_name',
+                'users.m_name',
+                'users.l_name',
+                'tbl_roles.role_name',
+                'tbl_leave_management.id',
+                'tbl_leave_management.name',
+                'tbl_leave_management.leave_count',
+                'tbl_leave_management.leave_year'
+            )
+            ->orderByRaw("CASE WHEN tbl_leave_management.leave_year = ? THEN 0 ELSE 1 END", [$currentYear])
+            ->orderBy('month_name', 'asc')
+            ->get();
+
+        /* ======================================================
+            STEP 3: MERGE CARRY FORWARD INTO CURRENT YEAR
+        ====================================================== */
+    foreach ($userLeaves as $row) {
+
+    // Default values
+    $row->carry_forward = 0;
+    $row->total_available_leaves = $row->current_year_leave;
+
+    // Apply carry forward ONLY for current year rows
+    if ($row->leave_year == $currentYear) {
+
+        $carry = $previousYearLeaves[$row->leave_type_name]->pending_carry_forward ?? 0;
+
+        $row->carry_forward = $carry;
+
+        $row->total_available_leaves = $row->current_year_leave + $carry;
+    }
+
+    // Final remaining
+    $row->remaining_leaves =
+        $row->total_available_leaves - $row->total_leaves_taken;
+}
+
+
+        return $userLeaves->isNotEmpty() ? $userLeaves : null;
+
+    } catch (\Exception $e) {
+        return [
+            'msg' => $e->getMessage(),
+            'status' => 'error'
+        ];
+    }
+}
 
 	public function showParticularDetails($id)
 	{

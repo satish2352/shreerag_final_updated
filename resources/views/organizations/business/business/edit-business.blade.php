@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('content')
-    <div class=".business-form">
+    <div class="business-form">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list">
                 <div class="sparkline12-hd">
@@ -151,36 +151,21 @@
                                                                         />
                                                                 </td>
                                                                   <td><input type="text" name="total_{{ $key }}" class="form-control total" readonly value="{{ $editDataNew->quantity * $editDataNew->rate }}"></td>
-                                                                {{-- <td>
-                                                                    <a data-id="{{ $editDataNew->id }}"
-                                                                        class="btn btn-sm btn-danger font-18 ml-2 remove-row"
-                                                                        title="Delete"
-                                                                        @if (!($editDataNew->business_status_id == 1112 && $editDataNew->design_status_id == 1111)) disabled @endif
-                                                                        >
-                                                                        <i class="fas fa-archive"></i>
-                                                                    </a>
-                                                                    
-                                                                </td> --}}
                                                                 <td>
-                                                                    @if ($editDataNew->id != 0)
-                                                                        {{-- Existing row --}}
-                                                                        <a data-id="{{ $editDataNew->id }}"
-                                                                            class="btn btn-sm btn-danger font-18 ml-2 remove-row"
-                                                                            title="Delete"
-                                                                            @if (!($editDataNew->business_status_id == 1112 && $editDataNew->design_status_id == 1111)) 
-                                                                                style="pointer-events:none; opacity:0.5;" 
-                                                                            @endif
-                                                                        >
-                                                                            <i class="fa fa-trash"></i>
-                                                                        </a>
-                                                                    @else
-                                                                        {{-- New added row, always enable --}}
-                                                                        <button type="button" data-id="0" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete">
-    <i class="fa fa-trash"></i>
-</button>
+    @php
+        $isEditable = ($editDataNew->business_status_id == 1112 && $editDataNew->design_status_id == 1111);
+    @endphp
 
-                                                                    @endif
-                                                                </td>
+    <button type="button"
+            class="btn btn-sm btn-danger remove-row"
+            data-id="{{ $isEditable ? $editDataNew->id : 0 }}"
+            title="Delete"
+            @if(!$isEditable) disabled @endif>
+        <i class="fa fa-trash"></i>
+    </button>
+</td>
+
+
 
                                                             </tr>
                                                         @endforeach
@@ -241,10 +226,10 @@
     </div>
     </div>
     </div>
-    <form method="POST" action="{{ route('delete-addmore') }}" id="deleteform">
+    {{-- <form method="POST" action="{{ route('delete-addmore') }}" id="deleteform">
         @csrf
         <input type="hidden" name="delete_id" id="delete_id" value="">
-    </form>
+    </form> --}}
 
 @push('scripts')
 
@@ -416,30 +401,36 @@ function updateSerialNumbers() {
         $(this).find('td:first').text(index + 1);
     });
 }
-// After deleting a row
-$(document).on("click", ".remove-row", function(e) {
-    const id = $(this).data("id");
-    if (!id || id === 0) {
+
+
+$(document).on("click", ".remove-row", function (e) {
+
+    const deleteId = $(this).data("id");
+
+    // If row is newly added (not saved in DB)
+    if (deleteId == 0) {
         $(this).closest("tr").remove();
         calculateGrandTotal();
-        updateSerialNumbers(); // Update serial numbers
         return;
     }
-    e.preventDefault();
+
+    // If saved row → delete from DB
     Swal.fire({
-        title: 'Are you sure?',
-        text: "This will permanently delete this product row!",
-        icon: 'warning',
+        title: "Are you sure?",
+        text: "This row will be deleted permanently!",
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!',
-        cancelButtonText: 'Cancel'
+        confirmButtonText: "Yes, delete it!",
     }).then((result) => {
         if (result.isConfirmed) {
-            $('#delete_id').val(id);
-            $('#deleteform').submit();
+            $("#delete_id").val(deleteId);   // SET ID
+            $("#deleteform").submit();       // SUBMIT THE DELETE FORM
         }
     });
+
 });
+
+
         $("#purchase_order_table tbody tr").each(function() {
             initializeValidation($(this));
             calculateTotalAmount($(this));
@@ -447,4 +438,10 @@ $(document).on("click", ".remove-row", function(e) {
     });
 </script>
 @endpush
+{{-- DELETE FORM (must be outside update form) --}}
+<form method="POST" action="{{ url('owner/delete-addmore') }}" id="deleteform">
+    @csrf
+    <input type="hidden" name="delete_id" id="delete_id">
+</form>
 @endsection
+

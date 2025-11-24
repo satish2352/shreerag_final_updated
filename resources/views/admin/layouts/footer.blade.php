@@ -93,18 +93,24 @@ $(document).ready(() => {
 
 <!-- DELETE BUTTON SCRIPT -->
 <script>
-$(document).on('click', '.delete-btn', function () {
+// $(document).on('click', '.delete-btn', function () {
+$(document).on('click', '.remove-row', function () {
 
-    let id = $(this).data('id');
+    let id = $(this).data('id');  
+    console.log("Deleting ID = ", id);
+
+    // New row: delete only in frontend
+    if (id == 0) {
+        $(this).closest("tr").remove();
+        return;
+    }
 
     Swal.fire({
         title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        text: "This row will be permanently deleted.",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
+        confirmButtonText: 'Yes, delete!'
     }).then((result) => {
         if (result.isConfirmed) {
             $("#delete_id").val(id);
@@ -113,6 +119,7 @@ $(document).on('click', '.delete-btn', function () {
     });
 
 });
+
 </script>
 
 <!-- SHOW BUTTON -->
@@ -180,10 +187,10 @@ function fetch_new_hold() {
             $.each(response.notifications, function (i, n) {
                 if (n.admin_count > 0) {
                     messages += `
-                    <li>
+                    <li class="bullet-list">
                         <a href="${n.url}">
-                            <div class="notification-content">
-                                <h6 style="color:#444;">${n.message}</h6>
+                            <div class="notification-content d-flex" >
+                               <h6 style="color:#444;">-> ${n.message}</h6>
                             </div>
                         </a>
                     </li>`;
@@ -211,6 +218,41 @@ $(document).ready(function () {
 </script>
 
 
+
+<script>
+    $(document).on('click', '.show-btn', function(e) {
+    $("#show_id").val($(this).attr("data-id"));
+    $("#showform").submit();
+});
+
+</script>
+
+
+<script>
+    $('.edit-btn').click(function(e) {
+        $("#edit_id").val($(this).attr("data-id"));
+        $("#editform").submit();
+     })
+ </script>
+<script>
+  
+        $(document).on('click', '.edit-user-btn', function(e) {
+        $("#edit_user_id").val($(this).attr("data-id"));
+        $("#edituserform").submit();
+    })
+</script>
+
+<script>
+        $(document).on('click', '.active-btn', function(e) {
+        $("#active_id").val($(this).attr("data-id"));
+        $("#activeform").submit();
+    })
+</script>
+<script>
+    setTimeout(function() {
+            $(".alert").alert('close');
+        }, 1000); // 1000 milliseconds = 1 second
+    </script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <!-- ========================= FOOTER END ========================= -->

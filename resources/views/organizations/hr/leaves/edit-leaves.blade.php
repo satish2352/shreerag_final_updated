@@ -22,25 +22,33 @@
             /* Add any other styling as per your design */
         }
 
-        /* Style for the calendar icon */
-        .calendar-icon {
-            position: relative;
-            display: inline-block;
-            width: -webkit-fill-available;
-        }
+         /* FIX: Calendar icon must stay fixed even when error message appears */
+.calendar-icon {
+    position: relative;
+    display: block;
+}
 
-        .calendar-icon input[type="date"] {
-            padding-right: 25px;
-        }
+.calendar-icon::after {
+    content: "\1F4C5";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);   /* prevents icon from moving */
+    right: 10px;
+    pointer-events: none;
+    z-index: 10;
+}
 
-        .calendar-icon::after {
-            content: '\1F4C5';
-            position: absolute;
-            top: 50%;
-            right: 5px;
-            transform: translateY(-50%);
-            pointer-events: none;
-        }
+/* Ensure error message does NOT push icon down */
+.calendar-icon input {
+    position: relative;
+    z-index: 5;
+}
+
+/* Prevent DIV expanding too much when error label appears */
+.calendar-icon + label.error {
+    margin-top: 2px !important;
+    display: block;
+}
 
 
         /* ----- FIX Full jQuery UI Datepicker Calendar Layout ----- */
@@ -286,11 +294,11 @@
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <link rel="stylesheet" 
+href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+@push('scripts')
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
     <script>
         $(function() {
@@ -355,4 +363,6 @@
             }
         });
     </script>
+      @endpush
+
 @endsection

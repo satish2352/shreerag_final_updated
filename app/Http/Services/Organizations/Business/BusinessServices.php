@@ -41,6 +41,7 @@ class BusinessServices
     public function getById($id)
     {
         try {
+            
             return $this->repo->getById($id);
         } catch (\Exception $e) {
             return $e;
@@ -75,27 +76,28 @@ class BusinessServices
 public function deleteByIdAddmore($id)
 {
     try {
-        $delete = $this->repo->deleteByIdAddmore($id);
+        $deleted = $this->repo->deleteByIdAddmore($id);
 
-        if ($delete) {
-            return ['status' => 'success', 'msg' => 'Deleted Successfully.'];
+        if ($deleted) {
+            return [
+                'status' => 'success',
+                'msg' => 'Product row deleted successfully.'
+            ];
         }
 
-        // Print custom debug message
         return [
             'status' => 'error',
-            'msg' => 'Not Deleted. (ID = ' . $id . ' not found or already deleted)'
+            'msg' => "Record not found or already deleted (ID = $id)"
         ];
 
     } catch (\Exception $e) {
-
-        // Print actual error
         return [
             'status' => 'error',
-            'msg' => 'Delete Failed: ' . $e->getMessage()
+            'msg'    => $e->getMessage()
         ];
     }
 }
+
 
 
 

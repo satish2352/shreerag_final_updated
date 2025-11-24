@@ -194,29 +194,28 @@ class BusinessController extends Controller
             return $e;
         }
     }
-    public function destroyAddmore(Request $request)
-    {
-      
-        try {
-            dd($request->delete_id);  // shows ID being sent
-            $delete_rti = $this->service->deleteByIdAddmore($request->delete_id);
+   public function destroyAddmore(Request $request)
+{
+    try {
 
-            if ($delete_rti) {
-                $msg = $delete_rti['msg'];
-                $status = $delete_rti['status'];
+        $id = $request->delete_id;
 
-                $id = base64_encode($request->delete_id); // This looks unnecessary unless used on the frontend
-
-                if ($status == 'success') {
-                    return redirect()->back()->with(compact('msg', 'status'));
-                } else {
-                    return redirect()->back()->withInput()->with(compact('msg', 'status'));
-                }
-            }
-        } catch (\Exception $e) {
-            return back()->with('status', 'error')->with('msg', $e->getMessage());
+        if (!$id) {
+            return back()->with('status', 'error')->with('msg', 'Invalid ID received.');
         }
+
+        $delete = $this->service->deleteByIdAddmore($id);
+
+        return back()->with([
+            'status' => $delete['status'],
+            'msg'    => $delete['msg']
+        ]);
+
+    } catch (\Exception $e) {
+        return back()->with('status', 'error')->with('msg', $e->getMessage());
     }
+}
+
     public function acceptEstimationBOM($id)
     {
         try {

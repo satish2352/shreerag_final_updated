@@ -73,13 +73,13 @@
                             <div class="row print-row" style="padding-left:10px;">
                                 <div class="col-lg-4 col-md-4 col-sm-4 left-side"><p><strong>From Date</strong> :</p></div>
                                 <div class="col-lg-8 col-md-8 col-sm-8 right-side">
-                                    <p>{{ strip_tags($user_detail['leave_details']->leave_start_date) }}</p>
+                                    <p>{{ date('d-m-Y', strtotime($user_detail['leave_details']->leave_start_date)) }}</p>
                                 </div>
                             </div>
                             <div class="row print-row" style="padding-left:10px;">
                                 <div class="col-lg-4 col-md-4 col-sm-4 left-side"><p><strong>To Date</strong> :</p></div>
                                 <div class="col-lg-8 col-md-8 col-sm-8 right-side">
-                                    <p>{{ strip_tags($user_detail['leave_details']->leave_end_date) }}</p>
+                                    <p>{{ date('d-m-Y', strtotime($user_detail['leave_details']->leave_end_date)) }}</p>
                                 </div>
                             </div>
                             <div class="row print-row" style="padding-left:10px;">
@@ -119,6 +119,7 @@
                                 <table class="table table-bordered table-sm">
                                     <thead class="thead-light">
                                         <tr>
+                                              <th>Year</th>
                                             <th>Leave Type</th>
                                             <th>Total Leave Count</th>
                                             <th>Total Leaves Taken</th>
@@ -128,6 +129,8 @@
                                     <tbody>
                                         @foreach($user_detail['leave_summary'] as $leave)
                                             <tr>
+                                                
+                                                <td>{{ $leave->leave_year }}</td>
                                                 <td>{{ $leave->leave_type_name }}</td>
                                                 <td>{{ $leave->leave_count }}</td>
                                                 <td>{{ $leave->total_leaves_taken }}</td>

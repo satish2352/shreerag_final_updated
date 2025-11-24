@@ -31,7 +31,7 @@ class LeavesRepository
                     'tbl_leaves.is_approved'
                 )
 
-                ->orderBy('tbl_leaves.updated_at', 'desc')
+                ->orderBy('tbl_leaves.created_at', 'desc')
                 ->get();
 
             return $data_output;
@@ -77,14 +77,17 @@ class LeavesRepository
                 })
                 ->where('tbl_leave_management.is_active', 1)
                 ->where('tbl_leave_management.is_deleted', 0)
-                ->where('tbl_leave_management.leave_year', $current_year)
+                // ->where('tbl_leave_management.leave_year', $current_year)
+                ->whereIn('tbl_leave_management.leave_year', [$current_year, $current_year - 1])
+
                 ->select(
                     'tbl_leave_management.name as leave_type_name',
                     'tbl_leave_management.leave_count',
+                     'tbl_leave_management.leave_year',
                     DB::raw('COALESCE(SUM(tbl_leaves.leave_count), 0) as total_leaves_taken'),
                     DB::raw('tbl_leave_management.leave_count - COALESCE(SUM(tbl_leaves.leave_count), 0) as remaining_leaves')
                 )
-                ->groupBy('tbl_leave_management.id', 'tbl_leave_management.name', 'tbl_leave_management.leave_count')
+                ->groupBy('tbl_leave_management.id', 'tbl_leave_management.name', 'tbl_leave_management.leave_count', 'tbl_leave_management.leave_year')
                 ->get();
 
             // Return the results
@@ -228,53 +231,130 @@ class LeavesRepository
         }
     }
 
+    // public function addAll($request)
+    // {
+
+    //     try {
+    //         $dataOutput = new Leaves();
+    //         $dataOutput->employee_id = $request->session()->get('user_id');
+    //         $dataOutput->other_employee_name = $request->other_employee_name;
+    //         $dataOutput->leave_start_date = $request->leave_start_date;
+    //         $dataOutput->leave_end_date = $request->leave_end_date;
+    //         $dataOutput->leave_day = $request->leave_day;
+    //         $dataOutput->leave_type_id = $request->leave_type_id;
+    //         $dataOutput->reason = $request->reason;
+
+    //         $dataOutput->organization_id = $request->session()->get('org_id');
+
+    //         // Calculate leave days count
+    //         $leaveStartDate = Carbon::parse($request->leave_start_date);
+    //         $leaveEndDate = Carbon::parse($request->leave_end_date);
+
+    //         if ($request->leave_count == 'full_day') {
+    //             // For full day leave, count the days including the start and end date
+    //             $leaveDaysCount = $leaveEndDate->diffInDays($leaveStartDate) + 1;
+    //         } else {
+    //             // For half-day leave, count the days between start and end date
+    //             $leaveDaysCount = $leaveEndDate->diffInDays($leaveStartDate);
+    //         }
+
+    //         $dataOutput->leave_count = $leaveDaysCount;
+
+    //         $dataOutput->save();
+
+    //         $last_insert_id = $dataOutput->id;
+    //         $finalOutput = Leaves::find($last_insert_id);
+    //         $finalOutput->save();
+    //         $update_data_admin['notification_read_status'] = '0';
+    //         Leaves::where('employee_id', $dataOutput->employee_id)
+    //             ->update($update_data_admin);
+    //         return [
+    //             'status' => 'success'
+    //         ];
+    //     } catch (\Exception $e) {
+    //         return [
+    //             'msg' => $e->getMessage(),
+    //             'status' => 'error'
+    //         ];
+    //     }
+    // }
     public function addAll($request)
-    {
+{
+    try {
 
-        try {
-            $dataOutput = new Leaves();
-            $dataOutput->employee_id = $request->session()->get('user_id');
-            $dataOutput->other_employee_name = $request->other_employee_name;
-            $dataOutput->leave_start_date = $request->leave_start_date;
-            $dataOutput->leave_end_date = $request->leave_end_date;
-            $dataOutput->leave_day = $request->leave_day;
-            $dataOutput->leave_type_id = $request->leave_type_id;
-            $dataOutput->reason = $request->reason;
+        $employeeId = $request->session()->get('user_id');
+        $leaveTypeId = $request->leave_type_id;
 
-            $dataOutput->organization_id = $request->session()->get('org_id');
+        // Convert dates
+        $startDate = Carbon::parse($request->leave_start_date)->startOfDay();
+        $endDate   = Carbon::parse($request->leave_end_date)->startOfDay();
 
-            // Calculate leave days count
-            $leaveStartDate = Carbon::parse($request->leave_start_date);
-            $leaveEndDate = Carbon::parse($request->leave_end_date);
+        if ($endDate->lessThan($startDate)) {
+            return ['status' => 'error', 'msg' => 'End date cannot be before start date.'];
+        }
 
-            if ($request->leave_count == 'full_day') {
-                // For full day leave, count the days including the start and end date
-                $leaveDaysCount = $leaveEndDate->diffInDays($leaveStartDate) + 1;
-            } else {
-                // For half-day leave, count the days between start and end date
-                $leaveDaysCount = $leaveEndDate->diffInDays($leaveStartDate);
-            }
+        // Calculate Leave Days
+        if ($request->leave_day == 'full_day') {
+            $leaveCount = $startDate->diffInDays($endDate) + 1;
+        } else {
+            $leaveCount = 0.5;
+        }
 
-            $dataOutput->leave_count = $leaveDaysCount;
+        // Check availability
+        $currentYear = date('Y');
 
-            $dataOutput->save();
+        $leaveData = DB::table('tbl_leave_management')
+            ->leftJoin('tbl_leaves', function ($join) use ($employeeId) {
+                $join->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
+                    ->where('tbl_leaves.employee_id', $employeeId)
+                    ->where('tbl_leaves.is_approved', 2);
+            })
+            ->where('tbl_leave_management.id', $leaveTypeId)
+            ->where('tbl_leave_management.leave_year', $currentYear)
+            ->select(
+                'tbl_leave_management.name',
+                'tbl_leave_management.leave_count',
+                DB::raw('COALESCE(SUM(tbl_leaves.leave_count), 0) as taken')
+            )
+            ->groupBy('tbl_leave_management.leave_count', 'tbl_leave_management.name')
+            ->first();
 
-            $last_insert_id = $dataOutput->id;
-            $finalOutput = Leaves::find($last_insert_id);
-            $finalOutput->save();
-            $update_data_admin['notification_read_status'] = '0';
-            Leaves::where('employee_id', $dataOutput->employee_id)
-                ->update($update_data_admin);
+        if (!$leaveData) {
+            return ['status' => 'error', 'msg' => 'Leave type not found.'];
+        }
+
+        $available = $leaveData->leave_count - $leaveData->taken;
+
+        if ($leaveCount > $available) {
             return [
-                'status' => 'success'
-            ];
-        } catch (\Exception $e) {
-            return [
-                'msg' => $e->getMessage(),
-                'status' => 'error'
+                'status' => 'error',
+                'msg' => "You cannot take $leaveCount days of {$leaveData->name}. Only $available available."
             ];
         }
+
+        // SAVE
+        $leave = new Leaves();
+        $leave->employee_id = $employeeId;
+        $leave->organization_id = $request->session()->get('org_id');
+        $leave->other_employee_name = $request->other_employee_name;
+        $leave->leave_type_id = $leaveTypeId;
+        $leave->leave_day = $request->leave_day;
+        $leave->reason = $request->reason;
+        $leave->leave_start_date = $request->leave_start_date;
+        $leave->leave_end_date = $request->leave_end_date;
+        $leave->leave_count = $leaveCount;
+        $leave->save();
+
+        return ['status' => 'success', 'msg' => 'Leave added successfully.'];
+
+    } catch (\Exception $e) {
+        return ['status' => 'error', 'msg' => $e->getMessage()];
     }
+}
+
+
+
+
     public function updateAll($request)
     {
         try {
