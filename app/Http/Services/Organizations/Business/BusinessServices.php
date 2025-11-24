@@ -72,21 +72,33 @@ class BusinessServices
             ];
         }
     }
-    public function deleteByIdAddmore()
-    {
-        try {
+public function deleteByIdAddmore($id)
+{
+    try {
+        $delete = $this->repo->deleteByIdAddmore($id);
 
-            $delete = $this->repo->deleteByIdAddmore();
-
-            if ($delete) {
-                return ['status' => 'success', 'msg' => 'Deleted Successfully.'];
-            } else {
-                return ['status' => 'error', 'msg' => 'Not Deleted.'];
-            }
-        } catch (Exception $e) {
-            return ['status' => 'error', 'msg' => $e->getMessage()];
+        if ($delete) {
+            return ['status' => 'success', 'msg' => 'Deleted Successfully.'];
         }
+
+        // Print custom debug message
+        return [
+            'status' => 'error',
+            'msg' => 'Not Deleted. (ID = ' . $id . ' not found or already deleted)'
+        ];
+
+    } catch (\Exception $e) {
+
+        // Print actual error
+        return [
+            'status' => 'error',
+            'msg' => 'Delete Failed: ' . $e->getMessage()
+        ];
     }
+}
+
+
+
     public function deleteById($id)
     {
         try {

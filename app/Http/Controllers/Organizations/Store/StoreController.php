@@ -359,25 +359,42 @@ class StoreController extends Controller
             return redirect()->back()->with('error', 'An error occurred while updating GRN.');
         }
     }
+    // public function destroyAddmoreStoreItem(Request $request)
+    // {
+
+    //     $delete_data_id = $request->delete_id;
+    //     // Get the delete ID from the request
+
+    //     try {
+    //         $delete_record = $this->service->destroyAddmoreStoreItem($delete_data_id);
+    //         if ($delete_record) {
+    //             $msg = $delete_record['msg'];
+    //             $status = $delete_record['status'];
+    //             if ($status == 'success') {
+    //                 return redirect('storedept/list-accepted-design-from-prod')->with(compact('msg', 'status'));
+    //             } else {
+    //                 return redirect()->back()->withInput()->with(compact('msg', 'status'));
+    //             }
+    //         }
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+
     public function destroyAddmoreStoreItem(Request $request)
     {
-
-        $delete_data_id = $request->delete_id;
-        // Get the delete ID from the request
-
         try {
-            $delete_record = $this->service->destroyAddmoreStoreItem($delete_data_id);
-            if ($delete_record) {
-                $msg = $delete_record['msg'];
-                $status = $delete_record['status'];
-                if ($status == 'success') {
-                    return redirect('storedept/list-accepted-design-from-prod')->with(compact('msg', 'status'));
-                } else {
-                    return redirect()->back()->withInput()->with(compact('msg', 'status'));
-                }
-            }
+            $delete_record = $this->service->destroyAddmoreStoreItem($request->delete_id);
+
+            return response()->json([
+                'status' => $delete_record['status'],
+                'msg'    => $delete_record['msg']
+            ]);
         } catch (\Exception $e) {
-            return $e;
+            return response()->json([
+                'status' => 'error',
+                'msg'    => $e->getMessage()
+            ], 500);
         }
     }
 }

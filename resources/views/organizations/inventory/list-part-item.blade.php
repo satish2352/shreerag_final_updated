@@ -88,13 +88,13 @@
                                                         @if(is_null($data->quantity))
                                                             <a href="#" data-toggle="tooltip" title="Edit" class="pd-setting-ed disabled">
                                                                 <button class="disabled" disabled>
-                                                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                                    <i class="fas fa-pen-square" aria-hidden="true"></i>
                                                                 </button>
                                                             </a>
                                                         @else
                                                             <a href="{{route('edit-product-stock', base64_encode($data->id))}}">
                                                                 <button data-toggle="tooltip" title="Edit" class="btn btn-sm btn-bg-colour">
-                                                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                                    <i class="fas fa-pen-square" aria-hidden="true"></i>
                                                                 </button>
                                                             </a>
                                                         @endif

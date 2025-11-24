@@ -45,7 +45,7 @@
                                                         id="addEmployeeForm" enctype="multipart/form-data">
                                                         @csrf
                                                         <div class="form-group-inner">
-                                                            <div>
+                                                            <div class="row">
                                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                                     <label for="project_name">Project Name : <span
                                                                             class="text-danger">*</span></label>
@@ -69,6 +69,8 @@
                                                                         <span class="red-text"><?php echo $errors->first('customer_po_number', ':message'); ?></span>
                                                                     @endif
                                                                 </div>
+                                                            </div>
+                                                               <div class="row mt-2">
                                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                                     <label for="title">Customer Name : <span
                                                                             class="text-danger">*</span></label>
@@ -90,7 +92,7 @@
                                                                     @endif
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-12 col-sm-12">
+                                                            <div class="col-md-12 col-sm-12 mt-2">
                                                                 <div class="table-responsive">
                                                                     <table class="table table-hover table-white repeater"
                                                                         id="purchase_order_table">
@@ -194,15 +196,15 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                    <label for="customer_payment_terms">Payment Terms
-                                                                        :</label> (optional)
+                                                                    <label for="customer_payment_terms">Payment Terms (optional)
+                                                                        :</label> 
                                                                     <textarea class="form-control" rows="3" type="text" class="form-control" id="customer_payment_terms"
                                                                         name="customer_payment_terms" placeholder="Enter Payment Terms">{{ old('customer_payment_terms') }}</textarea>
                                                                 </div>
 
                                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                    <label for="customer_terms_condition">Terms Condition
-                                                                        :</label> (optional)
+                                                                    <label for="customer_terms_condition">Terms Condition (optional)
+                                                                        :</label> 
                                                                     <textarea class="form-control" rows="3" type="text" class="form-control" id="customer_terms_condition"
                                                                         name="customer_terms_condition" placeholder="Enter Terms and Condition">{{ old('customer_terms_condition') }}</textarea>
                                                                 </div>
@@ -237,10 +239,7 @@
                 </div>
             </div>
         </div>
-        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+        @push('scripts')
         <script>
             $(document).ready(function() {
 
@@ -494,4 +493,5 @@
                 calculateGrandTotal();
             });
         </script>
+        @endpush
     @endsection

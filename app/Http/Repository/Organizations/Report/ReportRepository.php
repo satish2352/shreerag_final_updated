@@ -411,14 +411,14 @@ class ReportRepository
                 ->leftJoin('tbl_dispatch', function ($join) {
                     $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_dispatch.quantity_tracking_id');
                 })
-                ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status', $array_to_be_quantity_tracking)
+                // ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status', $array_to_be_quantity_tracking) //3001
                 ->where('businesses.is_active', true)
                 ->where('businesses.is_deleted', 0)
                 ->whereRaw('tbl_customer_product_quantity_tracking.id = (
         SELECT MAX(id) 
         FROM tbl_customer_product_quantity_tracking t2 
         WHERE t2.business_details_id = businesses_details.id
-    )');   // only latest entry per product
+    )');
             // Apply filters
             if ($request->filled('search')) {
                 $search = $request->search;

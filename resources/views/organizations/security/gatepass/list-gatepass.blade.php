@@ -87,7 +87,7 @@
                                                                 <button data-toggle="tooltip" title="Edit"
                                                                     class="btn btn-sm btn-bg-colour @if ($data->quality_status_id === 1134) disabled @endif"
                                                                     @if ($data->quality_status_id === 1134) disabled @endif>
-                                                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                                    <i class="fas fa-pen-square" aria-hidden="true"></i>
                                                                 </button>
                                                             </a>
                                                         </div>

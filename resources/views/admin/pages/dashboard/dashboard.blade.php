@@ -196,13 +196,16 @@
             overflow: scroll;
             height: 600px;
         }
+        .sparkline12-hd{
+            padding-top:85px !important;
+        }
     </style>
 
-    <div class="data-table-area mg-tb-15">
+    
         <div class="container-fluid">
             <div class="row ">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="sparkline14-list">
+                    <div class="sparkline12-hd">
                         @php
                             $role = session()->get('role_id');
                             $allowedRoles = [
@@ -1998,7 +2001,7 @@
                 </div>
             </div>
         </div>
-    </div>
+   
 @endsection
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

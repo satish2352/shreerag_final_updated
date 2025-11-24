@@ -114,7 +114,7 @@
                                                 placeholder="Search...">
                                             <div class="dropdown">
                                                 <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                                    id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    id="exportDropdown" data-toggle="dropdown" aria-expanded="false">
                                                     <i class="fa fa-download"></i> Export
                                                 </button>
                                                 <ul class="dropdown-menu" aria-labelledby="exportDropdown">

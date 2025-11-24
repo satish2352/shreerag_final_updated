@@ -74,7 +74,7 @@
                                                         <div style="display: flex; align-items: center;">
                                                             <a href="{{ route('add-logistics', $data->id) }}"><button
                                                                     data-toggle="tooltip" title="Edit"
-                                                                    class="btn btn-sm btn-bg-colour"><i class="fa fa-pencil-square-o"
+                                                                    class="btn btn-sm btn-bg-colour"><i class="fas fa-pen-square"
                                                                         aria-hidden="true"></i></button></a>
                                                         </div>
                                                     </td>
@@ -90,5 +90,4 @@
             </div>
         </div>
     </div>
-     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-@endsection
+   @endsection

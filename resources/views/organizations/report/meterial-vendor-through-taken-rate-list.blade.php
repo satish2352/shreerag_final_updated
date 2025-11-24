@@ -79,7 +79,7 @@
                                                 id="searchKeyword" style="margin-right: 23px;" placeholder="Search...">
                                             <div class="dropdown">
                                                 <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                                    id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                                                    id="exportDropdown" data-toggle="dropdown" aria-expanded="false"
                                                     style="float: right;">
                                                     <i class="fa fa-download"></i> Export
                                                 </button>

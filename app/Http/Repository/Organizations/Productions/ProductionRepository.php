@@ -385,6 +385,7 @@ class ProductionRepository
                     'pd.business_details_id',
                     'pd.material_send_production',
                     'pd.basic_rate',
+                    'pd.updated_at',
                     'tbl_part_item.description as part_description',
                     'designs.bom_image',
                     'designs.design_image',
@@ -579,102 +580,233 @@ class ProductionRepository
     //         ];
     //     }
     // }
+    // public function updateProductMaterial($request)
+    // {
+    //     try {
+    //         $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $request->business_details_id)
+    //             ->firstOrFail();
+    //         // dd($dataOutput_ProductionDetails, "dataOutput_ProductionDetails=====");
+
+    //         $errorMessages = [];
+
+    //         foreach ($request->addmore as $item) {
+    //             // dd($item, "item==========");
+    //             // Ensure default values to avoid undefined index
+    //             $partItemId = $item['part_item_id'] ?? null;
+    //             $quantity   = $item['quantity'] ?? 0;
+    //             $unit       = $item['unit'] ?? null;
+
+    //             if (!$partItemId) {
+    //                 $errorMessages[] = "Part Item ID is missing for one of the rows.";
+    //                 continue;
+    //             }
+
+    //             // Get basic rate
+    //             $partItemData = PartItem::where('id', $partItemId)->first();
+    //             // dd($partItemData, "partItemData==========");
+    //             $basicRate    = $partItemData ? $partItemData->basic_rate : 0;
+    //             // dd($basicRate, "basicRate==========");
+    //             // Calculate total amount
+    //             $totalAmount = isset($item['items_used_total_amount'])
+    //                 ? $item['items_used_total_amount']
+    //                 : ($basicRate * $quantity);
+    //             // dd($totalAmount, "totalAmount==========");
+    //             // Check if part_item_id already exists with material_send_production == 0
+    //             $existingDetail = ProductionDetails::where('business_details_id', $request->business_details_id)
+    //                 ->where('part_item_id', $partItemId)
+    //                 ->where('material_send_production', 0)
+    //                 ->where('quantity_minus_status', 'pending')
+    //                 ->first();
+    //             // dd($existingDetail, "existingDetail==========");
+    //             if ($existingDetail) {
+
+    //                 // dd($existingDetail, "existingDetailexistingDetail==========");
+    //                 $existingDetail->part_item_id              = $partItemId;
+    //                 $existingDetail->quantity                  = $quantity;
+    //                 $existingDetail->unit                      = $unit;
+    //                 $existingDetail->basic_rate                = $basicRate;
+    //                 $existingDetail->items_used_total_amount   = $totalAmount;
+    //                 $existingDetail->material_send_production  = 0;
+    //                 $existingDetail->quantity_minus_status     = 'pending';
+    //                 $existingDetail->save();
+    //             } else {
+    //                 // dd("hii savita==========");
+    //                 $dataOutput = new ProductionDetails();
+    //                 $dataOutput->part_item_id               = $partItemId;
+    //                 $dataOutput->quantity                   = $quantity;
+    //                 $dataOutput->unit                       = $unit;
+    //                 $dataOutput->basic_rate                 = $basicRate;
+    //                 $dataOutput->items_used_total_amount    = $totalAmount;
+    //                 $dataOutput->quantity_minus_status      = 'pending';
+    //                 $dataOutput->material_send_production   = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
+    //                 $dataOutput->business_id                = $dataOutput_ProductionDetails->business_id;
+    //                 $dataOutput->design_id                  = $dataOutput_ProductionDetails->design_id;
+    //                 $dataOutput->business_details_id        = $dataOutput_ProductionDetails->business_details_id;
+    //                 $dataOutput->production_id              = $dataOutput_ProductionDetails->production_id;
+
+
+    //                 // dd($dataOutput, "dataOutput==========");
+    //                 $dataOutput->save();
+    //             }
+    //         }
+
+
+    //         if (!empty($errorMessages)) {
+    //             return [
+    //                 'status' => 'error',
+    //                 'errors' => $errorMessages
+    //             ];
+    //         }
+
+    //         // Update status
+    //         $businessOutput = BusinessApplicationProcesses::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)
+    //             ->firstOrFail();
+    //         $businessOutput->product_production_inprocess_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_INPROCESS_FOR_PRODUCTION');
+    //         $businessOutput->save();
+
+    //         return [
+    //             'status' => 'success',
+    //             'message' => 'Production materials updated successfully.',
+    //             'updated_details' => $request->all()
+    //         ];
+    //     } catch (\Exception $e) {
+    //         return [
+    //             'status' => 'error',
+    //             'error' => $e->getMessage()
+    //         ];
+    //     }
+    // }
     public function updateProductMaterial($request)
     {
         try {
-            $dataOutput_ProductionDetails = ProductionDetails::where('business_details_id', $request->business_details_id)
+
+            // ============================================
+            // 1️⃣ FETCH BASE DETAILS
+            // ============================================
+            $baseDetail = ProductionDetails::where('business_details_id', $request->business_details_id)
                 ->firstOrFail();
-            // dd($dataOutput_ProductionDetails, "dataOutput_ProductionDetails=====");
 
             $errorMessages = [];
 
-            foreach ($request->addmore as $item) {
-                // dd($item, "item==========");
-                // Ensure default values to avoid undefined index
-                $partItemId = $item['part_item_id'] ?? null;
-                $quantity   = $item['quantity'] ?? 0;
-                $unit       = $item['unit'] ?? null;
+            // ============================================
+            // 2️⃣ LOOP THROUGH addmore ROWS
+            // ============================================
+            foreach ($request->addmore as $index => $item) {
 
-                if (!$partItemId) {
-                    $errorMessages[] = "Part Item ID is missing for one of the rows.";
+                // --------------------------------------------------
+                // ⭐ FIRST: SKIP EMPTY ROWS (PART ITEM EMPTY)
+                // --------------------------------------------------
+                if (
+                    empty($item['part_item_id']) ||
+                    $item['part_item_id'] == null ||
+                    $item['part_item_id'] == ""
+                ) {
                     continue;
                 }
 
-                // Get basic rate
-                $partItemData = PartItem::where('id', $partItemId)->first();
-                // dd($partItemData, "partItemData==========");
+                // --------------------------------------------------
+                // ⭐ SECOND: SKIP DISABLED ROWS (QUANTITY NOT SENT)
+                // --------------------------------------------------
+                if (
+                    !isset($item['quantity']) ||                // not present
+                    $item['quantity'] === null ||              // null
+                    $item['quantity'] === '' ||                // empty string
+                    floatval($item['quantity']) <= 0           // 0 or negative
+                ) {
+                    continue;  // SKIP this row completely
+                }
+
+                // Clean variables
+                $partItemId = $item['part_item_id'];
+                $quantity   = (float) $item['quantity'];
+                $unit       = $item['unit'] ?? null;
+                $isSendProd = $item['material_send_production'] ?? 0;
+
+                // --------------------------------------------------
+                // 3️⃣ FETCH PART ITEM BASIC RATE
+                // --------------------------------------------------
+                $partItemData = PartItem::find($partItemId);
                 $basicRate    = $partItemData ? $partItemData->basic_rate : 0;
-                // dd($basicRate, "basicRate==========");
-                // Calculate total amount
-                $totalAmount = isset($item['items_used_total_amount'])
-                    ? $item['items_used_total_amount']
-                    : ($basicRate * $quantity);
-                dd($totalAmount, "totalAmount==========");
-                // Check if part_item_id already exists with material_send_production == 0
-                $existingDetail = ProductionDetails::where('business_details_id', $request->business_details_id)
+
+                $totalAmount  = $item['items_used_total_amount'] ?? ($basicRate * $quantity);
+
+                // --------------------------------------------------
+                // 4️⃣ CHECK IF ANY PENDING ROW ALREADY EXISTS
+                // --------------------------------------------------
+                $pendingRow = ProductionDetails::where('business_details_id', $request->business_details_id)
                     ->where('part_item_id', $partItemId)
                     ->where('material_send_production', 0)
                     ->where('quantity_minus_status', 'pending')
                     ->first();
-                // dd($existingDetail, "existingDetail==========");
-                if ($existingDetail) {
 
-                    dd($existingDetail, "existingDetailexistingDetail==========");
-                    $existingDetail->part_item_id              = $partItemId;
-                    $existingDetail->quantity                  = $quantity;
-                    $existingDetail->unit                      = $unit;
-                    $existingDetail->basic_rate                = $basicRate;
-                    $existingDetail->items_used_total_amount   = $totalAmount;
-                    $existingDetail->material_send_production  = 0;
-                    $existingDetail->quantity_minus_status     = 'pending';
-                    $existingDetail->save();
-                } else {
-                    // dd("hii savita==========");
-                    $dataOutput = new ProductionDetails();
-                    $dataOutput->part_item_id               = $partItemId;
-                    $dataOutput->quantity                   = $quantity;
-                    $dataOutput->unit                       = $unit;
-                    $dataOutput->basic_rate                 = $basicRate;
-                    $dataOutput->items_used_total_amount    = $totalAmount;
-                    $dataOutput->quantity_minus_status      = 'pending';
-                    $dataOutput->material_send_production   = isset($item['material_send_production']) && $item['material_send_production'] == '1' ? 1 : 0;
-                    $dataOutput->business_id                = $dataOutput_ProductionDetails->business_id;
-                    $dataOutput->design_id                  = $dataOutput_ProductionDetails->design_id;
-                    $dataOutput->business_details_id        = $dataOutput_ProductionDetails->business_details_id;
-                    $dataOutput->production_id              = $dataOutput_ProductionDetails->production_id;
+                if ($pendingRow) {
 
+                    $pendingRow->quantity                 = $quantity;
+                    $pendingRow->unit                     = $unit;
+                    $pendingRow->basic_rate               = $basicRate;
+                    $pendingRow->items_used_total_amount  = $totalAmount;
+                    $pendingRow->material_send_production = $isSendProd;
+                    $pendingRow->quantity_minus_status    = 'pending';
+                    $pendingRow->save();
 
-                    dd($dataOutput, "dataOutput==========");
-                    $dataOutput->save();
+                    continue;
                 }
+
+                // --------------------------------------------------
+                // 5️⃣ CHECK IF ALREADY PROCESSED (DONE) ROW EXISTS
+                // --------------------------------------------------
+                $existingDoneRow = ProductionDetails::where('business_details_id', $request->business_details_id)
+                    ->where('part_item_id', $partItemId)
+                    ->where('quantity_minus_status', 'done')
+                    ->first();
+
+                // DONE rows are IGNORED — no update needed
+
+                // --------------------------------------------------
+                // 6️⃣ INSERT NEW PENDING ROW
+                // --------------------------------------------------
+                $new = new ProductionDetails();
+                $new->business_id              = $baseDetail->business_id;
+                $new->design_id                = $baseDetail->design_id;
+                $new->business_details_id      = $baseDetail->business_details_id;
+                $new->production_id            = $baseDetail->production_id;
+
+                $new->part_item_id             = $partItemId;
+                $new->quantity                 = $quantity;
+                $new->unit                     = $unit;
+                $new->basic_rate               = $basicRate;
+                $new->items_used_total_amount  = $totalAmount;
+                $new->material_send_production = $isSendProd;
+                $new->quantity_minus_status    = 'pending';
+                $new->save();
             }
 
-
-            if (!empty($errorMessages)) {
-                return [
-                    'status' => 'error',
-                    'errors' => $errorMessages
-                ];
-            }
-
-            // Update status
-            $businessOutput = BusinessApplicationProcesses::where('business_details_id', $dataOutput_ProductionDetails->business_details_id)
+            // --------------------------------------------------
+            // 7️⃣ UPDATE PRODUCTION STATUS
+            // --------------------------------------------------
+            $businessOutput = BusinessApplicationProcesses::where('business_details_id', $baseDetail->business_details_id)
                 ->firstOrFail();
-            $businessOutput->product_production_inprocess_status_id = config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_INPROCESS_FOR_PRODUCTION');
+
+            $businessOutput->product_production_inprocess_status_id =
+                config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_INPROCESS_FOR_PRODUCTION');
+
             $businessOutput->save();
 
             return [
                 'status' => 'success',
-                'message' => 'Production materials updated successfully.',
-                'updated_details' => $request->all()
+                'message' => 'Production materials updated successfully.'
             ];
         } catch (\Exception $e) {
+
             return [
                 'status' => 'error',
                 'error' => $e->getMessage()
             ];
         }
     }
+
+
+
 
     public function destroyAddmoreStoreItem($id)
     {

@@ -436,10 +436,8 @@ class LeavesController extends Controller
         try {
             $delete_record = $this->service->deleteById($delete_data_id);
 
-            if ($delete_record) {
-                return redirect()->route('list-leaves')
-                    ->with(['msg' => $delete_record['msg'], 'status' => $delete_record['status']]);
-            }
+            return redirect()->route('list-leaves')
+                ->with(['msg' => $delete_record['msg'], 'status' => $delete_record['status']]);
         } catch (\Exception $e) {
             return redirect()->back()->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }

@@ -1,4 +1,4 @@
-@extends('admin.layouts.master-add-more')
+@extends('admin.layouts.master')
 @section('content')
     <style>
         label {

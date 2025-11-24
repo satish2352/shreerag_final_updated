@@ -73,7 +73,7 @@
                                                             <a
                                                                 href="{{ route('edit-departments', base64_encode($data->id)) }}"><button
                                                                     data-toggle="tooltip" title="Edit"
-                                                                    class="pd-setting-ed"><i class="fa fa-pencil-square-o"
+                                                                    class="pd-setting-ed"><i class="fas fa-pen-square"
                                                                         aria-hidden="true"></i></button></a>
                                                             <a
                                                                 href="{{ route('delete-departments', base64_encode($data->id)) }} "><button

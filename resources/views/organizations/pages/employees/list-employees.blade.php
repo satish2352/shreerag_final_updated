@@ -101,7 +101,7 @@ padding-left: 20px !important;
                                             <td><img style="max-width:250px; max-height:150px;" src="{{ Config::get('DocumentConstant.EMPLOYEES_VIEW') . $data->emp_image }}" alt="{{ strip_tags($data['company_name']) }} Image" /></td>
                                             <td>
                                                 <div style="display: flex; align-items: center;">
-                                                    <a href="{{route('organizations-edit-employees', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+                                                    <a href="{{route('organizations-edit-employees', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fas fa-pen-square" aria-hidden="true"></i></button></a>
                                                     <a href="{{route('organizations-delete-employees', base64_encode($data->id))}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a>
                                                 </div>
                                             </td>

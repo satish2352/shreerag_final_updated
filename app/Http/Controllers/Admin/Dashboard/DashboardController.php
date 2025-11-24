@@ -732,8 +732,9 @@ class DashboardController extends Controller
         $ses_userId = session()->get('user_id');
 
         $ses_roleId = session()->get('role_id');
-        // $baseUrl = url('http://localhost/shreerag_final_updated'); // Get the base URL dynamically
-        $baseUrl = url('https://shreeragengineering.com'); // Get the base URL dynamically
+        //    $baseUrl = url('http://localhost/shreerag_final_updated'); // Get the base URL dynamically
+        $baseUrl = url('https://report.shreeragengineering.com'); // Get the base URL dynamically
+        // $baseUrl = url('https://shreeragengineering.com'); // Get the base URL dynamically
         $count = 0;  // Initialize the $count variable
         $notifications = [];  // Initialize the $notifications array
 

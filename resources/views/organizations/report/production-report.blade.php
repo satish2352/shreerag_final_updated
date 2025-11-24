@@ -1,5 +1,22 @@
 @extends('admin.layouts.master')
 @section('content')
+
+<style>
+    /* Export dropdown aligns exactly below the Export button */
+#exportDropdown {
+    position: relative;
+}
+
+#exportDropdown + .dropdown-menu {
+    left: 0 !important;
+    right: auto !important;
+    top: 100% !important;
+    margin-top: 5px !important;
+    transform: none !important;
+    min-width: 150px !important;
+}
+
+</style>
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">
@@ -89,25 +106,27 @@
                                         <div class="col-md-6 text-end d-flex">
                                             <input type="text" class="form-control d-flex align-self-center"
                                                 id="searchKeyword" style="margin-right: 23px;" placeholder="Search...">
-                                            <div class="dropdown">
-                                                <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                                    id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false"
-                                                    style="float: right;">
-                                                    <i class="fa fa-download"></i> Export
-                                                </button>
-                                                <ul class="dropdown-menu" aria-labelledby="exportDropdown">
-                                                    <li><a class="dropdown-item" href="#" id="exportExcel">Export to
-                                                            Excel</a></li>
-                                                    <li><a class="dropdown-item" href="#" id="exportPdf">Export to
-                                                            PDF</a></li>
-                                                </ul>
-                                            </div>
+                                          
+
                                         </div>
-                                        {{-- <div class="col-md-8 text-end">
-                <button type="button" class="btn btn-success" id="exportExcel">Export Excel</button>
-                <button type="button" class="btn btn-danger" id="exportPdf">Export PDF</button>
-            </div> --}}
+                                        
                                     </div>
+
+                                    <div class="row my-2 ">
+                                              <div class="col-md-6 d-flex justify-content-center">
+                         <div class="dropdown">
+    <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+        id="exportDropdown" data-toggle="dropdown" aria-expanded="false">
+        <i class="fa fa-download"></i> Export
+    </button>
+
+    <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+        <li><a class="dropdown-item" href="#" id="exportExcel">Export to Excel</a></li>
+        <li><a class="dropdown-item" href="#" id="exportPdf">Export to PDF</a></li>
+    </ul>
+</div>
+</div>
+</div>
                                 </form>
 
 

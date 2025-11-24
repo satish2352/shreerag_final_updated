@@ -4,46 +4,50 @@
         label {
             margin-top: 20px;
         }
+
         label.error {
             color: red;
             /* Error text color */
             font-size: 12px;
         }
+
         .disabled-btn {
             background-color: #ccc;
             color: #666;
             cursor: not-allowed;
             opacity: 0.7;
         }
-         .custom-dropdown .dropdown-options {
-        position: absolute;
-        width:600px !important;
-        /* top: 700px; */
-        left: 193px;
-        right: 0;
-        background: white;
-        border: 1px solid #ccc;
-        z-index: 999;
-        /* max-height: 200px; */
-        overflow-y: auto;
-    }
 
-    .custom-dropdown .option {
-        padding: 6px 10px;
-        cursor: pointer;
-    }
+        .custom-dropdown .dropdown-options {
+            position: absolute;
+            width: 600px !important;
+            /* top: 700px; */
+            left: 193px;
+            right: 0;
+            background: white;
+            border: 1px solid #ccc;
+            z-index: 999;
+            /* max-height: 200px; */
+            overflow-y: auto;
+        }
 
-    .custom-dropdown .option:hover {
-        background: #f0f0f0;
-    }
+        .custom-dropdown .option {
+            padding: 6px 10px;
+            cursor: pointer;
+        }
 
-    .custom-dropdown .search-box {
-        border-bottom: 1px solid #ccc;
-        margin-bottom: 5px;
-    }
-    .margin-bottom{
-        margin-bottom: 100px !important;
-    }
+        .custom-dropdown .option:hover {
+            background: #f0f0f0;
+        }
+
+        .custom-dropdown .search-box {
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 5px;
+        }
+
+        .margin-bottom {
+            margin-bottom: 100px !important;
+        }
     </style>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -107,8 +111,9 @@
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
+                                                            <th>Date</th>
                                                             <th>Part Item</th>
-                                                             <th>Basic Rate</th>
+                                                            <th>Basic Rate</th>
                                                             <th>Quantity</th>
                                                             <th>Unit</th>
                                                             <th>Received Material for Production</th>
@@ -121,8 +126,8 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                       
-                                                        @foreach ($dataGroupedById as $key => $items)
+
+                                                        {{-- @foreach ($dataGroupedById as $key => $items)
                                                             @foreach ($items as $index => $item)
                                                                 <tr>
                                                                     <td><span class="form-control"
@@ -145,18 +150,7 @@
         </div>
     </div>
 
-                                                                            {{-- <select class="form-control part-no"
-                                                                                name="addmore[{{ $index }}][part_no_id]"
-                                                                                required>
-                                                                                <option value="">Select Part Item
-                                                                                </option>
-                                                                                @foreach ($dataOutputPartItem as $partItem)
-                                                                                    <option value="{{ $partItem->id }}"
-                                                                                        {{ $partItem->id == $item->part_item_id ? 'selected' : '' }}>
-                                                                                        {{ $partItem->description }}
-                                                                                    </option>
-                                                                                @endforeach
-                                                                            </select> --}}
+                                                                           
                                                                         @else
                                                                                <div class="custom-dropdown">
         <input type="hidden" name="addmore[{{ $index }}][part_item_id]" class="part_no" value="{{ $item->part_item_id ?? '' }}">
@@ -248,18 +242,142 @@
                                                                     </td>
                                                                 </tr>
                                                             @endforeach
+                                                        @endforeach --}}
+
+                                                        @php $rowIndex = 0; @endphp
+
+                                                        @foreach ($dataGroupedById as $key => $items)
+                                                            @foreach ($items as $item)
+                                                                @php
+                                                                    $index = $rowIndex++; // FIXED INDEX
+                                                                @endphp
+
+                                                                <tr>
+                                                                    <td>
+                                                                        <span class="form-control" style="min-width:50px">
+                                                                            {{ $index + 1 }}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input class="form-control"
+                                                                            name="addmore[{{ $index }}][updated_at]"
+                                                                            value="{{ \Carbon\Carbon::parse($item->updated_at)->format('d-m-Y H:i') }}"
+                                                                            readonly>
+
+
+                                                                        <input type="hidden" class="udated_at"
+                                                                            name="addmore[{{ $index }}][items_used_total_amount]"
+                                                                            value="{{ \Carbon\Carbon::parse($item->updated_at)->format('d-m-Y H:i') }}">
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="custom-dropdown">
+                                                                            <input type="hidden"
+                                                                                name="addmore[{{ $index }}][part_item_id]"
+                                                                                class="part_no"
+                                                                                value="{{ $item->part_item_id ?? '' }}">
+
+                                                                            <input type="text"
+                                                                                class="dropdown-input form-control"
+                                                                                placeholder="Select Part Item..."
+                                                                                value="{{ $item->part_description ?? '' }}"
+                                                                                readonly required>
+
+                                                                            <div class="dropdown-options dropdown-height"
+                                                                                style="display:none;">
+                                                                                <input type="text"
+                                                                                    class="search-box form-control"
+                                                                                    placeholder="Search...">
+                                                                                <div class="options-list">
+                                                                                    @foreach ($dataOutputPartItem as $data)
+                                                                                        <div class="option"
+                                                                                            data-id="{{ $data->id }}">
+                                                                                            {{ $data->part_description }}
+                                                                                        </div>
+                                                                                    @endforeach
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <input class="form-control basic_rate"
+                                                                            name="addmore[{{ $index }}][basic_rate]"
+                                                                            type="number" step="any"
+                                                                            value="{{ $item->basic_rate }}" readonly>
+
+                                                                        <input type="hidden" class="total_amount"
+                                                                            name="addmore[{{ $index }}][items_used_total_amount]"
+                                                                            value="{{ $item->basic_rate * $item->quantity }}">
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <input class="form-control quantity"
+                                                                            name="addmore[{{ $index }}][quantity]"
+                                                                            type="number" step="any"
+                                                                            value="{{ $item->quantity }}"
+                                                                            {{ $item->material_send_production == 1 ? 'disabled' : '' }}
+                                                                            required>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <select class="form-control"
+                                                                            name="addmore[{{ $index }}][unit]"
+                                                                            {{ $item->material_send_production == 1 ? 'disabled' : '' }}
+                                                                            required>
+                                                                            <option value="">Select Unit</option>
+                                                                            @foreach ($dataOutputUnitMaster as $unit)
+                                                                                <option value="{{ $unit->id }}"
+                                                                                    {{ $unit->id == $item->unit ? 'selected' : '' }}>
+                                                                                    {{ $unit->name }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        @if ($item->material_send_production == 0)
+                                                                            <span>-</span>
+                                                                            <input type="hidden"
+                                                                                name="addmore[{{ $index }}][material_send_production]"
+                                                                                value="1">
+                                                                        @else
+                                                                            <input type="checkbox" checked disabled>
+                                                                        @endif
+                                                                    </td>
+
+                                                                    <td>
+                                                                        @if ($item->material_send_production == 0)
+                                                                            <a href="javascript:void(0)"
+                                                                                class="btn btn-danger btn-sm ajax-delete"
+                                                                                data-id="{{ $item->pd_id }}"
+                                                                                data-business-id="{{ $id }}">
+                                                                                <i class="fas fa-archive"></i>
+                                                                            </a>
+                                                                        @else
+                                                                            <button type="button"
+                                                                                class="btn btn-danger btn-sm disabled-btn"
+                                                                                disabled>
+                                                                                <i class="fa fa-trash"></i>
+                                                                            </button>
+                                                                        @endif
+                                                                    </td>
+
+                                                                </tr>
+                                                            @endforeach
                                                         @endforeach
+
                                                     </tbody>
                                                 </table>
                                             </div>
                                             <div class="d-flex justify-content-center align-items-center mt-3 mb-5">
-                                            <a href="{{ route('list-material-received') }}" class="btn btn-white me-3">
-                                                Cancel
-                                            </a>
-                                            <button class="btn btn-sm btn-bg-colour" type="submit">
-                                                Save Data
-                                            </button>
-                                        </div>
+                                                <a href="{{ route('list-material-received') }}"
+                                                    class="btn btn-white me-3">
+                                                    Cancel
+                                                </a>
+                                                <button class="btn btn-sm btn-bg-colour" type="submit">
+                                                    Save Data
+                                                </button>
+                                            </div>
                                         </form>
                                     </div>
                                 </div>
@@ -273,93 +391,99 @@
 
     <form method="POST" action="{{ route('delete-addmore-production-material-item') }}" id="deleteform">
         @csrf
-        <input type="hidden" name="delete_id" id="delete_id" value="">
+        <input type="hidden" name="delete_id" id="delete_id">
+        <input type="hidden" name="business_details_id" id="business_details_id" value="{{ $id }}">
     </form>
+
     <!-- Include jQuery, jQuery Validate (updated version for better compatibility), and SweetAlert -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-   <script>
-$(document).ready(function () {
-    const table = $("#purchase_order_table");
+    <script>
+        $(document).ready(function() {
+            const table = $("#purchase_order_table");
 
-    // ========================
-    //  DROPDOWN FUNCTIONALITY
-    // ========================
-    table.on('click', '.dropdown-input', function () {
-        $('.dropdown-options').hide(); // close all others
-        $(this).siblings('.dropdown-options').show();
-        $(this).siblings('.dropdown-options').find('.search-box').val('').trigger('input').focus();
-    });
+            // ========================
+            //  DROPDOWN FUNCTIONALITY
+            // ========================
+            table.on('click', '.dropdown-input', function() {
+                $('.dropdown-options').hide(); // close all others
+                $(this).siblings('.dropdown-options').show();
+                $(this).siblings('.dropdown-options').find('.search-box').val('').trigger('input').focus();
+            });
 
-    table.on('input', '.search-box', function () {
-        const term = $(this).val().toLowerCase();
-        $(this).siblings('.options-list').find('.option').each(function () {
-            $(this).toggle($(this).text().toLowerCase().includes(term));
-        });
-    });
+            table.on('input', '.search-box', function() {
+                const term = $(this).val().toLowerCase();
+                $(this).siblings('.options-list').find('.option').each(function() {
+                    $(this).toggle($(this).text().toLowerCase().includes(term));
+                });
+            });
 
-    table.on('click', '.custom-dropdown .option', function () {
-        const text = $(this).text();
-        const id = $(this).data('id');
-        const $dropdown = $(this).closest('.custom-dropdown');
-        const $row = $dropdown.closest('tr');
+            table.on('click', '.custom-dropdown .option', function() {
+                const text = $(this).text();
+                const id = $(this).data('id');
+                const $dropdown = $(this).closest('.custom-dropdown');
+                const $row = $dropdown.closest('tr');
 
-        // Set hidden value + visible text
-        $dropdown.find('.dropdown-input').val(text);
-        $dropdown.find('.part_no').val(id);
-        $dropdown.find('.dropdown-options').hide();
+                // Set hidden value + visible text
+                $dropdown.find('.dropdown-input').val(text);
+                $dropdown.find('.part_no').val(id);
+                $dropdown.find('.dropdown-options').hide();
 
-        // Fetch basic rate
-        $.ajax({
-            url: '{{ route("get-part-item-rate") }}',
-            type: 'GET',
-            data: { part_item_id: id },
-            success: function (res) {
-                if (res.status === 'success') {
-                    $row.find('.basic_rate').val(res.basic_rate);
-                    updateTotalAmount($row);
-                } else {
-                    $row.find('.basic_rate').val('');
+                // Fetch basic rate
+                $.ajax({
+                    url: '{{ route('get-part-item-rate') }}',
+                    type: 'GET',
+                    data: {
+                        part_item_id: id
+                    },
+                    success: function(res) {
+                        if (res.status === 'success') {
+                            $row.find('.basic_rate').val(res.basic_rate);
+                            updateTotalAmount($row);
+                        } else {
+                            $row.find('.basic_rate').val('');
+                        }
+                    },
+                    error: function() {
+                        $row.find('.basic_rate').val('');
+                    }
+                });
+            });
+
+            $(document).click(function(e) {
+                if (!$(e.target).closest('.custom-dropdown').length) {
+                    $('.dropdown-options').hide();
                 }
-            },
-            error: function () {
-                $row.find('.basic_rate').val('');
+            });
+
+            // ========================
+            //  TOTAL AMOUNT CALCULATION
+            // ========================
+            function updateTotalAmount($row) {
+                let rate = parseFloat($row.find('.basic_rate').val()) || 0;
+                let qty = parseFloat($row.find('.quantity').val()) || 0;
+                $row.find('.total_amount').val((rate * qty).toFixed(2));
             }
-        });
-    });
 
-    $(document).click(function (e) {
-        if (!$(e.target).closest('.custom-dropdown').length) {
-            $('.dropdown-options').hide();
-        }
-    });
+            table.on('input', '.basic_rate, .quantity', function() {
+                updateTotalAmount($(this).closest('tr'));
+            });
 
-    // ========================
-    //  TOTAL AMOUNT CALCULATION
-    // ========================
-    function updateTotalAmount($row) {
-        let rate = parseFloat($row.find('.basic_rate').val()) || 0;
-        let qty = parseFloat($row.find('.quantity').val()) || 0;
-        $row.find('.total_amount').val((rate * qty).toFixed(2));
-    }
+            // ========================
+            //  ADD MORE ROW
+            // ========================
+            let rowCount = table.find("tbody tr").length;
+            $("#add_more_btn").click(function() {
+                rowCount = table.find("tbody tr").length + 1;
 
-    table.on('input', '.basic_rate, .quantity', function () {
-        updateTotalAmount($(this).closest('tr'));
-    });
-
-    // ========================
-    //  ADD MORE ROW
-    // ========================
-    let rowCount = table.find("tbody tr").length;
-    $("#add_more_btn").click(function () {
-            rowCount = table.find("tbody tr").length + 1;
-            
-        // rowCount++;
-        let newRow = `
+                // rowCount++;
+                let newRow = `
             <tr>
                 <td><input type="text" class="form-control" value="${rowCount}" readonly></td>
+                 <td>-
+                     </td>
                 <td>
                     <div class="custom-dropdown">
                         <input type="hidden" name="addmore[${rowCount}][part_item_id]" class="part_no" value="">
@@ -396,55 +520,193 @@ $(document).ready(function () {
                     <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fa fa-trash"></i></button>
                 </td>
             </tr>`;
-        table.find("tbody").append(newRow);
+                table.find("tbody").append(newRow);
 
-        $(`input[name="addmore[${rowCount}][part_item_id]"]`).rules("add", {
-    required: true,
-    messages: { required: "Please select a Part Item" }
-});
-    });
+                $(`input[name="addmore[${rowCount}][part_item_id]"]`).rules("add", {
+                    required: true,
+                    messages: {
+                        required: "Please select a Part Item"
+                    }
+                });
+            });
 
-    // Remove row
-    table.on("click", ".remove-row", function () {
-        $(this).closest("tr").remove();
-    });
+            // Remove row
+            table.on("click", ".remove-row", function() {
+                $(this).closest("tr").remove();
+            });
 
-    // ========================
-    //  VALIDATION
-    // ========================
-    $("#addProductForm").validate({
-        ignore: [],
-        rules: {
-            "product_name": { required: true },
-            "description": { required: true }
-        },
-        messages: {
-            "product_name": "Product name is required",
-            "description": "Description is required"
-        },
-        errorPlacement: function (error, element) {
-            if (element.hasClass('part_no')) {
-                error.insertAfter(element.closest('.custom-dropdown'));
-            } else {
-                error.insertAfter(element);
-            }
-        },
-        submitHandler: function (form) {
+            // ========================
+            //  VALIDATION
+            // ========================
+            $("#addProductForm").validate({
+                ignore: [],
+                rules: {
+                    "product_name": {
+                        required: true
+                    },
+                    "description": {
+                        required: true
+                    }
+                },
+                messages: {
+                    "product_name": "Product name is required",
+                    "description": "Description is required"
+                },
+                errorPlacement: function(error, element) {
+                    if (element.hasClass('part_no')) {
+                        error.insertAfter(element.closest('.custom-dropdown'));
+                    } else {
+                        error.insertAfter(element);
+                    }
+                },
+                // submitHandler: function(form) {
+                //     Swal.fire({
+                //         icon: 'question',
+                //         title: 'Are you sure?',
+                //         text: 'Send this material to Production?',
+                //         showCancelButton: true,
+                //         confirmButtonText: 'Yes',
+                //         cancelButtonText: 'No',
+                //     }).then(function(result) {
+                //         if (result.isConfirmed) {
+                //             form.submit();
+                //         }
+                //     });
+                // }
+            });
+        });
+    </script>
+    <script>
+        // ========================================
+        // AJAX SAVE Product Material
+        // ========================================
+        $("#addProductForm").on("submit", function(e) {
+            e.preventDefault();
+
+            let form = $(this);
+            let formData = new FormData(form[0]);
+
             Swal.fire({
-                icon: 'question',
-                title: 'Are you sure?',
-                text: 'Send this material to Production?',
+                icon: "question",
+                title: "Are you sure?",
+                text: "Do you want to save the updated material?",
                 showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No',
-            }).then(function (result) {
-                if (result.isConfirmed) {
-                    form.submit();
+                confirmButtonText: "Yes",
+                cancelButtonText: "No"
+            }).then((result) => {
+
+                if (!result.isConfirmed) return;
+
+                $.ajax({
+                    url: form.attr("action"),
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+
+                    success: function(res) {
+
+                        if (res.status === "success") {
+
+                            Swal.fire({
+                                icon: "success",
+                                title: "Saved!",
+                                text: res.msg,
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+
+                            // Reload table without leaving page
+                            reloadTable();
+
+                        } else {
+                            Swal.fire("Error!", res.msg, "error");
+                        }
+                    },
+
+                    error: function(xhr) {
+                        Swal.fire("Error!", "Something went wrong.", "error");
+                    }
+                });
+
+            });
+        });
+
+        function reloadTable() {
+            let businessId = $("#business_details_id").val();
+
+            $.ajax({
+                url: "/proddept/edit-received-inprocess-production-material/" + businessId,
+                type: "GET",
+                success: function(html) {
+
+                    // Extract only table HTML from page
+                    let newTable = $(html).find("#purchase_order_table").html();
+
+                    $("#purchase_order_table").html(newTable);
                 }
             });
         }
-    });
-});
-</script>
+    </script>
+    <script>
+        // ================================
+        //   AJAX DELETE ROW (ENHANCED)
+        // ================================
+        $(document).on("click", ".ajax-delete", function() {
 
+            let deleteId = $(this).data("id");
+            let businessId = $(this).data("business-id");
+            let row = $(this).closest("tr");
+
+            // 🔥 Better confirmation message
+            Swal.fire({
+                title: "Delete Item?",
+                text: "This material item will be permanently removed. Are you sure?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Yes, Delete",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        url: "{{ route('delete-addmore-production-material-item') }}",
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            delete_id: deleteId,
+                            business_details_id: businessId
+                        },
+                        success: function(response) {
+
+                            if (response.status === "success") {
+
+                                // ✔ AFTER delete success message
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Deleted Successfully!",
+                                    text: response.msg,
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+
+                                // ✔ Remove row with animation
+                                row.fadeOut(300, function() {
+                                    $(this).remove();
+                                });
+
+                            } else {
+                                Swal.fire("Error!", response.msg, "error");
+                            }
+                        },
+                        error: function() {
+                            Swal.fire("Error!", "Something went wrong.", "error");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 @endsection

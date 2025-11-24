@@ -59,7 +59,7 @@
                                             <td>{{ucwords($data->name)}}</td>
                                             <td>
                                                 <div style="display: flex; align-items: center;">
-                                                    <a href="{{route('edit-vehicle-type', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+                                                    <a href="{{route('edit-vehicle-type', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fas fa-pen-square" aria-hidden="true"></i></button></a>
                                                     <a href="{{route('delete-vehicle-type', base64_encode($data->id))}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash" aria-hidden="true"></i></button></a>
                                                 </div>
                                             </td>

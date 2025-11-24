@@ -78,7 +78,7 @@
                                                         <a
                                                             href="{{ route('list-new-requirements-received-for-design-businesswise', base64_encode($data->business_id)) }}"><button
                                                                 data-toggle="tooltip" title="Edit"
-                                                                class="pd-setting-ed"><i class="fa fa-pencil-square-o"
+                                                                class="pd-setting-ed"><i class="fas fa-pen-square"
                                                                     aria-hidden="true"></i> Check Details</button></a>
 
 
@@ -97,5 +97,4 @@
         </div>
     </div>
     </div>
-     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-@endsection
+   @endsection

@@ -91,7 +91,7 @@ padding-left: 20px !important;
                                                     <a
                                                         href="{{ route('list-purchase-order-sent-to-owner-for-approval-busineswise', $data->id) }}"><button
                                                             data-toggle="tooltip" title="Edit"
-                                                            class="pd-setting-ed"><i class="fa fa-pencil-square-o"
+                                                            class="pd-setting-ed"><i class="fas fa-pen-square"
                                                                 aria-hidden="true"></i> Check Details</button></a>
                                                     &nbsp; &nbsp; &nbsp;
                                                 </div>

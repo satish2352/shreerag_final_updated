@@ -115,7 +115,7 @@
                                                             <a
                                                                 href="{{ route('edit-organizations', base64_encode($data->id)) }}"><button
                                                                     data-toggle="tooltip" title="Edit"
-                                                                    class="pd-setting-ed"><i class="fa fa-pencil-square-o"
+                                                                    class="pd-setting-ed"><i class="fas fa-pen-square"
                                                                         aria-hidden="true"></i></button></a>
                                                             {{-- <a href="{{route('delete-organizations', base64_encode($data->id))}} "><button data-toggle="tooltip" title="Send To Trash" class="pd-setting-ed"><i class="fa fa-trash" aria-hidden="true"></i></button></a> --}}
                                                         </div>

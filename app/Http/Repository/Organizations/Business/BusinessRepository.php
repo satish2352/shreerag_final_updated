@@ -301,20 +301,22 @@ class BusinessRepository
             ];
         }
     }
-    public function deleteByIdAddmore()
-    {
-        try {
-            $rti = BusinessDetails::find($id);
-            if ($rti) {
-                $rti->delete();
-                return true;
-            } else {
-                return false;
-            }
-        } catch (\Exception $e) {
-            return false;
+  public function deleteByIdAddmore($id)
+{
+    try {
+        $rti = BusinessDetails::find($id);
+        if ($rti) {
+            $rti->delete();
+            return true;
         }
+        return false;
+
+    } catch (\Exception $e) {
+        return false;
     }
+}
+
+
     public function deleteById($id)
     {
         try {

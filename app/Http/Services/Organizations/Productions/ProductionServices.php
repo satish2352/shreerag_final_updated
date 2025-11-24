@@ -59,6 +59,7 @@ class ProductionServices
     {
         try {
             $data_output = $this->repo->editProductQuantityTracking($id);
+
             return $data_output;
         } catch (\Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];

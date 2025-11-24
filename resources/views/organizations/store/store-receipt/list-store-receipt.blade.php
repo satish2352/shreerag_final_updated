@@ -97,7 +97,7 @@
                                             <!-- <td><img style="max-width:250px; max-height:150px;" src="" alt="Image" /></td> -->
                                             <td>
                                                 <div style="display: flex; align-items: center;">
-                                                    <a href="{{route('edit-store-receipt')}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+                                                    <a href="{{route('edit-store-receipt')}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fas fa-pen-square" aria-hidden="true"></i></button></a>
                                                     {{-- <a href="{{route('delete-products')}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a> --}}
                                                 </div>
                                             </td>

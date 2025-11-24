@@ -82,7 +82,7 @@
                                                     </td>
                                                     {{-- <td>
                                                 <div style="display: flex; align-items: center;">
-                                                    <a href="{{route('edit-business', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+                                                    <a href="{{route('edit-business', base64_encode($data->id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fas fa-pen-square" aria-hidden="true"></i></button></a>
                                                     <a href="{{route('delete-business', base64_encode($data->id))}} "><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash" aria-hidden="true"></i></button></a>
                                                 </div>
                                             </td> --}}
@@ -98,5 +98,4 @@
             </div>
         </div>
     </div>
-     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-@endsection
+   @endsection

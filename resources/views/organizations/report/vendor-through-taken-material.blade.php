@@ -55,11 +55,15 @@
                             <div class="row mb-2">
                                 <div class="col-md-6">
                                     <button type="submit" class="btn btn-primary filterbg">Filter</button>
+                                      <button type="button" class="btn btn-secondary ms-2" id="resetFilters"
+                                                style="margin-left: 10px;">
+                                                Reset
+                                            </button>
                                 </div>
                                 <div class="col-md-6 text-end d-flex">
                                     <input type="text" class="form-control me-2" id="searchKeyword" placeholder="Search...">
                                     <div class="dropdown">
-                                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown">
+                                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="exportDropdown" data-toggle="dropdown">
                                             <i class="fa fa-download"></i> Export
                                         </button>
                                         <ul class="dropdown-menu">

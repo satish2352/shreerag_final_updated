@@ -1,4 +1,4 @@
-@extends('admin.layouts.master-add-more')
+@extends('admin.layouts.master')
 
 @section('content')
 <style>
@@ -17,6 +17,15 @@
         width: 100%;
         text-align: left;
     }
+    .btn-outline-secondary:hover{
+color: #6c757d;
+background-color: #ffff;
+    }
+    .show>.btn-outline-secondary.dropdown-toggle {
+   color: #6c757d;
+background-color: #ffff;
+    border-color: #fff;
+}
     </style>
                             <div class="container-fluid">
                                 <div class="row">

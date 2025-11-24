@@ -10,6 +10,13 @@
         overflow-wrap: break-word !important;
     }
 
+    .description-column {
+    width: 200px !important;
+    word-break: break-word !important;
+    white-space: normal !important;
+}
+
+
     .font-family-page {
         font-family: 'Play', sans-serif !important;
     }
@@ -167,7 +174,7 @@
         @page {
             size: A4;
             /* Set page size to A4 */
-            margin: 0;
+           margin: 10mm !important;
             /* Remove all margins for print area */
         }
 
@@ -284,9 +291,9 @@
                                     <th class="pdf-font-size"
                                         style="border: 1px solid black; padding: 5px; font-size:12px;">Quantity</th>
                                     <th class="pdf-font-size"
-                                        style="border: 1px solid black; padding: 5px font-size:12px;">Rate</th>
+                                        style="border: 1px solid black; padding: 5px; font-size:12px;">Rate</th>
                                     <th class="pdf-font-size"
-                                        style=" width:100px; border: 1px solid black; padding: 5px font-size:12px;">
+                                        style="width:100px; border: 1px solid black; padding: 5px; font-size:12px;">
                                         Discount</th>
                                     <th class="pdf-font-size"
                                         style="width:100px; border-top: 1px solid black;border-bottom: 1px solid black;border-left: 1px solid black; border-right: 1px solid black;  padding: 5px; text-align: right; font-size:12px;">
@@ -506,10 +513,17 @@
                             font-size:9px !important;
                             }
                         table {
-                            width: 100%;
-                            border-collapse: collapse;
-                            margin: 0;
-                        }
+        table-layout: fixed !important;
+        width: 100% !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+    }
+
+    tr {
+        page-break-inside: avoid !important;
+    }
+    thead { display: table-header-group !important; }
+    tfoot { display: table-footer-group !important; }
                         th, td {
                             padding: 5px;
                             text-align: left;
@@ -539,75 +553,4 @@
         }
     </script>
 
-    {{-- <script>
-            function printInvoice() {
-                var contentToPrint = document.getElementById("printableArea").innerHTML;
-                var printWindow = window.open('', '', 'height=auto,width=auto');
-                printWindow.document.write('<html><head><title>Print Invoice</title>');
-                printWindow.document.write('<style>');
-                printWindow.document.write(`
-                    @media print {
-                        body {
-                            font-family: Arial, sans-serif;
-                            margin: 0;
-                            padding: 0;
-                        }
-                        .logo-size {
-                            width: 10%;
-                        }
-                        .middle-size {
-                            width: 80%;
-                        }
-                        .last-size {
-                            width: 10%;
-                        }
-                        .header-size {
-                            font-size: 13px;
-                        }
-                        #printableArea {
-                            width: 100%;
-                            margin: 0px;
-                            padding: 20px 20px 10px 20px;
-                            border-right: 1px solid black;
-                            box-sizing: border-box;
-                        }
-                        table {
-                            width: 100%;
-                            border-collapse: collapse;
-                            margin: 0;
-                        }
-                        th, td {
-                            padding: 5px;
-                            text-align: left;
-                            word-wrap: break-word;
-                        }
-                        th {
-                            background-color: #f2f2f2;
-                        }
-                        @page {
-                            size: A4;
-                            margin: 0;
-                        }
-                        html, body {
-                            width: 100%;
-                            height: 100%;
-                            margin: 0;
-                            padding: 0;
-                        }
-                        .print-button {
-                            display: none;
-                        }
-                    }
-                `);
-                printWindow.document.write('</style>');
-                printWindow.document.write('</head><body>');
-                printWindow.document.write('<div id="printableArea">');
-                printWindow.document.write(contentToPrint);
-                printWindow.document.write('</div>');
-                printWindow.document.write('</body></html>');
-                printWindow.document.close();
-                printWindow.focus();
-                printWindow.print();
-                printWindow.close();
-            }
-        </script> --}}
+   

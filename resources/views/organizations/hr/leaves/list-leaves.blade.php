@@ -111,7 +111,7 @@
                                                                         class="pd-setting-ed"
                                                                         style="color: green;
                                                             border: 1px solid;">
-                                                                        <i class="fa fa-pencil-square-o"
+                                                                        <i class="fas fa-pen-square"
                                                                             aria-hidden="true"></i>
                                                                     </button>
                                                                 </a>
@@ -142,7 +142,7 @@
                                                             @else
                                                                 <button data-toggle="tooltip" title="Edit"
                                                                     class="pd-setting-ed" disabled>
-                                                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                                    <i class="fas fa-pen-square" aria-hidden="true"></i>
                                                                 </button>
                                                                 <button data-toggle="tooltip" title="Trash"
                                                                     class="pd-setting-ed" disabled>

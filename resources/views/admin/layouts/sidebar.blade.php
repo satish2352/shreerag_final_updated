@@ -46,6 +46,113 @@
         color: #fff !important;
         display: block;
     }
+
+    /* Notification Badge */
+#notification-count {
+    background: #1A4FA7;    /* blue */
+    color: white;
+    font-size: 16px !important;
+    border-radius: 50%;
+    padding: 2px 7px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+/* Main dropdown box */
+.dropdown-menu[aria-labelledby="notifyDropdown"] {
+    width: 340px !important;
+    margin-top: 12px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: none;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.2);
+    padding-bottom: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Triangle arrow */
+.dropdown-menu[aria-labelledby="notifyDropdown"]::before {
+    content: "";
+    position: absolute;
+    top: -12px;
+    right: 25px;
+    border-width: 0 10px 12px 10px;
+    border-style: solid;
+    border-color: transparent transparent #ffffff transparent;
+}
+
+/* Header */
+.dropdown-menu[aria-labelledby="notifyDropdown"] .dropdown-header {
+ 
+    color: #000 !important;
+    text-align: center;
+    padding: 6px;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Notification list container */
+#notification-messages {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 0 15px 15px !important;
+    font-size: 10px !important;
+}
+
+/* Single notification card */
+.notify-row {
+    display: flex;
+    padding: 14px 0;
+    border-bottom: 1px solid #eee;
+}
+
+/* Icon circle */
+.notify-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #1A4FA7;  /* blue */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 20px;
+    margin-right: 15px;
+}
+
+/* Text area */
+.notify-text strong {
+    font-size: 15px;
+    color: #333;
+}
+
+.notify-text small {
+    float: right;
+    color: #73829a;
+}
+
+.notify-text p {
+    margin: 3px 0 0;
+    font-size: 13px;
+    color: #555;
+}
+
+/* Footer */
+.notify-footer {
+    text-align: center;
+    padding: 12px;
+    background: #f5f8ff;
+}
+
+.notify-footer a {
+    font-weight: bold;
+    color: #1A4FA7;
+    text-decoration: none;
+}
+
 </style>
 <!-- ============= pratiksha (21/08/24) ============= change for sidebar changes and change icon -->
 
@@ -1264,54 +1371,35 @@
 
                                             @if (session()->get('role_id') != config('constants.ROLE_ID.CMS') &&
                                                     session()->get('role_id') != config('constants.ROLE_ID.SUPER'))
-                                                <li class="nav-item">
-                                                    <a href="#" data-toggle="dropdown" role="button"
-                                                        aria-expanded="false" class="nav-link dropdown-toggle"><i
-                                                            class="fa fa-bell"
-                                                            style="padding-right: 32px;"></i></i><span class="satish"
-                                                            style="position: fixed; top: 9px;translate: -149%;"
-                                                            id="notification-count"></span>
-                                                    </a>
+                                            <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle"
+       href="#"
+       id="notifyDropdown"
+       role="button"
+       data-toggle="dropdown"
+       aria-haspopup="true"
+       aria-expanded="false">
+        <i class="fa fa-bell" style="padding-right: 16px;"></i>
+        <span class="satish" id="notification-count"></span>
+    </a>
 
-                                                    <div role="menu"
-                                                        class="notification-author dropdown-menu animated zoomIn">
-                                                        <div class="notification-single-top"
-                                                            style="background-color: linear-gradient(178deg, #175CA2 0%, #121416 100%)">
-                                                            <h1 style="color: #fff; ">Notifications</h1>
-                                                        </div>
-                                                        <ul class="notification-menu" id="notification-messages"
-                                                            style="background-color:#fff;">
-                                                            <li>
-                                                            </li>
-                                                        </ul>
-                                                        <div class="notification-view">
+    <div class="dropdown-menu dropdown-menu-right animated zoomIn"
+         aria-labelledby="notifyDropdown">
+
+        <h5 class="dropdown-header">Notifications</h5>
+        <hr>
+
+        <div id="notification-messages" class="px-3 py-2">
+        </div>
+    </div>
+</li>
 
 
-                                                        </div>
-                                                    </div>
-                                                </li>
                                             @endif
                                             <li class="nav-item">
-                                                {{-- <a href="#" data-toggle="dropdown" role="button"
-                                                    aria-expanded="false" class="nav-link dropdown-toggle"
-                                                    style="font-size: 16px !important;">
-                                                    <i class="fa fa-user adminpro-user-rounded header-riht-inf"
-                                                        aria-hidden="true"></i>
-                                                    {{ ucwords(config('constants.ROLE_ID_NAME.' . Session::get('role_id'))) }}
-                                                    Department
-                                                    <span class="admin-name"></span>
-                                                    <i class="fa fa-angle-down adminpro-icon adminpro-down-arrow"></i>
-                                                </a>
-                                                <ul role="menu"
-                                                    class="dropdown-header-top author-log dropdown-menu animated zoomIn">
+                                                
 
-                                                    <li><a href="{{ route('log-out') }}"><span
-                                                                class="fa fa-lock author-log-ic"></span>
-                                                            Log Out</a>
-                                                    </li>
-                                                </ul> --}}
-
-                                                <a href="#" data-bs-toggle="dropdown" role="button"
+                                                <a href="#" data-toggle="dropdown" role="button"
                                                     aria-expanded="false" class="nav-link dropdown-toggle"
                                                     style="font-size: 16px !important;">
                                                     <i class="fa fa-user adminpro-user-rounded header-riht-inf"
@@ -1322,7 +1410,7 @@
                                                 </a>
                                                 <ul class="dropdown-menu animated zoomIn">
                                                     <li>
-                                                        <a href="{{ route('log-out') }}">
+                                                        <a href="{{ route('log-out') }}" style="color: black; padding-left: 10px;">
                                                             <span class="fa fa-lock author-log-ic"></span> Log Out
                                                         </a>
                                                     </li>

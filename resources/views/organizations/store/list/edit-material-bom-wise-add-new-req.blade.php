@@ -1,5 +1,7 @@
 @extends('admin.layouts.master')
 @section('content')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
     <style>
         label {
             margin-top: 20px;
@@ -28,6 +30,12 @@
 
         .dropdown-height {
             height: 280px !important;
+        }
+
+        .dropdown-input[readonly] {
+            background-color: #fff !important;
+            color: #000 !important;
+            opacity: 1 !important;
         }
 
         .custom-dropdown .dropdown-options {
@@ -76,11 +84,30 @@
                     <div class="basic-login-form-ad">
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                @if (session('status') === 'error')
-                                    <div class="alert alert-danger">
-                                        {{ session('msg') }}
-                                    </div>
+                                {{-- SweetAlert Success --}}
+                                @if (session('status') === 'success')
+                                    <script>
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Success!',
+                                            text: '{{ session('msg') }}',
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        });
+                                    </script>
                                 @endif
+
+                                {{-- SweetAlert Error --}}
+                                @if (session('status') === 'error')
+                                    <script>
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Oops...',
+                                            text: '{{ session('msg') }}',
+                                        });
+                                    </script>
+                                @endif
+
 
                                 @if (isset($productDetails) && isset($dataGroupedById))
                                     <!-- Display product details -->
@@ -116,6 +143,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>Sr. No.</th>
+                                                    <th>Date</th>
                                                     <th>Part Item</th>
                                                     <th>Basic Rate</th>
                                                     <th>Quantity</th>
@@ -133,19 +161,107 @@
                                                 @foreach ($dataGroupedById as $key => $items)
                                                     @foreach ($items as $index => $item)
                                                         <tr class="item-row">
+                                                            <input type="hidden"
+                                                                name="addmore[{{ $index }}][detail_id]"
+                                                                value="{{ $item->id }}">
                                                             <td>
                                                                 <input type="text"
                                                                     name="addmore[{{ $index }}][id]"
                                                                     class="form-control" readonly
                                                                     value="{{ $index + 1 }}">
                                                             </td>
+                                                            {{-- <td>
+                                                                <div class="custom-dropdown">
+                                                                    <input type="hidden"
+                                                                        name="addmore[{{ $loop->parent->index }}][part_item_id]"
+                                                                        class="part_no" value="{{ $item->part_item_id }}">
+
+                                                                    @php
+                                                                        $selectedPartItem = $dataOutputPartItem->firstWhere(
+                                                                            'id',
+                                                                            $item->part_item_id,
+                                                                        );
+                                                                    @endphp
+
+                                                                    <input type="text"
+                                                                        class="dropdown-input form-control part-item-name"
+                                                                        placeholder="Select Part Item..."
+                                                                        value="{{ $selectedPartItem ? $selectedPartItem->description : 'Select Part Item' }}"
+                                                                        readonly>
+
+                                                                    <div class="dropdown-options dropdown-height"
+                                                                        style="display:none;">
+                                                                        <input type="text"
+                                                                            class="search-box form-control"
+                                                                            placeholder="Search...">
+                                                                        <div class="options-list">
+                                                                            @foreach ($dataOutputPartItem as $data)
+                                                                                <div class="option"
+                                                                                    data-id="{{ $data->id }}">
+                                                                                    {{ $data->description }}
+                                                                                </div>
+                                                                            @endforeach
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td> --}}
                                                             <td>
+                                                                <input class="form-control"
+                                                                    name="addmore[{{ $index }}][updated_at]"
+                                                                    type="text" step="any" required
+                                                                    value="{{ \Carbon\Carbon::parse($item->updated_at)->format('d-m-Y H:i') }}"
+                                                                    readonly>
+                                                                <input type="hidden" class="total_amount"
+                                                                    name="addmore[{{ $index }}][total_amount]"
+                                                                    value="{{ \Carbon\Carbon::parse($item->updated_at)->format('d-m-Y H:i') }}">
+                                                            </td>
+                                                            <td>
+                                                                <div class="custom-dropdown disabled-dropdown">
+
+                                                                    <!-- Correct index -->
+                                                                    <input type="hidden"
+                                                                        name="addmore[{{ $index }}][part_item_id]"
+                                                                        class="part_no" value="{{ $item->part_item_id }}">
+
+                                                                    @php
+                                                                        $selectedPartItem = $dataOutputPartItem->firstWhere(
+                                                                            'id',
+                                                                            $item->part_item_id,
+                                                                        );
+                                                                    @endphp
+
+                                                                    <!-- Visible Text -->
+                                                                    <input type="text"
+                                                                        class="dropdown-input form-control part-item-name"
+                                                                        placeholder="Select Part Item..."
+                                                                        value="{{ $selectedPartItem ? $selectedPartItem->description : '' }}"
+                                                                        readonly>
+
+                                                                    <!-- Dropdown -->
+                                                                    <div class="dropdown-options dropdown-height"
+                                                                        style="display:none;">
+                                                                        <input type="text"
+                                                                            class="search-box form-control"
+                                                                            placeholder="Search...">
+
+                                                                        <div class="options-list">
+                                                                            @foreach ($dataOutputPartItem as $data)
+                                                                                <div class="option"
+                                                                                    data-id="{{ $data->id }}">
+                                                                                    {{ $data->description }}
+                                                                                </div>
+                                                                            @endforeach
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+
+                                                            {{-- <td>
                                                                 <div class="custom-dropdown"
                                                                     data-index="{{ $index }}">
                                                                     <input type="hidden"
                                                                         name="addmore[{{ $index }}][part_item_id]"
                                                                         class="part_no" value="{{ $item->part_item_id }}">
-                                                                    {{-- <input type="text" class="dropdown-input form-control part-no" placeholder="Select Part Item..." readonly > --}}
                                                                     @php
                                                                         $selectedPartItem = $dataOutputPartItem->firstWhere(
                                                                             'id',
@@ -171,7 +287,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </td>
+                                                            </td> --}}
                                                             <td>
                                                                 <input class="form-control basic_rate"
                                                                     name="addmore[{{ $index }}][basic_rate]"
@@ -249,8 +365,10 @@
                                                             <td>
                                                                 @if ($item->material_send_production == 0)
                                                                     <a data-id="{{ $item->id }}"
-                                                                        class="delete-btn btn btn-sm btn-danger"
-                                                                        title="Delete"><i class="fa fa-trash"></i></a>
+                                                                        class="btn btn-danger btn-sm ajax-delete"
+                                                                        title="Delete">
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </a>
                                                                 @else
                                                                     <button type="button"
                                                                         class="delete-btn btn btn-sm btn-danger remove-row"
@@ -295,9 +413,7 @@
         <input type="hidden" name="delete_id" id="delete_id" value="">
     </form>
 
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+   @push('scripts')
     <script>
         $(document).ready(function() {
             // Show/hide dropdown
@@ -395,8 +511,11 @@
                     // Perform stock validation for each row
                     var isValid = true;
                     $('#purchase_order_table tbody tr').each(function() {
-                        var partItemId = $(this).find('select[name*="[part_item_id]"]').val();
-                        var quantity = $(this).find('input[name*="[quantity]"]').val();
+                        // var partItemId = $(this).find('select[name*="[part_item_id]"]').val();
+                        // var quantity = $(this).find('input[name*="[quantity]"]').val();
+                        var partItemId = $(this).find('input.part_no').val();
+                        var quantity = $(this).find('.quantity').val();
+
                         // Add your stock validation logic here
                         // If stock is insufficient, set isValid to false
                     });
@@ -469,6 +588,9 @@
                 const quantityMinusStatus = $row.find('input[name*="quantity_minus_status"]').val();
                 const stockAvailableMessage = $row.find('.stock-available');
 
+                // Reset Save button to enabled
+                $("#saveBtn").prop("disabled", false);
+
                 if (materialSendProduction === 1 && quantityMinusStatus === 'done') {
                     stockAvailableMessage.text('Stock check skipped').css('color', 'blue');
                     return;
@@ -486,6 +608,8 @@
                         },
                         success: function(response) {
                             if (response.status === 'error') {
+                                // ❌ Insufficient stock → Disable Save Button
+                                $("#saveBtn").prop("disabled", true);
                                 stockAvailableMessage.text('Insufficient stock. Available: ' + response
                                         .available_quantity)
                                     .css('color', 'red');
@@ -518,27 +642,29 @@
                 rowCount++;
                 const newRow = `
             <tr class="item-row">
+                  <input type="hidden" name="addmore[${rowCount}][detail_id]" value="">
                 <td>
                     <input type="text" name="addmore[${rowCount}][id]" class="form-control" readonly value="${rowCount}">
                 </td>
-               
+        <td class="text-center">-</td>       
+<td>
+    <div class="custom-dropdown">
+        <input type="hidden" name="addmore[${rowCount}][part_item_id]" class="part_no" value="">
+        <input type="text" class="dropdown-input form-control" placeholder="Select Part Item..." readonly>
 
-                <td>
-                                                                    <div class="custom-dropdown" data-index="{{ $index }}">
-                                                                      <input type="hidden" name="addmore[${rowCount}][part_item_id]" class="part_no" value="">
-<input type="text" class="dropdown-input form-control part-item-name" placeholder="Select Part Item..." readonly required>
+        <div class="dropdown-options dropdown-height" style="display:none;">
+            <input type="text" class="search-box form-control" placeholder="Search...">
+            <div class="options-list">
+                @foreach ($dataOutputPartItem as $data)
+                    <div class="option" data-id="{{ $data->id }}">{{ $data->description }}</div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</td>
 
 
-                                                                        <div class="dropdown-options dropdown-height" style="display: none;">
-                                                                            <input type="text" class="search-box form-control" placeholder="Search...">
-                                                                            <div class="options-list">
-                                                                                @foreach ($dataOutputPartItem as $data)
-                                                                                    <div class="option" data-id="{{ $data->id }}">{{ $data->description }}</div>
-                                                                                @endforeach
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
+
                                                                    <td>
     <input class="form-control basic_rate" name="addmore[${rowCount}][basic_rate]" type="number" step="any" readonly required>
     <input type="hidden" class="total_amount" name="addmore[${rowCount}][items_used_total_amount]" value="0">
@@ -623,5 +749,68 @@
             // Initialize validation on existing rows
             initializeValidation(purchaseOrderTable.find("tbody tr"));
         });
+
+
+        // Disable dropdown click for existing rows
+        $(document).on('click', '.disabled-dropdown .dropdown-input', function(e) {
+            e.stopImmediatePropagation();
+            return false;
+        });
+
+        // Disable selecting options for disabled dropdown
+        $(document).on('click', '.disabled-dropdown .option', function(e) {
+            e.stopImmediatePropagation();
+            return false;
+        });
     </script>
+
+    <script>
+        $(document).ready(function() {
+
+            // AJAX Delete
+            $(document).on("click", ".ajax-delete", function() {
+                let deleteId = $(this).data("id");
+                let row = $(this).closest("tr");
+
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "Do you want to delete this item?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, Delete",
+                    cancelButtonText: "No",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        $.ajax({
+                            url: "{{ route('deleted-addmore-store-material-item') }}",
+                            type: "POST",
+                            data: {
+                                delete_id: deleteId,
+                                _token: "{{ csrf_token() }}"
+                            },
+                            success: function(response) {
+
+                                if (response.status === 'success') {
+                                    Swal.fire("Deleted!", response.msg, "success");
+
+                                    // Remove Row from UI
+                                    row.remove();
+                                } else {
+                                    Swal.fire("Error", response.msg, "error");
+                                }
+                            },
+                            error: function() {
+                                Swal.fire("Error", "Server Error Occurred!", "error");
+                            }
+                        });
+
+                    }
+
+
+                });
+            });
+        });
+    </script>
+    @endpush
 @endsection

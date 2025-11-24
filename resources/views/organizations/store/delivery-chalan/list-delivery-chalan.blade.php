@@ -118,7 +118,7 @@
                                                         <a
                                                             href="{{ route('edit-delivery-chalan', base64_encode($data->id)) }}"><button
                                                                 data-toggle="tooltip" title="Edit"
-                                                                class="pd-setting-ed"><i class="fa fa-pencil-square-o"
+                                                                class="pd-setting-ed"><i class="fas fa-pen-square"
                                                                     aria-hidden="true"></i></button></a>
 
                                                         <a
@@ -139,5 +139,4 @@
             </div>
         </div>
     </div>
-     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-@endsection
+   @endsection

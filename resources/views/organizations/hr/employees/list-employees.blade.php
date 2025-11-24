@@ -61,8 +61,8 @@
                                                 <th>Sr. No.</th>
                                                 <th>Name</th>
                                                 <th>Department</th>
-                                                <th>latitude</th>
-                                                <th>longitude</th>
+                                                {{-- <th>latitude</th>
+                                                <th>longitude</th> --}}
                                                 <th>Leave Details</th>
                                                 <th>Action</th>
                                             </tr>
@@ -75,8 +75,9 @@
                                                         ({{ $item->u_email }})
                                                     </td>
                                                     <td>{{ $item->role_name }}</td>
-                                                    <td>{{ $item->latitude }}</td>
-                                                    <td>{{ $item->longitude }}</td>
+                                                    {{-- <td>{{ $item->latitude ?? '-' }}</td> --}}
+                                                    {{-- <td>{{ $item->longitude  ?? '-'}}</td> --}}
+                                                    
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
                                                             <a href="{{ route('users-leaves-details', base64_encode($item->id)) }} "><button
@@ -95,7 +96,7 @@
 
                                                             <a href="{{ route('edit-users', base64_encode($item->id)) }}"><button
                                                                     data-toggle="tooltip" title="Edit"
-                                                                    class="pd-setting-ed"><i class="fa fa-pencil-square-o"
+                                                                    class="pd-setting-ed"><i class="fas fa-pen-square"
                                                                         aria-hidden="true"></i></button></a>
 
 
@@ -131,9 +132,7 @@
             </div>
         </div>
     </div>
-     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>   
-
+     @push('scripts')
     <script>
         $(document).ready(function() {
             $(".delete-btn").click(function(e) {
@@ -181,4 +180,5 @@
         @csrf
         <input type="hidden" name="leavesdetails_id" id="leavesdetails_id" value="">
     </form>
+    @endpush
 @endsection

@@ -77,7 +77,7 @@
                                                         <a
                                                         href="{{ route('list-material-received-from-quality-bussinesswise', $data->id) }}"><button
                                                             data-toggle="tooltip" title="Edit"
-                                                            class="pd-setting-ed"><i class="fa fa-pencil-square-o"
+                                                            class="pd-setting-ed"><i class="fas fa-pen-square"
                                                                 aria-hidden="true"></i> Check Details</button></a>
                                                     &nbsp; &nbsp; &nbsp;
                                                         {{-- <div style="display: flex; align-items: center;">
@@ -101,5 +101,4 @@
             </div>
         </div>
     </div>
-     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-@endsection
+   @endsection

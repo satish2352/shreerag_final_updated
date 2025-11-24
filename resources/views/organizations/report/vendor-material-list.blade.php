@@ -57,7 +57,7 @@
             </div>
              <div class="col-md-2">
              <div class="dropdown">
-                                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown">
+                                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="exportDropdown" data-toggle="dropdown">
                                             <i class="fa fa-download"></i> Export
                                         </button>
                                         <ul class="dropdown-menu">

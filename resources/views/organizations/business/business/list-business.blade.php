@@ -79,7 +79,7 @@
                                                         @if ($data->is_approved_production == 1)
                                                             <button data-toggle="tooltip" title="Edit"
                                                                 class="pd-setting-ed" disabled>
-                                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                                <i class="fas fa-pen-square" aria-hidden="true"></i>
                                                             </button>
                                                             <button data-toggle="tooltip" title="Trash"
                                                                 class="pd-setting-ed" disabled>
@@ -91,7 +91,7 @@
                                                                     href="{{ route('edit-business', base64_encode($data->id)) }}">
                                                                     <button data-toggle="tooltip" title="Edit"
                                                                         class="pd-setting-ed">
-                                                                        <i class="fa fa-pencil-square-o"
+                                                                        <i class="fas fa-pen-square"
                                                                             aria-hidden="true"></i>
                                                                     </button>
                                                                 </a>
@@ -114,11 +114,8 @@
                 </div>
             </div>
         </div>
-    </div>
-
-   <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
+    </div> 
+  @push('scripts')
 <script>
 jQuery(document).ready(function($) {
     $(document).on('click', '.delete-button', function(e) {
@@ -136,28 +133,11 @@ jQuery(document).ready(function($) {
         }).then(function(result) {
             if (result.isConfirmed) {
                 // If your route is GET based (not recommended):
-                window.location.href = deleteUrl;
-
-                // If your route expects DELETE request:
-                /*
-                $.ajax({
-                    url: deleteUrl,
-                    type: 'DELETE',
-                    data: { _token: '{{ csrf_token() }}' },
-                    success: function(response) {
-                        Swal.fire('Deleted!', response.message, 'success').then(() => {
-                            location.reload();
-                        });
-                    },
-                    error: function() {
-                        Swal.fire('Error!', 'Something went wrong', 'error');
-                    }
-                });
-                */
+                window.location.href = deleteUrl;               
             }
         });
     });
 });
 </script>
-
+     @endpush
 @endsection

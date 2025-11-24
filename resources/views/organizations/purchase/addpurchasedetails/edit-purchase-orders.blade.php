@@ -1,11 +1,4 @@
-@extends('admin.layouts.master-add-more')
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+@extends('admin.layouts.master')
 @section('content')
     <style>
         a {
@@ -342,13 +335,14 @@
                                                                             value="{{ $editDataNew->purchase_order_details_id }}"
                                                                             placeholder="">
                                                                         <td class="reverse-label"
-                                                                            style="display: flex
-;
-    justify-content: flex-end;">
-                                                                            <select
+                                                                            style="display: flex;justify-content: flex-end;">
+                                                                            {{-- <select
                                                                                 class="form-control part_no_id mb-2 select2"
                                                                                 name="part_no_id_{{ $key }}"
-                                                                                id="part_no_id">
+                                                                                id="part_no_id"> --}}
+                                                                                <select class="form-control part_no_id mb-2 select2"
+        name="part_no_id_{{ $key }}">
+
                                                                                 <option value="" default>Select
                                                                                     Description</option>
                                                                                 @foreach ($dataOutputPartItem as $data)
@@ -688,12 +682,7 @@
         @csrf
         <input type="hidden" name="delete_id" id="delete_id" value="">
     </form>
-
-    {{-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> --}}
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
-    <!-- ========== 1) TAX CALCULATION SCRIPT ========== -->
+@push('scripts')
     <script>
         /* =============================================
        FIXED CALCULATION SCRIPT (WORKS ON EDIT MODE)
@@ -771,11 +760,13 @@
         });
     </script>
 
-    <script>
-        var jQuery321 = $.noConflict(true);
-    </script>
+    
     <script>
         $(document).ready(function() {
+             $('.select2').select2({
+        width: "100%"
+    });
+    
             var validator = $("#editDesignsForm").validate({
                 ignore: [],
                 rules: {
@@ -1150,7 +1141,7 @@
 
     <script>
         $(document).ready(function() {
-            var jQuery321 = $.noConflict(true);
+           
             $(document).on('change', '.part_no_id', function() {
                 // alert("hii");
                 var partNoId = $(this).val(); // Get the selected part_no_id
@@ -1187,5 +1178,5 @@
             });
         });
     </script>
-
+ @endpush
 @endsection

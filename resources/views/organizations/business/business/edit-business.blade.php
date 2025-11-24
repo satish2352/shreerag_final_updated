@@ -67,7 +67,8 @@
                                                                     placeholder="Enter the customer po number"
                                                                     value="@if (old('customer_po_number')) {{ trim(old('customer_po_number')) }}@else{{ trim($editDataNew->customer_po_number) }} @endif">
                                                             </div>
-
+                                                        </div>
+                                                        <div class="row mt-2">
                                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mb-4">
                                                                 <label for="title">Customer Name : <span
                                                                         class="text-danger">*</span></label>
@@ -110,7 +111,7 @@
                                                         <tbody>
                                                         @foreach ($editData as $key => $editDataNew)
                                                       
-                                                        <input type="hidden" name="delete_id" id="delete_id" value="{{ $editDataNew->id }}">
+                                                        {{-- <input type="hidden" name="delete_id" id="delete_id" value="{{ $editDataNew->id }}"> --}}
                                                             <tr>
                                                                 <input type="hidden" name="design_count"
                                                                     value="{{ count($editData) }}">
@@ -150,7 +151,7 @@
                                                                         />
                                                                 </td>
                                                                   <td><input type="text" name="total_{{ $key }}" class="form-control total" readonly value="{{ $editDataNew->quantity * $editDataNew->rate }}"></td>
-                                                                <td>
+                                                                {{-- <td>
                                                                     <a data-id="{{ $editDataNew->id }}"
                                                                         class="btn btn-sm btn-danger font-18 ml-2 remove-row"
                                                                         title="Delete"
@@ -159,7 +160,28 @@
                                                                         <i class="fas fa-archive"></i>
                                                                     </a>
                                                                     
+                                                                </td> --}}
+                                                                <td>
+                                                                    @if ($editDataNew->id != 0)
+                                                                        {{-- Existing row --}}
+                                                                        <a data-id="{{ $editDataNew->id }}"
+                                                                            class="btn btn-sm btn-danger font-18 ml-2 remove-row"
+                                                                            title="Delete"
+                                                                            @if (!($editDataNew->business_status_id == 1112 && $editDataNew->design_status_id == 1111)) 
+                                                                                style="pointer-events:none; opacity:0.5;" 
+                                                                            @endif
+                                                                        >
+                                                                            <i class="fa fa-trash"></i>
+                                                                        </a>
+                                                                    @else
+                                                                        {{-- New added row, always enable --}}
+                                                                        <button type="button" data-id="0" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete">
+    <i class="fa fa-trash"></i>
+</button>
+
+                                                                    @endif
                                                                 </td>
+
                                                             </tr>
                                                         @endforeach
                                                         </tbody>
@@ -175,21 +197,23 @@
                                                 </div>
                                                 @foreach ($editData as $key => $editDataNew)
                                                     @if ($key == 0)
-                                                    <div>
+                                                   <div class="row">
                                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                             <label for="remarks">Remark: <span
                                                                         class="text-danger">*</span> </label>
                                                             <textarea class="form-control remarks" name="remarks" id="remarks" placeholder="Enter the Description">@if (old('remarks')){{ trim(old('remarks')) }}@else{{ trim($editDataNew->remarks) }}@endif</textarea>
                                                         </div>
                                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                            <label for="customer_payment_terms">Payment Terms:</label>
-                                                            (optional)
+                                                            <label for="customer_payment_terms">Payment Terms (optional):</label>
+                                                            
                                                             <textarea class="form-control customer_payment_terms" name="customer_payment_terms" id="customer_payment_terms" placeholder="Enter the Description">@if (old('customer_payment_terms')){{ trim(old('customer_payment_terms')) }}@else{{ trim($editDataNew->customer_payment_terms) }}@endif</textarea>
 
                                                         </div>
+                                                   </div>
+                                                         <div class="row mt-2">
                                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mb-3">
                                                             <label for="customer_terms_condition">Terms
-                                                                Condition:</label> (optional)
+                                                                Condition (optional):</label> 
                                                                 <textarea class="form-control customer_terms_condition" name="customer_terms_condition" id="customer_terms_condition" placeholder="Enter the Description">@if (old('customer_terms_condition')){{ trim(old('customer_terms_condition')) }}@else{{ trim($editDataNew->customer_terms_condition) }}@endif</textarea>
                                                         </div>
                                                     </div>
@@ -222,12 +246,13 @@
         <input type="hidden" name="delete_id" id="delete_id" value="">
     </form>
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+@push('scripts')
 
 <script>
-     function setMinDate() {
+ 
+    $(document).ready(function() {
+
+    function setMinDate() {
     var today = new Date();
     var day = String(today.getDate()).padStart(2, '0');
     var month = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -254,7 +279,8 @@ function calculateGrandTotal() {
     });
     $('#grandTotal').val(grandTotal.toFixed(2));
     }
-    $(document).ready(function() {
+
+    
         // Trim whitespace on form submission
         $("#updateBusiness").on('submit', function() {
             var poNumberInput = $('#customer_po_number');
@@ -390,62 +416,6 @@ function updateSerialNumbers() {
         $(this).find('td:first').text(index + 1);
     });
 }
-
-// After adding a new row
-// $("#add_more_btn").click(function() {
-//     rowCount++;
-//     const newRow = `
-//         <tr>
-//             <td>
-//                 <input type="hidden" name="design_id_${rowCount}" value="0">
-//                 <input type="text" name="addmore[${rowCount}][product_name]" class="form-control product_name" placeholder="Enter product name" />
-//             </td>
-//             <td><input type="text" name="addmore[${rowCount}][description]" class="form-control description" placeholder="Enter description" /></td>
-//             <td><input type="text" name="addmore[${rowCount}][quantity]" class="form-control quantity" placeholder="Enter quantity" /></td>
-//             <td><input type="text" name="addmore[${rowCount}][rate]" class="form-control rate" placeholder="Enter rate" /></td>
-//             <td><input type="text" name="addmore[${rowCount}][total]" class="form-control total" readonly></td>
-//             <td>
-//                 <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete">
-//                     <i class="fa fa-trash"></i>
-//                 </button>
-//             </td>
-//         </tr>`;
-//     $("#purchase_order_table tbody").append(newRow);
-//     const $lastRow = $("#purchase_order_table tbody tr:last-child");
-//     initializeValidation($lastRow);
-//     updateSerialNumbers(); // Update serial numbers
-// });
-        // $(document).on("click", ".remove-row", function() {
-        //     $(this).closest("tr").remove();
-        //        calculateGrandTotal();
-        // });
-//     $(document).on("click", ".remove-row", function(e) {
-//     const id = $(this).data("id");
-
-//     // If no data-id, it's a new row => just remove
-//     if (!id || id === 0) {
-//         $(this).closest("tr").remove();
-//         calculateGrandTotal();
-//         return;
-//     }
-
-//     // Else it's an old row => confirm and submit delete form
-//     e.preventDefault();
-
-//     Swal.fire({
-//         title: 'Are you sure?',
-//         text: "This will permanently delete this product row!",
-//         icon: 'warning',
-//         showCancelButton: true,
-//         confirmButtonText: 'Yes, delete it!',
-//         cancelButtonText: 'Cancel'
-//     }).then((result) => {
-//         if (result.isConfirmed) {
-//             $('#delete_id').val(id);
-//             $('#deleteform').submit();
-//         }
-//     });
-// });
 // After deleting a row
 $(document).on("click", ".remove-row", function(e) {
     const id = $(this).data("id");
@@ -476,4 +446,5 @@ $(document).on("click", ".remove-row", function(e) {
         });
     });
 </script>
+@endpush
 @endsection
