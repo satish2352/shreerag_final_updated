@@ -3,6 +3,25 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <style>
+ .custom-dropdown {
+    position: relative;
+    width: 100%;
+    max-width: 600px; /* adjust as per design */
+}
+
+.custom-dropdown .dropdown-options {
+    position: absolute !important;
+    top: 100%;
+    left: 0;
+    width: 100% !important;
+    max-width: 300px; /* same as above */
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 99999 !important;
+}
+
+
+
         label {
             margin-top: 20px;
         }
@@ -38,8 +57,7 @@
             opacity: 1 !important;
         }
 
-        .custom-dropdown .dropdown-options {
-            /* position: absolute; */
+        /* .custom-dropdown .dropdown-options {
             width: 600px !important;
             top: 100%;
             left: 0;
@@ -47,9 +65,23 @@
             background: white;
             border: 1px solid #ccc;
             z-index: 999;
-            /* max-height: 200px; */
             overflow-y: auto;
-        }
+        } */
+.custom-dropdown {
+    position: relative;
+}
+
+.custom-dropdown .dropdown-options {
+    position: absolute !important;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 280px;
+    background: #fff;
+    border: 1px solid #ccc;
+    overflow-y: auto;
+    z-index: 99999 !important;
+}
 
         .custom-dropdown .option {
             padding: 6px 10px;
@@ -216,7 +248,8 @@
                                                                     value="{{ \Carbon\Carbon::parse($item->updated_at)->format('d-m-Y H:i') }}">
                                                             </td>
                                                             <td>
-                                                                <div class="custom-dropdown disabled-dropdown">
+                                                                {{-- <div class="custom-dropdown disabled-dropdown"> --}}
+                                                             <div class="custom-dropdown">
 
                                                                     <!-- Correct index -->
                                                                     <input type="hidden"
@@ -752,16 +785,16 @@
 
 
         // Disable dropdown click for existing rows
-        $(document).on('click', '.disabled-dropdown .dropdown-input', function(e) {
-            e.stopImmediatePropagation();
-            return false;
-        });
+        // $(document).on('click', '.disabled-dropdown .dropdown-input', function(e) {
+        //     e.stopImmediatePropagation();
+        //     return false;
+        // });
 
         // Disable selecting options for disabled dropdown
-        $(document).on('click', '.disabled-dropdown .option', function(e) {
-            e.stopImmediatePropagation();
-            return false;
-        });
+        // $(document).on('click', '.disabled-dropdown .option', function(e) {
+        //     e.stopImmediatePropagation();
+        //     return false;
+        // });
     </script>
 
     <script>

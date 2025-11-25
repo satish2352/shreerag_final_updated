@@ -28,7 +28,7 @@
                                                 <th data-field="design_image" data-editable="false">Design Layout</th>
                                                 <th data-field="bom_image" data-editable="false">BOM</th>
                                                 <th data-field="total_amount" data-editable="false">Total Amount</th>
-                                                @if (session('role_id') === 15)
+                                                @if (session('role_id') == 15)
                                                     <th data-field="action">Action</th>
                                                 @else
                                                 @endif

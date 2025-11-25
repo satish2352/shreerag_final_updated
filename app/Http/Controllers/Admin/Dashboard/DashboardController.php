@@ -833,7 +833,7 @@ foreach ($user_leaves_status as $item) {
             $notifications[] = [
                 'admin_count' => $business_count,
                 'message' => 'Estimation Received For Accept/Reject',
-                'url' => $baseUrl . '/owner/list-forwarded-to-design',
+                'url' => $baseUrl . '/owner/list-design-received-estimation',
             ];
             $revised_rejected_list = AdminView::where('off_canvas_status', 31)
                 ->where('is_view', '0')
