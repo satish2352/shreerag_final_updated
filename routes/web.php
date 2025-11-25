@@ -493,7 +493,7 @@
 
         // Returnable Chalan
         Route::get('/list-returnable-chalan', [ReturnableChalanController::class, 'index'])->name('list-returnable-chalan');
-        Route::get('/add-returnable-chalan', [ReturnableChalanController::class, 'create'])->name('add-returnable-chalan');
+        Route::post('/add-returnable-chalan', [ReturnableChalanController::class, 'create'])->name('add-returnable-chalan');
         Route::post('/store-returnable-chalan', [ReturnableChalanController::class, 'store'])->name('store-returnable-chalan');
         Route::get('/show-returnable-chalan/{id}', [ReturnableChalanController::class, 'show'])->name('show-returnable-chalan');
         Route::get('/edit-returnable-chalan/{id}', [ReturnableChalanController::class, 'edit'])->name('edit-returnable-chalan');

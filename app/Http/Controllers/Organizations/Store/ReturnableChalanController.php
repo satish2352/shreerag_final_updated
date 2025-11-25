@@ -122,7 +122,7 @@ class ReturnableChalanController extends Controller
         // dd($request);
         // die();
         $rules = [
-            // 'vendor_id' => 'required',
+            'vendor_id' => 'required',
             // // 'transport_id' => 'required',
             // 'vehicle_id' => 'required',
             // // 'business_id' => 'nullable',
@@ -144,7 +144,7 @@ class ReturnableChalanController extends Controller
             // 'addmore.*.amount' => 'required|numeric',
         ];
         $messages = [
-            // 'vendor_id.required' => 'The vendor company name is required.',
+            'vendor_id.required' => 'The vendor company name is required.',
             // // 'transport_id.required' => 'The transport name is required.',
             // 'vehicle_id.required' => 'The vehicle type is required.',
             // // 'business_id.exists' => 'The selected PO number is invalid.',
