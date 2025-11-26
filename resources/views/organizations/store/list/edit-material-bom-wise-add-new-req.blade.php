@@ -3,6 +3,15 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <style>
+
+        .table td .custom-dropdown {
+    width: 100% !important;
+}
+.dropdown-input {
+    text-align: left !important;
+}
+
+
  .custom-dropdown {
     position: relative;
     width: 100%;
@@ -67,9 +76,7 @@
             z-index: 999;
             overflow-y: auto;
         } */
-.custom-dropdown {
-    position: relative;
-}
+
 
 .custom-dropdown .dropdown-options {
     position: absolute !important;
@@ -247,11 +254,12 @@
                                                                     name="addmore[{{ $index }}][total_amount]"
                                                                     value="{{ \Carbon\Carbon::parse($item->updated_at)->format('d-m-Y H:i') }}">
                                                             </td>
-                                                            <td>
-                                                                {{-- <div class="custom-dropdown disabled-dropdown"> --}}
+                                                            {{-- old --}}
+                                                            {{-- <td>
+                                                              
                                                              <div class="custom-dropdown">
 
-                                                                    <!-- Correct index -->
+                                                                  
                                                                     <input type="hidden"
                                                                         name="addmore[{{ $index }}][part_item_id]"
                                                                         class="part_no" value="{{ $item->part_item_id }}">
@@ -263,14 +271,14 @@
                                                                         );
                                                                     @endphp
 
-                                                                    <!-- Visible Text -->
+                                                                    
                                                                     <input type="text"
                                                                         class="dropdown-input form-control part-item-name"
                                                                         placeholder="Select Part Item..."
                                                                         value="{{ $selectedPartItem ? $selectedPartItem->description : '' }}"
                                                                         readonly>
 
-                                                                    <!-- Dropdown -->
+                                                                
                                                                     <div class="dropdown-options dropdown-height"
                                                                         style="display:none;">
                                                                         <input type="text"
@@ -287,7 +295,28 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </td>
+                                                            </td> --}}
+<td>
+    <div class="custom-dropdown">
+        <input type="hidden" name="addmore[{{ $index }}][part_item_id]" class="part_no" value="{{ $item->part_item_id }}">
+        
+        @php
+            $selected = $dataOutputPartItem->firstWhere('id', $item->part_item_id);
+        @endphp
+
+        <input type="text" class="dropdown-input form-control"
+               value="{{ $selected ? $selected->description : '' }}" readonly>
+
+        <div class="dropdown-options dropdown-height" style="display:none;">
+            <input type="text" class="search-box form-control" placeholder="Search...">
+            <div class="options-list">
+                @foreach ($dataOutputPartItem as $data)
+                    <div class="option" data-id="{{ $data->id }}">{{ $data->description }}</div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</td>
 
                                                             {{-- <td>
                                                                 <div class="custom-dropdown"

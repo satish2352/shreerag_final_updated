@@ -2,70 +2,65 @@
 @section('content')
     <style>
        
-.custom-dropdown {
+.table td .custom-dropdown {
     width: 100% !important;
-    position: relative !important;
+}
+.dropdown-input {
+    text-align: left !important;
 }
 
+
+ .custom-dropdown {
+    position: relative;
+    width: 100%;
+    max-width: 600px; /* adjust as per design */
+}
+
+
+
+ .custom-dropdown {
+            position: relative;
+            width: 100%;
+        }
+
+        .dropdown-height {
+            height: 280px !important;
+        }
+
+        .dropdown-input[readonly] {
+            background-color: #fff !important;
+            color: #000 !important;
+            opacity: 1 !important;
+        }
+
+      
+
+
 .custom-dropdown .dropdown-options {
-    left: 0 !important;
-    width: 100% !important;
     position: absolute !important;
-    top: 100% !important;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 280px;
+    background: #fff;
+    border: 1px solid #ccc;
+    overflow-y: auto;
     z-index: 99999 !important;
 }
 
-/* Container for the dropdown */
-.custom-dropdown {
-    width: 100% !important;
-    position: relative; /* ensures dropdown anchors here */
-}
+        .custom-dropdown .option {
+            padding: 6px 10px;
+            cursor: pointer;
+        }
 
-/* Input box */
-.custom-dropdown .dropdown-input {
-    width: 100%;
-    cursor: pointer;
-}
+        .custom-dropdown .option:hover {
+            background: #f0f0f0;
+        }
 
-/* Dropdown panel */
-.custom-dropdown .dropdown-options {
-    position: absolute;
-    top: 100%;                /* below input */
-    left: 0 !important;       /* align left */
-    width: 100% !important;   /* match input width */
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    z-index: 9999;
-    display: none;            /* initially hidden */
-    max-height: 220px;
-    overflow-y: auto;
-}
-
-/* Search box inside dropdown */
-.custom-dropdown .search-box {
-    width: 100%;
-    margin-bottom: 5px;
-    border-bottom: 1px solid #e2e2e2;
-}
-
-/* Dropdown options list */
-.custom-dropdown .options-list {
-    max-height: 180px;
-    overflow-y: auto;
-}
-
-/* Individual option */
-.custom-dropdown .option {
-    padding: 6px 10px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.custom-dropdown .option:hover {
-    background: #f0f0f0;
-}
+        .custom-dropdown .search-box {
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 5px;
+        }
 
 /* Fix bootstrap table overflow cutting dropdown */
 .table-responsive {
@@ -361,19 +356,14 @@ table td {
                                                                                         style="min-width:50px" readonly
                                                                                         value="0"> --}}
                                                                                 </td>
-                                                                                 <td class="col-part-item">
+                                                                                 {{-- <td class="col-part-item">
                                                                                     <div class="custom-dropdown">
-                                                                                        <input 
-    type="text" 
-    id="addmore[${i}][part_item_id]" 
-    name="addmore[${i}][part_item_id]" 
-    class="form-control dropdown-input" 
-    placeholder="Search..."
->
-
-                                                                                        {{-- <input type="text" 
-                                                                                            class="form-control dropdown-input" name="description"
-                                                                                            placeholder="Search Part Item"> --}}
+                                                                                        <input  type="text" 
+                                                                                            id="addmore[${i}][part_item_id]" 
+                                                                                            name="addmore[${i}][part_item_id]" 
+                                                                                            class="form-control dropdown-input" 
+                                                                                            placeholder="Search..."
+                                                                                        >                                                                                  
                                                                                         <input type="hidden"
                                                                                             name="addmore[${i}][part_item_id]"
                                                                                             class="part_no">
@@ -393,7 +383,24 @@ table td {
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                </td>
+                                                                                </td> --}}
+                                                                            
+
+                                                                                <td class="col-part-item">
+                                                                                                    <div class="custom-dropdown">
+                                                                                                        <input type="text" class="form-control dropdown-input" placeholder="Search Part Item">
+                                                                                                        <input type="hidden" name="addmore[0][part_item_id]" class="part_no">
+                                                                                                        <div class="dropdown-options" style="display:none;">
+                                                                                                            <input type="text" class="form-control search-box" placeholder="Search...">
+                                                                                                            <div class="options-list" style="max-height:150px; overflow:auto;">
+                                                                                                                @foreach ($dataOutputPartItem as $data)
+                                                                                                                    <div class="option" data-id="{{ $data['id'] }}">{{ $data['description'] }}</div>
+                                                                                                                @endforeach
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </td>
+
                                                                                 {{-- <td>
                                                                                             <div class="custom-dropdown"
                                                                                                 data-index="0">

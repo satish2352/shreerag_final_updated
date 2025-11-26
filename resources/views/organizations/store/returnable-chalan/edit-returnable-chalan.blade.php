@@ -1,6 +1,65 @@
 @extends('admin.layouts.master')
 @section('content')
     <style>
+        .table td .custom-dropdown {
+    width: 100% !important;
+}
+.dropdown-input {
+    text-align: left !important;
+}
+
+
+ .custom-dropdown {
+    position: relative;
+    width: 100%;
+    max-width: 600px; /* adjust as per design */
+}
+
+
+
+
+ .custom-dropdown {
+            position: relative;
+            width: 100%;
+        }
+
+        .dropdown-height {
+            height: 280px !important;
+        }
+
+        .dropdown-input[readonly] {
+            background-color: #fff !important;
+            color: #000 !important;
+            opacity: 1 !important;
+        }
+
+       
+
+.custom-dropdown .dropdown-options {
+    position: absolute !important;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 280px;
+    background: #fff;
+    border: 1px solid #ccc;
+    overflow-y: auto;
+    z-index: 99999 !important;
+}
+
+        .custom-dropdown .option {
+            padding: 6px 10px;
+            cursor: pointer;
+        }
+
+        .custom-dropdown .option:hover {
+            background: #f0f0f0;
+        }
+
+        .custom-dropdown .search-box {
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 5px;
+        }
         a {
             color: black;
         }

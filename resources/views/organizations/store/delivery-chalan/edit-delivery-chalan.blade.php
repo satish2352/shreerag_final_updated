@@ -30,6 +30,65 @@
             opacity: 0.6;
             /* Looks visually "readonly" */
         }
+               
+.custom-dropdown {
+    width: 100% !important;
+    position: relative !important;
+}
+
+
+
+/* Container for the dropdown */
+.custom-dropdown {
+    width: 100% !important;
+    position: relative; /* ensures dropdown anchors here */
+}
+
+/* Input box */
+.custom-dropdown .dropdown-input {
+    width: 100%;
+    cursor: pointer;
+}
+
+/* Dropdown panel */
+.custom-dropdown .dropdown-options {
+    position: absolute;
+    top: 100%;                /* below input */
+    left: 0 !important;       /* align left */
+    width: 100% !important;   /* match input width */
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    z-index: 9999;
+    display: none;            /* initially hidden */
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+/* Search box inside dropdown */
+.custom-dropdown .search-box {
+    width: 100%;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+/* Dropdown options list */
+.custom-dropdown .options-list {
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+/* Individual option */
+.custom-dropdown .option {
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.custom-dropdown .option:hover {
+    background: #f0f0f0;
+}
     </style>
 
     <div class="container-fluid">

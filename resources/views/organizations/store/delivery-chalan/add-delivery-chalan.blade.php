@@ -7,13 +7,7 @@
     position: relative !important;
 }
 
-.custom-dropdown .dropdown-options {
-    left: 0 !important;
-    width: 100% !important;
-    position: absolute !important;
-    top: 100% !important;
-    z-index: 99999 !important;
-}
+
 
 /* Container for the dropdown */
 .custom-dropdown {
@@ -111,43 +105,7 @@ table td {
     min-width: 260px !important;
     max-width: 280px !important;
 }
-        /* label {
-            margin-top: 10px;
-        }
-
-        label.error {
-            color: red;
-            font-size: 12px;
-        }
-
-        .form-display-center {
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center;
-        }
-
-        .red-text {
-            color: red;
-        }
-
-        .custom-dropdown {
-            position: relative;
-        }
-
-        .custom-dropdown .dropdown-options {
-            border-radius: 4px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-            width: 615px !important;
-        }
-
-        .custom-dropdown .option {
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
-        .custom-dropdown .option:hover {
-            background: #f0f0f0;
-        } */
+      
     </style>
     <div class="container-fluid">
         <div class="row">
@@ -413,7 +371,7 @@ table td {
                                                                                         </select>
 
                                                                                     </td> --}}
-                                                                                    <td class="col-part-item">
+                                                                                    {{-- <td class="col-part-item">
                                                                                         <div class="custom-dropdown"
                                                                                             data-index="0">
                                                                                             <input type="hidden"
@@ -442,8 +400,22 @@ table td {
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
-                                                                                    </td>
-
+                                                                                    </td> --}}
+ <td class="col-part-item">
+                    <!-- Custom dropdown example -->
+                    <div class="custom-dropdown">
+                        <input type="text" class="form-control dropdown-input" placeholder="Search Part Item">
+                        <input type="hidden" name="addmore[0][part_item_id]" class="part_no">
+                        <div class="dropdown-options" style="display:none;">
+                            <input type="text" class="form-control search-box" placeholder="Search...">
+                            <div class="options-list" style="max-height:150px; overflow:auto;">
+                                @foreach ($dataOutputPartItem as $data)
+                                    <div class="option" data-id="{{ $data['id'] }}">{{ $data['description'] }}</div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </td>
                                                                                     <td>
                                                                                         <input
                                                                                             class="form-control hsn_name"
