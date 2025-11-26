@@ -1,6 +1,78 @@
 @extends('admin.layouts.master')
 @section('content')
     <style>
+       
+.custom-dropdown {
+    width: 100% !important;
+    position: relative !important;
+}
+
+.custom-dropdown .dropdown-options {
+    left: 0 !important;
+    width: 100% !important;
+    position: absolute !important;
+    top: 100% !important;
+    z-index: 99999 !important;
+}
+
+/* Container for the dropdown */
+.custom-dropdown {
+    width: 100% !important;
+    position: relative; /* ensures dropdown anchors here */
+}
+
+/* Input box */
+.custom-dropdown .dropdown-input {
+    width: 100%;
+    cursor: pointer;
+}
+
+/* Dropdown panel */
+.custom-dropdown .dropdown-options {
+    position: absolute;
+    top: 100%;                /* below input */
+    left: 0 !important;       /* align left */
+    width: 100% !important;   /* match input width */
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    z-index: 9999;
+    display: none;            /* initially hidden */
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+/* Search box inside dropdown */
+.custom-dropdown .search-box {
+    width: 100%;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+/* Dropdown options list */
+.custom-dropdown .options-list {
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+/* Individual option */
+.custom-dropdown .option {
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.custom-dropdown .option:hover {
+    background: #f0f0f0;
+}
+
+/* Fix bootstrap table overflow cutting dropdown */
+.table-responsive {
+    overflow: visible !important;
+}
+
+
         label {
             margin-top: 10px;
         }
@@ -20,24 +92,25 @@
             color: red;
         }
 
-        .custom-dropdown {
-            position: relative;
-        }
+       /* Makes dropdown align inside table cell */
+table td {
+    position: relative !important;
+}
 
-        .custom-dropdown .dropdown-options {
-            border-radius: 4px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-            width: 615px !important;
-        }
+/* Serial No Column */
+.col-serial {
+    width: 50px !important;
+    min-width: 50px !important;
+    max-width: 50px !important;
+    text-align: center;
+}
 
-        .custom-dropdown .option {
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
-        .custom-dropdown .option:hover {
-            background: #f0f0f0;
-        }
+/* Product / Part Item Column */
+.col-part-item {
+    width: 260px !important;
+    min-width: 260px !important;
+    max-width: 280px !important;
+}
     </style>
     <div class="container-fluid">
         <div class="row">
@@ -176,7 +249,7 @@
                                                         <div class="row">
                                                             <div class="col-lg-4 col-md-4 col-sm-4">
                                                                 <div class="form-group">
-                                                                    <label>Tax Type<span
+                                                                    <label for="tax_type">Tax Type<span
                                                                             class="text-danger">*</span></label>
                                                                     <select name="tax_type" class="form-control"
                                                                         title="select tax" id="tax_type">
@@ -255,9 +328,9 @@
                                                                         id="purchase_order_table">
                                                                         <thead>
                                                                             <tr>
-                                                                                <th>#</th>
-                                                                                <th class="col-sm-2">Product Name
-                                                                                </th>
+                                                                                <th class="col-serial">#</th>
+                                                                                    <th class="col-sm-2 col-part-item">Product Name
+                                                                                    </th>
                                                                                 <th class="col-md-1">HSN</th>
                                                                                 <th class="col-md-1">Unit</th>
                                                                                 <th class="col-md-2">process</th>
@@ -277,21 +350,30 @@
                                                                         </thead>
                                                                         <tbody>
                                                                             <tr>
-                                                                                <td>
-                                                                                    <input type="text" name="id"
+                                                                                  <td class="col-serial">
+                                                                                    1<input type="hidden" id="i_id" value="1">
+                                                                                    {{-- <input type="text" name="id"
                                                                                         class="form-control"
                                                                                         style="min-width:50px" readonly
                                                                                         value="1">
                                                                                     <input type="hidden" id="i_id"
                                                                                         class="form-control"
                                                                                         style="min-width:50px" readonly
-                                                                                        value="0">
+                                                                                        value="0"> --}}
                                                                                 </td>
-                                                                                <td>
+                                                                                 <td class="col-part-item">
                                                                                     <div class="custom-dropdown">
-                                                                                        <input type="text"
-                                                                                            class="form-control dropdown-input"
-                                                                                            placeholder="Search Part Item">
+                                                                                        <input 
+    type="text" 
+    id="addmore[${i}][part_item_id]" 
+    name="addmore[${i}][part_item_id]" 
+    class="form-control dropdown-input" 
+    placeholder="Search..."
+>
+
+                                                                                        {{-- <input type="text" 
+                                                                                            class="form-control dropdown-input" name="description"
+                                                                                            placeholder="Search Part Item"> --}}
                                                                                         <input type="hidden"
                                                                                             name="addmore[${i}][part_item_id]"
                                                                                             class="part_no">
@@ -734,8 +816,8 @@
 
                 var newRow = `
             <tr>
-                <td>${i}</td>
-                <td>
+                   <td class="col-serial">${i}</td>
+                <td class="col-part-item">
                     <div class="custom-dropdown">
                         <input type="text" class="form-control dropdown-input" placeholder="Search Part Item">
                         <input type="hidden" name="addmore[${i}][part_item_id]" class="part_no">

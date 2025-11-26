@@ -423,7 +423,7 @@
                                                         @foreach ($editData as $key => $editDataNew)
                                                             @if ($key == 0)
                                                                 <div class="form-group-inner">
-                                                                    <div class="row">
+                                                                    
                                                                         <div class="row">
                                                                             <div
                                                                                 class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -466,12 +466,7 @@
         @csrf
         <input type="hidden" name="delete_id" id="delete_id" value="">
     </form>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    @push('scripts')
     <script>
         $(document).ready(function() {
             $('.editdatetimepicker').datepicker({
@@ -863,5 +858,5 @@
 
         });
     </script>
-
+  @endpush
 @endsection

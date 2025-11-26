@@ -1,6 +1,6 @@
 <!-- ========================= FOOTER START ========================= -->
 
-<div class="footer-copyright-area navbar-fixed-bottom">
+<div class="footer-copyright-area navbar-fixed-bottom" style="width:100%;">
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
@@ -44,7 +44,7 @@
 <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.0/dist/bootstrap-table.min.css">
 <script src="https://unpkg.com/bootstrap-table@1.21.0/dist/bootstrap-table.min.js"></script>
 <script src="https://unpkg.com/bootstrap-table@1.21.0/dist/extensions/export/bootstrap-table-export.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tableexport/5.2.0/js/tableexport.min.js"></script>
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tableexport/5.2.0/js/tableexport.min.js"></script> --}}
 
 <!-- 7. Template Plugins -->
 <script src="{{ asset('js/wow.min.js') }}"></script>
