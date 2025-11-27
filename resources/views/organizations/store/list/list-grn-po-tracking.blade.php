@@ -1,6 +1,11 @@
 @extends('admin.layouts.master')
 @section('content')
     <style>
+        .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+}
         .remaining_quantity {
             background-color: #8cd9b3 !important;
         }
@@ -110,9 +115,10 @@
                                                     </div>
                                                 </div>
 <div id="printableArea">
-                                                <div style="margin-top:20px" >
+                                                 <div style="margin-top:20px" class="table-responsive">
                                                     <table class="table table-bordered" id="dynamicTable">
                                                         <tr>
+                                                            <th style="width: 60px;">Sr. No.</th>
                                                             <th>Description</th>
                                                             <th style="width: 100px;">Part No.</th>
                                                             <th style="width: 100px;">PO Quantity</th>
@@ -126,11 +132,13 @@
                                                             <th style="width: 100px;">Balance Quantity</th>
                                                             {{-- <th>Action</th> --}}
                                                         </tr>
-                                                        @foreach ($purchase_order_details_data as $item)
+                                                       @foreach ($purchase_order_details_data as $index => $item)
                                                             <tr>
-                                                                <input type="hidden" name="addmore[0][edit_id]"
+                                                                <input type="hidden"
+                                                                    name="addmore[{{ $index }}][edit_id]"
                                                                     placeholder="Enter Description" class="form-control"
                                                                     value="{{ $item->id }}" readonly />
+                                                                     <td>{{ $index + 1 }}</td>
                                                                 <td><input type="text" name="addmore[0][description]"
                                                                         placeholder="Enter Description"
                                                                         class="form-control"
