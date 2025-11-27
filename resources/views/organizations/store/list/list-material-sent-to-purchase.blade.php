@@ -48,7 +48,7 @@
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
                                                 <th data-field="grn_date" data-editable="false">Description</th>
                                                 <th data-field="purchase_id" data-editable="false">Remark</th>
-                                                <th data-field="bom_image" data-editable="false">BOM</th>
+                                                <th data-field="bom_image" data-editable="false">Requistion BOM</th>
                                             </tr>
                                         </thead>
                                         <tbody>

@@ -25,7 +25,7 @@
                                             <th data-field="quantity" data-editable="false">Quantity</th>
                                             <th data-field="grn_date" data-editable="false">Description</th>
                                             <th data-field="design_image" data-editable="false">Design Layout</th>
-                                            <th data-field="bom_image" data-editable="false">BOM</th>   
+                                            <th data-field="bom_image" data-editable="false">Estimated BOM</th>   
                                             <th data-field="total_amount" data-editable="false">Total Amount</th> 
                                             <th data-field="total_estimation_amount" data-editable="false">Estimation Total Amount</th>
                                         </tr>
@@ -48,10 +48,10 @@
                                             </td>
                                              <td>{{ ucwords($data->total_amount) }}</td>
                                                 <td>{{ ucwords($data->total_estimation_amount) }}</td>
-                                            <td>
+                                            {{-- <td>
                                                 <div style="display: inline-block; align-items: center;">
                                                 </div>
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -64,5 +64,4 @@
         </div>
     </div>
 </div>
- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 @endsection

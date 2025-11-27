@@ -29,7 +29,7 @@
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
                                                 <th data-field="description" data-editable="false">Description</th>
                                                 <th data-field="design_image" data-editable="false">Design Layout</th>
-                                                <th data-field="bom_image" data-editable="false">BOM</th>
+                                                <th data-field="bom_image" data-editable="false">Estimated BOM</th>
                                                 <th data-field="total_estimation_amount" data-editable="false">Total
                                                     Estimation Amount</th>
                                             </tr>

@@ -373,8 +373,8 @@ class AllListRepositor
   public function getPurchaseOrderBusinessWise($id)
   {
     try {
-      // $array_to_be_check = [config('constants.HIGHER_AUTHORITY.APPROVED_PO_FROM_PURCHASE')];
-      $array_to_be_check = [config('constants.HIGHER_AUTHORITY.LIST_PO_TO_BE_APPROVE_FROM_PURCHASE')];
+      $array_to_be_check = [config('constants.HIGHER_AUTHORITY.APPROVED_PO_FROM_PURCHASE')];
+      // $array_to_be_check = [config('constants.HIGHER_AUTHORITY.LIST_PO_TO_BE_APPROVE_FROM_PURCHASE')];
 
       $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
         $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
@@ -400,11 +400,11 @@ class AllListRepositor
           $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
         })
         ->where('businesses_details.id', $id)
-        // ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check)
-        ->where(function ($q) use ($array_to_be_check) {
-          $q->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check)
-            ->orWhereNull('purchase_orders.purchase_status_from_owner');
-        })
+        ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check)
+        // ->where(function ($q) use ($array_to_be_check) {
+        //   $q->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check)
+        //     ->orWhereNull('purchase_orders.purchase_status_from_owner');
+        // })
 
         // ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
         ->where('businesses.is_active', true)
@@ -1016,6 +1016,7 @@ class AllListRepositor
           'businesses.id',
           'businesses.project_name',
           'businesses.customer_po_number',
+          'businesses.title',
           'businesses.remarks',
           'businesses.grand_total_amount',
           DB::raw('MAX(estimation.updated_at) as updated_at'),
@@ -1027,6 +1028,7 @@ class AllListRepositor
           'businesses.project_name',
           'businesses.customer_po_number',
           'businesses.remarks',
+          'businesses.title',
           'businesses.grand_total_amount'
         )
         ->orderBy('updated_at', 'desc') // use the alias

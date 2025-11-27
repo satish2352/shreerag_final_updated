@@ -3,7 +3,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <style>
-
         .table td .custom-dropdown {
     width: 100% !important;
 }
@@ -22,8 +21,8 @@
     position: absolute !important;
     top: 100%;
     left: 0;
-    width: 100% !important;
-    max-width: 300px; /* same as above */
+   
+   
     overflow-y: auto;
     overflow-x: hidden;
     z-index: 99999 !important;
@@ -307,7 +306,7 @@
         <input type="text" class="dropdown-input form-control"
                value="{{ $selected ? $selected->description : '' }}" readonly>
 
-        <div class="dropdown-options dropdown-height" style="display:none;">
+        <div class="dropdown-options dropdown-height" style="display:none; width: 750px !important;">
             <input type="text" class="search-box form-control" placeholder="Search...">
             <div class="options-list">
                 @foreach ($dataOutputPartItem as $data)
@@ -714,7 +713,7 @@
         <input type="hidden" name="addmore[${rowCount}][part_item_id]" class="part_no" value="">
         <input type="text" class="dropdown-input form-control" placeholder="Select Part Item..." readonly>
 
-        <div class="dropdown-options dropdown-height" style="display:none;">
+        <div class="dropdown-options dropdown-height" style="display:none; width: 750px !important;">
             <input type="text" class="search-box form-control" placeholder="Search...">
             <div class="options-list">
                 @foreach ($dataOutputPartItem as $data)

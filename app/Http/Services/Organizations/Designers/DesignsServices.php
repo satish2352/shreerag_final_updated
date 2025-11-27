@@ -93,7 +93,10 @@ class DesignsServices
     public function getUploadedDesignSendEstimation()
     { //checked
         try {
-            return $this->repo->getUploadedDesignSendEstimation();
+            $data_output =  $this->repo->getUploadedDesignSendEstimation();
+            // dd($data_output);
+            // die();
+            return $data_output;
         } catch (\Exception $e) {
             Log::error('Service getAll() error: ' . $e->getMessage());
             throw $e;

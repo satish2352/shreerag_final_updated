@@ -54,11 +54,11 @@
 
     /* Notification Badge */
 #notification-count {
-    background: #1A4FA7;    /* blue */
+    background: #8baadd;    /* blue */
     color: white;
     font-size: 16px !important;
     border-radius: 50%;
-    padding: 2px 7px;
+    padding: 2px 8px;
     position: absolute;
     top: 0;
     right: 0;
@@ -717,7 +717,7 @@
                             <ul class="submenu-angle" aria-expanded="false">
                                 <li class="nav-item {{ Request::is('list-design-report') ? 'active' : '' }}"><a
                                         href="{{ route('list-design-report') }}"><i
-                                            class="fa big-icon fa-list-check icon-wrap" aria-hidden="true"></i> <span
+                                            class="fa fa-chart-bar icon-wrap" aria-hidden="true"></i> <span
                                             class="mini-click-non">Design Report</span></a></li>
 
                             </ul>

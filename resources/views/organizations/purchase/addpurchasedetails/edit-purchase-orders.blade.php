@@ -1,6 +1,20 @@
 @extends('admin.layouts.master')
 @section('content')
     <style>
+         /* .select2-selection__rendered{
+            background-color: #FFFFFF;
+    background-image: none;
+    border: 1px solid #e5e6e7;
+    border-radius: 1px;
+    color: inherit;
+    display: block;
+    padding: 6px 12px;
+    transition: border-color 0.15s 
+ease-in-out 0s, box-shadow 0.15s 
+ease-in-out 0s;
+    width: 100%;
+        } */
+
          .table-responsive-scroll {
     width: 100%;
     overflow-x: auto;      /* Enables horizontal scroll */

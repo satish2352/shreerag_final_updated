@@ -1,6 +1,8 @@
 @extends('admin.layouts.master')
 @section('content')
     <style>
+
+       
         .table-responsive-scroll {
     width: 100%;
     overflow-x: auto;      /* Enables horizontal scroll */

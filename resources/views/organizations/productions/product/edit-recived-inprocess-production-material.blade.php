@@ -389,17 +389,13 @@
         </div>
     </div>
 
-    <form method="POST" action="{{ route('delete-addmore-production-material-item') }}" id="deleteform">
+    {{-- <form method="POST" action="{{ route('delete-addmore-production-material-item') }}" id="deleteform">
         @csrf
         <input type="hidden" name="delete_id" id="delete_id">
         <input type="hidden" name="business_details_id" id="business_details_id" value="{{ $id }}">
-    </form>
+    </form> --}}
 
-    <!-- Include jQuery, jQuery Validate (updated version for better compatibility), and SweetAlert -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
+    @push('scripts')
     <script>
         $(document).ready(function() {
             const table = $("#purchase_order_table");
@@ -617,7 +613,7 @@
                             });
 
                             // Reload table without leaving page
-                            reloadTable();
+                            
 
                         } else {
                             Swal.fire("Error!", res.msg, "error");
@@ -652,61 +648,62 @@
         // ================================
         //   AJAX DELETE ROW (ENHANCED)
         // ================================
-        $(document).on("click", ".ajax-delete", function() {
+      $(document).on("click", ".ajax-delete", function(e) {
+    e.preventDefault(); // stop form submit
 
-            let deleteId = $(this).data("id");
-            let businessId = $(this).data("business-id");
-            let row = $(this).closest("tr");
+    let deleteId = $(this).data("id");
+    let businessId = $(this).data("business-id");
+    let row = $(this).closest("tr");
 
-            // 🔥 Better confirmation message
-            Swal.fire({
-                title: "Delete Item?",
-                text: "This material item will be permanently removed. Are you sure?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "Yes, Delete",
-                cancelButtonText: "Cancel"
-            }).then((result) => {
-                if (result.isConfirmed) {
+    Swal.fire({
+        title: "Delete Item?",
+        text: "This material item will be permanently removed. Are you sure?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Yes, Delete",
+        cancelButtonText: "Cancel"
+    }).then((result) => {
 
-                    $.ajax({
-                        url: "{{ route('delete-addmore-production-material-item') }}",
-                        type: "POST",
-                        data: {
-                            _token: "{{ csrf_token() }}",
-                            delete_id: deleteId,
-                            business_details_id: businessId
-                        },
-                        success: function(response) {
+        if (!result.isConfirmed) return;
 
-                            if (response.status === "success") {
+        $.ajax({
+            url: "{{ route('delete-addmore-production-material-item') }}",
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                delete_id: deleteId,
+                business_details_id: businessId
+            },
+            success: function(response) {
 
-                                // ✔ AFTER delete success message
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Deleted Successfully!",
-                                    text: response.msg,
-                                    timer: 1500,
-                                    showConfirmButton: false
-                                });
+                if (response.status === "success") {
 
-                                // ✔ Remove row with animation
-                                row.fadeOut(300, function() {
-                                    $(this).remove();
-                                });
-
-                            } else {
-                                Swal.fire("Error!", response.msg, "error");
-                            }
-                        },
-                        error: function() {
-                            Swal.fire("Error!", "Something went wrong.", "error");
-                        }
+                    Swal.fire({
+                        icon: "success",
+                        title: "Deleted Successfully!",
+                        text: response.msg,
+                        timer: 1500,
+                        showConfirmButton: false
                     });
+
+                    row.fadeOut(300, function() {
+                        $(this).remove();
+                    });
+
+                } else {
+                    Swal.fire("Error!", response.msg, "error");
                 }
-            });
+            },
+            error: function() {
+                Swal.fire("Error!", "Something went wrong.", "error");
+            }
         });
+
+    });
+});
+
     </script>
+    @endpush
 @endsection

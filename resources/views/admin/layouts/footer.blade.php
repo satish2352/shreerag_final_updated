@@ -93,7 +93,6 @@ $(document).ready(() => {
 
 <!-- DELETE BUTTON SCRIPT -->
 <script>
-// $(document).on('click', '.delete-btn', function () {
 $(document).on('click', '.remove-row', function () {
 
     let id = $(this).data('id');  
