@@ -4,6 +4,11 @@
         label {
             margin-top: 20px;
         }
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+}
 
         label.error {
             color: red;
@@ -165,9 +170,10 @@
                                                             id="image" name="image">
                                                     </div>
                                                 </div>
-                                                <div style="margin-top:20px">
+                                                <div style="margin-top:20px" class="table-responsive">
                                                     <table class="table table-bordered" id="dynamicTable">
                                                         <tr>
+                                                            <th style="width: 60px;">Sr. No.</th>
                                                             <th style="width: 400px;">Description</th>
                                                             <th style="width: 100px;">Part No.</th>
                                                             <th style="width: 100px;">PO Quantity</th>
@@ -187,6 +193,7 @@
                                                                     name="addmore[{{ $index }}][edit_id]"
                                                                     placeholder="Enter Description" class="form-control"
                                                                     value="{{ $item->id }}" readonly />
+                                                                     <td>{{ $index + 1 }}</td>
                                                                 <td><input type="text"
                                                                         name="addmore[{{ $index }}][part_description]"
                                                                         placeholder="Enter Description"
@@ -341,7 +348,7 @@
             });
         });
     </script>
-    <script>
+    {{-- <script>
         jQuery.noConflict();
         jQuery(document).ready(function($) {
             $("#addDesignsForm").validate({
@@ -443,8 +450,71 @@
                 },
             });
         });
-    </script>
+    </script> --}}
 
+<script>
+jQuery.noConflict();
+jQuery(document).ready(function($) {
+
+    // Initialize validation
+    var validator = $("#addDesignsForm").validate({
+        ignore: [], // do NOT ignore hidden fields inside table rows
+        rules: {
+            grn_date: { required: true },
+            purchase_orders_id: { required: true },
+            po_date: { required: true },
+            bill_no: { required: true },
+            bill_date: { required: true },
+            remark: { required: true },
+            image: {
+                required: true,
+                accept: "image/*"
+            }
+        },
+        messages: {
+            grn_date: { required: "Please Select GRN Date." },
+            purchase_orders_id: { required: "Please Enter PO No." },
+            bill_no: { required: "Please Enter Bill No." },
+            bill_date: { required: "Please select Bill Date." },
+            po_date: { required: "Please select PO Date." },
+            remark: { required: "Please enter Remark." },
+            image: {
+                required: "Please select Signature.",
+                accept: "Only image files are allowed."
+            }
+        }
+    });
+
+    // ============================
+    // APPLY VALIDATION TO ALL ROWS
+    // ============================
+
+    // For Actual Qty
+    $(".actual_quantity").each(function() {
+        $(this).rules("add", {
+            required: true,
+            number: true,
+            messages: {
+                required: "Please enter Actual Qty.",
+                number: "Enter a valid number."
+            }
+        });
+    });
+
+    // For Accepted Qty
+    $(".accepted_quantity").each(function() {
+        $(this).rules("add", {
+            required: true,
+            number: true,
+            messages: {
+                required: "Please enter Accepted Qty.",
+                number: "Enter a valid number."
+            }
+        });
+    });
+
+});
+</script>
 
 
 
