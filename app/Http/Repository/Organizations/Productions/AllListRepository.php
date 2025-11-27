@@ -520,78 +520,94 @@ class AllListRepository
             return $e;
         }
     }
-    public function getAllCompletedProductionSendToLogistics()
-    {
-        try {
-            $array_to_be_check = [
-                config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')
-            ];
+//     public function getAllCompletedProductionSendToLogistics()
+// {
+//     try {
+//         $data_output = CustomerProductQuantityTracking::leftJoin('production', function ($join) {
+//                 $join->on('tbl_customer_product_quantity_tracking.business_details_id', '=', 'production.business_details_id');
+//             })
+//             ->leftJoin('designs', 'tbl_customer_product_quantity_tracking.business_details_id', '=', 'designs.business_details_id')
+//             ->leftJoin('businesses', 'tbl_customer_product_quantity_tracking.business_id', '=', 'businesses.id')
+//             ->leftJoin('businesses_details', 'tbl_customer_product_quantity_tracking.business_details_id', '=', 'businesses_details.id')
+//             ->leftJoin('design_revision_for_prod', 'tbl_customer_product_quantity_tracking.business_details_id', '=', 'design_revision_for_prod.business_details_id')
+//             ->leftJoin('purchase_orders', 'tbl_customer_product_quantity_tracking.business_details_id', '=', 'purchase_orders.business_details_id')
+            
+//             ->whereNotNull('tbl_customer_product_quantity_tracking.completed_quantity')
+//             ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status', [3001,3002,3003,3004,3005])
+//             ->where('businesses.is_active', true)
+//             ->where('businesses.is_deleted', 0)
 
-            $array_to_be_quantity_tracking = [
-                config('constants.PRODUCTION_DEPARTMENT.INPROCESS_COMPLETED_QUANLTITY_SEND_TO_LOGISTICS')
-            ];
+//             ->select(
+//                 'businesses_details.id as product_id',
+//                 'businesses.project_name',
+//                 'businesses.customer_po_number',
+//                 'businesses_details.product_name',
+//                 'businesses_details.description',
+//                 'businesses_details.quantity',
+//                 DB::raw('SUM(tbl_customer_product_quantity_tracking.completed_quantity) as total_completed_quantity'),
+//                 DB::raw('MAX(production.updated_at) as last_updated')
+//             )
 
+//             ->groupBy(
+//                 'businesses_details.id',
+//                 'businesses.project_name',
+//                 'businesses.customer_po_number',
+//                 'businesses_details.product_name',
+//                 'businesses_details.description',
+//                 'businesses_details.quantity'
+//             )
+//             ->orderBy('last_updated', 'desc')
+//             ->get();
 
+//         return $data_output;
 
-            $data_output = CustomerProductQuantityTracking::leftJoin('production', function ($join) {
-                $join->on('tbl_customer_product_quantity_tracking.business_details_id', '=', 'production.business_details_id');
-            })
-                ->leftJoin('designs', function ($join) {
-                    $join->on('tbl_customer_product_quantity_tracking.business_details_id', '=', 'designs.business_details_id');
-                })
-                ->leftJoin('businesses', function ($join) {
-                    $join->on('tbl_customer_product_quantity_tracking.business_id', '=', 'businesses.id');
-                })
-                ->leftJoin('businesses_details', function ($join) {
-                    $join->on('tbl_customer_product_quantity_tracking.business_details_id', '=', 'businesses_details.id');
-                })
-                ->leftJoin('design_revision_for_prod', function ($join) {
-                    $join->on('tbl_customer_product_quantity_tracking.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-                })
-                ->leftJoin('purchase_orders', function ($join) {
-                    $join->on('tbl_customer_product_quantity_tracking.business_details_id', '=', 'purchase_orders.business_details_id');
-                })
-                ->where(function ($query) {
-                    $query->whereNotNull('tbl_customer_product_quantity_tracking.completed_quantity')
-                        ->WhereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status', [3001, 3002, 3003, 3004, 3005]);
-                })
-                ->where('businesses.is_active', true)
-                ->where('businesses.is_deleted', 0)
-                ->distinct('businesses.id')
-                ->groupBy(
-                    'tbl_customer_product_quantity_tracking.id',
-                    'businesses_details.id',
-                    'businesses.project_name',
-                    'businesses.customer_po_number',
-                    'businesses.created_at',
-                    'businesses_details.product_name',
-                    'businesses_details.description',
-                    'businesses_details.quantity',
-                    'businesses_details.rate',
-                    'tbl_customer_product_quantity_tracking.completed_quantity',
-                    'production.updated_at'
-                )
-                ->select(
-                    'tbl_customer_product_quantity_tracking.id',
-                    'businesses.project_name',
-                    'businesses.customer_po_number',
-                    'businesses.created_at',
-                    'businesses_details.id',
-                    'businesses_details.product_name',
-                    'businesses_details.description',
-                    'businesses_details.quantity',
-                    'tbl_customer_product_quantity_tracking.completed_quantity',
-                    'production.updated_at'
-                )
-                ->orderBy('production.updated_at', 'desc')
-                ->get();
+//     } catch (\Exception $e) {
+//         return response()->json(['error' => $e->getMessage()], 500);
+//     }
+// }
+ public function getAllCompletedProductionSendToLogistics()
+{
+    try {
+        $subQuery = CustomerProductQuantityTracking::select(
+                'business_id',
+                'business_details_id',
+                DB::raw('SUM(completed_quantity) as total_completed_quantity'),
+                DB::raw('MAX(updated_at) as last_updated')
+            )
+            ->whereNotNull('completed_quantity')
+            ->whereIn('quantity_tracking_status', [3001,3002,3003,3004,3005])
+            ->groupBy('business_id', 'business_details_id');
 
-            return $data_output;
-        } catch (\Exception $e) {
-            // Return the exception message for debugging
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+        $data_output = DB::table(DB::raw("({$subQuery->toSql()}) as t"))
+            ->mergeBindings($subQuery->getQuery()) 
+
+            ->leftJoin('businesses', 't.business_id', '=', 'businesses.id')
+            ->leftJoin('businesses_details', 't.business_details_id', '=', 'businesses_details.id')
+            ->leftJoin('production', 't.business_details_id', '=', 'production.business_details_id')
+
+            ->where('businesses.is_active', true)
+            ->where('businesses.is_deleted', 0)
+
+            ->select(
+                't.business_details_id as product_id',
+                'businesses.project_name',
+                'businesses.customer_po_number',
+                'businesses_details.product_name',
+                'businesses_details.description',
+                'businesses_details.quantity',
+                't.total_completed_quantity',
+                't.last_updated'
+            )
+            ->orderBy('t.last_updated', 'desc')
+            ->get();
+
+        return $data_output;
+
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
     }
+}
+
 
     public function getAllCompletedProductionSendToLogisticsProductWise($id)
     {

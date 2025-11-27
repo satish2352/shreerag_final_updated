@@ -262,7 +262,7 @@ td.description-column,
                                             {{ $purchaseOrder->created_at ? $purchaseOrder->created_at->format('d-m-Y') : 'N/A' }}
                                         </div>
                                         <div>Quote Ref No.: {{ $purchaseOrder->quote_no }}</div>
-                                        <div>Payment Terms: {{ $purchaseOrder->payment_terms }} DAYS</div>
+                                        <div>Payment Terms: {{ $purchaseOrder->payment_terms }}</div>
                                         <div>Our Contact Person: {{ $purchaseOrder->contact_person_name }}</div>
                                         <div>Our Contact Person No.: {{ $purchaseOrder->contact_person_number }}</div>
                                     </td>

@@ -38,18 +38,18 @@
                                             @foreach ($data_output as $data)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td> {{ $data->created_at ? $data->created_at->format('d-m-Y') : 'N/A' }}
-                                                    </td>
+                                                 <td>{{ $data->last_updated ? \Carbon\Carbon::parse($data->last_updated)->format('d-m-Y') : 'N/A' }}</td>
+
                                                     <td>{{ ucwords($data->project_name) }}</td>
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
-                                                    <td>{{ ucwords($data->completed_quantity) }}</td>
+                                                    <td>{{ ucwords($data->total_completed_quantity ) }}</td>
                                                     <td>
                                                         <div style="display: inline-block; align-items: center;">
                                                             <a
-                                                                href="{{ route('list-final-prod-completed-send-to-logistics-tracking-product-wise', $data->id) }}"><button
+                                                                href="{{ route('list-final-prod-completed-send-to-logistics-tracking-product-wise', $data->product_id) }}"><button
                                                                     data-toggle="tooltip" title="View Details"
                                                                     class="btn btn-sm btn-bg-colour">View Details</button></a>
                                                         </div>

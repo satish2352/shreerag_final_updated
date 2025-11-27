@@ -1483,26 +1483,36 @@
 
 
                                             @endif
-                                            <li class="nav-item">
-                                                
+                                          <li class="nav-item">
 
-                                                <a href="#" data-toggle="dropdown" role="button"
-                                                    aria-expanded="false" class="nav-link dropdown-toggle"
-                                                    style="font-size: 16px !important;">
-                                                    <i class="fa fa-user adminpro-user-rounded header-riht-inf"
-                                                        aria-hidden="true"></i>
-                                                    {{ ucwords(config('constants.ROLE_ID_NAME.' . Session::get('role_id'))) }}
-                                                    Department
-                                                    <span class="admin-name"></span>
-                                                </a>
-                                                <ul class="dropdown-menu  shadow-lg rounded zoomIn">
-                                                    <li>
-                                                        <a href="{{ route('log-out') }}" style="color: black; padding-left: 10px;">
-                                                            <span class="fa fa-lock author-log-ic"></span> Log Out
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </li>
+    <a href="#" data-toggle="dropdown" role="button"
+        aria-expanded="false" class="nav-link dropdown-toggle"
+        style="font-size: 16px !important;">
+        <i class="fa fa-user adminpro-user-rounded header-riht-inf" aria-hidden="true"></i>
+        {{ ucwords(config('constants.ROLE_ID_NAME.' . Session::get('role_id'))) }} Department
+        <span class="admin-name"></span>
+    </a>
+
+    <ul class="dropdown-menu shadow-lg rounded zoomIn logout-dropdown">
+        <li>
+            <div>
+                <a href="{{ route('log-out') }}" style="color: black; padding-left: 10px;">
+                    <span class="fa fa-lock author-log-ic"></span> Log Out
+                </a>
+            </div>
+        </li>
+    </ul>
+</li>
+
+<script>
+$(document).ready(function(){
+    // Click anywhere inside UL = logout
+    $('.logout-dropdown').on('click', function() {
+        window.location.href = "{{ route('log-out') }}";
+    });
+});
+</script>
+
 
                                         </ul>
 

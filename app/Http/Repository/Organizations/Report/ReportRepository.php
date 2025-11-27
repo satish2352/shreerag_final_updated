@@ -1320,10 +1320,10 @@ class ReportRepository
                 $query->where('businesses.id', $request->project_name);
             }
 
-            // 📁 Filter by Product
-            if ($request->filled('product_name')) {
-                $query->where('businesses_details.id', $request->product_name);
-            }
+             if ($request->filled('business_details_id')) {
+                        $query->where('tbl_logistics.business_details_id', $request->business_details_id);
+                    }
+
 
             if ($request->filled('from_date')) {
                 $from = Carbon::parse($request->from_date)->startOfDay(); // 00:00:00
@@ -1459,11 +1459,10 @@ class ReportRepository
             if ($request->filled('project_name')) {
                 $query->where('businesses.id', $request->project_name);
             }
-
-            // 📁 Filter by Product
-            if ($request->filled('product_name')) {
-                $query->where('businesses_details.id', $request->product_name);
-            }
+            
+             if ($request->filled('business_details_id')) {
+                        $query->where('tbl_logistics.business_details_id', $request->business_details_id);
+                    }
 
             // 🗓️ Date filters
             if ($request->filled('from_date')) {
@@ -1712,9 +1711,10 @@ class ReportRepository
             }
 
             // 📁 Filter by Product
-            if ($request->filled('product_name')) {
-                $query->where('businesses_details.id', $request->product_name);
-            }
+            if ($request->filled('business_details_id')) {
+                        $query->where('tbl_dispatch.business_details_id', $request->business_details_id);
+                    }
+            
             if ($request->filled('from_date')) {
                 $from = Carbon::parse($request->from_date)->startOfDay(); // 00:00:00
                 $query->where('tbl_dispatch.updated_at', '>=', $from);
@@ -1849,11 +1849,9 @@ class ReportRepository
                 $query->where('businesses.id', $request->project_name);
             }
 
-            // 📁 Filter by Product
-            if ($request->filled('product_name')) {
-                $query->where('businesses_details.id', $request->product_name);
-            }
-
+                if ($request->filled('business_details_id')) {
+                        $query->where('bap1.business_details_id', $request->business_details_id);
+                    }
             // 🗓️ Date filters
             if ($request->filled('from_date')) {
                 $from = Carbon::parse($request->from_date)->startOfDay();
@@ -1963,10 +1961,9 @@ class ReportRepository
                 $query->where('businesses.id', $request->project_name);
             }
 
-            // 📁 Filter by Product
-            if ($request->filled('product_name')) {
-                $query->where('businesses_details.id', $request->product_name);
-            }
+              if ($request->filled('business_details_id')) {
+                        $query->where('tbl_dispatch.business_details_id', $request->business_details_id);
+                    }
 
             $data = $query->select(
                 'businesses_details.id as business_details_id',
