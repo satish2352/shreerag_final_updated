@@ -610,6 +610,7 @@ class AllListRepository
                     $join->on('production_details.business_details_id', '=', 'businesses_details.id');
                 })
                 ->leftJoin('tbl_unit', 'production_details.unit', '=', 'tbl_unit.id')
+                ->leftJoin('tbl_part_item', 'production_details.part_item_id', '=', 'tbl_part_item.id')
                 ->where('businesses_details.id', $id)
                 ->where('businesses_details.is_active', true)
                 ->where('businesses_details.is_deleted', 0)
@@ -620,6 +621,7 @@ class AllListRepository
                     'production_details.part_item_id',
                     'production_details.quantity',
                     'production_details.unit',
+                    'production_details.basic_rate',
                     'tbl_unit.name as unit_name',
                     'production_details.business_details_id',
                     'production_details.material_send_production',

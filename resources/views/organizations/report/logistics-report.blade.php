@@ -298,5 +298,7 @@
                     console.error("Failed to load products:", error);
                 });
         });
+
+       
     </script>
 @endsection

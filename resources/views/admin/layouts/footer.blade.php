@@ -252,6 +252,54 @@ $(document).ready(function () {
             $(".alert").alert('close');
         }, 1000); // 1000 milliseconds = 1 second
     </script>
+
+{{-- report reset button code --}}
+    <script>
+         document.getElementById('resetFilters').addEventListener('click', function () {
+
+    // Reset all form fields
+    document.getElementById('filterForm').reset();
+
+    // Clear Select2 dropdowns
+    $('#project_name').val('').trigger('change');
+    $('#business_details_id').val('').trigger('change');
+
+    // Clear search input
+    document.getElementById('searchKeyword').value = '';
+
+    // Reset pagination
+    currentPage = 1;
+
+    // Load default report
+    fetchReport(true);
+});
+
+    </script>
+    <script>
+        // Validate date range before applying filter
+document.getElementById('filterForm').addEventListener('submit', function (e) {
+
+    // Skip validation when exporting
+    if (document.getElementById('export_type').value) {
+        return;
+    }
+
+    let from = document.querySelector('input[name="from_date"]').value;
+    let to = document.querySelector('input[name="to_date"]').value;
+
+    if (from && to) {
+        let fromDate = new Date(from);
+        let toDate = new Date(to);
+
+        if (fromDate > toDate) {
+            e.preventDefault();
+            alert("❗ 'From Date' cannot be greater than 'To Date'.");
+            return false;
+        }
+    }
+});
+
+    </script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <!-- ========================= FOOTER END ========================= -->

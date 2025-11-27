@@ -807,13 +807,19 @@
                                         class="fa fa-tachometer-alt icon-wrap"></i><span
                                         class="mini-click-non">Dashboard</span></a>
                             </li>
-                            <li
-                                class="nav-item {{ request()->is('proddept/list-production-report*') ? 'active' : '' }}">
-                                <a href="{{ route('list-production-report') }}">
-                                    <i class="fa fa-chart-line icon-wrap"></i>
-                                    <span class="mini-click-non">Production Report </span>
-                                </a>
-                            </li>
+                              <li>
+                            <a class="has-arrow" href="{{ route('list-production-report') }}" aria-expanded="false"> <i
+                                    class="fa fa-chart-line icon-wrap"></i><span class="mini-click-non"> Report</span></a>
+                            <ul class="submenu-angle" aria-expanded="false">
+                                <li
+                                    class="nav-item {{ request()->is('proddept/list-production-report') || request()->is('proddept/list-production-report/*') ? 'active' : '' }}">
+                                    <a href="{{ route('list-production-report') }}"><i class="fa fa-chart-line icon-wrap"></i>
+                                        <span class="mini-click-non">Production</span></a>
+                                </li>
+                            </ul>
+                        </li>
+
+                           
                             <li
                                 class="nav-item {{ request()->is('proddept/list-new-requirements-received-for-production') || request()->is('proddept/list-new-requirements-received-for-production-business-wise/*') || request()->is('proddept/reject-design-edit/*') ? 'active' : '' }}">
                                 <a href="{{ route('list-new-requirements-received-for-production') }}">
@@ -853,14 +859,14 @@
                                 class="nav-item {{ request()->is('proddept/list-final-production-completed') ? 'active' : '' }}">
                                 <a href="{{ route('list-final-production-completed') }}">
                                     <i class="fa fa-clipboard-check icon-wrap"></i>
-                                    <span class="mini-click-non">Production Completed</span>
+                                    <span class="mini-click-non">Production Completed & Sent to Logistics</span>
                                 </a>
                             </li>
                             <li
                                 class="nav-item {{ request()->is('proddept/list-final-prod-completed-send-to-logistics-tracking') || request()->is('proddept/list-final-prod-completed-send-to-logistics-tracking-product-wise/*') ? 'active' : '' }}">
                                 <a href="{{ route('list-final-prod-completed-send-to-logistics-tracking') }}">
                                     <i class="fa fa-shipping-fast icon-wrap"></i>
-                                    <span class="mini-click-non">Tracking Of Send Material To Logistics Dept</span>
+                                    <span class="mini-click-non">Product-Wise Material Consumption</span>
                                 </a>
                             </li>
 
@@ -905,12 +911,20 @@
                             <a href="{{ route('dashboard') }}"><i class="fa fa-tachometer-alt icon-wrap"></i><span
                                     class="mini-click-non">Dashboard</span></a>
                         </li>
-                        <li class="nav-item {{ request()->is('grn-report*') ? 'active' : '' }}">
-                            <a href="{{ route('grn-report') }}">
-                                <i class="fa fa-chart-line icon-wrap"></i>
-                                <span class="mini-click-non">Report </span>
-                            </a>
+                       
+
+                         <li>
+                            <a class="has-arrow" href="{{ route('grn-report') }}" aria-expanded="false"> <i
+                                    class="fa fa-chart-line icon-wrap"></i><span class="mini-click-non">Report</span></a>
+                            <ul class="submenu-angle" aria-expanded="false">
+                                <li
+                                    class="nav-item {{ request()->is('quality/grn-report') || request()->is('quality/add-grn/*') ? 'active' : '' }}">
+                                    <a href="{{ route('grn-report') }}"><i class="fa fa-chart-line icon-wrap"></i>
+                                        <span class="mini-click-non">GRN</span></a>
+                                </li>
+                            </ul>
                         </li>
+
                         <li>
                             <a class="has-arrow" href="{{ route('list-grn') }}" aria-expanded="false"> <i
                                     class="fa fa-file-invoice icon-wrap"></i><span class="mini-click-non">GRN

@@ -530,8 +530,6 @@ class ReportController extends Controller
                 ->where('is_deleted', 0)
                 ->where('is_active', 1)
                 ->whereNotNull('project_name')
-                ->where('project_name', '!=', '')
-
                 ->pluck('project_name', 'id');
 
             $getProductName = BusinessDetails::whereNotNull('product_name')
