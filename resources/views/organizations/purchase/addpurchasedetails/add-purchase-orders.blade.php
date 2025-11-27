@@ -456,7 +456,7 @@
                
   @push('scripts')
                     <!-- ========== 1) TAX CALCULATION SCRIPT ========== -->
-                    <script>
+                    {{-- <script>
                         $(document).ready(function() {
  $(".select2").select2({ width: '100%' });
                             $('#tax_id').on('change', function() {
@@ -513,7 +513,42 @@
                             }
 
                         });
-                    </script>
+                    </script> --}}
+<script>
+$(document).ready(function () {
+
+    $(document).on('keyup change', '.quantity, .rate, .discount, #tax_id', function () {
+        calculateGrandTotal();
+    });
+
+    function calculateGrandTotal() {
+
+        let totalWithoutTax = 0;
+
+        $('#purchase_order_table tbody tr').each(function () {
+
+            let qty = parseFloat($(this).find('.quantity').val()) || 0;
+            let rate = parseFloat($(this).find('.rate').val()) || 0;
+            let discount = parseFloat($(this).find('.discount').val()) || 0;
+
+            let baseAmount = qty * rate;
+            let discountAmount = (baseAmount * discount) / 100;
+            let afterDiscount = baseAmount - discountAmount;
+
+            $(this).find('.total_amount').val(afterDiscount.toFixed(2));
+
+            totalWithoutTax += afterDiscount;
+        });
+
+        let taxRate = parseFloat($('#tax_id option:selected').data('tax-rate')) || 0;
+        let taxAmount = (totalWithoutTax * taxRate) / 100;
+        let finalTotal = totalWithoutTax + taxAmount;
+
+        $('#po_grand_total_amount').val(finalTotal.toFixed(2));
+    }
+});
+</script>
+
 
                     <!-- ========== 2) NO CONFLICT SCRIPT ========== -->
                 
@@ -670,7 +705,9 @@
                                     required: true
                                 });
                             }
-
+   $('.part_no_id').select2({
+        width: '100%'
+    });
                             $("#add_more_btn").click(function() {
 
                                 var i_count = $('#i_id').val();
@@ -790,7 +827,9 @@
                                 validator.resetForm();
                                 initializeValidation($("#purchase_order_table tbody tr:last"));
                             });
-
+ $("#purchase_order_table tbody tr:last .select2").select2({
+            width: '100%'
+        });
                             $(document).on("click", ".remove-row", function() {
 
                                 var i = parseInt($('#i_id').val()) - 1;
@@ -805,44 +844,6 @@
 
                         });
                     </script>
-
-                    <!-- ========== 4) DUPLICATE CALCULATION BLOCK PRESERVED AS REQUESTED ========== -->
-                    <script>
-                        $(document).ready(function() {
-
-                            $(document).on('keyup change', '.quantity, .rate, .discount, #tax_id', function() {
-                                calculateAllRows();
-                            });
-
-                            function calculateAllRows() {
-
-                                var taxRate = parseFloat($('#tax_id option:selected').data('tax-rate')) || 0;
-                                var grandTotal = 0;
-
-                                $('#purchase_order_table tbody tr').each(function() {
-
-                                    var qty = parseFloat($(this).find('.quantity').val()) || 0;
-                                    var rate = parseFloat($(this).find('.rate').val()) || 0;
-                                    var discount = parseFloat($(this).find('.discount').val()) || 0;
-
-                                    var baseAmount = qty * rate;
-                                    var discountAmount = (baseAmount * discount) / 100;
-                                    var afterDiscount = baseAmount - discountAmount;
-                                    var taxAmount = (afterDiscount * taxRate) / 100;
-
-                                    var finalAmount = afterDiscount + taxAmount;
-
-                                    $(this).find('.total_amount').val(finalAmount.toFixed(2));
-
-                                    grandTotal += finalAmount;
-                                });
-
-                                $('#po_grand_total_amount').val(grandTotal.toFixed(2));
-                            }
-
-                        });
-                    </script>
-
                     <!-- ========== 5) HSN FETCH SCRIPT ========== -->
                     <script>
                         $(document).ready(function() {
