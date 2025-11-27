@@ -31,7 +31,6 @@
 
 #clickable-link:hover {
   color: red;
-  /* Change text color on hover for better visibility */
 }
 </style>
 
@@ -82,15 +81,6 @@
 
           <div class="sparkline13-graph">
             <div class="datatable-dashv1-list custom-datatable-overright">
-              {{-- <div id="toolbar">
-                <select class="form-control">
-                  <option value="">Export Basic</option>
-                  <option value="all">Export All</option>
-                  <option value="selected">Export Selected</option>
-                </select>
-              </div> --}}
-
-
               <div class="table-responsive">
                 <table id="table" data-toggle="table" data-pagination="true" data-search="true" data-show-columns="true"
                   data-show-pagination-switch="true" data-show-refresh="false" data-key-events="true"
@@ -98,9 +88,7 @@
                   data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
                   <thead>
                     <tr>
-                      
-                      <th data-field="#">#</th>
-                      <th data-field="po_id">ID</th>
+                      <th data-field="#">Sr. No.</th>
                       <th data-field="purchase_orders_id" data-editable="false"> PO Number</th>
                       <th data-field="vendor_name" data-editable="false">Vendor Name</th>
                       <th data-field="vendor_type_id" data-editable="false">Vendor Type Name</th>
@@ -116,15 +104,11 @@
                       <th data-field="contact_person_number" data-editable="false">Contact Person Number</th>
                       <th data-field="action">Action</th>
                     </tr>
-
                   </thead>
                   <tbody>
-                   
                     @foreach($getOutput as $data)
                     <tr>
-                      
                       <td>{{ $loop->iteration }}</td>
-                      <td>{{ $data->id }}</td>
                       <td>{{ucwords($data->purchase_orders_id)}}</td>
                       <td>{{ucwords($data->vendor_name)}}</td>
                         <td>{{ucwords($data->vendor_type_name)}}</td>
@@ -139,7 +123,6 @@
                       <td>{{ucwords($data->contact_person_name)}}</td>
                       <td>{{ucwords($data->contact_person_number)}}</td>
                       {{-- <td>{{ucwords($data->status)}}</td> --}}
-
                       <td>
                         <div style="display: flex; align-items: center;">
                           <a href="{{route('edit-purchase-order', $data->purchase_orders_id)}}"><button
@@ -152,14 +135,6 @@
                   </tbody>
                 </table>
               </div>
-              {{-- @if(!$getOutput->isEmpty())
-              <form action="{{ route('submit-purchase-order-to-owner-for-review') }}" method="POST" style="padding-top: 14px;">
-                @csrf
-                <input type="hidden" name="requistition_id" id="requistition_id" value="{{$requistition_id}}">
-                <button class="btn btn-sm btn-primary login-submit-cs mt-0"
-                type="submit">Send to the owner for approval</button>
-                </form>
-                @endif --}}
             </div>
           </div>
         </div>
@@ -167,5 +142,4 @@
     </div>
   </div>
 </div>
- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 @endsection

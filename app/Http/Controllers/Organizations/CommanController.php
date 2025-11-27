@@ -96,7 +96,8 @@ class CommanController
                     'purchase_order_details.amount'
                 )
                 ->get();
-
+// dd($purchaseOrderDetails);
+// die();
             return [
                 'purchaseOrder' => $purchaseOrder,
                 'purchaseOrderDetails' => $purchaseOrderDetails,

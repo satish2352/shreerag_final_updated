@@ -89,7 +89,7 @@
 
             Swal.fire({
                 title: 'Are you sure?',
-                text: "Do you want to send Acceptd BOM to production?",
+                text: "Do you want to send Accepted BOM to production?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

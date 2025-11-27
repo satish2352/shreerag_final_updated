@@ -1,6 +1,17 @@
 @extends('admin.layouts.master')
 @section('content')
     <style>
+         .table-responsive-scroll {
+    width: 100%;
+    overflow-x: auto;      /* Enables horizontal scroll */
+    overflow-y: hidden;
+    white-space: nowrap;   /* Prevents table cells from wrapping */
+}
+
+.table-responsive-scroll table {
+    width: 1500px;         /* Set fixed width if needed (optional) */
+}
+
         a {
             color: black;
         }
@@ -307,6 +318,7 @@
                                                         </div>
 
                                                         <div style="margin-top:10px;">
+                                                             <div class="table-responsive">
                                                             <table class="table table-bordered" id="dynamicTable">
                                                                 <tr>
                                                                     <th>Description </th>
@@ -620,6 +632,7 @@
                                                                     </tr>
                                                                 </tfoot>
                                                             </table>
+                                                             </div>
                                                         </div>
 
                                                         @foreach ($editData as $key => $editDataNew)

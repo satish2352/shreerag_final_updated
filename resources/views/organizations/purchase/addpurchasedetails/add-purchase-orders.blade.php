@@ -1,6 +1,18 @@
 @extends('admin.layouts.master')
 @section('content')
     <style>
+        .table-responsive-scroll {
+    width: 100%;
+    overflow-x: auto;      /* Enables horizontal scroll */
+    overflow-y: hidden;
+    white-space: nowrap;   /* Prevents table cells from wrapping */
+}
+
+.table-responsive-scroll table {
+    width: 1500px;         /* Set fixed width if needed (optional) */
+}
+
+
         .form-control {
             border: 2px solid #ced4da;
             border-radius: 4px;
@@ -14,10 +26,10 @@
             color: black;
         }
 
-        .table-responsive {
+        /* .table-responsive {
             min-height: .01%;
             overflow-x: visible !important;
-        }
+        } */
 
         /* The container of the dropdown button */
         .marginTop {
