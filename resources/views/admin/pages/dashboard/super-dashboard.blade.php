@@ -20,7 +20,7 @@
                         </div>
                     </div>
                     <div class="mt-2 mb-0 text-sm">
-                        <a href="{{ route('list-users') }}">
+                        <a href="{{ route('list-employee') }}">
                             <span class="badge badge-pill bg-soft-success text-success me-2">
                                 <i class="fa-solid fa-arrow-right"></i> </span>
                             <span class="text-nowrap text-xs text-muted">View

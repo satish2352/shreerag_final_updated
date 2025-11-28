@@ -1,35 +1,5 @@
 @extends('admin.layouts.master')
 @section('content')
-    <style>
-        label {
-            margin-top: 20px;
-        }
-        .password-toggle {
-            cursor: pointer;
-            position: absolute;
-            top: 68%;
-            right: 20px;
-            transform: translateY(-50%);
-        }
-           .password-toggle-disable {
-            cursor: pointer;
-            position: absolute;
-            top: 50%;
-            right: 20px;
-            transform: translateY(-50%);
-        }
-        label.error {
-            color: red;
-            /* Change 'red' to your desired text color */
-            font-size: 12px;
-            /* Adjust font size if needed */
-            /* Add any other styling as per your design */
-        }
-
-        .red-text {
-            color: red;
-        }
-    </style>
 @php
     $isHR = session('role_name') === 'HR';
 @endphp
@@ -82,7 +52,7 @@
                                 @endif
                                 <div class="all-form-element-inner">
                                     <form class="forms-sample" id="regForm" name="frm_register" method="post"
-                                        role="form" action="{{ route('update-users') }}" enctype="multipart/form-data">
+                                        role="form" action="{{ route('update-employee') }}" enctype="multipart/form-data">
                                         <input type="hidden" name="_token" id="csrf-token"
                                             value="{{ Session::token() }}" />
                                         <div class="row">
@@ -337,7 +307,7 @@
                                                     Save &amp; Update
                                                 </button>
                                                 {{-- <button type="reset" class="btn btn-sm btn-danger">Cancel</button> --}}
-                                                <span><a href="{{ route('list-users') }}"
+                                                <span><a href="{{ route('list-employee') }}"
                                                         class="btn btn-sm btn-primary ">Back</a></span>
                                             </div>
 
@@ -351,11 +321,7 @@
             </div>
         </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
-
+    @push('scripts')  
     <script>
         function getStateCity(stateId, city_id) {
             $('#city').html('<option value="">Select City</option>');
@@ -669,5 +635,5 @@
         }
     }
 </script>
-
+@endpush
 @endsection

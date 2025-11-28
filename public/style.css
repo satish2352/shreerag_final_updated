@@ -4682,3 +4682,125 @@ label{
             order: 1;
             /* Ensure label content appears before span */
         }
+        /* =================================blade pages css=========== */
+         .password-toggle {
+            cursor: pointer;
+            position: absolute;
+            top: 68%;
+            right: 20px;
+            transform: translateY(-50%);
+        }
+           .password-toggle-disable {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+        }
+         /* .password-toggle {
+            cursor: pointer;
+            position: absolute;
+            top: 65%;
+            right: 20px;
+            transform: translateY(-50%);
+        } */
+          .btn-colour{
+            color: gray !important;
+        }
+        /* ==============delivery page ============= */
+        .custom-dropdown {
+    width: 100% !important;
+    position: relative !important;
+}
+
+
+/* Input box */
+.custom-dropdown .dropdown-input {
+    width: 100%;
+    cursor: pointer;
+}
+
+/* Dropdown panel */
+.custom-dropdown .dropdown-options {
+    position: absolute;
+    top: 100%;                /* below input */
+    left: 0 !important;       /* align left */
+    width: 100% !important;   /* match input width */
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    z-index: 9999;
+    display: none;            /* initially hidden */
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+/* Search box inside dropdown */
+.custom-dropdown .search-box {
+    width: 100%;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+/* Dropdown options list */
+.custom-dropdown .options-list {
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+/* Individual option */
+.custom-dropdown .option {
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.custom-dropdown .option:hover {
+    background: #f0f0f0;
+}
+
+        /* Fix bootstrap table overflow cutting dropdown */
+        .table-responsive {
+            overflow: visible !important;
+        }
+
+        .form-display-center {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center;
+        }
+
+       /* Makes dropdown align inside table cell */
+table td {
+    position: relative !important;
+}
+
+/* Serial No Column */
+.col-serial {
+    width: 50px !important;
+    min-width: 50px !important;
+    max-width: 50px !important;
+    text-align: center;
+}
+
+/* Product / Part Item Column */
+.col-part-item {
+    width: 260px !important;
+    min-width: 260px !important;
+    max-width: 280px !important;
+}
+/* Serial No Column */
+.col-serial {
+    width: 50px !important;
+    min-width: 50px !important;
+    max-width: 50px !important;
+    text-align: center;
+}
+
+/* Product / Part Item Column */
+.col-part-item {
+    width: 260px !important;
+    min-width: 260px !important;
+    max-width: 280px !important;
+}

@@ -9,7 +9,7 @@
                     </h3>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 show-btn-position">
-                    <a href="{{ route('list-users') }}" class="btn btn-sm btn-bg-colour ml-3">Back</a>
+                    <a href="{{ route('list-employee') }}" class="btn btn-sm btn-bg-colour ml-3">Back</a>
                 </div>
             </div>
 

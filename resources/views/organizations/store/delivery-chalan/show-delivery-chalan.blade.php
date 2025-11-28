@@ -5,11 +5,6 @@
             border: 2px solid #ced4da;
             border-radius: 4px;
         }
-
-        .error {
-            color: red;
-        }
-
         .no-print {
             display: none !important;
         }

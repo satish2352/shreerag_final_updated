@@ -1,12 +1,6 @@
 
 @extends('admin.layouts.master')
 @section('content')
-    <style>
-        .btn-colour{
-            color: gray !important;
-        }
-    </style>
-
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">
@@ -83,14 +77,13 @@
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>   
+ @push('scripts')    
 
     <script>
         $(document).ready(function() {
             $(".delete-btn").click(function(e) {
                 e.preventDefault();
-                var deleteUrl = "{{ route('delete-users', ':id') }}";
+                var deleteUrl = "{{ route('delete-employee', ':id') }}";
                 var userId = $(this).data('id');
                 deleteUrl = deleteUrl.replace(':id', userId);
 
@@ -125,7 +118,8 @@
             $("#leavesdetailsform").submit();
         })
     </script>
-    <form method="POST" action="{{ url('/show-users') }}" id="showform">
+    
+    <form method="POST" action="{{ url('/show-employee') }}" id="showform">
         @csrf
         <input type="hidden" name="show_id" id="show_id" value="">
     </form>
@@ -133,4 +127,5 @@
         @csrf
         <input type="hidden" name="leavesdetails_id" id="leavesdetails_id" value="">
     </form>
+@endpush
 @endsection

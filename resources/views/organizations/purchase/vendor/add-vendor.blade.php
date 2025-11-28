@@ -1,16 +1,5 @@
 @extends('admin.layouts.master')
 @section('content')
-<style>
-label {
-    margin-top: 20px;
-}
-
-label.error {
-    color: red;
-    font-size: 12px;
-   
-}
-</style>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="sparkline12-list">
@@ -137,9 +126,7 @@ label.error {
     </div>
 </div>
 
-<<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> 
+@push('scripts')  
 <script>
    jQuery.noConflict();
    jQuery(document).ready(function($) {
@@ -226,5 +213,5 @@ label.error {
     });
 });
 </script>
-
+@endpush
 @endsection

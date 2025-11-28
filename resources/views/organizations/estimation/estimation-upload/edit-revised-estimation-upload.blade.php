@@ -126,9 +126,7 @@
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+   @push('scripts')  
     <script>
         jQuery.noConflict();
         jQuery(document).ready(function($) {
@@ -206,4 +204,5 @@
             });
         });
     </script>
+    @endpush
 @endsection

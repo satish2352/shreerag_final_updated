@@ -82,7 +82,7 @@ class RegisterController extends Controller
     public function editUsers(Request $request)
     {
         $user_data = $this->service->editUsers($request);
-        return view('admin.pages.users.edit-users', compact('user_data'));
+        return view('admin.pages.users.edit-employee', compact('user_data'));
     }
 
     public function update(Request $request)
@@ -155,9 +155,9 @@ class RegisterController extends Controller
                     $msg = $register_user['msg'];
                     $status = $register_user['status'];
                     if ($status == 'success') {
-                        return redirect('list-users')->with(compact('msg', 'status'));
+                        return redirect('list-employee')->with(compact('msg', 'status'));
                     } else {
-                        return redirect('list-users')->withInput()->with(compact('msg', 'status'));
+                        return redirect('list-employee')->withInput()->with(compact('msg', 'status'));
                     }
                 }
             }
@@ -239,7 +239,7 @@ class RegisterController extends Controller
 
         $validation = Validator::make($request->all(), $rules, $messages);
         if ($validation->fails()) {
-            return redirect('add-users')
+            return redirect('add-employee')
                 ->withInput()
                 ->withErrors($validation);
         } else {
@@ -250,9 +250,9 @@ class RegisterController extends Controller
                 $msg = $register_user['msg'];
                 $status = $register_user['status'];
                 if ($status == 'success') {
-                    return redirect('list-users')->with(compact('msg', 'status'));
+                    return redirect('list-employee')->with(compact('msg', 'status'));
                 } else {
-                    return redirect('add-users')->withInput()->with(compact('msg', 'status'));
+                    return redirect('add-employee')->withInput()->with(compact('msg', 'status'));
                 }
             }
         }
@@ -262,7 +262,7 @@ class RegisterController extends Controller
     {
         try {
             $user_detail = $this->service->getById($request->show_id);
-            return view('admin.pages.users.show-users', compact('user_detail'));
+            return view('admin.pages.users.show-employee', compact('user_detail'));
         } catch (\Exception $e) {
             return $e;
         }
@@ -276,7 +276,7 @@ class RegisterController extends Controller
                 $msg = $delete['msg'];
                 $status = $delete['status'];
                 if ($status == 'success') {
-                    return redirect('list-users')->with(compact('msg', 'status'));
+                    return redirect('list-employee')->with(compact('msg', 'status'));
                 } else {
                     return redirect()->back()
                         ->withInput()
@@ -293,7 +293,7 @@ class RegisterController extends Controller
         try {
             $active_id = $request->active_id;
             $result = $this->service->updateOne($active_id);
-            return redirect('list-users')->with('flash_message', 'Updated!');
+            return redirect('')->with('flash_message', 'Updated!');
         } catch (\Exception $e) {
             return $e;
         }

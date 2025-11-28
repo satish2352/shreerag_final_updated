@@ -1,11 +1,5 @@
 @extends('admin.layouts.master')
 @section('content')
-    <style>
-        .btn-colour {
-            color: gray !important;
-        }
-    </style>
-
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">

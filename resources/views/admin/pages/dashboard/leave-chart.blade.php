@@ -141,13 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-<style>
-#leaveChartsContainer canvas {
-    max-width: 300px;
-    height: 235px;
-    padding: 30px;
-}
-</style>
+
  --}}
 <div class="col-lg-12 col-md-12 mb-4">
     <div id="leaveChartsContainer" class="row d-flex justify-content-start"></div>

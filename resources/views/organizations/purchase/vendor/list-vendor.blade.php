@@ -94,13 +94,7 @@
         </div>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="{{ asset('js/password-meter/pwstrength-bootstrap.min.js') }}"></script>
-            <script src="{{ asset('js/password-meter/zxcvbn.js') }}"></script>
-            <script src="{{ asset('js/password-meter/password-meter-active.js') }}"></script>
-            <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+@push('scripts') 
 
             <script>
     $.noConflict();
@@ -126,5 +120,5 @@
         });
     });
 </script>
-
+@endpush
 @endsection

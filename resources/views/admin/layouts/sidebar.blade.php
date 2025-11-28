@@ -206,8 +206,8 @@
                                 </li>
 
                                 <li
-                                    class="{{ Request::is('hr/users-leaves-details/*') || Request::is('hr/show-users/*') || Request::is('edit-users/*') ? 'active' : '' }}">
-                                    <a href="{{ route('list-users') }}" aria-expanded="false"><i
+                                    class="{{ Request::is('hr/users-leaves-details/*') || Request::is('hr/show-employee/*') || Request::is('edit-employee/*') ? 'active' : '' }}">
+                                    <a href="{{ route('list-employee') }}" aria-expanded="false"><i
                                             class="fa big-icon fa-users icon-wrap" aria-hidden="true"></i> <span
                                             class="mini-click-non">Add Employees</span></a>
                                 </li>
@@ -391,8 +391,8 @@
                                 </ul>
                             </li> --}}
 
-                            <li class="nav-item {{ request()->is('hr/list-users') ? 'active' : '' }}">
-                                <a href="{{ route('list-users') }}" aria-expanded="false"> <i
+                            <li class="nav-item {{ request()->is('hr/list-employee') ? 'active' : '' }}">
+                                <a href="{{ route('list-employee') }}" aria-expanded="false"> <i
                                         class="fa fa-user-friends icon-wrap"></i><span class="mini-click-non">Add
                                         Employees</span></a>
                             </li>
@@ -1132,11 +1132,11 @@
                                     class="mini-click-non">Dashboard</span></a>
                         </li>
                         <li>
-                            <a class="has-arrow" href="{{ route('list-users') }}" aria-expanded="false"><i
+                            <a class="has-arrow" href="{{ route('list-employee') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-user icon-wrap"></i> <span
                                     class="mini-click-non">Employee</span></a>
                             <ul class="submenu-angle" aria-expanded="false">
-                                <li><a href="{{ route('list-users') }}"> <i
+                                <li><a href="{{ route('list-employee') }}"> <i
                                             class="fas fa-user-plus icon-wrap"></i> <span
                                             class="mini-click-non">Add
                                             Employee</span></a></li>

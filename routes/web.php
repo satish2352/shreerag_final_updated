@@ -446,13 +446,8 @@
         Route::get('/production-report-ajax', [ReportController::class, 'getProductionReportAjax'])->name('production-production-report-ajax');
     });
    
-    Route::group(['prefix' => 'storedept', 'middleware' => 'admin'], function () {
-
+      Route::group(['prefix' => 'storedept', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-        // Requisition
-        //     Route::get('/list-requistion', ['as' => 'list-requistion', 'uses' => 'App\Http\Controllers\Organizations\Store\RequistionController@index']);
-
         Route::get('/list-requisition', [RequistionController::class, 'index'])->name('list-requisition');
         Route::get('/add-requisition', [RequistionController::class, 'add'])->name('add-requisition');
         Route::get('/edit-requisition', [RequistionController::class, 'edit'])->name('edit-requisition');
@@ -747,22 +742,22 @@
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         // Employees
-        Route::get('/list-employees', [EmployeesHrController::class, 'index'])->name('list-employees');
-        Route::get('/add-employees', [EmployeesHrController::class, 'add'])->name('add-employees');
-        Route::post('/store-employees', [EmployeesHrController::class, 'store'])->name('store-employees');
-        Route::get('/edit-employees/{id}', [EmployeesHrController::class, 'edit'])->name('edit-employees');
-        Route::post('/update-employees', [EmployeesHrController::class, 'update'])->name('update-employees');
-        Route::any('/delete-employees/{id}', [EmployeesHrController::class, 'destroy'])->name('delete-employees');
+        // Route::get('/list-employees', [EmployeesHrController::class, 'index'])->name('list-employees');
+        // Route::get('/add-employees', [EmployeesHrController::class, 'add'])->name('add-employees');
+        // Route::post('/store-employees', [EmployeesHrController::class, 'store'])->name('store-employees');
+        // Route::get('/edit-employees/{id}', [EmployeesHrController::class, 'edit'])->name('edit-employees');
+        // Route::post('/update-employees', [EmployeesHrController::class, 'update'])->name('update-employees');
+        // Route::any('/delete-employees/{id}', [EmployeesHrController::class, 'destroy'])->name('delete-employees');
 
         // Users
 
-        Route::get('/list-users', [EmployeesHrController::class, 'index'])->name('list-users');
-        Route::get('/add-users', [EmployeesHrController::class, 'addUsers'])->name('add-users');
-        Route::post('/add-users', [EmployeesHrController::class, 'register'])->name('store-users');
-        Route::get('/edit-users/{id}', [EmployeesHrController::class, 'editUsers'])->name('edit-users');
-        Route::post('/update-users', [EmployeesHrController::class, 'update'])->name('update-users');
-        Route::any('/delete-users/{id}', [EmployeesHrController::class, 'destroy'])->name('delete-users');
-        Route::any('/show-users/{id}', [EmployeesHrController::class, 'show'])->name('show-users');
+        Route::get('/list-employee', [EmployeesHrController::class, 'index'])->name('list-employee');
+        Route::get('/add-employee', [EmployeesHrController::class, 'addUsers'])->name('add-employee');
+        Route::post('/add-employee', [EmployeesHrController::class, 'register'])->name('store-employee');
+        Route::get('/edit-employee/{id}', [EmployeesHrController::class, 'editUsers'])->name('edit-employee');
+        Route::post('/update-employee', [EmployeesHrController::class, 'update'])->name('update-employee');
+        Route::any('/delete-employee/{id}', [EmployeesHrController::class, 'destroy'])->name('delete-employee');
+        Route::any('/show-employee/{id}', [EmployeesHrController::class, 'show'])->name('show-employee');
         Route::any('/users-leaves-details/{id}', [EmployeesHrController::class, 'usersLeavesDetails'])->name('users-leaves-details');
 
         Route::get('/cities', [EmployeesHrController::class, 'getCities'])->name('cities');

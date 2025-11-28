@@ -1,12 +1,6 @@
 
 @extends('admin.layouts.master')
 @section('content')
-    <style>
-        .btn-colour{
-            color: gray !important;
-        }
-    </style>
-
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">
@@ -18,7 +12,7 @@
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
                                         <div class="login-horizental cancel-wp pull-left">
-                                            <a href="{{ route('add-users') }}"><button
+                                            <a href="{{ route('add-employee') }}"><button
                                                     class="btn btn-sm btn-primary login-submit-cs" type="submit">Add
                                                     Employee</button></a>
                                         </div>
@@ -89,19 +83,19 @@
                                                     </td>
                                                     <td class="d-flex">
                                                         <div style="display: flex; align-items: center;">
-                                                            <a href="{{ route('show-users', base64_encode($item->id)) }} "><button
+                                                            <a href="{{ route('show-employee', base64_encode($item->id)) }} "><button
                                                                     data-toggle="tooltip" title="Trash"
                                                                     class="pd-setting-ed"><i class="fa fa-eye"
                                                                         aria-hidden="true"></i></button></a>
 
-                                                            <a href="{{ route('edit-users', base64_encode($item->id)) }}"><button
+                                                            <a href="{{ route('edit-employee', base64_encode($item->id)) }}"><button
                                                                     data-toggle="tooltip" title="Edit"
                                                                     class="pd-setting-ed"><i class="fas fa-pen-square"
                                                                         aria-hidden="true"></i></button></a>
 
 
                                                                         @if ($item->id > 14)
-                                                                        <a href="{{ route('delete-users', base64_encode($item->id)) }}">
+                                                                        <a href="{{ route('delete-employee', base64_encode($item->id)) }}">
                                                                             <button data-toggle="tooltip" title="Delete" class="pd-setting-ed delete-btn">
                                                                                 <i class="fa fa-trash" aria-hidden="true"></i>
                                                                             </button>
@@ -112,7 +106,7 @@
                                                                         </button>
                                                                     @endif
                                                             {{-- <a
-                                                                href="{{ route('delete-users', base64_encode($item->id)) }} "><button
+                                                                href="{{ route('delete-employee', base64_encode($item->id)) }} "><button
                                                                     data-toggle="tooltip" title="Trash"
                                                                     class="pd-setting-ed"><i class="fa fa-trash"
                                                                         aria-hidden="true"></i></button></a> --}}
@@ -137,7 +131,7 @@
         $(document).ready(function() {
             $(".delete-btn").click(function(e) {
                 e.preventDefault();
-                var deleteUrl = "{{ route('delete-users', ':id') }}";
+                var deleteUrl = "{{ route('delete-employee', ':id') }}";
                 var userId = $(this).data('id');
                 deleteUrl = deleteUrl.replace(':id', userId);
 
@@ -172,7 +166,7 @@
             $("#leavesdetailsform").submit();
         })
     </script>
-    <form method="POST" action="{{ url('/show-users') }}" id="showform">
+    <form method="POST" action="{{ url('/show-employee') }}" id="showform">
         @csrf
         <input type="hidden" name="show_id" id="show_id" value="">
     </form>

@@ -1,19 +1,6 @@
 
 @extends('admin.layouts.master')
 @section('content')
-    <style>
-        #clickable-link {
-            color: blue;
-            text-decoration: underline;
-            cursor: pointer;
-        }
-
-        #clickable-link:hover {
-            color: red;
-            /* Change text color on hover for better visibility */
-        }
-    </style>
-
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">

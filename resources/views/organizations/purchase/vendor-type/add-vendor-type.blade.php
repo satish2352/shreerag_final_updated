@@ -1,13 +1,6 @@
 @extends('admin.layouts.master')
 @section('content')
-<style>
-    label {
-        margin-top: 20px;
-    }
-    .error{
-        color: red !important;
-    }
-</style>
+
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="sparkline12-list">
@@ -60,9 +53,7 @@
         </div>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+@push('scripts') 
     <script>
         $(document).ready(function() {
             // Custom validation rule to check if the input does not contain only spaces
@@ -87,6 +78,6 @@
             });
         });
         </script>
-        
+        @endpush
   
 @endsection

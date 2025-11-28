@@ -1,34 +1,5 @@
 @extends('admin.layouts.master')
 @section('content')
-    <style>
-        label {
-            margin-top: 10px;
-        }
-
-        label.error {
-            color: red;
-            /* Change 'red' to your desired text color */
-            font-size: 12px;
-            /* Adjust font size if needed */
-            /* Add any other styling as per your design */
-        }
-
-        .red-text {
-            color: red !important;
-        }
-
-        .password-toggle {
-            cursor: pointer;
-            position: absolute;
-            top: 65%;
-            right: 20px;
-            transform: translateY(-50%);
-        }
-
-        .fa-eye-slash {
-            /* display: none; */
-        }
-    </style>
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -46,7 +17,7 @@
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="all-form-element-inner">
                                         <form class="forms-sample" id="regForm" name="regForm" method="post"
-                                            role="form" action="{{ route('add-users') }}" enctype="multipart/form-data">
+                                            role="form" action="{{ route('add-employee') }}" enctype="multipart/form-data">
                                             <div class="row">
                                                 <input type="hidden" name="_token" id="csrf-token"
                                                     value="{{ Session::token() }}" />
@@ -263,7 +234,7 @@
                                                         id="submitButton">
                                                         Save &amp; Submit
                                                     </button>
-                                                    <span><a href="{{ route('list-users') }}"
+                                                    <span><a href="{{ route('list-employee') }}"
                                                             class="btn btn-sm btn-primary ">Back</a></span>
                                                 </div>
                                             </div>
@@ -278,9 +249,7 @@
         </div>
     </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+   @push('scripts')
     <script type="text/javascript">
         function submitRegister() {
             document.getElementById("frm_register").submit();
@@ -543,4 +512,5 @@
             }
         }
     </script>
+    @endpush
 @endsection

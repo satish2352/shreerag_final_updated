@@ -155,7 +155,7 @@ class EmployeesHrController extends Controller
 
         $validation = Validator::make($request->all(), $rules, $messages);
         if ($validation->fails()) {
-            return redirect('hr/add-users')
+            return redirect('hr/add-employee')
                 ->withInput()
                 ->withErrors($validation);
         } else {
@@ -165,9 +165,9 @@ class EmployeesHrController extends Controller
                 $msg = $register_user['msg'];
                 $status = $register_user['status'];
                 if ($status == 'success') {
-                    return redirect('hr/list-users')->with(compact('msg', 'status'));
+                    return redirect('hr/list-employee')->with(compact('msg', 'status'));
                 } else {
-                    return redirect('hr/add-users')->withInput()->with(compact('msg', 'status'));
+                    return redirect('hr/add-employee')->withInput()->with(compact('msg', 'status'));
                 }
             }
         }
@@ -251,9 +251,9 @@ class EmployeesHrController extends Controller
                     $msg = $register_user['msg'];
                     $status = $register_user['status'];
                     if ($status == 'success') {
-                        return redirect('hr/list-users')->with(compact('msg', 'status'));
+                        return redirect('hr/list-employee')->with(compact('msg', 'status'));
                     } else {
-                        return redirect('hr/list-users')->withInput()->with(compact('msg', 'status'));
+                        return redirect('hr/list-employee')->withInput()->with(compact('msg', 'status'));
                     }
                 }
             }
@@ -314,7 +314,7 @@ class EmployeesHrController extends Controller
                 $msg = $delete_record['msg'];
                 $status = $delete_record['status'];
                 if ($status == 'success') {
-                    return redirect('hr/list-users')->with(compact('msg', 'status'));
+                    return redirect('hr/list-employee')->with(compact('msg', 'status'));
                 } else {
                     return redirect()->back()
                         ->withInput()
