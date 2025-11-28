@@ -1,10 +1,12 @@
 <style>
-    /* ============= pratiksha (21/08/24) ============= */
+   
     .dropdown-menu {
     list-style: none !important;
     padding-left: 0 !important;
 }
-
+.dropdown-menu[x-placement^=bottom]{
+    right:200px;
+}
     .navbar-btn-wb {
         color: #fff !important;
         border: 1px solid #fff !important;
@@ -157,9 +159,10 @@
     color: #1A4FA7;
     text-decoration: none;
 }
-
+.{
+        left: 125px !important;
+}
 </style>
-<!-- ============= pratiksha (21/08/24) ============= change for sidebar changes and change icon -->
 
 <div class="left-sidebar-pro">
     <nav id="sidebar" class="">
@@ -1467,7 +1470,6 @@
                             <div class="row">
                                 <div class="col-lg-1 col-md-0 col-sm-1 col-xs-12">
                                     <div class="menu-switcher-pro">
-                                        <!-- ============= pratiksha (21/08/24) ============= change for sidebars btn  -->
                                         <button type="button" id="sidebarCollapse"
                                             class="btn bar-button-pro header-drl-controller-btn btn-info navbar-btn navbar-btn-wb">
                                             <i class="fa fa-bars"></i>
@@ -1512,7 +1514,7 @@
 
 
                                             @endif
-                                          <li class="nav-item">
+                                          {{-- <li class="nav-item">
 
     <a href="#" data-toggle="dropdown" role="button"
         aria-expanded="false" class="nav-link dropdown-toggle"
@@ -1531,16 +1533,28 @@
             </div>
         </li>
     </ul>
+</li> --}}
+<li class="nav-item dropdown">
+
+    <a href="#" class="nav-link dropdown-toggle" id="userDropdown" role="button"
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+       style="font-size: 16px !important;">
+        <i class="fa fa-user adminpro-user-rounded header-riht-inf" aria-hidden="true"></i>
+        {{ ucwords(config('constants.ROLE_ID_NAME.' . Session::get('role_id'))) }} Department
+    </a>
+
+    <div class="dropdown-menu dropdown-menu-right shadow-lg rounded zoomIn logout-dropdown"
+         aria-labelledby="userDropdown">
+
+        <a class="dropdown-item" href="{{ route('log-out') }}">
+            <span class="fa fa-lock author-log-ic"></span> Log Out
+        </a>
+
+    </div>
+
 </li>
 
-<script>
-$(document).ready(function(){
-    // Click anywhere inside UL = logout
-    $('.logout-dropdown').on('click', function() {
-        window.location.href = "{{ route('log-out') }}";
-    });
-});
-</script>
+
 
 
                                         </ul>

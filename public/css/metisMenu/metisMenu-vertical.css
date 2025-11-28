@@ -57,10 +57,7 @@
     transition: all .3s ease-out;
 	font-size:16px;
 }
-/* pratiksha (21/08/24) */
-/* .sidebar-nav .metismenu ul a {
-    padding: 10px 15px 10px 30px;
-} */
+
 
 .sidebar-nav .metismenu ul ul a {
     padding: 10px 15px 10px 45px;

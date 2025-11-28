@@ -191,7 +191,7 @@ function fetchReport(reset = false) {
 
 
 
-    tbody.innerHTML = rows || '<tr><td colspan="2">No records found.</td></tr>';
+    tbody.innerHTML = rows || '<tr><td colspan="8">No records found.</td></tr>';
 
                 // Pagination
                 let pagHtml = '', totalPages = res.pagination.totalPages;
