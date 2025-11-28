@@ -4632,3 +4632,54 @@ label{
     font-weight:700 !important;
     font-size: 14px !important;
 }
+/* ===================== */
+
+ .table-responsive-scroll {
+    width: 100%;
+    overflow-x: auto;      /* Enables horizontal scroll */
+    overflow-y: hidden;
+    white-space: nowrap;   /* Prevents table cells from wrapping */
+}
+
+.table-responsive-scroll table {
+    width: 1500px;         /* Set fixed width if needed (optional) */
+}
+
+
+        .form-control {
+            border: 2px solid #ced4da;
+            border-radius: 4px;
+        }
+
+        .select2-container .select2-selection--single {
+            height: 34px !important;
+            width: 100% !important;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border: 1px solid #ccc !important;
+            border-radius: 0px !important;
+        }
+
+        #select2--container {
+            width: 300px !important;
+        }
+        .reverse-label {
+            display: flex;
+            flex-direction: row-reverse;
+            /* Reverse the order of elements */
+            flex-wrap: wrap-reverse;
+            /* Allow elements to wrap onto the next line */
+            align-items: center;
+            /* Align items vertically if needed */
+        }
+
+        .reverse-label span {
+            order: 2;
+            /* Place span after the label content */
+        }
+
+        .reverse-label label {
+            order: 1;
+            /* Ensure label content appears before span */
+        }
