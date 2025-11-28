@@ -4804,3 +4804,18 @@ table td {
     min-width: 260px !important;
     max-width: 280px !important;
 }
+
+ .table-responsive {
+    overflow-x: auto !important;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+#purchase_order_table {
+    min-width: 1800px; /* adjust as needed */
+}
+
+#purchase_order_table th,
+#purchase_order_table td {
+    white-space: nowrap !important;
+}
