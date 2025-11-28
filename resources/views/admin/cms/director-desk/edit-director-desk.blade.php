@@ -118,9 +118,7 @@
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+ @push('scripts')  
     <script>
         $(document).ready(function() {
             // Function to check if all input fields are filled with valid data
@@ -186,5 +184,5 @@
             });
         });
     </script>
-
+@endpush
 @endsection

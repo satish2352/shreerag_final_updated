@@ -277,7 +277,7 @@
         </div>
     </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+     @push('scripts')  
     <script>
         $(document).ready(function() {
             $('#roleSelect').change(function() {
@@ -330,4 +330,5 @@
             });
         }
     </script>
+    @endpush
 @endsection
