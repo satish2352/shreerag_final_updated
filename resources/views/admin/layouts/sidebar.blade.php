@@ -760,6 +760,20 @@
                                         class="fa big-icon fa-tachometer-alt icon-wrap"></i><span
                                         class="mini-click-non">Dashboard</span></a>
                             </li>
+
+                        <li class="{{ Request::is('estimation-report') ? 'active' : '' }}">
+                            <a class="has-arrow" href="{{ route('estimation-report') }}" aria-expanded="false"><i
+                                    class="fa big-icon fa-file-invoice icon-wrap"></i> <span
+                                    class="mini-click-non">Report</span></a>
+                            <ul class="submenu-angle" aria-expanded="false">
+                                <li class="nav-item {{ Request::is('estimation-report') ? 'active' : '' }}"><a
+                                        href="{{ route('estimation-report') }}"><i
+                                            class="fa fa-chart-bar icon-wrap" aria-hidden="true"></i> <span
+                                            class="mini-click-non">Estimation</span></a></li>
+
+                            </ul>
+                        </li>
+
                             <li
                                 class="nav-item {{ request()->is('estimationdept/list-new-requirements-received-for-estimation') || request()->is('estimationdept/list-new-requirements-received-for-estimation-business-wise/*') || request()->is('estimationdept/edit-estimation/*') ? 'active' : '' }}">
                                 <a href="{{ route('list-new-requirements-received-for-estimation') }}">
@@ -877,12 +891,21 @@
                             <a href="{{ route('dashboard') }}"><i class="fa fa-tachometer-alt icon-wrap"></i><span
                                     class="mini-click-non">Dashboard</span></a>
                         </li>
-                        <li class="nav-item {{ request()->is('security-report*') ? 'active' : '' }}">
-                            <a href="{{ route('security-report') }}">
-                                <i class="fa fa-file-alt icon-wrap"></i>
-                                <span class="mini-click-non">Report </span>
-                            </a>
+                  
+ <li>
+                            <a class="has-arrow" href="{{ route('security-report') }}" aria-expanded="false"> <i
+                                    class="fa fa-chart-line icon-wrap"></i><span class="mini-click-non">Report</span></a>
+                            <ul class="submenu-angle" aria-expanded="false">
+                                <li
+                                    class="nav-item {{ request()->is('quality/security-report') || request()->is('quality/add-grn/*') ? 'active' : '' }}">
+                                    <a href="{{ route('security-report') }}"><i class="fa fa-chart-line icon-wrap"></i>
+                                        <span class="mini-click-non">Gatepass</span></a>
+                                </li>
+                            </ul>
                         </li>
+
+
+
                         <li class="nav-item {{ request()->is('securitydept/search-by-po-no') ? 'active' : '' }}">
                             <a href="{{ route('search-by-po-no') }}">
                                 <i class="fa fa-search icon-wrap"></i>
@@ -1230,12 +1253,18 @@
                             <a href="{{ route('dashboard') }}"> <i class="fa fa-tachometer-alt icon-wrap"></i><span
                                     class="mini-click-non">Dashboard</span></a>
                         </li>
-                        <li class="nav-item {{ request()->is('list-logistics-report*') ? 'active' : '' }}">
-                            <a href="{{ route('list-logistics-report') }}">
-                                <i class="fa fa-file-alt icon-wrap"></i>
-                                <span class="mini-click-non">Report </span>
-                            </a>
+                        <li>
+                            <a class="has-arrow" href="{{ route('list-logistics-report') }}" aria-expanded="false"> <i
+                                    class="fa fa-chart-line icon-wrap"></i><span class="mini-click-non">Report</span></a>
+                            <ul class="submenu-angle" aria-expanded="false">
+                                <li
+                                    class="nav-item {{ request()->is('quality/list-logistics-report') || request()->is('quality/add-grn/*') ? 'active' : '' }}">
+                                    <a href="{{ route('list-logistics-report') }}"><i class="fa fa-chart-line icon-wrap"></i>
+                                        <span class="mini-click-non">Logistics</span></a>
+                                </li>
+                            </ul>
                         </li>
+
                         <li
                             class="nav-item {{ request()->is('logisticsdept/list-final-production-completed-recive-to-logistics') || request()->is('logisticsdept/add-logistics/*') ? 'active' : '' }}">
                             <a href="{{ route('list-final-production-completed-recive-to-logistics') }}">

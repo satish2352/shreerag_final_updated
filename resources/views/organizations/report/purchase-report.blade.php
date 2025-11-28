@@ -54,7 +54,7 @@
         {{-- 🔹 Search and Export --}}
         <div class="row mb-2">
           <div class="col-md-6 d-flex justify-content-center">
-    <button type="submit" class="btn btn-primary filterbg me-2">Filter</button>
+    <button type="submit" class="btn btn-primary filterbg mr-2">Filter</button>
     <button type="button" class="btn btn-secondary" id="resetFilters">Reset</button>
 </div>
 

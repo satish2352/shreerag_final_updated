@@ -360,6 +360,13 @@
         // Dashboard (unique name for estimation dashboard)
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('estimation-dashboard');
 
+
+          // Reports
+        Route::get('/estimation-report', [ReportController::class, 'getEstimationReport'])->name('estimation-report');
+        Route::get('/estimation-report-ajax', [ReportController::class, 'getEstimationReportAjax'])->name('estimation-report-ajax');
+
+        // All Lists
+
         // All List
         Route::get('/list-new-requirements-received-for-estimation', [EstimationAllListController::class, 'getAllNewRequirement'])->name('list-new-requirements-received-for-estimation');
         Route::get('/list-new-requirements-received-for-estimation-business-wise/{business_id}', [EstimationAllListController::class, 'getAllNewRequirementBusinessWise'])->name('list-new-requirements-received-for-estimation-business-wise');

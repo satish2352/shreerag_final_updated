@@ -45,6 +45,17 @@ class ReportServices
             return $e;
         }
     }
+     public function getEstimationReport($request)
+    {
+        try {
+            $data_output = $this->repo->getEstimationReport($request);
+            //   dd($data_output);
+            //   die();
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     public function getProductionReport($request)
     {
         try {

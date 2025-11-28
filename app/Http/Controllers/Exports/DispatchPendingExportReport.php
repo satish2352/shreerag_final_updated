@@ -1,10 +1,16 @@
 <?php
+
 namespace App\Http\Controllers\Exports;
 
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class DispatchPendingExportReport implements FromCollection, WithHeadings
+class DispatchPendingExportReport implements FromCollection, WithHeadings, WithMapping, WithStyles, ShouldAutoSize
 {
     protected $data;
 
@@ -13,28 +19,53 @@ class DispatchPendingExportReport implements FromCollection, WithHeadings
         $this->data = collect($data);
     }
 
+    /**
+     * Raw Data
+     */
     public function collection()
     {
-        return $this->data->values()->map(function ($item, $index) {
-            return [
-                $index + 1,  // ✅ Sr. No.
-                $item['updated_at'] ?? '-',   // use last_updated_at from repo
-                $item['project_name'] ?? '-',
-                $item['customer_po_number'] ?? '-',
-                $item['title'] ?? '-',
-                $item['product_name'] ?? '-',
-                $item['quantity'] ?? '-',
-                $item['cumulative_completed_quantity'] ?? '-',
-                $item['remaining_quantity'] ?? '-',
-                $item['from_place'] ?? '-',
-                $item['to_place'] ?? '-',
-                $item['transport_name'] ?? '-',
-                $item['vehicle_name'] ?? '-',
-                 $item['truck_no'] ?? '-',
-            ];
-        });
+        return $this->data;
     }
 
+    /**
+     * Row Mapping With Formatting
+     */
+    public function map($item): array
+    {
+        static $index = 0;
+        $index++;
+
+        // Format date
+        $formattedDate = '-';
+        if (!empty($item['updated_at'])) {
+            try {
+                $formattedDate = Carbon::parse($item['updated_at'])->format('d-m-Y h:i:s A');
+            } catch (\Exception $e) {
+                $formattedDate = $item['updated_at'];
+            }
+        }
+
+        return [
+            $index,
+            $formattedDate,
+            ucwords($item['project_name'] ?? '-'),
+            $item['customer_po_number'] ?? '-',
+            ucwords($item['title'] ?? '-'),
+            ucwords($item['product_name'] ?? '-'),
+            $item['quantity'] ?? '-',
+            $item['cumulative_completed_quantity'] ?? '-',
+            $item['remaining_quantity'] ?? '-',
+            ucwords($item['from_place'] ?? '-'),
+            ucwords($item['to_place'] ?? '-'),
+            ucwords($item['transport_name'] ?? '-'),
+            ucwords($item['vehicle_name'] ?? '-'),
+            $item['truck_no'] ?? '-',
+        ];
+    }
+
+    /**
+     * Column Headings
+     */
     public function headings(): array
     {
         return [
@@ -47,12 +78,25 @@ class DispatchPendingExportReport implements FromCollection, WithHeadings
             'Quantity',
             'Completed Quantity',
             'Balance Quantity',
-            'Form Place',
+            'From Place',
             'To Place',
             'Transport Name',
             'Vehicle Type',
             'Truck No.',
-
         ];
+    }
+
+    /**
+     * Apply Common Styling From Helper
+     */
+    public function styles(Worksheet $sheet)
+    {
+        applyExcelCommonStyles(
+            $sheet,
+            $this->headings(),
+            $this->data->count()
+        );
+
+        return [];
     }
 }

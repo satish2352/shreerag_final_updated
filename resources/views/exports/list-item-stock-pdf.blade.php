@@ -63,7 +63,11 @@
                     <td>{{ $issueDate }}</td>
                    
                     <td>{{ ucwords($row['description'] ?? '-') }}</td>
-                    <td class="text-right">{{ number_format($row['quantity'] ?? 0, 2) }}</td>
+                  @php
+                    $qty = is_numeric($row['quantity']) ? (float)$row['quantity'] : 0;
+                    @endphp
+                    <td class="text-right">{{ number_format($qty, 2) }}</td>
+
                     <td>{{ $row['unit_name'] ?? '-' }}</td>
                     <td>{{ $row['hsn_name'] ?? '-' }}</td>
                     <td>{{ $row['group_name'] ?? '-' }}</td>

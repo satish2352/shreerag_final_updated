@@ -24,6 +24,7 @@ use App\Http\Controllers\Exports\CompleteProductReportExport;
 use App\Http\Controllers\Exports\ConsumptionReport;
 use App\Http\Controllers\Exports\VendorThroughTakenMaterialReport;
 use App\Http\Controllers\Exports\ItemWiseVendorRateReportExport;
+use App\Http\Controllers\Exports\EstimationReportExport;
 
 
 use Illuminate\Support\Facades\Log;
@@ -47,6 +48,12 @@ class ReportController extends Controller
     {
         $this->service = new ReportServices();
     }
+
+        private function timeStamp()
+        {
+            return now()->format('Y-m-d_H-i-s');
+        }
+
     public function getCompletedProductList(Request $request)
     {
         try {
@@ -80,13 +87,13 @@ class ReportController extends Controller
                 ->where('business_application_processes.off_canvas_status', 22)
                 ->pluck('businesses.project_name', 'businesses.id');
 
-      $getProductName = BusinessDetails::leftJoin('business_application_processes as bap', function ($join) {
-    $join->on('businesses_details.id', '=', 'bap.business_details_id');
-})
-->where('businesses_details.is_deleted', 0)
-->where('businesses_details.is_active', 1)
-->where('bap.off_canvas_status', 22)
-->pluck('businesses_details.product_name', 'businesses_details.id');
+            $getProductName = BusinessDetails::leftJoin('business_application_processes as bap', function ($join) {
+            $join->on('businesses_details.id', '=', 'bap.business_details_id');
+            })
+            ->where('businesses_details.is_deleted', 0)
+            ->where('businesses_details.is_active', 1)
+            ->where('bap.off_canvas_status', 22)
+            ->pluck('businesses_details.product_name', 'businesses_details.id');
 
 
             return view('organizations.report.list-report-product-completed', [
@@ -111,12 +118,12 @@ class ReportController extends Controller
                 $pdf = Pdf::loadView('exports.complete-product-report-pdf', ['data' => $data['data']])
                     ->setPaper('a3', 'landscape'); // <-- Landscape
 
-                return $pdf->download('CompleteProductReport.pdf');
+                return $pdf->download("CompleteProductReport_{$this->timeStamp()}.pdf");
             }
 
             // Excel Export
             if ($request->filled('export_type') && $request->export_type == 2) {
-                return Excel::download(new CompleteProductReportExport($data['data']), 'CompleteProductReport.xlsx');
+                return Excel::download(new CompleteProductReportExport($data['data']), "CompleteProductReport_{$this->timeStamp()}.xlsx");
             }
 
             // Normal AJAX response
@@ -129,7 +136,6 @@ class ReportController extends Controller
             return response()->json(['status' => false, 'message' => $e->getMessage()]);
         }
     }
-
     public function listDesignReport(Request $request)
     {
         try {
@@ -160,12 +166,61 @@ class ReportController extends Controller
                 $pdf = Pdf::loadView('exports.design-report-pdf', ['data' => $data['data']])
                     ->setPaper('a3', 'landscape'); // <-- Landscape
 
-                return $pdf->download('DesignReport.pdf');
+                return $pdf->download("DesignReport_{$this->timeStamp()}.pdf");
             }
 
             // Excel Export
             if ($request->filled('export_type') && $request->export_type == 2) {
-                return Excel::download(new DesignReportExport($data['data']), 'DesignReport.xlsx');
+                return Excel::download(new DesignReportExport($data['data']), "DesignReport_{$this->timeStamp()}.xlsx");
+            }
+
+            // Normal AJAX response
+            return response()->json([
+                'status' => true,
+                'data' => $data['data'],
+                'pagination' => $data['pagination']
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+        }
+    }
+     public function getEstimationReport(Request $request)
+    {
+        try {
+            $data = $this->service->getEstimationReport($request);
+
+            $getProjectName = Business::whereNotNull('project_name')
+                ->where('is_deleted', 0)
+                ->where('is_active', 1)
+                ->whereNotNull('project_name')
+                ->pluck('project_name', 'id');
+
+            $getProductName = BusinessDetails::whereNotNull('product_name')
+                ->where('is_deleted', 0)
+                ->where('is_active', 1)
+                ->pluck('product_name', 'id');
+
+            return view('organizations.report.estimation-report', compact('data', 'getProjectName', 'getProductName'));
+        } catch (\Exception $e) {
+            return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+        }
+    }
+    public function getEstimationReportAjax(Request $request)
+    {
+        try {
+            $data = $this->service->getEstimationReport($request);
+
+            // PDF Export
+            if ($request->filled('export_type') && $request->export_type == 1) {
+                $pdf = Pdf::loadView('exports.estimation-report-pdf', ['data' => $data['data']])
+                    ->setPaper('a3', 'landscape'); // <-- Landscape
+
+                return $pdf->download("EstimationReport_{$this->timeStamp()}.pdf");
+            }
+
+            // Excel Export
+            if ($request->filled('export_type') && $request->export_type == 2) {
+                return Excel::download(new EstimationReportExport($data['data']), "EstimationReport_{$this->timeStamp()}.xlsx");
             }
 
             // Normal AJAX response
@@ -209,12 +264,12 @@ class ReportController extends Controller
                 $pdf = Pdf::loadView('exports.security-report-pdf', ['data' => $data['data']])
                     ->setPaper('a4'); // <-- Landscape
 
-                return $pdf->download('SecurityReport.pdf');
+                return $pdf->download("SecurityReport_{$this->timeStamp()}.pdf");
             }
 
             // Excel Export
             if ($request->filled('export_type') && $request->export_type == 2) {
-                return Excel::download(new SecurityReportExport($data['data']), 'SecurityReport.xlsx');
+                return Excel::download(new SecurityReportExport($data['data']), "SecurityReport_{$this->timeStamp()}.xlsx");
             }
 
             // Normal AJAX response
@@ -281,12 +336,12 @@ class ReportController extends Controller
             if ($request->export_type == "1") {
                 $pdf = Pdf::loadView('exports.grn-report-pdf', ['data' => $data['data']])
                     ->setPaper('a3', 'landscape');
-                return $pdf->download('GRNReport.pdf');
+                return $pdf->download("GRNReport_{$this->timeStamp()}.pdf");
             }
 
             // if ($request->filled('export_type') && $request->export_type == 2) {
             if ($request->export_type == "2") {
-                return Excel::download(new GRNReportExport($data['data']), 'GRNReport.xlsx');
+                return Excel::download(new GRNReportExport($data['data']), "GRNReport_{$this->timeStamp()}.xlsx");
             }
 
             return response()->json([
@@ -337,24 +392,7 @@ class ReportController extends Controller
 
 
 
-    // public function listConsumptionReport( Request $request ) {
-    //         try {
-    //             $data = $this->service->getConsumptionReport($request);
-
-    //        $getProjectName = Business::whereNotNull('project_name')
-    //             ->where('is_deleted', 0)
-    //             ->where('is_active', 1)
-    //             ->pluck('project_name', 'id');
-    //     $getProductName = BusinessDetails::whereNotNull('product_name')
-    //             ->where('is_deleted', 0)
-    //             ->where('is_active', 1)
-    //             ->pluck('product_name', 'id');
-
-    //             return view( 'organizations.report.consumption-report', compact( 'data','getProjectName', 'getProductName') );
-    //         } catch ( \Exception $e ) {
-    //             return $e;
-    //         }
-    //     }
+ 
     public function listConsumptionReport(Request $request)
     {
         $getProjectName = Business::whereNotNull('project_name')
@@ -371,11 +409,11 @@ class ReportController extends Controller
 
             if ($request->export_type == 1) {
                 $pdf = Pdf::loadView('exports.consumption-report-pdf', ['data' => $data]);
-                return $pdf->download('consumption_report.pdf');
+                return $pdf->download("consumptionReport_{$this->timeStamp()}.pdf");
             }
 
             if ($request->export_type == 2) {
-                return Excel::download(new ConsumptionReportExport($data), 'consumption_report.xlsx');
+                return Excel::download(new ConsumptionReportExport($data), "consumptionReport_{$this->timeStamp()}.xlsx");
             }
         }
 
@@ -401,12 +439,12 @@ class ReportController extends Controller
                 $pdf = Pdf::loadView('exports.consumption-report-pdf', [
                     'data' => $response['data']
                 ])->setPaper('a4');
-                return $pdf->download('ConsumptionReport.pdf');
+                return $pdf->download("ConsumptionReport_{$this->timeStamp()}.pdf");
             }
 
             // Handle Excel export
             if ($request->filled('export_type') && $request->export_type == 2) {
-                return Excel::download(new ConsumptionReport($response['data']), 'ConsumptionReport.xlsx');
+                return Excel::download(new ConsumptionReport($response['data']), "ConsumptionReport_{$this->timeStamp()}.xlsx");
             }
 
             // Normal JSON response for AJAX
@@ -503,12 +541,12 @@ class ReportController extends Controller
                 $pdf = Pdf::loadView('exports.security-report-pdf', ['data' => $data['data']])
                     ->setPaper('a4'); // <-- Landscape
 
-                return $pdf->download('DesignReport.pdf');
+                return $pdf->download("DesignReport_{$this->timeStamp()}.pdf");
             }
 
             // Excel Export
             if ($request->filled('export_type') && $request->export_type == 2) {
-                return Excel::download(new SecurityReportExport($data['data']), 'DesignReport.xlsx');
+                return Excel::download(new SecurityReportExport($data['data']), "DesignReport_{$this->timeStamp()}.xlsx");
             }
 
             // Normal AJAX response
@@ -557,12 +595,12 @@ class ReportController extends Controller
                 $pdf = Pdf::loadView('exports.logistics-report-pdf', ['data' => $data['data']])
                     ->setPaper('a4');
 
-                return $pdf->download('LogisticsReport.pdf');
+                return $pdf->download("LogisticsReport_{$this->timeStamp()}.pdf");
             }
 
             // Excel Export
             if ($request->filled('export_type') && $request->export_type == 2) {
-                return Excel::download(new LogisticsReportExport($data['data']), 'LogisticsReport.xlsx');
+                return Excel::download(new LogisticsReportExport($data['data']), "LogisticsReport_{$this->timeStamp()}.xlsx");
             }
 
             // Normal AJAX response
@@ -610,12 +648,12 @@ class ReportController extends Controller
                 $pdf = Pdf::loadView('exports.fianance-report-pdf', ['data' => $data['data']])
                     ->setPaper('a4');
 
-                return $pdf->download('FiananceReport.pdf');
+                return $pdf->download("FiananceReport_{$this->timeStamp()}.pdf");
             }
 
             // Excel Export
             if ($request->filled('export_type') && $request->export_type == 2) {
-                return Excel::download(new FiananceExportReport($data['data']), 'FiananceReport.xlsx');
+                return Excel::download(new FiananceExportReport($data['data']), "FiananceReport_{$this->timeStamp()}.xlsx");
             }
 
             // Normal AJAX response
@@ -691,12 +729,12 @@ class ReportController extends Controller
                 $pdf = Pdf::loadView('exports.vendor-payment-report-pdf', ['data' => $data['data']])
                     ->setPaper('a4');
 
-                return $pdf->download('VendorPaymentReport.pdf');
+                return $pdf->download("VendorPaymentReport_{$this->timeStamp()}.pdf");
             }
 
             // Excel Export
             if ($request->filled('export_type') && $request->export_type == 2) {
-                return Excel::download(new VendorPaymentReportExport($data['data']), 'VendorPaymentReport.xlsx');
+                return Excel::download(new VendorPaymentReportExport($data['data']), "VendorPaymentReport_{$this->timeStamp()}.xlsx");
             }
 
             // Normal AJAX response
@@ -753,12 +791,12 @@ class ReportController extends Controller
                 $pdf = Pdf::loadView('exports.dispatch-report-pdf', ['data' => $data['data']])
                     ->setPaper('a4');
 
-                return $pdf->download('DispatchReport.pdf');
+                return $pdf->download("DispatchReport_{$this->timeStamp()}.pdf");
             }
 
             // Excel Export
             if ($request->filled('export_type') && $request->export_type == 2) {
-                return Excel::download(new DispatchExportReport($data['data']), 'DispatchReport.xlsx');
+                return Excel::download(new DispatchExportReport($data['data']), "DispatchReport_{$this->timeStamp()}.xlsx");
             }
 
             // Normal AJAX response
@@ -810,12 +848,12 @@ class ReportController extends Controller
                 $pdf = Pdf::loadView('exports.dispatch-pending-report-pdf', ['data' => $data['data']])
                     ->setPaper('a4');
 
-                return $pdf->download('DispatchPendingReport.pdf');
+                return $pdf->download("DispatchPendingReport_{$this->timeStamp()}.pdf");
             }
 
             // Excel Export
             if ($request->filled('export_type') && $request->export_type == 2) {
-                return Excel::download(new DispatchPendingExportReport($data['data']), 'DispatchPendingReport.xlsx');
+                return Excel::download(new DispatchPendingExportReport($data['data']), "DispatchPendingReport_{$this->timeStamp()}.xlsx");
             }
 
             // Normal AJAX response
@@ -860,13 +898,13 @@ class ReportController extends Controller
             $data = $this->service->listVendorThroughTakenMaterial($request)['data'];
 
             if ($request->export_type == 1) {
-                $pdf = Pdf::loadView('exports.vendor-through-taken-material', ['data' => $data])
+                $pdf = Pdf::loadView('exports.vendorThroughTakenMaterial_{$this->timeStamp()}', ['data' => $data])
                     ->setPaper('a3', 'landscape');
-                return $pdf->download('vendor-through-taken-material.pdf');
+                return $pdf->download("vendor-through-taken-material.pdf");
             }
 
             if ($request->export_type == 2) {
-                return Excel::download(new VendorThroughTakenMaterialReport($data), 'vendor-through-taken-material.xlsx');
+                return Excel::download(new VendorThroughTakenMaterialReport($data), "vendorThroughTakenMaterial_{$this->timeStamp()}.xlsx");
             }
         }
 
@@ -917,12 +955,12 @@ class ReportController extends Controller
                 $pdf = Pdf::loadView('exports.vendor-through-taken-material-report-pdf', ['data' => $data['data']])
                     ->setPaper('a4');
 
-                return $pdf->download('VendorThroughTakenMaterialReport.pdf');
+                return $pdf->download("VendorThroughTakenMaterialReport_{$this->timeStamp()}.pdf");
             }
 
             // Excel Export
             if ($request->filled('export_type') && $request->export_type == 2) {
-                return Excel::download(new VendorThroughTakenMaterialListDetailsReport($data['data']), 'VendorThroughTakenMaterialReport.xlsx');
+                return Excel::download(new VendorThroughTakenMaterialListDetailsReport($data['data']), "VendorThroughTakenMaterialReport_{$this->timeStamp()}.xlsx");
             }
 
             // Normal AJAX response
@@ -943,11 +981,11 @@ class ReportController extends Controller
             if ($request->export_type == 1) {
                 $pdf = Pdf::loadView('exports.list-item-stock-pdf', ['data' => $data])
                     ->setPaper('a4', 'landscape');
-                return $pdf->download('ItemStock.pdf');
+                return $pdf->download("ItemStock_{$this->timeStamp()}.pdf");
             }
 
             if ($request->export_type == 2) {
-                return Excel::download(new ItemStockReport($data), 'ItemStock.xlsx');
+                return Excel::download(new ItemStockReport($data), "ItemStock_{$this->timeStamp()}.xlsx");
             }
         }
 
@@ -984,11 +1022,11 @@ class ReportController extends Controller
             if ($request->export_type == 1) {
                 $pdf = Pdf::loadView('exports.stock-item-pdf', ['data' => $data])
                     ->setPaper('a3', 'landscape');
-                return $pdf->download('stock-item.pdf');
+                return $pdf->download("stockItem_{$this->timeStamp()}.pdf");
             }
 
             if ($request->export_type == 2) {
-                return Excel::download(new ItemStockReport($data), 'stock-item.xlsx');
+                return Excel::download(new ItemStockReport($data), "stockItem_{$this->timeStamp()}.xlsx");
             }
         }
 
@@ -1055,7 +1093,7 @@ class ReportController extends Controller
                     'data' => $records
                 ])->setPaper('a3', 'landscape');
 
-                return $pdf->download('ProductionReport.pdf');
+                return $pdf->download("ProductionReport_{$this->timeStamp()}.pdf");
             }
 
             // --- EXCEL EXPORT ---
@@ -1063,7 +1101,7 @@ class ReportController extends Controller
 
                 return Excel::download(
                     new ProductionReportExport($data['data']), // only query
-                    'ProductionReport.xlsx'
+                    "ProductionReport_{$this->timeStamp()}.xlsx"
                 );
             }
 
@@ -1080,81 +1118,6 @@ class ReportController extends Controller
             ]);
         }
     }
-
-
-
-
-    // public function getProductionReport(Request $request)
-    // {
-    //     if ($request->filled('export_type')) {
-
-    //         $data = $this->service->getProductionReport($request)['data']; // ✅ corrected
-
-    //         if ($request->export_type == 1) {
-    //             $pdf = Pdf::loadView('exports.production-report-pdf', ['data' => $data])
-    //                 ->setPaper('a3', 'landscape');
-    //             return $pdf->download('production-report-pdf.pdf');
-    //         }
-
-    //         if ($request->export_type == 2) {
-    //             return Excel::download(new ProductionReportExport($data), 'production-report.xlsx');
-    //         }
-    //     }
-    //     $getProjectName = Business::whereNotNull('project_name')
-    //         ->where('is_deleted', 0)
-    //         ->where('is_active', 1)
-    //         ->pluck('project_name', 'id');
-    //     // If no export type, show the view with data (optional: fetch data for initial load)
-    //     $data = $this->service->getProductionReport($request)['data'] ?? [];
-    //     return view('organizations.report.production-report', compact('data', 'getProjectName'));
-    // }
-    // public function getProductionReportAjax(Request $request)
-    // {
-    //     try {
-    //         $response = $this->service->getProductionReport($request);
-
-    //         if (isset($response['status']) && $response['status'] === false) {
-    //             return response()->json([
-    //                 'status' => false,
-    //                 'message' => $response['message']
-    //             ]);
-    //         }
-
-    //         return response()->json([
-    //             'status' => true,
-    //             'data' => $response['data'],
-    //             'pagination' => $response['pagination']
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['status' => false, 'message' => $e->getMessage()]);
-    //     }
-    // }
-    // public function listStockDailyReport(Request $request)
-    // {
-    //     if ($request->filled('export_type')) {
-    //         $data = $this->service->listStockDailyReport($request)['data'];
-
-    //         if ($request->export_type == 1) {
-    //             $pdf = Pdf::loadView('exports.item-stock-report-pdf', ['data' => $data])
-    //                 ->setPaper('a3', 'landscape');
-    //             return $pdf->download('item-stock-report-pdf.pdf');
-    //         }
-
-    //         if ($request->export_type == 2) {
-    //             return Excel::download(new ItemStockReportExport($data), 'item-stock-report-pdf.xlsx');
-    //         }
-    //     }
-
-    //     $getPartItemName = PartItem::whereNotNull('description')
-    //     ->where('is_deleted', 0)
-    //     ->where('is_active', 1)
-    //     ->pluck('description', 'id');
-
-    //     // If no export type, show the view with data (optional: fetch data for initial load)
-    //     $data = $this->service->listStockDailyReport($request)['data'] ?? [];
-
-    //     return view('organizations.report.item-stock-report', compact('data', 'getPartItemName'));
-    // }
     public function listStockDailyReport(Request $request)
     {
         // First get full response from service
@@ -1176,14 +1139,14 @@ class ReportController extends Controller
                     'totals' => $totals
                 ])->setPaper('a3', 'landscape');
 
-                return $pdf->download('item-stock-report.pdf');
+                return $pdf->download("ItemStockReport_{$this->timeStamp()}.pdf");
             }
 
             // ---- EXCEL EXPORT ----
             if ($request->export_type == 2) {
                 return Excel::download(
                     new ItemStockReportExport($response['data'], $response['totals']),
-                    'item-stock-report.xlsx'
+                    "ItemStockReport_{$this->timeStamp()}.xlsx"
                 );
             }
         }
@@ -1223,8 +1186,6 @@ class ReportController extends Controller
             return response()->json(['status' => false, 'message' => $e->getMessage()]);
         }
     }
-
-
     public function listItemWiseVendorRateReport(Request $request)
     {
         // First get full response from service
@@ -1246,12 +1207,12 @@ class ReportController extends Controller
                     // 'totals' => $totals
                 ])->setPaper('a3', 'landscape');
 
-                return $pdf->download('item-wise-vendor-rate-report-pdf.pdf');
+                return $pdf->download("ItemWiseVendorRateReport_{$this->timeStamp()}.pdf");
             }
 
             if ($request->export_type == 2) {
                 $data = $response['data'] ?? collect();
-                return Excel::download(new ItemWiseVendorRateReportExport($data), 'Item-wise-vendor-rate-report.xlsx');
+                return Excel::download(new ItemWiseVendorRateReportExport($data), "ItemWiseVendorRateReport_{$this->timeStamp()}.xlsx");
             }
         }
 

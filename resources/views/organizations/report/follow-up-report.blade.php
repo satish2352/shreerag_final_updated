@@ -73,7 +73,7 @@
         </div>
 
         <div class="row mb-2">
-            <div class="col-md-6">
+            <div class="col-md-6 d-flex justify-content-center">
                 <button type="submit" class="btn btn-primary filterbg">Filter</button>
                  <button type="button" class="btn btn-secondary ms-2" id="resetFilters" style="margin-left: 10px;">
         Reset
@@ -81,7 +81,7 @@
             </div>
             <div class="col-md-6 text-end d-flex">
                 <input type="text" class="form-control me-2" id="searchKeyword" placeholder="Search...">
-                <div class="dropdown">
+                <div class="dropdown ml-2">
                     <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown">
                         <i class="fa fa-download"></i> Export
                     </button>

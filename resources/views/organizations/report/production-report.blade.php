@@ -106,27 +106,23 @@
                                         <div class="col-md-6 text-end d-flex">
                                             <input type="text" class="form-control d-flex align-self-center"
                                                 id="searchKeyword" style="margin-right: 23px;" placeholder="Search...">
+
+                                                <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                            id="exportDropdown" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-download"></i> Export
+                        </button>
+
+                        <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                            <li><a class="dropdown-item" href="#" id="exportExcel">Export to Excel</a></li>
+                            <li><a class="dropdown-item" href="#" id="exportPdf">Export to PDF</a></li>
+                        </ul>
+                    </div>
                                           
 
                                         </div>
                                         
-                                    </div>
-
-                                    <div class="row my-2 ">
-                                              <div class="col-md-6 d-flex justify-content-center">
-                         <div class="dropdown">
-    <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-        id="exportDropdown" data-toggle="dropdown" aria-expanded="false">
-        <i class="fa fa-download"></i> Export
-    </button>
-
-    <ul class="dropdown-menu" aria-labelledby="exportDropdown">
-        <li><a class="dropdown-item" href="#" id="exportExcel">Export to Excel</a></li>
-        <li><a class="dropdown-item" href="#" id="exportPdf">Export to PDF</a></li>
-    </ul>
-</div>
-</div>
-</div>
+                                    </div>                                 
                                 </form>
 
 

@@ -121,3 +121,37 @@ if (!function_exists('yearOptions')) {
         return $years;
     }
 }
+
+if (!function_exists('applyExcelCommonStyles')) {
+
+    function applyExcelCommonStyles($sheet, $headings, $dataCount)
+    {
+        // Number of columns (ex: 5 → A–E)
+        $columnCount = count($headings);
+        $lastColumn = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnCount);
+
+        // Bold headings
+        $sheet->getStyle("A1:{$lastColumn}1")->getFont()->setBold(true);
+
+        // Center align headings
+        $sheet->getStyle("A1:{$lastColumn}1")->getAlignment()->setHorizontal('center');
+
+        // Auto wrap text
+        $sheet->getStyle("A1:{$lastColumn}" . ($dataCount + 1))
+            ->getAlignment()->setWrapText(true);
+
+        // Apply border to all cells
+        $sheet->getStyle("A1:{$lastColumn}" . ($dataCount + 1))
+            ->applyFromArray([
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                        'color' => ['argb' => '000000'],
+                    ],
+                ],
+            ]);
+
+        return true;
+    }
+}
+

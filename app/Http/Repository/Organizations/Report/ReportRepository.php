@@ -383,6 +383,142 @@ class ReportRepository
         }
     }
 
+   public function getEstimationReport(Request $request)
+{
+    try {
+        $array_to_be_check = config('constants.ESTIMATION_DEPARTMENT.UPDATED_ACCEPTED_BOM_SEND_TO_PRODUCTION');
+
+        $data_output = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
+                $join->on('business_application_processes.business_id', '=', 'businesses.id');
+            })
+            ->leftJoin('businesses_details', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+            })
+            ->leftJoin('designs', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+            })
+            ->leftJoin('estimation', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
+            })
+            ->leftJoin('design_revision_for_prod', function ($join) {
+                $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+            })
+            ->where('business_application_processes.estimation_send_to_production', $array_to_be_check)
+            ->where('businesses.is_active', true)
+            ->where('businesses.is_deleted', 0);
+
+        // 🔍 Search filter
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $data_output->where(function ($q) use ($search) {
+                $q->where('businesses.project_name', 'like', "%{$search}%")
+                    ->orWhere('businesses.customer_po_number', 'like', "%{$search}%")
+                    ->orWhere('businesses_details.product_name', 'like', "%{$search}%");
+            });
+        }
+
+        // 🔍 Project name filter
+        if ($request->filled('project_name')) {
+            $data_output->where('businesses.id', $request->project_name);
+        }
+
+         if ($request->filled('business_details_id')) {
+    $data_output->where('business_application_processes.business_details_id', $request->business_details_id);
+}
+
+        // 🔍 Date filters
+        if ($request->filled('from_date')) {
+            $from = Carbon::parse($request->from_date)->startOfDay();
+            $data_output->where('production.updated_at', '>=', $from);
+        }
+
+        if ($request->filled('to_date')) {
+            $to = Carbon::parse($request->to_date)->endOfDay();
+            $data_output->where('production.updated_at', '<=', $to);
+        }
+
+        if ($request->filled('year')) {
+            $data_output->whereYear('production.updated_at', $request->year);
+        }
+
+        if ($request->filled('month')) {
+            $data_output->whereMonth('production.updated_at', $request->month);
+        }
+
+        // 🔍 Production status filter
+        if ($request->filled('production_status_id')) {
+            $statusIds = explode(',', $request->production_status_id);
+            $data_output->whereIn('business_application_processes.production_status_id', $statusIds);
+        }
+
+        // 🎯 Final Select
+        $data_output->select(
+            'businesses.id',
+            'businesses.project_name',
+            'businesses.customer_po_number',
+            'businesses.title',
+            'businesses.remarks',
+            'estimation.updated_at',
+
+            DB::raw('MAX(businesses_details.product_name) as product_name'),
+            DB::raw('MAX(businesses_details.quantity) as quantity'),
+            DB::raw('MAX(businesses_details.description) as description'),
+
+            DB::raw('MAX(design_revision_for_prod.bom_image) as bom_image'),
+            DB::raw('MAX(designs.design_image) as design_image'),
+
+            'estimation.total_estimation_amount'
+        )
+        ->groupBy(
+            'businesses.id',
+            'businesses.project_name',
+            'businesses.customer_po_number',
+            'businesses.title',
+            'businesses.remarks',
+            'estimation.updated_at',
+            'estimation.total_estimation_amount'
+        )
+        ->orderBy('estimation.updated_at', 'desc');
+
+        // ⬇ EXPORT (no pagination)
+        if ($request->filled('export_type')) {
+            return [
+                'data' => $data_output->get(),
+                'pagination' => null,
+            ];
+        }
+
+        // ⬇ PAGINATION
+        $perPage = $request->input('pageSize', 10);
+        $currentPage = $request->input('currentPage', 1);
+
+        $totalItems = (clone $data_output)->count();
+
+        $data = (clone $data_output)
+            ->skip(($currentPage - 1) * $perPage)
+            ->take($perPage)
+            ->get();
+
+        return [
+            'data' => $data,
+            'pagination' => [
+                'currentPage' => $currentPage,
+                'pageSize' => $perPage,
+                'totalItems' => $totalItems,
+                'totalPages' => ceil($totalItems / $perPage),
+                'from' => ($currentPage - 1) * $perPage + 1,
+                'to' => (($currentPage - 1) * $perPage) + count($data),
+            ]
+        ];
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => false,
+            'message' => $e->getMessage()
+        ]);
+    }
+}
+
     public function getProductionReport($request)
     {
         try {
@@ -1691,7 +1827,7 @@ class ReportRepository
                 })
                 ->whereIn('tcqt1.quantity_tracking_status', $array_to_be_quantity_tracking)
                 ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
-                ->where('bap1.off_canvas_status', 22)
+                ->where('bap1.off_canvas_status', 23)
                 ->where('businesses.is_active', true)
                 ->where('businesses.is_deleted', 0);
             // 🔍 Search filter

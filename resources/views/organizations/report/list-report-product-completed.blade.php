@@ -16,7 +16,7 @@
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
 
-       <form id="filterForm" method="GET" action="{{ route('list-product-completed-report') }}">
+       <form id="filterForm" method="GET" action="{{ route('list-product-completed-report-ajax') }}">
 
      <input type="hidden" name="export_type" id="export_type" />
       

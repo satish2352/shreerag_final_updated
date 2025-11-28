@@ -207,7 +207,7 @@
 
 
 
-                        tbody.innerHTML = rows || '<tr><td colspan="6">No records found.</td></tr>';
+                        tbody.innerHTML = rows || '<tr><td colspan="14">No records found.</td></tr>';
 
                         // Pagination
                         let pagHtml = '',

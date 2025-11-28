@@ -7,19 +7,19 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Completed Product Fianance to Dispatch Report</h1>
+                                <h1>Estimation Report</h1>
 
                             </div>
                         </div>
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
 
-                                <form id="filterForm" method="GET" action="{{ route('finance-ajax') }}" target="_blank">
+                                <form id="filterForm" method="GET" action="{{ route('estimation-report-ajax') }}" target="_blank">
 
                                     <input type="hidden" name="export_type" id="export_type" />
 
                                     <div class="row mb-3">
-                                        <div class="col-md-2">
+                                        <div class="col-md-3">
                                             <label>Project Name</label>
                                             <select class="form-control select2" name="project_name" id="project_name">
                                                 <option value="">All Projects</option>
@@ -29,7 +29,7 @@
                                             </select>
                                         </div>
 
-                                        <div class="col-md-2">
+                                        <div class="col-md-3">
                                             <label>Product Name</label>
                                             <select class="form-control select2" name="business_details_id"
                                                 id="business_details_id">
@@ -37,7 +37,7 @@
                                                 {{-- Product options will be populated via JS --}}
                                             </select>
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-3">
                                             <label>Year</label>
                                             <select name="year" class="form-control">
                                                 <option value="">All</option>
@@ -46,7 +46,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-3">
                                             <label>Month</label>
                                             <select name="month" class="form-control">
                                                 <option value="">All</option>
@@ -56,15 +56,26 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-md-2">
+
+
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
                                             <label>From Date</label>
                                             <input type="date" name="from_date" class="form-control">
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-3">
                                             <label>To Date</label>
                                             <input type="date" name="to_date" class="form-control">
                                         </div>
+
+                                        <div class="col-md-3">
+                                            <label>Total Records</label>
+                                            <div> <span id="totalCount">0</span></div>
+                                        </div>
                                     </div>
+
+                                    {{-- 🔹 Search and Export --}}
                                     <div class="row mb-2">
                                         <div class="col-md-6 d-flex justify-content-center">
 
@@ -106,23 +117,18 @@
                                         <thead>
                                             <tr>
 
-                                                <th data-field="id">ID</th>
-                                                <th data-field="updated_at" data-editable="false">Sent Date</th>
+                                               <th data-field="id">ID</th>
+                                                <th data-field="date" data-editable="false">Sent Date</th>
                                                 <th data-field="project_name" data-editable="false">Project Name</th>
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
-                                                <th data-field="title" data-editable="false">customer Name</th>
+                                                <th data-field="purchase_id" data-editable="false">Remark</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
-                                                <th data-field="completed_quantity" data-editable="false">Completed
-                                                    Production</th>
-                                                <th data-field="remaining_quantity" data-editable="false">Balance Quantity
-                                                </th>
-                                                <th data-field="from_place" data-editable="false">Form Place</th>
-                                                <th data-field="to_place" data-editable="false">To Place</th>
-                                                <th data-field="transport_name" data-editable="false">Transport Name</th>
-                                                <th data-field="vehicle_name" data-editable="false">Vehicle Type</th>
-                                                <th data-field="truck_no" data-editable="false">Truck No.</th>
-
+                                                <th data-field="description" data-editable="false">Description</th>
+                                                <th data-field="design_image" data-editable="false">Design Layout</th>
+                                                <th data-field="bom_image" data-editable="false">Estimated BOM</th>
+                                                <th data-field="total_estimation_amount" data-editable="false">Total
+                                                    Estimation Amount</th>
 
                                             </tr>
                                         </thead>
@@ -152,19 +158,12 @@
             </div>
         </div>
     </div>
-    <?php
-    // dd($data);
-    // die();
-    ?>
-    <script>
-        window.APP_URL = "{{ config('app.url') }}";
-    </script>
-
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
         let currentPage = 1,
             pageSize = 10;
 
-
+      
 
         function fetchReport(reset = false) {
             if (reset) currentPage = 1;
@@ -178,41 +177,50 @@
             const params = new URLSearchParams();
             formData.forEach((val, key) => params.append(key, val));
 
-            fetch(`{{ route('finance-ajax') }}?${params.toString()}`)
+            fetch(`{{ route('estimation-report-ajax') }}?${params.toString()}`)
                 .then(res => res.json())
                 .then(res => {
                     const tbody = document.getElementById('reportBody');
                     const pagLinks = document.getElementById('paginationLinks');
                     const pagInfo = document.getElementById('paginationInfo');
 
-                    if (res.status && Array.isArray(res.data)) {
-
+                    if (res.status) {
+                        document.getElementById('totalCount').innerText = res.pagination.totalItems || 0;
                         const rows = res.data.map((item, i) => {
+                            const designImage = item.design_image ?
+                                `<a class="img-size" target="_blank" href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}${item.design_image}">Click to view</a>` :
+                                '-';
+
+                            const bomImage = item.bom_image ?
+                                `<a class="img-size" target="_blank" href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}${item.bom_image}">Click to download</a>` :
+                                '-';
+
+                            const reDesignImage = item.reject_reason_prod && item.re_design_image ?
+                                `<a class="img-size" target="_blank" href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}${item.re_design_image}">Click to view</a>` :
+                                '-';
+
+                            const reBomImage = item.reject_reason_prod && item.re_bom_image ?
+                                `<a class="img-size" target="_blank" href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}${item.re_bom_image}">Click to download</a>` :
+                                '-';
 
                             return `
         <tr>
             <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
             <td>${item.updated_at ? new Date(item.updated_at).toLocaleDateString('en-IN') : '-'}</td>
-            <td>${item.project_name ?? '-'}</td>
-            <td>${item.customer_po_number ?? '-'}</td>
-            <td>${item.title ?? '-'}</td>
-            <td>${item.product_name ?? '-'}</td>
-             <td>${item.quantity ?? '-'}</td>
-            <td>${item.completed_quantity ?? '-'}</td>
-             <td>${item.remaining_quantity ?? '-'}</td>
-            <td>${item.from_place ?? '-'}</td>
-             <td>${item.to_place ?? '-'}</td>
-             <td>${item.transport_name ?? '-'}</td>
-            <td>${item.vehicle_name ?? '-'}</td>
-            <td>${item.truck_no ?? '-'}</td>
-          
+            
+            <td>${item.project_name || '-'}</td>
+            <td>${item.customer_po_number || '-'}</td>
+            <td>${item.remark || '-'}</td>
+            <td>${item.product_name || '-'}</td>
+            <td>${item.quantity || '-'}</td>
+            <td>${item.description || '-'}</td>
+            <td>${item.bom_image || '-'}</td>
+            <td>${item.design_image || '-'}</td>
+            <td>${item.total_estimation_amount || '-'}</td>
         </tr>
     `;
                         }).join('');
-
-
-
-                        tbody.innerHTML = rows || '<tr><td colspan="14">No records found.</td></tr>';
+                        tbody.innerHTML = rows || '<tr><td colspan="11">No records found.</td></tr>';
 
                         // Pagination
                         let pagHtml = '',
@@ -264,33 +272,34 @@
         // Initial load
         fetchReport(true);
     </script>
+
     <script>
-        document.getElementById('project_name').addEventListener('change', function() {
-            let projectId = this.value;
-            let productSelect = document.getElementById('business_details_id'); // ✅ must match the ID
+    document.getElementById('project_name').addEventListener('change', function () {
+        let projectId = this.value;
+        let productSelect = document.getElementById('business_details_id'); // ✅ must match the ID
 
-            // Clear options
-            productSelect.innerHTML = '<option value="">All Product Name</option>';
+        // Clear options
+        productSelect.innerHTML = '<option value="">All Product Name</option>';
 
-            if (!projectId) return;
+        if (!projectId) return;
 
-            let url = '{{ url('designdept/get-products-by-project') }}/' + projectId;
+        let url = '{{ url("designdept/get-products-by-project") }}/' + projectId;
 
-            fetch(url)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status) {
-                        data.products.forEach(product => {
-                            const option = document.createElement('option');
-                            option.value = product.id;
-                            option.textContent = product.name;
-                            productSelect.appendChild(option);
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error("Failed to load products:", error);
-                });
-        });
-    </script>
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                if (data.status) {
+                    data.products.forEach(product => {
+                        const option = document.createElement('option');
+                        option.value = product.id;
+                        option.textContent = product.name;
+                        productSelect.appendChild(option);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Failed to load products:", error);
+            });
+    });
+</script>
 @endsection

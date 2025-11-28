@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Exports;
 
 use Carbon\Carbon;
-use Exception;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
@@ -26,7 +25,7 @@ class ItemStockReportExport implements FromCollection, WithHeadings, WithStyles
 
         foreach ($this->data as $index => $item) {
 
-            // Proper date format
+            // Format date properly
             $formattedDate = $item->date
                 ? Carbon::parse($item->date)->format('d/m/Y h:i:s A')
                 : '-';
@@ -46,7 +45,7 @@ class ItemStockReportExport implements FromCollection, WithHeadings, WithStyles
             ]);
         }
 
-        // Add total row
+        // Add TOTAL row
         $rows->push([
             '',
             '',
@@ -73,8 +72,18 @@ class ItemStockReportExport implements FromCollection, WithHeadings, WithStyles
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->getStyle('A1:F1')->getFont()->setBold(true);  // header bold
-        $sheet->getStyle('A' . ($this->data->count() + 2) . ':F' . ($this->data->count() + 2))->getFont()->setBold(true); // total row bold
+        // USE HELPER FUNCTION FOR COMMON STYLING
+        applyExcelCommonStyles(
+            $sheet,
+            $this->headings(),
+            $this->data->count() + 1  // +1 because we also added TOTAL row
+        );
+
+        // Make TOTAL row bold
+        $totalRow = $this->data->count() + 2;
+        $sheet->getStyle("A{$totalRow}:F{$totalRow}")
+              ->getFont()
+              ->setBold(true);
 
         return [];
     }

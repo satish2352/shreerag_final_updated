@@ -28,7 +28,10 @@ class AllListController extends Controller
     {
         $this->service = new AllListServices();
     }
-
+      private function timeStamp()
+        {
+            return now()->format('Y-m-d_H-i-s');
+        }
     public function getAllListMaterialReceivedForPurchase()
     {
 
@@ -205,11 +208,11 @@ class AllListController extends Controller
 
             if ($request->export_type == 1) {
                 $pdf = Pdf::loadView('exports.purchase-report-pdf', ['data' => $data]);
-                return $pdf->download('purchase_report.pdf');
+                return $pdf->download("PurchaseReport_{$this->timeStamp()}.pdf");
             }
 
             if ($request->export_type == 2) {
-                return Excel::download(new PurchaseReportExport($data), 'purchase_report.xlsx');
+                return Excel::download(new PurchaseReportExport($data), "PurchaseReport_{$this->timeStamp()}.xlsx");
             }
         }
 
@@ -226,12 +229,12 @@ class AllListController extends Controller
                 $pdf = Pdf::loadView('exports.purchase_report', ['data' => $data['data']])
                     ->setPaper('a3', 'landscape'); // <-- Landscape
 
-                return $pdf->download('PurchaseReport.pdf');
+                return $pdf->download("PurchaseReport_{$this->timeStamp()}.pdf");
             }
 
             // Excel Export
             if ($request->filled('export_type') && $request->export_type == 2) {
-                return Excel::download(new PurchaseReportExport($data['data']), 'PurchaseReport.xlsx');
+                return Excel::download(new PurchaseReportExport($data['data']), "PurchaseReport_{$this->timeStamp()}.xlsx");
             }
 
             // Normal AJAX response
@@ -258,11 +261,11 @@ class AllListController extends Controller
             if ($request->export_type == 1) {
                 $pdf = Pdf::loadView('exports.party-wise-report', ['data' => $data])
                     ->setPaper('a3', 'landscape');
-                return $pdf->download('party-wise-report.pdf');
+                return $pdf->download("PartyWiseReport_{$this->timeStamp()}.pdf");
             }
 
             if ($request->export_type == 2) {
-                return Excel::download(new PurchasePartyReportExport($data), 'party-wise-report.xlsx');
+                return Excel::download(new PurchasePartyReportExport($data), "PartyWiseReport_{$this->timeStamp()}.xlsx");
             }
         }
 
@@ -305,11 +308,11 @@ class AllListController extends Controller
             if ($request->export_type == 1) {
                 $pdf = Pdf::loadView('exports.follow-up-report', ['data' => $data])
                     ->setPaper('a3', 'landscape');
-                return $pdf->download('follow-up-report.pdf');
+                return $pdf->download("FollowUpReport_{$this->timeStamp()}.pdf");
             }
 
             if ($request->export_type == 2) {
-                return Excel::download(new FollowUpReportExport($data), 'follow-up-report.xlsx');
+                return Excel::download(new FollowUpReportExport($data), "FollowUpReport_{$this->timeStamp()}.xlsx");
             }
         }
 

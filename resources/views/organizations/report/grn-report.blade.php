@@ -112,7 +112,7 @@
                                         <div class="col-md-6 d-flex justify-content-end align-items-center">
                                             <input type="text" class="form-control me-2" id="searchKeyword"
                                                 placeholder="Search...">
-                                            <div class="dropdown">
+                                            <div class="dropdown ml-2">
                                                 <button class="btn btn-outline-secondary dropdown-toggle" type="button"
                                                     id="exportDropdown" data-toggle="dropdown" aria-expanded="false">
                                                     <i class="fa fa-download"></i> Export

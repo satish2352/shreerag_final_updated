@@ -4,8 +4,17 @@ namespace App\Http\Controllers\Exports;
 
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ItemStockReport implements FromCollection, WithHeadings
+class ItemStockReport implements 
+    FromCollection, 
+    WithHeadings, 
+    WithMapping,
+    ShouldAutoSize,
+    WithStyles
 {
     protected $data;
 
@@ -16,23 +25,27 @@ class ItemStockReport implements FromCollection, WithHeadings
 
     public function collection()
     {
-        $serial = 1; // Start serial number
+        return $this->data;
+    }
 
-        return $this->data->map(function ($item) use (&$serial) {
-            return [
-                'serial_no'   => $serial++,
-                'updated_at'  => isset($item['updated_at'])
-                    ? date('d-m-Y H:i:s', strtotime($item['updated_at']))
-                    : '-',
-                'description' => $item['description'] ?? '-',
-                'quantity'    => $item['quantity'] ?? '-',
-                'unit_name'   => $item['unit_name'] ?? '-',
-                'hsn_name'    => $item['hsn_name'] ?? '-',
-                'group_name'  => $item['group_name'] ?? '-',
-                'rack_name'   => $item['rack_name'] ?? '-',
+    public function map($item): array
+    {
+        static $serial = 1;
 
-            ];
-        });
+        return [
+            $serial++,
+            isset($item['updated_at'])
+                ? date('d-m-Y H:i:s', strtotime($item['updated_at']))
+                : '-',
+
+            $item['description'] ?? '-',   // Item Name (Wrap this)
+
+            (string) ($item['quantity'] ?? '0'),
+            $item['unit_name'] ?? '-',
+            $item['hsn_name'] ?? '-',
+            $item['group_name'] ?? '-',
+            $item['rack_name'] ?? '-',
+        ];
     }
 
     public function headings(): array
@@ -46,7 +59,20 @@ class ItemStockReport implements FromCollection, WithHeadings
             'HSN Name',
             'Group Name',
             'Rack Name',
-
         ];
+    }
+
+    public function styles(Worksheet $sheet)
+    {
+        // Bold heading
+        $sheet->getStyle('A1:H1')->getFont()->setBold(true);
+
+        // Wrap text for Item Name column (Column C)
+        $sheet->getStyle('C')->getAlignment()->setWrapText(true);
+
+        // Auto row height for wrapping
+        foreach ($sheet->getRowDimensions() as $row) {
+            $row->setRowHeight(-1);
+        }
     }
 }
