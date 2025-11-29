@@ -166,26 +166,26 @@
 
     @push('scripts')
 <script>
-    $(document).ready(function() {
-        $('.delete-btn').click(function(e) {
-            e.preventDefault();
-            var url = $(this).data('url');
+    $(document).on('click', '.delete-btn', function(e) {
+        e.preventDefault();
 
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = url;
-                }
-            });
+        let form = $(this).closest("form");
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit(); // ✔ submit form properly
+            }
         });
     });
 </script>
+
    @endpush
 @endsection
