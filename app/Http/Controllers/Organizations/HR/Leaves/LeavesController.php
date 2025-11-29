@@ -185,8 +185,6 @@ class LeavesController extends Controller
 public function updateLabourStatus(Request $request)
 {
     try {
-        $leaves_id = $request->active_id;
-        $action = $request->action;
 
         $validator = Validator::make($request->all(), [
             'active_id' => 'required|exists:tbl_leaves,id',
@@ -194,18 +192,24 @@ public function updateLabourStatus(Request $request)
         ]);
 
         if ($validator->fails()) {
-            return back()->with('status', 'error')->with('msg', 'Validation failed');
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed'
+            ], 422);
         }
 
-        $leaves = Leaves::find($leaves_id);
+        $leaves_id = $request->active_id;
+        $action = $request->action;
 
+        $leaves = Leaves::find($leaves_id);
         $employeeId = $leaves->employee_id;
         $leaveType = $leaves->leave_type_id;
 
+        /* ---------------------- APPROVE LEAVE ---------------------- */
         if ($action === 'approve') {
 
-            if ($leaves->is_approved == '0') {
-                $leaves->is_approved = '2';
+            if ($leaves->is_approved == 0) {
+                $leaves->is_approved = 2;
 
                 $financialRecord = FinancialYearLeaveRecord::where('user_id', $employeeId)
                     ->where('leave_management_id', $leaveType)
@@ -216,33 +220,43 @@ public function updateLabourStatus(Request $request)
                     $financialRecord->save();
                 }
             } else {
-                $leaves->is_approved = '2';
+                $leaves->is_approved = 2;
             }
 
             $leaves->save();
 
-            return redirect('hr/list-leaves-approvedby-hr')
-                ->with('status', 'success')
-                ->with('msg', 'Leave approved successfully');
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Leave approved successfully',
+                'redirect' => url('hr/list-leaves-approvedby-hr')
+            ]);
         }
 
+        /* ---------------------- REJECT LEAVE ---------------------- */
         if ($action === 'notapprove') {
 
             if ($leaves->is_approved == 0 || $leaves->is_approved == 2) {
-                $leaves->is_approved = '1';
+                $leaves->is_approved = 1;
             }
 
             $leaves->save();
 
-            return redirect('hr/list-leaves-not-approvedby-hr')
-                ->with('status', 'success')
-                ->with('msg', 'Leave rejected successfully');
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Leave rejected successfully',
+                'redirect' => url('hr/list-leaves-not-approvedby-hr')
+            ]);
         }
 
     } catch (\Exception $e) {
-        return back()->with('status', 'error')->with('msg', 'Error: '.$e->getMessage());
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
     }
 }
+
 
     public function add()
     {

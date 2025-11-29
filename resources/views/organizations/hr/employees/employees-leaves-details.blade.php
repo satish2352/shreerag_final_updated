@@ -39,7 +39,7 @@
                                 <th>Total Leaves</th>
                                 <th>Total Leaves Taken</th>
                                 <th>Balance Leaves</th>
-                                <th>Month</th>
+                                {{-- <th>Month</th> --}}
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -58,7 +58,7 @@
                                                 <!-- Final Remaining Leaves -->
                                                 <td><b>{{ $leave->remaining_leaves ?? '0' }}</b></td>
 
-                                                <td>{{ $leave->month_name ?? '-' }}</td>
+                                                {{-- <td>{{ $leave->month_name ?? '-' }}</td> --}}
                                             </tr>
                                             @endforeach
 
