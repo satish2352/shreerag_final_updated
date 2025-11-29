@@ -1,6 +1,5 @@
 @extends('admin.layouts.master')
 @section('content')
-
 <div class="data-table-area mg-tb-15">
     <div class="container-fluid">
         <div class="row">
@@ -97,17 +96,12 @@
         </div>
     </div>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+@push('scripts')
 <script>
 $(document).ready(function() {
 
-
     function updateLeaveStatus(leaveId, action) {
-     
+
         $.ajax({
             url: "{{ route('update-status') }}",
             type: "POST",
@@ -117,18 +111,18 @@ $(document).ready(function() {
                 action: action
             },
             success: function(response) {
+
                 Swal.fire({
                     icon: 'success',
                     title: 'Success',
-                    text: 'Leave status updated successfully',
-                    timer: 1500,
+                    text: response.message,
+                    timer: 1200,
                     showConfirmButton: false
                 });
 
-                // Optionally remove the row from table after approval/not approval
-                $('#leave-row-' + leaveId).fadeOut(800, function() {
-                    $(this).remove();
-                });
+                setTimeout(function() {
+                    window.location.href = response.redirect;
+                }, 1200);
             },
             error: function(xhr) {
                 Swal.fire({
@@ -140,14 +134,18 @@ $(document).ready(function() {
         });
     }
 
-   $(document).on('click', '.approve-btn, .notapprove-btn', function() {
+    $(document).on('click', '.approve-btn, .notapprove-btn', function() {
+
         var leaveId = $(this).data('id');
         var action = $(this).data('action');
 
-        // Confirm before performing action
+        let message = action === "approve"
+                        ? "Do you want to approve this leave?"
+                        : "Do you want to reject this leave?";
+
         Swal.fire({
             title: 'Are you sure?',
-            text: "You are about to " + action + " this leave request.",
+            text: message,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -162,5 +160,100 @@ $(document).ready(function() {
 
 });
 </script>
+@endpush
+{{-- <script>
+$(document).ready(function() {
+
+
+  $(document).ready(function() {
+
+    function updateLeaveStatus(leaveId, action) {
+
+        $.ajax({
+            url: "{{ route('update-status') }}",
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                active_id: leaveId,
+                action: action
+            },
+            success: function(response) {
+
+                let msg = action === "approve" 
+                    ? "Leave approved successfully"
+                    : "Leave rejected successfully";
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: msg,
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+
+                $('#leave-row-' + leaveId).fadeOut(800, function() {
+                    $(this).remove();
+                });
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Something went wrong, please try again'
+                });
+            }
+        });
+    }
+
+    $(document).on('click', '.approve-btn, .notapprove-btn', function() {
+
+        var leaveId = $(this).data('id');
+        var action = $(this).data('action');
+
+        // Set message based on action
+        let message = action === "approve"
+                        ? "Do you want to approve this leave?"
+                        : "Do you want to reject this leave?";
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                updateLeaveStatus(leaveId, action);
+            }
+        });
+    });
+
+});
+
+
+   $(document).on('click', '.approve-btn, .notapprove-btn', function() {
+        var leaveId = $(this).data('id');
+        var action = $(this).data('action');
+
+        // Confirm before performing action
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to approve this leave?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                updateLeaveStatus(leaveId, action);
+            }
+        });
+    });
+
+});
+</script> --}}
 
 @endsection

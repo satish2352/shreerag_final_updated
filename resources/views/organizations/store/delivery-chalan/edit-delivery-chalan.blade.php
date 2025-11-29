@@ -51,7 +51,7 @@
                                                                             <label for="Service">Vendor Company
                                                                                 Name: <span
                                                                                     class="text-danger">*</span></label>
-                                                                            <select class="form-control mb-2"
+                                                                            <select class="form-control mb-2 select2"
                                                                                 name="vendor_id" id="vendor_id">
                                                                                 <option value="" default>Select
                                                                                     Vendor Company Name</option>
@@ -437,6 +437,12 @@
     @push('scripts')
     <script>
         $(document).ready(function() {
+               $('.select2').select2({
+                        width: '100%',
+                        placeholder: "Select Vendor",
+                        allowClear: true
+                    });
+
             $('.editdatetimepicker').datepicker({
                 format: 'yyyy-mm-dd',
                 autoclose: true,

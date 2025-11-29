@@ -620,7 +620,7 @@
                                     class="nav-item {{ Request::is('list-itemwise-vendor-rate-report') ? 'active' : '' }}">
                                     <a href="{{ route('list-itemwise-vendor-rate-report') }}"><i
                                             class="fa fa-clipboard-check icon-wrap"></i><span
-                                            class="mini-click-non">Material Vendor through Taken List</span></a>
+                                            class="mini-click-non">Vendor Part Item Rate List</span></a>
                                 </li>
 
                             </ul>

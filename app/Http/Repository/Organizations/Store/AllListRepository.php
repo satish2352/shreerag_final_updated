@@ -458,7 +458,7 @@ class AllListRepository
                     'grn_tbl.id',
                     'grn_tbl.grn_date',
                     'grn_tbl.grn_no_generate',
-                    'grn_tbl.bill_date',
+                    'grn_tbl.bill_no',
                     'business_application_processes.business_details_id',
                     'purchase_orders.purchase_orders_id',
                     'vendors.vendor_name',

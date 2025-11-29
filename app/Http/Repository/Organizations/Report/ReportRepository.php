@@ -2979,101 +2979,197 @@ class ReportRepository
         }
     }
 
-    public function listItemWiseVendorRateReport(Request $request)
-    {
-        try {
+    // public function listItemWiseVendorRateReport(Request $request)
+    // {
+    //     try {
 
-            $query = PurchaseOrdersModel::leftJoin('purchase_order_details', function ($join) {
+    //         $query = PurchaseOrdersModel::leftJoin('purchase_order_details', function ($join) {
+    //             $join->on('purchase_order_details.purchase_id', '=', 'purchase_orders.id');
+    //         })
+    //             ->leftJoin('grn_tbl', function ($join) {
+    //                 $join->on('grn_tbl.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id');
+    //             })
+    //             ->leftJoin('tbl_part_item', function ($join) {
+    //                 $join->on('purchase_order_details.part_no_id', '=', 'tbl_part_item.id');
+    //             })
+    //             ->leftJoin('vendors', function ($join) {
+    //                 $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
+    //             })
+    //             ->where('purchase_orders.is_active', true)
+    //             ->where('purchase_orders.is_deleted', 0);
+
+    //         if ($request->filled('search')) {
+    //             $search = $request->search;
+    //             $query->where(function ($q) use ($search) {
+    //                 $q->where('purchase_orders.purchase_orders_id', 'like', "%{$search}%")
+    //                     ->orWhere('vendors.name', 'like', "%{$search}%")
+    //                      ->orWhere('tbl_part_item.description', 'like', "%{$search}%")
+    //                     ->orWhere('purchase_order_details.rate', 'like', "%{$search}%");
+    //             });
+    //         }
+
+    //         // 📁 Filter by Project
+    //         if ($request->filled('description')) {
+    //             $query->where('tbl_part_item.id', $request->description);
+    //         }
+
+    //         // 🗓️ Date filters
+    //         if ($request->filled('from_date')) {
+    //             $query->whereDate('purchase_order_details.updated_at', '>=', $request->from_date);
+    //         }
+
+    //         if ($request->filled('to_date')) {
+    //             $query->whereDate('purchase_order_details.updated_at', '<=', $request->to_date);
+    //         }
+
+    //         if ($request->filled('year')) {
+    //             $query->whereYear('purchase_order_details.updated_at', $request->year);
+    //         }
+
+    //         if ($request->filled('month')) {
+    //             $query->whereMonth('purchase_order_details.updated_at', $request->month);
+    //         }
+
+    //         // 🔽 Select columns
+    //         $query->select(
+    //             'purchase_orders.purchase_orders_id',
+    //             'tbl_part_item.description',
+    //             'vendors.vendor_name',
+    //             'vendors.vendor_company_name',
+    //             'purchase_order_details.rate',
+    //             'grn_tbl.updated_at',
+
+    //         )
+    //             ->orderBy('purchase_order_details.updated_at', 'desc')
+    //             ->get();
+
+
+    //         // 📤 Export full data (PDF/Excel)
+    //         if ($request->filled('export_type')) {
+    //             return [
+    //                 'data' => $query->get(),
+    //                 'pagination' => null
+    //             ];
+    //         }
+
+    //         // 📄 Pagination setup
+    //         $perPage = $request->input('pageSize', 10);
+    //         $currentPage = $request->input('currentPage', 1);
+    //         $totalItems = (clone $query)->count();
+
+    //         $data = (clone $query)
+    //             ->skip(($currentPage - 1) * $perPage)
+    //             ->take($perPage)
+    //             ->get();
+
+    //         return [
+    //             'data' => $data,
+    //             'pagination' => [
+    //                 'currentPage' => $currentPage,
+    //                 'pageSize' => $perPage,
+    //                 'totalItems' => $totalItems,
+    //                 'totalPages' => ceil($totalItems / $perPage),
+    //                 'from' => ($currentPage - 1) * $perPage + 1,
+    //                 'to' => (($currentPage - 1) * $perPage) + count($data),
+    //             ]
+    //         ];
+    //     } catch (\Exception $e) {
+    //         throw $e; // ✅ Let the controller catch and respond
+    //     }
+    // }
+    public function listItemWiseVendorRateReport(Request $request)
+{
+    try {
+
+        $query = PurchaseOrdersModel::leftJoin('purchase_order_details', function ($join) {
                 $join->on('purchase_order_details.purchase_id', '=', 'purchase_orders.id');
             })
-                ->leftJoin('grn_tbl', function ($join) {
-                    $join->on('grn_tbl.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id');
-                })
-                ->leftJoin('tbl_part_item', function ($join) {
-                    $join->on('purchase_order_details.part_no_id', '=', 'tbl_part_item.id');
-                })
-                ->leftJoin('vendors', function ($join) {
-                    $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
-                })
-                ->where('purchase_orders.is_active', true)
-                ->where('purchase_orders.is_deleted', 0);
+            ->leftJoin('grn_tbl', function ($join) {
+                $join->on('grn_tbl.purchase_orders_id', '=', 'purchase_orders.id');
+            })
+            ->leftJoin('tbl_part_item', function ($join) {
+                $join->on('purchase_order_details.part_no_id', '=', 'tbl_part_item.id');
+            })
+            ->leftJoin('vendors', function ($join) {
+                $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
+            })
+            ->where('purchase_orders.is_active', true)
+            ->where('purchase_orders.is_deleted', 0);
 
-            if ($request->filled('search')) {
-                $search = $request->search;
-                $query->where(function ($q) use ($search) {
-                    $q->where('purchase_orders.purchase_orders_id', 'like', "%{$search}%")
-                        ->orWhere('vendors.name', 'like', "%{$search}%")
-                        ->orWhere('purchase_order_details.rate', 'like', "%{$search}%");
-                });
-            }
+        // 🔍 Search
+        if ($request->filled('search')) {
+            $search = $request->search;
 
-            // 📁 Filter by Project
-            if ($request->filled('description')) {
-                $query->where('tbl_part_item.id', $request->description);
-            }
-
-            // 🗓️ Date filters
-            if ($request->filled('from_date')) {
-                $query->whereDate('purchase_order_details.updated_at', '>=', $request->from_date);
-            }
-
-            if ($request->filled('to_date')) {
-                $query->whereDate('purchase_order_details.updated_at', '<=', $request->to_date);
-            }
-
-            if ($request->filled('year')) {
-                $query->whereYear('purchase_order_details.updated_at', $request->year);
-            }
-
-            if ($request->filled('month')) {
-                $query->whereMonth('purchase_order_details.updated_at', $request->month);
-            }
-
-            // 🔽 Select columns
-            $query->select(
-                'purchase_orders.purchase_orders_id',
-                'tbl_part_item.description',
-                'vendors.vendor_name',
-                'vendors.vendor_company_name',
-                'purchase_order_details.rate',
-                'grn_tbl.updated_at',
-
-            )
-                ->orderBy('purchase_order_details.updated_at', 'desc')
-                ->get();
-
-
-            // 📤 Export full data (PDF/Excel)
-            if ($request->filled('export_type')) {
-                return [
-                    'data' => $query->get(),
-                    'pagination' => null
-                ];
-            }
-
-            // 📄 Pagination setup
-            $perPage = $request->input('pageSize', 10);
-            $currentPage = $request->input('currentPage', 1);
-            $totalItems = (clone $query)->count();
-
-            $data = (clone $query)
-                ->skip(($currentPage - 1) * $perPage)
-                ->take($perPage)
-                ->get();
-
-            return [
-                'data' => $data,
-                'pagination' => [
-                    'currentPage' => $currentPage,
-                    'pageSize' => $perPage,
-                    'totalItems' => $totalItems,
-                    'totalPages' => ceil($totalItems / $perPage),
-                    'from' => ($currentPage - 1) * $perPage + 1,
-                    'to' => (($currentPage - 1) * $perPage) + count($data),
-                ]
-            ];
-        } catch (\Exception $e) {
-            throw $e; // ✅ Let the controller catch and respond
+            $query->where(function ($q) use ($search) {
+                $q->where('tbl_part_item.description', 'like', "%{$search}%")   // Item Name
+                    ->orWhere('tbl_part_item.part_number', 'like', "%{$search}%")
+                    ->orWhere('vendors.vendor_name', 'like', "%{$search}%")
+                    ->orWhere('vendors.vendor_company_name', 'like', "%{$search}%")
+                    ->orWhere('purchase_order_details.rate', 'like', "%{$search}%");
+            });
         }
+
+        // 📅 Date Filters
+        if ($request->filled('from_date')) {
+            $query->whereDate('purchase_order_details.updated_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('purchase_order_details.updated_at', '<=', $request->to_date);
+        }
+
+        if ($request->filled('year')) {
+            $query->whereYear('purchase_order_details.updated_at', $request->year);
+        }
+
+        if ($request->filled('month')) {
+            $query->whereMonth('purchase_order_details.updated_at', $request->month);
+        }
+
+        // 🔽 Select Fields
+        $query->select(
+            'grn_tbl.updated_at',
+            'tbl_part_item.description',
+            'vendors.vendor_name',
+            'vendors.vendor_company_name',
+            'purchase_order_details.rate'
+        )
+        ->orderBy('grn_tbl.updated_at', 'desc');
+
+        // Export
+        if ($request->filled('export_type')) {
+            return [
+                'data' => $query->get(),
+                'pagination' => null
+            ];
+        }
+
+        // Pagination
+        $perPage = $request->input('pageSize', 10);
+        $currentPage = $request->input('currentPage', 1);
+
+        $totalItems = (clone $query)->count();
+
+        $data = (clone $query)
+            ->skip(($currentPage - 1) * $perPage)
+            ->take($perPage)
+            ->get();
+
+        return [
+            'data' => $data,
+            'pagination' => [
+                'currentPage' => $currentPage,
+                'pageSize' => $perPage,
+                'totalItems' => $totalItems,
+                'totalPages' => ceil($totalItems / $perPage),
+                'from' => ($currentPage - 1) * $perPage + 1,
+                'to' => (($currentPage - 1) * $perPage) + count($data),
+            ]
+        ];
+
+    } catch (\Exception $e) {
+        throw $e;
     }
+}
+
 }

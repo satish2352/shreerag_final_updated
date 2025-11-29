@@ -63,7 +63,7 @@
                                                     <td>{{ ucwords($data->grn_no_generate) }}</td>
                                                     <td>{{ ucwords($data->vendor_name) }}</td>
                                                     <td>{{ ucwords($data->grn_date) }}</td>
-                                                    <td>{{ ucwords($data->bill_date) }}</td>
+                                                    <td>{{ ucwords($data->bill_no) }}</td>
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
                                                             <a

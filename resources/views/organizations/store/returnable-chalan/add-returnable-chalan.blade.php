@@ -52,7 +52,7 @@
                                                                 <div class="form-group">
                                                                     <label for="vendor_id">Vendor Company Name <span
                                                                             class="text-danger">*</span></label>
-                                                                    <select class="form-control mb-2" name="vendor_id"
+                                                                    <select class="form-control mb-2 select2" name="vendor_id"
                                                                         id="vendor_id">
                                                                         <option value="">Select Vendor</option>
                                                                         @foreach ($dataOutputVendor as $data)
@@ -453,7 +453,12 @@
     @push('scripts') 
     <script>
         $(document).ready(function() {
-
+ 
+               $('.select2').select2({
+                        width: '100%',
+                        placeholder: "Select Vendor",
+                        allowClear: true
+                    });
             /* -----------------------------------------
                1. Custom Dropdown with Search
             ----------------------------------------- */

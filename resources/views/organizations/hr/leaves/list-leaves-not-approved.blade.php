@@ -1,25 +1,5 @@
 @extends('admin.layouts.master')
 @section('content')
-<style>
-    .fixed-table-loading {
-        display: none;
-    }
-    #table thead th {
-        white-space: nowrap;
-    }
-    #table thead th {
-        width: 300px !important;
-        padding-right: 49px !important;
-        padding-left: 20px !important;
-    }
-    .custom-datatable-overright table tbody tr td {
-        padding-left: 19px !important;
-        padding-right: 5px !important;
-        font-size: 14px;
-        text-align: left;
-    }
-</style>
-
 <div class="data-table-area mg-tb-15">
     <div class="container-fluid">
         <div class="row">
@@ -121,17 +101,24 @@
     <input type="hidden" name="action" id="action" value="">
 </form>
 
- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  @push('scripts')  
 <script>
-    $(document).ready(function() {
-               $(document).on('click', '.approve-btn, .notapprove-btn', function() {
-            var leaveId = $(this).data('id');
-            var action = $(this).data('action');
-            $("#active_id").val(leaveId);
-            $("#action").val(action);
-            $("#activeform").submit();
-        });
+$(document).ready(function() {
+
+    $(document).on('click', '.approve-btn, .notapprove-btn', function () {
+
+        var leaveId = $(this).data('id');
+        var action = $(this).data('action');
+
+        $("#active_id").val(leaveId);
+        $("#action").val(action);
+
+        $("#activeform").submit();
     });
+
+});
 </script>
+
+@endpush
+
 @endsection

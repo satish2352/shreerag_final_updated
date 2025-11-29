@@ -33,7 +33,7 @@
                                                                 <div class="col-lg-4 col-md-4 col-sm-4">
                                                                     <div class="form-group">
                                                                         <label for="vendor_id">Vendor</label>
-                                                                        <select class="form-control" id="vendor_id"
+                                                                        <select class="form-control select2" id="vendor_id"
                                                                             name="vendor_id">
                                                                             <option value="" default>Select Vendor
                                                                             </option>
@@ -419,6 +419,12 @@
     </script>
     <script>
         $(document).ready(function() {
+
+               $('.select2').select2({
+                        width: '100%',
+                        placeholder: "Select Vendor",
+                        allowClear: true
+                    });
             const poDropdown = $('#business_id');
             let preselectedPoId = poDropdown.val(); // Get the preselected PO ID (if any)
 
