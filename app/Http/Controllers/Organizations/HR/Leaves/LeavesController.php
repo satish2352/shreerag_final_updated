@@ -204,8 +204,8 @@ public function updateLabourStatus(Request $request)
 
         if ($action === 'approve') {
 
-            if ($leaves->is_approved == 0) {
-                $leaves->is_approved = 2;
+            if ($leaves->is_approved == '0') {
+                $leaves->is_approved = '2';
 
                 $financialRecord = FinancialYearLeaveRecord::where('user_id', $employeeId)
                     ->where('leave_management_id', $leaveType)
@@ -216,7 +216,7 @@ public function updateLabourStatus(Request $request)
                     $financialRecord->save();
                 }
             } else {
-                $leaves->is_approved = 2;
+                $leaves->is_approved = '2';
             }
 
             $leaves->save();
@@ -229,7 +229,7 @@ public function updateLabourStatus(Request $request)
         if ($action === 'notapprove') {
 
             if ($leaves->is_approved == 0 || $leaves->is_approved == 2) {
-                $leaves->is_approved = 1;
+                $leaves->is_approved = '1';
             }
 
             $leaves->save();
