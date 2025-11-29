@@ -28,7 +28,7 @@
             position: absolute;
             top: 50%;
             right: 10px;
-            transform: translateY(-50%);
+            transform: translateY(-80%);
             pointer-events: none;
             z-index: 10;
         }
@@ -104,6 +104,37 @@
         .ui-datepicker table tr th {
             border: none !important;
         }
+
+        /* Fix calendar icon height issue */
+.calendar-icon input {
+    height: 38px !important;
+    line-height: 38px !important;
+    padding-right: 35px !important;   /* space for icon */
+}
+
+/* Fix icon vertical alignment */
+.calendar-icon::after {
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    right: 10px;
+}
+
+/* Ensure error message stays under input properly */
+.calendar-icon + label.error {
+    margin-top: 2px !important;
+    display: block;
+    position: relative;
+    left: 0;
+}
+
+/* Global input label spacing fix */
+form .form-group label.error {
+    color: red;
+    font-size: 13px;
+    margin-top: 2px;
+}
+
     </style>
 
     {{-- ======================= PAGE CONTENT START ======================= --}}
@@ -319,258 +350,214 @@
     <link rel="stylesheet"
           href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
-    @push('scripts')
+   @push('scripts')
 
-        {{-- jQuery UI JS (master footer मध्ये jQuery आधीच आहे) --}}
-        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+<!-- jQuery UI -->
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
-        {{-- ========== Datepicker init ========== --}}
-        <script>
-            $(function () {
-                $('#leave_start_date, #leave_end_date').datepicker({
-                    dateFormat: 'yy-mm-dd',
-                    minDate: 0 // past dates not allowed
-                });
-            });
-        </script>
+<script>
+$(function () {
+    // Datepicker init
+    $('#leave_start_date, #leave_end_date').datepicker({
+        dateFormat: 'yy-mm-dd',
+        minDate: 0
+    });
+});
+</script>
 
-        {{-- ========== Custom validation for overlapping dates (existing logic) ========== --}}
-        <script>
-            jQuery(document).ready(function ($) {
+<script>
+jQuery(document).ready(function ($) {
 
-                // Custom rule: dates must not overlap existing pending leaves
-                $.validator.addMethod("datesNotExist", function (value, element, params) {
-                    var valid = false;
+    /* ------------------------------------------------------
+       CUSTOM RULE → DATES MUST NOT OVERLAP WITH EXISTING LEAVES
+    ---------------------------------------------------------*/
+    $.validator.addMethod("datesNotExist", function (value, element) {
+        let valid = false;
 
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ route('check-dates') }}",
-                        data: {
-                            leave_start_date: $("#leave_start_date").val(),
-                            leave_end_date: $("#leave_end_date").val(),
-                            _token: "{{ csrf_token() }}"
-                        },
-                        dataType: "json",
-                        async: false, // sync because validate method must return true/false
-                        success: function (response) {
-                            valid = !response.exists; // if exists = true ⇒ invalid
-                        }
-                    });
+        $.ajax({
+            type: "POST",
+            url: "{{ route('check-dates') }}",
+            data: {
+                leave_start_date: $("#leave_start_date").val(),
+                leave_end_date: $("#leave_end_date").val(),
+                _token: "{{ csrf_token() }}"
+            },
+            dataType: "json",
+            async: false,
+            success: function (response) {
+                valid = !response.exists;
+            }
+        });
 
-                    return valid;
+        return valid;
 
-                }, "These dates are already taken.");
+    }, "These dates are already taken.");
 
-                // jQuery Validate rules
-                $("#addForm").validate({
-                    rules: {
-                        other_employee_name: { required: true },
-                        leave_type_id: { required: true },
-                        leave_day: { required: true },
-                        leave_start_date: {
-                            required: true,
-                            datesNotExist: true
-                        },
-                        leave_end_date: {
-                            required: true,
-                            datesNotExist: true
-                        },
-                        reason: { required: true },
-                    },
-                    messages: {
-                        other_employee_name: {
-                            required: "Please enter full name",
-                        },
-                        leave_type_id: {
-                            required: "Please select leave type.",
-                        },
-                        leave_day: {
-                            required: "Please select leave day.",
-                        },
-                        leave_start_date: {
-                            required: "Please select leave start date.",
-                        },
-                        leave_end_date: {
-                            required: "Please select leave end date.",
-                        },
-                        reason: {
-                            required: "Please enter reason.",
-                        },
-                    },
-                });
-            });
-        </script>
 
-        {{-- ========== OPTION C: LEAVE BALANCE + DATE RANGE CHECK ========== --}}
-        <script>
-            $(document).ready(function () {
 
-                // This will hold current available leaves for selected type
-                let availableLeaves = 0;
+    /* ------------------------------------------------------
+       MAIN FORM VALIDATION (FINAL FIX WITH PROPER ALIGNMENT)
+    ---------------------------------------------------------*/
+    $("#addForm").validate({
 
-                // This will store selected leave type name, e.g. "SL", "PL", "Casual Leave"
-                let currentLeaveTypeName = "";
+        // FIX ERROR MESSAGE ALIGNMENT
+        errorPlacement: function (error, element) {
 
-                /**
-                 * Utility: calculate how many days user has selected
-                 * - Full day: inclusive difference between start & end
-                 * - Half day: always 0.5
-                 */
-                function calculateSelectedDays() {
+            // if field is inside calendar icon wrapper
+            if (element.parent().hasClass('calendar-icon')) {
+                error.insertAfter(element.parent());  // place below wrapper
+            } 
+            else {
+                error.insertAfter(element);  // normal placement
+            }
+        },
 
-                    const start = $("#leave_start_date").val();
-                    const end   = $("#leave_end_date").val();
-                    const dayType = $("#leave_day").val();
+        rules: {
+            other_employee_name: { required: true },
+            leave_type_id: { required: true },
+            leave_day: { required: true },
+            leave_start_date: {
+                required: true,
+                datesNotExist: true
+            },
+            leave_end_date: {
+                required: true,
+                datesNotExist: true
+            },
+            reason: { required: true }
+        },
 
-                    // If any required value missing ⇒ cannot calculate
-                    if (!start || !end || !dayType) {
-                        return null;
-                    }
+        messages: {
+            other_employee_name: { required: "Please enter full name" },
+            leave_type_id: { required: "Please select leave type." },
+            leave_day: { required: "Please select leave day." },
+            leave_start_date: { required: "Please select leave start date." },
+            leave_end_date: { required: "Please select leave end date." },
+            reason: { required: "Please enter reason." }
+        }
+    });
 
-                    const s = new Date(start);
-                    const e = new Date(end);
 
-                    if (e < s) {
-                        // End date before start date ⇒ invalid
-                        $("#leave_balance_error")
-                            .text("End date cannot be before start date.")
-                            .css("color", "red")
-                            .show();
-                        return null;
-                    }
+    /* ------------------------------------------------------
+       LEAVE BALANCE CHECK (SL / PL / CL VALIDATION)
+    ---------------------------------------------------------*/
 
-                    // Full day = inclusive count, Half day = 0.5
-                    if (dayType === "half_day") {
-                        return 0.5;
-                    }
+    let availableLeaves = 0;
+    let currentLeaveTypeName = "";
 
-                    const diffDays = Math.floor((e - s) / (1000 * 60 * 60 * 24)) + 1;
-                    return diffDays;
+    function calculateSelectedDays() {
+        const start = $("#leave_start_date").val();
+        const end = $("#leave_end_date").val();
+        const dayType = $("#leave_day").val();
+
+        if (!start || !end || !dayType) return null;
+
+        const s = new Date(start);
+        const e = new Date(end);
+
+        if (e < s) {
+            $("#leave_balance_error")
+                .text("End date cannot be before start date.")
+                .css("color", "red")
+                .show();
+            return null;
+        }
+
+        if (dayType === "half_day") return 0.5;
+
+        return Math.floor((e - s) / (1000 * 60 * 60 * 24)) + 1;
+    }
+
+    function validateSelectedDaysAgainstBalance() {
+
+        if (!currentLeaveTypeName || availableLeaves <= 0) {
+            return true;
+        }
+
+        const total = calculateSelectedDays();
+
+        if (total === null) return false;
+
+        if (total > availableLeaves) {
+
+            $("#leave_balance_error")
+                .text("You cannot take " + total + " day(s) of " +
+                      currentLeaveTypeName + ". Only " + availableLeaves + " day(s) available.")
+                .css("color", "red")
+                .show();
+
+            return false;
+        }
+
+        $("#leave_balance_error").hide();
+        return true;
+    }
+
+
+    // When Leave Type changes: fetch leave balance
+    $("#leave_type_id").on("change", function () {
+
+        const leaveTypeId = $(this).val();
+        currentLeaveTypeName = $("#leave_type_id option:selected").text().trim();
+        $("#leave_balance_error").hide().text("");
+        availableLeaves = 0;
+
+        if (leaveTypeId === "") return;
+
+        $.ajax({
+            url: "{{ route('check-leave-balance') }}",
+            type: "POST",
+            data: {
+                leave_type_id: leaveTypeId,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function (res) {
+
+                availableLeaves = parseFloat(res.available) || 0;
+
+                if (availableLeaves <= 0) {
+                    $("#leave_balance_error")
+                        .text("You have 0 " + currentLeaveTypeName + " remaining. You cannot apply more.")
+                        .css("color", "red")
+                        .show();
+
+                    $("#leave_type_id").val("");
+                    availableLeaves = 0;
+                    currentLeaveTypeName = "";
+                    return;
                 }
 
-                /**
-                 * Main function: check if selected days > availableLeaves
-                 * Show proper message (Option C) and return true/false
-                 */
-                function validateSelectedDaysAgainstBalance() {
+                $("#leave_balance_error")
+                    .text("Available " + currentLeaveTypeName + ": " + availableLeaves + " day(s).")
+                    .css("color", "green")
+                    .show();
 
-                    // If no leave type selected or no balance data yet, do nothing
-                    if (!currentLeaveTypeName || availableLeaves <= 0) {
-                        return true; // let backend handle
-                    }
+                validateSelectedDaysAgainstBalance();
+            }
+        });
+    });
 
-                    const totalLeaves = calculateSelectedDays();
+    // Re-check when dates or day type changes
+    $("#leave_start_date, #leave_end_date, #leave_day").on("change", function () {
+        validateSelectedDaysAgainstBalance();
+    });
 
-                    if (totalLeaves === null) {
-                        // invalid date / missing fields already handled in calculateSelectedDays
-                        return false;
-                    }
 
-                    console.log("Selected Days:", totalLeaves, "Available:", availableLeaves);
+    /* ------------------------------------------------------
+       PREVENT SUBMISSION IF EXCEEDS BALANCE
+    ---------------------------------------------------------*/
+    $("#addForm").on("submit", function (e) {
 
-                    if (totalLeaves > availableLeaves) {
-                        // Example: "You cannot take 6 days of SL. Only 3 day(s) available."
-                        $("#leave_balance_error")
-                            .text("You cannot take " + totalLeaves + " day(s) of " +
-                                  currentLeaveTypeName + ". Only " + availableLeaves + " day(s) available.")
-                            .css("color", "red")
-                            .show();
-                        return false;
-                    }
+        if (!$(this).valid()) return;
 
-                    // OK
-                    $("#leave_balance_error").hide();
-                    return true;
-                }
+        if (!validateSelectedDaysAgainstBalance()) {
+            e.preventDefault();
+        }
+    });
 
-                // ===== 1) When Leave Type changes, fetch balance from backend =====
-                $("#leave_type_id").on("change", function () {
+});
+</script>
 
-                    const leaveTypeId = $(this).val();
-
-                    // Get text of selected option for Option-C message
-                    currentLeaveTypeName = $("#leave_type_id option:selected").text().trim();
-
-                    $("#leave_balance_error").hide().text("");
-                    availableLeaves = 0; // reset
-
-                    // If user cleared dropdown, nothing to do
-                    if (leaveTypeId === "") {
-                        return;
-                    }
-
-                    $.ajax({
-                        url: "{{ route('check-leave-balance') }}",
-                        type: "POST",
-                        data: {
-                            leave_type_id: leaveTypeId,
-                            _token: "{{ csrf_token() }}"
-                        },
-                        success: function (res) {
-
-                            availableLeaves = parseFloat(res.available) || 0;
-
-                            console.log("Available Leaves for", currentLeaveTypeName, "=", availableLeaves);
-
-                            // Case 1: NO balance left for this type
-                            if (availableLeaves <= 0) {
-
-                                $("#leave_balance_error")
-                                    .text("You have 0 " + currentLeaveTypeName + " remaining. You cannot apply more.")
-                                    .css("color", "red")
-                                    .show();
-
-                                // Reset dropdown so user must choose something else (e.g. PL)
-                                $("#leave_type_id").val("");
-
-                                // Also clear local state
-                                availableLeaves = 0;
-                                currentLeaveTypeName = "";
-
-                                return;
-                            }
-
-                            // Case 2: Some balance is available
-                            $("#leave_balance_error")
-                                .text("Available " + currentLeaveTypeName + " : " + availableLeaves + " day(s).")
-                                .css("color", "green")
-                                .show();
-
-                            // After showing available, if dates already selected,
-                            // we can immediately validate range
-                            validateSelectedDaysAgainstBalance();
-                        },
-                        error: function (xhr) {
-                            console.log("Error in check-leave-balance:", xhr.responseText);
-                        }
-                    });
-                });
-
-                // ===== 2) When dates or day type change, re-validate range vs balance =====
-                $("#leave_start_date, #leave_end_date, #leave_day").on("change", function () {
-                    validateSelectedDaysAgainstBalance();
-                });
-
-                // ===== 3) Final check on form submit =====
-                $("#addForm").on("submit", function (e) {
-
-                    // First let jQuery Validate check required fields
-                    if (!$(this).valid()) {
-                        return;
-                    }
-
-                    // Then perform our balance vs selected days check
-                    const ok = validateSelectedDaysAgainstBalance();
-
-                    if (!ok) {
-                        // Prevent submit if user is exceeding balance
-                        e.preventDefault();
-                    }
-                });
-
-            });
-        </script>
-
-    @endpush
+@endpush
 
 @endsection

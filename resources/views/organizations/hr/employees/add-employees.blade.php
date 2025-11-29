@@ -80,7 +80,7 @@
                                                             id="password_confirmation" name="password_confirmation"
                                                             value="{{ old('password_confirmation') }}">
                                                         <span id="toggleConfirmPassword"
-                                                            class=" toggleConfirmPpassword password-toggle"
+                                                            class=" toggleConfirmPpassword password-toggle-confirm"
                                                             onclick="toggleConfirmPasswordVisibility()">
                                                             <i class="fa fa-eye-slash"></i>
                                                         </span>

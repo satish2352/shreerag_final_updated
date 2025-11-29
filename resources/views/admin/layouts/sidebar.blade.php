@@ -162,6 +162,13 @@
 .{
         left: 125px !important;
 }
+.logout-dropdown{
+    position: absolute;
+    transform: translate3d(0px, 24px, 0px);
+    top: 10px !important;
+    left: 95px !important;
+    will-change: transform;
+}
 </style>
 
 <div class="left-sidebar-pro">
@@ -1543,7 +1550,7 @@
         {{ ucwords(config('constants.ROLE_ID_NAME.' . Session::get('role_id'))) }} Department
     </a>
 
-    <div class="dropdown-menu dropdown-menu-right shadow-lg rounded zoomIn logout-dropdown"
+    <div class="dropdown-menu shadow-lg rounded zoomIn logout-dropdown"
          aria-labelledby="userDropdown">
 
         <a class="dropdown-item" href="{{ route('log-out') }}">
