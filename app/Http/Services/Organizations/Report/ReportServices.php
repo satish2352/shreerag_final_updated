@@ -85,6 +85,7 @@ class ReportServices
     {
         try {
             $data_output = $this->repo->getGRNReport($request);
+            
             return $data_output;
         } catch (\Exception $e) {
             throw $e; // propagate error

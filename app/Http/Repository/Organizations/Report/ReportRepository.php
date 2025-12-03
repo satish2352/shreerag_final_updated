@@ -1081,7 +1081,8 @@ class ReportRepository
                 'grn_tbl.updated_at',
                 'grn_tbl.grn_no_generate',
                 'businesses_details.id as business_details_id',
-                'grn_tbl.id as grn_id'
+                'grn_tbl.id as grn_id',
+                'tbl_grn_po_quantity_tracking.grn_id as tracking_grn_id'
             )->distinct();
 
 

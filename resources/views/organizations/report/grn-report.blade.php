@@ -163,161 +163,185 @@
             </div>
         </div>
     </div>
+@push('scripts')
+<script>
+    // Pass APP_URL safely from Blade into JS and remove trailing slash
+    const baseUrl = @json(rtrim(env('APP_URL', config('app.url')), '/'));
 
-    {{-- 🔹 JavaScript --}}
-    <script>
-        let currentPage = 1,
-            pageSize = 10;
+    let currentPage = 1,
+        pageSize = 10;
 
-        function fetchReport(reset = false) {
-            if (reset) currentPage = 1;
+    function fetchReport(reset = false) {
+        if (reset) currentPage = 1;
 
-            const form = document.getElementById('filterForm');
-            const formData = new FormData(form);
-            formData.append('pageSize', pageSize);
-            formData.append('currentPage', currentPage);
-            formData.append('search', document.getElementById('searchKeyword').value);
+        const form = document.getElementById('filterForm');
+        const formData = new FormData(form);
+        formData.append('pageSize', pageSize);
+        formData.append('currentPage', currentPage);
+        formData.append('search', document.getElementById('searchKeyword').value);
 
-            const params = new URLSearchParams();
-            formData.forEach((val, key) => {
-                if (val) params.append(key, val);
-            });
+        const params = new URLSearchParams();
+        formData.forEach((val, key) => {
+            if (val !== null && val !== undefined && String(val) !== '') params.append(key, val);
+        });
 
-            fetch(`{{ route('grn-report-ajax') }}?${params.toString()}`)
-                .then(res => res.json())
-                .then(res => {
-                    const tbody = document.getElementById('reportBody');
-                    const pagLinks = document.getElementById('paginationLinks');
-                    const pagInfo = document.getElementById('paginationInfo');
+        fetch(`{{ route('grn-report-ajax') }}?${params.toString()}`)
+            .then(res => {
+                if (!res.ok) throw new Error('Network response was not ok: ' + res.status);
+                return res.json();
+            })
+            .then(res => {
+                const tbody = document.getElementById('reportBody');
+                const pagLinks = document.getElementById('paginationLinks');
+                const pagInfo = document.getElementById('paginationInfo');
 
-                    if (res.status) {
-                        // document.getElementById('totalCount').innerText = res.pagination.totalItems || 0;
+                if (res.status) {
+                    const rows = (res.data && res.data.length > 0) ?
+                        res.data.map((item, i) => {
+                            // Create encoded IDs safely
+                            const poId = btoa(String(item.purchase_orders_id ?? ''));
+                            const businessId = btoa(String(item.business_details_id ?? ''));
+                            const grnId = btoa(String(item.grn_id ?? ''));
 
-                        const rows = res.data.length > 0 ?
-                            res.data.map((item, i) => `
-                        <tr>
-                            <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
-                            <td>${item.updated_at ? new Date(item.updated_at).toLocaleDateString('en-IN') : '-'}</td>
-                            <td>${item.purchase_orders_id ?? '-'}</td>
-                            <td>${item.grn_no_generate ?? '-'}</td>
-                            <td>${item.vendor_name ?? '-'}</td>
-                            <td>${item.vendor_company_name ?? '-'}</td>
+                            // Build details URL using baseUrl (do not duplicate subfolder)
+                            const detailsUrl = `${baseUrl}/storedept/list-grn-details-po-tracking/${poId}/${businessId}/${grnId}`;
 
-     <td>
-                <a href="/shreerag_final_updated/storedept/list-grn-details-po-tracking/${btoa(item.purchase_orders_id)}/${btoa(item.business_details_id)}/${btoa(item.grn_id)}">
-                    <button class="btn btn-sm btn-bg-colour">GRN Details</button>
-                </a>
-            </td>
+                            return `
+                                <tr>
+                                    <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
+                                    <td>${item.updated_at ? new Date(item.updated_at).toLocaleDateString('en-IN') : '-'}</td>
+                                    <td>${item.purchase_orders_id ?? '-'}</td>
+                                    <td>${item.grn_no_generate ?? '-'}</td>
+                                    <td>${item.vendor_name ?? '-'}</td>
+                                    <td>${item.vendor_company_name ?? '-'}</td>
+                                    <td>
+                                        <a href="${detailsUrl}">
+                                            <button class="btn btn-sm btn-bg-colour">GRN Details</button>
+                                        </a>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('') :
+                        '<tr><td colspan="8" class="text-center">No records found.</td></tr>';
 
-                        </tr>
-                    `).join('') :
-                            '<tr><td colspan="6" class="text-center">No records found.</td></tr>';
+                    tbody.innerHTML = rows;
 
-                        tbody.innerHTML = rows;
+                    // Pagination rendering...
+                    let pagHtml = '';
+                    const totalPages = (res.pagination && res.pagination.totalPages) ? res.pagination.totalPages : 1;
+                    const start = Math.max(1, currentPage - 2);
+                    const end = Math.min(totalPages, start + 4);
 
-                        // Pagination
-                        let pagHtml = '';
-                        const totalPages = res.pagination.totalPages;
-                        const start = Math.max(1, currentPage - 2);
-                        const end = Math.min(totalPages, start + 4);
-
-                        if (start > 1)
-                            pagHtml +=
-                            `<li class="page-item"><a class="page-link" href="javascript:goToPage(1)">1</a></li><li class="page-item disabled"><span class="page-link">...</span></li>`;
-
-                        for (let i = start; i <= end; i++) {
-                            pagHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
-                        <a class="page-link" href="javascript:goToPage(${i})">${i}</a>
-                    </li>`;
-                        }
-
-                        if (end < totalPages)
-                            pagHtml +=
-                            `<li class="page-item disabled"><span class="page-link">...</span></li>
-                                <li class="page-item"><a class="page-link" href="javascript:goToPage(${totalPages})">${totalPages}</a></li>`;
-
-                        pagLinks.innerHTML = pagHtml;
-                        pagInfo.innerHTML =
-                            `Showing ${res.pagination.from} to ${res.pagination.to} of ${res.pagination.totalItems}`;
-                    } else {
-                        tbody.innerHTML =
-                            '<tr><td colspan="6" class="text-center text-danger">Failed to fetch data.</td></tr>';
+                    if (start > 1) {
+                        pagHtml += `<li class="page-item"><a class="page-link" href="javascript:goToPage(1)">1</a></li>
+                                    <li class="page-item disabled"><span class="page-link">...</span></li>`;
                     }
-                })
-                .catch(() => {
-                    document.getElementById('reportBody').innerHTML =
-                        '<tr><td colspan="6" class="text-center text-danger">Error fetching data.</td></tr>';
-                });
-        }
 
-        function goToPage(page) {
-            currentPage = page;
-            fetchReport();
-        }
+                    for (let i = start; i <= end; i++) {
+                        pagHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+                            <a class="page-link" href="javascript:goToPage(${i})">${i}</a>
+                        </li>`;
+                    }
 
-        // Filter submit
-        document.getElementById('filterForm').addEventListener('submit', e => {
-            e.preventDefault();
-            fetchReport(true);
-        });
+                    if (end < totalPages) {
+                        pagHtml += `<li class="page-item disabled"><span class="page-link">...</span></li>
+                                    <li class="page-item"><a class="page-link" href="javascript:goToPage(${totalPages})">${totalPages}</a></li>`;
+                    }
 
-        // Live search
-        document.getElementById('searchKeyword').addEventListener('input', () => fetchReport(true));
+                    pagLinks.innerHTML = pagHtml;
+                    pagInfo.innerHTML = `Showing ${res.pagination?.from || 0} to ${res.pagination?.to || 0} of ${res.pagination?.totalItems || 0}`;
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="7" class="text-center text-danger">Failed to fetch data.</td></tr>';
+                    console.error('API returned status=false', res);
+                }
+            })
+            .catch(err => {
+                document.getElementById('reportBody').innerHTML = '<tr><td colspan="7" class="text-center text-danger">Error fetching data.</td></tr>';
+                console.error('Fetch error:', err);
+            });
+    }
 
-        // Export buttons
-        document.getElementById('exportPdf').addEventListener('click', () => {
-            document.getElementById('export_type').value = "1";
-            document.getElementById('filterForm').submit();
-        });
+    function goToPage(page) {
+        currentPage = page;
+        fetchReport();
+    }
 
-        document.getElementById('exportExcel').addEventListener('click', () => {
-            document.getElementById('export_type').value = "2";
-            document.getElementById('filterForm').submit();
-        });
-
-
-        // Reset filters
-        document.getElementById('resetFilters').addEventListener('click', () => {
-            document.getElementById('filterForm').reset();
-            document.getElementById('searchKeyword').value = '';
-            fetchReport(true);
-        });
-
-        // Initial load
+    // Filter submit
+    document.getElementById('filterForm').addEventListener('submit', e => {
+        e.preventDefault();
         fetchReport(true);
+    });
+
+    // Live search (debounce)
+    let searchTimeout = null;
+    document.getElementById('searchKeyword').addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => fetchReport(true), 350);
+    });
+
+    // Export buttons
+    document.getElementById('exportPdf').addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('export_type').value = "1";
+        document.getElementById('filterForm').submit();
+    });
+
+    document.getElementById('exportExcel').addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('export_type').value = "2";
+        document.getElementById('filterForm').submit();
+    });
+
+    // Reset filters
+    document.getElementById('resetFilters').addEventListener('click', () => {
+        document.getElementById('filterForm').reset();
+        document.getElementById('searchKeyword').value = '';
+        fetchReport(true);
+    });
+
+    // Initial load
+    fetchReport(true);
+
+    // Vendor -> PO dependent select
+    document.getElementById('vendorSelect').addEventListener('change', function() {
+        const vendorId = this.value;
+        const poSelect = document.getElementById('poSelect');
+
+        poSelect.innerHTML = '<option value="">All PO Numbers</option>';
+
+        if (vendorId) {
+            let url = '{{ route('get-vendor-by-purchase_order', ':id') }}'.replace(':id', vendorId);
+
+            fetch(url)
+                .then(res => {
+                    if (!res.ok) throw new Error('Network response was not ok: ' + res.status);
+                    return res.json();
+                })
+                .then(res => {
+                    if (res.status && res.purchaseOrders && res.purchaseOrders.length > 0) {
+                        res.purchaseOrders.forEach(po => {
+                            const opt = document.createElement('option');
+                            opt.value = po.name;
+                            opt.textContent = po.name;
+                            poSelect.appendChild(opt);
+                        });
+                    }
+
+                    // Refresh select2 if used
+                    if (typeof $ !== 'undefined' && $('.select2').length) $('#poSelect').trigger('change.select2');
+
+                    fetchReport(true);
+                })
+                .catch(err => {
+                    console.error('Error fetching purchase orders for vendor:', err);
+                    fetchReport(true);
+                });
+        } else {
+            fetchReport(true); // refresh if no vendor selected
+        }
+    });
+</script>
+@endpush
 
 
-
-
-        document.getElementById('vendorSelect').addEventListener('change', function() {
-            const vendorId = this.value;
-            const poSelect = document.getElementById('poSelect');
-
-            poSelect.innerHTML = '<option value="">All PO Numbers</option>';
-
-            if (vendorId) {
-                let url = '{{ route('get-vendor-by-purchase_order', ':id') }}'.replace(':id', vendorId);
-
-                fetch(url)
-                    .then(res => res.json())
-                    .then(res => {
-                        if (res.status && res.purchaseOrders.length > 0) {
-                            res.purchaseOrders.forEach(po => {
-                                const opt = document.createElement('option');
-                                opt.value = po.name; // ✅ important
-                                opt.textContent = po.name;
-                                poSelect.appendChild(opt);
-                            });
-                        }
-
-                        // Refresh select2 if used
-                        if ($('.select2').length) $('#poSelect').trigger('change.select2');
-
-                        fetchReport(true); // ✅ refresh table immediately
-                    });
-            } else {
-                fetchReport(true); // refresh if no vendor selected
-            }
-        });
-    </script>
 @endsection
