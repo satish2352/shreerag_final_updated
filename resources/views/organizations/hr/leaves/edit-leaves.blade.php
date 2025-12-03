@@ -240,27 +240,27 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Start Date -->
+                                            <!-- From Date -->
                                             <div class="col-lg-6">
-                                                <label for="leave_start_date">Start Date <span
+                                                <label for="leave_start_date">From Date <span
                                                         class="text-danger">*</span></label>
                                                 <div class="calendar-icon">
                                                     <input type="text" class="form-control" id="leave_start_date"
                                                         name="leave_start_date"
                                                         value="{{ $editData['leave_details']->leave_start_date }}"
-                                                        placeholder="Select Start Date">
+                                                        placeholder="Select From Date">
                                                 </div>
                                             </div>
 
-                                            <!-- End Date -->
+                                            <!-- To Date -->
                                             <div class="col-lg-6">
-                                                <label for="leave_end_date">End Date <span
+                                                <label for="leave_end_date">To Date <span
                                                         class="text-danger">*</span></label>
                                                 <div class="calendar-icon">
                                                     <input type="text" class="form-control" id="leave_end_date"
                                                         name="leave_end_date"
                                                         value="{{ $editData['leave_details']->leave_end_date }}"
-                                                        placeholder="Select End Date">
+                                                        placeholder="Select To Date">
                                                 </div>
                                             </div>
 
@@ -285,7 +285,7 @@
                                         </div>
                                     </form>
                                 </div>
-                                <!-- End Form -->
+                                <!-- To Form -->
                             </div>
                         </div>
                     </div>

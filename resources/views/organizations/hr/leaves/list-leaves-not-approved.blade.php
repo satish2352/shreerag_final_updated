@@ -47,8 +47,8 @@
                                             <th data-field="employee_id" data-editable="false">Employee Name</th>
                                             <th data-field="department" data-editable="false">Department</th>
                                             <th data-field="u_email" data-editable="false">Email</th>
-                                            <th data-field="leave_start_date" data-editable="false">Leave Start Date</th>
-                                            <th data-field="leave_end_date" data-editable="false">Leave End Date</th>
+                                            <th data-field="leave_start_date" data-editable="false">Leave From Date</th>
+                                            <th data-field="leave_end_date" data-editable="false">Leave To Date</th>
                                             <th data-field="leave_day" data-editable="false">Leave Day</th>
                                             <th data-field="leave_type_id" data-editable="false">Leave Type</th>
                                             <th data-field="leave_count" data-editable="false">Leave Count</th>

@@ -166,7 +166,7 @@
     position: absolute;
     transform: translate3d(0px, 24px, 0px);
     top: 10px !important;
-    left: 95px !important;
+    /* left: 95px !important; */
     will-change: transform;
 }
 </style>

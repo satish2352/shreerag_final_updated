@@ -264,7 +264,7 @@ form .form-group label.error {
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                     <div class="form-group">
                                                         <label for="leave_start_date">
-                                                            Start Date <span class="text-danger">*</span>
+                                                            From Date <span class="text-danger">*</span>
                                                         </label>
 
                                                         <div class="calendar-icon">
@@ -272,7 +272,7 @@ form .form-group label.error {
                                                                    class="form-control custom-select-value"
                                                                    id="leave_start_date"
                                                                    name="leave_start_date"
-                                                                   placeholder="Enter Start Date"
+                                                                   placeholder="Enter From Date"
                                                                    autocomplete="off">
                                                         </div>
                                                     </div>
@@ -282,7 +282,7 @@ form .form-group label.error {
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                     <div class="form-group">
                                                         <label for="leave_end_date">
-                                                            End Date <span class="text-danger">*</span>
+                                                            To Date <span class="text-danger">*</span>
                                                         </label>
 
                                                         <div class="calendar-icon">
@@ -290,7 +290,7 @@ form .form-group label.error {
                                                                    class="form-control"
                                                                    id="leave_end_date"
                                                                    name="leave_end_date"
-                                                                   placeholder="Enter End Date"
+                                                                   placeholder="Enter To Date"
                                                                    autocomplete="off">
                                                         </div>
                                                     </div>
@@ -457,7 +457,7 @@ jQuery(document).ready(function ($) {
 
         if (e < s) {
             $("#leave_balance_error")
-                .text("End date cannot be before start date.")
+                .text("To date cannot be before from date.")
                 .css("color", "red")
                 .show();
             return null;

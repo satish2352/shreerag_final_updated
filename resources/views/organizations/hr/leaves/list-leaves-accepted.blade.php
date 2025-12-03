@@ -45,8 +45,8 @@
                                             <th>Employee Name</th>
                                             <th>Department</th>
                                             <th>Email</th>
-                                            <th>Leave Start Date</th>
-                                            <th>Leave End Date</th>
+                                            <th>Leave From Date</th>
+                                            <th>Leave To Date</th>
                                             <th>Leave Day</th>
                                             <th>Action</th>
                                         </tr>

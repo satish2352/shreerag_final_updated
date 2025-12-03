@@ -799,6 +799,7 @@ Route::post('/check-leave-balance', [LeavesController::class, 'checkLeaveBalance
         Route::post('/add-notice', [NoticeController::class, 'store'])->name('store-notice');
         Route::get('/edit-notice/{id}', [NoticeController::class, 'edit'])->name('edit-notice');
         Route::post('/update-notice', [NoticeController::class, 'update'])->name('update-notice');
+        Route::post('/show-notice', [NoticeController::class, 'show'])->name('show-notice');
         Route::any('/delete-notice/{id}', [NoticeController::class, 'destroy'])->name('delete-notice');
         Route::get('/particular-notice-department-wise', [NoticeController::class, 'departmentWiseNotice'])
             ->name('particular-notice-department-wise');

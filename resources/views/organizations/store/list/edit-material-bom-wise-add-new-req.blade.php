@@ -1,7 +1,34 @@
 @extends('admin.layouts.master')
 @section('content')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<style>
+    /* keep the inline input styled as before */
+.custom-dropdown { position: relative; display: inline-block; }
 
+/* hidden by default when inside dropdown; when moved to body we still use same class */
+.dropdown-options {
+  display: none; 
+  max-height: 320px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  z-index: 3000;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+/* option hover */
+.dropdown-options .option { padding: 6px 8px; cursor: pointer; }
+.dropdown-options .option:hover { background: #f2f2f2; }
+
+/* ensure search box fills area */
+.dropdown-options .search-box { margin-bottom: 8px; width: 100%; box-sizing: border-box; }
+
+/* when appended to body we'll add a helper class to show it */
+.dropdown-opened { display: block !important; }
+
+</style>
   
     <div class="">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -371,6 +398,148 @@
 
    @push('scripts')
     <script>
+        $(function() {
+  // Keep a reference so we can restore menu back to its original container if needed
+  let menuState = {
+    attachedToBody: false,
+    originalParent: null,
+    $currentDropdown: null
+  };
+
+  function openDropdown($dropdown) {
+    // if another dropdown opened -> close it first
+    closeDropdown();
+
+    const $options = $dropdown.find('.dropdown-options');
+    const $input = $dropdown.find('.dropdown-input');
+
+    // remember original parent to restore later
+    menuState.originalParent = $options.parent();
+    menuState.$currentDropdown = $dropdown;
+
+    // move to body
+    $options.appendTo('body');
+    menuState.attachedToBody = true;
+
+    // set width same as input or a fixed width (your markup used 750px)
+    let width = Math.max($input.outerWidth(), 300);
+    $options.css({ width: width + 'px' });
+
+    // position right under input
+    const offset = $input.offset();
+    const top = offset.top + $input.outerHeight();
+    const left = offset.left;
+    $options.css({
+      position: 'absolute',
+      top: top + 'px',
+      left: left + 'px'
+    });
+
+    $options.addClass('dropdown-opened').show();
+    $options.find('.search-box').val('').focus().trigger('input');
+  }
+
+  function closeDropdown() {
+    if (!menuState.attachedToBody || !menuState.$currentDropdown) return;
+
+    const $options = $('body').find('.dropdown-options.dropdown-opened');
+    // restore DOM (move back to original parent)
+    if (menuState.originalParent && menuState.originalParent.length) {
+      $options.appendTo(menuState.originalParent);
+    }
+    $options.removeClass('dropdown-opened').hide();
+    menuState.attachedToBody = false;
+    menuState.originalParent = null;
+    menuState.$currentDropdown = null;
+  }
+
+  // Click on input -> open menu (append to body)
+  $(document).on('click', '.dropdown-input', function(e) {
+    e.stopPropagation();
+    const $dropdown = $(this).closest('.custom-dropdown');
+    openDropdown($dropdown);
+  });
+
+  // Click on option (works even when menu is in body)
+  $(document).on('click', '.dropdown-options .option', function(e) {
+    e.stopPropagation();
+    const selectedText = $(this).text();
+    const selectedId = $(this).data('id');
+
+    // if menu currently attached to body, find which dropdown this menu belongs to by tracking menuState
+    let $dropdown = menuState.$currentDropdown;
+    if (!$dropdown) {
+      // fallback: menu is inside original parent
+      $dropdown = $(this).closest('.custom-dropdown');
+    }
+
+    // set values in the dropdown row
+    $dropdown.find('.dropdown-input').val(selectedText);
+    $dropdown.find('.part_no').val(selectedId);
+
+    // run your existing AJAX fetch if needed (fetch rate)
+    const $row = $dropdown.closest('tr');
+    $.ajax({
+      url: '{{ route("get-part-item-rate") }}',
+      type: 'GET',
+      data: { part_item_id: selectedId },
+      success: function(response) {
+        if (response.status === 'success') {
+          $row.find('.basic_rate').val(response.basic_rate);
+          // update total using your existing function if needed:
+          if (typeof updateTotalAmount === 'function') {
+            updateTotalAmount($row);
+          }
+        } else {
+          $row.find('.basic_rate').val('');
+        }
+      }
+    });
+
+    // close and restore menu
+    closeDropdown();
+  });
+
+  // search inside options (works both when moved to body or original)
+  $(document).on('input', '.dropdown-options .search-box', function() {
+    const searchTerm = $(this).val().toLowerCase();
+    const $options = $(this).siblings('.options-list').find('.option');
+    $options.each(function() {
+      const text = $(this).text().toLowerCase();
+      $(this).toggle(text.includes(searchTerm));
+    });
+  });
+
+  // close on click outside
+  $(document).on('click', function(e) {
+    if (!$(e.target).closest('.dropdown-options').length && !$(e.target).closest('.dropdown-input').length) {
+      closeDropdown();
+    }
+  });
+
+  // reposition on window scroll/resize so the menu stays aligned
+  $(window).on('scroll resize', function() {
+    if (!menuState.attachedToBody || !menuState.$currentDropdown) return;
+    const $dropdown = menuState.$currentDropdown;
+    const $input = $dropdown.find('.dropdown-input');
+    const $options = $('body').find('.dropdown-options.dropdown-opened');
+
+    if ($input.length && $options.length) {
+      const offset = $input.offset();
+      $options.css({
+        top: (offset.top + $input.outerHeight()) + 'px',
+        left: offset.left + 'px'
+      });
+    } else {
+      closeDropdown();
+    }
+  });
+
+  // Optional: restore on form destroy / navigate away to avoid orphaned nodes
+  $(window).on('beforeunload', function() { closeDropdown(); });
+});
+
+
         $(document).ready(function() {
             // Show/hide dropdown
             $(document).on('click', '.dropdown-input', function() {

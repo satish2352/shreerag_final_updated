@@ -57,9 +57,9 @@
                                                 <th data-field="id">ID</th>
                                                 <th data-field="other_employee_name" data-editable="false">Employee Name
                                                 </th>
-                                                <th data-field="leave_start_date" data-editable="false">Leave start Date
+                                                <th data-field="leave_start_date" data-editable="false">Leave From Date
                                                 </th>
-                                                <th data-field="leave_end_date" data-editable="false">Leave End Date</th>
+                                                <th data-field="leave_end_date" data-editable="false">Leave To Date</th>
                                                 <th data-field="leave_day" data-editable="false">Leave Day</th>
                                                 <th data-field="leave_type_id" data-editable="false">Leave Type</th>
                                                 <th data-field="leave_count" data-editable="false">Leave Count</th>
