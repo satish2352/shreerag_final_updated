@@ -1828,7 +1828,7 @@ class ReportRepository
                 })
                 ->whereIn('tcqt1.quantity_tracking_status', $array_to_be_quantity_tracking)
                 ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
-                ->where('bap1.off_canvas_status', 23)
+                ->where('bap1.off_canvas_status', 22)
                 ->where('businesses.is_active', true)
                 ->where('businesses.is_deleted', 0);
             // 🔍 Search filter
