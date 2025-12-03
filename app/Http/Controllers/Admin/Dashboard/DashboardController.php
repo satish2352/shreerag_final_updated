@@ -425,7 +425,8 @@ class DashboardController extends Controller
             $leave_request = Leaves::where(['is_active' => 1, 'is_approved' => 0])->where('is_deleted', 0)->count();
             $accepted_leave_request = Leaves::where(['is_active' => 1, 'is_approved' => 2])->where('is_deleted', 0)->count();
             $rejected__leave_request = Leaves::where(['is_active' => 1, 'is_approved' => 1])->where('is_deleted', 0)->count();
-            $total_employee = User::where('is_active', 1)->where('is_deleted', 0)->count();
+            $total_employee = User::where('is_active', 1)->where('is_deleted', 0)->where('id', '!=', 1)->count();
+
 
 
 
