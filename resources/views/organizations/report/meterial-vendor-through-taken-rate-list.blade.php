@@ -147,216 +147,143 @@
             </div>
         </div>
     </div>
+  @push('scripts')
+  <script>
+$(document).ready(function () {
 
-    <script>
-        let currentPage = 1,
-            pageSize = 10;
+    // ==========================  
+    // Initialize Select2  
+    // ==========================
+    $('.select2').select2({
+        width: '100%',
+        placeholder: 'All Part Item',
+        allowClear: true
+    });
 
-        function getStatusLabel(id) {
-            if (id == 1114) return 'Rejected';
-            if ([1115, 1121, 1117].includes(id)) return 'Accepted';
-            return '-';
-        }
+    // Pagination values
+    let currentPage = 1;
+    let pageSize = 10;
 
+    // ==========================
+    // Fetch Report (AJAX)
+    // ==========================
+    function fetchReport(reset = false) {
 
-        // let currentPage = 1;
-        // const pageSize = 10;
+        if (reset) currentPage = 1;
 
-        function fetchReport(reset = false) {
-            if (reset) currentPage = 1;
+        const formData = new FormData(document.getElementById('filterForm'));
+        formData.append('pageSize', pageSize);
+        formData.append('currentPage', currentPage);
+        formData.append('search', $('#searchKeyword').val());
 
-            const form = document.getElementById('filterForm');
-            const formData = new FormData(form);
-            formData.append('pageSize', pageSize);
-            formData.append('currentPage', currentPage);
-            formData.append('search', document.getElementById('searchKeyword').value);
+        const params = new URLSearchParams();
+        formData.forEach((v, k) => params.append(k, v));
 
-            const params = new URLSearchParams();
-            formData.forEach((val, key) => params.append(key, val));
+        fetch(`{{ route('list-itemwise-vendor-rate-report-ajax') }}?${params.toString()}`)
+            .then(res => res.json())
+            .then(res => {
 
-            fetch(`{{ route('list-itemwise-vendor-rate-report-ajax') }}?${params.toString()}`)
-                .then(res => res.json())
-                .then(res => {
-                    const tbody = document.getElementById('reportBody');
-                    const pagLinks = document.getElementById('paginationLinks');
-                    const pagInfo = document.getElementById('paginationInfo');
+                const tbody = $('#reportBody');
+                const pagLinks = $('#paginationLinks');
+                const pagInfo = $('#paginationInfo');
 
-                    if (res.status) {
-                        document.getElementById('totalCount').innerText = res.pagination.totalItems || 0;
+                if (!res.status) {
+                    tbody.html('<tr><td colspan="7">Failed to fetch data.</td></tr>');
+                    return;
+                }
 
-                        if (res.data.length > 0) {
-                            let rows = '';
-                            res.data.forEach((item, i) => {
+                $('#totalCount').text(res.pagination.totalItems || 0);
 
+                // ==========================
+                // Table rows
+                // ==========================
+                if (res.data.length > 0) {
+                    let rows = '';
 
-                                rows += `
-                                    <tr>
-                                        <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
-                                        <td>${item.updated_at ? new Date(item.updated_at).toLocaleDateString('en-IN') : '-'}</td>
-                                         <td>${item.description|| '-'}</td>
-                                        <td>${item.vendor_name|| '-'}</td>
-                                        <td> ${item.vendor_company_name || '-'}</td>
-                                        <td> ${item.rate || '-'}</td>
-                                        
-                                    </tr>
-                                `;
-                            });
-                            tbody.innerHTML = rows;
+                    res.data.forEach((item, i) => {
+                        rows += `
+                            <tr>
+                                <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
+                                <td>${item.updated_at ? new Date(item.updated_at).toLocaleDateString('en-IN') : '-'}</td>
+                                <td>${item.description || '-'}</td>
+                                <td>${item.vendor_name || '-'}</td>
+                                <td>${item.vendor_company_name || '-'}</td>
+                                <td>${item.rate || '-'}</td>
+                            </tr>
+                        `;
+                    });
 
-                        } else {
-                            tbody.innerHTML = '<tr><td colspan="7">No records found.</td></tr>';
-                        }
+                    tbody.html(rows);
 
-                        // Pagination
-                        const totalPages = res.pagination.totalPages;
-                        let pagHtml = '';
-                        let start = Math.max(1, currentPage - 2);
-                        let end = Math.min(totalPages, start + 4);
+                } else {
+                    tbody.html('<tr><td colspan="7">No records found.</td></tr>');
+                }
 
-                        if (start > 1) pagHtml +=
-                            `<li><a class="page-link" onclick="goToPage(1)">1</a></li><li>...</li>`;
-                        for (let i = start; i <= end; i++) {
-                            pagHtml +=
-                                `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" onclick="goToPage(${i})">${i}</a></li>`;
-                        }
-                        if (end < totalPages) pagHtml +=
-                            `<li>...</li><li><a class="page-link" onclick="goToPage(${totalPages})">${totalPages}</a></li>`;
+                // ==========================
+                // Pagination
+                // ==========================
+                let totalPages = res.pagination.totalPages;
+                let html = '';
+                let start = Math.max(1, currentPage - 2);
+                let end = Math.min(totalPages, start + 4);
 
-                        pagLinks.innerHTML = pagHtml;
-                        pagInfo.innerHTML =
-                            `Showing ${res.pagination.from} to ${res.pagination.to} of ${res.pagination.totalItems}`;
+                if (start > 1) {
+                    html += `<li><a class="page-link" onclick="goToPage(1)">1</a></li><li>...</li>`;
+                }
 
-                    } else {
-                        tbody.innerHTML = '<tr><td colspan="7">Failed to fetch data.</td></tr>';
-                    }
-                });
-        }
+                for (let i = start; i <= end; i++) {
+                    html += `
+                        <li class="page-item ${i === currentPage ? 'active' : ''}">
+                            <a class="page-link" onclick="goToPage(${i})">${i}</a>
+                        </li>`;
+                }
 
-        function goToPage(page) {
-            currentPage = page;
-            fetchReport();
-        }
+                if (end < totalPages) {
+                    html += `<li>...</li><li><a class="page-link" onclick="goToPage(${totalPages})">${totalPages}</a></li>`;
+                }
 
-        document.getElementById('filterForm').addEventListener('submit', e => {
-            e.preventDefault();
-            fetchReport(true);
-        });
+                pagLinks.html(html);
 
-        document.getElementById('searchKeyword').addEventListener('input', () => fetchReport(true));
+                pagInfo.html(`Showing ${res.pagination.from} to ${res.pagination.to} of ${res.pagination.totalItems}`);
+            });
+    }
 
-        document.getElementById('exportPdf').addEventListener('click', () => {
-            document.getElementById('export_type').value = 1;
-            document.getElementById('filterForm').submit();
-        });
+    // ==========================
+    // Go to Page
+    // ==========================
+    window.goToPage = function (page) {
+        currentPage = page;
+        fetchReport();
+    };
 
-        document.getElementById('exportExcel').addEventListener('click', () => {
-            document.getElementById('export_type').value = 2;
-            document.getElementById('filterForm').submit();
-        });
-
-        // Initial load
+    // ==========================
+    // Events
+    // ==========================
+    $('#filterForm').on('submit', function (e) {
+        e.preventDefault();
         fetchReport(true);
+    });
 
-        //     function fetchReport(reset = false) {
-        //         if (reset) currentPage = 1;
-
-        //         const form = document.getElementById('filterForm');
-        //         const formData = new FormData(form);
-        //         formData.append('pageSize', pageSize);
-        //         formData.append('currentPage', currentPage);
-        //         formData.append('search', document.getElementById('searchKeyword').value);
-
-        //         const params = new URLSearchParams();
-        //         formData.forEach((val, key) => params.append(key, val));
-
-        //         fetch(`{{ route('stock-daily-report-ajax') }}?${params.toString()}`)
-        //             .then(res => res.json())
-        //             .then(res => {
-        //                 const tbody = document.getElementById('reportBody');
-        //                 const pagLinks = document.getElementById('paginationLinks');
-        //                 const pagInfo = document.getElementById('paginationInfo');
-
-        //                 if (res.status) {
-        //                     document.getElementById('totalCount').innerText = res.pagination.totalItems || 0;
-        //                     const rows = res.data.map((item, i) => {
-        //                         return `
-    //     <tr>
-    //         <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
-    //         <td>${item.issue_updated_at ? new Date(item.issue_updated_at).toLocaleDateString('en-IN') : '-'}</td>
-    //         <td>${item.received_updated_at ? new Date(item.received_updated_at).toLocaleDateString('en-IN') : '-'}</td>
-    //         <td>${item.description || '-'}</td>
-    //         <td>${item.received_quantity || '-'}</td>
-    //          <td>${item.issue_quantity || '-'}</td>            
-    //         <td>${item.balance_quantity || '-'}</td>
-
-
-    //     </tr>
-    // `;
-        //                     }).join('');
-
-        //                       // ✅ Totals row
-        //             const totals = res.totals;
-        //             const totalsRow = `
-    //                 <tr style="font-weight:bold; background:#f2f2f2;">
-    //                     <td colspan="4" style="text-align:right;">Total:</td>
-    //                     <td>${totals.received}</td>
-    //                     <td>${totals.issue}</td>
-    //                     <td>${totals.balance}</td>
-    //                 </tr>
-    //             `;
-
-        //             tbody.innerHTML = rows + totalsRow;
-
-        //                     tbody.innerHTML = rows || '<tr><td colspan="6">No records found.</td></tr>';
-
-        //                     // Pagination
-        //                     let pagHtml = '',
-        //                         totalPages = res.pagination.totalPages;
-        //                     let start = Math.max(1, currentPage - 2),
-        //                         end = Math.min(totalPages, start + 4);
-
-        //                     if (start > 1) pagHtml +=
-        //                         `<li><a class="page-link" onclick="goToPage(1)">1</a></li><li>...</li>`;
-        //                     for (let i = start; i <= end; i++) {
-        //                         pagHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
-    //                                 <a class="page-link" onclick="goToPage(${i})">${i}</a>
-    //                             </li>`;
-        //                     }
-        //                     if (end < totalPages) pagHtml +=
-        //                         `<li>...</li><li><a class="page-link" onclick="goToPage(${totalPages})">${totalPages}</a></li>`;
-
-        //                     pagLinks.innerHTML = pagHtml;
-        //                     pagInfo.innerHTML =
-        //                         `Showing ${res.pagination.from} to ${res.pagination.to} of ${res.pagination.totalItems}`;
-        //                 } else {
-        //                     tbody.innerHTML = '<tr><td colspan="6">Failed to fetch data.</td></tr>';
-        //                 }
-        //             });
-        //     }
-
-        function goToPage(page) {
-            currentPage = page;
-            fetchReport();
-        }
-
-        document.getElementById('filterForm').addEventListener('submit', e => {
-            e.preventDefault();
-            fetchReport(true);
-        });
-
-        document.getElementById('searchKeyword').addEventListener('input', () => fetchReport(true));
-
-        document.getElementById('exportPdf').addEventListener('click', () => {
-            document.getElementById('export_type').value = 1;
-            document.getElementById('filterForm').submit();
-        });
-
-        document.getElementById('exportExcel').addEventListener('click', () => {
-            document.getElementById('export_type').value = 2;
-            document.getElementById('filterForm').submit();
-        });
-
-        // Initial load
+    $('#searchKeyword').on('input', function () {
         fetchReport(true);
-    </script>
+    });
+
+    $('#exportPdf').on('click', function () {
+        $('#export_type').val(1);
+        $('#filterForm').submit();
+    });
+
+    $('#exportExcel').on('click', function () {
+        $('#export_type').val(2);
+        $('#filterForm').submit();
+    });
+
+    // First Load
+    fetchReport(true);
+
+});
+</script>
+
+ 
+      @endpush
 @endsection

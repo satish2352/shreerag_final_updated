@@ -3107,7 +3107,13 @@ class ReportRepository
                     ->orWhere('vendors.vendor_company_name', 'like', "%{$search}%")
                     ->orWhere('purchase_order_details.rate', 'like', "%{$search}%");
             });
-        }
+        }       
+        
+       if ($request->filled('description')) {
+    $query->where('tbl_part_item.id', $request->description);
+}
+
+
 
         // 📅 Date Filters
         if ($request->filled('from_date')) {
