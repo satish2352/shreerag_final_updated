@@ -1861,14 +1861,23 @@ class ReportRepository
                 $to = Carbon::parse($request->to_date)->endOfDay(); // 23:59:59
                 $query->where('tbl_dispatch.updated_at', '<=', $to);
             }
-
+            // Year Filter (Use HAVING after selecting MAX Date)
             if ($request->filled('year')) {
-                $query->whereYear('tbl_dispatch.updated_at', $request->year);
+                $query->havingRaw("YEAR(MAX(tbl_dispatch.updated_at)) = ?", [$request->year]);
             }
 
+            // Month Filter (Use HAVING)
             if ($request->filled('month')) {
-                $query->whereMonth('tbl_dispatch.updated_at', $request->month);
+                $query->havingRaw("MONTH(MAX(tbl_dispatch.updated_at)) = ?", [$request->month]);
             }
+
+            // if ($request->filled('year')) {
+            //     $query->whereYear('tbl_dispatch.updated_at', $request->year);
+            // }
+
+            // if ($request->filled('month')) {
+            //     $query->whereMonth('tbl_dispatch.updated_at', $request->month);
+            // }
 
             // 🔽 Select columns
             $query->select(
