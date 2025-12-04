@@ -1,7 +1,11 @@
 @extends('admin.layouts.master')
 
 @section('content')
-
+<style>#description {
+    min-height: 150px !important;
+    height: auto !important;
+}
+</style>
     <div class="">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list">
@@ -91,13 +95,13 @@
                                             <div class="col-lg-6 col-md-6 col-sm-6">
                                                 <div class="form-group" id="summernote_id">
                                                     <label for="english_description">Description <span class="text-danger">*</span></label>
-                                                    <span class="summernote1">
+                                                    <div class="summernote1">
                                                         <textarea class="form-control" name="description" id="description" placeholder="Enter the Description">
                                              @if (old('description'))
 {{ old('description') }}@else{{ $editData->description }}
 @endif 
                                         </textarea>
-                                                    </span>
+                                    </div>
                                                     @if ($errors->has('description'))
                                                         <span class="red-text"><?php echo $errors->first('description', ':message'); ?></span>
                                                     @endif

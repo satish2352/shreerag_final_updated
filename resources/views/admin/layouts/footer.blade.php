@@ -303,6 +303,19 @@ document.getElementById('filterForm').addEventListener('submit', function (e) {
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <!-- ========================= FOOTER END ========================= -->
+<!-- SUMMERNOTE CSS + JS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
+<script>
+$(document).ready(function () {
+    $('#description').summernote({
+        height: 200,           // Set height
+        minHeight: 150,        // Minimum height
+        maxHeight: null,       
+        focus: true
+    });
+});
+</script>
 
 @stack('scripts')
 

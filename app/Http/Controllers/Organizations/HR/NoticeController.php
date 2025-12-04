@@ -164,7 +164,8 @@ class NoticeController extends Controller
 
     public function edit(Request $request)
     {
-        $edit_data_id = base64_decode($request->edit_id);
+    
+        $edit_data_id = base64_decode($request->id);
 
         $editData = $this->service->getById($edit_data_id);
 

@@ -1,5 +1,27 @@
 @extends('admin.layouts.master')
 @section('content')
+<style>
+    .table-responsive {
+    overflow-x: auto !important;
+    overflow-y: hidden;
+    width: 100%;
+    display: block;
+    white-space: nowrap;
+}
+.form-display-center .col-lg-6,
+.form-display-center .col-md-6,
+.form-display-center textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: block;
+}
+textarea.form-control {
+    resize: vertical;
+    min-height: 90px;
+    margin-bottom: 15px;
+}
+
+</style>
     <div class="business-form">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list">
