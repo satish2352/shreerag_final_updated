@@ -303,8 +303,189 @@ href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
 @push('scripts')
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+@push('scripts')
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
-    <script>
+<script>
+
+/* ===========================================================
+   A) FUNCTION → LOCK TO-DATE WHEN HALF DAY IS SELECTED
+=========================================================== */
+function lockHalfDayToDate() {
+    let dayType = $("#leave_day").val();
+    let startDate = $("#leave_start_date").val();
+    let endDateInput = $("#leave_end_date");
+
+    // FULL DAY → ENABLE TO DATE
+    if (dayType !== "first_half_day" && dayType !== "second_half_day") {
+        endDateInput.prop("readonly", false);
+        return;
+    }
+
+    // HALF DAY → LOCK TO DATE = START DATE
+    if (startDate !== "") {
+        endDateInput
+            .val(startDate)
+            .prop("readonly", true);
+    }
+}
+
+/* ===========================================================
+   B) INITIALIZE DATE PICKERS ONLY ONCE (CORRECT WAY)
+=========================================================== */
+function initDatePickers() {
+
+    // Destroy old datepickers to avoid conflict
+    $("#leave_start_date, #leave_end_date").datepicker("destroy");
+
+    // START DATE PICKER
+    $("#leave_start_date").datepicker({
+        dateFormat: "yy-mm-dd",
+        minDate: 0,
+        changeMonth: true,
+        changeYear: true,
+        onSelect: function () {
+            lockHalfDayToDate();
+        }
+    });
+
+    // END DATE PICKER
+    $("#leave_end_date").datepicker({
+        dateFormat: "yy-mm-dd",
+        minDate: 0,
+        changeMonth: true,
+        changeYear: true,
+        beforeShow: function () {
+
+            let dayType = $("#leave_day").val();
+            let startDate = $("#leave_start_date").val();
+
+            // HALF DAY → ALLOW ONLY START DATE
+            if (dayType === "first_half_day" || dayType === "second_half_day") {
+
+                $(this).datepicker("option", "beforeShowDay", function (date) {
+
+                    let d = $.datepicker.formatDate("yy-mm-dd", date);
+
+                    return [d === startDate];   // only allow same day
+                });
+
+            } else {
+                $(this).datepicker("option", "beforeShowDay", null);
+            }
+        }
+    });
+}
+
+/* ===========================================================
+   C) EVENT LISTENERS
+=========================================================== */
+$("#leave_day").on("change", function () {
+    lockHalfDayToDate();
+});
+
+$("#leave_start_date").on("change", function () {
+    lockHalfDayToDate();
+});
+
+/* ===========================================================
+   D) RUN WHEN PAGE LOADS → VERY IMPORTANT
+=========================================================== */
+$(document).ready(function () {
+
+    initDatePickers();      // load new datepickers
+    lockHalfDayToDate();    // apply lock logic if editing half-day
+});
+
+/* ===========================================================
+   E) VALIDATION
+=========================================================== */
+$("#editEmployeeForm").validate({
+    rules: {
+        other_employee_name: { required: true },
+        leave_type_id: { required: true },
+        leave_day: { required: true },
+        leave_start_date: { required: true },
+        leave_end_date: { required: true },
+        reason: { required: true }
+    },
+    messages: {
+        other_employee_name: { required: "Please enter full name" },
+        leave_type_id: { required: "Please select leave type" },
+        leave_day: { required: "Please select leave day" },
+        leave_start_date: { required: "Please select start date" },
+        leave_end_date: { required: "Please select end date" },
+        reason: { required: "Please enter reason" }
+    }
+});
+
+</script>
+@endpush
+
+    {{-- <script>
+
+        /*******************************************************************
+    HALF DAY LOGIC → LOCK TO-DATE = FROM-DATE
+*******************************************************************/
+function lockHalfDayToDate() {
+    let dayType = $("#leave_day").val();
+    let startDate = $("#leave_start_date").val();
+
+    // If NOT half day → enable To Date normally
+    if (dayType !== "first_half_day" && dayType !== "second_half_day") {
+        $("#leave_end_date").prop("readonly", false).val("");
+        return;
+    }
+
+    // If half day & start date selected → lock To Date
+    if (startDate !== "") {
+        $("#leave_end_date")
+            .val(startDate)
+            .prop("readonly", true);   // Prevent typing
+    }
+}
+
+/*******************************************************************
+    DATEPICKER INITIALIZATION WITH HALF-DAY RESTRICTION
+*******************************************************************/
+$("#leave_start_date").datepicker({
+    dateFormat: "yy-mm-dd",
+    minDate: 0,
+    onSelect: function () {
+        lockHalfDayToDate();
+    }
+});
+
+$("#leave_end_date").datepicker({
+    dateFormat: "yy-mm-dd",
+    minDate: 0,
+    beforeShow: function () {
+        let dayType = $("#leave_day").val();
+        let startDate = $("#leave_start_date").val();
+
+        // If half day → disable all dates except start date
+        if (dayType === "first_half_day" || dayType === "second_half_day") {
+            $(this).datepicker("option", "beforeShowDay", function (date) {
+                let d = $.datepicker.formatDate("yy-mm-dd", date);
+                return [d === startDate]; // Only one date enabled
+            });
+        } else {
+            $(this).datepicker("option", "beforeShowDay", null);
+        }
+    }
+});
+
+/*******************************************************************
+    APPLY LOGIC ON CHANGE EVENTS
+*******************************************************************/
+$("#leave_day").on("change", function () {
+    lockHalfDayToDate();
+});
+
+$("#leave_start_date").on("change", function () {
+    lockHalfDayToDate();
+});
+
         $(function() {
 
             // Remove previous datepicker if any
@@ -366,7 +547,7 @@ href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
                 }
             }
         });
-    </script>
+    </script> --}}
       @endpush
 
 @endsection

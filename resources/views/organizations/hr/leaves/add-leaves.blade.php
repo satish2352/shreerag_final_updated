@@ -364,6 +364,69 @@ $(function () {
         minDate: 0
     });
 });
+
+/*******************************************************************
+    HALF DAY LOGIC → LOCK TO-DATE = FROM-DATE
+*******************************************************************/
+function lockHalfDayToDate() {
+    let dayType = $("#leave_day").val();
+    let startDate = $("#leave_start_date").val();
+
+    // If NOT half day → enable To Date normally
+    if (dayType !== "first_half_day" && dayType !== "second_half_day") {
+        $("#leave_end_date").prop("readonly", false).val("");
+        return;
+    }
+
+    // If half day & start date selected → lock To Date
+    if (startDate !== "") {
+        $("#leave_end_date")
+            .val(startDate)
+            .prop("readonly", true);   // Prevent typing
+    }
+}
+
+/*******************************************************************
+    DATEPICKER INITIALIZATION WITH HALF-DAY RESTRICTION
+*******************************************************************/
+$("#leave_start_date").datepicker({
+    dateFormat: "yy-mm-dd",
+    minDate: 0,
+    onSelect: function () {
+        lockHalfDayToDate();
+    }
+});
+
+$("#leave_end_date").datepicker({
+    dateFormat: "yy-mm-dd",
+    minDate: 0,
+    beforeShow: function () {
+        let dayType = $("#leave_day").val();
+        let startDate = $("#leave_start_date").val();
+
+        // If half day → disable all dates except start date
+        if (dayType === "first_half_day" || dayType === "second_half_day") {
+            $(this).datepicker("option", "beforeShowDay", function (date) {
+                let d = $.datepicker.formatDate("yy-mm-dd", date);
+                return [d === startDate]; // Only one date enabled
+            });
+        } else {
+            $(this).datepicker("option", "beforeShowDay", null);
+        }
+    }
+});
+
+/*******************************************************************
+    APPLY LOGIC ON CHANGE EVENTS
+*******************************************************************/
+$("#leave_day").on("change", function () {
+    lockHalfDayToDate();
+});
+
+$("#leave_start_date").on("change", function () {
+    lockHalfDayToDate();
+});
+
 </script>
 
 <script>
