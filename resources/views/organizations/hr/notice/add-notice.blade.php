@@ -127,7 +127,7 @@ background-color: #ffff;
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group" id="summernote_id">
                                             <label for="description">Description <span class="text-danger">*</span></label>
-                                            <textarea class="form-control" name="description" id="description" placeholder="Enter Description">{{ old('description') }}</textarea>
+                                            <textarea class="form-control" name="description" id="descriptionsumernote" placeholder="Enter Description">{{ old('description') }}</textarea>
                                             @if ($errors->has('description'))
                                                 <span
                                                     class="red-text">{{ $errors->first('description') }}</span>

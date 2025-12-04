@@ -96,7 +96,7 @@
                                                 <div class="form-group" id="summernote_id">
                                                     <label for="english_description">Description <span class="text-danger">*</span></label>
                                                     <div class="summernote1">
-                                                        <textarea class="form-control" name="description" id="description" placeholder="Enter the Description">
+                                                        <textarea class="form-control" name="description" id="descriptionsumernote" placeholder="Enter the Description">
                                              @if (old('description'))
 {{ old('description') }}@else{{ $editData->description }}
 @endif 

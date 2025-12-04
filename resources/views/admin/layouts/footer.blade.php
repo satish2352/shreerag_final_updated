@@ -308,7 +308,7 @@ document.getElementById('filterForm').addEventListener('submit', function (e) {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
 <script>
 $(document).ready(function () {
-    $('#description').summernote({
+    $('#descriptionsumernote').summernote({
         height: 200,           // Set height
         minHeight: 150,        // Minimum height
         maxHeight: null,       
