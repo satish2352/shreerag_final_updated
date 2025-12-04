@@ -357,6 +357,81 @@ class ReportController extends Controller
         }
     }
 
+     public function getRejectedGRNReport(Request $request)
+    {
+        try {
+            // Fetch report data from service
+            $data = $this->service->getRejectedGRNReport($request);
+
+            // -------------------------------------------
+            // 🔹 VENDOR LIST (ONLY WHERE GRN IS GENERATED)
+            // -------------------------------------------
+            $getProjectName = PurchaseOrdersModel::leftJoin('vendors', function ($join) {
+                $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
+            })
+                ->leftJoin('grn_tbl', function ($join) {
+                    $join->on('purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id');
+                })
+                ->whereNotNull('grn_tbl.grn_no_generate') // <-- IMPORTANT
+                ->where('vendors.is_deleted', 0)
+                ->where('vendors.is_active', 1)
+                ->distinct() // prevents duplicate vendor names
+                ->pluck('vendors.vendor_name', 'vendors.id');
+
+            // -------------------------------------------
+            // 🔹 PURCHASE ORDER LIST (ONLY WHERE GRN EXISTS)
+            // -------------------------------------------
+            $getPurchaseOrder = PurchaseOrdersModel::leftJoin('grn_tbl', function ($join) {
+                $join->on('purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id');
+            })
+                ->whereNotNull('grn_tbl.grn_no_generate') // <-- IMPORTANT
+                ->where('purchase_orders.is_deleted', 0)
+                ->where('purchase_orders.is_active', 1)
+                ->distinct()
+                ->pluck('purchase_orders.purchase_orders_id', 'purchase_orders.purchase_orders_id');
+
+            return view('organizations.report.rejected-grn-report', compact(
+                'data',
+                'getProjectName',
+                'getPurchaseOrder'
+            ));
+        } catch (\Exception $e) {
+            return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+        }
+    }
+
+
+    public function getRejectedGRNReportAjax(Request $request)
+    {
+        try {
+            $data = $this->service->getRejectedGRNReport($request);
+
+
+            // if ($request->filled('export_type') && $request->export_type == 1) {
+            if ($request->export_type == "1") {
+                $pdf = Pdf::loadView('exports.rejected-grn-report-pdf', ['data' => $data['data']])
+                    ->setPaper('a3', 'landscape');
+                return $pdf->download("RejectedGRNReport_{$this->timeStamp()}.pdf");
+            }
+
+            // if ($request->filled('export_type') && $request->export_type == 2) {
+            if ($request->export_type == "2") {
+                return Excel::download(new GRNReportExport($data['data']), "RejectedGRNReport_{$this->timeStamp()}.xlsx");
+            }
+
+            return response()->json([
+                'status' => true,
+                'data' => $data['data'],
+                'pagination' => $data['pagination']
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
     public function getVendorbyPurchaseOrder($id)
     {
         try {

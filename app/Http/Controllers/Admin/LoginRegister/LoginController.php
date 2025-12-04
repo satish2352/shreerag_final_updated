@@ -33,6 +33,27 @@ class LoginController extends Controller
 
         return view('admin.login');
     }
+    function getClientIpAddress() {
+    $keys = [
+        'HTTP_CF_CONNECTING_IP',   // Cloudflare
+        'HTTP_X_REAL_IP',
+        'HTTP_X_FORWARDED_FOR',
+        'HTTP_CLIENT_IP',
+        'HTTP_X_FORWARDED',
+        'HTTP_FORWARDED_FOR',
+        'HTTP_FORWARDED',
+        'REMOTE_ADDR'
+    ];
+
+    foreach ($keys as $key) {
+        if (isset($_SERVER[$key]) && $_SERVER[$key]) {
+            $ipList = explode(',', $_SERVER[$key]);
+            return trim($ipList[0]); // first IP = real client
+        }
+    }
+    return 'UNKNOWN';
+}
+
     // public function submitLogin( Request $request ) {
     //     $rules = [
     //         'email' => 'required|email',
@@ -190,8 +211,10 @@ class LoginController extends Controller
 
      // ✅ Get user IP address
         // $ipAddress = $request->ip();
-            $systemIp = getHostByName(getHostName());
-            $ipAddress = getHostByName(getHostName());
+            // $systemIp = getHostByName(getHostName());
+            // $ipAddress = getHostByName(getHostName());
+            $ipAddress = getClientIpAddress();
+
    // ✅ Update location if provided
         if ($request->filled(['latitude', 'longitude'])) {
             $latitude  = $request->latitude;

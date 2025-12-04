@@ -233,9 +233,13 @@
                                                         <option value="full_day"
                                                             {{ $editData['leave_details']->leave_day == 'full_day' ? 'selected' : '' }}>
                                                             Full Day</option>
-                                                        <option value="half_day"
-                                                            {{ $editData['leave_details']->leave_day == 'half_day' ? 'selected' : '' }}>
-                                                            Half Day</option>
+                                                        <option value="first_half_day"
+                                                            {{ $editData['leave_details']->leave_day == 'first_half_day' ? 'selected' : '' }}>
+                                                            First Half Day</option>
+ <option value="second_half_day"
+                                                            {{ $editData['leave_details']->leave_day == 'second_half_day' ? 'selected' : '' }}>
+                                                            Second Half Day</option>
+                                                           
                                                     </select>
                                                 </div>
                                             </div>

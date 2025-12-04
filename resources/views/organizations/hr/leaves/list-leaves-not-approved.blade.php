@@ -65,13 +65,17 @@
                                             <td>{{ ucwords($data->u_email) }}</td>
                                             <td>{{ ucwords($data->leave_start_date) }}</td>
                                             <td>{{ ucwords($data->leave_end_date) }}</td>
-                                            <td> @if($data->leave_day == 'half_day')
-                                                Half Day
-                                              @elseif($data->leave_day == 'full_day')
-                                             Full Day
-                                              @else
-                                                  Unknown Status
-                                              @endif</td>
+                                            <td>
+                                               @if ($data->leave_day == 'first_half_day')
+                                                    First Half Day
+                                                @elseif ($data->leave_day == 'second_half_day')
+                                                    Second Half Day
+                                                @elseif ($data->leave_day == 'full_day')
+                                                    Full Day
+                                                @else
+                                                    Unknown Status
+                                                @endif    
+                                            </td>
                                               <td>{{ ucwords($data->leave_type_name) }}</td>
                                               <td>{{ ucwords($data->leave_count) }}</td>
                                             <td>{{ ucwords($data->reason) }}</td>
@@ -95,29 +99,74 @@
         </div>
     </div>
 </div>
-<form method="POST" action="{{ url('/hr/update-status') }}" id="activeform">
+{{-- <form method="POST" action="{{ url('/hr/update-status-rejected') }}" id="activeform">
     @csrf
     <input type="hidden" name="active_id" id="active_id" value="">
     <input type="hidden" name="action" id="action" value="">
-</form>
+</form> --}}
 
   @push('scripts')  
 <script>
-$(document).ready(function() {
+$(document).ready(function () {
 
     $(document).on('click', '.approve-btn, .notapprove-btn', function () {
 
         var leaveId = $(this).data('id');
         var action = $(this).data('action');
 
-        $("#active_id").val(leaveId);
-        $("#action").val(action);
+        let message = action === "approve"
+            ? "Do you want to approve this leave?"
+            : "Do you want to reject this leave?";
 
-        $("#activeform").submit();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                $.ajax({
+                    url: "{{ route('update-status-rejected') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        active_id: leaveId,
+                        action: action
+                    },
+                    success: function(response) {
+
+                        Swal.fire({
+                            icon: "success",
+                            title: "Success",
+                            text: response.message,
+                            timer: 1200,
+                            showConfirmButton: false
+                        });
+
+                        setTimeout(() => {
+                            window.location.href = response.redirect;
+                        }, 1200);
+                    },
+                    error: function() {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: "Something went wrong"
+                        });
+                    }
+                });
+
+            }
+        });
     });
 
 });
 </script>
+
 
 @endpush
 

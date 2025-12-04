@@ -254,7 +254,8 @@ form .form-group label.error {
                                                                     id="leave_day">
                                                                 <option value="">Select Leave Day</option>
                                                                 <option value="full_day">Full Day</option>
-                                                                <option value="half_day">Half Day</option>
+                                                                <option value="first_half_day">First Half Day</option>
+                                                                <option value="second_half_day">Second Half Day</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -463,7 +464,7 @@ jQuery(document).ready(function ($) {
             return null;
         }
 
-        if (dayType === "half_day") return 0.5;
+        if (dayType === "first_half_day" || dayType === "second_half_day") return 0.5;
 
         return Math.floor((e - s) / (1000 * 60 * 60 * 24)) + 1;
     }

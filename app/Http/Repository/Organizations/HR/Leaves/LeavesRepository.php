@@ -159,29 +159,46 @@ class LeavesRepository
                 ->join('tbl_leave_management', 'tbl_leaves.leave_type_id', '=', 'tbl_leave_management.id')
                 ->where('organization_id', session()->get('org_id'))
                 ->where('is_approved', 1)
-                ->select(
-                    'tbl_leaves.id',
-                    'users.u_email',
-                    'users.f_name',
-                    'users.m_name',
-                    'users.l_name',
-                    'users.role_id',
-                    'tbl_roles.role_name',
-                    'tbl_leaves.leave_start_date',
-                    'tbl_leaves.other_employee_name',
-                    'tbl_leaves.employee_id',
-                    'tbl_leaves.leave_end_date',
-                    'tbl_leaves.leave_day',
-                    // 'tbl_leaves.leave_count',
-                    // DB::raw("STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y') as leave_start_date"),
-                    'tbl_leaves.employee_id',
-                    // DB::raw("STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y') as leave_end_date"),
-                    'tbl_leaves.leave_day',
-                    DB::raw("DATEDIFF(STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y'), STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y')) + 1 as leave_count"),
-                    'tbl_leave_management.name as leave_type_name',
-                    'tbl_leaves.reason',
-                    'tbl_leaves.is_approved',
-                )
+                  ->select(
+    'tbl_leaves.id',
+    'users.u_email',
+    'users.f_name',
+    'users.m_name',
+    'users.l_name',
+    'users.role_id',
+    'tbl_roles.role_name',
+    'tbl_leaves.leave_start_date',
+    'tbl_leaves.other_employee_name',
+    'tbl_leaves.employee_id',
+    'tbl_leaves.leave_end_date',
+    'tbl_leaves.leave_day',
+    'tbl_leaves.leave_count',   // ✔ FIXED
+    'tbl_leave_management.name as leave_type_name',
+    'tbl_leaves.reason',
+    'tbl_leaves.is_approved',
+)
+
+                // ->select(
+                //     'tbl_leaves.id',
+                //     'users.u_email',
+                //     'users.f_name',
+                //     'users.m_name',
+                //     'users.l_name',
+                //     'users.role_id',
+                //     'tbl_roles.role_name',
+                //     'tbl_leaves.leave_start_date',
+                //     'tbl_leaves.other_employee_name',
+                //     'tbl_leaves.employee_id',
+                //     'tbl_leaves.leave_end_date',
+                //     'tbl_leaves.leave_day',
+                   
+                //     'tbl_leaves.employee_id',
+                //     'tbl_leaves.leave_day',
+                //     DB::raw("DATEDIFF(STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y'), STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y')) + 1 as leave_count"),
+                //     'tbl_leave_management.name as leave_type_name',
+                //     'tbl_leaves.reason',
+                //     'tbl_leaves.is_approved',
+                // )
                 ->orderBy('tbl_leaves.updated_at', 'desc')
                 ->get();
 
@@ -200,28 +217,44 @@ class LeavesRepository
                 ->where('organization_id', session()->get('org_id'))
                 ->where('is_approved', 2)
                 ->select(
-                    'tbl_leaves.id',
-                    'users.u_email',
-                    'users.f_name',
-                    'users.m_name',
-                    'users.l_name',
-                    'users.role_id',
-                    'tbl_roles.role_name',
-                    'tbl_leaves.leave_start_date',
-                    'tbl_leaves.other_employee_name',
-                    'tbl_leaves.employee_id',
-                    'tbl_leaves.leave_end_date',
-                    'tbl_leaves.leave_day',
-                    // 'tbl_leaves.leave_count',
-                    // DB::raw("STR_TO_DATE(tbl_leaves.leave_start_date, '%m/%d/%Y') as leave_start_date"),
-                    'tbl_leaves.employee_id',
-                    // DB::raw("STR_TO_DATE(tbl_leaves.leave_end_date, '%m/%d/%Y') as leave_end_date"),
-                    'tbl_leaves.leave_day',
-                    DB::raw("DATEDIFF(tbl_leaves.leave_end_date, tbl_leaves.leave_start_date) + 1 as leave_count"),
-                    'tbl_leave_management.name as leave_type_name',
-                    'tbl_leaves.reason',
-                    'tbl_leaves.is_approved',
-                )
+    'tbl_leaves.id',
+    'users.u_email',
+    'users.f_name',
+    'users.m_name',
+    'users.l_name',
+    'users.role_id',
+    'tbl_roles.role_name',
+    'tbl_leaves.leave_start_date',
+    'tbl_leaves.other_employee_name',
+    'tbl_leaves.employee_id',
+    'tbl_leaves.leave_end_date',
+    'tbl_leaves.leave_day',
+    'tbl_leaves.leave_count',   // ✔ FIXED
+    'tbl_leave_management.name as leave_type_name',
+    'tbl_leaves.reason',
+    'tbl_leaves.is_approved',
+)
+
+                // ->select(
+                //     'tbl_leaves.id',
+                //     'users.u_email',
+                //     'users.f_name',
+                //     'users.m_name',
+                //     'users.l_name',
+                //     'users.role_id',
+                //     'tbl_roles.role_name',
+                //     'tbl_leaves.leave_start_date',
+                //     'tbl_leaves.other_employee_name',
+                //     'tbl_leaves.employee_id',
+                //     'tbl_leaves.leave_end_date',
+                //     'tbl_leaves.leave_day',
+                //     'tbl_leaves.employee_id',
+                //     'tbl_leaves.leave_day',
+                //     DB::raw("DATEDIFF(tbl_leaves.leave_end_date, tbl_leaves.leave_start_date) + 1 as leave_count"),
+                //     'tbl_leave_management.name as leave_type_name',
+                //     'tbl_leaves.reason',
+                //     'tbl_leaves.is_approved',
+                // )
                 ->orderBy('tbl_leaves.updated_at', 'desc')
                 ->get();
 

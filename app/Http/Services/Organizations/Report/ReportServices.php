@@ -91,6 +91,16 @@ class ReportServices
             throw $e; // propagate error
         }
     }
+     public function getRejectedGRNReport($request)
+    {
+        try {
+            $data_output = $this->repo->getRejectedGRNReport($request);
+           
+            return $data_output;
+        } catch (\Exception $e) {
+            throw $e; // propagate error
+        }
+    }
     public function getConsumptionReport($request)
     {
         try {

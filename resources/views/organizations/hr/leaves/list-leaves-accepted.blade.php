@@ -61,13 +61,15 @@
                                                 <td>{{ $data->leave_start_date }}</td>
                                                 <td>{{ $data->leave_end_date }}</td>
                                                 <td>
-                                                    @if ($data->leave_day == 'half_day')
-                                                        Half Day
-                                                    @elseif($data->leave_day == 'full_day')
-                                                        Full Day
-                                                    @else
-                                                        Unknown
-                                                    @endif
+                                                    @if ($data->leave_day == 'first_half_day')
+                                                            First Half Day
+                                                        @elseif ($data->leave_day == 'second_half_day')
+                                                            Second Half Day
+                                                        @elseif ($data->leave_day == 'full_day')
+                                                            Full Day
+                                                        @else
+                                                            Unknown Status
+                                                        @endif
                                                 </td>
                                                 <td>
                                                       <a href="{{ route('show-leaves', base64_encode($data->id)) }} "><button

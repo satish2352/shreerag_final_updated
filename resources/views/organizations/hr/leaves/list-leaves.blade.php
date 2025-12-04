@@ -79,13 +79,16 @@
                                                     <td>{{ ucwords($data->leave_start_date) }}</td>
                                                     <td>{{ ucwords($data->leave_end_date) }}</td>
                                                     <td>
-                                                        @if ($data->leave_day == 'half_day')
-                                                            Half Day
-                                                        @elseif($data->leave_day == 'full_day')
+                                                        @if ($data->leave_day == 'first_half_day')
+                                                            First Half Day
+                                                        @elseif ($data->leave_day == 'second_half_day')
+                                                            Second Half Day
+                                                        @elseif ($data->leave_day == 'full_day')
                                                             Full Day
                                                         @else
                                                             Unknown Status
                                                         @endif
+
                                                     </td>
                                                     <td>{{ ucwords($data->leave_type_name) }}</td>
                                                     <td>{{ ucwords($data->leave_count) }}</td>

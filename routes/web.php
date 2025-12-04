@@ -678,6 +678,9 @@
         Route::get('/grn-report', [ReportController::class, 'getGRNReport'])->name('grn-report');
         Route::get('/grn-report-ajax', [ReportController::class, 'getGRNReportAjax'])->name('grn-report-ajax');
 
+          Route::get('/rejected-grn-report', [ReportController::class, 'getRejectedGRNReport'])->name('rejected-grn-report');
+        Route::get('/rejected-grn-report-ajax', [ReportController::class, 'getRejectedGRNReportAjax'])->name('rejected-grn-report-ajax');
+
         Route::get('/get-vendor-by-purchase_order/{id}', [ReportController::class, 'getVendorbyPurchaseOrder'])
             ->name('get-vendor-by-purchase_order');
     });
@@ -791,7 +794,7 @@ Route::post('/check-leave-balance', [LeavesController::class, 'checkLeaveBalance
         Route::get('/list-leaves-approvedby-hr', [LeavesController::class, 'getAllApprovedRequest'])->name('list-leaves-approvedby-hr');
         Route::post('/check-dates', [LeavesController::class, 'checkDates'])->name('check-dates');
         Route::post('/update-status', [LeavesController::class, 'updateLabourStatus'])->name('update-status');
-        Route::post('/update-status-not-approved', [LeavesController::class, 'updateLabourStatusNotApproved'])->name('update-status-not-approved');
+        Route::post('/update-status-rejected', [LeavesController::class, 'updateLabourStatusRejected'])->name('update-status-rejected');
 
         // Notices
         Route::get('/list-notice', [NoticeController::class, 'index'])->name('list-notice');

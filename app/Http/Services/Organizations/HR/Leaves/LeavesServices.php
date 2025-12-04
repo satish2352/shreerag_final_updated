@@ -55,7 +55,9 @@ class LeavesServices
     public function getAllApprovedRequest()
     {
         try {
-            return $this->repo->getAllApprovedRequest();
+            $data_output = $this->repo->getAllApprovedRequest();
+          
+            return $data_output;
         } catch (\Exception $e) {
             return $e;
         }

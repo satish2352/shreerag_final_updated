@@ -256,6 +256,88 @@ public function updateLabourStatus(Request $request)
         ]);
     }
 }
+public function updateLabourStatusRejected(Request $request)
+{
+    try {
+
+        // Validation
+        $validator = Validator::make($request->all(), [
+            'active_id' => 'required|exists:tbl_leaves,id',
+            'action' => 'required|in:approve,notapprove',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed'
+            ], 422);
+        }
+
+        $leaveId = $request->active_id;
+        $action = $request->action;
+
+        $leave = Leaves::find($leaveId);
+        $employeeId = $leave->employee_id;
+        $leaveType = $leave->leave_type_id;
+
+        /* ---------------------- APPROVE LEAVE FROM REJECTED LIST ---------------------- */
+        if ($action === 'approve') {
+
+            // Only approve if not already approved
+            if ($leave->is_approved != 2) {
+
+                $leave->is_approved = 2; // 2 = approved
+
+                // Update leave balance only once
+                $financialRecord = FinancialYearLeaveRecord::where('user_id', $employeeId)
+                    ->where('leave_management_id', $leaveType)
+                    ->first();
+
+                if ($financialRecord) {
+                    $financialRecord->leave_balance -= $leave->leave_count;
+
+                    if ($financialRecord->leave_balance < 0) {
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => 'Insufficient leave balance for approval'
+                        ]);
+                    }
+
+                    $financialRecord->save();
+                }
+            }
+
+            $leave->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Leave approved successfully',
+                'redirect' => url('hr/list-leaves-approvedby-hr')
+            ]);
+        }
+
+        /* ---------------------- REJECT LEAVE ---------------------- */
+        if ($action === 'notapprove') {
+
+            // 1 = rejected
+            $leave->is_approved = 1;
+            $leave->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Leave rejected successfully',
+                'redirect' => url('hr/list-leaves-not-approvedby-hr')
+            ]);
+        }
+
+    } catch (\Exception $e) {
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
 
 
     public function add()

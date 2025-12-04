@@ -85,13 +85,20 @@
                             <div class="row print-row" style="padding-left:10px;">
                                 <div class="col-lg-4 col-md-4 col-sm-4 left-side"><p><strong>Leave Day</strong> :</p></div>
                                 <div class="col-lg-8 col-md-8 col-sm-8 right-side">
-                                    @if ($user_detail['leave_details']->leave_day == 'half_day')
-                                        <p>Half Day</p>
-                                    @elseif($user_detail['leave_details']->leave_day == 'full_day')
+                                  @if ($user_detail['leave_details']->leave_day == 'first_half_day')
+                                        <p>First Half Day</p>
+
+                                    @elseif ($user_detail['leave_details']->leave_day == 'second_half_day')
+                                        <p>Second Half Day</p>
+
+                                    @elseif ($user_detail['leave_details']->leave_day == 'full_day')
                                         <p>Full Day</p>
+
                                     @else
                                         <p>Unknown Status</p>
                                     @endif
+
+
                                 </div>
                             </div>
                             <div class="row print-row" style="padding-left:10px;">

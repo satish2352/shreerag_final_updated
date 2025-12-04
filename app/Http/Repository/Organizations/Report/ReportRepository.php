@@ -12,6 +12,7 @@ use App\Models\{
     CustomerProductQuantityTracking,
     GrnPOQuantityTracking,
     ItemStock,
+      RejectedChalan,
 };
 
 class ReportRepository
@@ -1131,6 +1132,142 @@ class ReportRepository
             throw $e;
         }
     }
+public function getRejectedGRNReport(Request $request)
+{
+    try {
+
+        // -----------------------------------------------
+        //  BASE QUERY
+        // -----------------------------------------------
+        $query = RejectedChalan::join('grn_tbl', 'grn_tbl.purchase_orders_id', '=', 'tbl_rejected_chalan.purchase_orders_id')
+            ->leftJoin('gatepass', 'grn_tbl.gatepass_id', '=', 'gatepass.id')
+
+            // 🔥 FIXED JOIN → Use purchase_orders.purchase_orders_id instead of id
+            ->leftJoin(
+                'purchase_orders',
+                'tbl_rejected_chalan.purchase_orders_id',
+                '=',
+                'purchase_orders.purchase_orders_id'
+            )
+
+            ->leftJoin('businesses_details', 'purchase_orders.business_details_id', '=', 'businesses_details.id')
+            ->leftJoin('vendors', 'purchase_orders.vendor_id', '=', 'vendors.id')
+            ->leftJoin('tbl_grn_po_quantity_tracking', 'grn_tbl.id', '=', 'tbl_grn_po_quantity_tracking.grn_id')
+            ->where('tbl_rejected_chalan.is_deleted', 0)
+            ->where('tbl_rejected_chalan.chalan_no', '<>', '');
+
+        // -----------------------------------------------
+        // SEARCH FILTER
+        // -----------------------------------------------
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('businesses_details.product_name', 'like', "%{$search}%")
+                    ->orWhere('vendors.vendor_name', 'like', "%{$search}%")
+                    ->orWhere('vendors.vendor_company_name', 'like', "%{$search}%")
+                    ->orWhere('purchase_orders.purchase_orders_id', 'like', "%{$search}%");
+            });
+        }
+
+        // -----------------------------------------------
+        // VENDOR FILTER
+        // -----------------------------------------------
+        if ($request->filled('vendor_name')) {
+            $query->where('vendors.id', $request->vendor_name);
+        }
+
+        // -----------------------------------------------
+        // PO NUMBER FILTER
+        // -----------------------------------------------
+        if ($request->filled('purchase_orders_id')) {
+            $query->where('purchase_orders.purchase_orders_id', $request->purchase_orders_id);
+        }
+
+        // -----------------------------------------------
+        // DATE FILTER
+        // -----------------------------------------------
+        if ($request->filled('from_date')) {
+            $query->whereDate('grn_tbl.updated_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('grn_tbl.updated_at', '<=', $request->to_date);
+        }
+
+        // -----------------------------------------------
+        // YEAR / MONTH FILTER
+        // -----------------------------------------------
+        if ($request->filled('year')) {
+            $query->whereYear('grn_tbl.updated_at', $request->year);
+        }
+
+        if ($request->filled('month')) {
+            $query->whereMonth('grn_tbl.updated_at', $request->month);
+        }
+
+        // -----------------------------------------------
+        // SELECT FIELDS
+        // -----------------------------------------------
+        $query->select(
+            'tbl_rejected_chalan.id',
+            'tbl_rejected_chalan.purchase_orders_id',
+            'grn_tbl.po_date',
+            'grn_tbl.grn_date',
+            'grn_tbl.remark',
+            'gatepass.gatepass_name',
+            'tbl_rejected_chalan.is_active',
+            'grn_tbl.updated_at',
+            'purchase_orders.purchase_orders_id as po_number',
+            'businesses_details.product_name',
+            'businesses_details.description',
+            'vendors.vendor_name',
+            'vendors.vendor_company_name',
+            'grn_tbl.grn_no_generate',
+            'businesses_details.id as business_details_id',
+            'grn_tbl.id as grn_id',
+            'tbl_grn_po_quantity_tracking.grn_id as tracking_grn_id'
+        )->distinct();
+
+        // -----------------------------------------------
+        // EXPORT REQUEST
+        // -----------------------------------------------
+        if ($request->filled('export_type')) {
+            return [
+                'data' => $query->orderBy('grn_tbl.id', 'desc')->get(),
+                'pagination' => null,
+            ];
+        }
+
+        // -----------------------------------------------
+        // PAGINATION
+        // -----------------------------------------------
+        $perPage = $request->input('pageSize', 10);
+        $currentPage = $request->input('currentPage', 1);
+
+        $totalItems = $query->distinct()->count('grn_tbl.id');
+
+        $data = $query->orderBy('grn_tbl.id', 'desc')
+            ->skip(($currentPage - 1) * $perPage)
+            ->take($perPage)
+            ->get();
+
+        return [
+            'data' => $data,
+            'pagination' => [
+                'currentPage' => $currentPage,
+                'pageSize' => $perPage,
+                'totalItems' => $totalItems,
+                'totalPages' => ceil($totalItems / $perPage),
+                'from' => ($currentPage - 1) * $perPage + 1,
+                'to' => (($currentPage - 1) * $perPage) + count($data),
+            ]
+        ];
+
+    } catch (\Exception $e) {
+        throw $e;
+    }
+}
+
 
     public function getConsumptionReport(Request $request)
     {
