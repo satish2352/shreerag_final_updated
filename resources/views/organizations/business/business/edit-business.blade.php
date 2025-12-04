@@ -12,7 +12,7 @@
                 </div>
                 <div class="sparkline12-graph">
                     <div class="basic-login-form-ad">
-                        <div class="row">
+                        <div class="">
                             @if (Session::get('status') == 'success')
                                 <div class="col-md-12">
                                     <div class="alert alert-success alert-dismissible" role="alert">
@@ -50,7 +50,7 @@
                                                 @foreach ($editData as $key => $editDataNew)
                                                     @if ($key == 0)
                                                         <div class="row">
-                                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                             <div class="col-lg-6 col-md-6 col-sm-6">
                                                                 <label for="project_name">Project Name : <span
                                                                         class="text-danger">*</span></label>
                                                                 <input class="form-control" name="project_name"
@@ -59,7 +59,7 @@
                                                                     value="@if (old('project_name')) {{ trim(old('project_name')) }}@else{{ trim($editDataNew->project_name) }} @endif">
                                                             </div>
 
-                                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                            <div class="col-lg-6 col-md-6 col-sm-6">
                                                                 <label for="customer_po_number">PO Number : <span
                                                                         class="text-danger">*</span></label>
                                                                 <input class="form-control" name="customer_po_number"
@@ -67,8 +67,7 @@
                                                                     placeholder="Enter the customer po number"
                                                                     value="@if (old('customer_po_number')) {{ trim(old('customer_po_number')) }}@else{{ trim($editDataNew->customer_po_number) }} @endif">
                                                             </div>
-                                                        </div>
-                                                        <div class="row mt-2">
+                                                   
                                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mb-4">
                                                                 <label for="title">Customer Name : <span
                                                                         class="text-danger">*</span></label>
