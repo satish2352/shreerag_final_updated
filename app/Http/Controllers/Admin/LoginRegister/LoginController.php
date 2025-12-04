@@ -213,7 +213,8 @@ class LoginController extends Controller
         // $ipAddress = $request->ip();
             // $systemIp = getHostByName(getHostName());
             // $ipAddress = getHostByName(getHostName());
-            $ipAddress = getClientIpAddress();
+          $ipAddress = $this->getClientIpAddress();
+
 
    // ✅ Update location if provided
         if ($request->filled(['latitude', 'longitude'])) {
