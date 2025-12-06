@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('content')
-    <div class="row">
+    <div class="">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list">
                 <div class="sparkline12-hd">
@@ -75,7 +75,7 @@
                                                             readonly>
                                                     </div>
                                                
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-4">
                                                         <label for="bom_image">Upload Estimation BOM (Excel, 1KB - 5MB) <span
                                                                 class="text-danger">*</span></label>
                                                         <input type="file" class="form-control" accept=".xls,.xlsx"
@@ -85,13 +85,13 @@
                                                             <span class="red-text">{{ $errors->first('bom_image') }}</span>
                                                         @endif
                                                     </div>
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-4">
                                                         <label for="total_estimation_amount">Total Estimation Amount <span
                                                                 class="text-danger">*</span></label>
                                                         <input type="text" class="form-control" id="total_estimation_amount"
                                                             name="total_estimation_amount" >
                                                     </div>
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-4">
                                                         <label for="remark_by_estimation">Remark <span
                                                                 class="text-danger">*</span></label>
                                                         <input type="text" class="form-control" id="remark_by_estimation"

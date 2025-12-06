@@ -4690,7 +4690,7 @@ label{
 
 .form-control {
     height: 42px !important;
-    line-height: 42px !important;
+    /* line-height: 42px !important; */
 }
 
 .password-toggle {

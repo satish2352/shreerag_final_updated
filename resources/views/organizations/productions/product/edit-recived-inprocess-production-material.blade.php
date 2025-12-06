@@ -49,7 +49,7 @@
             margin-bottom: 100px !important;
         }
     </style>
-    <div class="row">
+    <div class="">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list" style="margin-bottom: 100px;">
                 <div class="sparkline12-hd">

@@ -16,7 +16,7 @@
             color: red !important;
         }
     </style>
-    <div class="row">
+    <div class="">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list">
                 <div class="sparkline12-hd">
@@ -151,8 +151,7 @@
                                                         <span class="red-text"><?php echo $errors->first('truck_no', ':message'); ?></span>
                                                     @endif
                                                 </div>
-                                                <div class="row">
-                                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                                 <div class="col-lg-6 col-md-6 col-sm-6">
                                                     <label for="from_place">From Place :  <span class="text-danger">*</span></label> 
                                                     <input type="text" class="form-control" id="from_place"
                                                      value=" "
@@ -161,7 +160,7 @@
                                                         <span class="red-text"><?php echo $errors->first('from_place', ':message'); ?></span>
                                                     @endif
                                                 </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                                  <div class="col-lg-6 col-md-6 col-sm-6">
                                                     <label for="to_place">To Place :  <span class="text-danger">*</span></label> 
                                                     <input type="text" class="form-control" id="to_place"
                                                      value=" "
@@ -170,7 +169,6 @@
                                                         <span class="red-text"><?php echo $errors->first('to_place', ':message'); ?></span>
                                                     @endif
                                                 </div>
-                                            </div>
                                             </div>
                                             <div class="container-fluid">
                                                  <div class="login-btn-inner">

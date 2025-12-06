@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('content')
-    <div class="row">
+    <div class="">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list">
                 <div class="sparkline12-hd">
@@ -74,7 +74,7 @@
                                                             value="{{ old('description', $business_details_data->description) }}"
                                                             readonly>
                                                     </div>
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-4">
                                                         <label for="design_image">Upload Design Layout (PDF, 1KB - 5MB)
                                                             <span class="text-danger">*</span></label>
                                                         {{-- <input type="file" class="form-control" accept="application/pdf" name="design_image"> --}}
@@ -86,7 +86,7 @@
                                                                 class="red-text">{{ $errors->first('design_image') }}</span>
                                                         @endif
                                                     </div>
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-4">
                                                         <label for="bom_image">Upload BOM (Excel, 1KB - 5MB) <span
                                                                 class="text-danger">*</span></label>
                                                         <input type="file" class="form-control" accept=".xls,.xlsx"

@@ -29,7 +29,7 @@
             margin-top: 30px !important;
         }
     </style>
-    <div class="row">
+    <div class="">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list">
                 <div class="sparkline12-hd">
@@ -70,7 +70,7 @@
                                                 value="{{ $id }}">
                                             <input type="hidden" name="part_item_id" id="part_item_id"
                                                 value="{{ $id }}">
-                                            <div class="row">
+                                         
                                                 <div class="row">
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="product_name">Name:</label>
@@ -134,12 +134,12 @@
                                                 
                                                 </div>
 
-
-                                                <div class="login-btn-inner marg-top d-flex justify-content-center">
+                                                <div class="row d-flex justify-content-center">
+                                                <div class="login-btn-inner marg-top">
                                                     <a href="{{ route('list-material-received') }}" class="btn btn-white me-2">Cancel</a>
                                                     <button class="btn btn-sm btn-bg-colour" type="submit">Submit Completed Quantity</button>
                                                 </div>
-
+                                              </div>
                                         </form>
 
                                     </div>

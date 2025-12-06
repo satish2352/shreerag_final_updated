@@ -85,7 +85,7 @@
                                     <input type="hidden" name="id" id="id" value="{{ $productDetails->id }}">
                                     <div class="row">
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                            <label for="product_name">Name:</label>
+                                            <label for="product_name">Product Name:</label>
                                             <input type="text" class="form-control" id="name" name="product_name"
                                                 value="{{ $productDetails->product_name }}" placeholder="Enter Product Name"
                                                 readonly>
@@ -98,7 +98,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="table-responsive">
+                                    <div class="table-responsive mt-4">
                                         <table class="table table-hover table-white repeater" id="purchase_order_table">
                                             <thead>
                                                 <tr>
