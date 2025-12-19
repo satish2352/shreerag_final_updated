@@ -433,7 +433,7 @@ class DashboardController extends Controller
 
 
             $total_leaves_type = LeaveManagement::where('is_active', 1)->where('is_deleted', 0)->count();
-           
+
             $total_notice = Notice::where('is_active', 1)->where('is_deleted', 0)->count();
 
             $ses_userId = session()->get('user_id');
@@ -470,64 +470,64 @@ class DashboardController extends Controller
             //     'tbl_leave_management.leave_count'
             // )
             // ->get();
-         $currentYear = date('Y');
-$previousYear = $currentYear - 1;
+            $currentYear = date('Y');
+            $previousYear = $currentYear - 1;
 
-/* -------------------------------------------
+            /* -------------------------------------------
    PREVIOUS YEAR PENDING LEAVES
 --------------------------------------------*/
-$previousYearPending = DB::table('tbl_leave_management')
-    ->leftJoin('tbl_leaves', function ($join) use ($ses_userId, $previousYear) {
-        $join->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
-            ->where('tbl_leaves.employee_id', $ses_userId)
-            ->where('tbl_leaves.is_approved', 2)
-            ->whereYear('tbl_leaves.leave_start_date', $previousYear);
-    })
-    ->where('tbl_leave_management.leave_year', $previousYear)
-    ->select(
-        'tbl_leave_management.name',
-        'tbl_leave_management.leave_count',
-        DB::raw('tbl_leave_management.leave_count - COALESCE(SUM(tbl_leaves.leave_count), 0) AS pending_carry_forward')
-    )
-    ->groupBy('tbl_leave_management.name', 'tbl_leave_management.leave_count')
-    ->get()
-    ->keyBy('name');
+            $previousYearPending = DB::table('tbl_leave_management')
+                ->leftJoin('tbl_leaves', function ($join) use ($ses_userId, $previousYear) {
+                    $join->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
+                        ->where('tbl_leaves.employee_id', $ses_userId)
+                        ->where('tbl_leaves.is_approved', 2)
+                        ->whereYear('tbl_leaves.leave_start_date', $previousYear);
+                })
+                ->where('tbl_leave_management.leave_year', $previousYear)
+                ->select(
+                    'tbl_leave_management.name',
+                    'tbl_leave_management.leave_count',
+                    DB::raw('tbl_leave_management.leave_count - COALESCE(SUM(tbl_leaves.leave_count), 0) AS pending_carry_forward')
+                )
+                ->groupBy('tbl_leave_management.name', 'tbl_leave_management.leave_count')
+                ->get()
+                ->keyBy('name');
 
-/* -------------------------------------------
+            /* -------------------------------------------
    CURRENT YEAR LEAVES
 --------------------------------------------*/
-$user_leaves_status = DB::table('tbl_leave_management')
-    ->leftJoin('tbl_leaves', function ($join) use ($ses_userId) {
-        $join->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
-            ->where('tbl_leaves.employee_id', $ses_userId)
-            ->where('tbl_leaves.is_approved', 2);
-    })
-    ->where('tbl_leave_management.leave_year', $currentYear)
-    ->where('tbl_leave_management.is_active', 1)
-    ->where('tbl_leave_management.is_deleted', 0)
-    ->select(
-        'tbl_leave_management.id',
-        'tbl_leave_management.name as leave_type_name',
-        'tbl_leave_management.leave_count as current_year_leave',
-        DB::raw('COALESCE(SUM(tbl_leaves.leave_count), 0) AS total_leaves_taken')
-    )
-    ->groupBy('tbl_leave_management.id', 'tbl_leave_management.name', 'tbl_leave_management.leave_count')
-    ->get();
+            $user_leaves_status = DB::table('tbl_leave_management')
+                ->leftJoin('tbl_leaves', function ($join) use ($ses_userId) {
+                    $join->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
+                        ->where('tbl_leaves.employee_id', $ses_userId)
+                        ->where('tbl_leaves.is_approved', 2);
+                })
+                ->where('tbl_leave_management.leave_year', $currentYear)
+                ->where('tbl_leave_management.is_active', 1)
+                ->where('tbl_leave_management.is_deleted', 0)
+                ->select(
+                    'tbl_leave_management.id',
+                    'tbl_leave_management.name as leave_type_name',
+                    'tbl_leave_management.leave_count as current_year_leave',
+                    DB::raw('COALESCE(SUM(tbl_leaves.leave_count), 0) AS total_leaves_taken')
+                )
+                ->groupBy('tbl_leave_management.id', 'tbl_leave_management.name', 'tbl_leave_management.leave_count')
+                ->get();
 
-/* -------------------------------------------
+            /* -------------------------------------------
    MERGE CARRY FORWARD + FINAL BALANCE
 --------------------------------------------*/
-foreach ($user_leaves_status as $item) {
+            foreach ($user_leaves_status as $item) {
 
-    $carryForward = $previousYearPending[$item->leave_type_name]->pending_carry_forward ?? 0;
+                $carryForward = $previousYearPending[$item->leave_type_name]->pending_carry_forward ?? 0;
 
-    $item->carry_forward = $carryForward;
+                $item->carry_forward = $carryForward;
 
-    $item->total_available_leaves = $item->current_year_leave + $carryForward;
+                $item->total_available_leaves = $item->current_year_leave + $carryForward;
 
-    $item->remaining_leaves = 
-        $item->total_available_leaves - $item->total_leaves_taken;
-}
+                $item->remaining_leaves =
+                    $item->total_available_leaves - $item->total_leaves_taken;
+            }
 
             // $currentYear = date('Y');
 
@@ -794,8 +794,10 @@ foreach ($user_leaves_status as $item) {
         $ses_userId = session()->get('user_id');
 
         $ses_roleId = session()->get('role_id');
+        $baseUrl = config('app.url');
+
         //    $baseUrl = url('http://localhost/shreerag_final_updated'); // Get the base URL dynamically
-        $baseUrl = url('https://report.shreeragengineering.com'); // Get the base URL dynamically
+        // $baseUrl = url('https://report.shreeragengineering.com'); // Get the base URL dynamically
         // $baseUrl = url('https://shreeragengineering.com'); // Get the base URL dynamically
         $count = 0;  // Initialize the $count variable
         $notifications = [];  // Initialize the $notifications array

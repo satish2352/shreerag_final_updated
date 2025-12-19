@@ -126,9 +126,6 @@
         Route::any('/update-roles', [RolesController::class, 'update'])->name('update-roles');
         Route::any('/delete-roles/{id}', [RolesController::class, 'destroy'])->name('delete-roles');
 
-
-
-
         // Departments
         Route::resource('departments', DepartmentController::class)->except(['show']);
 
@@ -164,10 +161,6 @@
         Route::get('/list-rejected-chalan-updated', [RejectedChalanController::class, 'getAllRejectedChalanList'])
             ->name('list-rejected-chalan-updated');
         // ... (continue grouping all the remaining "AllListController" routes neatly here)
-
-
-
-
 
         // Purchase Orders - Approved
         Route::get('/list-purchase-orders', [BusinessAllListController::class, 'getAllListPurchaseOrder'])->name('list-purchase-orders');
@@ -282,7 +275,6 @@
             ->name('list-product-completed-report-ajax');
     });
 
-
     Route::group(['prefix' => 'designdept', 'middleware' => 'admin'], function () {
 
         // Dashboard
@@ -361,7 +353,7 @@
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('estimation-dashboard');
 
 
-          // Reports
+        // Reports
         Route::get('/estimation-report', [ReportController::class, 'getEstimationReport'])->name('estimation-report');
         Route::get('/estimation-report-ajax', [ReportController::class, 'getEstimationReportAjax'])->name('estimation-report-ajax');
 
@@ -445,8 +437,8 @@
         Route::get('/list-production-report', [ReportController::class, 'getProductionReport'])->name('list-production-report');
         Route::get('/production-report-ajax', [ReportController::class, 'getProductionReportAjax'])->name('production-production-report-ajax');
     });
-   
-      Route::group(['prefix' => 'storedept', 'middleware' => 'admin'], function () {
+
+    Route::group(['prefix' => 'storedept', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/list-requisition', [RequistionController::class, 'index'])->name('list-requisition');
         Route::get('/add-requisition', [RequistionController::class, 'add'])->name('add-requisition');
@@ -678,7 +670,7 @@
         Route::get('/grn-report', [ReportController::class, 'getGRNReport'])->name('grn-report');
         Route::get('/grn-report-ajax', [ReportController::class, 'getGRNReportAjax'])->name('grn-report-ajax');
 
-          Route::get('/rejected-grn-report', [ReportController::class, 'getRejectedGRNReport'])->name('rejected-grn-report');
+        Route::get('/rejected-grn-report', [ReportController::class, 'getRejectedGRNReport'])->name('rejected-grn-report');
         Route::get('/rejected-grn-report-ajax', [ReportController::class, 'getRejectedGRNReportAjax'])->name('rejected-grn-report-ajax');
 
         Route::get('/get-vendor-by-purchase_order/{id}', [ReportController::class, 'getVendorbyPurchaseOrder'])
@@ -744,14 +736,6 @@
     Route::group(['prefix' => 'hr', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-        // Employees
-        // Route::get('/list-employees', [EmployeesHrController::class, 'index'])->name('list-employees');
-        // Route::get('/add-employees', [EmployeesHrController::class, 'add'])->name('add-employees');
-        // Route::post('/store-employees', [EmployeesHrController::class, 'store'])->name('store-employees');
-        // Route::get('/edit-employees/{id}', [EmployeesHrController::class, 'edit'])->name('edit-employees');
-        // Route::post('/update-employees', [EmployeesHrController::class, 'update'])->name('update-employees');
-        // Route::any('/delete-employees/{id}', [EmployeesHrController::class, 'destroy'])->name('delete-employees');
-
         // Users
 
         Route::get('/list-employee', [EmployeesHrController::class, 'index'])->name('list-employee');
@@ -783,8 +767,8 @@
         // Route::any('/delete-leaves/{id}', [LeavesController::class, 'destroy'])->name('delete-leaves');
         Route::delete('/delete-leaves/{id}', [LeavesController::class, 'destroy'])->name('delete-leaves');
 
-Route::post('/check-leave-balance', [LeavesController::class, 'checkLeaveBalance'])
-    ->name('check-leave-balance');
+        Route::post('/check-leave-balance', [LeavesController::class, 'checkLeaveBalance'])
+            ->name('check-leave-balance');
 
 
         Route::get('/list-leaves-acceptedby-hr', [LeavesController::class, 'getAllLeavesRequest'])->name('list-leaves-acceptedby-hr');
@@ -807,7 +791,7 @@ Route::post('/check-leave-balance', [LeavesController::class, 'checkLeaveBalance
         Route::get('/particular-notice-department-wise', [NoticeController::class, 'departmentWiseNotice'])
             ->name('particular-notice-department-wise');
     });
-   
+
     Route::group(['prefix' => 'cms', 'middleware' => 'admin'], function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('cms.dashboard');
 

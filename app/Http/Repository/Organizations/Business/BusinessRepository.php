@@ -159,10 +159,10 @@ class BusinessRepository
                     'business_application_processes.business_status_id',
                     'business_application_processes.design_status_id',
                     'business_application_processes.production_status_id',
-                    
-                    
+
+
                 )
-                  ->where('businesses.id', $id)
+                ->where('businesses.id', $id)
                 ->where('businesses_details.is_deleted', 0)
                 ->get();
 
@@ -304,38 +304,37 @@ class BusinessRepository
             ];
         }
     }
-public function deleteByIdAddmore($id)
-{
-    try {
-        // Fetch record
-        $record = BusinessDetails::find($id);
+    public function deleteByIdAddmore($id)
+    {
+        try {
+            // Fetch record
+            $record = BusinessDetails::find($id);
 
-        if (!$record) {
+            if (!$record) {
+                return false;
+            }
+
+            // Soft delete → update is_deleted = 1
+            $record->is_deleted = 1;
+            $record->save();
+
+            // Now recalculate grand total for business
+            $businessId = $record->business_id;
+
+            $newGrandTotal = BusinessDetails::where('business_id', $businessId)
+                ->where('is_deleted', 0)
+                ->sum('total_amount');
+
+            // Update business table grand total
+            Business::where('id', $businessId)->update([
+                'grand_total_amount' => $newGrandTotal
+            ]);
+
+            return true;
+        } catch (\Exception $e) {
             return false;
         }
-
-        // Soft delete → update is_deleted = 1
-        $record->is_deleted = 1;
-        $record->save();
-
-        // Now recalculate grand total for business
-        $businessId = $record->business_id;
-
-        $newGrandTotal = BusinessDetails::where('business_id', $businessId)
-            ->where('is_deleted', 0)
-            ->sum('total_amount');
-
-        // Update business table grand total
-        Business::where('id', $businessId)->update([
-            'grand_total_amount' => $newGrandTotal
-        ]);
-
-        return true;
-
-    } catch (\Exception $e) {
-        return false;
     }
-}
 
 
 

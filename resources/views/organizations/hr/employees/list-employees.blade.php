@@ -94,7 +94,7 @@
                                                                         aria-hidden="true"></i></button></a>
 
 
-                                                                        @if ($item->id > 14)
+                                                                        @if ($item->id > 15)
                                                                         <a href="{{ route('delete-employee', base64_encode($item->id)) }}">
                                                                             <button data-toggle="tooltip" title="Delete" class="pd-setting-ed delete-btn">
                                                                                 <i class="fa fa-trash" aria-hidden="true"></i>
