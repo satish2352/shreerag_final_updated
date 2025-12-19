@@ -295,8 +295,6 @@ class AllListController extends Controller
     }
     public function FollowUpReport(Request $request)
     {
-        // dd($request);
-        // die();
         $getVendorName = Vendors::whereNotNull('vendor_name')
             ->where('is_deleted', 0)
             ->where('is_active', 1)

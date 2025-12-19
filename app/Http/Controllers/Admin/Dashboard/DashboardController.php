@@ -549,8 +549,6 @@ foreach ($user_leaves_status as $item) {
             //     ->groupBy('tbl_leave_management.id', 'tbl_leave_management.name', 'tbl_leave_management.leave_count')
             //     ->get();
 
-                // dd($user_leaves_status);
-                // die();
             $employee_accepted_leave_request = Leaves::leftJoin('users', function ($join) {
                 $join->on('tbl_leaves.employee_id', '=', 'users.id');
             })

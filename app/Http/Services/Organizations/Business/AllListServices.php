@@ -356,8 +356,7 @@ class AllListServices
     //         ]);
 
     //         $responseData = $response->json();
-    // dd($responseData);
-    // die();
+
     //         // Get formatted address
     //         if (!empty($responseData['results'][0]['formatted_address'])) {
     //             $address = $responseData['results'][0]['formatted_address'];
@@ -389,8 +388,7 @@ class AllListServices
     //         $longitude = $user->longitude;
 
     //         $apiKey = config('services.locationiq.api_key');
-    // // dd($apiKey);
-    // // die();
+ 
     //         // Call LocationIQ Reverse Geocoding API
     //         $response = Http::get("https://us1.locationiq.com/v1/reverse.php", [
     //             'key'    => $apiKey,

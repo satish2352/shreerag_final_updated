@@ -79,8 +79,6 @@ class ProductionServices
     {
         try {
             $result = $this->repo->updateProductMaterial($request);
-            // dd($result);
-            // die();
             return $result;
         } catch (\Exception $e) {
             return ['status' => 'error', 'message' => $e->getMessage()];

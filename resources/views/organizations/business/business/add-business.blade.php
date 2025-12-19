@@ -294,7 +294,8 @@ textarea.form-control {
                             required: true,
                             minlength: 10,
                             maxlength: 16,
-                            digits: true
+                            // digits: true,
+                            pattern: /^[A-Za-z0-9]+$/
                         },
                         po_validity: {
                             required: true,
@@ -336,7 +337,7 @@ textarea.form-control {
                             required: "Please enter PO number.",
                             minlength: "PO number must be at least 10 characters long.",
                             maxlength: "PO number must be at most 16 characters long.",
-                            digits: "PO number can only contain digits."
+                            pattern: "PO number can only contain alphabets and numbers."
                         },
                         po_validity: {
                             required: "Please enter PO validity.",

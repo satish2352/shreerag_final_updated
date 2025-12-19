@@ -40,8 +40,6 @@ class AllListServices
     {
         try {
             $data_output = $this->repo->getAllDispatchClosedProduct();
-            // dd($data_output);
-            // die();
             return $data_output;
         } catch (\Exception $e) {
             return $e;

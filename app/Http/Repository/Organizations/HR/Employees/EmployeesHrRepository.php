@@ -149,8 +149,6 @@ class EmployeesHrRepository
 	// 				'users.is_active',
 	// 			)->get()
 	// 			->toArray();
-	// // 		dd($data_users_data);
-	// // die();
 	// 	      $data_users_data = User::join('tbl_roles', function($join) {
 	// 						$join->on('users.role_id', '=', 'tbl_roles.id');
 	// 					})

@@ -94,8 +94,6 @@ class DesignsServices
     { //checked
         try {
             $data_output =  $this->repo->getUploadedDesignSendEstimation();
-            // dd($data_output);
-            // die();
             return $data_output;
         } catch (\Exception $e) {
             Log::error('Service getAll() error: ' . $e->getMessage());

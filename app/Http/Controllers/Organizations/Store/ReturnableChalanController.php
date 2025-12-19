@@ -119,8 +119,6 @@ class ReturnableChalanController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request);
-        // die();
         $rules = [
             'vendor_id' => 'required',
             // // 'transport_id' => 'required',

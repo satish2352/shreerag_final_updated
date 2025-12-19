@@ -54,8 +54,6 @@ class StoreServices
     { //checked
         try {
             $data_output = $this->repo->editProductMaterialWiseAddNewReq($id);
-            // dd($data_output);
-            // die();
             return $data_output;
         } catch (\Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
@@ -65,8 +63,6 @@ class StoreServices
     {
         try {
             $result = $this->repo->updateProductMaterialWiseAddNewReq($request);
-            // dd($result);
-            // die();
             return $result;
         } catch (\Exception $e) {
             return ['status' => 'error', 'message' => $e->getMessage()];

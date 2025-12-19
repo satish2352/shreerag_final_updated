@@ -31,10 +31,6 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php
-                                            // dd($register_user);
-                                            // die();
-                                            ?>
                                             @foreach ($register_user as $item)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>

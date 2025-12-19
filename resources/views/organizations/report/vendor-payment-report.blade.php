@@ -159,10 +159,6 @@
             </div>
         </div>
     </div>
-    <?php
-    // dd($data);
-    // die();
-    ?>
     <script>
         window.APP_URL = "{{ config('app.url') }}";
     </script>

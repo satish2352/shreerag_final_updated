@@ -49,10 +49,10 @@ class ReportController extends Controller
         $this->service = new ReportServices();
     }
 
-        private function timeStamp()
-        {
-            return now()->format('Y-m-d_H-i-s');
-        }
+    private function timeStamp()
+    {
+        return now()->format('Y-m-d_H-i-s');
+    }
 
     public function getCompletedProductList(Request $request)
     {
@@ -77,23 +77,23 @@ class ReportController extends Controller
             //     ->pluck('product_name', 'id');
 
 
-             $getProjectName = Business::leftJoin('business_application_processes', function ($join) {
+            $getProjectName = Business::leftJoin('business_application_processes', function ($join) {
                 $join->on('businesses.id', '=', 'business_application_processes.business_id');
             })
                 ->whereNotNull('businesses.project_name')
-                    ->where('businesses.project_name', '!=', '')
+                ->where('businesses.project_name', '!=', '')
                 ->where('businesses.is_deleted', 0)
                 ->where('businesses.is_active', 1)
                 ->where('business_application_processes.off_canvas_status', 22)
                 ->pluck('businesses.project_name', 'businesses.id');
 
             $getProductName = BusinessDetails::leftJoin('business_application_processes as bap', function ($join) {
-            $join->on('businesses_details.id', '=', 'bap.business_details_id');
+                $join->on('businesses_details.id', '=', 'bap.business_details_id');
             })
-            ->where('businesses_details.is_deleted', 0)
-            ->where('businesses_details.is_active', 1)
-            ->where('bap.off_canvas_status', 22)
-            ->pluck('businesses_details.product_name', 'businesses_details.id');
+                ->where('businesses_details.is_deleted', 0)
+                ->where('businesses_details.is_active', 1)
+                ->where('bap.off_canvas_status', 22)
+                ->pluck('businesses_details.product_name', 'businesses_details.id');
 
 
             return view('organizations.report.list-report-product-completed', [
@@ -184,7 +184,7 @@ class ReportController extends Controller
             return response()->json(['status' => false, 'message' => $e->getMessage()]);
         }
     }
-     public function getEstimationReport(Request $request)
+    public function getEstimationReport(Request $request)
     {
         try {
             $data = $this->service->getEstimationReport($request);
@@ -357,7 +357,7 @@ class ReportController extends Controller
         }
     }
 
-     public function getRejectedGRNReport(Request $request)
+    public function getRejectedGRNReport(Request $request)
     {
         try {
             // Fetch report data from service
@@ -467,7 +467,7 @@ class ReportController extends Controller
 
 
 
- 
+
     public function listConsumptionReport(Request $request)
     {
         $getProjectName = Business::whereNotNull('project_name')
@@ -475,7 +475,7 @@ class ReportController extends Controller
             ->where('is_active', 1)
 
             ->whereNotNull('project_name')
-             ->where('project_name', '!=', '')
+            ->where('project_name', '!=', '')
 
             ->pluck('project_name', 'id');
 
@@ -831,7 +831,7 @@ class ReportController extends Controller
                 $join->on('businesses.id', '=', 'business_application_processes.business_id');
             })
                 ->whereNotNull('businesses.project_name')
-                    ->where('businesses.project_name', '!=', '')
+                ->where('businesses.project_name', '!=', '')
                 ->where('businesses.is_deleted', 0)
                 ->where('businesses.is_active', 1)
                 ->where('business_application_processes.off_canvas_status', 22)
@@ -1092,7 +1092,10 @@ class ReportController extends Controller
     public function getStoreItemStockList(Request $request)
     {
         if ($request->filled('export_type')) {
-            $data = $this->service->getStoreItemStockList($request)['data'];
+            // $data = $this->service->getStoreItemStockList($request)['data'];
+            $dataResponse = $this->service->getStoreItemStockList($request);
+
+            $data = $dataResponse['export_data'] ?? $dataResponse['data'] ?? [];
 
             if ($request->export_type == 1) {
                 $pdf = Pdf::loadView('exports.stock-item-pdf', ['data' => $data])

@@ -12,7 +12,7 @@ use App\Models\{
     CustomerProductQuantityTracking,
     GrnPOQuantityTracking,
     ItemStock,
-      RejectedChalan,
+    RejectedChalan,
 };
 
 class ReportRepository
@@ -384,141 +384,140 @@ class ReportRepository
         }
     }
 
-   public function getEstimationReport(Request $request)
-{
-    try {
-        $array_to_be_check = config('constants.ESTIMATION_DEPARTMENT.UPDATED_ACCEPTED_BOM_SEND_TO_PRODUCTION');
+    public function getEstimationReport(Request $request)
+    {
+        try {
+            $array_to_be_check = config('constants.ESTIMATION_DEPARTMENT.UPDATED_ACCEPTED_BOM_SEND_TO_PRODUCTION');
 
-        $data_output = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
+            $data_output = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
                 $join->on('business_application_processes.business_id', '=', 'businesses.id');
             })
-            ->leftJoin('businesses_details', function ($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-            })
-            ->leftJoin('designs', function ($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-            })
-            ->leftJoin('estimation', function ($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
-            })
-            ->leftJoin('design_revision_for_prod', function ($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-            })
-            ->where('business_application_processes.estimation_send_to_production', $array_to_be_check)
-            ->where('businesses.is_active', true)
-            ->where('businesses.is_deleted', 0);
+                ->leftJoin('businesses_details', function ($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+                })
+                ->leftJoin('designs', function ($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+                })
+                ->leftJoin('estimation', function ($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
+                })
+                ->leftJoin('design_revision_for_prod', function ($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+                })
+                ->where('business_application_processes.estimation_send_to_production', $array_to_be_check)
+                ->where('businesses.is_active', true)
+                ->where('businesses.is_deleted', 0);
 
-        // 🔍 Search filter
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $data_output->where(function ($q) use ($search) {
-                $q->where('businesses.project_name', 'like', "%{$search}%")
-                    ->orWhere('businesses.customer_po_number', 'like', "%{$search}%")
-                    ->orWhere('businesses_details.product_name', 'like', "%{$search}%");
-            });
-        }
+            // 🔍 Search filter
+            if ($request->filled('search')) {
+                $search = $request->search;
+                $data_output->where(function ($q) use ($search) {
+                    $q->where('businesses.project_name', 'like', "%{$search}%")
+                        ->orWhere('businesses.customer_po_number', 'like', "%{$search}%")
+                        ->orWhere('businesses_details.product_name', 'like', "%{$search}%");
+                });
+            }
 
-        // 🔍 Project name filter
-        if ($request->filled('project_name')) {
-            $data_output->where('businesses.id', $request->project_name);
-        }
+            // 🔍 Project name filter
+            if ($request->filled('project_name')) {
+                $data_output->where('businesses.id', $request->project_name);
+            }
 
-         if ($request->filled('business_details_id')) {
-    $data_output->where('business_application_processes.business_details_id', $request->business_details_id);
-}
+            if ($request->filled('business_details_id')) {
+                $data_output->where('business_application_processes.business_details_id', $request->business_details_id);
+            }
 
-        // 🔍 Date filters
-        if ($request->filled('from_date')) {
-            $from = Carbon::parse($request->from_date)->startOfDay();
-            $data_output->where('production.updated_at', '>=', $from);
-        }
+            // 🔍 Date filters
+            if ($request->filled('from_date')) {
+                $from = Carbon::parse($request->from_date)->startOfDay();
+                $data_output->where('production.updated_at', '>=', $from);
+            }
 
-        if ($request->filled('to_date')) {
-            $to = Carbon::parse($request->to_date)->endOfDay();
-            $data_output->where('production.updated_at', '<=', $to);
-        }
+            if ($request->filled('to_date')) {
+                $to = Carbon::parse($request->to_date)->endOfDay();
+                $data_output->where('production.updated_at', '<=', $to);
+            }
 
-        if ($request->filled('year')) {
-            $data_output->whereYear('production.updated_at', $request->year);
-        }
+            if ($request->filled('year')) {
+                $data_output->whereYear('production.updated_at', $request->year);
+            }
 
-        if ($request->filled('month')) {
-            $data_output->whereMonth('production.updated_at', $request->month);
-        }
+            if ($request->filled('month')) {
+                $data_output->whereMonth('production.updated_at', $request->month);
+            }
 
-        // 🔍 Production status filter
-        if ($request->filled('production_status_id')) {
-            $statusIds = explode(',', $request->production_status_id);
-            $data_output->whereIn('business_application_processes.production_status_id', $statusIds);
-        }
+            // 🔍 Production status filter
+            if ($request->filled('production_status_id')) {
+                $statusIds = explode(',', $request->production_status_id);
+                $data_output->whereIn('business_application_processes.production_status_id', $statusIds);
+            }
 
-        // 🎯 Final Select
-        $data_output->select(
-            'businesses.id',
-            'businesses.project_name',
-            'businesses.customer_po_number',
-            'businesses.title',
-            'businesses.remarks',
-            'estimation.updated_at',
+            // 🎯 Final Select
+            $data_output->select(
+                'businesses.id',
+                'businesses.project_name',
+                'businesses.customer_po_number',
+                'businesses.title',
+                'businesses.remarks',
+                'estimation.updated_at',
 
-            DB::raw('MAX(businesses_details.product_name) as product_name'),
-            DB::raw('MAX(businesses_details.quantity) as quantity'),
-            DB::raw('MAX(businesses_details.description) as description'),
+                DB::raw('MAX(businesses_details.product_name) as product_name'),
+                DB::raw('MAX(businesses_details.quantity) as quantity'),
+                DB::raw('MAX(businesses_details.description) as description'),
 
-            DB::raw('MAX(design_revision_for_prod.bom_image) as bom_image'),
-            DB::raw('MAX(designs.design_image) as design_image'),
+                DB::raw('MAX(design_revision_for_prod.bom_image) as bom_image'),
+                DB::raw('MAX(designs.design_image) as design_image'),
 
-            'estimation.total_estimation_amount'
-        )
-        ->groupBy(
-            'businesses.id',
-            'businesses.project_name',
-            'businesses.customer_po_number',
-            'businesses.title',
-            'businesses.remarks',
-            'estimation.updated_at',
-            'estimation.total_estimation_amount'
-        )
-        ->orderBy('estimation.updated_at', 'desc');
+                'estimation.total_estimation_amount'
+            )
+                ->groupBy(
+                    'businesses.id',
+                    'businesses.project_name',
+                    'businesses.customer_po_number',
+                    'businesses.title',
+                    'businesses.remarks',
+                    'estimation.updated_at',
+                    'estimation.total_estimation_amount'
+                )
+                ->orderBy('estimation.updated_at', 'desc');
 
-        // ⬇ EXPORT (no pagination)
-        if ($request->filled('export_type')) {
+            // ⬇ EXPORT (no pagination)
+            if ($request->filled('export_type')) {
+                return [
+                    'data' => $data_output->get(),
+                    'pagination' => null,
+                ];
+            }
+
+            // ⬇ PAGINATION
+            $perPage = $request->input('pageSize', 10);
+            $currentPage = $request->input('currentPage', 1);
+
+            $totalItems = (clone $data_output)->count();
+
+            $data = (clone $data_output)
+                ->skip(($currentPage - 1) * $perPage)
+                ->take($perPage)
+                ->get();
+
             return [
-                'data' => $data_output->get(),
-                'pagination' => null,
+                'data' => $data,
+                'pagination' => [
+                    'currentPage' => $currentPage,
+                    'pageSize' => $perPage,
+                    'totalItems' => $totalItems,
+                    'totalPages' => ceil($totalItems / $perPage),
+                    'from' => ($currentPage - 1) * $perPage + 1,
+                    'to' => (($currentPage - 1) * $perPage) + count($data),
+                ]
             ];
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
         }
-
-        // ⬇ PAGINATION
-        $perPage = $request->input('pageSize', 10);
-        $currentPage = $request->input('currentPage', 1);
-
-        $totalItems = (clone $data_output)->count();
-
-        $data = (clone $data_output)
-            ->skip(($currentPage - 1) * $perPage)
-            ->take($perPage)
-            ->get();
-
-        return [
-            'data' => $data,
-            'pagination' => [
-                'currentPage' => $currentPage,
-                'pageSize' => $perPage,
-                'totalItems' => $totalItems,
-                'totalPages' => ceil($totalItems / $perPage),
-                'from' => ($currentPage - 1) * $perPage + 1,
-                'to' => (($currentPage - 1) * $perPage) + count($data),
-            ]
-        ];
-
-    } catch (\Exception $e) {
-        return response()->json([
-            'status' => false,
-            'message' => $e->getMessage()
-        ]);
     }
-}
 
     public function getProductionReport($request)
     {
@@ -960,8 +959,6 @@ class ReportRepository
     //         $perPage = $request->input('pageSize', 10);
     //         $currentPage = $request->input('currentPage', 1);
     //         $totalItems = $query->count();
-    //         // dd($totalItems);
-    //         // die();
     //         $data = $query->skip(($currentPage - 1) * $perPage)
     //             ->take($perPage)
     //             ->get();
@@ -1132,141 +1129,140 @@ class ReportRepository
             throw $e;
         }
     }
-public function getRejectedGRNReport(Request $request)
-{
-    try {
+    public function getRejectedGRNReport(Request $request)
+    {
+        try {
 
-        // -----------------------------------------------
-        //  BASE QUERY
-        // -----------------------------------------------
-        $query = RejectedChalan::join('grn_tbl', 'grn_tbl.purchase_orders_id', '=', 'tbl_rejected_chalan.purchase_orders_id')
-            ->leftJoin('gatepass', 'grn_tbl.gatepass_id', '=', 'gatepass.id')
+            // -----------------------------------------------
+            //  BASE QUERY
+            // -----------------------------------------------
+            $query = RejectedChalan::join('grn_tbl', 'grn_tbl.purchase_orders_id', '=', 'tbl_rejected_chalan.purchase_orders_id')
+                ->leftJoin('gatepass', 'grn_tbl.gatepass_id', '=', 'gatepass.id')
 
-            // 🔥 FIXED JOIN → Use purchase_orders.purchase_orders_id instead of id
-            ->leftJoin(
-                'purchase_orders',
+                // 🔥 FIXED JOIN → Use purchase_orders.purchase_orders_id instead of id
+                ->leftJoin(
+                    'purchase_orders',
+                    'tbl_rejected_chalan.purchase_orders_id',
+                    '=',
+                    'purchase_orders.purchase_orders_id'
+                )
+
+                ->leftJoin('businesses_details', 'purchase_orders.business_details_id', '=', 'businesses_details.id')
+                ->leftJoin('vendors', 'purchase_orders.vendor_id', '=', 'vendors.id')
+                ->leftJoin('tbl_grn_po_quantity_tracking', 'grn_tbl.id', '=', 'tbl_grn_po_quantity_tracking.grn_id')
+                ->where('tbl_rejected_chalan.is_deleted', 0)
+                ->where('tbl_rejected_chalan.chalan_no', '<>', '');
+
+            // -----------------------------------------------
+            // SEARCH FILTER
+            // -----------------------------------------------
+            if ($request->filled('search')) {
+                $search = $request->search;
+                $query->where(function ($q) use ($search) {
+                    $q->where('businesses_details.product_name', 'like', "%{$search}%")
+                        ->orWhere('vendors.vendor_name', 'like', "%{$search}%")
+                        ->orWhere('vendors.vendor_company_name', 'like', "%{$search}%")
+                        ->orWhere('purchase_orders.purchase_orders_id', 'like', "%{$search}%");
+                });
+            }
+
+            // -----------------------------------------------
+            // VENDOR FILTER
+            // -----------------------------------------------
+            if ($request->filled('vendor_name')) {
+                $query->where('vendors.id', $request->vendor_name);
+            }
+
+            // -----------------------------------------------
+            // PO NUMBER FILTER
+            // -----------------------------------------------
+            if ($request->filled('purchase_orders_id')) {
+                $query->where('purchase_orders.purchase_orders_id', $request->purchase_orders_id);
+            }
+
+            // -----------------------------------------------
+            // DATE FILTER
+            // -----------------------------------------------
+            if ($request->filled('from_date')) {
+                $query->whereDate('grn_tbl.updated_at', '>=', $request->from_date);
+            }
+
+            if ($request->filled('to_date')) {
+                $query->whereDate('grn_tbl.updated_at', '<=', $request->to_date);
+            }
+
+            // -----------------------------------------------
+            // YEAR / MONTH FILTER
+            // -----------------------------------------------
+            if ($request->filled('year')) {
+                $query->whereYear('grn_tbl.updated_at', $request->year);
+            }
+
+            if ($request->filled('month')) {
+                $query->whereMonth('grn_tbl.updated_at', $request->month);
+            }
+
+            // -----------------------------------------------
+            // SELECT FIELDS
+            // -----------------------------------------------
+            $query->select(
+                'tbl_rejected_chalan.id',
                 'tbl_rejected_chalan.purchase_orders_id',
-                '=',
-                'purchase_orders.purchase_orders_id'
-            )
+                'grn_tbl.po_date',
+                'grn_tbl.grn_date',
+                'grn_tbl.remark',
+                'gatepass.gatepass_name',
+                'tbl_rejected_chalan.is_active',
+                'grn_tbl.updated_at',
+                'purchase_orders.purchase_orders_id as po_number',
+                'businesses_details.product_name',
+                'businesses_details.description',
+                'vendors.vendor_name',
+                'vendors.vendor_company_name',
+                'grn_tbl.grn_no_generate',
+                'businesses_details.id as business_details_id',
+                'grn_tbl.id as grn_id',
+                'tbl_grn_po_quantity_tracking.grn_id as tracking_grn_id'
+            )->distinct();
 
-            ->leftJoin('businesses_details', 'purchase_orders.business_details_id', '=', 'businesses_details.id')
-            ->leftJoin('vendors', 'purchase_orders.vendor_id', '=', 'vendors.id')
-            ->leftJoin('tbl_grn_po_quantity_tracking', 'grn_tbl.id', '=', 'tbl_grn_po_quantity_tracking.grn_id')
-            ->where('tbl_rejected_chalan.is_deleted', 0)
-            ->where('tbl_rejected_chalan.chalan_no', '<>', '');
+            // -----------------------------------------------
+            // EXPORT REQUEST
+            // -----------------------------------------------
+            if ($request->filled('export_type')) {
+                return [
+                    'data' => $query->orderBy('grn_tbl.id', 'desc')->get(),
+                    'pagination' => null,
+                ];
+            }
 
-        // -----------------------------------------------
-        // SEARCH FILTER
-        // -----------------------------------------------
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('businesses_details.product_name', 'like', "%{$search}%")
-                    ->orWhere('vendors.vendor_name', 'like', "%{$search}%")
-                    ->orWhere('vendors.vendor_company_name', 'like', "%{$search}%")
-                    ->orWhere('purchase_orders.purchase_orders_id', 'like', "%{$search}%");
-            });
-        }
+            // -----------------------------------------------
+            // PAGINATION
+            // -----------------------------------------------
+            $perPage = $request->input('pageSize', 10);
+            $currentPage = $request->input('currentPage', 1);
 
-        // -----------------------------------------------
-        // VENDOR FILTER
-        // -----------------------------------------------
-        if ($request->filled('vendor_name')) {
-            $query->where('vendors.id', $request->vendor_name);
-        }
+            $totalItems = $query->distinct()->count('grn_tbl.id');
 
-        // -----------------------------------------------
-        // PO NUMBER FILTER
-        // -----------------------------------------------
-        if ($request->filled('purchase_orders_id')) {
-            $query->where('purchase_orders.purchase_orders_id', $request->purchase_orders_id);
-        }
+            $data = $query->orderBy('grn_tbl.id', 'desc')
+                ->skip(($currentPage - 1) * $perPage)
+                ->take($perPage)
+                ->get();
 
-        // -----------------------------------------------
-        // DATE FILTER
-        // -----------------------------------------------
-        if ($request->filled('from_date')) {
-            $query->whereDate('grn_tbl.updated_at', '>=', $request->from_date);
-        }
-
-        if ($request->filled('to_date')) {
-            $query->whereDate('grn_tbl.updated_at', '<=', $request->to_date);
-        }
-
-        // -----------------------------------------------
-        // YEAR / MONTH FILTER
-        // -----------------------------------------------
-        if ($request->filled('year')) {
-            $query->whereYear('grn_tbl.updated_at', $request->year);
-        }
-
-        if ($request->filled('month')) {
-            $query->whereMonth('grn_tbl.updated_at', $request->month);
-        }
-
-        // -----------------------------------------------
-        // SELECT FIELDS
-        // -----------------------------------------------
-        $query->select(
-            'tbl_rejected_chalan.id',
-            'tbl_rejected_chalan.purchase_orders_id',
-            'grn_tbl.po_date',
-            'grn_tbl.grn_date',
-            'grn_tbl.remark',
-            'gatepass.gatepass_name',
-            'tbl_rejected_chalan.is_active',
-            'grn_tbl.updated_at',
-            'purchase_orders.purchase_orders_id as po_number',
-            'businesses_details.product_name',
-            'businesses_details.description',
-            'vendors.vendor_name',
-            'vendors.vendor_company_name',
-            'grn_tbl.grn_no_generate',
-            'businesses_details.id as business_details_id',
-            'grn_tbl.id as grn_id',
-            'tbl_grn_po_quantity_tracking.grn_id as tracking_grn_id'
-        )->distinct();
-
-        // -----------------------------------------------
-        // EXPORT REQUEST
-        // -----------------------------------------------
-        if ($request->filled('export_type')) {
             return [
-                'data' => $query->orderBy('grn_tbl.id', 'desc')->get(),
-                'pagination' => null,
+                'data' => $data,
+                'pagination' => [
+                    'currentPage' => $currentPage,
+                    'pageSize' => $perPage,
+                    'totalItems' => $totalItems,
+                    'totalPages' => ceil($totalItems / $perPage),
+                    'from' => ($currentPage - 1) * $perPage + 1,
+                    'to' => (($currentPage - 1) * $perPage) + count($data),
+                ]
             ];
+        } catch (\Exception $e) {
+            throw $e;
         }
-
-        // -----------------------------------------------
-        // PAGINATION
-        // -----------------------------------------------
-        $perPage = $request->input('pageSize', 10);
-        $currentPage = $request->input('currentPage', 1);
-
-        $totalItems = $query->distinct()->count('grn_tbl.id');
-
-        $data = $query->orderBy('grn_tbl.id', 'desc')
-            ->skip(($currentPage - 1) * $perPage)
-            ->take($perPage)
-            ->get();
-
-        return [
-            'data' => $data,
-            'pagination' => [
-                'currentPage' => $currentPage,
-                'pageSize' => $perPage,
-                'totalItems' => $totalItems,
-                'totalPages' => ceil($totalItems / $perPage),
-                'from' => ($currentPage - 1) * $perPage + 1,
-                'to' => (($currentPage - 1) * $perPage) + count($data),
-            ]
-        ];
-
-    } catch (\Exception $e) {
-        throw $e;
     }
-}
 
 
     public function getConsumptionReport(Request $request)
@@ -1594,9 +1590,9 @@ public function getRejectedGRNReport(Request $request)
                 $query->where('businesses.id', $request->project_name);
             }
 
-             if ($request->filled('business_details_id')) {
-                        $query->where('tbl_logistics.business_details_id', $request->business_details_id);
-                    }
+            if ($request->filled('business_details_id')) {
+                $query->where('tbl_logistics.business_details_id', $request->business_details_id);
+            }
 
 
             if ($request->filled('from_date')) {
@@ -1733,10 +1729,10 @@ public function getRejectedGRNReport(Request $request)
             if ($request->filled('project_name')) {
                 $query->where('businesses.id', $request->project_name);
             }
-            
-             if ($request->filled('business_details_id')) {
-                        $query->where('tbl_logistics.business_details_id', $request->business_details_id);
-                    }
+
+            if ($request->filled('business_details_id')) {
+                $query->where('tbl_logistics.business_details_id', $request->business_details_id);
+            }
 
             // 🗓️ Date filters
             if ($request->filled('from_date')) {
@@ -1986,9 +1982,9 @@ public function getRejectedGRNReport(Request $request)
 
             // 📁 Filter by Product
             if ($request->filled('business_details_id')) {
-                        $query->where('tbl_dispatch.business_details_id', $request->business_details_id);
-                    }
-            
+                $query->where('tbl_dispatch.business_details_id', $request->business_details_id);
+            }
+
             if ($request->filled('from_date')) {
                 $from = Carbon::parse($request->from_date)->startOfDay(); // 00:00:00
                 $query->where('tbl_dispatch.updated_at', '>=', $from);
@@ -2132,9 +2128,9 @@ public function getRejectedGRNReport(Request $request)
                 $query->where('businesses.id', $request->project_name);
             }
 
-                if ($request->filled('business_details_id')) {
-                        $query->where('bap1.business_details_id', $request->business_details_id);
-                    }
+            if ($request->filled('business_details_id')) {
+                $query->where('bap1.business_details_id', $request->business_details_id);
+            }
             // 🗓️ Date filters
             if ($request->filled('from_date')) {
                 $from = Carbon::parse($request->from_date)->startOfDay();
@@ -2244,9 +2240,9 @@ public function getRejectedGRNReport(Request $request)
                 $query->where('businesses.id', $request->project_name);
             }
 
-              if ($request->filled('business_details_id')) {
-                        $query->where('tbl_dispatch.business_details_id', $request->business_details_id);
-                    }
+            if ($request->filled('business_details_id')) {
+                $query->where('tbl_dispatch.business_details_id', $request->business_details_id);
+            }
 
             $data = $query->select(
                 'businesses_details.id as business_details_id',
@@ -2727,16 +2723,25 @@ public function getRejectedGRNReport(Request $request)
                 'tbl_item_stock.updated_at'
             );
 
-            // 📤 Export full data
+            // ⚡ FAST EXPORT (Chunking Data)
             if ($request->filled('export_type')) {
+
+                $exportData = [];
+
+                $query->chunk(300, function ($rows) use (&$exportData) {
+                    foreach ($rows as $row) {
+                        $exportData[] = $row;
+                    }
+                });
+
                 return [
                     'status' => true,
-                    'data' => $query->get(),
+                    'data' => $exportData,  // <-- only chunked full data
                     'pagination' => null
                 ];
             }
 
-            // 📄 Pagination setup
+            // 📄 Pagination
             $perPage = $request->input('pageSize', 10);
             $currentPage = $request->input('currentPage', 1);
 
@@ -3225,104 +3230,102 @@ public function getRejectedGRNReport(Request $request)
     //     }
     // }
     public function listItemWiseVendorRateReport(Request $request)
-{
-    try {
+    {
+        try {
 
-        $query = PurchaseOrdersModel::leftJoin('purchase_order_details', function ($join) {
+            $query = PurchaseOrdersModel::leftJoin('purchase_order_details', function ($join) {
                 $join->on('purchase_order_details.purchase_id', '=', 'purchase_orders.id');
             })
-            ->leftJoin('grn_tbl', function ($join) {
-                $join->on('grn_tbl.purchase_orders_id', '=', 'purchase_orders.id');
-            })
-            ->leftJoin('tbl_part_item', function ($join) {
-                $join->on('purchase_order_details.part_no_id', '=', 'tbl_part_item.id');
-            })
-            ->leftJoin('vendors', function ($join) {
-                $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
-            })
-            ->where('purchase_orders.is_active', true)
-            ->where('purchase_orders.is_deleted', 0);
+                ->leftJoin('grn_tbl', function ($join) {
+                    $join->on('grn_tbl.purchase_orders_id', '=', 'purchase_orders.id');
+                })
+                ->leftJoin('tbl_part_item', function ($join) {
+                    $join->on('purchase_order_details.part_no_id', '=', 'tbl_part_item.id');
+                })
+                ->leftJoin('vendors', function ($join) {
+                    $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
+                })
+                ->where('purchase_orders.is_active', true)
+                ->where('purchase_orders.is_deleted', 0);
 
-        // 🔍 Search
-        if ($request->filled('search')) {
-            $search = $request->search;
+            // 🔍 Search
+            if ($request->filled('search')) {
+                $search = $request->search;
 
-            $query->where(function ($q) use ($search) {
-                $q->where('tbl_part_item.description', 'like', "%{$search}%")   // Item Name
-                    ->orWhere('tbl_part_item.part_number', 'like', "%{$search}%")
-                    ->orWhere('vendors.vendor_name', 'like', "%{$search}%")
-                    ->orWhere('vendors.vendor_company_name', 'like', "%{$search}%")
-                    ->orWhere('purchase_order_details.rate', 'like', "%{$search}%");
-            });
-        }       
-        
-       if ($request->filled('description')) {
-    $query->where('tbl_part_item.id', $request->description);
-}
+                $query->where(function ($q) use ($search) {
+                    $q->where('tbl_part_item.description', 'like', "%{$search}%")   // Item Name
+                        ->orWhere('tbl_part_item.part_number', 'like', "%{$search}%")
+                        ->orWhere('vendors.vendor_name', 'like', "%{$search}%")
+                        ->orWhere('vendors.vendor_company_name', 'like', "%{$search}%")
+                        ->orWhere('purchase_order_details.rate', 'like', "%{$search}%");
+                });
+            }
+
+            if ($request->filled('description')) {
+                $query->where('tbl_part_item.id', $request->description);
+            }
 
 
 
-        // 📅 Date Filters
-        if ($request->filled('from_date')) {
-            $query->whereDate('purchase_order_details.updated_at', '>=', $request->from_date);
-        }
+            // 📅 Date Filters
+            if ($request->filled('from_date')) {
+                $query->whereDate('purchase_order_details.updated_at', '>=', $request->from_date);
+            }
 
-        if ($request->filled('to_date')) {
-            $query->whereDate('purchase_order_details.updated_at', '<=', $request->to_date);
-        }
+            if ($request->filled('to_date')) {
+                $query->whereDate('purchase_order_details.updated_at', '<=', $request->to_date);
+            }
 
-        if ($request->filled('year')) {
-            $query->whereYear('purchase_order_details.updated_at', $request->year);
-        }
+            if ($request->filled('year')) {
+                $query->whereYear('purchase_order_details.updated_at', $request->year);
+            }
 
-        if ($request->filled('month')) {
-            $query->whereMonth('purchase_order_details.updated_at', $request->month);
-        }
+            if ($request->filled('month')) {
+                $query->whereMonth('purchase_order_details.updated_at', $request->month);
+            }
 
-        // 🔽 Select Fields
-        $query->select(
-            'grn_tbl.updated_at',
-            'tbl_part_item.description',
-            'vendors.vendor_name',
-            'vendors.vendor_company_name',
-            'purchase_order_details.rate'
-        )
-        ->orderBy('grn_tbl.updated_at', 'desc');
+            // 🔽 Select Fields
+            $query->select(
+                'grn_tbl.updated_at',
+                'tbl_part_item.description',
+                'vendors.vendor_name',
+                'vendors.vendor_company_name',
+                'purchase_order_details.rate'
+            )
+                ->orderBy('grn_tbl.updated_at', 'desc');
 
-        // Export
-        if ($request->filled('export_type')) {
+            // Export
+            if ($request->filled('export_type')) {
+                return [
+                    'data' => $query->get(),
+                    'pagination' => null
+                ];
+            }
+
+            // Pagination
+            $perPage = $request->input('pageSize', 10);
+            $currentPage = $request->input('currentPage', 1);
+
+            $totalItems = (clone $query)->count();
+
+            $data = (clone $query)
+                ->skip(($currentPage - 1) * $perPage)
+                ->take($perPage)
+                ->get();
+
             return [
-                'data' => $query->get(),
-                'pagination' => null
+                'data' => $data,
+                'pagination' => [
+                    'currentPage' => $currentPage,
+                    'pageSize' => $perPage,
+                    'totalItems' => $totalItems,
+                    'totalPages' => ceil($totalItems / $perPage),
+                    'from' => ($currentPage - 1) * $perPage + 1,
+                    'to' => (($currentPage - 1) * $perPage) + count($data),
+                ]
             ];
+        } catch (\Exception $e) {
+            throw $e;
         }
-
-        // Pagination
-        $perPage = $request->input('pageSize', 10);
-        $currentPage = $request->input('currentPage', 1);
-
-        $totalItems = (clone $query)->count();
-
-        $data = (clone $query)
-            ->skip(($currentPage - 1) * $perPage)
-            ->take($perPage)
-            ->get();
-
-        return [
-            'data' => $data,
-            'pagination' => [
-                'currentPage' => $currentPage,
-                'pageSize' => $perPage,
-                'totalItems' => $totalItems,
-                'totalPages' => ceil($totalItems / $perPage),
-                'from' => ($currentPage - 1) * $perPage + 1,
-                'to' => (($currentPage - 1) * $perPage) + count($data),
-            ]
-        ];
-
-    } catch (\Exception $e) {
-        throw $e;
     }
-}
-
 }

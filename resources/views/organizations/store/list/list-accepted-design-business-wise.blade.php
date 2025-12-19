@@ -134,10 +134,6 @@
                                                                     Need To Purchase
                                                                 </button>
                                                             @else
-                                                            <?php
-                                                            // dd($data);
-                                                            // die();
-                                                            ?>
                                                                 {{-- OPEN → BUTTONS ENABLED --}}
                                                                 <a
                                                                     href="{{ route('edit-material-list-bom-wise-new-req', base64_encode($data->business_details_id)) }}">
