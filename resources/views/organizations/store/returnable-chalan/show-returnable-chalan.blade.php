@@ -10,7 +10,15 @@
     .error {
         color: red;
     }
-
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+ .description-column {
+    width: 200px !important;
+    word-break: break-word !important;
+    white-space: normal !important;
+}
     .no-print {
         display: none !important;
     }
@@ -101,11 +109,17 @@
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <!-- Logo Section (Left Aligned) -->
                                             <div style="width: 20%; text-align: left;">
+                                                 @if(!empty($getOrganizationData->image))
                                                 <img 
                                                     src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}" 
                                                     alt="No Image" 
                                                     style="width: 100px; padding: 10px;" 
                                                 />
+                                                @else
+                                                <p style="padding:10px;"><img
+                                src="{{ asset('website/assets/img/logo/Layer 2.png') }}" alt="no image"
+                                style="width:120px;"></p>
+                                            @endif
                                             </div>
                                             <!-- Title Section (Centered) -->
                                             <div style="width: 60%; text-align: center; ">
@@ -126,14 +140,14 @@
                                         <td style="width: 56%; padding: 10px; border: 1px solid black; padding: 5px">
                                             <strong>
                                                 <p class="company-name-size" style="font-size: 20px; margin-bottom:0px;text-transform: uppercase;">
-                                                    {{ $getOrganizationData->company_name }}</p>
+                                                    {{ ($getOrganizationData)->company_name ?? 'Shreerag Engineering & Auto Pvt. Ltd.' }}</p>
                                             </strong>
-                                           <p class="font-size-delivery"> {{ $getOrganizationData->address }}</br>
-                                            CIN No. : {{ $getOrganizationData->cin_number }}</br>
-                                            Email Id : {{ $getOrganizationData->email }},<br />
-                                            <strong>Mo No. : {{ $getOrganizationData->mobile_number }},</strong><br>
-                                            {{-- {{ $getOrganizationData->mobile_number }},</br> --}}
-                                            <strong>GST No.: {{ $getOrganizationData->gst_no }},</strong></p>
+                                           <p class="font-size-delivery"> {{ ($getOrganizationData)->address ?? 'W-127A,MIDC,NASHIK - 422010'}}</br>
+                                            CIN No. : {{ ($getOrganizationData)->cin_number ?? 'U99999MH1997PTC108601'}}</br>
+                                            Email Id : {{ ($getOrganizationData)->email ?? 'shreeragengg@rediffmail.com'}},<br />
+                                            <strong>Mo No. : {{ ($getOrganizationData)->mobile_number ?? '7028082176'}},</strong><br>
+                                            {{-- {{ ($getOrganizationData)->mobile_number }},</br> --}}
+                                            <strong>GST No.: {{ ($getOrganizationData)->gst_no ?? '27AAHCS6330F1ZE'}},</strong></p>
                                         </td>
                                         <td
                                             style="width: 44%; vertical-align: top; padding-top:0px; padding-left:0px; padding-right:0px; border: 1px solid black; ">
@@ -157,7 +171,8 @@
                                         </td>
                                     </tr>
                                 </table>
-                                <table style="width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px;">
+                                <div class="table-responsive">
+                                <table class="invoice-table" style="width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px;">
                                     <thead>
                                         <tr class="font-size-delivery">
                                             <th style="border: 1px solid black; padding: 5px;">No.</th>
@@ -178,7 +193,7 @@
                                             <tr class="font-size-delivery">
                                                 <td style="border: 1px solid black; padding: 5px; text-align: center;">
                                                     {{ $index + 1 }}</td>
-                                                <td style="border: 1px solid black; padding: 5px;">{{ $item->part_number }}
+                                                <td class="description-column" style="border: 1px solid black; padding: 5px;">{{ $item->part_number }}
                                                 </td>
                                                 <td style="border: 1px solid black; padding: 5px;">{{ $item->description }}
                                                 </td>
@@ -257,7 +272,7 @@
                                             </td>
                                             <td colspan="8" class="no-border" style="padding-bottom: 40px;">
                                                 <div class="company-name-size" style="display: flex; justify-content: end; font-size:18px; text-transform: uppercase; padding-top:20px;"><strong>For:
-                                                       <span class="company-name-size"> {{ $getOrganizationData->company_name }}</span></strong></div>
+                                                       <span class="company-name-size"> {{ ($getOrganizationData)->company_name ?? 'Shreerag Engineering & Auto Pvt. Ltd.'}}</span></strong></div>
                                             </td>
                                         </tr>
                                         <tr style="height:80px;">
@@ -274,6 +289,7 @@
                                         </tr>
                                     </tfoot>
                                 </table>
+                                </div>
                                 <!-- Print Button -->
     
                             </div>

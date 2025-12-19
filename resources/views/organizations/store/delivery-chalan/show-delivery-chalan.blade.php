@@ -104,8 +104,14 @@
                                 <div style="display: flex; align-items: center; justify-content: space-between;">
                                     <!-- Logo Section (Left Aligned) -->
                                     <div style="width: 20%; text-align: left;">
+                                           @if(!empty($getOrganizationData->image))
                                         <img src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}"
                                             alt="No Image" style="width: 100px; padding: 10px;" />
+                                             @else
+                                                <p style="padding:10px;"><img
+                                src="{{ asset('website/assets/img/logo/Layer 2.png') }}" alt="no image"
+                                style="width:120px;"></p>
+                                            @endif
                                     </div>
                                     <!-- Title Section (Centered) -->
                                     <div style="width: 60%; text-align: center;">
@@ -127,14 +133,14 @@
                                         <strong>
                                             <p class="company-name-size"
                                                 style="font-size: 20px; margin-bottom:0px;text-transform: uppercase;">
-                                                {{ $getOrganizationData->company_name }}</p>
+                                               {{ ($getOrganizationData)->company_name ?? 'Shreerag Engineering & Auto Pvt. Ltd.'}}</p>
                                         </strong>
-                                        <p class="font-size-delivery"> {{ $getOrganizationData->address }}</br>
-                                            CIN No. : {{ $getOrganizationData->cin_number }}</br>
-                                            Email Id : {{ $getOrganizationData->email }},<br />
-                                            <strong>Mo No. : {{ $getOrganizationData->mobile_number }},</strong><br>
+                                        <p class="font-size-delivery"> {{ ($getOrganizationData)->address ?? 'W-127A,MIDC,NASHIK - 422010'}}</br>
+                                            CIN No. :  {{ ($getOrganizationData)->cin_number ?? 'U99999MH1997PTC108601'}}</br>
+                                            Email Id :  {{ ($getOrganizationData)->email ?? 'shreeragengg@rediffmail.com'}},<br />
+                                            <strong>Mo No. : {{ ($getOrganizationData)->mobile_number ?? '7028082176'}},</strong><br>
                                             {{-- {{ $getOrganizationData->mobile_number }},</br> --}}
-                                            <strong>GST No.: {{ $getOrganizationData->gst_no }},</strong>
+                                            <strong>GST No.: {{ ($getOrganizationData)->gst_no ?? '27AAHCS6330F1ZE'}},</strong>
                                         </p>
                                     </td>
                                     <td
@@ -284,7 +290,7 @@
                                                 style="display: flex; justify-content: end; font-size:18px; text-transform: uppercase; padding-top:20px;">
                                                 <strong>For:
                                                     <span class="company-name-size">
-                                                        {{ $getOrganizationData->company_name }}</span></strong></div>
+                                                         {{ ($getOrganizationData)->company_name ?? 'Shreerag Engineering & Auto Pvt. Ltd.' }}</span></strong></div>
                                         </td>
                                     </tr>
                                     <tr style="height:80px;">
