@@ -177,12 +177,12 @@
                                         <tr class="font-size-delivery">
                                             <th style="border: 1px solid black; padding: 5px;">No.</th>
                                             <th style="border: 1px solid black; padding: 5px; width:70px;">Part Item.</th>
-                                            <th style="border: 1px solid black; padding: 5px;">Particulars</th>
+                                            <th class="description-column"  style="border: 1px solid black; padding: 5px;">Particulars</th>
                                             <th style="border: 1px solid black; padding: 5px;">Process</th>
                                             {{-- <th style="border: 1px solid black; padding: 5px;">Unit</th> --}}
                                             <th style="border: 1px solid black; padding: 5px;">HSN</th>
     
-                                            <th style="border: 1px solid black; padding: 5px;">Size</th>
+                                            <th class="description-column" style="border: 1px solid black; padding: 5px;">Size</th>
                                             <th style="border: 1px solid black; padding: 5px;">Quantity</th>
                                             <th style="border: 1px solid black; padding: 5px;">Rate</th>
                                             <th style="border: 1px solid black; padding: 5px;">Amount</th>
@@ -195,13 +195,13 @@
                                                     {{ $index + 1 }}</td>
                                                 <td class="description-column" style="border: 1px solid black; padding: 5px;">{{ $item->part_number }}
                                                 </td>
-                                                <td style="border: 1px solid black; padding: 5px;">{{ $item->description }}
+                                                <td class="description-column"  style="border: 1px solid black; padding: 5px;">{{ $item->description }}
                                                 </td>
                                                 <td style="border: 1px solid black; padding: 5px;">{{ $item->process_name }}
                                                 </td>
                                                 <td style="border: 1px solid black; padding: 5px;">{{ $item->hsn_name }}</td>
     
-                                                <td style="border: 1px solid black; padding: 5px; text-align: left;">
+                                                <td class="description-column" style="border: 1px solid black; padding: 5px; text-align: left;">
                                                     {{ $item->size }}</td>
                                                 <td style="border: 1px solid black; padding: 5px; text-align: right;">
                                                     {{ $item->quantity }} {{ $item->name }}</td>
@@ -307,7 +307,7 @@
                 var contentToPrint = document.getElementById("printableArea").innerHTML;
         
                 // Open a new window
-                var printWindow = window.open('', '', 'height=600,width=800');
+                var printWindow = window.open('', '', 'height=600,width=00');
         
                 // Write the content to the new window with proper styles
                 printWindow.document.write('<html><head><title>Print</title>');

@@ -88,11 +88,16 @@
             justify-content: center;
             padding-bottom: 10px;
         }
+         .description-column {
+    width: 200px !important;
+    word-break: break-word !important;
+    white-space: normal !important;
+}
     </style>
 
     <div class="data-table-area mg-tb-15" id="printableArea">
         <div class="container-fluid">
-            <div class="row">
+            <div class="">
 
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="sparkline13-list">
@@ -175,7 +180,7 @@
                                     <tr class="font-size-delivery">
                                         <th style="border: 1px solid black; padding: 5px;">No.</th>
                                         <th style="border: 1px solid black; padding: 5px; width:70px;">Part Item.</th>
-                                        <th style="border: 1px solid black; padding: 5px;">Particulars</th>
+                                        <th   class="description-column"  style="border: 1px solid black; padding: 5px;">Particulars</th>
                                         <th style="border: 1px solid black; padding: 5px;">Process</th>
                                         {{-- <th style="border: 1px solid black; padding: 5px;">Unit</th> --}}
                                         <th style="border: 1px solid black; padding: 5px;">HSN</th>
@@ -191,15 +196,15 @@
                                         <tr class="font-size-delivery">
                                             <td style="border: 1px solid black; padding: 5px; text-align: center;">
                                                 {{ $index + 1 }}</td>
-                                            <td style="border: 1px solid black; padding: 5px;">{{ $item->part_number }}
+                                            <td  style="border: 1px solid black; padding: 5px;">{{ $item->part_number }}
                                             </td>
-                                            <td style="border: 1px solid black; padding: 5px;">{{ $item->description }}
+                                            <td  class="description-column" style="border: 1px solid black; padding: 5px;">{{ $item->description }}
                                             </td>
                                             <td style="border: 1px solid black; padding: 5px;">{{ $item->process_name }}
                                             </td>
                                             <td style="border: 1px solid black; padding: 5px;">{{ $item->hsn_name }}</td>
 
-                                            <td style="border: 1px solid black; padding: 5px; text-align: left;">
+                                            <td class="description-column"  style="border: 1px solid black; padding: 5px; text-align: left;">
                                                 {{ $item->size }}</td>
                                             <td style="border: 1px solid black; padding: 5px; text-align: left;">
                                                 {{ $item->quantity }} {{ $item->name }}</td>
