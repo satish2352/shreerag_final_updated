@@ -9,6 +9,49 @@
 
     .error {
         color: red;
+        @media print {
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-size: 12px;
+    }
+
+    .no-print,
+    .accept-btn {
+        display: none !important;
+    }
+
+    #printableArea {
+        width: 100% !important;
+        overflow: visible !important;
+    }
+
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        page-break-inside: auto;
+    }
+
+    table tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+
+    th, td {
+        border: 1px solid black !important;
+        padding: 6px !important;
+    }
+
+    .table-responsive {
+        overflow: visible !important;
+    }
+
+    .description-column {
+        white-space: normal !important;
+        word-break: break-word !important;
+    }
+}
     }
 .table-responsive {
     width: 100%;

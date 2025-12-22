@@ -512,23 +512,37 @@
                             .pdf-font-size{
                             font-size:9px !important;
                             }
-                        table {
-        table-layout: fixed !important;
-        width: 100% !important;
-        word-wrap: break-word !important;
-        overflow-wrap: break-word !important;
-    }
+                           /* 🔥 FIXED DESCRIPTION FONT SIZE */
+            .description-column{
+                font-size:11px !important;
+                line-height: 1.2 !important;
+                word-break: break-word !important;
+                white-space: normal !important;
+            }
+                                table {
+                table-layout: fixed !important;
+                width: 100% !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+            }
 
-    tr {
-        page-break-inside: avoid !important;
+            tr {
+                page-break-inside: avoid !important;
+            }
+            thead { display: table-header-group !important; }
+            tfoot { display: table-footer-group !important; }
+                            
+
+                          th, td {
+                          font-family: Font Awesome 5 Free;
+        font-size: 11px !important;  
+        padding: 5px !important;
+           text-align: left;
+        vertical-align: top !important;
+        word-break: break-word !important;
+        overflow-wrap: anywhere !important;
+        white-space: normal !important;
     }
-    thead { display: table-header-group !important; }
-    tfoot { display: table-footer-group !important; }
-                        th, td {
-                            padding: 5px;
-                            text-align: left;
-                            word-wrap: break-word;
-                        }
                         th {
                             background-color: #f2f2f2;
                         }

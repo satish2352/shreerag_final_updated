@@ -204,13 +204,17 @@ class EstimationRepository
             $production_data->business_id = $dataOutputNew->business_id;
             $production_data->business_details_id = $dataOutputNew->business_details_id;
             $production_data->design_id = $dataOutputNew->design_id;
+
+
             $production_data->save();
 
             // Create or update ProductionDetails
             $production_data_details = ProductionDetails::firstOrNew([
-                'business_details_id' => $dataOutputNew->id
+                // 'business_details_id' => $dataOutputNew->id
+                'business_details_id' => $decoded_business_id
             ]);
-
+            // dd($production_data_details);
+            // die();
             $production_data_details->business_id = $dataOutputNew->business_id;
             $production_data_details->design_id = $dataOutputNew->design_id;
             $production_data_details->business_details_id = $dataOutputNew->business_details_id;

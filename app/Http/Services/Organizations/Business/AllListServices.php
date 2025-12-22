@@ -388,7 +388,7 @@ class AllListServices
     //         $longitude = $user->longitude;
 
     //         $apiKey = config('services.locationiq.api_key');
- 
+
     //         // Call LocationIQ Reverse Geocoding API
     //         $response = Http::get("https://us1.locationiq.com/v1/reverse.php", [
     //             'key'    => $apiKey,

@@ -347,7 +347,7 @@
                                                             </td>
                                                             <td>
                                                                 @if ($item->material_send_production == 0)
-                                                                    <a data-id="{{ $item->id }}"
+                                                                    <a data-id="{{ $item->id }}" type="button"
                                                                         class="btn btn-danger btn-sm ajax-delete"
                                                                         title="Delete">
                                                                         <i class="fa fa-trash"></i>
