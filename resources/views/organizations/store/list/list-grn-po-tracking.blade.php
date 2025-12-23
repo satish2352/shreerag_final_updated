@@ -9,6 +9,13 @@
         .remaining_quantity {
             background-color: #8cd9b3 !important;
         }
+        .desc-text {
+    font-size: 12px;
+    text-align: left;
+    word-break: break-word;
+    padding: 10px;
+    background: #ddd;
+        }
     </style>
     <div class="row" >
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -139,10 +146,11 @@
                                                                     placeholder="Enter Description" class="form-control"
                                                                     value="{{ $item->id }}" readonly />
                                                                      <td>{{ $index + 1 }}</td>
-                                                                <td><input type="text" name="addmore[0][description]"
+                                                                <td><div class="desc-text" readonly> {{ $item->part_description }}</div>
+                                                                    {{-- <input type="text" name="addmore[0][description]"
                                                                         placeholder="Enter Description"
                                                                         class="form-control"
-                                                                        value="{{ $item->part_description }}" readonly />
+                                                                        value="{{ $item->part_description }}" readonly /> --}}
                                                                 </td>
                                                                 </td>
                                                                 <td><input type="text"
