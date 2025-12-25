@@ -309,7 +309,7 @@
                                             style="border: 1px solid black; padding: 5px; max-width: 200px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-all;">
                                             {{ $item->item_description }}</td>
                                         <td style="border: 1px solid black; padding: 5px;">{{ $item->hsn_name }}</td>
-                                        <td style="border: 1px solid black; padding: 5px;">{{ $item->description }}
+                                        <td class="description-column" style="border: 1px solid black; padding: 5px;">{{ $item->description }}
                                         </td>
                                         <td style="border: 1px solid black; padding: 5px; text-align: left;">
                                             {{ $item->quantity }} {{ $item->unit_name }}</td>
