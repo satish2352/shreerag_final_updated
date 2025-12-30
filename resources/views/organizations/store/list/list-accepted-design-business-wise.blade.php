@@ -111,11 +111,11 @@
                                                     @endif
                                                     {{-- PRODUCT STATUS --}}
                                                     <td>
-                                                        @if ($data->dispatch_status_id == 1148)
-                                                            <span class="badge badge-success">CLOSED</span>
-                                                        @else
+                                                        {{-- @if ($data->dispatch_status_id == 1148) --}}
+                                                            {{-- <span class="badge badge-success">CLOSED</span>
+                                                        @else --}}
                                                             <span class="badge badge-warning">OPEN</span>
-                                                        @endif
+                                                        {{-- @endif --}}
                                                     </td>
 
                                                     {{-- ACTION BUTTONS --}}
