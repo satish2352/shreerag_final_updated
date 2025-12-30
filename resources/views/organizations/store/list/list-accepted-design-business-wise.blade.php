@@ -152,7 +152,7 @@
                                                                         Need To Purchase
                                                                     </button>
                                                                 </a>
-                                                            @endif
+                                                            {{-- @endif --}}
 
                                                         </div>
                                                     </td>
