@@ -122,9 +122,9 @@
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
 
-                                                            @if ($data->dispatch_status_id == 1148)
+                                                            {{-- @if ($data->dispatch_status_id == 1148) --}}
                                                                 {{-- CLOSED → BOTH BUTTONS DISABLED --}}
-                                                                <button class="btn btn-sm disabled-btn"
+                                                                {{-- <button class="btn btn-sm disabled-btn"
                                                                     style="padding: 7px;" disabled>
                                                                     Issue Product Material
                                                                 </button>
@@ -132,8 +132,8 @@
                                                                 <button class="btn btn-sm disabled-btn"
                                                                     style="padding: 7px; margin-left: 10px;" disabled>
                                                                     Need To Purchase
-                                                                </button>
-                                                            @else
+                                                                </button> --}}
+                                                            {{-- @else --}}
                                                                 {{-- OPEN → BUTTONS ENABLED --}}
                                                                 <a
                                                                     href="{{ route('edit-material-list-bom-wise-new-req', base64_encode($data->business_details_id)) }}">
