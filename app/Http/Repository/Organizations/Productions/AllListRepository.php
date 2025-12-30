@@ -25,7 +25,7 @@ class AllListRepository
                 ->whereIn('business_application_processes.estimation_send_to_production', $array_to_be_check)
                 ->where('businesses.is_active', true)
                 ->where('businesses.is_deleted', 0)
-                ->groupBy('businesses.id', 'businesses.project_name', 'businesses.customer_po_number', 'businesses.created_at', 'businesses.title', 'businesses.remarks', 'businesses.is_active', 'estimation.business_id', 'businesses.updated_at')
+                ->groupBy('businesses.id', 'businesses.project_name', 'businesses.customer_po_number', 'businesses.created_at', 'businesses.title', 'businesses.remarks', 'businesses.is_active', 'estimation.business_id', 'businesses.updated_at', 'businesses.grand_total_amount')
                 ->select(
                     'businesses.id',
                     'businesses.project_name',
@@ -35,7 +35,8 @@ class AllListRepository
                     'businesses.is_active',
                     'businesses.created_at',
                     'estimation.business_id',
-                    'businesses.updated_at'
+                    'estimation.business_id',
+                    'businesses.grand_total_amount'
                 )->orderBy('businesses.updated_at', 'desc')
                 ->get();
 
@@ -76,6 +77,7 @@ class AllListRepository
                     'businesses_details.product_name',
                     'businesses_details.description',
                     'businesses_details.quantity',
+                    'businesses_details.total_amount',
                     'estimation.business_id',
                     'estimation.id as productionId',
                     'designs.bom_image',
@@ -520,93 +522,92 @@ class AllListRepository
             return $e;
         }
     }
-//     public function getAllCompletedProductionSendToLogistics()
-// {
-//     try {
-//         $data_output = CustomerProductQuantityTracking::leftJoin('production', function ($join) {
-//                 $join->on('tbl_customer_product_quantity_tracking.business_details_id', '=', 'production.business_details_id');
-//             })
-//             ->leftJoin('designs', 'tbl_customer_product_quantity_tracking.business_details_id', '=', 'designs.business_details_id')
-//             ->leftJoin('businesses', 'tbl_customer_product_quantity_tracking.business_id', '=', 'businesses.id')
-//             ->leftJoin('businesses_details', 'tbl_customer_product_quantity_tracking.business_details_id', '=', 'businesses_details.id')
-//             ->leftJoin('design_revision_for_prod', 'tbl_customer_product_quantity_tracking.business_details_id', '=', 'design_revision_for_prod.business_details_id')
-//             ->leftJoin('purchase_orders', 'tbl_customer_product_quantity_tracking.business_details_id', '=', 'purchase_orders.business_details_id')
-            
-//             ->whereNotNull('tbl_customer_product_quantity_tracking.completed_quantity')
-//             ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status', [3001,3002,3003,3004,3005])
-//             ->where('businesses.is_active', true)
-//             ->where('businesses.is_deleted', 0)
+    //     public function getAllCompletedProductionSendToLogistics()
+    // {
+    //     try {
+    //         $data_output = CustomerProductQuantityTracking::leftJoin('production', function ($join) {
+    //                 $join->on('tbl_customer_product_quantity_tracking.business_details_id', '=', 'production.business_details_id');
+    //             })
+    //             ->leftJoin('designs', 'tbl_customer_product_quantity_tracking.business_details_id', '=', 'designs.business_details_id')
+    //             ->leftJoin('businesses', 'tbl_customer_product_quantity_tracking.business_id', '=', 'businesses.id')
+    //             ->leftJoin('businesses_details', 'tbl_customer_product_quantity_tracking.business_details_id', '=', 'businesses_details.id')
+    //             ->leftJoin('design_revision_for_prod', 'tbl_customer_product_quantity_tracking.business_details_id', '=', 'design_revision_for_prod.business_details_id')
+    //             ->leftJoin('purchase_orders', 'tbl_customer_product_quantity_tracking.business_details_id', '=', 'purchase_orders.business_details_id')
 
-//             ->select(
-//                 'businesses_details.id as product_id',
-//                 'businesses.project_name',
-//                 'businesses.customer_po_number',
-//                 'businesses_details.product_name',
-//                 'businesses_details.description',
-//                 'businesses_details.quantity',
-//                 DB::raw('SUM(tbl_customer_product_quantity_tracking.completed_quantity) as total_completed_quantity'),
-//                 DB::raw('MAX(production.updated_at) as last_updated')
-//             )
+    //             ->whereNotNull('tbl_customer_product_quantity_tracking.completed_quantity')
+    //             ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status', [3001,3002,3003,3004,3005])
+    //             ->where('businesses.is_active', true)
+    //             ->where('businesses.is_deleted', 0)
 
-//             ->groupBy(
-//                 'businesses_details.id',
-//                 'businesses.project_name',
-//                 'businesses.customer_po_number',
-//                 'businesses_details.product_name',
-//                 'businesses_details.description',
-//                 'businesses_details.quantity'
-//             )
-//             ->orderBy('last_updated', 'desc')
-//             ->get();
+    //             ->select(
+    //                 'businesses_details.id as product_id',
+    //                 'businesses.project_name',
+    //                 'businesses.customer_po_number',
+    //                 'businesses_details.product_name',
+    //                 'businesses_details.description',
+    //                 'businesses_details.quantity',
+    //                 DB::raw('SUM(tbl_customer_product_quantity_tracking.completed_quantity) as total_completed_quantity'),
+    //                 DB::raw('MAX(production.updated_at) as last_updated')
+    //             )
 
-//         return $data_output;
+    //             ->groupBy(
+    //                 'businesses_details.id',
+    //                 'businesses.project_name',
+    //                 'businesses.customer_po_number',
+    //                 'businesses_details.product_name',
+    //                 'businesses_details.description',
+    //                 'businesses_details.quantity'
+    //             )
+    //             ->orderBy('last_updated', 'desc')
+    //             ->get();
 
-//     } catch (\Exception $e) {
-//         return response()->json(['error' => $e->getMessage()], 500);
-//     }
-// }
- public function getAllCompletedProductionSendToLogistics()
-{
-    try {
-        $subQuery = CustomerProductQuantityTracking::select(
+    //         return $data_output;
+
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => $e->getMessage()], 500);
+    //     }
+    // }
+    public function getAllCompletedProductionSendToLogistics()
+    {
+        try {
+            $subQuery = CustomerProductQuantityTracking::select(
                 'business_id',
                 'business_details_id',
                 DB::raw('SUM(completed_quantity) as total_completed_quantity'),
                 DB::raw('MAX(updated_at) as last_updated')
             )
-            ->whereNotNull('completed_quantity')
-            ->whereIn('quantity_tracking_status', [3001,3002,3003,3004,3005])
-            ->groupBy('business_id', 'business_details_id');
+                ->whereNotNull('completed_quantity')
+                ->whereIn('quantity_tracking_status', [3001, 3002, 3003, 3004, 3005])
+                ->groupBy('business_id', 'business_details_id');
 
-        $data_output = DB::table(DB::raw("({$subQuery->toSql()}) as t"))
-            ->mergeBindings($subQuery->getQuery()) 
+            $data_output = DB::table(DB::raw("({$subQuery->toSql()}) as t"))
+                ->mergeBindings($subQuery->getQuery())
 
-            ->leftJoin('businesses', 't.business_id', '=', 'businesses.id')
-            ->leftJoin('businesses_details', 't.business_details_id', '=', 'businesses_details.id')
-            ->leftJoin('production', 't.business_details_id', '=', 'production.business_details_id')
+                ->leftJoin('businesses', 't.business_id', '=', 'businesses.id')
+                ->leftJoin('businesses_details', 't.business_details_id', '=', 'businesses_details.id')
+                ->leftJoin('production', 't.business_details_id', '=', 'production.business_details_id')
 
-            ->where('businesses.is_active', true)
-            ->where('businesses.is_deleted', 0)
+                ->where('businesses.is_active', true)
+                ->where('businesses.is_deleted', 0)
 
-            ->select(
-                't.business_details_id as product_id',
-                'businesses.project_name',
-                'businesses.customer_po_number',
-                'businesses_details.product_name',
-                'businesses_details.description',
-                'businesses_details.quantity',
-                't.total_completed_quantity',
-                't.last_updated'
-            )
-            ->orderBy('t.last_updated', 'desc')
-            ->get();
+                ->select(
+                    't.business_details_id as product_id',
+                    'businesses.project_name',
+                    'businesses.customer_po_number',
+                    'businesses_details.product_name',
+                    'businesses_details.description',
+                    'businesses_details.quantity',
+                    't.total_completed_quantity',
+                    't.last_updated'
+                )
+                ->orderBy('t.last_updated', 'desc')
+                ->get();
 
-        return $data_output;
-
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
+            return $data_output;
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
-}
 
 
     public function getAllCompletedProductionSendToLogisticsProductWise($id)

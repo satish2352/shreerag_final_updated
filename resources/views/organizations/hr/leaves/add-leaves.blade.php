@@ -359,10 +359,10 @@ form .form-group label.error {
 <script>
 $(function () {
     // Datepicker init
-    $('#leave_start_date, #leave_end_date').datepicker({
-        dateFormat: 'yy-mm-dd',
-        minDate: 0
-    });
+    // $('#leave_start_date, #leave_end_date').datepicker({
+    //     dateFormat: 'yy-mm-dd',
+    //     minDate: 0
+    // });
 });
 
 /*******************************************************************
@@ -391,7 +391,7 @@ function lockHalfDayToDate() {
 *******************************************************************/
 $("#leave_start_date").datepicker({
     dateFormat: "yy-mm-dd",
-    minDate: 0,
+    // minDate: 0,
     onSelect: function () {
         lockHalfDayToDate();
     }
@@ -399,7 +399,7 @@ $("#leave_start_date").datepicker({
 
 $("#leave_end_date").datepicker({
     dateFormat: "yy-mm-dd",
-    minDate: 0,
+    // minDate: 0,
     beforeShow: function () {
         let dayType = $("#leave_day").val();
         let startDate = $("#leave_start_date").val();

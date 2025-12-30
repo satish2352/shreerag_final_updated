@@ -25,6 +25,7 @@
                                             <th data-field="project_name" data-editable="false">Project Name</th>
                                             <th data-field="customer_po_number" data-editable="false">PO Number</th>
                                             <th data-field="purchase_id" data-editable="false">Remark</th>                                         
+                                            <th data-field="grand_total_amount" data-editable="false">Grand Total Amount</th>    
                                             <th data-field="status">Status</th>                                                                                                                          
                                         </tr>
                                     </thead>                                   
@@ -37,6 +38,7 @@
                                             <td>{{ ucwords($data->project_name) }}</td>
                                             <td>{{ ucwords($data->customer_po_number) }}</td>
                                             <td>{{ucwords($data->remarks)}}</td>
+                                               <td>{{ucwords($data->grand_total_amount)}}</td>
                                             <td> <a href="{{ route('list-new-requirements-received-for-production-business-wise', base64_encode($data->business_id)) }}" ><button class="btn btn-sm btn-bg-colour" type="submit" >View Details</button></a></td>
                                         </tr>
                                         @endforeach

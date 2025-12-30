@@ -365,6 +365,10 @@
 
         // Estimation CRUD
         Route::get('/edit-estimation/{id}', [EstimationController::class, 'editEstimation'])->name('edit-estimation');
+        Route::post(
+            '/check-estimation-amount',
+            [EstimationController::class, 'checkEstimationAmount']
+        )->name('check.estimation.amount');
         Route::post('/update-estimation', [EstimationController::class, 'updateEstimation'])->name('update-estimation');
 
         // Send to Owner

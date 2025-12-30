@@ -341,7 +341,7 @@ function initDatePickers() {
     // START DATE PICKER
     $("#leave_start_date").datepicker({
         dateFormat: "yy-mm-dd",
-        minDate: 0,
+        // minDate: 0,
         changeMonth: true,
         changeYear: true,
         onSelect: function () {
@@ -352,7 +352,7 @@ function initDatePickers() {
     // END DATE PICKER
     $("#leave_end_date").datepicker({
         dateFormat: "yy-mm-dd",
-        minDate: 0,
+        // minDate: 0,
         changeMonth: true,
         changeYear: true,
         beforeShow: function () {

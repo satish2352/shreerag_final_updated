@@ -145,7 +145,7 @@ textarea.form-control {
                                                                         name="product_name_{{ $key }}"
                                                                         value="{{ $editDataNew->product_name }}"
                                                                         class="form-control"
-                                                                        @if (!($editDataNew->business_status_id == 1112 && $editDataNew->design_status_id == 1111)) disabled @endif
+                                                                        @if (!($editDataNew->business_status_id == 1112 && $editDataNew->design_status_id == 1111)) readonly @endif
                                                                          />
                                                                 </td>
                                                                 <td>
@@ -153,7 +153,7 @@ textarea.form-control {
                                                                         name="description_{{ $key }}"
                                                                         value="{{ $editDataNew->description }}"
                                                                         class="form-control"
-                                                                        @if (!($editDataNew->business_status_id == 1112 && $editDataNew->design_status_id == 1111)) disabled @endif
+                                                                        @if (!($editDataNew->business_status_id == 1112 && $editDataNew->design_status_id == 1111)) readonly @endif
                                                                          />
                                                                 </td>
                                                                 <td>
@@ -161,14 +161,14 @@ textarea.form-control {
                                                                         name="quantity_{{ $key }}"
                                                                         value="{{ $editDataNew->quantity }}"
                                                                         class="form-control quantity"
-                                                                        @if (!($editDataNew->business_status_id == 1112 && $editDataNew->design_status_id == 1111)) disabled @endif 
+                                                                        @if (!($editDataNew->business_status_id == 1112 && $editDataNew->design_status_id == 1111)) readonly @endif 
                                                                         />
                                                                 </td>
                                                                 <td>
                                                                     <input type="text" name="rate_{{ $key }}"
                                                                         value="{{ $editDataNew->rate }}"
                                                                         class="form-control rate"
-                                                                        @if (!($editDataNew->business_status_id == 1112 && $editDataNew->design_status_id == 1111)) disabled @endif 
+                                                                        @if (!($editDataNew->business_status_id == 1112 && $editDataNew->design_status_id == 1111)) readonly @endif 
                                                                         />
                                                                 </td>
                                                                   <td><input type="text" name="total_{{ $key }}" class="form-control total" readonly value="{{ $editDataNew->quantity * $editDataNew->rate }}"></td>
@@ -177,13 +177,22 @@ textarea.form-control {
         $isEditable = ($editDataNew->business_status_id == 1112 && $editDataNew->design_status_id == 1111);
     @endphp
 
-    <button type="button"
+    {{-- <button type="button"
             class="btn btn-sm btn-danger remove-row"
             data-id="{{ $isEditable ? $editDataNew->id : 0 }}"
             title="Delete"
-            @if(!$isEditable) disabled @endif>
+            @if(!$isEditable) readonly @endif>
         <i class="fa fa-trash"></i>
-    </button>
+    </button> --}}
+
+    <button type="button"
+        class="btn btn-sm btn-danger remove-row"
+        data-id="{{ $isEditable ? $editDataNew->id : 0 }}"
+        title="Delete"
+        @if(!$isEditable) disabled @endif>
+    <i class="fa fa-trash"></i>
+</button>
+
 </td>
 
 

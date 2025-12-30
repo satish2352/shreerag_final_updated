@@ -38,6 +38,28 @@ class EstimationController extends Controller
             return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
         }
     }
+    public function checkEstimationAmount(Request $request)
+    {
+        $businessDetails = BusinessDetails::find($request->business_id);
+
+        if (!$businessDetails) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Business details not found'
+            ]);
+        }
+
+        if ($request->total_estimation_amount > $businessDetails->total_amount) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Estimation amount cannot be greater than Business Total Amount (₹'
+                    . $businessDetails->total_amount . ')'
+            ]);
+        }
+
+        return response()->json(['status' => 'success']);
+    }
+
     public function updateEstimation(Request $request)
     { //checked
         $rules = [
@@ -55,6 +77,17 @@ class EstimationController extends Controller
         try {
             $validation = Validator::make($request->all(), $rules, $messages);
 
+            $businessDetails = BusinessDetails::find($request->business_id);
+
+            if ($request->total_estimation_amount > $businessDetails->total_amount) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with([
+                        'status' => 'error',
+                        'msg' => 'Total Estimation Amount cannot exceed Business Total Amount (₹'
+                            . $businessDetails->total_amount . ')'
+                    ]);
+            }
             if ($validation->fails()) {
                 return redirect()->back()
                     ->withInput()

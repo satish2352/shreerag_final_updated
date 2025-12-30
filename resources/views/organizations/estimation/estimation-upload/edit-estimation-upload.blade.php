@@ -125,7 +125,10 @@
             </div>
         </div>
     </div>
-     @push('scripts')t>
+    @push('scripts')
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
     <script>
         jQuery.noConflict();
         jQuery(document).ready(function($) {
@@ -203,5 +206,40 @@
             });
         });
     </script>
+    <script>
+let estimationAmountValid = false;
+
+$('#total_estimation_amount').on('blur', function () {
+    let totalAmount = $(this).val();
+    let businessId  = $('#business_id').val();
+
+    if (totalAmount !== '') {
+        $.ajax({
+            url: "{{ route('check.estimation.amount') }}",
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                total_estimation_amount: totalAmount,
+                business_id: businessId
+            },
+            success: function (response) {
+                if (response.status === 'error') {
+                    estimationAmountValid = false;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Amount',
+                        text: response.message
+                    });
+                    $('#total_estimation_amount').val('').focus();
+                } else {
+                    estimationAmountValid = true;
+                }
+            }
+        });
+    }
+});
+</script>
+
+
     @endpush
 @endsection

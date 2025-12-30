@@ -53,7 +53,9 @@ class DesignsServices
         try {
             $return_data = $this->repo->updateAll($request);
             $productName = $return_data['product_name'];
-            $formattedProductName = preg_replace('/_+/', '_', $productName);
+            // $formattedProductName = preg_replace('/_+/', '_', $productName);
+            $formattedProductName = preg_replace('/[^A-Za-z0-9_-]/', '_', $productName);
+            $formattedProductName = preg_replace('/_+/', '_', $formattedProductName);
             $path = Config::get('FileConstant.DESIGNS_ADD');
             if ($request->hasFile('design_image')) {
                 if ($return_data['design_image']) {

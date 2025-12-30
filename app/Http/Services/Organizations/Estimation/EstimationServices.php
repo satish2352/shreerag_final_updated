@@ -26,7 +26,10 @@ class EstimationServices
             $return_data = $this->repo->updateAll($request);
 
             $productName = $return_data['product_name'];
-            $formattedProductName = preg_replace('/_+/', '_', $productName);
+            // $formattedProductName = preg_replace('/_+/', '_', $productName);
+
+            $formattedProductName = preg_replace('/[^A-Za-z0-9_-]/', '_', $productName);
+            $formattedProductName = preg_replace('/_+/', '_', $formattedProductName);
             $path = Config::get('FileConstant.DESIGNS_ADD');
             if ($request->hasFile('bom_image')) {
                 if ($return_data['bom_image']) {
@@ -74,7 +77,11 @@ class EstimationServices
             $return_data = $this->repo->updateRevisedEstimation($request);
 
             $productName = $return_data['product_name'];
-            $formattedProductName = preg_replace('/_+/', '_', $productName);
+            // $formattedProductName = preg_replace('/_+/', '_', $productName);
+
+            $formattedProductName = preg_replace('/[^A-Za-z0-9_-]/', '_', $productName);
+            $formattedProductName = preg_replace('/_+/', '_', $formattedProductName);
+
             $path = Config::get('FileConstant.DESIGNS_ADD');
 
 
