@@ -25,10 +25,10 @@ class AllListServices
             return $e;
         }
     }
-    public function getAllNewRequirementBusinessWise($business_id)
+    public function getAllNewRequirementBusinessWise()
     { //checked
         try {
-            $data_output = $this->repo->getAllNewRequirementBusinessWise($business_id);
+            $data_output = $this->repo->getAllNewRequirementBusinessWise();
             return $data_output;
         } catch (\Exception $e) {
             return $e;

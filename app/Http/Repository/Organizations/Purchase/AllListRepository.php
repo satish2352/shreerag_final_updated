@@ -17,9 +17,6 @@ class AllListRepository
       $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
         $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
       })
-        // ->leftJoin('designs', function ($join) {
-        //     $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-        // })
         ->leftJoin('requisition', function ($join) {
           $join->on('business_application_processes.business_details_id', '=', 'requisition.business_details_id');
         })
@@ -29,9 +26,6 @@ class AllListRepository
         ->leftJoin('businesses_details', function ($join) {
           $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
         })
-        // ->leftJoin('design_revision_for_prod', function ($join) {
-        //     $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-        // })
         ->leftJoin('purchase_orders', function ($join) {
           $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
         })
@@ -49,6 +43,7 @@ class AllListRepository
           'production.business_details_id',
           'businesses_details.id',
           'businesses.project_name',
+          'businesses.grand_total_amount',
           'businesses.customer_po_number',
           'businesses.created_at',
           'businesses_details.product_name',
@@ -58,8 +53,6 @@ class AllListRepository
           'businesses_details.is_active',
           'production.business_id',
           'production.id',
-          // 'designs.bom_image',
-          // 'designs.design_image',
           'req2.id',
           'req2.bom_file',
           'req2.updated_at'
@@ -69,6 +62,7 @@ class AllListRepository
           'production.business_details_id',
           'businesses_details.id',
           'businesses.project_name',
+          'businesses.grand_total_amount',
           'businesses.created_at',
           'businesses.customer_po_number',
           'businesses_details.product_name',
@@ -78,8 +72,6 @@ class AllListRepository
           'businesses_details.is_active',
           'production.id',
           'production.id as productionId',
-          // 'designs.bom_image',
-          // 'designs.design_image',
           'req2.id as requistition_id',
           'req2.bom_file',
           'req2.updated_at'
@@ -656,209 +648,209 @@ class AllListRepository
     ];
   }
 
-//   public function getFollowUpReport($request)
-//   {
-//     $statuses = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')];
+  //   public function getFollowUpReport($request)
+  //   {
+  //     $statuses = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')];
 
-//     $query = PurchaseOrdersModel::leftJoin('vendors', 'purchase_orders.vendor_id', '=', 'vendors.id')
-//       ->whereIn('purchase_orders.purchase_status_from_owner', $statuses)
-//       ->whereIn('purchase_orders.purchase_status_from_purchase', $statuses);
+  //     $query = PurchaseOrdersModel::leftJoin('vendors', 'purchase_orders.vendor_id', '=', 'vendors.id')
+  //       ->whereIn('purchase_orders.purchase_status_from_owner', $statuses)
+  //       ->whereIn('purchase_orders.purchase_status_from_purchase', $statuses);
 
-//     // 🔹 Filter by Vendor
-//     if ($request->filled('vendor_name')) {
-//       $query->where('purchase_orders.vendor_id', $request->vendor_name);
-//     }
+  //     // 🔹 Filter by Vendor
+  //     if ($request->filled('vendor_name')) {
+  //       $query->where('purchase_orders.vendor_id', $request->vendor_name);
+  //     }
 
-//     // 🔹 Filter by PO Status (your custom logic)
-//     if ($request->filled('po_status')) {
-//       $status = $request->po_status;
+  //     // 🔹 Filter by PO Status (your custom logic)
+  //     if ($request->filled('po_status')) {
+  //       $status = $request->po_status;
 
-//       $query->where(function ($q) use ($status) {
-//         if ($status === 'open') {
-//           $q->whereNull('purchase_orders.purchase_status_from_owner')
-//             ->where('purchase_orders.purchase_status_from_purchase', 1126);
-//         } elseif ($status === 'partially_received') {
-//           $q->where('purchase_orders.purchase_status_from_owner', 1127)
-//             ->where('purchase_orders.purchase_status_from_purchase', 1126);
-//         } elseif ($status === 'pending_gate_pass') {
-//           $q->where('purchase_orders.purchase_status_from_owner', 1129)
-//             ->where('purchase_orders.purchase_status_from_purchase', 1129);
-//         }
-//       });
-//     }
+  //       $query->where(function ($q) use ($status) {
+  //         if ($status === 'open') {
+  //           $q->whereNull('purchase_orders.purchase_status_from_owner')
+  //             ->where('purchase_orders.purchase_status_from_purchase', 1126);
+  //         } elseif ($status === 'partially_received') {
+  //           $q->where('purchase_orders.purchase_status_from_owner', 1127)
+  //             ->where('purchase_orders.purchase_status_from_purchase', 1126);
+  //         } elseif ($status === 'pending_gate_pass') {
+  //           $q->where('purchase_orders.purchase_status_from_owner', 1129)
+  //             ->where('purchase_orders.purchase_status_from_purchase', 1129);
+  //         }
+  //       });
+  //     }
 
 
 
-//     // 🔹 Search keyword
-//     if ($request->filled('search')) {
-//       $s = $request->search;
-//       $query->where(function ($q) use ($s) {
-//         $q->where('vendors.vendor_name', 'like', "%{$s}%")
-//           ->orWhere('vendors.vendor_company_name', 'like', "%{$s}%")
-//           ->orWhere('vendors.vendor_email', 'like', "%{$s}%")
-//           ->orWhere('vendors.contact_no', 'like', "%{$s}%")
-//           ->orWhere('purchase_orders.purchase_orders_id', 'like', "%{$s}%");
-//       });
-//     }
+  //     // 🔹 Search keyword
+  //     if ($request->filled('search')) {
+  //       $s = $request->search;
+  //       $query->where(function ($q) use ($s) {
+  //         $q->where('vendors.vendor_name', 'like', "%{$s}%")
+  //           ->orWhere('vendors.vendor_company_name', 'like', "%{$s}%")
+  //           ->orWhere('vendors.vendor_email', 'like', "%{$s}%")
+  //           ->orWhere('vendors.contact_no', 'like', "%{$s}%")
+  //           ->orWhere('purchase_orders.purchase_orders_id', 'like', "%{$s}%");
+  //       });
+  //     }
 
-//     // 🔹 Date Filters
-//     if ($request->filled('from_date')) {
-//       $query->whereDate('purchase_orders.created_at', '>=', $request->from_date);
-//     }
+  //     // 🔹 Date Filters
+  //     if ($request->filled('from_date')) {
+  //       $query->whereDate('purchase_orders.created_at', '>=', $request->from_date);
+  //     }
 
-//     if ($request->filled('to_date')) {
-//       $query->whereDate('purchase_orders.created_at', '<=', $request->to_date);
-//     }
+  //     if ($request->filled('to_date')) {
+  //       $query->whereDate('purchase_orders.created_at', '<=', $request->to_date);
+  //     }
 
-//     if ($request->filled('year')) {
-//       $query->whereYear('purchase_orders.updated_at', $request->year);
-//     }
+  //     if ($request->filled('year')) {
+  //       $query->whereYear('purchase_orders.updated_at', $request->year);
+  //     }
 
-//     if ($request->filled('month')) {
-//       $query->whereMonth('purchase_orders.updated_at', $request->month);
-//     }
+  //     if ($request->filled('month')) {
+  //       $query->whereMonth('purchase_orders.updated_at', $request->month);
+  //     }
 
-//     // 🔹 Select and group
-//     $queryForData = (clone $query)
-//       ->select(
-//         'purchase_orders.purchase_orders_id as purchase_order_id',
-//         'vendors.vendor_name',
-//         'vendors.vendor_company_name',
-//         'vendors.vendor_email',
-//         'vendors.contact_no',
-//         'purchase_orders.purchase_status_from_owner',
-//         'purchase_orders.purchase_status_from_purchase',
-//         'purchase_orders.purchase_order_mail_submited_to_vendor_date',
-//         DB::raw('MAX(purchase_orders.updated_at) as latest_update')
-//       )
-//       ->groupBy(
-//         'purchase_orders.purchase_orders_id',
-//         'vendors.vendor_name',
-//         'vendors.vendor_company_name',
-//         'vendors.vendor_email',
-//         'vendors.contact_no',
-//         'purchase_orders.purchase_status_from_owner',
-//         'purchase_orders.purchase_status_from_purchase',
-//         'purchase_orders.purchase_order_mail_submited_to_vendor_date'
-//       )
-//       ->orderByDesc('purchase_orders.updated_at');
+  //     // 🔹 Select and group
+  //     $queryForData = (clone $query)
+  //       ->select(
+  //         'purchase_orders.purchase_orders_id as purchase_order_id',
+  //         'vendors.vendor_name',
+  //         'vendors.vendor_company_name',
+  //         'vendors.vendor_email',
+  //         'vendors.contact_no',
+  //         'purchase_orders.purchase_status_from_owner',
+  //         'purchase_orders.purchase_status_from_purchase',
+  //         'purchase_orders.purchase_order_mail_submited_to_vendor_date',
+  //         DB::raw('MAX(purchase_orders.updated_at) as latest_update')
+  //       )
+  //       ->groupBy(
+  //         'purchase_orders.purchase_orders_id',
+  //         'vendors.vendor_name',
+  //         'vendors.vendor_company_name',
+  //         'vendors.vendor_email',
+  //         'vendors.contact_no',
+  //         'purchase_orders.purchase_status_from_owner',
+  //         'purchase_orders.purchase_status_from_purchase',
+  //         'purchase_orders.purchase_order_mail_submited_to_vendor_date'
+  //       )
+  //       ->orderByDesc('purchase_orders.updated_at');
 
-//     // 🔹 For export (Excel / PDF)
-//     if ($request->filled('export_type')) {
-//       return [
-//         'data' => $queryForData->get(),
-//         'pagination' => null,
-//       ];
-//     }
+  //     // 🔹 For export (Excel / PDF)
+  //     if ($request->filled('export_type')) {
+  //       return [
+  //         'data' => $queryForData->get(),
+  //         'pagination' => null,
+  //       ];
+  //     }
 
-//     // 🔹 For AJAX pagination
-//     $perPage = $request->input('pageSize', 10);
-//     $currentPage = $request->input('currentPage', 1);
+  //     // 🔹 For AJAX pagination
+  //     $perPage = $request->input('pageSize', 10);
+  //     $currentPage = $request->input('currentPage', 1);
 
-//     $totalItems = (clone $queryForData)->count();
+  //     $totalItems = (clone $queryForData)->count();
 
-//     $data = $queryForData
-//       ->skip(($currentPage - 1) * $perPage)
-//       ->take($perPage)
-//       ->get();
+  //     $data = $queryForData
+  //       ->skip(($currentPage - 1) * $perPage)
+  //       ->take($perPage)
+  //       ->get();
 
-//     return [
-//       'data' => $data,
-//       'pagination' => [
-//         'currentPage' => $currentPage,
-//         'pageSize' => $perPage,
-//         'totalItems' => $totalItems,
-//         'totalPages' => ceil($totalItems / $perPage),
-//         'from' => ($currentPage - 1) * $perPage + 1,
-//         'to' => (($currentPage - 1) * $perPage) + count($data),
-//       ]
-//     ];
-//   }
-// }
-public function getFollowUpReport($request)
-{
+  //     return [
+  //       'data' => $data,
+  //       'pagination' => [
+  //         'currentPage' => $currentPage,
+  //         'pageSize' => $perPage,
+  //         'totalItems' => $totalItems,
+  //         'totalPages' => ceil($totalItems / $perPage),
+  //         'from' => ($currentPage - 1) * $perPage + 1,
+  //         'to' => (($currentPage - 1) * $perPage) + count($data),
+  //       ]
+  //     ];
+  //   }
+  // }
+  public function getFollowUpReport($request)
+  {
     try {
 
-        $statuses = [
-            config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')
-        ];
+      $statuses = [
+        config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')
+      ];
 
-        $query = PurchaseOrdersModel::leftJoin('vendors', 'purchase_orders.vendor_id', '=', 'vendors.id')
-            ->whereIn('purchase_orders.purchase_status_from_owner', $statuses)
-            ->whereIn('purchase_orders.purchase_status_from_purchase', $statuses);
+      $query = PurchaseOrdersModel::leftJoin('vendors', 'purchase_orders.vendor_id', '=', 'vendors.id')
+        ->whereIn('purchase_orders.purchase_status_from_owner', $statuses)
+        ->whereIn('purchase_orders.purchase_status_from_purchase', $statuses);
 
-        /* ----------------------------------
+      /* ----------------------------------
            🔹 FILTERS
         ---------------------------------- */
 
-        // Filter: Vendor
-        if ($request->filled('vendor_name')) {
-            $query->where('purchase_orders.vendor_id', $request->vendor_name);
-        }
+      // Filter: Vendor
+      if ($request->filled('vendor_name')) {
+        $query->where('purchase_orders.vendor_id', $request->vendor_name);
+      }
 
-        // Filter: PO Status
-        if ($request->filled('po_status')) {
-            $status = $request->po_status;
-            $query->where(function ($q) use ($status) {
-                if ($status === 'open') {
-                    $q->whereNull('purchase_orders.purchase_status_from_owner')
-                      ->where('purchase_orders.purchase_status_from_purchase', 1126);
-                } elseif ($status === 'partially_received') {
-                    $q->where('purchase_orders.purchase_status_from_owner', 1127)
-                      ->where('purchase_orders.purchase_status_from_purchase', 1126);
-                } elseif ($status === 'pending_gate_pass') {
-                    $q->where('purchase_orders.purchase_status_from_owner', 1129)
-                      ->where('purchase_orders.purchase_status_from_purchase', 1129);
-                }
-            });
-        }
+      // Filter: PO Status
+      if ($request->filled('po_status')) {
+        $status = $request->po_status;
+        $query->where(function ($q) use ($status) {
+          if ($status === 'open') {
+            $q->whereNull('purchase_orders.purchase_status_from_owner')
+              ->where('purchase_orders.purchase_status_from_purchase', 1126);
+          } elseif ($status === 'partially_received') {
+            $q->where('purchase_orders.purchase_status_from_owner', 1127)
+              ->where('purchase_orders.purchase_status_from_purchase', 1126);
+          } elseif ($status === 'pending_gate_pass') {
+            $q->where('purchase_orders.purchase_status_from_owner', 1129)
+              ->where('purchase_orders.purchase_status_from_purchase', 1129);
+          }
+        });
+      }
 
-        // Search filter
-        if ($request->filled('search')) {
-            $s = $request->search;
-            $query->where(function ($q) use ($s) {
-                $q->where('vendors.vendor_name', 'like', "%{$s}%")
-                  ->orWhere('vendors.vendor_company_name', 'like', "%{$s}%")
-                  ->orWhere('vendors.vendor_email', 'like', "%{$s}%")
-                  ->orWhere('vendors.contact_no', 'like', "%{$s}%")
-                  ->orWhere('purchase_orders.purchase_orders_id', 'like', "%{$s}%");
-            });
-        }
+      // Search filter
+      if ($request->filled('search')) {
+        $s = $request->search;
+        $query->where(function ($q) use ($s) {
+          $q->where('vendors.vendor_name', 'like', "%{$s}%")
+            ->orWhere('vendors.vendor_company_name', 'like', "%{$s}%")
+            ->orWhere('vendors.vendor_email', 'like', "%{$s}%")
+            ->orWhere('vendors.contact_no', 'like', "%{$s}%")
+            ->orWhere('purchase_orders.purchase_orders_id', 'like', "%{$s}%");
+        });
+      }
 
-        // Date filters
-        if ($request->filled('from_date')) {
-            $query->whereDate('purchase_orders.created_at', '>=', $request->from_date);
-        }
+      // Date filters
+      if ($request->filled('from_date')) {
+        $query->whereDate('purchase_orders.created_at', '>=', $request->from_date);
+      }
 
-        if ($request->filled('to_date')) {
-            $query->whereDate('purchase_orders.created_at', '<=', $request->to_date);
-        }
+      if ($request->filled('to_date')) {
+        $query->whereDate('purchase_orders.created_at', '<=', $request->to_date);
+      }
 
-        if ($request->filled('year')) {
-            $query->whereYear('purchase_orders.updated_at', $request->year);
-        }
+      if ($request->filled('year')) {
+        $query->whereYear('purchase_orders.updated_at', $request->year);
+      }
 
-        if ($request->filled('month')) {
-            $query->whereMonth('purchase_orders.updated_at', $request->month);
-        }
+      if ($request->filled('month')) {
+        $query->whereMonth('purchase_orders.updated_at', $request->month);
+      }
 
-        /* ----------------------------------
+      /* ----------------------------------
            🔹 SELECT + FIX STRICT MODE
         ---------------------------------- */
 
-        $queryForData = (clone $query)
-            ->select(
-                'purchase_orders.purchase_orders_id as purchase_order_id',
-                'vendors.vendor_name',
-                'vendors.vendor_company_name',
-                'vendors.vendor_email',
-                'vendors.contact_no',
-                'purchase_orders.purchase_status_from_owner',
-                'purchase_orders.purchase_status_from_purchase',
-                'purchase_orders.purchase_order_mail_submited_to_vendor_date',
-                DB::raw('MAX(purchase_orders.updated_at) as latest_update')
-            )
-            ->groupByRaw('
+      $queryForData = (clone $query)
+        ->select(
+          'purchase_orders.purchase_orders_id as purchase_order_id',
+          'vendors.vendor_name',
+          'vendors.vendor_company_name',
+          'vendors.vendor_email',
+          'vendors.contact_no',
+          'purchase_orders.purchase_status_from_owner',
+          'purchase_orders.purchase_status_from_purchase',
+          'purchase_orders.purchase_order_mail_submited_to_vendor_date',
+          DB::raw('MAX(purchase_orders.updated_at) as latest_update')
+        )
+        ->groupByRaw('
                 purchase_orders.purchase_orders_id,
                 vendors.vendor_name,
                 vendors.vendor_company_name,
@@ -868,51 +860,50 @@ public function getFollowUpReport($request)
                 purchase_orders.purchase_status_from_purchase,
                 purchase_orders.purchase_order_mail_submited_to_vendor_date
             ')
-            ->orderByDesc('latest_update');
+        ->orderByDesc('latest_update');
 
-        /* ----------------------------------
+      /* ----------------------------------
            🔹 EXPORT (NO PAGINATION)
         ---------------------------------- */
-        if ($request->filled('export_type')) {
-            return [
-                'data' => $queryForData->get(),
-                'pagination' => null
-            ];
-        }
+      if ($request->filled('export_type')) {
+        return [
+          'data' => $queryForData->get(),
+          'pagination' => null
+        ];
+      }
 
-        /* ----------------------------------
+      /* ----------------------------------
            🔹 AJAX PAGINATION
         ---------------------------------- */
 
-        $perPage     = $request->input('pageSize', 10);
-        $currentPage = $request->input('currentPage', 1);
+      $perPage     = $request->input('pageSize', 10);
+      $currentPage = $request->input('currentPage', 1);
 
-        $totalItems = (clone $queryForData)->get()->count();
+      $totalItems = (clone $queryForData)->get()->count();
 
-        $data = $queryForData
-            ->skip(($currentPage - 1) * $perPage)
-            ->take($perPage)
-            ->get();
+      $data = $queryForData
+        ->skip(($currentPage - 1) * $perPage)
+        ->take($perPage)
+        ->get();
 
-        return [
-            'status' => true,
-            'data' => $data,
-            'pagination' => [
-                'currentPage' => $currentPage,
-                'pageSize' => $perPage,
-                'totalItems' => $totalItems,
-                'totalPages' => ceil($totalItems / $perPage),
-                'from' => ($currentPage - 1) * $perPage + 1,
-                'to' => (($currentPage - 1) * $perPage) + count($data),
-            ]
-        ];
-
+      return [
+        'status' => true,
+        'data' => $data,
+        'pagination' => [
+          'currentPage' => $currentPage,
+          'pageSize' => $perPage,
+          'totalItems' => $totalItems,
+          'totalPages' => ceil($totalItems / $perPage),
+          'from' => ($currentPage - 1) * $perPage + 1,
+          'to' => (($currentPage - 1) * $perPage) + count($data),
+        ]
+      ];
     } catch (\Exception $e) {
 
-        return [
-            'status' => false,
-            'message' => $e->getMessage()
-        ];
+      return [
+        'status' => false,
+        'message' => $e->getMessage()
+      ];
     }
-}
+  }
 }

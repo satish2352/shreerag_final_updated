@@ -235,11 +235,31 @@ class AllListRepository
 
                 ->havingRaw('SUM(tcqt1.completed_quantity) = businesses_details.quantity')
                 ->orderBy('last_updated_at', 'desc') // Use the alias instead of tbl_dispatch.last_updated_at
-                ->get()
-                ->map(function ($data) {
-                    $data->last_updated_at = Carbon::parse($data->last_updated_at);
-                    return $data;
-                });
+                ->get();
+
+            /**
+             * ✅ Update dispatch_status_id = 1154
+             * Only once per business_application_process
+             */
+            $bapIds = $data_output->pluck('business_details_id')->unique();
+
+
+            if ($bapIds->isNotEmpty()) {
+                DB::table('business_application_processes')
+                    ->whereIn('id', $bapIds)
+                    ->update([
+                        'dispatch_status_id' => 1154,
+                        'updated_at' => now()
+                    ]);
+            }
+
+            $data_output = $data_output->map(function ($data) {
+                $data->last_updated_at = Carbon::parse($data->last_updated_at);
+                return $data;
+            });
+
+            DB::commit();
+
 
             return $data_output;
         } catch (\Exception $e) {

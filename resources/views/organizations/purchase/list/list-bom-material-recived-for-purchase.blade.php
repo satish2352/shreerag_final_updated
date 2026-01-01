@@ -22,17 +22,20 @@
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
                                                 <th data-field="date" data-editable="false">Sent Date</th>
+                                                  <th data-field="bom" data-editable="false">Action</th>
+                                                   <th data-field="bom_file" data-editable="false">Requisition BOM</th>
                                                 <th data-field="project_name" data-editable="false">Project Name</th>
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
+                                                 <th data-field="grand_total_amount" data-editable="false">Grand Total Amount</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
                                                 <th data-field="grn_date" data-editable="false">Description</th>
                                                 <th data-field="total_estimation_amount" data-editable="false"> <span
                                                         style="margin-right:20px">Estimation
                                                         Amount</span></th>
-                                                <th data-field="bom_file" data-editable="false">BOM</th>
+                                               
 
-                                                <th data-field="bom" data-editable="false">Action</th>
+                                              
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -41,17 +44,6 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td> {{ $data->created_at ? $data->created_at->format('d-m-Y') : 'N/A' }}
                                                     </td>
-                                                    <td>{{ ucwords($data->project_name) }}</td>
-                                                    <td>{{ ucwords($data->customer_po_number) }}</td>
-                                                    <td>{{ ucwords($data->product_name) }}</td>
-                                                    <td>{{ ucwords($data->quantity) }}</td>
-                                                    <td>{{ ucwords($data->description) }}</td>
-                                                    <td>{{ ucwords($data->total_estimation_amount) }}</td>
-                                                    <td> <a class="img-size"
-                                                            href="{{ Config::get('FileConstant.REQUISITION_VIEW') }}{{ $data['bom_file'] }}"
-                                                            alt="bill of material">Click to download</a>
-                                                    </td>
-
                                                     <td>
                                                         <div style="display: inline-block; align-items: center;">
                                                             <a
@@ -65,6 +57,20 @@
                                                                     Purchase </button></a>
                                                         </div>
                                                     </td>
+                                                      <td> <a class="img-size"
+                                                            href="{{ Config::get('FileConstant.REQUISITION_VIEW') }}{{ $data['bom_file'] }}"
+                                                            alt="bill of material">Click to download</a>
+                                                    </td>
+                                                    <td>{{ ucwords($data->project_name) }}</td>
+                                                    <td>{{ ucwords($data->customer_po_number) }}</td>
+                                                      <td><b>{{ ucwords($data->grand_total_amount) }}</b></td>
+                                                    <td>{{ ucwords($data->product_name) }}</td>
+                                                    <td>{{ ucwords($data->quantity) }}</td>
+                                                    <td>{{ ucwords($data->description) }}</td>
+                                                    <td><b>{{ ucwords($data->total_estimation_amount) }}</b></td>
+                                                  
+
+                                                    
                                                 </tr>
                                             @endforeach
                                         </tbody>

@@ -23,6 +23,7 @@
                                                 <th data-field="id">Sr.No.</th>
                                                 <th data-field="date" data-editable="false">Sent Date</th>
                                                 <th data-field="project_name" data-editable="false">Project Name</th>
+                                                 <th data-field="grand_total_amount" data-editable="false">Grand Total Amount</th>
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="purchase_id" data-editable="false">Name</th>
@@ -35,9 +36,11 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td> {{ $data->created_at ? $data->created_at->format('d-m-Y') : 'N/A' }}</td>
                                                     <td>{{ ucwords($data->project_name) }}</td>
+                                                    <td><b>{{ ucwords($data->grand_total_amount) }}</b></td>
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->title) }}</td>
+                                             
                                                 <td>
                                                     <div style="display: inline-block; align-items: center;">
                                                         <a href="{{route('list-final-purchase-order-production', $data->id)}}"><button data-toggle="tooltip" title="View Details" class="btn btn-sm btn-bg-colour">View Details</button></a>

@@ -24,6 +24,7 @@
                                                 <th data-field="id">Sr.No.</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
+                                                 <th data-field="total_estimation_amount" data-editable="false">Estimated Amount</th>
                                                 <th data-field="completed_quantity" data-editable="false">Completed
                                                     Production</th>
                                                 <th data-field="remaining_quantity" data-editable="false">Balance Quantity
@@ -42,6 +43,7 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ $data->quantity }}</td>
+                                                     <td><b>{{ $data->total_estimation_amount }}</b></td>
                                                     <td>{{ $data->completed_quantity }}</td>
                                                     <td>{{ $data->remaining_quantity }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>

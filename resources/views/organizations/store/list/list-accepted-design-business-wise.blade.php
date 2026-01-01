@@ -66,8 +66,11 @@
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="description" data-editable="false">Description</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
+                                                <th data-field="total_amount" data-editable="false">Estimated Amount</th>
+
                                                 <th data-field="design_image" data-editable="false">Design</th>
                                                 <th data-field="bom_image" data-editable="false">BOM</th>
+                                                
                                                 <th data-field="re_design_image" data-editable="false">Revised Design
                                                 </th>
                                                 <th data-field="re_bom_image" data-editable="false">Revised BOM</th>
@@ -85,6 +88,7 @@
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
+                                                       <td>{{ ucwords($data->total_estimation_amount) }}</td>
                                                     <td> <a class="img-size" target="_blank"
                                                             href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
                                                             alt="Design"> Click to view</a>
@@ -111,20 +115,20 @@
                                                     @endif
                                                     {{-- PRODUCT STATUS --}}
                                                     <td>
-                                                        {{-- @if ($data->dispatch_status_id == 1148) --}}
-                                                            {{-- <span class="badge badge-success">CLOSED</span>
-                                                        @else --}}
+                                                        @if ($data->dispatch_status_id == 1154)
+                                                            <span class="badge badge-success">CLOSED</span>
+                                                        @else
                                                             <span class="badge badge-warning">OPEN</span>
-                                                        {{-- @endif --}}
+                                                        @endif
                                                     </td>
 
                                                     {{-- ACTION BUTTONS --}}
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
 
-                                                            {{-- @if ($data->dispatch_status_id == 1148) --}}
+                                                            @if ($data->dispatch_status_id == 1154)
                                                                 {{-- CLOSED → BOTH BUTTONS DISABLED --}}
-                                                                {{-- <button class="btn btn-sm disabled-btn"
+                                                                <button class="btn btn-sm disabled-btn"
                                                                     style="padding: 7px;" disabled>
                                                                     Issue Product Material
                                                                 </button>
@@ -132,8 +136,8 @@
                                                                 <button class="btn btn-sm disabled-btn"
                                                                     style="padding: 7px; margin-left: 10px;" disabled>
                                                                     Need To Purchase
-                                                                </button> --}}
-                                                            {{-- @else --}}
+                                                                </button>
+                                                            @else
                                                                 {{-- OPEN → BUTTONS ENABLED --}}
                                                                 <a
                                                                     href="{{ route('edit-material-list-bom-wise-new-req', base64_encode($data->business_details_id)) }}">
@@ -152,7 +156,7 @@
                                                                         Need To Purchase
                                                                     </button>
                                                                 </a>
-                                                            {{-- @endif --}}
+                                                            @endif
 
                                                         </div>
                                                     </td>

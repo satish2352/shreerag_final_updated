@@ -87,7 +87,7 @@ button.pd-setting-ed {
                                             {{-- <th data-field="title" data-editable="false">Name</th> --}}
                                             <th data-field="quantity" data-editable="false">Quantity</th>
                                             <th data-field="grn_date" data-editable="false">Description</th>
-                                               <th data-field="total_amount" data-editable="false">Amount</th>  
+                                               <th data-field="total_estimation_amount" data-editable="false">Estimated Amount</th>  
                                             {{-- <th data-field="purchase_id" data-editable="false">Remark</th>                                          --}}
                                             <th data-field="design_image" data-editable="false">Design Layout</th>
                                             <th data-field="bom_image" data-editable="false">Estimated BOM</th>       
@@ -108,7 +108,7 @@ button.pd-setting-ed {
                                             <td>{{ ucwords($data->description) }}</td>
                                             {{-- <td>{{ucwords($data->remarks)}}</td>  
                                                                                        --}}
-                                            <td>{{ ucwords($data->total_amount) }}</td>
+                                            <td>{{ ucwords($data->total_estimation_amount) }}</td>
                                             <td><a class="img-size" target="_blank"
                                                 href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
                                                 alt="Design"> Click to view</a>

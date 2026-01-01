@@ -25,6 +25,7 @@
                                                 <th data-field="project_name" data-editable="false">Project Name</th>
                                                 <th data-field="po_number" data-editable="false">PO Number</th>
                                                 <th data-field="purchase_id" data-editable="false">Remark</th>
+                                                  <th data-field="grand_total_amount" data-editable="false">Grand Total Amount</th>
                                                 {{-- <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="description" data-editable="false">Description</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
@@ -46,6 +47,8 @@
                                                     <td>{{ ucwords($data->project_name) }}</td>
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
+
+                                                              <td>{{ ucwords($data->grand_total_amount) }}</td>
                                                     {{-- <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>

@@ -91,6 +91,7 @@ class AllListRepository
                 ->select(
                     'businesses.id',
                     'businesses.project_name',
+                    'businesses.grand_total_amount',
                     'businesses.customer_po_number',
                     'businesses.remarks',
                     'businesses.is_active',
@@ -233,6 +234,9 @@ class AllListRepository
                 ->leftJoin('purchase_orders', function ($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
                 })
+                ->leftJoin('estimation', function ($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
+                })
                 ->where('businesses_details.business_id', $decoded_business_id)
                 ->where('businesses_details.is_deleted', 0)
                 ->distinct('businesses.id')
@@ -255,6 +259,7 @@ class AllListRepository
                     'businesses_details.quantity',
                     'businesses_details.description',
                     'businesses.remarks',
+                    'estimation.total_estimation_amount',
                     DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'),
                     DB::raw('MAX(designs.bom_image) as bom_image'),
                     DB::raw('MAX(designs.design_image) as design_image'),
@@ -276,7 +281,8 @@ class AllListRepository
                     'businesses_details.description',
                     'businesses.remarks',
                     'production.updated_at',
-                    'business_application_processes.dispatch_status_id'
+                    'business_application_processes.dispatch_status_id',
+                    'estimation.total_estimation_amount',
                 )
                 ->orderBy('production.updated_at', 'desc')
                 ->get();

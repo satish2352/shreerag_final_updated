@@ -33,10 +33,10 @@ class AllListController extends Controller
         }
     }
 
-    public function getAllNewRequirementBusinessWise($business_id)
+    public function getAllNewRequirementBusinessWise()
     { //checked
         try {
-            $data_output = $this->service->getAllNewRequirementBusinessWise($business_id);
+            $data_output = $this->service->getAllNewRequirementBusinessWise();
 
             if ($data_output->isNotEmpty()) {
                 foreach ($data_output as $data) {

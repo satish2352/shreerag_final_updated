@@ -845,8 +845,8 @@
 
                            
                             <li
-                                class="nav-item {{ request()->is('proddept/list-new-requirements-received-for-production') || request()->is('proddept/list-new-requirements-received-for-production-business-wise/*') || request()->is('proddept/reject-design-edit/*') ? 'active' : '' }}">
-                                <a href="{{ route('list-new-requirements-received-for-production') }}">
+                                class="nav-item {{ request()->is('proddept/list-new-requirements-received-for-production-business-wise') || request()->is('proddept/reject-design-edit/*') ? 'active' : '' }}">
+                                <a href="{{ route('list-new-requirements-received-for-production-business-wise') }}">
                                     <i class="fa fa-file-alt icon-wrap"></i>
                                     <span class="mini-click-non">New Design List</span>
                                 </a>

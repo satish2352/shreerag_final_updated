@@ -46,10 +46,10 @@ class AllListRepository
         }
     }
 
-    public function getAllNewRequirementBusinessWise($business_id)
+    public function getAllNewRequirementBusinessWise()
     { //checked
         try {
-            $decoded_business_id = base64_decode($business_id);
+            // $decoded_business_id = base64_decode($business_id);
 
             $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_ESTIMATION_RECEIVED_FOR_PRODUCTION')];
 
@@ -65,7 +65,7 @@ class AllListRepository
                 ->leftJoin('design_revision_for_prod', function ($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
                 })
-                ->where('businesses_details.business_id', $decoded_business_id)
+                // ->where('businesses_details.business_id', $decoded_business_id)
                 ->whereIn('business_application_processes.estimation_send_to_production', $array_to_be_check)
                 ->where('business_application_processes.off_canvas_status', 33)
                 ->whereNull('estimation.is_approved_estimation')
@@ -77,7 +77,7 @@ class AllListRepository
                     'businesses_details.product_name',
                     'businesses_details.description',
                     'businesses_details.quantity',
-                    'businesses_details.total_amount',
+                    'estimation.total_estimation_amount',
                     'estimation.business_id',
                     'estimation.id as productionId',
                     'designs.bom_image',
@@ -398,7 +398,8 @@ class AllListRepository
                     'businesses.created_at',
                     'businesses_details.id',
                     'businesses_details.product_name',
-                    'businesses_details.description'
+                    'businesses_details.description',
+                    'businesses.grand_total_amount',
                 )
                 ->select(
                     'businesses_details.id',
@@ -407,6 +408,7 @@ class AllListRepository
                     'businesses_details.product_name',
                     'businesses.title',
                     'businesses.created_at',
+                    'businesses.grand_total_amount',
                     DB::raw('MAX(production.updated_at) as last_updated_at') // Use MAX aggregate function
                 )
                 ->orderBy('last_updated_at', 'desc')
@@ -433,6 +435,9 @@ class AllListRepository
                 ->leftJoin('purchase_orders', function ($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
                 })
+                ->leftJoin('estimation', function ($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
+                })
                 ->where('businesses_details.id', $id)
                 ->where('businesses_details.is_active', true)
                 ->where('businesses.is_deleted', 0)
@@ -446,6 +451,7 @@ class AllListRepository
                     'businesses_details.quantity',
                     'businesses_details.description',
                     'businesses.remarks',
+                    'estimation.total_estimation_amount',
                     DB::raw('(SELECT SUM(t2.completed_quantity)
                           FROM tbl_customer_product_quantity_tracking AS t2
                           WHERE t2.business_details_id = businesses_details.id) 
@@ -467,6 +473,7 @@ class AllListRepository
                     'businesses_details.quantity',
                     'businesses_details.description',
                     'businesses.remarks',
+                    'estimation.total_estimation_amount',
                     'production.updated_at'
                 )
                 ->get();

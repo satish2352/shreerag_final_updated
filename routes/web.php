@@ -410,7 +410,7 @@
 
         // New Requirements
         Route::get('/list-new-requirements-received-for-production', [ProductionAllListController::class, 'getAllNewRequirement'])->name('list-new-requirements-received-for-production');
-        Route::get('/list-new-requirements-received-for-production-business-wise/{business_id}', [ProductionAllListController::class, 'getAllNewRequirementBusinessWise'])->name('list-new-requirements-received-for-production-business-wise');
+        Route::get('/list-new-requirements-received-for-production-business-wise', [ProductionAllListController::class, 'getAllNewRequirementBusinessWise'])->name('list-new-requirements-received-for-production-business-wise');
 
         // Accept/Reject Lists
         Route::get('/list-accept-design', [ProductionAllListController::class, 'acceptdesignlist'])->name('list-accept-design');
