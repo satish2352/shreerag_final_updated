@@ -202,7 +202,7 @@ class AllListRepository
                 )
 
                 ->whereIn('tcqt1.quantity_tracking_status', $array_to_be_quantity_tracking)
-                ->whereIn('bap1.dispatch_status_id', 1154)
+                // ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
                 ->where('businesses.is_active', true)
                 ->where('businesses.is_deleted', 0)
                 ->select(
