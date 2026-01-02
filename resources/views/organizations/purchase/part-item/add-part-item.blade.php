@@ -55,6 +55,10 @@
     .margin-bottom{
         margin-bottom: 100px !important;
     }
+    .custom-dropdown.error-border .dropdown-input {
+    border: 2px solid red !important;
+}
+
 </style>
 <div class="">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -120,13 +124,16 @@
 @endphp
 <input type="text" class="dropdown-input form-control part-no" placeholder="Select HSN/SAC No..." readonly value="{{ $selectedPartItem->name ?? '' }}">
 
-
+  @if ($errors->has('hsn_id'))
+                                                <span class="red-text">{{ $errors->first('hsn_id') }}</span>
+                                                @endif
                                                                         <div class="dropdown-options dropdown-height" style="display: none;">
                                                                             <input type="text" class="search-box form-control" placeholder="Search...">
                                                                             <div class="options-list">
                                                                                 @foreach ($dataOutputHSNMaster as $data)
                                                                                     <div class="option" data-id="{{ $data->id }}">{{ $data->name }}</div>
                                                                                 @endforeach
+                                                                               
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -186,8 +193,7 @@
                                             </div>
                                              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 marg-top">
                                                                 <div class="form-group">
-                                                                    <label for="image">Image </label>&nbsp<span
-                                                                        class="red-text">*</span><br>
+                                                                    <label for="image">Image  (optional) </label><br>
                                                                     <input type="file" name="image" id="image"
                                                                         accept="image/*" value="{{ old('image') }}"
                                                                         class="form-control mb-2">
@@ -230,6 +236,7 @@
         }, "Field cannot contain only spaces.");
 
         $("#regForm").validate({
+               ignore: [], 
             rules: {
                 part_number: {
                     required: true,

@@ -734,14 +734,7 @@
                     <input class="form-control hsn_name" type="text" disabled>
                     <input type="hidden" class="form-control hsn_id" name="addmore[${i}][hsn_id]">
                 </td>
-                <td>
-                    <select class="form-control unit_id" name="addmore[${i}][unit_id]">
-                        <option value="">Select Unit</option>
-                        @foreach ($dataOutputUnitMaster as $data)
-                            <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
-                        @endforeach
-                    </select>
-                </td>
+               
                 <td>
                     <select class="form-control process_id" name="addmore[${i}][process_id]">
                         <option value="">Select Process</option>
@@ -753,6 +746,14 @@
                 <td>
                     <input class="form-control quantity" name="addmore[${i}][quantity]" type="text">
                     <span class="stock-available"></span>
+                </td>
+                 <td>
+                    <select class="form-control unit_id" name="addmore[${i}][unit_id]">
+                        <option value="">Select Unit</option>
+                        @foreach ($dataOutputUnitMaster as $data)
+                            <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                        @endforeach
+                    </select>
                 </td>
                 <td>
                     <input class="form-control rate" name="addmore[${i}][rate]" type="text">
@@ -832,5 +833,29 @@
 
         });
     </script>
+    <script>
+$(document).on('click', '.delete-btn', function (e) {
+    e.preventDefault();
+
+    let deleteId = $(this).data('id');
+    let row = $(this).closest('tr');
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This item will be deleted!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $('#delete_id').val(deleteId);
+            $('#deleteform').submit();
+        }
+    });
+});
+</script>
+
   @endpush
 @endsection

@@ -83,6 +83,8 @@ button.pd-setting-ed {
                                             
                                             <th data-field="id">ID</th>   
                                             {{-- <th data-field="customer_po_number" data-editable="false">PO Number</th> --}}
+                                              <th>Project Name</th>
+                                                <th>Grand Total Amount</th>
                                             <th data-field="product_name" data-editable="false">Product Name</th>
                                             {{-- <th data-field="title" data-editable="false">Name</th> --}}
                                             <th data-field="quantity" data-editable="false">Quantity</th>
@@ -101,14 +103,15 @@ button.pd-setting-ed {
                                         <tr>
                                             
                                             <td>{{ $loop->iteration }}</td>
-                                            {{-- <td>{{ ucwords($data->customer_po_number) }}</td> --}}
+                                            <td>{{ ucwords($data->project_name) }}</td>
+                                            <td><b>{{ ucwords($data->grand_total_amount) }}</b></td>
                                             <td>{{ucwords($data->product_name)}}</td>
                                             {{-- <td>{{ucwords($data->title)}}</td> --}}
                                             <td>{{ucwords($data->quantity)}}</td>
                                             <td>{{ ucwords($data->description) }}</td>
                                             {{-- <td>{{ucwords($data->remarks)}}</td>  
                                                                                        --}}
-                                            <td>{{ ucwords($data->total_estimation_amount) }}</td>
+                                            <td><b>{{ ucwords($data->total_estimation_amount) }}</b></td>
                                             <td><a class="img-size" target="_blank"
                                                 href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
                                                 alt="Design"> Click to view</a>

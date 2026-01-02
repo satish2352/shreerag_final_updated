@@ -56,6 +56,9 @@ class AllListRepository
             $data_output = BusinessApplicationProcesses::leftJoin('estimation', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
             })
+                ->leftJoin('businesses', function ($join) {
+                    $join->on('business_application_processes.business_id', '=', 'businesses.id');
+                })
                 ->leftJoin('businesses_details', function ($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
                 })
@@ -74,6 +77,8 @@ class AllListRepository
                 ->distinct('businesses_details.id')
                 ->select(
                     'estimation.business_details_id',
+                    'businesses.project_name',
+                    'businesses.grand_total_amount',
                     'businesses_details.product_name',
                     'businesses_details.description',
                     'businesses_details.quantity',
