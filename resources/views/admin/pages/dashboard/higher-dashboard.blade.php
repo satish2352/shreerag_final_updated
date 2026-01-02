@@ -61,8 +61,9 @@
                                     <div class="col mb-2 font-size-dashboard"> 
                                         <span class="font-semibold text-muted text-sm d-block mb-2 " >Total utilize
                                         </span>
-                                        <span class="h5 font-bold mb-0">₹ {{ $business_total_amount['total_utilize_materila_amount'] }}
-
+                                        <span class="h5 font-bold mb-0">
+                                            {{-- ₹ {{ $business_total_amount['total_utilize_materila_amount'] }} --}}
+                                           ₹ {{ number_format($business_total_amount['total_utilize_materila_amount'], 2) }}
                                         </span>
                                     </div>
                                     <div class="col-auto">
