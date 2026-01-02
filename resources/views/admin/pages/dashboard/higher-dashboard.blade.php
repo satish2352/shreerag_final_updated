@@ -40,9 +40,9 @@
                                     <div class="col mb-2 font-size-dashboard">
                                         <span class="font-semibold text-muted text-sm d-block mb-2 ">Total Estimation
                                         </span>
-                                        <span class="h5 font-bold mb-0">₹ {{ $business_total_amount['total_revenu_count'] }}
-
-                                        </span>
+                                        <span class="h5 font-bold mb-0">
+                                             ₹ {{ number_format($business_total_amount['total_revenu_count'], 2) }}
+                                                                                   </span>
                                     </div>
                                     <div class="col-auto">
                                         <div class="icon icon-shape bg-warning text-white text-lg rounded-circle">
@@ -83,8 +83,7 @@
                                     <div class="col mb-2 font-size-dashboard">
                                         <span class="font-semibold text-muted text-sm d-block mb-2">Total Profit
                                         </span>
-                                        <span class="h5 font-bold mb-0">₹ {{ $business_total_amount['profit'] }}
-
+                                        <span class="h5 font-bold mb-0">₹ {{ number_format($business_total_amount['profit'], 2) }}
                                         </span>
                                     </div>
                                     <div class="col-auto">
