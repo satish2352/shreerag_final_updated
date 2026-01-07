@@ -145,7 +145,11 @@ class StoreController extends Controller
             }
 
             // Fetch the part item stock
-            $partItem = ItemStock::find($partItemId);
+            // $partItem = ItemStock::find($partItemId);
+            $partItem = ItemStock::where('part_item_id', $partItemId)
+                ->where('is_deleted', 0)
+                ->where('is_active', 1)
+                ->first();
 
             if (!$partItem) {
                 return response()->json([
