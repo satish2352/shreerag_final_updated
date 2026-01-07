@@ -618,7 +618,12 @@ var myBarChart = new Chart(ctx, {
                                         style="color:#{{ str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) . str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) . str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) }};">
                                         <b>{{ $data->product_name }}</b> :
                                         @switch(true)
-                                            @case($data->quantity_tracking_status == 3005)
+                                        @case($data->quantity_tracking_status == 3005 &&  $data->dispatch_status_id == 1154 )
+                                              Product Dispatch Completed
+                                                {{-- {{ $data->completed_quantity }} --}}
+                                            @break
+
+                                            @case($data->quantity_tracking_status == 3005  )
                                                 Dispatch Department Product Dispatch Completed Quantity
                                                 {{ $data->completed_quantity }}
                                             @break

@@ -69,14 +69,14 @@ class DashboardController extends Controller
             $total_revenu_count = EstimationModel::leftJoin('business_application_processes', function ($join) {
                 $join->on('estimation.business_details_id', '=', 'business_application_processes.business_details_id');
             })
-                ->where('business_application_processes.dispatch_status_id', 1148)
+                ->where('business_application_processes.dispatch_status_id', 1154)
                 ->where('business_application_processes.off_canvas_status', 22)
                 ->sum('total_estimation_amount');
 
             $total_utilize_materila_amount = ProductionDetails::join('business_application_processes', function ($join) {
                 $join->on('production_details.business_details_id', '=', 'business_application_processes.business_details_id');
             })
-                ->where('business_application_processes.dispatch_status_id', 1148)
+                ->where('business_application_processes.dispatch_status_id', 1154)
                 ->where('business_application_processes.off_canvas_status', 22)
                 ->sum('production_details.items_used_total_amount');
 
@@ -149,6 +149,7 @@ class DashboardController extends Controller
                     'businesses_details.product_name',
                     'businesses.updated_at',
                     'business_application_processes.off_canvas_status',
+                    'business_application_processes.dispatch_status_id',
                     'tbl_customer_product_quantity_tracking.quantity_tracking_status',
                     'tbl_customer_product_quantity_tracking.completed_quantity',
                     'gatepass.po_tracking_status',

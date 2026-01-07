@@ -20,7 +20,8 @@ class ReportRepository
     public function getCompletedProductList(Request $request)
     {
         try {
-            $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.LIST_DISPATCH_COMPLETED_FROM_DISPATCH_DEPARTMENT')];
+            $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.FINAL_PRODUCT_DISPATCH')];
+            // $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.LIST_DISPATCH_COMPLETED_FROM_DISPATCH_DEPARTMENT')];
             $array_to_be_quantity_tracking = [config('constants.DISPATCH_DEPARTMENT.SUBMITTED_COMPLETED_QUANLTITY_DISPATCH_DEPT')];
 
             // Base query
@@ -2224,7 +2225,8 @@ class ReportRepository
     public function listDispatchBarChartProductWise(Request $request)
     {
         try {
-            $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.LIST_DISPATCH_COMPLETED_FROM_DISPATCH_DEPARTMENT')];
+            $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.FINAL_PRODUCT_DISPATCH')];
+            // $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.LIST_DISPATCH_COMPLETED_FROM_DISPATCH_DEPARTMENT')];
             $array_to_be_quantity_tracking = [config('constants.DISPATCH_DEPARTMENT.SUBMITTED_COMPLETED_QUANLTITY_DISPATCH_DEPT')];
 
             $query = Logistics::leftJoin('tbl_customer_product_quantity_tracking as tcqt1', 'tbl_logistics.quantity_tracking_id', '=', 'tcqt1.id')
