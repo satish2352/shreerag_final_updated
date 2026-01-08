@@ -3,18 +3,7 @@
         box-sizing: border-box;
     }
 
-    td.description-column,
-    th.description-column {
-        white-space: normal !important;
-        word-wrap: break-word !important;
-        overflow-wrap: break-word !important;
-    }
-
-    .description-column {
-    width: 200px !important;
-    word-break: break-word !important;
-    white-space: normal !important;
-}
+    
 
 
     .font-family-page {
@@ -78,15 +67,26 @@
         margin-top: -63px;
     }
 
-    table th,
-    table td {
-        /* border: 1px solid black; */
-        padding: 8px;
-    }
+   table {
+    width:100% !important;
+    table-layout:fixed !important;
+    border-collapse: collapse !important;
+}
+thead { display: table-header-group !important; }
+tfoot { display: table-footer-group !important; }
+tr { page-break-inside: avoid !important; }
+td, th {
+    font-size: 11px !important;
+    border:1px solid #000;
+    word-break: break-word !important;
+    padding:4px !important;
+}
+.description-column {
+    font-size:11px !important;
+    word-break: break-word !important;
+    white-space: normal !important;
+}
 
-    table th {
-        background-color: #f2f2f2;
-    }
 
     p {
         font-size: 16px !important;
@@ -109,87 +109,7 @@
         font-family: sans-serif !important;
     }
 
-    @media print {
-
-        /* General print styles */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        .logo-size {
-            width: 10% !important;
-        }
-
-        .middle-size {
-            width: 80% !important;
-        }
-
-        .last-size {
-            width: 10% !important;
-        }
-
-        .header-size {
-            font-size: 10px !important;
-        }
-
-        #printableArea {
-            width: 100%;
-            margin: 0px;
-            padding: 20px 20px 10px 20px;
-            border-right: 1px solid black;
-            box-sizing: border-box;
-        }
-
-        .amountBorder {
-            border-right: 1px solid black;
-        }
-
-        .print-btn {
-            display: none;
-        }
-
-        .border-page {
-            border: 1px solid red;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 0;
-        }
-
-        th,
-        td {
-            padding: 5px;
-            text-align: left;
-            word-wrap: break-word;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        @page {
-            size: A4;
-            /* Set page size to A4 */
-           margin: 10mm !important;
-            /* Remove all margins for print area */
-        }
-
-        html,
-        body {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-
-        .print-button {
-            display: none;
-        }
-    }
+    
 </style>
 
 <div class="data-table-area mg-tb-15">
