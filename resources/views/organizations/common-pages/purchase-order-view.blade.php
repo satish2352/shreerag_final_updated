@@ -3,7 +3,10 @@
         box-sizing: border-box;
     }
 
-    
+
+    .header-no-border {
+        border: none !important;
+    }
 
 
     .font-family-page {
@@ -67,25 +70,37 @@
         margin-top: -63px;
     }
 
-   table {
-    width:100% !important;
-    table-layout:fixed !important;
-    border-collapse: collapse !important;
-}
-thead { display: table-header-group !important; }
-tfoot { display: table-footer-group !important; }
-tr { page-break-inside: avoid !important; }
-td, th {
-    font-size: 11px !important;
-    border:1px solid #000;
-    word-break: break-word !important;
-    padding:4px !important;
-}
-.description-column {
-    font-size:11px !important;
-    word-break: break-word !important;
-    white-space: normal !important;
-}
+    table {
+        width: 100% !important;
+        table-layout: fixed !important;
+        border-collapse: collapse !important;
+    }
+
+    thead {
+        display: table-header-group !important;
+    }
+
+    tfoot {
+        display: table-footer-group !important;
+    }
+
+    tr {
+        page-break-inside: avoid !important;
+    }
+
+    td,
+    th {
+        font-size: 14px !important;
+        border: 1px solid #000;
+        word-break: break-word !important;
+        padding: 4px !important;
+    }
+
+    .description-column {
+        font-size: 14px !important;
+        word-break: break-word !important;
+        white-space: normal !important;
+    }
 
 
     p {
@@ -96,6 +111,7 @@ td, th {
         background-color: #fff;
         padding: 22px;
         margin-top: 72px;
+        /* margin-top: 0 !important; */
         margin-bottom: 80px;
     }
 
@@ -108,8 +124,6 @@ td, th {
     .span {
         font-family: sans-serif !important;
     }
-
-    
 </style>
 
 <div class="data-table-area mg-tb-15">
@@ -123,13 +137,15 @@ td, th {
                             <table style="width: 100%;">
                                 <tr>
                                     <!-- Left Side: Logo -->
-                                    <td style="width: 10%; text-align: left; vertical-align: middle;">
+                                    <td style="width: 10%; text-align: left; vertical-align: middle;"
+                                        class="header-no-border">
                                         <img src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}"
                                             alt="no image" style="width: 100px; padding: 10px;" />
                                     </td>
 
                                     <!-- Center: Company Name and Details -->
-                                    <td style="width: 80%; text-align: center; vertical-align: middle;">
+                                    <td style="width: 80%; text-align: center; vertical-align: middle;"
+                                        class="header-no-border">
                                         <div {{-- style="font-size: 20px; font-weight: bold; text-transform: uppercase; font-family: sans-serif;" --}}
                                             style="
                                         font-size: 20px;    /* Set font size for smaller appearance */
@@ -152,7 +168,7 @@ td, th {
                                     </td>
 
                                     <!-- Right Side: Empty (For spacing) -->
-                                    <td style="width: 10%;"></td>
+                                    <td style="width: 10%;" class="header-no-border"></td>
                                 </tr>
                             </table>
 
@@ -201,22 +217,24 @@ td, th {
                             <thead>
                                 <tr style="bold; font-family: 'Play', sans-serif!important;font-size:14px;">
                                     <th class="pdf-font-size"
-                                        style="border: 1px solid black; padding: 5px; font-size:12px;">No.</th>
+                                        style="border: 1px solid black; padding: 5px; font-size:14px; width: 52px;">No.
+                                    </th>
                                     <th class="pdf-font-size"
-                                        style="border: 1px solid black; padding: 5px; font-size:12px;">Description</th>
+                                        style="border: 1px solid black; padding: 5px; font-size:14px; width:20%;">
+                                        Description</th>
                                     <th class="pdf-font-size"
-                                        style="border: 1px solid black; padding: 5px; font-size:12px;">HSN No.</th>
+                                        style="border: 1px solid black; padding: 5px; font-size:14px;">HSN No.</th>
                                     <th class="pdf-font-size"
-                                        style="border: 1px solid black; padding: 5px; font-size:11px;">Part No.</th>
+                                        style="border: 1px solid black; padding: 5px; font-size:14px;">Part No.</th>
                                     <th class="pdf-font-size"
-                                        style="border: 1px solid black; padding: 5px; font-size:12px;">Quantity</th>
+                                        style="border: 1px solid black; padding: 5px; font-size:14px;">Quantity</th>
                                     <th class="pdf-font-size"
-                                        style="border: 1px solid black; padding: 5px; font-size:12px;">Rate</th>
+                                        style="border: 1px solid black; padding: 5px; font-size:14px;">Rate</th>
                                     <th class="pdf-font-size"
-                                        style="width:100px; border: 1px solid black; padding: 5px; font-size:12px;">
+                                        style="width:100px; border: 1px solid black; padding: 5px; font-size:14px;">
                                         Discount</th>
                                     <th class="pdf-font-size"
-                                        style="width:100px; border-top: 1px solid black;border-bottom: 1px solid black;border-left: 1px solid black; border-right: 1px solid black;  padding: 5px; text-align: right; font-size:12px;">
+                                        style="width:100px; border-top: 1px solid black;border-bottom: 1px solid black;border-left: 1px solid black; border-right: 1px solid black;  padding: 5px; text-align: right; font-size:14px;">
                                         Amount</th>
                                 </tr>
                             </thead>
@@ -226,10 +244,12 @@ td, th {
                                         <td style="border: 1px solid black; padding: 5px; text-align: center;">
                                             {{ $index + 1 }}</td>
                                         <td class="description-column"
-                                            style="border: 1px solid black; padding: 5px; max-width: 200px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-all;">
+                                            style="border: 1px solid black; padding: 5px; max-width: 200px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word !important;
+overflow-wrap: anywhere !important;">
                                             {{ $item->item_description }}</td>
                                         <td style="border: 1px solid black; padding: 5px;">{{ $item->hsn_name }}</td>
-                                        <td class="description-column" style="border: 1px solid black; padding: 5px;">{{ $item->description }}
+                                        <td class="description-column" style="border: 1px solid black; padding: 5px;">
+                                            {{ $item->description }}
                                         </td>
                                         <td style="border: 1px solid black; padding: 5px; text-align: left;">
                                             {{ $item->quantity }} {{ $item->unit_name }}</td>
@@ -284,7 +304,7 @@ td, th {
                                         <strong>Transport/Dispatch :- {{ $purchaseOrder->transport_dispatch }}</strong>
                                     </td>
                                     <td class="no-border" colspan="1"></td>
-                                    <td style="border: 1px solid black;"><strong>Net Total (Including
+                                    <td style="border: 1px solid black;"><strong>Net Total<br> (Including
                                             {{ $purchaseOrder->tax_type }})</strong></td>
                                     <td style="border-top: 1px solid black;border-bottom:1px solid black;border-left:1px solid black; border-right:none;padding:5px; text-align:right;"
                                         class="text-right">
@@ -352,21 +372,23 @@ td, th {
                                     <td class="no-border" colspan="2"
                                         style="padding-bottom: 10px; text-align:center; font-size:11px;">( Finance
                                         Signatory )</td>
-                                    <td class="no-border" colspan="3"
+                                    <td class="no-border" colspan="2"
                                         style="padding-bottom: 10px; text-align:center; font-size:11px;">( Purchase
                                         Signatory )</td>
                                     <td class="no-border" colspan="2"
-                                        style="display: block; text-align: center; padding-bottom: 10px; font-size:11px;">
+                                        style="padding-bottom: 10px; text-align:end; font-size:11px; font-size:11px;">
                                         (Authorized Signatory)</td>
                                 </tr>
                             </tfoot>
                         </table>
-                        <div><span
-                                style="padding: 10px 10px 10px 8px;font-family: 'Play', sans-serif!important; font-size:13px;">This
-                                is a computer-generated document No signature is required</span></div>
-                        <div><span
-                                style="padding: 10px 10px 10px 8px;font-family: 'Play', sans-serif!important; font-size:13px;">Subject
-                                To Nashik Jurisdiction. PO Terms and Conditions As per attached PO Annexture</span>
+                        <div class="print-spacing">
+                            <div><span
+                                    style="padding: 10px 10px 10px 8px;font-family: 'Play', sans-serif!important; font-size:13px;">This
+                                    is a computer-generated document No signature is required</span></div>
+                            <div><span
+                                    style="padding: 10px 10px 10px 8px;font-family: 'Play', sans-serif!important; font-size:13px;">Subject
+                                    To Nashik Jurisdiction. PO Terms and Conditions As per attached PO Annexture</span>
+                            </div>
                         </div>
                         @if (empty($is_pdf))
                             <a>
@@ -405,13 +427,15 @@ td, th {
                         html, body {
                             width: 100%;
                             height: 100%;
-                            font-family: Font Awesome 5 Free;
+                           font-family: Arial, sans-serif !important;
                             margin: 0;
                             padding: 0;
                         }
                         .logo-size {
                             width: 10%;
                         }
+                            .print-spacing{
+                            padding: 15px 0px;}
                         .middle-size {
                             width: 80%;
                         }
@@ -426,11 +450,11 @@ td, th {
                             width: 100%;
                             margin: 0px;
                             padding: 20px 20px 10px 20px;
-                            border-right: 1px solid black;
+                        
                             box-sizing: border-box;
                         }
                             .pdf-font-size{
-                            font-size:9px !important;
+                            font-size:13px !important;
                             }
                            /* 🔥 FIXED DESCRIPTION FONT SIZE */
             .description-column{
@@ -454,8 +478,8 @@ td, th {
                             
 
                           th, td {
-                          font-family: Font Awesome 5 Free;
-        font-size: 11px !important;  
+                         font-family: Arial, sans-serif !important;
+        font-size: 14px !important;  
         padding: 5px !important;
            text-align: left;
         vertical-align: top !important;
@@ -467,8 +491,8 @@ td, th {
                             background-color: #f2f2f2;
                         }
                         @page {
-                            size: A4;
-                            margin: 0;
+                          size: A4;
+    margin: 5mm;
                             padding:0;
                         }
                         .print-button {
@@ -486,5 +510,3 @@ td, th {
             printWindow.close();
         }
     </script>
-
-   
