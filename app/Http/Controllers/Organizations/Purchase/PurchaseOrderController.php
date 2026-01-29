@@ -8,6 +8,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
 use setasign\Fpdi\Fpdi;
 use Exception;
+use Illuminate\Support\Facades\Log;
 // use Barryvdh\DomPDF\Facade\Pdf;
 // use LynX39\LaraPdfMerger\PdfManage as PdfMerger;
 // use setasign\Fpdi\Fpdi;
@@ -23,7 +24,8 @@ use App\Models\{
     HSNMaster,
     PurchaseOrderDetailsModel,
     NotificationStatus,
-    VendorType
+    VendorType,
+    EstimationModel
 };
 use App\Http\Controllers\Organizations\CommanController;
 
@@ -60,6 +62,7 @@ class PurchaseOrderController extends Controller
                 'purchase_orders.contact_person_number',
                 'purchase_orders.po_date',
                 'purchase_orders.invoice_date',
+                'purchase_orders.po_grand_total_amount',
                 'vendors.vendor_name',
                 'vendors.vendor_company_name',
                 'vendors.vendor_email',
@@ -154,6 +157,19 @@ class PurchaseOrderController extends Controller
         $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
         $dataOutputHSNMaster = HSNMaster::where('is_active', true)->get();
         $dataOutputVendorTyper = VendorType::where('is_active', true)->get();
+
+        // ✅ GET ESTIMATION AMOUNT
+        $estimation = EstimationModel::where('business_details_id', base64_decode($business_detailsId))
+            ->first();
+
+        $estimation_amount = $estimation ? $estimation->total_estimation_amount : 0;
+
+        // ✅ USED PO AMOUNT
+        $used_po_amount = PurchaseOrdersModel::where('requisition_id', $requistitionId)
+            ->sum('po_grand_total_amount');
+
+        // ✅ REMAINING AMOUNT
+        $remaining_amount = $estimation_amount - $used_po_amount;
         return view(
             'organizations.purchase.addpurchasedetails.add-purchase-orders',
             compact(
@@ -166,7 +182,10 @@ class PurchaseOrderController extends Controller
                 'dataOutputHSNMaster',
                 'dataPurchaseOrder',
                 'business_detailsId',
-                'dataOutputVendorTyper'
+                'dataOutputVendorTyper',
+                'estimation_amount',   // 👈 new
+                'used_po_amount',      // 👈 new
+                'remaining_amount'     // 👈 new
             )
         );
     }
@@ -178,6 +197,61 @@ class PurchaseOrderController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+    // public function store(Request $request)
+    // {
+    //     $rules = [
+    //         'vendor_id' => 'required',
+    //         'vendor_type_id' => 'required',
+    //         'tax_id' => 'required',
+    //         'invoice_date' => 'required',
+    //         'payment_terms' => 'required',
+    //         'contact_person_name' => 'required',
+    //         'contact_person_number' => 'required',
+    //         // 'status' => 'required',
+    //         'note' => 'required',
+    //         'transport_dispatch' => 'required',
+    //     ];
+
+    //     $messages = [
+    //         'vendor_id.required' => 'The select vendor comapny name is required.',
+    //         'vendor_type_id.required' => 'The select vendor type is required.',
+    //         'tax_id.required' => 'The Tax is required.',
+    //         'invoice_date.required' => 'The Invoice Date is required.',
+    //         'payment_terms.required' => 'The Payment Terms is required.',
+    //         'contact_person_name.required' => 'Enter the contact person name is required.',
+    //         'contact_person_number.required' => 'Enter the contact person number is required.',
+    //         // 'status.required' => 'The Status is required.',
+    //         'note.required' => 'The Note is required.',
+    //         'transport_dispatch.required' => 'The transport dispatch is required.',
+    //     ];
+
+    //     try {
+    //         $validation = Validator::make($request->all(), $rules, $messages);
+
+    //         if ($validation->fails()) {
+    //             return redirect('purchase/add-purchase-order')
+    //                 ->withInput()
+    //                 ->withErrors($validation);
+    //         } else {
+    //             $requi_id = $request->requistition_id;
+    //             $businessId = $request->business_details_id;
+    //             $add_record = $this->service->submitBOMToOwner($request);
+    //             if ($add_record) {
+    //                 $msg = $add_record['msg'];
+    //                 $status = $add_record['status'];
+    //                 if ($status == 'success') {
+    //                     return redirect('purchase/list-purchase-order/' . $requi_id . '/' . $businessId)
+    //                         ->with(['msg' => $msg, 'status' => $status]);
+    //                 } else {
+    //                     return redirect('purchase/add-purchase-order')->withInput()->with(compact('msg', 'status'));
+    //                 }
+    //             }
+    //         }
+    //     } catch (Exception $e) {
+    //         return redirect('purchase/add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+    //     }
+    // }
+
     public function store(Request $request)
     {
         $rules = [
@@ -188,50 +262,50 @@ class PurchaseOrderController extends Controller
             'payment_terms' => 'required',
             'contact_person_name' => 'required',
             'contact_person_number' => 'required',
-            // 'status' => 'required',
             'note' => 'required',
             'transport_dispatch' => 'required',
+            'po_grand_total_amount' => 'required|numeric|min:1',
         ];
 
-        $messages = [
-            'vendor_id.required' => 'The select vendor comapny name is required.',
-            'vendor_type_id.required' => 'The select vendor type is required.',
-            'tax_id.required' => 'The Tax is required.',
-            'invoice_date.required' => 'The Invoice Date is required.',
-            'payment_terms.required' => 'The Payment Terms is required.',
-            'contact_person_name.required' => 'Enter the contact person name is required.',
-            'contact_person_number.required' => 'Enter the contact person number is required.',
-            // 'status.required' => 'The Status is required.',
-            'note.required' => 'The Note is required.',
-            'transport_dispatch.required' => 'The transport dispatch is required.',
-        ];
+        $validation = Validator::make($request->all(), $rules);
 
-        try {
-            $validation = Validator::make($request->all(), $rules, $messages);
-
-            if ($validation->fails()) {
-                return redirect('purchase/add-purchase-order')
-                    ->withInput()
-                    ->withErrors($validation);
-            } else {
-                $requi_id = $request->requistition_id;
-                $businessId = $request->business_details_id;
-                $add_record = $this->service->submitBOMToOwner($request);
-                if ($add_record) {
-                    $msg = $add_record['msg'];
-                    $status = $add_record['status'];
-                    if ($status == 'success') {
-                        return redirect('purchase/list-purchase-order/' . $requi_id . '/' . $businessId)
-                            ->with(['msg' => $msg, 'status' => $status]);
-                    } else {
-                        return redirect('purchase/add-purchase-order')->withInput()->with(compact('msg', 'status'));
-                    }
-                }
-            }
-        } catch (Exception $e) {
-            return redirect('purchase/add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+        if ($validation->fails()) {
+            return redirect()->back()->withInput()->withErrors($validation);
         }
+
+        // ================= ESTIMATION LIMIT CHECK =================
+        $businessDetailsId = base64_decode($request->business_details_id);
+        $requisitionId     = base64_decode($request->requistition_id);
+
+        $estimation = EstimationModel::where('business_details_id', $businessDetailsId)->first();
+        $estimation_amount = $estimation ? $estimation->total_estimation_amount : 0;
+
+        $used_po_amount = PurchaseOrdersModel::where('requisition_id', $requisitionId)
+            ->sum('po_grand_total_amount');
+
+        $remaining_amount = $estimation_amount - $used_po_amount;
+
+        if ($request->po_grand_total_amount > $remaining_amount) {
+            return redirect()->back()
+                ->withInput()
+                ->with([
+                    'status' => 'error',
+                    'msg' => 'PO amount exceeds remaining estimation amount. Remaining: ' . number_format($remaining_amount, 2)
+                ]);
+        }
+
+        // ================= SAVE =================
+        $add_record = $this->service->submitBOMToOwner($request);
+
+        if ($add_record['status'] == 'success') {
+            return redirect('purchase/list-purchase-order/' . $request->requistition_id . '/' . $request->business_details_id)
+                ->with(['msg' => $add_record['msg'], 'status' => 'success']);
+        }
+
+        return redirect()->back()->withInput()->with($add_record);
     }
+
+
     public function getTaxValue(Request $request)
     {
         $tax = Tax::find($request->tax_id);
@@ -471,16 +545,48 @@ class PurchaseOrderController extends Controller
 
     public function edit(Request $request)
     {
-        $edit_data_id = $request->id;
+        $edit_data_id = $request->id; // purchase_orders_id (business)
 
-        // $edit_data_id = base64_decode($request->id);
+        // $editData = $this->service->getById($edit_data_id);
         $editData = $this->service->getById($edit_data_id);
+
+        if (!$editData || count($editData) == 0) {
+            abort(404, 'Purchase Order not found');
+        }
+
         $dataOutputVendor = Vendors::where('is_active', true)->get();
         $dataOutputTax = Tax::where('is_active', true)->get();
         $dataOutputPartItem = PartItem::where('is_active', true)->get();
         $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
         $dataOutputHSNMaster = HSNMaster::where('is_active', true)->get();
         $dataOutputVendorType = VendorType::where('is_active', true)->get();
+
+
+
+
+
+
+        // CURRENT PO
+        $currentPO = PurchaseOrdersModel::where('purchase_orders_id', $edit_data_id)->firstOrFail();
+
+        $businessDetailsId = $currentPO->business_details_id;
+        $requisitionId     = $currentPO->requisition_id;
+        $currentPoAmount   = $currentPO->po_grand_total_amount;
+
+        // ESTIMATION
+        $estimation = EstimationModel::where('business_details_id', $businessDetailsId)->first();
+        $estimation_amount = $estimation ? $estimation->total_estimation_amount : 0;
+
+        // USED PO (EXCEPT CURRENT PO)
+        $used_po_amount = PurchaseOrdersModel::where('requisition_id', $requisitionId)
+            // ->where('purchase_orders_id', '!=', $edit_data_id)   // 👈 IMPORTANT
+            ->where('id', '<=', $currentPoAmount)
+            ->sum('po_grand_total_amount');
+
+        // REMAINING
+        $remaining_amount = $estimation_amount - $used_po_amount;
+
+
         return view('organizations.purchase.addpurchasedetails.edit-purchase-orders', compact(
             'editData',
             'dataOutputVendor',
@@ -488,74 +594,154 @@ class PurchaseOrderController extends Controller
             'dataOutputPartItem',
             'dataOutputUnitMaster',
             'dataOutputHSNMaster',
-            'dataOutputVendorType'
+            'dataOutputVendorType',
+            'estimation_amount',
+            'used_po_amount',
+            'remaining_amount'
         ));
     }
 
 
+
+
+
+
+
+    // public function update(Request $request)
+    // {
+
+    //     $rules = [
+    //         // 'design_name' => 'required|string|max:255',
+    //         // 'design_page' => 'required|max:255',
+    //         // 'project_name' => 'required|string|max:20',
+    //         // 'time_allocation' => 'required|string|max:255',
+    //         // 'image' => 'image|mimes:jpeg,png,jpg|max:10240|min:5',
+    //     ];
+
+    //     $messages = [
+    //         // 'design_name.required' => 'The design name is required.',
+    //         // 'design_name.string' => 'The design name must be a valid string.',
+    //         // 'design_name.max' => 'The design name must not exceed 255 characters.',
+
+    //         // 'design_page.required' => 'The design page is required.',
+    //         // 'design_page.max' => 'The design page must not exceed 255 characters.',
+
+    //         // 'project_name.required' => 'The project name is required.',
+    //         // 'project_name.string' => 'The project name must be a valid string.',
+    //         // 'project_name.max' => 'The project name must not exceed 20 characters.',
+
+    //         // 'time_allocation.required' => 'The time allocation is required.',
+    //         // 'time_allocation.string' => 'The time allocation must be a valid string.',
+    //         // 'time_allocation.max' => 'The time allocation must not exceed 255 characters.',
+
+    //         // 'image.required' => 'The image is required.',
+    //         // 'image.image' => 'The image must be a valid image file.',
+    //         // 'image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
+    //         // 'image.max' => 'The image size must not exceed 10MB.',
+    //         // 'image.min' => 'The image size must not be less than 5KB.',
+    //     ];
+
+    //     try {
+    //         $validation = Validator::make($request->all(), $rules, $messages);
+    //         if ($validation->fails()) {
+    //             return redirect()->back()
+    //                 ->withInput()
+    //                 ->withErrors($validation);
+    //         } else {
+
+    //             $update_data = $this->service->updateAll($request);
+    //             // $requisition_id = $request->input('requisition_id');
+
+    //             if ($update_data) {
+    //                 $msg = $update_data['msg'];
+    //                 $status = $update_data['status'];
+    //                 if ($status == 'success') {
+    //                     return redirect('purchase/list-purchase')->with(compact('msg', 'status'));
+    //                 } else {
+    //                     return redirect()->back()
+    //                         ->withInput()
+    //                         ->with(compact('msg', 'status'));
+    //                 }
+    //             }
+    //         }
+    //     } catch (Exception $e) {
+    //         return redirect()->back()
+    //             ->withInput()
+    //             ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+    //     }
+    // }
     public function update(Request $request)
     {
-
         $rules = [
-            // 'design_name' => 'required|string|max:255',
-            // 'design_page' => 'required|max:255',
-            // 'project_name' => 'required|string|max:20',
-            // 'time_allocation' => 'required|string|max:255',
-            // 'image' => 'image|mimes:jpeg,png,jpg|max:10240|min:5',
+            'vendor_id' => 'required',
+            'vendor_type_id' => 'required',
+            'tax_id' => 'required',
+            'invoice_date' => 'required',
+            'payment_terms' => 'required',
+            'contact_person_name' => 'required',
+            'contact_person_number' => 'required',
+            'note' => 'required',
+            'transport_dispatch' => 'required',
+            'po_grand_total_amount' => 'required|numeric|min:1',
         ];
 
-        $messages = [
-            // 'design_name.required' => 'The design name is required.',
-            // 'design_name.string' => 'The design name must be a valid string.',
-            // 'design_name.max' => 'The design name must not exceed 255 characters.',
+        $validation = Validator::make($request->all(), $rules);
 
-            // 'design_page.required' => 'The design page is required.',
-            // 'design_page.max' => 'The design page must not exceed 255 characters.',
-
-            // 'project_name.required' => 'The project name is required.',
-            // 'project_name.string' => 'The project name must be a valid string.',
-            // 'project_name.max' => 'The project name must not exceed 20 characters.',
-
-            // 'time_allocation.required' => 'The time allocation is required.',
-            // 'time_allocation.string' => 'The time allocation must be a valid string.',
-            // 'time_allocation.max' => 'The time allocation must not exceed 255 characters.',
-
-            // 'image.required' => 'The image is required.',
-            // 'image.image' => 'The image must be a valid image file.',
-            // 'image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
-            // 'image.max' => 'The image size must not exceed 10MB.',
-            // 'image.min' => 'The image size must not be less than 5KB.',
-        ];
-
-        try {
-            $validation = Validator::make($request->all(), $rules, $messages);
-            if ($validation->fails()) {
-                return redirect()->back()
-                    ->withInput()
-                    ->withErrors($validation);
-            } else {
-
-                $update_data = $this->service->updateAll($request);
-                // $requisition_id = $request->input('requisition_id');
-
-                if ($update_data) {
-                    $msg = $update_data['msg'];
-                    $status = $update_data['status'];
-                    if ($status == 'success') {
-                        return redirect('purchase/list-purchase')->with(compact('msg', 'status'));
-                    } else {
-                        return redirect()->back()
-                            ->withInput()
-                            ->with(compact('msg', 'status'));
-                    }
-                }
-            }
-        } catch (Exception $e) {
+        if ($validation->fails()) {
             return redirect()->back()
                 ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                ->withErrors($validation);
         }
+
+        // ================= ESTIMATION LIMIT CHECK (EDIT MODE) =================
+
+        $purchaseMainId = $request->purchase_main_id;
+
+        // Current PO amount (before edit)
+        $currentPO = PurchaseOrdersModel::findOrFail($purchaseMainId);
+        $oldAmount = $currentPO->po_grand_total_amount;
+
+        $businessDetailsId = $currentPO->business_details_id;
+        $requisitionId     = $currentPO->requisition_id;
+
+        $estimation = EstimationModel::where('business_details_id', $businessDetailsId)->first();
+        $estimation_amount = $estimation ? $estimation->total_estimation_amount : 0;
+
+        // Used amount EXCEPT current PO
+        $used_po_amount = PurchaseOrdersModel::where('requisition_id', $requisitionId)
+            ->where('id', '!=', $purchaseMainId)
+            ->sum('po_grand_total_amount');
+
+        $remaining_amount = $estimation_amount - $used_po_amount;
+
+        if ($request->po_grand_total_amount > $remaining_amount) {
+            return redirect()->back()
+                ->withInput()
+                ->with([
+                    'status' => 'error',
+                    'msg' => 'PO amount exceeds remaining estimation amount. Remaining: ' . number_format($remaining_amount, 2)
+                ]);
+        }
+
+        // ================= UPDATE =================
+        $update_data = $this->service->updateAll($request);
+
+        if ($update_data['status'] == 'success') {
+            return redirect('purchase/list-purchase')
+                ->with([
+                    'msg' => $update_data['msg'],
+                    'status' => 'success'
+                ]);
+        }
+
+        return redirect()->back()
+            ->withInput()
+            ->with([
+                'msg' => $update_data['msg'],
+                'status' => 'error'
+            ]);
     }
+
 
     public function destroyAddmore(Request $request)
     {
@@ -759,12 +945,17 @@ class PurchaseOrderController extends Controller
                 'getAllRulesAndRegulations' => $getAllRulesAndRegulations,
                 'business_id' => $business_id,
                 'is_pdf' => true,
-            ])->setPaper('a4', 'portrait')->setWarnings(false);
+            ])->setPaper('a4', 'portrait')->setOptions([
+                'isRemoteEnabled' => true,
+            ])->setWarnings(false);
 
             // Generate PDF for static terms and conditions page
             $termsPdf = Pdf::loadView('organizations.common-pages.static-terms-condition')
                 ->setPaper('a4', 'portrait')
+
+                ->setOptions(['isRemoteEnabled' => true])
                 ->setWarnings(false);
+
 
             // Save individual PDFs
             $purchaseOrderPath = storage_path('app/public/purchase_order_' . $purchase_order_id . '.pdf');
@@ -806,7 +997,7 @@ class PurchaseOrderController extends Controller
                 ->with('status', 'success')
                 ->with('msg', 'Purchase order mail sent to vendor.');
         } catch (\Exception $e) {
-            \Log::error($e->getMessage());
+            Log::error($e->getMessage());
             return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }

@@ -1,12 +1,13 @@
 <style>
-   
     .dropdown-menu {
-    list-style: none !important;
-    padding-left: 0 !important;
-}
-.dropdown-menu[x-placement^=bottom]{
-    right:200px;
-}
+        list-style: none !important;
+        padding-left: 0 !important;
+    }
+
+    .dropdown-menu[x-placement^=bottom] {
+        right: 200px;
+    }
+
     .navbar-btn-wb {
         color: #fff !important;
         border: 1px solid #fff !important;
@@ -55,120 +56,124 @@
     }
 
     /* Notification Badge */
-#notification-count {
-    background: #8baadd;    /* blue */
-    color: white;
-    font-size: 16px !important;
-    border-radius: 50%;
-    padding: 2px 8px;
-    position: absolute;
-    top: 0;
-    right: 0;
-}
+    #notification-count {
+        background: #8baadd;
+        /* blue */
+        color: white;
+        font-size: 16px !important;
+        border-radius: 50%;
+        padding: 2px 8px;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
 
-/* Main dropdown box */
-.dropdown-menu[aria-labelledby="notifyDropdown"] {
-    width: 340px !important;
-    margin-top: 12px;
-    border-radius: 12px;
-    background: #ffffff;
-    border: none;
-    box-shadow: 0 6px 25px rgba(0,0,0,0.2);
-    padding-bottom: 0;
-    overflow: hidden;
-    position: relative;
-}
+    /* Main dropdown box */
+    .dropdown-menu[aria-labelledby="notifyDropdown"] {
+        width: 340px !important;
+        margin-top: 12px;
+        border-radius: 12px;
+        background: #ffffff;
+        border: none;
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+        padding-bottom: 0;
+        overflow: hidden;
+        position: relative;
+    }
 
-/* Triangle arrow */
-.dropdown-menu[aria-labelledby="notifyDropdown"]::before {
-    content: "";
-    position: absolute;
-    top: -12px;
-    right: 25px;
-    border-width: 0 10px 12px 10px;
-    border-style: solid;
-    border-color: transparent transparent #ffffff transparent;
-}
+    /* Triangle arrow */
+    .dropdown-menu[aria-labelledby="notifyDropdown"]::before {
+        content: "";
+        position: absolute;
+        top: -12px;
+        right: 25px;
+        border-width: 0 10px 12px 10px;
+        border-style: solid;
+        border-color: transparent transparent #ffffff transparent;
+    }
 
-/* Header */
-.dropdown-menu[aria-labelledby="notifyDropdown"] .dropdown-header {
- 
-    color: #000 !important;
-    text-align: center;
-    padding: 6px;
-    font-size: 18px;
-    font-weight: 600;
-    margin: 0;
-}
+    /* Header */
+    .dropdown-menu[aria-labelledby="notifyDropdown"] .dropdown-header {
 
-/* Notification list container */
-#notification-messages {
-    max-height: 300px;
-    overflow-y: auto;
-    padding: 0 15px 15px !important;
-    font-size: 10px !important;
-}
+        color: #000 !important;
+        text-align: center;
+        padding: 6px;
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0;
+    }
 
-/* Single notification card */
-.notify-row {
-    display: flex;
-    padding: 14px 0;
-    border-bottom: 1px solid #eee;
-}
+    /* Notification list container */
+    #notification-messages {
+        max-height: 300px;
+        overflow-y: auto;
+        padding: 0 15px 15px !important;
+        font-size: 10px !important;
+    }
 
-/* Icon circle */
-.notify-icon {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: #1A4FA7;  /* blue */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 20px;
-    margin-right: 15px;
-}
+    /* Single notification card */
+    .notify-row {
+        display: flex;
+        padding: 14px 0;
+        border-bottom: 1px solid #eee;
+    }
 
-/* Text area */
-.notify-text strong {
-    font-size: 15px;
-    color: #333;
-}
+    /* Icon circle */
+    .notify-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: #1A4FA7;
+        /* blue */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 20px;
+        margin-right: 15px;
+    }
 
-.notify-text small {
-    float: right;
-    color: #73829a;
-}
+    /* Text area */
+    .notify-text strong {
+        font-size: 15px;
+        color: #333;
+    }
 
-.notify-text p {
-    margin: 3px 0 0;
-    font-size: 13px;
-    color: #555;
-}
+    .notify-text small {
+        float: right;
+        color: #73829a;
+    }
 
-/* Footer */
-.notify-footer {
-    text-align: center;
-    padding: 12px;
-    background: #f5f8ff;
-}
+    .notify-text p {
+        margin: 3px 0 0;
+        font-size: 13px;
+        color: #555;
+    }
 
-.notify-footer a {
-    font-weight: bold;
-    color: #1A4FA7;
-    text-decoration: none;
-}
-.{
+    /* Footer */
+    .notify-footer {
+        text-align: center;
+        padding: 12px;
+        background: #f5f8ff;
+    }
+
+    .notify-footer a {
+        font-weight: bold;
+        color: #1A4FA7;
+        text-decoration: none;
+    }
+
+    . {
         left: 125px !important;
-}
-.logout-dropdown{
-    position: absolute;
-    transform: translate3d(0px, 24px, 0px);
-    top: 10px !important;
-    /* left: 95px !important; */
-    will-change: transform;
-}
+    }
+
+    .logout-dropdown {
+        position: absolute;
+        transform: translate3d(0px, 24px, 0px);
+        top: 10px !important;
+        /* left: 95px !important; */
+        will-change: transform;
+    }
 </style>
 
 <div class="left-sidebar-pro">
@@ -250,12 +255,12 @@
                                 $isReportActive = in_array(Route::currentRouteName(), $reportRoutes);
                             @endphp
 
- <li>
-                            <a class="has-arrow" href="{{ route('list-unit') }}" aria-expanded="false"><i
-                                   class="fa fa-chart-bar icon-wrap"></i><span class="mini-click-non">Report
-                                </span></a>
-                            <ul class="submenu-angle" aria-expanded="false">
-                                <li>
+                            <li>
+                                <a class="has-arrow" href="{{ route('list-unit') }}" aria-expanded="false"><i
+                                        class="fa fa-chart-bar icon-wrap"></i><span class="mini-click-non">Report
+                                    </span></a>
+                                <ul class="submenu-angle" aria-expanded="false">
+                                    <li>
                                         <a title="Product Completed Report"
                                             href="{{ route('list-product-completed-report') }}"
                                             class="{{ Route::currentRouteName() == 'list-product-completed-report' ? 'active-submenu' : '' }}">
@@ -287,7 +292,7 @@
                                             <span class="mini-sub-pro">Dispatch Bar Chart</span>
                                         </a>
                                     </li>
-                                      <li>
+                                    <li>
                                         <a title="Vendor Taken Material"
                                             href="{{ route('list-vendor-through-taken-material') }}"
                                             class="{{ Route::currentRouteName() == 'list-vendor-through-taken-material' ? 'active-submenu' : '' }}">
@@ -296,8 +301,8 @@
                                         </a>
                                     </li>
 
-                            </ul>
-                        </li>
+                                </ul>
+                            </li>
 
 
 
@@ -359,7 +364,7 @@
                                             <span class="mini-sub-pro">Dispatch Bar Chart</span>
                                         </a>
                                     </li> --}}
-{{-- 
+                            {{-- 
                                     <li>
                                         <a title="Vendor Taken Material"
                                             href="{{ route('list-vendor-through-taken-material') }}"
@@ -771,18 +776,18 @@
                                         class="mini-click-non">Dashboard</span></a>
                             </li>
 
-                        <li class="{{ Request::is('estimation-report') ? 'active' : '' }}">
-                            <a class="has-arrow" href="{{ route('estimation-report') }}" aria-expanded="false"><i
-                                    class="fa big-icon fa-file-invoice icon-wrap"></i> <span
-                                    class="mini-click-non">Report</span></a>
-                            <ul class="submenu-angle" aria-expanded="false">
-                                <li class="nav-item {{ Request::is('estimation-report') ? 'active' : '' }}"><a
-                                        href="{{ route('estimation-report') }}"><i
-                                            class="fa fa-chart-bar icon-wrap" aria-hidden="true"></i> <span
-                                            class="mini-click-non">Estimation</span></a></li>
+                            <li class="{{ Request::is('estimation-report') ? 'active' : '' }}">
+                                <a class="has-arrow" href="{{ route('estimation-report') }}"
+                                    aria-expanded="false"><i class="fa big-icon fa-file-invoice icon-wrap"></i> <span
+                                        class="mini-click-non">Report</span></a>
+                                <ul class="submenu-angle" aria-expanded="false">
+                                    <li class="nav-item {{ Request::is('estimation-report') ? 'active' : '' }}"><a
+                                            href="{{ route('estimation-report') }}"><i
+                                                class="fa fa-chart-bar icon-wrap" aria-hidden="true"></i> <span
+                                                class="mini-click-non">Estimation</span></a></li>
 
-                            </ul>
-                        </li>
+                                </ul>
+                            </li>
 
                             <li
                                 class="nav-item {{ request()->is('estimationdept/list-new-requirements-received-for-estimation') || request()->is('estimationdept/list-new-requirements-received-for-estimation-business-wise/*') || request()->is('estimationdept/edit-estimation/*') ? 'active' : '' }}">
@@ -831,19 +836,21 @@
                                         class="fa fa-tachometer-alt icon-wrap"></i><span
                                         class="mini-click-non">Dashboard</span></a>
                             </li>
-                              <li>
-                            <a class="has-arrow" href="{{ route('list-production-report') }}" aria-expanded="false"> <i
-                                    class="fa fa-chart-line icon-wrap"></i><span class="mini-click-non"> Report</span></a>
-                            <ul class="submenu-angle" aria-expanded="false">
-                                <li
-                                    class="nav-item {{ request()->is('proddept/list-production-report') || request()->is('proddept/list-production-report/*') ? 'active' : '' }}">
-                                    <a href="{{ route('list-production-report') }}"><i class="fa fa-chart-line icon-wrap"></i>
-                                        <span class="mini-click-non">Production</span></a>
-                                </li>
-                            </ul>
-                        </li>
+                            <li>
+                                <a class="has-arrow" href="{{ route('list-production-report') }}"
+                                    aria-expanded="false"> <i class="fa fa-chart-line icon-wrap"></i><span
+                                        class="mini-click-non"> Report</span></a>
+                                <ul class="submenu-angle" aria-expanded="false">
+                                    <li
+                                        class="nav-item {{ request()->is('proddept/list-production-report') || request()->is('proddept/list-production-report/*') ? 'active' : '' }}">
+                                        <a href="{{ route('list-production-report') }}"><i
+                                                class="fa fa-chart-line icon-wrap"></i>
+                                            <span class="mini-click-non">Production</span></a>
+                                    </li>
+                                </ul>
+                            </li>
 
-                           
+
                             <li
                                 class="nav-item {{ request()->is('proddept/list-new-requirements-received-for-production-business-wise') || request()->is('proddept/reject-design-edit/*') ? 'active' : '' }}">
                                 <a href="{{ route('list-new-requirements-received-for-production-business-wise') }}">
@@ -901,14 +908,16 @@
                             <a href="{{ route('dashboard') }}"><i class="fa fa-tachometer-alt icon-wrap"></i><span
                                     class="mini-click-non">Dashboard</span></a>
                         </li>
-                  
- <li>
+
+                        <li>
                             <a class="has-arrow" href="{{ route('security-report') }}" aria-expanded="false"> <i
-                                    class="fa fa-chart-line icon-wrap"></i><span class="mini-click-non">Report</span></a>
+                                    class="fa fa-chart-line icon-wrap"></i><span
+                                    class="mini-click-non">Report</span></a>
                             <ul class="submenu-angle" aria-expanded="false">
                                 <li
                                     class="nav-item {{ request()->is('quality/security-report') || request()->is('quality/add-grn/*') ? 'active' : '' }}">
-                                    <a href="{{ route('security-report') }}"><i class="fa fa-chart-line icon-wrap"></i>
+                                    <a href="{{ route('security-report') }}"><i
+                                            class="fa fa-chart-line icon-wrap"></i>
                                         <span class="mini-click-non">Gatepass</span></a>
                                 </li>
                             </ul>
@@ -944,20 +953,22 @@
                             <a href="{{ route('dashboard') }}"><i class="fa fa-tachometer-alt icon-wrap"></i><span
                                     class="mini-click-non">Dashboard</span></a>
                         </li>
-                       
 
-                         <li>
+
+                        <li>
                             <a class="has-arrow" href="{{ route('grn-report') }}" aria-expanded="false"> <i
-                                    class="fa fa-chart-line icon-wrap"></i><span class="mini-click-non">Report</span></a>
+                                    class="fa fa-chart-line icon-wrap"></i><span
+                                    class="mini-click-non">Report</span></a>
                             <ul class="submenu-angle" aria-expanded="false">
                                 <li
                                     class="nav-item {{ request()->is('quality/grn-report') || request()->is('quality/add-grn/*') ? 'active' : '' }}">
                                     <a href="{{ route('grn-report') }}"><i class="fa fa-chart-line icon-wrap"></i>
                                         <span class="mini-click-non">GRN</span></a>
                                 </li>
-                                 <li
+                                <li
                                     class="nav-item {{ request()->is('quality/rejected-grn-report') || request()->is('quality/add-grn/*') ? 'active' : '' }}">
-                                    <a href="{{ route('rejected-grn-report') }}"><i class="fa fa-chart-line icon-wrap"></i>
+                                    <a href="{{ route('rejected-grn-report') }}"><i
+                                            class="fa fa-chart-line icon-wrap"></i>
                                         <span class="mini-click-non">Rejected GRN</span></a>
                                 </li>
                             </ul>
@@ -1149,8 +1160,7 @@
                                     class="mini-click-non">Employee</span></a>
                             <ul class="submenu-angle" aria-expanded="false">
                                 <li><a href="{{ route('list-employee') }}"> <i
-                                            class="fas fa-user-plus icon-wrap"></i> <span
-                                            class="mini-click-non">Add
+                                            class="fas fa-user-plus icon-wrap"></i> <span class="mini-click-non">Add
                                             Employee</span></a></li>
                             </ul>
                         </li>
@@ -1158,6 +1168,19 @@
                                     class="fas fa-calendar-alt icon-wrap"></i> <span class="mini-click-non">Add
                                     Yearly Leave</span></a></li>
 
+
+                        <li class="{{ Request::is('list-employee-leave-report') ? 'active' : '' }}">
+                            <a class="has-arrow" href="{{ route('list-employee-leave-report') }}"
+                                aria-expanded="false"><i class="fa fa-chart-line icon-wrap"></i><span
+                                    class="mini-click-non">Report</span></a>
+                            <ul class="submenu-angle" aria-expanded="false">
+                                <li class="nav-item {{ Request::is('list-employee-leave-report') ? 'active' : '' }}">
+                                    <a href="{{ route('list-employee-leave-report') }}"> <i
+                                            class="fa fa-list-alt icon-wrap"></i> <span
+                                            class="mini-click-non">Employee Leave Report</span></a></li>
+
+                            </ul>
+                        </li>
 
 
                         <li>
@@ -1269,12 +1292,14 @@
                                     class="mini-click-non">Dashboard</span></a>
                         </li>
                         <li>
-                            <a class="has-arrow" href="{{ route('list-logistics-report') }}" aria-expanded="false"> <i
-                                    class="fa fa-chart-line icon-wrap"></i><span class="mini-click-non">Report</span></a>
+                            <a class="has-arrow" href="{{ route('list-logistics-report') }}" aria-expanded="false">
+                                <i class="fa fa-chart-line icon-wrap"></i><span
+                                    class="mini-click-non">Report</span></a>
                             <ul class="submenu-angle" aria-expanded="false">
                                 <li
                                     class="nav-item {{ request()->is('quality/list-logistics-report') || request()->is('quality/add-grn/*') ? 'active' : '' }}">
-                                    <a href="{{ route('list-logistics-report') }}"><i class="fa fa-chart-line icon-wrap"></i>
+                                    <a href="{{ route('list-logistics-report') }}"><i
+                                            class="fa fa-chart-line icon-wrap"></i>
                                         <span class="mini-click-non">Logistics</span></a>
                                 </li>
                             </ul>
@@ -1501,32 +1526,26 @@
 
                                             @if (session()->get('role_id') != config('constants.ROLE_ID.CMS') &&
                                                     session()->get('role_id') != config('constants.ROLE_ID.SUPER'))
-                                            <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle"
-       href="#"
-       id="notifyDropdown"
-       role="button"
-       data-toggle="dropdown"
-       aria-haspopup="true"
-       aria-expanded="false">
-        <i class="fa fa-bell" style="padding-right: 16px;"></i>
-        <span class="satish" id="notification-count"></span>
-    </a>
+                                                <li class="nav-item dropdown">
+                                                    <a class="nav-link dropdown-toggle" href="#"
+                                                        id="notifyDropdown" role="button" data-toggle="dropdown"
+                                                        aria-haspopup="true" aria-expanded="false">
+                                                        <i class="fa fa-bell" style="padding-right: 16px;"></i>
+                                                        <span class="satish" id="notification-count"></span>
+                                                    </a>
 
-    <div class="dropdown-menu dropdown-menu-right animated zoomIn"
-         aria-labelledby="notifyDropdown">
+                                                    <div class="dropdown-menu dropdown-menu-right animated zoomIn"
+                                                        aria-labelledby="notifyDropdown">
 
-        <h5 class="dropdown-header">Notifications</h5>
-        <hr>
+                                                        <h5 class="dropdown-header">Notifications</h5>
+                                                        <hr>
 
-        <div id="notification-messages" class="px-3 py-2">
-        </div>
-    </div>
-</li>
-
-
+                                                        <div id="notification-messages" class="px-3 py-2">
+                                                        </div>
+                                                    </div>
+                                                </li>
                                             @endif
-                                          {{-- <li class="nav-item">
+                                            {{-- <li class="nav-item">
 
     <a href="#" data-toggle="dropdown" role="button"
         aria-expanded="false" class="nav-link dropdown-toggle"
@@ -1546,25 +1565,27 @@
         </li>
     </ul>
 </li> --}}
-<li class="nav-item dropdown">
+                                            <li class="nav-item dropdown">
 
-    <a href="#" class="nav-link dropdown-toggle" id="userDropdown" role="button"
-       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-       style="font-size: 16px !important;">
-        <i class="fa fa-user adminpro-user-rounded header-riht-inf" aria-hidden="true"></i>
-        {{ ucwords(config('constants.ROLE_ID_NAME.' . Session::get('role_id'))) }} Department
-    </a>
+                                                <a href="#" class="nav-link dropdown-toggle" id="userDropdown"
+                                                    role="button" data-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false" style="font-size: 16px !important;">
+                                                    <i class="fa fa-user adminpro-user-rounded header-riht-inf"
+                                                        aria-hidden="true"></i>
+                                                    {{ ucwords(config('constants.ROLE_ID_NAME.' . Session::get('role_id'))) }}
+                                                    Department
+                                                </a>
 
-    <div class="dropdown-menu shadow-lg rounded zoomIn logout-dropdown"
-         aria-labelledby="userDropdown">
+                                                <div class="dropdown-menu shadow-lg rounded zoomIn logout-dropdown"
+                                                    aria-labelledby="userDropdown">
 
-        <a class="dropdown-item" href="{{ route('log-out') }}">
-            <span class="fa fa-lock author-log-ic"></span> Log Out
-        </a>
+                                                    <a class="dropdown-item" href="{{ route('log-out') }}">
+                                                        <span class="fa fa-lock author-log-ic"></span> Log Out
+                                                    </a>
 
-    </div>
+                                                </div>
 
-</li>
+                                            </li>
 
 
 

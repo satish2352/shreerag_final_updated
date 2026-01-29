@@ -1,4 +1,3 @@
-
 @extends('admin.layouts.master')
 @section('content')
     <div class="data-table-area mg-tb-15">
@@ -50,10 +49,10 @@
                             <div class="datatable-dashv1-list custom-datatable-overright">
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
-                                        data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="false"
-                                        data-key-events="true" data-show-toggle="true" data-resizable="true"
-                                        data-cookie="true" data-cookie-id-table="saveId" data-show-export="true"
-                                        data-click-to-select="true" data-toolbar="#toolbar">
+                                        data-show-columns="true" data-show-pagination-switch="true"
+                                        data-show-refresh="false" data-key-events="true" data-show-toggle="true"
+                                        data-resizable="true" data-cookie="true" data-cookie-id-table="saveId"
+                                        data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
                                         <thead>
                                             <tr>
                                                 <th data-field="#">#</th>
@@ -78,8 +77,9 @@
 
                                                     <td>{{ $loop->iteration }}</td>
                                                     {{-- <td>{{ucwords($data->customer_po_number)}}</td> --}}
-                                                    <td>  {{ \Carbon\Carbon::parse($data->updated_at)->format('d-m-Y h:i:s A') }}</td>
-                                                    <td>{{ucwords($data->dc_number)}}</td>
+                                                    <td> {{ \Carbon\Carbon::parse($data->po_date)->format('d-m-Y h:i:s A') }}
+                                                    </td>
+                                                    <td>{{ ucwords($data->dc_number) }}</td>
                                                     <td>
                                                         {{ $data->customer_po_number ? ucwords($data->customer_po_number) : 'N/A' }}
                                                     </td>
@@ -126,4 +126,4 @@
             </div>
         </div>
     </div>
-   @endsection
+@endsection

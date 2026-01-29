@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 @section('content')
-<style>
-   
+    <style>
+
 
     </style>
     <div class="data-table-area mg-tb-15">
@@ -14,6 +14,27 @@
                                 <h1>Purchase Order <span class="table-project-n">Form</span> </h1>
                             </div><br>
 
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label><strong>Estimation Amount</strong></label>
+                                    <input type="text" class="form-control"
+                                        value="{{ number_format($estimation_amount, 2) }}" readonly>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label><strong>Used PO Amount</strong></label>
+                                    <input type="text" class="form-control"
+                                        value="{{ number_format($used_po_amount, 2) }}" readonly>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label><strong>Remaining Amount</strong></label>
+                                    <input type="text" class="form-control text-danger" id="remaining_amount_display"
+                                        value="{{ number_format($remaining_amount, 2) }}" readonly>
+                                </div>
+                            </div>
+
+                            <input type="hidden" id="remaining_amount" value="{{ $remaining_amount }}">
                             <form action="{{ route('store-purchase-order') }} " id="forms" method="post"
                                 enctype="multipart/form-data">
                                 @csrf
@@ -384,10 +405,10 @@
                         </div>
                     </div>
 
-               
-  @push('scripts')
-                    <!-- ========== 1) TAX CALCULATION SCRIPT ========== -->
-                    {{-- <script>
+
+                    @push('scripts')
+                        <!-- ========== 1) TAX CALCULATION SCRIPT ========== -->
+                        {{-- <script>
                         $(document).ready(function() {
  $(".select2").select2({ width: '100%' });
                             $('#tax_id').on('change', function() {
@@ -445,207 +466,217 @@
 
                         });
                     </script> --}}
-<script>
-$(document).ready(function () {
+                        <script>
+                            $(document).ready(function() {
 
-    $(document).on('keyup change', '.quantity, .rate, .discount, #tax_id', function () {
-        calculateGrandTotal();
-    });
+                                $(document).on('keyup change', '.quantity, .rate, .discount, #tax_id', function() {
+                                    calculateGrandTotal();
+                                });
 
-    function calculateGrandTotal() {
+                                function calculateGrandTotal() {
 
-        let totalWithoutTax = 0;
+                                    let totalWithoutTax = 0;
 
-        $('#purchase_order_table tbody tr').each(function () {
+                                    $('#purchase_order_table tbody tr').each(function() {
 
-            let qty = parseFloat($(this).find('.quantity').val()) || 0;
-            let rate = parseFloat($(this).find('.rate').val()) || 0;
-            let discount = parseFloat($(this).find('.discount').val()) || 0;
+                                        let qty = parseFloat($(this).find('.quantity').val()) || 0;
+                                        let rate = parseFloat($(this).find('.rate').val()) || 0;
+                                        let discount = parseFloat($(this).find('.discount').val()) || 0;
 
-            let baseAmount = qty * rate;
-            let discountAmount = (baseAmount * discount) / 100;
-            let afterDiscount = baseAmount - discountAmount;
+                                        let baseAmount = qty * rate;
+                                        let discountAmount = (baseAmount * discount) / 100;
+                                        let afterDiscount = baseAmount - discountAmount;
 
-            $(this).find('.total_amount').val(afterDiscount.toFixed(2));
+                                        $(this).find('.total_amount').val(afterDiscount.toFixed(2));
 
-            totalWithoutTax += afterDiscount;
-        });
+                                        totalWithoutTax += afterDiscount;
+                                    });
 
-        let taxRate = parseFloat($('#tax_id option:selected').data('tax-rate')) || 0;
-        let taxAmount = (totalWithoutTax * taxRate) / 100;
-        let finalTotal = totalWithoutTax + taxAmount;
+                                    let taxRate = parseFloat($('#tax_id option:selected').data('tax-rate')) || 0;
+                                    let taxAmount = (totalWithoutTax * taxRate) / 100;
+                                    let finalTotal = totalWithoutTax + taxAmount;
 
-        $('#po_grand_total_amount').val(finalTotal.toFixed(2));
-    }
-});
-</script>
+                                    $('#po_grand_total_amount').val(finalTotal.toFixed(2));
 
 
-                    <!-- ========== 2) NO CONFLICT SCRIPT ========== -->
-                
+                                    let remaining = parseFloat($('#remaining_amount').val()) || 0;
 
-                    <!-- ========== 3) FORM VALIDATION & ADD ROW SCRIPT ========== -->
-                    <script>
-                        $(document).ready(function() {
-
-                            var validator = $("#forms").validate({
-
-                                ignore: [],
-                                rules: {
-
-                                    vendor_type_id: {
-                                        required: true
-                                    },
-                                    contact_person_name: {
-                                        required: true
-                                    },
-                                    contact_person_number: {
-                                        required: true
-                                    },
-                                    tax_type: {
-                                        required: true
-                                    },
-                                    tax_id: {
-                                        required: true
-                                    },
-                                    invoice_date: {
-                                        required: true
-                                    },
-                                    payment_terms: {
-                                        required: true
-                                    },
-                                    transport_dispatch: {
-                                        required: true
-                                    },
-                                    note: {
-                                        required: true
-                                    },
-
-                                    'addmore[0][part_no_id]': {
-                                        required: true
-                                    },
-                                    'addmore[0][discount]': {
-                                        required: true
-                                    },
-                                    'addmore[0][quantity]': {
-                                        required: true
-                                    },
-                                    'addmore[0][hsn_id]': {
-                                        required: true,
-                                        number: true
-                                    },
-                                    'addmore[0][rate]': {
-                                        required: true,
-                                        number: true
-                                    },
-                                    'addmore[0][amount]': {
-                                        required: true
-                                    },
-                                },
-
-                                messages: {
-                                    vendor_type_id: {
-                                        required: "Please select Vendor Type"
-                                    },
-                                    contact_person_name: {
-                                        required: "Enter Contact Person Name"
-                                    },
-                                    contact_person_number: {
-                                        required: "Enter Contact Person Number"
-                                    },
-                                    tax_type: {
-                                        required: "Select Tax Type"
-                                    },
-                                    tax_id: {
-                                        required: "Select Tax"
-                                    },
-                                    invoice_date: {
-                                        required: "Please select Purchase Order Date"
-                                    },
-                                    payment_terms: {
-                                        required: "Enter Payment Terms"
-                                    },
-                                    transport_dispatch: {
-                                        required: "Enter Transport/Dispatch field"
-                                    },
-                                    note: {
-                                        required: "Enter Remark"
-                                    },
-
-                                    'addmore[0][part_no_id]': {
-                                        required: "Please Enter the Part Number"
-                                    },
-                                    'addmore[0][discount]': {
-                                        required: "Please Enter the Discount"
-                                    },
-                                    'addmore[0][quantity]': {
-                                        required: "Please Enter the Quantity"
-                                    },
-                                    'addmore[0][rate]': {
-                                        required: "Please Enter the Rate"
-                                    },
-                                    'addmore[0][amount]': {
-                                        required: "Please Enter the Amount"
-                                    },
-                                },
-
-                                errorPlacement: function(error, element) {
-
-                                    if (element.hasClass("select2-hidden-accessible")) {
-                                        var select2Container = element.next('.select2');
-                                        error.insertAfter(select2Container);
-                                    } else if (
-                                        element.hasClass("part_no_id") ||
-                                        element.hasClass("discount") ||
-                                        element.hasClass("quantity") ||
-                                        element.hasClass("unit") ||
-                                        element.hasClass("rate") ||
-                                        element.hasClass("total_amount")
-                                    ) {
-                                        error.insertAfter(element);
+                                    if (finalTotal > remaining) {
+                                        alert("PO amount exceeds remaining estimation amount!");
+                                        $('.login-submit-cs').prop('disabled', true);
                                     } else {
-                                        error.insertAfter(element);
+                                        $('.login-submit-cs').prop('disabled', false);
                                     }
                                 }
-
                             });
+                        </script>
 
-                            $(document).on('change', '.part_no_id', function() {
-                                if ($(this).val()) $(this).valid();
-                            });
 
-                            function initializeValidation(context) {
-                                $(context).find('.part_no_id').rules("add", {
-                                    required: true
-                                });
-                                $(context).find('.discount').rules("add", {
-                                    required: true
-                                });
-                                $(context).find('.quantity').rules("add", {
-                                    required: true,
-                                    digits: true
-                                });
-                                $(context).find('.unit').rules("add", {
-                                    required: true
-                                });
-                                $(context).find('.rate').rules("add", {
-                                    required: true,
-                                    number: true
-                                });
-                                $(context).find('.total_amount').rules("add", {
-                                    required: true
-                                });
-                            }
-   $('.part_no_id').select2({
-        width: '100%'
-    });
-                            $("#add_more_btn").click(function() {
+                        <!-- ========== 2) NO CONFLICT SCRIPT ========== -->
 
-                                var i_count = $('#i_id').val();
-                                var i = parseInt(i_count) + 1;
-                                $('#i_id').val(i);
 
-                                var newRow = `
+                        <!-- ========== 3) FORM VALIDATION & ADD ROW SCRIPT ========== -->
+                        <script>
+                            $(document).ready(function() {
+
+                                var validator = $("#forms").validate({
+
+                                    ignore: [],
+                                    rules: {
+
+                                        vendor_type_id: {
+                                            required: true
+                                        },
+                                        contact_person_name: {
+                                            required: true
+                                        },
+                                        contact_person_number: {
+                                            required: true
+                                        },
+                                        tax_type: {
+                                            required: true
+                                        },
+                                        tax_id: {
+                                            required: true
+                                        },
+                                        invoice_date: {
+                                            required: true
+                                        },
+                                        payment_terms: {
+                                            required: true
+                                        },
+                                        transport_dispatch: {
+                                            required: true
+                                        },
+                                        note: {
+                                            required: true
+                                        },
+
+                                        'addmore[0][part_no_id]': {
+                                            required: true
+                                        },
+                                        'addmore[0][discount]': {
+                                            required: true
+                                        },
+                                        'addmore[0][quantity]': {
+                                            required: true
+                                        },
+                                        'addmore[0][hsn_id]': {
+                                            required: true,
+                                            number: true
+                                        },
+                                        'addmore[0][rate]': {
+                                            required: true,
+                                            number: true
+                                        },
+                                        'addmore[0][amount]': {
+                                            required: true
+                                        },
+                                    },
+
+                                    messages: {
+                                        vendor_type_id: {
+                                            required: "Please select Vendor Type"
+                                        },
+                                        contact_person_name: {
+                                            required: "Enter Contact Person Name"
+                                        },
+                                        contact_person_number: {
+                                            required: "Enter Contact Person Number"
+                                        },
+                                        tax_type: {
+                                            required: "Select Tax Type"
+                                        },
+                                        tax_id: {
+                                            required: "Select Tax"
+                                        },
+                                        invoice_date: {
+                                            required: "Please select Purchase Order Date"
+                                        },
+                                        payment_terms: {
+                                            required: "Enter Payment Terms"
+                                        },
+                                        transport_dispatch: {
+                                            required: "Enter Transport/Dispatch field"
+                                        },
+                                        note: {
+                                            required: "Enter Remark"
+                                        },
+
+                                        'addmore[0][part_no_id]': {
+                                            required: "Please Enter the Part Number"
+                                        },
+                                        'addmore[0][discount]': {
+                                            required: "Please Enter the Discount"
+                                        },
+                                        'addmore[0][quantity]': {
+                                            required: "Please Enter the Quantity"
+                                        },
+                                        'addmore[0][rate]': {
+                                            required: "Please Enter the Rate"
+                                        },
+                                        'addmore[0][amount]': {
+                                            required: "Please Enter the Amount"
+                                        },
+                                    },
+
+                                    errorPlacement: function(error, element) {
+
+                                        if (element.hasClass("select2-hidden-accessible")) {
+                                            var select2Container = element.next('.select2');
+                                            error.insertAfter(select2Container);
+                                        } else if (
+                                            element.hasClass("part_no_id") ||
+                                            element.hasClass("discount") ||
+                                            element.hasClass("quantity") ||
+                                            element.hasClass("unit") ||
+                                            element.hasClass("rate") ||
+                                            element.hasClass("total_amount")
+                                        ) {
+                                            error.insertAfter(element);
+                                        } else {
+                                            error.insertAfter(element);
+                                        }
+                                    }
+
+                                });
+
+                                $(document).on('change', '.part_no_id', function() {
+                                    if ($(this).val()) $(this).valid();
+                                });
+
+                                function initializeValidation(context) {
+                                    $(context).find('.part_no_id').rules("add", {
+                                        required: true
+                                    });
+                                    $(context).find('.discount').rules("add", {
+                                        required: true
+                                    });
+                                    $(context).find('.quantity').rules("add", {
+                                        required: true,
+                                        digits: true
+                                    });
+                                    $(context).find('.unit').rules("add", {
+                                        required: true
+                                    });
+                                    $(context).find('.rate').rules("add", {
+                                        required: true,
+                                        number: true
+                                    });
+                                    $(context).find('.total_amount').rules("add", {
+                                        required: true
+                                    });
+                                }
+                                $('.part_no_id').select2({
+                                    width: '100%'
+                                });
+                                $("#add_more_btn").click(function() {
+
+                                    var i_count = $('#i_id').val();
+                                    var i = parseInt(i_count) + 1;
+                                    $('#i_id').val(i);
+
+                                    var newRow = `
                 <tr>
                     <td>
                 <input type="text" name="id" class="form-control" style="min-width:15px" readonly value="${i + 1}"> <!-- This will start numbering from 2 -->
@@ -749,72 +780,71 @@ $(document).ready(function () {
                 </tr>
             `;
 
-                                $("#purchase_order_table tbody").append(newRow);
+                                    $("#purchase_order_table tbody").append(newRow);
 
+                                    $("#purchase_order_table tbody tr:last .select2").select2({
+                                        width: '100%'
+                                    });
+
+                                    validator.resetForm();
+                                    initializeValidation($("#purchase_order_table tbody tr:last"));
+                                });
                                 $("#purchase_order_table tbody tr:last .select2").select2({
                                     width: '100%'
                                 });
+                                $(document).on("click", ".remove-row", function() {
 
-                                validator.resetForm();
-                                initializeValidation($("#purchase_order_table tbody tr:last"));
+                                    var i = parseInt($('#i_id').val()) - 1;
+                                    $('#i_id').val(i);
+
+                                    $(this).closest("tr").remove();
+                                    validator.resetForm();
+                                    calculateGrandTotal();
+                                });
+
+                                initializeValidation($("#purchase_order_table"));
+
                             });
- $("#purchase_order_table tbody tr:last .select2").select2({
-            width: '100%'
-        });
-                            $(document).on("click", ".remove-row", function() {
+                        </script>
+                        <!-- ========== 5) HSN FETCH SCRIPT ========== -->
+                        <script>
+                            $(document).ready(function() {
 
-                                var i = parseInt($('#i_id').val()) - 1;
-                                $('#i_id').val(i);
 
-                                $(this).closest("tr").remove();
-                                validator.resetForm();
-                                calculateGrandTotal();
-                            });
 
-                            initializeValidation($("#purchase_order_table"));
+                                $(document).on('change', '.part_no_id', function(e) {
 
-                        });
-                    </script>
-                    <!-- ========== 5) HSN FETCH SCRIPT ========== -->
-                    <script>
-                        $(document).ready(function() {
+                                    var partNoId = $(this).val();
+                                    var currentRow = $(this).closest('tr');
 
-                          
+                                    if (partNoId) {
 
-                            $(document).on('change', '.part_no_id', function(e) {
+                                        $.ajax({
+                                            url: '{{ route('get-hsn-for-part') }}',
+                                            type: 'GET',
+                                            data: {
+                                                part_no_id: partNoId
+                                            },
+                                            success: function(response) {
 
-                                var partNoId = $(this).val();
-                                var currentRow = $(this).closest('tr');
+                                                if (response.part && response.part.length > 0) {
 
-                                if (partNoId) {
+                                                    currentRow.find('.hsn_name').val(response.part[0].name);
+                                                    currentRow.find('.hsn_id').val(response.part[0].id);
 
-                                    $.ajax({
-                                        url: '{{ route('get-hsn-for-part') }}',
-                                        type: 'GET',
-                                        data: {
-                                            part_no_id: partNoId
-                                        },
-                                        success: function(response) {
-
-                                            if (response.part && response.part.length > 0) {
-
-                                                currentRow.find('.hsn_name').val(response.part[0].name);
-                                                currentRow.find('.hsn_id').val(response.part[0].id);
-
-                                            } else {
-                                                alert("HSN not found for the selected part.");
+                                                } else {
+                                                    alert("HSN not found for the selected part.");
+                                                }
+                                            },
+                                            error: function(xhr, status, error) {
+                                                alert("Error fetching HSN. Please try again.");
                                             }
-                                        },
-                                        error: function(xhr, status, error) {
-                                            alert("Error fetching HSN. Please try again.");
-                                        }
-                                    });
+                                        });
 
-                                }
+                                    }
+                                });
+
                             });
-
-                        });
-                    </script>
-  @endpush
-
+                        </script>
+                    @endpush
                 @endsection

@@ -1,35 +1,49 @@
 @extends('admin.layouts.master')
 @section('content')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-<style>
-    /* keep the inline input styled as before */
-.custom-dropdown { position: relative; display: inline-block; }
+    <style>
+        /* keep the inline input styled as before */
+        .custom-dropdown {
+            position: relative;
+            display: inline-block;
+        }
 
-/* hidden by default when inside dropdown; when moved to body we still use same class */
-.dropdown-options {
-  display: none; 
-  max-height: 320px;
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  background: #fff;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-  z-index: 3000;
-  padding: 8px;
-  border-radius: 4px;
-}
+        /* hidden by default when inside dropdown; when moved to body we still use same class */
+        .dropdown-options {
+            display: none;
+            max-height: 320px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            background: #fff;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+            z-index: 3000;
+            padding: 8px;
+            border-radius: 4px;
+        }
 
-/* option hover */
-.dropdown-options .option { padding: 6px 8px; cursor: pointer; }
-.dropdown-options .option:hover { background: #f2f2f2; }
+        /* option hover */
+        .dropdown-options .option {
+            padding: 6px 8px;
+            cursor: pointer;
+        }
 
-/* ensure search box fills area */
-.dropdown-options .search-box { margin-bottom: 8px; width: 100%; box-sizing: border-box; }
+        .dropdown-options .option:hover {
+            background: #f2f2f2;
+        }
 
-/* when appended to body we'll add a helper class to show it */
-.dropdown-opened { display: block !important; }
+        /* ensure search box fills area */
+        .dropdown-options .search-box {
+            margin-bottom: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
 
-</style>
-  
+        /* when appended to body we'll add a helper class to show it */
+        .dropdown-opened {
+            display: block !important;
+        }
+    </style>
+
     <div class="">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list margin-bottom">
@@ -84,17 +98,24 @@
                                         value="{{ $id }}">
                                     <input type="hidden" name="id" id="id" value="{{ $productDetails->id }}">
                                     <div class="row">
-                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
                                             <label for="product_name">Product Name:</label>
                                             <input type="text" class="form-control" id="name" name="product_name"
                                                 value="{{ $productDetails->product_name }}" placeholder="Enter Product Name"
                                                 readonly>
                                         </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
                                             <label for="description">Description:</label>
                                             <input type="text" class="form-control" id="description" name="description"
                                                 value="{{ $productDetails->description }}" placeholder="Enter Description"
                                                 readonly>
+                                        </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                            <label for="total_estimation_amount">Estimation Amount :</label>
+                                            <input type="text" class="form-control" id="total_estimation_amount"
+                                                name="total_estimation_amount"
+                                                value="{{ $productDetails->total_estimation_amount }}"
+                                                placeholder="Enter Description" readonly>
                                         </div>
                                     </div>
 
@@ -171,9 +192,10 @@
                                                                     type="text" step="any" required
                                                                     value="{{ \Carbon\Carbon::parse($item->updated_at)->format('d-m-Y H:i') }}"
                                                                     readonly>
-                                                                <input type="hidden" class="total_amount"
-                                                                    name="addmore[{{ $index }}][total_amount]"
-                                                                    value="{{ \Carbon\Carbon::parse($item->updated_at)->format('d-m-Y H:i') }}">
+                                                                {{-- <input type="hidden" class="total_amount"
+                                                                
+                                                                    name="addmore[{{ $index }}][total_amount]" 
+                                                                    value="{{ \Carbon\Carbon::parse($item->updated_at)->format('d-m-Y H:i') }}"> --}}
                                                             </td>
                                                             {{-- old --}}
                                                             {{-- <td>
@@ -217,27 +239,39 @@
                                                                     </div>
                                                                 </div>
                                                             </td> --}}
-<td>
-    <div class="custom-dropdown">
-        <input type="hidden" name="addmore[{{ $index }}][part_item_id]" class="part_no" value="{{ $item->part_item_id }}">
-        
-        @php
-            $selected = $dataOutputPartItem->firstWhere('id', $item->part_item_id);
-        @endphp
+                                                            <td>
+                                                                <div class="custom-dropdown">
+                                                                    <input type="hidden"
+                                                                        name="addmore[{{ $index }}][part_item_id]"
+                                                                        class="part_no" value="{{ $item->part_item_id }}">
 
-        <input type="text" class="dropdown-input form-control"
-               value="{{ $selected ? $selected->description : '' }}" readonly>
+                                                                    @php
+                                                                        $selected = $dataOutputPartItem->firstWhere(
+                                                                            'id',
+                                                                            $item->part_item_id,
+                                                                        );
+                                                                    @endphp
 
-        <div class="dropdown-options dropdown-height" style="display:none; width: 750px !important;">
-            <input type="text" class="search-box form-control" placeholder="Search...">
-            <div class="options-list">
-                @foreach ($dataOutputPartItem as $data)
-                    <div class="option" data-id="{{ $data->id }}">{{ $data->description }}</div>
-                @endforeach
-            </div>
-        </div>
-    </div>
-</td>
+                                                                    <input type="text"
+                                                                        class="dropdown-input form-control"
+                                                                        value="{{ $selected ? $selected->description : '' }}"
+                                                                        readonly>
+
+                                                                    <div class="dropdown-options dropdown-height"
+                                                                        style="display:none; width: 750px !important;">
+                                                                        <input type="text"
+                                                                            class="search-box form-control"
+                                                                            placeholder="Search...">
+                                                                        <div class="options-list">
+                                                                            @foreach ($dataOutputPartItem as $data)
+                                                                                <div class="option"
+                                                                                    data-id="{{ $data->id }}">
+                                                                                    {{ $data->description }}</div>
+                                                                            @endforeach
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
 
                                                             {{-- <td>
                                                                 <div class="custom-dropdown"
@@ -277,7 +311,8 @@
                                                                     type="number" step="any" required
                                                                     value="{{ $item->basic_rate }}" readonly>
                                                                 <input type="hidden" class="total_amount"
-                                                                    name="addmore[{{ $index }}][total_amount]"
+                                                                    {{-- name="addmore[{{ $index }}][total_amount]" --}}
+                                                                    name="addmore[{{ $index }}][items_used_total_amount]"
                                                                     value="{{ $item->basic_rate * $item->quantity }}">
                                                             </td>
 
@@ -364,6 +399,18 @@
                                                     @endforeach
                                                 @endforeach
                                             </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="4" class="text-end"><strong>Total Amount :</strong>
+                                                    </td>
+                                                    <td colspan="2">
+                                                        <input type="text" id="grand_total" class="form-control"
+                                                            readonly value="0">
+                                                    </td>
+                                                    <td colspan="2"></td>
+                                                </tr>
+                                            </tfoot>
+
                                         </table>
                                     </div>
 
@@ -396,376 +443,396 @@
         <input type="hidden" name="delete_id" id="delete_id" value="">
     </form>
 
-   @push('scripts')
-    <script>
-        $(function() {
-  // Keep a reference so we can restore menu back to its original container if needed
-  let menuState = {
-    attachedToBody: false,
-    originalParent: null,
-    $currentDropdown: null
-  };
+    @push('scripts')
+        <script>
+            $(function() {
+                // Keep a reference so we can restore menu back to its original container if needed
+                let menuState = {
+                    attachedToBody: false,
+                    originalParent: null,
+                    $currentDropdown: null
+                };
 
-  function openDropdown($dropdown) {
-    // if another dropdown opened -> close it first
-    closeDropdown();
+                function openDropdown($dropdown) {
+                    // if another dropdown opened -> close it first
+                    closeDropdown();
 
-    const $options = $dropdown.find('.dropdown-options');
-    const $input = $dropdown.find('.dropdown-input');
+                    const $options = $dropdown.find('.dropdown-options');
+                    const $input = $dropdown.find('.dropdown-input');
 
-    // remember original parent to restore later
-    menuState.originalParent = $options.parent();
-    menuState.$currentDropdown = $dropdown;
+                    // remember original parent to restore later
+                    menuState.originalParent = $options.parent();
+                    menuState.$currentDropdown = $dropdown;
 
-    // move to body
-    $options.appendTo('body');
-    menuState.attachedToBody = true;
+                    // move to body
+                    $options.appendTo('body');
+                    menuState.attachedToBody = true;
 
-    // set width same as input or a fixed width (your markup used 750px)
-    let width = Math.max($input.outerWidth(), 300);
-    $options.css({ width: width + 'px' });
+                    // set width same as input or a fixed width (your markup used 750px)
+                    let width = Math.max($input.outerWidth(), 300);
+                    $options.css({
+                        width: width + 'px'
+                    });
 
-    // position right under input
-    const offset = $input.offset();
-    const top = offset.top + $input.outerHeight();
-    const left = offset.left;
-    $options.css({
-      position: 'absolute',
-      top: top + 'px',
-      left: left + 'px'
-    });
+                    // position right under input
+                    const offset = $input.offset();
+                    const top = offset.top + $input.outerHeight();
+                    const left = offset.left;
+                    $options.css({
+                        position: 'absolute',
+                        top: top + 'px',
+                        left: left + 'px'
+                    });
 
-    $options.addClass('dropdown-opened').show();
-    $options.find('.search-box').val('').focus().trigger('input');
-  }
+                    $options.addClass('dropdown-opened').show();
+                    $options.find('.search-box').val('').focus().trigger('input');
+                }
 
-  function closeDropdown() {
-    if (!menuState.attachedToBody || !menuState.$currentDropdown) return;
+                function closeDropdown() {
+                    if (!menuState.attachedToBody || !menuState.$currentDropdown) return;
 
-    const $options = $('body').find('.dropdown-options.dropdown-opened');
-    // restore DOM (move back to original parent)
-    if (menuState.originalParent && menuState.originalParent.length) {
-      $options.appendTo(menuState.originalParent);
-    }
-    $options.removeClass('dropdown-opened').hide();
-    menuState.attachedToBody = false;
-    menuState.originalParent = null;
-    menuState.$currentDropdown = null;
-  }
-
-  // Click on input -> open menu (append to body)
-  $(document).on('click', '.dropdown-input', function(e) {
-    e.stopPropagation();
-    const $dropdown = $(this).closest('.custom-dropdown');
-    openDropdown($dropdown);
-  });
-
-  // Click on option (works even when menu is in body)
-  $(document).on('click', '.dropdown-options .option', function(e) {
-    e.stopPropagation();
-    const selectedText = $(this).text();
-    const selectedId = $(this).data('id');
-
-    // if menu currently attached to body, find which dropdown this menu belongs to by tracking menuState
-    let $dropdown = menuState.$currentDropdown;
-    if (!$dropdown) {
-      // fallback: menu is inside original parent
-      $dropdown = $(this).closest('.custom-dropdown');
-    }
-
-    // set values in the dropdown row
-    $dropdown.find('.dropdown-input').val(selectedText);
-    $dropdown.find('.part_no').val(selectedId);
-
-    // run your existing AJAX fetch if needed (fetch rate)
-    const $row = $dropdown.closest('tr');
-    $.ajax({
-      url: '{{ route("get-part-item-rate") }}',
-      type: 'GET',
-      data: { part_item_id: selectedId },
-      success: function(response) {
-        if (response.status === 'success') {
-          $row.find('.basic_rate').val(response.basic_rate);
-          // update total using your existing function if needed:
-          if (typeof updateTotalAmount === 'function') {
-            updateTotalAmount($row);
-          }
-        } else {
-          $row.find('.basic_rate').val('');
-        }
-      }
-    });
-
-    // close and restore menu
-    closeDropdown();
-  });
-
-  // search inside options (works both when moved to body or original)
-  $(document).on('input', '.dropdown-options .search-box', function() {
-    const searchTerm = $(this).val().toLowerCase();
-    const $options = $(this).siblings('.options-list').find('.option');
-    $options.each(function() {
-      const text = $(this).text().toLowerCase();
-      $(this).toggle(text.includes(searchTerm));
-    });
-  });
-
-  // close on click outside
-  $(document).on('click', function(e) {
-    if (!$(e.target).closest('.dropdown-options').length && !$(e.target).closest('.dropdown-input').length) {
-      closeDropdown();
-    }
-  });
-
-  // reposition on window scroll/resize so the menu stays aligned
-  $(window).on('scroll resize', function() {
-    if (!menuState.attachedToBody || !menuState.$currentDropdown) return;
-    const $dropdown = menuState.$currentDropdown;
-    const $input = $dropdown.find('.dropdown-input');
-    const $options = $('body').find('.dropdown-options.dropdown-opened');
-
-    if ($input.length && $options.length) {
-      const offset = $input.offset();
-      $options.css({
-        top: (offset.top + $input.outerHeight()) + 'px',
-        left: offset.left + 'px'
-      });
-    } else {
-      closeDropdown();
-    }
-  });
-
-  // Optional: restore on form destroy / navigate away to avoid orphaned nodes
-  $(window).on('beforeunload', function() { closeDropdown(); });
-});
-
-
-        $(document).ready(function() {
-            // Show/hide dropdown
-            $(document).on('click', '.dropdown-input', function() {
-                $('.dropdown-options').hide(); // close others
-                $(this).siblings('.dropdown-options').toggle();
-                $(this).siblings('.dropdown-options').find('.search-box').val('').trigger('input').focus();
-            });
-
-            // Search filter
-            $(document).on('input', '.search-box', function() {
-                const searchTerm = $(this).val().toLowerCase();
-                const $options = $(this).siblings('.options-list').find('.option');
-                $options.each(function() {
-                    const text = $(this).text().toLowerCase();
-                    $(this).toggle(text.includes(searchTerm));
-                });
-            });
-
-            // Select option
-            // $(document).on('click', '.custom-dropdown .option', function () {
-            //     const selectedText = $(this).text();
-            //     const selectedId = $(this).data('id');
-            //     const $dropdown = $(this).closest('.custom-dropdown');
-            //     $dropdown.find('.dropdown-input').val(selectedText);
-            //     $dropdown.find('.part_no').val(selectedId);
-            //     $dropdown.find('.dropdown-options').hide();
-            // });
-
-            function updateTotalAmount($row) {
-                let rate = parseFloat($row.find('.basic_rate').val()) || 0;
-                let qty = parseFloat($row.find('.quantity').val()) || 0;
-                let total = rate * qty;
-                $row.find('.total_amount').val(total.toFixed(2)); // store in hidden input
-            }
-
-            $("#purchase_order_table").on('input', '.basic_rate, .quantity', function() {
-                let $row = $(this).closest('tr');
-                updateTotalAmount($row);
-            });
-
-
-            // Select option
-            $(document).on('click', '.custom-dropdown .option', function() {
-                const selectedText = $(this).text();
-                const selectedId = $(this).data('id');
-                const $dropdown = $(this).closest('.custom-dropdown');
-                const $row = $dropdown.closest('tr');
-
-                // Set the selected text & ID
-                $dropdown.find('.dropdown-input').val(selectedText);
-                $dropdown.find('.part_no').val(selectedId);
-                $dropdown.find('.dropdown-options').hide();
-
-                // Fetch the basic rate via AJAX
-                $.ajax({
-                    url: '{{ route('get-part-item-rate') }}',
-                    type: 'GET',
-                    data: {
-                        part_item_id: selectedId
-                    },
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            $row.find('.basic_rate').val(response.basic_rate);
-                            updateTotalAmount($row);
-                        } else {
-                            $row.find('.basic_rate').val('');
-                        }
+                    const $options = $('body').find('.dropdown-options.dropdown-opened');
+                    // restore DOM (move back to original parent)
+                    if (menuState.originalParent && menuState.originalParent.length) {
+                        $options.appendTo(menuState.originalParent);
                     }
-                });
-            });
-
-            // Close on click outside
-            $(document).click(function(e) {
-                if (!$(e.target).closest('.custom-dropdown').length) {
-                    $('.dropdown-options').hide();
+                    $options.removeClass('dropdown-opened').hide();
+                    menuState.attachedToBody = false;
+                    menuState.originalParent = null;
+                    menuState.$currentDropdown = null;
                 }
-            });
-        });
-    </script>
 
-    <script>
-        function removeRow(button) {
-            // Find the row containing the button
-            var row = button.closest('tr');
-            // Remove the row from the table
-            row.remove();
-        }
-    </script>
-    <script>
-        $(document).ready(function() {
-            // Initialize form validation
-            $("#addProductForm").validate({
-                submitHandler: function(form) {
-                    // Perform stock validation for each row
-                    var isValid = true;
-                    $('#purchase_order_table tbody tr').each(function() {
-                        // var partItemId = $(this).find('select[name*="[part_item_id]"]').val();
-                        // var quantity = $(this).find('input[name*="[quantity]"]').val();
-                        var partItemId = $(this).find('input.part_no').val();
-                        var quantity = $(this).find('.quantity').val();
+                // Click on input -> open menu (append to body)
+                $(document).on('click', '.dropdown-input', function(e) {
+                    e.stopPropagation();
+                    const $dropdown = $(this).closest('.custom-dropdown');
+                    openDropdown($dropdown);
+                });
 
-                        // Add your stock validation logic here
-                        // If stock is insufficient, set isValid to false
-                    });
-                    if (isValid) {
-                        form.submit();
-                    } else {
-                        alert('Please ensure all items have sufficient stock.');
+                // Click on option (works even when menu is in body)
+                $(document).on('click', '.dropdown-options .option', function(e) {
+                    e.stopPropagation();
+                    const selectedText = $(this).text();
+                    const selectedId = $(this).data('id');
+
+                    // if menu currently attached to body, find which dropdown this menu belongs to by tracking menuState
+                    let $dropdown = menuState.$currentDropdown;
+                    if (!$dropdown) {
+                        // fallback: menu is inside original parent
+                        $dropdown = $(this).closest('.custom-dropdown');
                     }
-                }
-            });
-        });
-    </script>
 
-    <script>
-        $(document).ready(function() {
-            const purchaseOrderTable = $("#purchase_order_table");
-            const validationMessages = {
-                part_no: "Please select a Part Item",
-                quantity: {
-                    required: "Please enter the Quantity",
-                    digits: "Quantity must be a valid number",
-                },
-                unit: "Please select a Unit",
-                materialSend: "Please check this box if materials will be sent for production",
-            };
+                    // set values in the dropdown row
+                    $dropdown.find('.dropdown-input').val(selectedText);
+                    $dropdown.find('.part_no').val(selectedId);
 
-            // Initialize validation rules
-            function initializeValidation(context) {
-                $(context).find('.part_no').each(function() {
-                    $(this).rules("add", {
-                        required: true,
-                        messages: {
-                            required: validationMessages.part_no
-                        }
-                    });
-                });
-                $(context).find('.quantity').each(function() {
-                    $(this).rules("add", {
-                        required: true,
-                        digits: true,
-                        messages: validationMessages.quantity
-                    });
-                });
-                $(context).find('.unit').each(function() {
-                    $(this).rules("add", {
-                        required: true,
-                        messages: {
-                            required: validationMessages.unit
-                        }
-                    });
-                });
-                $(context).find('.material-send-checkbox').each(function() {
-                    $(this).rules("add", {
-                        required: true,
-                        messages: {
-                            required: validationMessages.materialSend
-                        }
-                    });
-                });
-            }
-
-            let rowCount = purchaseOrderTable.find("tbody tr").length;
-
-            // Function to check stock availability
-
-            function checkStock($row) {
-                const quantity = $row.find('.quantity').val();
-                const partItemId = $row.find('input.part_no').val(); // ✅ FIXED
-                const materialSendProduction = $row.find('.material-send-checkbox').is(':checked') ? 1 : 0;
-                const quantityMinusStatus = $row.find('input[name*="quantity_minus_status"]').val();
-                const stockAvailableMessage = $row.find('.stock-available');
-
-                // Reset Save button to enabled
-                $("#saveBtn").prop("disabled", false);
-
-                if (materialSendProduction === 1 && quantityMinusStatus === 'done') {
-                    stockAvailableMessage.text('Stock check skipped').css('color', 'blue');
-                    return;
-                }
-
-                if (partItemId && quantity) {
+                    // run your existing AJAX fetch if needed (fetch rate)
+                    const $row = $dropdown.closest('tr');
                     $.ajax({
-                        url: '{{ route('check-stock-quantity') }}',
+                        url: '{{ route('get-part-item-rate') }}',
                         type: 'GET',
                         data: {
-                            part_item_id: partItemId,
-                            quantity: quantity,
-                            material_send_production: materialSendProduction,
-                            quantity_minus_status: quantityMinusStatus
+                            part_item_id: selectedId
                         },
                         success: function(response) {
-                            if (response.status === 'error') {
-                                // ❌ Insufficient stock → Disable Save Button
-                                $("#saveBtn").prop("disabled", true);
-                                stockAvailableMessage.text('Insufficient stock. Available: ' + response
-                                        .available_quantity)
-                                    .css('color', 'red');
+                            if (response.status === 'success') {
+                                $row.find('.basic_rate').val(response.basic_rate);
+                                // update total using your existing function if needed:
+                                if (typeof updateTotalAmount === 'function') {
+                                    updateTotalAmount($row);
+                                }
                             } else {
-                                stockAvailableMessage.text('Stock is sufficient').css('color', 'green');
+                                $row.find('.basic_rate').val('');
                             }
-                        },
-                        // error: function () {
-                        //     stockAvailableMessage.text('Error checking stock').css('color', 'red');
-                        // }
-                        error: function(xhr) {
-                            let msg = 'Error checking stock';
-                            if (xhr.responseJSON && xhr.responseJSON.message) {
-                                msg = xhr.responseJSON.message;
-                            }
-                            stockAvailableMessage.text(msg).css('color', 'red');
                         }
-
                     });
-                } else {
-                    stockAvailableMessage.text('');
+
+                    // close and restore menu
+                    closeDropdown();
+                });
+
+                // search inside options (works both when moved to body or original)
+                $(document).on('input', '.dropdown-options .search-box', function() {
+                    const searchTerm = $(this).val().toLowerCase();
+                    const $options = $(this).siblings('.options-list').find('.option');
+                    $options.each(function() {
+                        const text = $(this).text().toLowerCase();
+                        $(this).toggle(text.includes(searchTerm));
+                    });
+                });
+
+                // close on click outside
+                $(document).on('click', function(e) {
+                    if (!$(e.target).closest('.dropdown-options').length && !$(e.target).closest(
+                            '.dropdown-input').length) {
+                        closeDropdown();
+                    }
+                });
+
+                // reposition on window scroll/resize so the menu stays aligned
+                $(window).on('scroll resize', function() {
+                    if (!menuState.attachedToBody || !menuState.$currentDropdown) return;
+                    const $dropdown = menuState.$currentDropdown;
+                    const $input = $dropdown.find('.dropdown-input');
+                    const $options = $('body').find('.dropdown-options.dropdown-opened');
+
+                    if ($input.length && $options.length) {
+                        const offset = $input.offset();
+                        $options.css({
+                            top: (offset.top + $input.outerHeight()) + 'px',
+                            left: offset.left + 'px'
+                        });
+                    } else {
+                        closeDropdown();
+                    }
+                });
+
+                // Optional: restore on form destroy / navigate away to avoid orphaned nodes
+                $(window).on('beforeunload', function() {
+                    closeDropdown();
+                });
+            });
+
+
+            $(document).ready(function() {
+                // Show/hide dropdown
+                $(document).on('click', '.dropdown-input', function() {
+                    $('.dropdown-options').hide(); // close others
+                    $(this).siblings('.dropdown-options').toggle();
+                    $(this).siblings('.dropdown-options').find('.search-box').val('').trigger('input').focus();
+                });
+
+                // Search filter
+                $(document).on('input', '.search-box', function() {
+                    const searchTerm = $(this).val().toLowerCase();
+                    const $options = $(this).siblings('.options-list').find('.option');
+                    $options.each(function() {
+                        const text = $(this).text().toLowerCase();
+                        $(this).toggle(text.includes(searchTerm));
+                    });
+                });
+
+                // Select option
+                // $(document).on('click', '.custom-dropdown .option', function () {
+                //     const selectedText = $(this).text();
+                //     const selectedId = $(this).data('id');
+                //     const $dropdown = $(this).closest('.custom-dropdown');
+                //     $dropdown.find('.dropdown-input').val(selectedText);
+                //     $dropdown.find('.part_no').val(selectedId);
+                //     $dropdown.find('.dropdown-options').hide();
+                // });
+
+                function updateTotalAmount($row) {
+                    let rate = parseFloat($row.find('.basic_rate').val()) || 0;
+                    let qty = parseFloat($row.find('.quantity').val()) || 0;
+                    let total = rate * qty;
+                    $row.find('.total_amount').val(total.toFixed(2)); // store in hidden input
+                    calculateGrandTotal(); // 👈 ADD THIS
                 }
+
+                $("#purchase_order_table").on('input', '.basic_rate, .quantity', function() {
+                    let $row = $(this).closest('tr');
+                    updateTotalAmount($row);
+                });
+
+
+                // Select option
+                $(document).on('click', '.custom-dropdown .option', function() {
+                    const selectedText = $(this).text();
+                    const selectedId = $(this).data('id');
+                    const $dropdown = $(this).closest('.custom-dropdown');
+                    const $row = $dropdown.closest('tr');
+
+                    // Set the selected text & ID
+                    $dropdown.find('.dropdown-input').val(selectedText);
+                    $dropdown.find('.part_no').val(selectedId);
+                    $dropdown.find('.dropdown-options').hide();
+
+                    // Fetch the basic rate via AJAX
+                    $.ajax({
+                        url: '{{ route('get-part-item-rate') }}',
+                        type: 'GET',
+                        data: {
+                            part_item_id: selectedId
+                        },
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                $row.find('.basic_rate').val(response.basic_rate);
+                                updateTotalAmount($row);
+                            } else {
+                                $row.find('.basic_rate').val('');
+                            }
+                        }
+                    });
+                });
+
+                // Close on click outside
+                $(document).click(function(e) {
+                    if (!$(e.target).closest('.custom-dropdown').length) {
+                        $('.dropdown-options').hide();
+                    }
+                });
+                calculateGrandTotal();
+            });
+        </script>
+
+        <script>
+            function removeRow(button) {
+                // Find the row containing the button
+                var row = button.closest('tr');
+                // Remove the row from the table
+                row.remove();
             }
+        </script>
+        <script>
+            $(document).ready(function() {
+                // Initialize form validation
+                $("#addProductForm").validate({
+                    submitHandler: function(form) {
+                        // Perform stock validation for each row
+                        var isValid = true;
+                        $('#purchase_order_table tbody tr').each(function() {
+                            // var partItemId = $(this).find('select[name*="[part_item_id]"]').val();
+                            // var quantity = $(this).find('input[name*="[quantity]"]').val();
+                            var partItemId = $(this).find('input.part_no').val();
+                            var quantity = $(this).find('.quantity').val();
+
+                            // Add your stock validation logic here
+                            // If stock is insufficient, set isValid to false
+                        });
+                        if (isValid) {
+                            form.submit();
+                        } else {
+                            alert('Please ensure all items have sufficient stock.');
+                        }
+                    }
+                });
+
+                $('#addProductForm').on('submit', function(e) {
+                    let total = parseFloat($('#grand_total').val()) || 0;
+                    let estimation = parseFloat($('#total_estimation_amount').val()) || 0;
+
+                    if (total > estimation) {
+                        e.preventDefault();
+                        Swal.fire('Error', 'Total amount exceeds estimation amount', 'error');
+                    }
+                });
+
+            });
+        </script>
+
+        <script>
+            $(document).ready(function() {
+                const purchaseOrderTable = $("#purchase_order_table");
+                const validationMessages = {
+                    part_no: "Please select a Part Item",
+                    quantity: {
+                        required: "Please enter the Quantity",
+                        digits: "Quantity must be a valid number",
+                    },
+                    unit: "Please select a Unit",
+                    materialSend: "Please check this box if materials will be sent for production",
+                };
+
+                // Initialize validation rules
+                function initializeValidation(context) {
+                    $(context).find('.part_no').each(function() {
+                        $(this).rules("add", {
+                            required: true,
+                            messages: {
+                                required: validationMessages.part_no
+                            }
+                        });
+                    });
+                    $(context).find('.quantity').each(function() {
+                        $(this).rules("add", {
+                            required: true,
+                            digits: true,
+                            messages: validationMessages.quantity
+                        });
+                    });
+                    $(context).find('.unit').each(function() {
+                        $(this).rules("add", {
+                            required: true,
+                            messages: {
+                                required: validationMessages.unit
+                            }
+                        });
+                    });
+                    $(context).find('.material-send-checkbox').each(function() {
+                        $(this).rules("add", {
+                            required: true,
+                            messages: {
+                                required: validationMessages.materialSend
+                            }
+                        });
+                    });
+                }
+
+                let rowCount = purchaseOrderTable.find("tbody tr").length;
+
+                // Function to check stock availability
+
+                function checkStock($row) {
+                    const quantity = $row.find('.quantity').val();
+                    const partItemId = $row.find('input.part_no').val(); // ✅ FIXED
+                    const materialSendProduction = $row.find('.material-send-checkbox').is(':checked') ? 1 : 0;
+                    const quantityMinusStatus = $row.find('input[name*="quantity_minus_status"]').val();
+                    const stockAvailableMessage = $row.find('.stock-available');
+
+                    // Reset Save button to enabled
+                    $("#saveBtn").prop("disabled", false);
+
+                    if (materialSendProduction === 1 && quantityMinusStatus === 'done') {
+                        stockAvailableMessage.text('Stock check skipped').css('color', 'blue');
+                        return;
+                    }
+
+                    if (partItemId && quantity) {
+                        $.ajax({
+                            url: '{{ route('check-stock-quantity') }}',
+                            type: 'GET',
+                            data: {
+                                part_item_id: partItemId,
+                                quantity: quantity,
+                                material_send_production: materialSendProduction,
+                                quantity_minus_status: quantityMinusStatus
+                            },
+                            success: function(response) {
+                                if (response.status === 'error') {
+                                    // ❌ Insufficient stock → Disable Save Button
+                                    $("#saveBtn").prop("disabled", true);
+                                    stockAvailableMessage.text('Insufficient stock. Available: ' + response
+                                            .available_quantity)
+                                        .css('color', 'red');
+                                } else {
+                                    stockAvailableMessage.text('Stock is sufficient').css('color', 'green');
+                                }
+                            },
+                            // error: function () {
+                            //     stockAvailableMessage.text('Error checking stock').css('color', 'red');
+                            // }
+                            error: function(xhr) {
+                                let msg = 'Error checking stock';
+                                if (xhr.responseJSON && xhr.responseJSON.message) {
+                                    msg = xhr.responseJSON.message;
+                                }
+                                stockAvailableMessage.text(msg).css('color', 'red');
+                            }
+
+                        });
+                    } else {
+                        stockAvailableMessage.text('');
+                    }
+                }
 
 
 
 
-            // Add new row functionality
-            $("#add_more_btn").click(function() {
-                rowCount++;
-                const newRow = `
+                // Add new row functionality
+                $("#add_more_btn").click(function() {
+                    rowCount++;
+                    const newRow = `
             <tr class="item-row">
                   <input type="hidden" name="addmore[${rowCount}][detail_id]" value="">
                 <td>
@@ -818,124 +885,136 @@
                     </button>
                 </td>
             </tr>`;
-                purchaseOrderTable.find("tbody").append(newRow);
+                    purchaseOrderTable.find("tbody").append(newRow);
 
-                const addedRow = purchaseOrderTable.find("tbody tr").last();
-                initializeValidation(addedRow);
-            });
+                    const addedRow = purchaseOrderTable.find("tbody tr").last();
+                    initializeValidation(addedRow);
+                });
 
-            // Remove row functionality
-            purchaseOrderTable.on("click", ".remove-row", function() {
-                $(this).closest('tr').remove();
-            });
+                // Remove row functionality
+                purchaseOrderTable.on("click", ".remove-row", function() {
+                    $(this).closest('tr').remove();
+                });
 
-            // Trigger stock check on quantity input change
-            purchaseOrderTable.on('input', '.quantity', function() {
-                const $row = $(this).closest('tr');
-                checkStock($row);
-            });
-
-            // Trigger stock check on checkbox change
-            purchaseOrderTable.on('change', '.material-send-checkbox', function() {
-                const $row = $(this).closest('tr');
-                if ($(this).is(':checked')) {
+                // Trigger stock check on quantity input change
+                purchaseOrderTable.on('input', '.quantity', function() {
+                    const $row = $(this).closest('tr');
                     checkStock($row);
-                } else {
-                    $row.find('.stock-available').text('');
-                }
-            });
+                });
 
-            // Submit form with confirmation
-            $("form").validate({
-                ignore: ".delete-btn", // Ignore delete buttons during validation
-                errorPlacement: function(error, element) {
-                    if (element.hasClass('part_no')) {
-                        error.insertAfter(element.closest('.custom-dropdown'));
+                // Trigger stock check on checkbox change
+                purchaseOrderTable.on('change', '.material-send-checkbox', function() {
+                    const $row = $(this).closest('tr');
+                    if ($(this).is(':checked')) {
+                        checkStock($row);
                     } else {
-                        error.insertAfter(element);
+                        $row.find('.stock-available').text('');
                     }
-                },
-                submitHandler: function(form) {
-                    Swal.fire({
-                        icon: 'question',
-                        title: 'Are you sure?',
-                        text: 'You want to send this material to the Production Department?',
-                        showCancelButton: true,
-                        confirmButtonText: 'Yes',
-                        cancelButtonText: 'No',
-                    }).then(function(result) {
-                        if (result.isConfirmed) {
-                            form.submit();
+                });
+
+                // Submit form with confirmation
+                $("form").validate({
+                    ignore: ".delete-btn", // Ignore delete buttons during validation
+                    errorPlacement: function(error, element) {
+                        if (element.hasClass('part_no')) {
+                            error.insertAfter(element.closest('.custom-dropdown'));
+                        } else {
+                            error.insertAfter(element);
                         }
-                    });
-                }
-            });
-
-            // Initialize validation on existing rows
-            initializeValidation(purchaseOrderTable.find("tbody tr"));
-        });
-
-
-        // Disable dropdown click for existing rows
-        // $(document).on('click', '.disabled-dropdown .dropdown-input', function(e) {
-        //     e.stopImmediatePropagation();
-        //     return false;
-        // });
-
-        // Disable selecting options for disabled dropdown
-        // $(document).on('click', '.disabled-dropdown .option', function(e) {
-        //     e.stopImmediatePropagation();
-        //     return false;
-        // });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-
-            // AJAX Delete
-            $(document).on("click", ".ajax-delete", function() {
-                let deleteId = $(this).data("id");
-                let row = $(this).closest("tr");
-
-                Swal.fire({
-                    title: "Are you sure?",
-                    text: "Do you want to delete this item?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Yes, Delete",
-                    cancelButtonText: "No",
-                }).then((result) => {
-                    if (result.isConfirmed) {
-
-                        $.ajax({
-                            url: "{{ route('deleted-addmore-store-material-item') }}",
-                            type: "POST",
-                            data: {
-                                delete_id: deleteId,
-                                _token: "{{ csrf_token() }}"
-                            },
-                            success: function(response) {
-
-                                if (response.status === 'success') {
-                                    Swal.fire("Deleted!", response.msg, "success");
-
-                                    // Remove Row from UI
-                                    row.remove();
-                                } else {
-                                    Swal.fire("Error", response.msg, "error");
-                                }
-                            },
-                            error: function() {
-                                Swal.fire("Error", "Server Error Occurred!", "error");
+                    },
+                    submitHandler: function(form) {
+                        Swal.fire({
+                            icon: 'question',
+                            title: 'Are you sure?',
+                            text: 'You want to send this material to the Production Department?',
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes',
+                            cancelButtonText: 'No',
+                        }).then(function(result) {
+                            if (result.isConfirmed) {
+                                form.submit();
                             }
                         });
-
                     }
+                });
+
+                // Initialize validation on existing rows
+                initializeValidation(purchaseOrderTable.find("tbody tr"));
+            });
 
 
+            // Disable dropdown click for existing rows
+            // $(document).on('click', '.disabled-dropdown .dropdown-input', function(e) {
+            //     e.stopImmediatePropagation();
+            //     return false;
+            // });
+
+            // Disable selecting options for disabled dropdown
+            // $(document).on('click', '.disabled-dropdown .option', function(e) {
+            //     e.stopImmediatePropagation();
+            //     return false;
+            // });
+        </script>
+
+        <script>
+            $(document).ready(function() {
+
+                // AJAX Delete
+                $(document).on("click", ".ajax-delete", function() {
+                    let deleteId = $(this).data("id");
+                    let row = $(this).closest("tr");
+
+                    Swal.fire({
+                        title: "Are you sure?",
+                        text: "Do you want to delete this item?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Yes, Delete",
+                        cancelButtonText: "No",
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+
+                            $.ajax({
+                                url: "{{ route('deleted-addmore-store-material-item') }}",
+                                type: "POST",
+                                data: {
+                                    delete_id: deleteId,
+                                    _token: "{{ csrf_token() }}"
+                                },
+                                success: function(response) {
+
+                                    if (response.status === 'success') {
+                                        Swal.fire("Deleted!", response.msg, "success");
+
+                                        // Remove Row from UI
+                                        row.remove();
+                                    } else {
+                                        Swal.fire("Error", response.msg, "error");
+                                    }
+                                },
+                                error: function() {
+                                    Swal.fire("Error", "Server Error Occurred!", "error");
+                                }
+                            });
+
+                        }
+
+
+                    });
                 });
             });
-        });
-    </script>
+        </script>
+        <script>
+            function calculateGrandTotal() {
+                let grandTotal = 0;
+
+                $('.total_amount').each(function() {
+                    let val = parseFloat($(this).val()) || 0;
+                    grandTotal += val;
+                });
+
+                $('#grand_total').val(grandTotal.toFixed(2));
+            }
+        </script>
     @endpush
 @endsection

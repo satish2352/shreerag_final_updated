@@ -43,7 +43,7 @@ class ReportServices
             return $e;
         }
     }
-     public function getEstimationReport($request)
+    public function getEstimationReport($request)
     {
         try {
             $data_output = $this->repo->getEstimationReport($request);
@@ -81,17 +81,17 @@ class ReportServices
     {
         try {
             $data_output = $this->repo->getGRNReport($request);
-            
+
             return $data_output;
         } catch (\Exception $e) {
             throw $e; // propagate error
         }
     }
-     public function getRejectedGRNReport($request)
+    public function getRejectedGRNReport($request)
     {
         try {
             $data_output = $this->repo->getRejectedGRNReport($request);
-           
+
             return $data_output;
         } catch (\Exception $e) {
             throw $e; // propagate error
@@ -231,6 +231,7 @@ class ReportServices
     {
         try {
             $data_output =  $this->repo->listStockDailyReport($request);
+            // dd($data_output);
             return $data_output;
         } catch (\Exception $e) {
             throw $e;
@@ -241,6 +242,16 @@ class ReportServices
     {
         try {
             $data_output =  $this->repo->listItemWiseVendorRateReport($request);
+
+            return $data_output;
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+    public function listEmployeeLeaveReport($request)
+    {
+        try {
+            $data_output =  $this->repo->listEmployeeLeaveReport($request);
 
             return $data_output;
         } catch (\Exception $e) {

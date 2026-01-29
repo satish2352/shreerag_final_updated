@@ -25,7 +25,9 @@ use App\Http\Controllers\Exports\ConsumptionReport;
 use App\Http\Controllers\Exports\VendorThroughTakenMaterialReport;
 use App\Http\Controllers\Exports\ItemWiseVendorRateReportExport;
 use App\Http\Controllers\Exports\EstimationReportExport;
+use App\Http\Controllers\Exports\EmployeeLeaveExportReport;
 
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Log;
 use Exception;
@@ -1328,5 +1330,85 @@ class ReportController extends Controller
         } catch (\Exception $e) {
             return response()->json(['status' => false, 'message' => $e->getMessage()]);
         }
+    }
+
+    public function listEmployeeLeaveReport(Request $request)
+    {
+        try {
+            $data = $this->service->listEmployeeLeaveReport($request);
+
+            $getProjectName = Business::whereNotNull('project_name')
+                ->where('is_deleted', 0)
+                ->where('is_active', 1)
+                ->pluck('project_name', 'id');
+
+            $getProductName = BusinessDetails::whereNotNull('product_name')
+                ->where('is_deleted', 0)
+                ->where('is_active', 1)
+                ->pluck('product_name', 'id');
+
+            return view('organizations.report.employee-leave-report', compact('data', 'getProjectName', 'getProductName'));
+        } catch (\Exception $e) {
+            return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+        }
+    }
+    public function listEmployeeLeaveAjax(Request $request)
+    {
+        try {
+            $data = $this->service->listEmployeeLeaveReport($request);
+
+            if (!is_array($data) || !isset($data['data'])) {
+                throw new \Exception("Invalid response format from service.");
+            }
+
+            // ✅ PDF Export
+            if ($request->filled('export_type') && $request->export_type == 1) {
+
+                $pdf = Pdf::loadView('exports.employee-leave-report-pdf', [
+                    'data' => $data['data']
+                ])->setPaper('a3', 'landscape');
+
+                return $pdf->download("EmployeeLeaveReport_{$this->timeStamp()}.pdf");
+            }
+
+            // ✅ Excel Export (optional – if you want)
+            if ($request->filled('export_type') && $request->export_type == 2) {
+                return Excel::download(
+                    new EmployeeLeaveExportReport($data['data']),
+                    "EmployeeLeaveReport_{$this->timeStamp()}.xlsx"
+                );
+            }
+
+            return response()->json([
+                'status' => true,
+                'data' => $data['data'],
+                'pagination' => $data['pagination']
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
+    public function employeeLeaveDetails(Request $request)
+    {
+        $employeeId = $request->employee_id;
+        $year = $request->year;
+
+        $data = DB::table('tbl_leaves as l')
+            ->join('tbl_leave_management as lm', 'lm.id', '=', 'l.leave_type_id')
+            ->where('l.employee_id', $employeeId)
+            ->whereYear('l.leave_start_date', $year)
+            ->where('l.is_approved', 2)
+            ->select(
+                'l.leave_start_date',
+                'l.leave_end_date',
+                'l.leave_count',
+                'l.reason',
+                'lm.name as leave_name'
+            )
+            ->orderBy('l.leave_start_date')
+            ->get();
+
+        return response()->json(['data' => $data]);
     }
 }

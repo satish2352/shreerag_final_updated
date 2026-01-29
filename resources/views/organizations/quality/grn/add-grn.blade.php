@@ -4,11 +4,12 @@
         label {
             margin-top: 20px;
         }
-.table-responsive {
-    width: 100%;
-    overflow-x: auto;
-    white-space: nowrap;
-}
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
 
         label.error {
             color: red;
@@ -18,7 +19,7 @@
             /* Add any other styling as per your design */
         }
     </style>
-    <div class="row">
+    <div class="">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="sparkline12-list">
                 <div class="sparkline12-hd">
@@ -193,7 +194,7 @@
                                                                     name="addmore[{{ $index }}][edit_id]"
                                                                     placeholder="Enter Description" class="form-control"
                                                                     value="{{ $item->id }}" readonly />
-                                                                     <td>{{ $index + 1 }}</td>
+                                                                <td>{{ $index + 1 }}</td>
                                                                 <td><input type="text"
                                                                         name="addmore[{{ $index }}][part_description]"
                                                                         placeholder="Enter Description"
@@ -348,173 +349,95 @@
             });
         });
     </script>
-    {{-- <script>
+
+
+    <script>
         jQuery.noConflict();
         jQuery(document).ready(function($) {
-            $("#addDesignsForm").validate({
+
+            // Initialize validation
+            var validator = $("#addDesignsForm").validate({
+                ignore: [], // do NOT ignore hidden fields inside table rows
                 rules: {
                     grn_date: {
-                        required: true,
+                        required: true
                     },
                     purchase_orders_id: {
-                        required: true,
+                        required: true
                     },
                     po_date: {
-                        required: true,
-                    },
-                    invoice_no: {
-                        required: true,
-                    },
-                    invoice_date: {
-                        required: true,
+                        required: true
                     },
                     bill_no: {
-                        required: true,
+                        required: true
                     },
                     bill_date: {
-                        required: true,
+                        required: true
                     },
                     remark: {
-                        required: true,
+                        required: true
                     },
                     image: {
                         required: true,
-                        accept: "image/*",
-                    },
-                    'addmore[0][description]': {
-                        required: true,
-                    },
-                    // 'addmore[0][qc_check_remark]': {
-                    //     required: true,
-                    // },
-                    'addmore[0][chalan_quantity]': {
-                        required: true,
-                    },
-                    'addmore[0][actual_quantity]': {
-                        required: true,
-                    },
-                    'addmore[0][accepted_quantity]': {
-                        required: true,
-                    },
-                    'addmore[0][rejected_quantity]': {
-                        required: true,
-                    },
+                        accept: "image/*"
+                    }
                 },
                 messages: {
                     grn_date: {
-                        required: "Please Select GRN Date.",
+                        required: "Please Select GRN Date."
                     },
                     purchase_orders_id: {
-                        required: "Please Enter PO No",
+                        required: "Please Enter PO No."
                     },
                     bill_no: {
-                        required: "Please Enter Bill No.",
+                        required: "Please Enter Bill No."
                     },
                     bill_date: {
-                        required: "Please select bill Date.",
+                        required: "Please select Bill Date."
                     },
                     po_date: {
-                        required: "Please select PO Date.",
-                    },
-                    invoice_no: {
-                        required: "Please Enter Invoice No.",
-                    },
-                    invoice_date: {
-                        required: "Please Select Invoice Date.",
+                        required: "Please select PO Date."
                     },
                     remark: {
-                        required: "Please enter Remark.",
+                        required: "Please enter Remark."
                     },
                     image: {
-                        required: "Please select Signature .",
-                        accept: "Please select an Signature file.",
-                    },
-                    'addmore[0][description]': {
-                        required: "Please enter Description.",
-                    },
-                    // 'addmore[0][qc_check_remark]': {
-                    //     required: "Please enter QC Check.",
-                    // },
-                    'addmore[0][chalan_quantity]': {
-                        required: "Please enter Chalan Qty.",
-                    },
-                    'addmore[0][actual_quantity]': {
-                        required: "Please enter Actual Qty.",
-                    },
-                    'addmore[0][accepted_quantity]': {
-                        required: "Please enter Accepted Qty.",
-                    },
-                    'addmore[0][rejected_quantity]': {
-                        required: "Please enter Rejected Qty.",
-                    },
-                },
+                        required: "Please select Signature.",
+                        accept: "Only image files are allowed."
+                    }
+                }
             });
+
+            // ============================
+            // APPLY VALIDATION TO ALL ROWS
+            // ============================
+
+            // For Actual Qty
+            $(".actual_quantity").each(function() {
+                $(this).rules("add", {
+                    required: true,
+                    number: true,
+                    messages: {
+                        required: "Please enter Actual Qty.",
+                        number: "Enter a valid number."
+                    }
+                });
+            });
+
+            // For Accepted Qty
+            $(".accepted_quantity").each(function() {
+                $(this).rules("add", {
+                    required: true,
+                    number: true,
+                    messages: {
+                        required: "Please enter Accepted Qty.",
+                        number: "Enter a valid number."
+                    }
+                });
+            });
+
         });
-    </script> --}}
-
-<script>
-jQuery.noConflict();
-jQuery(document).ready(function($) {
-
-    // Initialize validation
-    var validator = $("#addDesignsForm").validate({
-        ignore: [], // do NOT ignore hidden fields inside table rows
-        rules: {
-            grn_date: { required: true },
-            purchase_orders_id: { required: true },
-            po_date: { required: true },
-            bill_no: { required: true },
-            bill_date: { required: true },
-            remark: { required: true },
-            image: {
-                required: true,
-                accept: "image/*"
-            }
-        },
-        messages: {
-            grn_date: { required: "Please Select GRN Date." },
-            purchase_orders_id: { required: "Please Enter PO No." },
-            bill_no: { required: "Please Enter Bill No." },
-            bill_date: { required: "Please select Bill Date." },
-            po_date: { required: "Please select PO Date." },
-            remark: { required: "Please enter Remark." },
-            image: {
-                required: "Please select Signature.",
-                accept: "Only image files are allowed."
-            }
-        }
-    });
-
-    // ============================
-    // APPLY VALIDATION TO ALL ROWS
-    // ============================
-
-    // For Actual Qty
-    $(".actual_quantity").each(function() {
-        $(this).rules("add", {
-            required: true,
-            number: true,
-            messages: {
-                required: "Please enter Actual Qty.",
-                number: "Enter a valid number."
-            }
-        });
-    });
-
-    // For Accepted Qty
-    $(".accepted_quantity").each(function() {
-        $(this).rules("add", {
-            required: true,
-            number: true,
-            messages: {
-                required: "Please enter Accepted Qty.",
-                number: "Enter a valid number."
-            }
-        });
-    });
-
-});
-</script>
+    </script>
 
 
 

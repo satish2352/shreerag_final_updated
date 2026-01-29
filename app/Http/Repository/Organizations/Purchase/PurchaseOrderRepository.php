@@ -41,6 +41,8 @@ class PurchaseOrderRepository
             $dataOutput->terms_condition = '';
             $dataOutput->remark = '';
             $dataOutput->image = 'null';
+            $dataOutput->po_grand_total_amount = $request->po_grand_total_amount;
+
             // $dataOutput->po_grand_total_amount = $request->po_grand_total_amount;
             // $dataOutput->quote_no = $request->quote_no;
             $dataOutput->contact_person_name = $request->contact_person_name;

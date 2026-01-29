@@ -139,8 +139,13 @@
                                     <!-- Left Side: Logo -->
                                     <td style="width: 10%; text-align: left; vertical-align: middle;"
                                         class="header-no-border">
-                                        <img src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}"
-                                            alt="no image" style="width: 100px; padding: 10px;" />
+                                        <img src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') . $getOrganizationData->image }}"
+                                            style="width:100px; padding:10px;">
+
+
+
+                                        {{-- <img src="{{ Config::get('DocumentConstant.ORGANIZATION_VIEW') }}{{ $getOrganizationData->image }}"
+                                            alt="no image" style="width: 100px; padding: 10px;" /> --}}
                                     </td>
 
                                     <!-- Center: Company Name and Details -->
@@ -217,7 +222,8 @@
                             <thead>
                                 <tr style="bold; font-family: 'Play', sans-serif!important;font-size:14px;">
                                     <th class="pdf-font-size"
-                                        style="border: 1px solid black; padding: 5px; font-size:14px; width: 52px;">No.
+                                        style="border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-left:0.1px solid black; padding: 5px; font-size:14px; width: 52px;">
+                                        No.
                                     </th>
                                     <th class="pdf-font-size"
                                         style="border: 1px solid black; padding: 5px; font-size:14px; width:20%;">
@@ -241,7 +247,8 @@
                             <tbody>
                                 @foreach ($purchaseOrderDetails as $index => $item)
                                     <tr style="bold; font-family: 'Play', sans-serif!important;">
-                                        <td style="border: 1px solid black; padding: 5px; text-align: center;">
+                                        <td
+                                            style="border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-left:none; padding: 5px; text-align: center;">
                                             {{ $index + 1 }}</td>
                                         <td class="description-column"
                                             style="border: 1px solid black; padding: 5px; max-width: 200px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word !important;
@@ -263,7 +270,8 @@ overflow-wrap: anywhere !important;">
                                     </tr>
                                 @endforeach
                             </tbody>
-                            <tfoot style="border: 1px solid black;">
+                            <tfoot
+                                style="border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-left:none;">
                                 <tr style="bold; font-family: 'Play', sans-serif!important; font-size:12px;">
                                     <td class="no-border" colspan="5" style="padding-top:10px;">
                                         <strong>Remark:- {{ $purchaseOrder->note }}</strong>
@@ -355,6 +363,9 @@ overflow-wrap: anywhere !important;">
                                         @if ($purchaseOrder->purchase_status_from_owner == 1127 || $purchaseOrder->purchase_status_from_owner == 1129)
                                             <div style="font-size: 26px; color: green;">
                                                 {{-- <i class="fa fa-check" aria-hidden="true"></i> --}}
+                                                {{-- <img src="{{ public_path('website/assets/img/tick.png') }}"
+                                                    style="width:44px;"> --}}
+
                                                 <img src="{{ asset('website/assets/img/tick.png') }}"
                                                     style="width: 44px;" alt="">
                                             </div>
@@ -381,7 +392,29 @@ overflow-wrap: anywhere !important;">
                                 </tr>
                             </tfoot>
                         </table>
-                        <div class="print-spacing">
+                        @if (!empty($is_pdf))
+                            <!-- PDF only spacing -->
+                            <div style="margin-top:15px; margin-bottom:15px;">
+                                <p
+                                    style="margin-top:15px; margin-bottom:10px; margin-left:5px; font-size:12px; font-family:'Play', sans-serif;">
+                                    This is a computer-generated document No signature is required
+                                </p>
+
+                                <p
+                                    style="margin-top:10px; margin-bottom:20px; margin-left:5px; font-size:12px; font-family:'Play', sans-serif;">
+                                    Subject To Nashik Jurisdiction. PO Terms and Conditions As per attached PO Annexture
+                                </p>
+                            </div>
+                        @else
+                            <!-- Browser view (no extra spacing) -->
+                            <div class="print-spacing">
+                                <div>This is a computer-generated document No signature is required</div>
+                                <div>Subject To Nashik Jurisdiction. PO Terms and Conditions As per attached PO
+                                    Annexture</div>
+                            </div>
+                        @endif
+
+                        {{-- <div class="print-spacing">
                             <div><span
                                     style="padding: 10px 10px 10px 8px;font-family: 'Play', sans-serif!important; font-size:13px;">This
                                     is a computer-generated document No signature is required</span></div>
@@ -389,7 +422,7 @@ overflow-wrap: anywhere !important;">
                                     style="padding: 10px 10px 10px 8px;font-family: 'Play', sans-serif!important; font-size:13px;">Subject
                                     To Nashik Jurisdiction. PO Terms and Conditions As per attached PO Annexture</span>
                             </div>
-                        </div>
+                        </div> --}}
                         @if (empty($is_pdf))
                             <a>
                                 <button onclick="printInvoice()" style="margin: 20px;" type="button"

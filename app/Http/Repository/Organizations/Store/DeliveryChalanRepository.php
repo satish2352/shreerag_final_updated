@@ -158,7 +158,8 @@ class DeliveryChalanRepository
                     'tbl_delivery_chalan.vehicle_number',
                     'tbl_delivery_chalan.remark',
                     'tbl_delivery_chalan.dc_number',
-                    'tbl_delivery_chalan.dc_date',
+                    // 'tbl_delivery_chalan.dc_date',
+                    'tbl_delivery_chalan.po_date',
                     'tbl_delivery_chalan.remark',
                     'tbl_transport_name.name as transport_name'
                 )

@@ -1,5 +1,28 @@
 @extends('admin.layouts.master')
 @section('content')
+    <style>
+        /* Control select box */
+        .select2-container {
+            width: 100% !important;
+        }
+
+        /* Control dropdown list width */
+        .select2-dropdown {
+            max-width: 100% !important;
+            width: auto !important;
+        }
+
+        /* Prevent long text breaking layout */
+        .select2-results__option {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .option-width {
+            width: 100px !important;
+        }
+    </style>
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">
@@ -20,8 +43,8 @@
                                     <div class="row mb-5">
                                         <div class="col-md-2">
                                             <label>Part Item</label>
-                                            <select class="form-control select2" name="description">
-                                                <option value="">All Part Item</option>
+                                            <select class="form-control select2 " name="description">
+                                                <option value="" class="option-width">All Part Item</option>
                                                 @foreach ($getPartItemName as $id => $name)
                                                     <option value="{{ $id }}">{{ $name }}</option>
                                                 @endforeach
@@ -107,7 +130,7 @@
 
                                                 <th data-field="id">Sr.No.</th>
                                                 <!-- <th data-field="received_updated_at" data-editable="false">Received Date
-                                                    </th> -->
+                                                                                                                        </th> -->
                                                 <th data-field="issue_updated_at" data-editable="false">Transaction Date
                                                 </th>
                                                 <th data-field="description" data-editable="false">Entry No/Particulars</th>
@@ -143,6 +166,12 @@
             </div>
         </div>
     </div>
+    <script>
+        $('.select2').select2({
+            width: '100%',
+            dropdownAutoWidth: false
+        });
+    </script>
 
     <script>
         let currentPage = 1,
@@ -186,7 +215,8 @@
                                 let particulars = '-';
 
                                 if (item.received_qty > 0) {
-                                    particulars = `Supplier GRN No.${item.grn_no} ${item.part_name}`;
+                                    particulars =
+                                        `Supplier GRN No.${item.grn_no} | <b>${item.vendor_name}</b> | ${item.part_name}`;
                                 } else if (item.issue_qty > 0) {
                                     particulars =
                                         `FOR PRODUCTION ISSUE  ${item.product_name}  ${item.part_name}`;
@@ -197,9 +227,10 @@
                                         <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
                                         <td>${item.date ? new Date(item.date).toLocaleDateString('en-IN') : '-'}</td>
                                         <td>${particulars}</td>
-                                        <td> ${item.received_qty || '-'}</td>
-                                        <td> ${item.issue_qty || '-'}</td>
-                                        <td>${item.balance || '-'}</td>
+                                       <td>${item.received_qty ? Number(item.received_qty).toFixed(2) : '-'}</td>
+<td>${item.issue_qty ? Number(item.issue_qty).toFixed(2) : '-'}</td>
+<td>${item.balance ? Number(item.balance).toFixed(2) : '-'}</td>
+
                                     </tr>
                                 `;
                             });
@@ -207,13 +238,14 @@
                             // Totals row
                             const totals = res.totals;
                             const totalsRow = `
-                                <tr style="font-weight:bold; background:#f2f2f2;">
-                                    <td colspan="3" style="text-align:right;">Total:</td>
-                                    <td>${totals.received}</td>
-                                    <td>${totals.issue}</td>
-                                    <td>${totals.balance}</td>
-                                </tr>
-                            `;
+<tr style="font-weight:bold; background:#f2f2f2;">
+    <td colspan="3" style="text-align:right;">Total:</td>
+    <td>${Number(totals.received).toFixed(2)}</td>
+    <td>${Number(totals.issue).toFixed(2)}</td>
+    <td>${Number(totals.balance).toFixed(2)}</td>
+</tr>
+`;
+
 
                             tbody.innerHTML = rows + totalsRow;
 

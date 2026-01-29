@@ -62,6 +62,7 @@ class DeliveryChalanController extends Controller
                 'tbl_vehicle_type.name as vehicle_name',
                 'tbl_delivery_chalan.remark',
                 'tbl_delivery_chalan.dc_number',
+                'tbl_delivery_chalan.po_date',
                 'tbl_delivery_chalan.updated_at'
             )->orderBy('tbl_delivery_chalan.updated_at', 'desc')->get();
         return view(

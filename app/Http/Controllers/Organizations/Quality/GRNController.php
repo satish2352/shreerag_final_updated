@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Services\Organizations\Quality\GRNServices;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
 use Carbon\Carbon;
 use Exception;
@@ -88,12 +89,23 @@ class GRNController extends Controller
                           AND t2.purchase_order_details_id = purchase_order_details.id
                           AND t2.part_no_id = tbl_part_item.id
                          ) AS sum_actual_quantity'),
-                    DB::raw('(purchase_order_details.quantity - (SELECT SUM(t2.actual_quantity) 
-                                                              FROM tbl_grn_po_quantity_tracking AS t2 
-                                                              WHERE t2.purchase_order_id = purchase_order_details.purchase_id
-                                                              AND t2.purchase_order_details_id = purchase_order_details.id
-                                                              AND t2.part_no_id = tbl_part_item.id
-                                                             )) AS remaining_quantity')
+                    DB::raw('(
+    purchase_order_details.quantity - 
+    COALESCE((
+        SELECT SUM(t2.actual_quantity) 
+        FROM tbl_grn_po_quantity_tracking AS t2 
+        WHERE t2.purchase_order_id = purchase_order_details.purchase_id
+        AND t2.purchase_order_details_id = purchase_order_details.id
+        AND t2.part_no_id = tbl_part_item.id
+    ),0)
+) AS remaining_quantity')
+
+                    //     DB::raw('(purchase_order_details.quantity - (SELECT SUM(t2.actual_quantity) 
+                    //                                               FROM tbl_grn_po_quantity_tracking AS t2 
+                    //                                               WHERE t2.purchase_order_id = purchase_order_details.purchase_id
+                    //                                               AND t2.purchase_order_details_id = purchase_order_details.id
+                    //                                               AND t2.part_no_id = tbl_part_item.id
+                    //                                              )) AS remaining_quantity')
                 )
                 ->groupBy(
                     'purchase_order_details.id',
@@ -287,16 +299,7 @@ class GRNController extends Controller
             return $e;
         }
     }
-    // public function getAllListMaterialSentFromQualityBusinessWise(Request $request, $id)
-    // {
-    //     try {
-    //         $data_output = $this->service->getAllListMaterialSentFromQualityBusinessWise($request, $id);
-    //         return view('organizations.quality.list.list-checked-material-sent-to-store-businesswise', compact('data_output'));
-    //     } catch (\Exception $e) {
-    //         \Log::error('Error in Controller: ' . $e->getMessage());
-    //         return redirect()->back()->with('error', 'Something went wrong. Please try again.');
-    //     }
-    // }
+
     public function getAllListMaterialSentFromQualityBusinessWise(Request $request, $id)
     {
         try {
@@ -320,7 +323,7 @@ class GRNController extends Controller
 
             return view('organizations.quality.list.list-checked-material-sent-to-store-businesswise', compact('data_output', 'id'));
         } catch (\Exception $e) {
-            \Log::error('Error in Controller: ' . $e->getMessage());
+            Log::error('Error in Controller: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Something went wrong. Please try again.');
         }
     }

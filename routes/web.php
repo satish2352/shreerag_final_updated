@@ -697,6 +697,11 @@
 
         Route::get('/list-fianance-report', [ReportController::class, 'listFinanceReport'])->name('list-fianance-report');
         Route::get('/finance-ajax', [ReportController::class, 'listFinanceReportAjax'])->name('finance-ajax');
+
+        Route::get('/list-employee-leave-report', [ReportController::class, 'listEmployeeLeaveReport'])->name('list-employee-leave-report');
+        Route::get('/employee-leave-ajax', [ReportController::class, 'listEmployeeLeaveAjax'])->name('employee-leave-ajax');
+
+        Route::get('/employee-leave-details', [ReportController::class, 'employeeLeaveDetails']);
     });
 
     // ================= LOGISTICS DEPT =================

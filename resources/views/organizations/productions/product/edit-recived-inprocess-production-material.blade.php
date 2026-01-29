@@ -91,16 +91,23 @@
                                             <input type="hidden" name="part_item_id" id="part_item_id"
                                                 value="{{ $id }}">
                                             <div class="row">
-                                                <div class="col-lg-3">
+                                                <div class="col-lg-4">
                                                     <label for="product_name">Product Name :</label>
                                                     <input type="text" class="form-control" id="name"
                                                         name="product_name" value="{{ $productDetails->product_name }}"
                                                         placeholder="Enter Product Name" readonly>
                                                 </div>
-                                                <div class="col-lg-6">
+                                                <div class="col-lg-5">
                                                     <label for="description">Description :</label>
                                                     <input type="text" class="form-control" id="description"
                                                         name="description" value="{{ $productDetails->description }}"
+                                                        placeholder="Enter Description" readonly>
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <label for="total_estimation_amount">Estimation Amount :</label>
+                                                    <input type="text" class="form-control" id="total_estimation_amount"
+                                                        name="total_estimation_amount"
+                                                        value="{{ $productDetails->total_estimation_amount }}"
                                                         placeholder="Enter Description" readonly>
                                                 </div>
                                             </div>
@@ -265,9 +272,9 @@
                                                                             readonly>
 
 
-                                                                        <input type="hidden" class="udated_at"
+                                                                        {{-- <input type="hidden" class="udated_at"
                                                                             name="addmore[{{ $index }}][items_used_total_amount]"
-                                                                            value="{{ \Carbon\Carbon::parse($item->updated_at)->format('d-m-Y H:i') }}">
+                                                                            value="{{ \Carbon\Carbon::parse($item->updated_at)->format('d-m-Y H:i') }}"> --}}
                                                                     </td>
                                                                     <td>
                                                                         <div class="custom-dropdown">
@@ -367,6 +374,18 @@
                                                         @endforeach
 
                                                     </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td colspan="4" class="text-end"><strong>Total Amount
+                                                                    :</strong></td>
+                                                            <td colspan="2">
+                                                                <input type="text" id="grand_total"
+                                                                    class="form-control" readonly value="0">
+                                                            </td>
+                                                            <td colspan="2"></td>
+                                                        </tr>
+                                                    </tfoot>
+
                                                 </table>
                                             </div>
                                             <div class="d-flex justify-content-center align-items-center mt-3 mb-5">
@@ -396,86 +415,102 @@
     </form> --}}
 
     @push('scripts')
-    <script>
-        $(document).ready(function() {
-            const table = $("#purchase_order_table");
+        <script>
+            $(document).ready(function() {
+                calculateGrandTotal(); //  THIS LINE IS REQUIRED
+                const table = $("#purchase_order_table");
 
-            // ========================
-            //  DROPDOWN FUNCTIONALITY
-            // ========================
-            table.on('click', '.dropdown-input', function() {
-                $('.dropdown-options').hide(); // close all others
-                $(this).siblings('.dropdown-options').show();
-                $(this).siblings('.dropdown-options').find('.search-box').val('').trigger('input').focus();
-            });
-
-            table.on('input', '.search-box', function() {
-                const term = $(this).val().toLowerCase();
-                $(this).siblings('.options-list').find('.option').each(function() {
-                    $(this).toggle($(this).text().toLowerCase().includes(term));
+                // ========================
+                //  DROPDOWN FUNCTIONALITY
+                // ========================
+                table.on('click', '.dropdown-input', function() {
+                    $('.dropdown-options').hide(); // close all others
+                    $(this).siblings('.dropdown-options').show();
+                    $(this).siblings('.dropdown-options').find('.search-box').val('').trigger('input').focus();
                 });
-            });
 
-            table.on('click', '.custom-dropdown .option', function() {
-                const text = $(this).text();
-                const id = $(this).data('id');
-                const $dropdown = $(this).closest('.custom-dropdown');
-                const $row = $dropdown.closest('tr');
+                table.on('input', '.search-box', function() {
+                    const term = $(this).val().toLowerCase();
+                    $(this).siblings('.options-list').find('.option').each(function() {
+                        $(this).toggle($(this).text().toLowerCase().includes(term));
+                    });
+                });
 
-                // Set hidden value + visible text
-                $dropdown.find('.dropdown-input').val(text);
-                $dropdown.find('.part_no').val(id);
-                $dropdown.find('.dropdown-options').hide();
+                table.on('click', '.custom-dropdown .option', function() {
+                    const text = $(this).text();
+                    const id = $(this).data('id');
+                    const $dropdown = $(this).closest('.custom-dropdown');
+                    const $row = $dropdown.closest('tr');
 
-                // Fetch basic rate
-                $.ajax({
-                    url: '{{ route('get-part-item-rate') }}',
-                    type: 'GET',
-                    data: {
-                        part_item_id: id
-                    },
-                    success: function(res) {
-                        if (res.status === 'success') {
-                            $row.find('.basic_rate').val(res.basic_rate);
-                            updateTotalAmount($row);
-                        } else {
+                    // Set hidden value + visible text
+                    $dropdown.find('.dropdown-input').val(text);
+                    $dropdown.find('.part_no').val(id);
+                    $dropdown.find('.dropdown-options').hide();
+
+                    // Fetch basic rate
+                    $.ajax({
+                        url: '{{ route('get-part-item-rate') }}',
+                        type: 'GET',
+                        data: {
+                            part_item_id: id
+                        },
+                        success: function(res) {
+                            if (res.status === 'success') {
+                                $row.find('.basic_rate').val(res.basic_rate);
+                                updateTotalAmount($row);
+                            } else {
+                                $row.find('.basic_rate').val('');
+                            }
+                        },
+                        error: function() {
                             $row.find('.basic_rate').val('');
                         }
-                    },
-                    error: function() {
-                        $row.find('.basic_rate').val('');
+                    });
+                });
+
+                $(document).click(function(e) {
+                    if (!$(e.target).closest('.custom-dropdown').length) {
+                        $('.dropdown-options').hide();
                     }
                 });
-            });
 
-            $(document).click(function(e) {
-                if (!$(e.target).closest('.custom-dropdown').length) {
-                    $('.dropdown-options').hide();
+                // ========================
+                //  TOTAL AMOUNT CALCULATION
+                // ========================
+                function updateTotalAmount($row) {
+                    let rate = parseFloat($row.find('.basic_rate').val()) || 0;
+                    let qty = parseFloat($row.find('.quantity').val()) || 0;
+                    $row.find('.total_amount').val((rate * qty).toFixed(2));
+                    calculateGrandTotal();
                 }
-            });
 
-            // ========================
-            //  TOTAL AMOUNT CALCULATION
-            // ========================
-            function updateTotalAmount($row) {
-                let rate = parseFloat($row.find('.basic_rate').val()) || 0;
-                let qty = parseFloat($row.find('.quantity').val()) || 0;
-                $row.find('.total_amount').val((rate * qty).toFixed(2));
-            }
+                function calculateGrandTotal() {
+                    let grandTotal = 0;
+                    $('.total_amount').each(function() {
+                        grandTotal += parseFloat($(this).val()) || 0;
+                    });
+                    $('#grand_total').val(grandTotal.toFixed(2));
+                }
 
-            table.on('input', '.basic_rate, .quantity', function() {
-                updateTotalAmount($(this).closest('tr'));
-            });
+                // on change
+                $("#purchase_order_table").on('input', '.basic_rate, .quantity', function() {
+                    updateTotalAmount($(this).closest('tr'));
+                });
 
-            // ========================
-            //  ADD MORE ROW
-            // ========================
-            let rowCount = table.find("tbody tr").length;
-            $("#add_more_btn").click(function() {
-                rowCount = table.find("tbody tr").length + 1;
 
-                // rowCount++;
-                let newRow = `
+                table.on('input', '.basic_rate, .quantity', function() {
+                    updateTotalAmount($(this).closest('tr'));
+                });
+
+                // ========================
+                //  ADD MORE ROW
+                // ========================
+                let rowCount = table.find("tbody tr").length;
+                $("#add_more_btn").click(function() {
+                    rowCount = table.find("tbody tr").length + 1;
+
+                    // rowCount++;
+                    let newRow = `
             <tr>
                 <td><input type="text" class="form-control" value="${rowCount}" readonly></td>
                  <td>-
@@ -516,194 +551,203 @@
                     <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fa fa-trash"></i></button>
                 </td>
             </tr>`;
-                table.find("tbody").append(newRow);
+                    table.find("tbody").append(newRow);
 
-                $(`input[name="addmore[${rowCount}][part_item_id]"]`).rules("add", {
-                    required: true,
-                    messages: {
-                        required: "Please select a Part Item"
-                    }
+                    $(`input[name="addmore[${rowCount}][part_item_id]"]`).rules("add", {
+                        required: true,
+                        messages: {
+                            required: "Please select a Part Item"
+                        }
+                    });
                 });
-            });
 
-            // Remove row
-            table.on("click", ".remove-row", function() {
-                $(this).closest("tr").remove();
-            });
+                // Remove row
+                table.on("click", ".remove-row", function() {
+                    $(this).closest("tr").remove();
+                });
 
-            // ========================
-            //  VALIDATION
-            // ========================
-            $("#addProductForm").validate({
-                ignore: [],
-                rules: {
-                    "product_name": {
-                        required: true
-                    },
-                    "description": {
-                        required: true
-                    }
-                },
-                messages: {
-                    "product_name": "Product name is required",
-                    "description": "Description is required"
-                },
-                errorPlacement: function(error, element) {
-                    if (element.hasClass('part_no')) {
-                        error.insertAfter(element.closest('.custom-dropdown'));
-                    } else {
-                        error.insertAfter(element);
-                    }
-                },
-                // submitHandler: function(form) {
-                //     Swal.fire({
-                //         icon: 'question',
-                //         title: 'Are you sure?',
-                //         text: 'Send this material to Production?',
-                //         showCancelButton: true,
-                //         confirmButtonText: 'Yes',
-                //         cancelButtonText: 'No',
-                //     }).then(function(result) {
-                //         if (result.isConfirmed) {
-                //             form.submit();
-                //         }
-                //     });
-                // }
-            });
-        });
-    </script>
-    <script>
-        // ========================================
-        // AJAX SAVE Product Material
-        // ========================================
-        $("#addProductForm").on("submit", function(e) {
-            e.preventDefault();
-
-            let form = $(this);
-            let formData = new FormData(form[0]);
-
-            Swal.fire({
-                icon: "question",
-                title: "Are you sure?",
-                text: "Do you want to save the updated material?",
-                showCancelButton: true,
-                confirmButtonText: "Yes",
-                cancelButtonText: "No"
-            }).then((result) => {
-
-                if (!result.isConfirmed) return;
-
-                $.ajax({
-                    url: form.attr("action"),
-                    type: "POST",
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-
-                    success: function(res) {
-
-                        if (res.status === "success") {
-
-                            Swal.fire({
-                                icon: "success",
-                                title: "Saved!",
-                                text: res.msg,
-                                timer: 1500,
-                                showConfirmButton: false
-                            });
-
-                            // Reload table without leaving page
-                            
-
-                        } else {
-                            Swal.fire("Error!", res.msg, "error");
+                // ========================
+                //  VALIDATION
+                // ========================
+                $("#addProductForm").validate({
+                    ignore: [],
+                    rules: {
+                        "product_name": {
+                            required: true
+                        },
+                        "description": {
+                            required: true
                         }
                     },
+                    messages: {
+                        "product_name": "Product name is required",
+                        "description": "Description is required"
+                    },
+                    errorPlacement: function(error, element) {
+                        if (element.hasClass('part_no')) {
+                            error.insertAfter(element.closest('.custom-dropdown'));
+                        } else {
+                            error.insertAfter(element);
+                        }
+                    },
+                    // submitHandler: function(form) {
+                    //     Swal.fire({
+                    //         icon: 'question',
+                    //         title: 'Are you sure?',
+                    //         text: 'Send this material to Production?',
+                    //         showCancelButton: true,
+                    //         confirmButtonText: 'Yes',
+                    //         cancelButtonText: 'No',
+                    //     }).then(function(result) {
+                    //         if (result.isConfirmed) {
+                    //             form.submit();
+                    //         }
+                    //     });
+                    // }
+                });
+            });
+        </script>
+        <script>
+            // ========================================
+            // AJAX SAVE Product Material
+            // ========================================
+            $("#addProductForm").on("submit", function(e) {
+                e.preventDefault();
 
-                    error: function(xhr) {
-                        Swal.fire("Error!", "Something went wrong.", "error");
+
+                let total = parseFloat($('#grand_total').val()) || 0;
+                let estimation = parseFloat($('#total_estimation_amount').val()) || 0;
+
+                if (total > estimation) {
+                    Swal.fire("Error", "Total amount exceeds estimation amount", "error");
+                    return false;
+                }
+
+
+                let form = $(this);
+                let formData = new FormData(form[0]);
+
+                Swal.fire({
+                    icon: "question",
+                    title: "Are you sure?",
+                    text: "Do you want to save the updated material?",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No"
+                }).then((result) => {
+
+                    if (!result.isConfirmed) return;
+
+                    $.ajax({
+                        url: form.attr("action"),
+                        type: "POST",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+
+                        success: function(res) {
+
+                            if (res.status === "success") {
+
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Saved!",
+                                    text: res.msg,
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+
+                                // Reload table without leaving page
+
+
+                            } else {
+                                Swal.fire("Error!", res.msg, "error");
+                            }
+                        },
+
+                        error: function(xhr) {
+                            Swal.fire("Error!", "Something went wrong.", "error");
+                        }
+                    });
+
+                });
+            });
+
+            function reloadTable() {
+                let businessId = $("#business_details_id").val();
+
+                $.ajax({
+                    url: "/proddept/edit-received-inprocess-production-material/" + businessId,
+                    type: "GET",
+                    success: function(html) {
+
+                        // Extract only table HTML from page
+                        let newTable = $(html).find("#purchase_order_table").html();
+
+                        $("#purchase_order_table").html(newTable);
                     }
                 });
-
-            });
-        });
-
-        function reloadTable() {
-            let businessId = $("#business_details_id").val();
-
-            $.ajax({
-                url: "/proddept/edit-received-inprocess-production-material/" + businessId,
-                type: "GET",
-                success: function(html) {
-
-                    // Extract only table HTML from page
-                    let newTable = $(html).find("#purchase_order_table").html();
-
-                    $("#purchase_order_table").html(newTable);
-                }
-            });
-        }
-    </script>
-    <script>
-        // ================================
-        //   AJAX DELETE ROW (ENHANCED)
-        // ================================
-      $(document).on("click", ".ajax-delete", function(e) {
-    e.preventDefault(); // stop form submit
-
-    let deleteId = $(this).data("id");
-    let businessId = $(this).data("business-id");
-    let row = $(this).closest("tr");
-
-    Swal.fire({
-        title: "Delete Item?",
-        text: "This material item will be permanently removed. Are you sure?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#d33",
-        cancelButtonColor: "#3085d6",
-        confirmButtonText: "Yes, Delete",
-        cancelButtonText: "Cancel"
-    }).then((result) => {
-
-        if (!result.isConfirmed) return;
-
-        $.ajax({
-            url: "{{ route('delete-addmore-production-material-item') }}",
-            type: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-                delete_id: deleteId,
-                business_details_id: businessId
-            },
-            success: function(response) {
-
-                if (response.status === "success") {
-
-                    Swal.fire({
-                        icon: "success",
-                        title: "Deleted Successfully!",
-                        text: response.msg,
-                        timer: 1500,
-                        showConfirmButton: false
-                    });
-
-                    row.fadeOut(300, function() {
-                        $(this).remove();
-                    });
-
-                } else {
-                    Swal.fire("Error!", response.msg, "error");
-                }
-            },
-            error: function() {
-                Swal.fire("Error!", "Something went wrong.", "error");
             }
-        });
+        </script>
+        <script>
+            // ================================
+            //   AJAX DELETE ROW (ENHANCED)
+            // ================================
+            $(document).on("click", ".ajax-delete", function(e) {
+                e.preventDefault(); // stop form submit
 
-    });
-});
+                let deleteId = $(this).data("id");
+                let businessId = $(this).data("business-id");
+                let row = $(this).closest("tr");
 
-    </script>
+                Swal.fire({
+                    title: "Delete Item?",
+                    text: "This material item will be permanently removed. Are you sure?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "Yes, Delete",
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+
+                    if (!result.isConfirmed) return;
+
+                    $.ajax({
+                        url: "{{ route('delete-addmore-production-material-item') }}",
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            delete_id: deleteId,
+                            business_details_id: businessId
+                        },
+                        success: function(response) {
+
+                            if (response.status === "success") {
+
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Deleted Successfully!",
+                                    text: response.msg,
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+
+                                row.fadeOut(300, function() {
+                                    $(this).remove();
+                                });
+
+                            } else {
+                                Swal.fire("Error!", response.msg, "error");
+                            }
+                        },
+                        error: function() {
+                            Swal.fire("Error!", "Something went wrong.", "error");
+                        }
+                    });
+
+                });
+            });
+        </script>
     @endpush
 @endsection

@@ -13,6 +13,8 @@ use App\Models\{
     GrnPOQuantityTracking,
     ItemStock,
     RejectedChalan,
+    LeaveManagement,
+    Leaves
 };
 
 class ReportRepository
@@ -2984,15 +2986,19 @@ class ReportRepository
             /* -----------------------------------------
            1. RECEIVED TRANSACTIONS (GRN)
         ------------------------------------------*/
+            // tbl_grn_po_quantity_tracking.quantity AS received_qty,
             $received = DB::table('tbl_grn_po_quantity_tracking')
                 ->join('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_grn_po_quantity_tracking.part_no_id')
                 ->join('grn_tbl', 'grn_tbl.id', '=', 'tbl_grn_po_quantity_tracking.grn_id')
+                ->leftJoin('purchase_orders', 'purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id')
+                ->leftJoin('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
                 ->selectRaw("
                 tbl_grn_po_quantity_tracking.updated_at AS date,
                 tbl_part_item.description AS part_name,
-                tbl_grn_po_quantity_tracking.quantity AS received_qty,
+                IFNULL(tbl_grn_po_quantity_tracking.accepted_quantity, 0) AS received_qty,
                 0 AS issue_qty,
                 grn_tbl.grn_no_generate AS grn_no,
+                vendors.vendor_name AS vendor_name,
                 '' AS product_name
             ");
 
@@ -3035,6 +3041,7 @@ class ReportRepository
         0 AS received_qty,
         production_details.quantity AS issue_qty,
         '' AS grn_no,
+         '' AS vendor_name,   -- required for UNION,
         businesses_details.product_name AS product_name
     ");
 
@@ -3059,6 +3066,7 @@ class ReportRepository
            3. MERGE BOTH (UNION ALL)
         ------------------------------------------*/
             $ledger = $received->unionAll($issued)
+
                 ->orderBy('date', 'asc')
                 ->get();
 
@@ -3330,4 +3338,203 @@ class ReportRepository
             throw $e;
         }
     }
+    public function listEmployeeLeaveReport(Request $request)
+    {
+        try {
+            $year = $request->year ?? date('Y');
+
+            $pageSize = $request->pageSize ?? 10;
+            $currentPage = $request->currentPage ?? 1;
+            $offset = ($currentPage - 1) * $pageSize;
+
+            $baseQuery = DB::table('users')
+                ->leftJoin('tbl_leave_management as lm', function ($join) use ($year) {
+                    $join->on('lm.leave_year', '=', DB::raw($year))
+                        ->where('lm.is_active', 1)
+                        ->where('lm.is_deleted', 0);
+                })
+                ->leftJoin('tbl_leaves as l', function ($join) use ($year) {
+                    $join->on('users.id', '=', 'l.employee_id')
+                        ->on('lm.id', '=', 'l.leave_type_id')
+                        ->where('l.is_approved', 2)
+                        ->whereYear('l.leave_start_date', $year);
+                });
+
+            /* ---------------- FILTERS ---------------- */
+
+            if ($request->filled('year')) {
+                $baseQuery->whereYear('l.leave_start_date', $request->year);
+            }
+
+            if ($request->filled('month')) {
+                $baseQuery->whereMonth('l.leave_start_date', $request->month);
+            }
+
+            if ($request->filled('from_date')) {
+                $baseQuery->whereDate('l.leave_start_date', '>=', $request->from_date);
+            }
+
+            if ($request->filled('to_date')) {
+                $baseQuery->whereDate('l.leave_start_date', '<=', $request->to_date);
+            }
+
+            if ($request->filled('search')) {
+                $search = $request->search;
+                $baseQuery->where(function ($q) use ($search) {
+                    $q->where('users.f_name', 'like', "%{$search}%")
+                        ->orWhere('users.m_name', 'like', "%{$search}%")
+                        ->orWhere('users.l_name', 'like', "%{$search}%");
+                });
+            }
+
+            /* -------- TOTAL COUNT -------- */
+            $totalItems = (clone $baseQuery)
+                ->select('users.id')
+                ->groupBy('users.id')
+                ->get()
+                ->count();
+
+            /* -------- DATA -------- */
+            $data = $baseQuery->select(
+                'users.id as employee_id',
+                'users.f_name',
+                'users.m_name',
+                'users.l_name',
+                DB::raw("$year as year"),
+
+                DB::raw("SUM(CASE WHEN lm.name = 'CASUAL LEAVE' THEN lm.leave_count ELSE 0 END) as opening_cl"),
+                DB::raw("SUM(CASE WHEN lm.name = 'PL' THEN lm.leave_count ELSE 0 END) as opening_pl"),
+                DB::raw("SUM(CASE WHEN lm.name = 'SL' THEN lm.leave_count ELSE 0 END) as opening_sl"),
+
+                DB::raw("SUM(CASE WHEN lm.name = 'CASUAL LEAVE' THEN l.leave_count ELSE 0 END) as used_cl"),
+                DB::raw("SUM(CASE WHEN lm.name = 'PL' THEN l.leave_count ELSE 0 END) as used_pl"),
+                DB::raw("SUM(CASE WHEN lm.name = 'SL' THEN l.leave_count ELSE 0 END) as used_sl")
+            )
+                ->groupBy('users.id', 'users.f_name', 'users.m_name', 'users.l_name')
+                ->offset($offset)
+                ->limit($pageSize)
+                ->get();
+
+            foreach ($data as $row) {
+                $row->closed_cl = $row->opening_cl - $row->used_cl;
+                $row->closed_pl = $row->opening_pl - $row->used_pl;
+                $row->closed_sl = $row->opening_sl - $row->used_sl;
+            }
+
+            return [
+                'data' => $data,
+                'pagination' => [
+                    'totalItems' => $totalItems,
+                    'totalPages' => ceil($totalItems / $pageSize),
+                    'from' => $offset + 1,
+                    'to' => min($offset + $pageSize, $totalItems),
+                ]
+            ];
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+
+    // public function listEmployeeLeaveReport(Request $request)
+    // {
+    //     try {
+    //         $year = $request->year ?? date('Y');
+
+    //         $pageSize = $request->pageSize ?? 10;
+    //         $currentPage = $request->currentPage ?? 1;
+    //         $offset = ($currentPage - 1) * $pageSize;
+
+    //         $baseQuery = DB::table('users')
+    //             ->leftJoin('tbl_leave_management as lm', function ($join) use ($year) {
+    //                 $join->where('lm.leave_year', $year)
+    //                     ->where('lm.is_active', 1)
+    //                     ->where('lm.is_deleted', 0);
+    //             })
+    //             ->leftJoin('tbl_leaves as l', function ($join) use ($year) {
+    //                 $join->on('users.id', '=', 'l.employee_id')
+    //                     ->on('lm.id', '=', 'l.leave_type_id')
+    //                     ->where('l.is_approved', 2)
+    //                     ->whereYear('l.leave_start_date', $year);
+    //             });
+
+    //         /* ---------------- FILTERS ---------------- */
+
+    //         if ($request->filled('month')) {
+    //             $baseQuery->whereMonth('l.leave_start_date', $request->month);
+    //         }
+
+    //         if ($request->filled('from_date')) {
+    //             $baseQuery->whereDate('l.leave_start_date', '>=', $request->from_date);
+    //         }
+
+    //         if ($request->filled('to_date')) {
+    //             $baseQuery->whereDate('l.leave_start_date', '<=', $request->to_date);
+    //         }
+
+    //         if ($request->filled('search')) {
+    //             $search = $request->search;
+    //             $baseQuery->where(function ($q) use ($search) {
+    //                 $q->where('users.f_name', 'like', "%{$search}%")
+    //                     ->orWhere('users.m_name', 'like', "%{$search}%")
+    //                     ->orWhere('users.l_name', 'like', "%{$search}%");
+    //             });
+    //         }
+
+    //         /* -------- TOTAL COUNT (before limit) -------- */
+
+    //         $countQuery = clone $baseQuery;
+    //         $totalItems = $countQuery
+    //             ->select('users.id')
+    //             ->groupBy('users.id')
+    //             ->get()
+    //             ->count();
+
+    //         /* -------- DATA QUERY -------- */
+
+    //         $dataQuery = $baseQuery->select(
+    //             'users.id as employee_id',
+    //             'users.f_name',
+    //             'users.m_name',
+    //             'users.l_name',
+    //             DB::raw("$year as year"),
+
+    //             DB::raw("SUM(CASE WHEN lm.name = 'CASUAL LEAVE' THEN lm.leave_count ELSE 0 END) as opening_cl"),
+    //             DB::raw("SUM(CASE WHEN lm.name = 'PL' THEN lm.leave_count ELSE 0 END) as opening_pl"),
+    //             DB::raw("SUM(CASE WHEN lm.name = 'SL' THEN lm.leave_count ELSE 0 END) as opening_sl"),
+
+    //             DB::raw("SUM(CASE WHEN lm.name = 'CASUAL LEAVE' THEN l.leave_count ELSE 0 END) as used_cl"),
+    //             DB::raw("SUM(CASE WHEN lm.name = 'PL' THEN l.leave_count ELSE 0 END) as used_pl"),
+    //             DB::raw("SUM(CASE WHEN lm.name = 'SL' THEN l.leave_count ELSE 0 END) as used_sl")
+    //         )
+    //             ->groupBy('users.id', 'users.f_name', 'users.m_name', 'users.l_name');
+    //         /* -------- EXPORT (NO LIMIT) -------- */
+    //         if ($request->filled('export_type')) {
+    //             $data = $dataQuery->get();
+    //         } else {
+    //             $data = $dataQuery->offset($offset)->limit($pageSize)->get();
+    //         }
+
+    //         /* -------- CLOSED -------- */
+    //         foreach ($data as $row) {
+    //             $row->closed_cl = $row->opening_cl - $row->used_cl;
+    //             $row->closed_pl = $row->opening_pl - $row->used_pl;
+    //             $row->closed_sl = $row->opening_sl - $row->used_sl;
+    //         }
+
+    //         $totalPages = ceil($totalItems / $pageSize);
+
+    //         return [
+    //             'data' => $data,
+    //             'pagination' => $request->filled('export_type') ? null : [
+    //                 'totalItems' => $totalItems,
+    //                 'totalPages' => $totalPages,
+    //                 'from' => $offset + 1,
+    //                 'to' => min($offset + $pageSize, $totalItems),
+    //             ]
+    //         ];
+    //     } catch (\Exception $e) {
+    //         throw $e;
+    //     }
+    // }
 }

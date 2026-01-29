@@ -13,7 +13,8 @@ use App\Models\{
     ProductionDetails,
     ItemStock,
     NotificationStatus,
-    PartItem
+    PartItem,
+    EstimationModel
 };
 
 class StoreRepository
@@ -266,6 +267,9 @@ class StoreRepository
                 ->leftJoin('production_details', function ($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
                 })
+                ->leftJoin('estimation', function ($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
+                })
                 ->where('businesses_details.id', $id)
                 ->where('businesses_details.is_active', true)
                 ->where('production_details.is_deleted', 0)
@@ -284,6 +288,7 @@ class StoreRepository
                     'production_details.material_send_production',
                     'business_application_processes.store_material_sent_date',
                     'production_details.updated_at',
+                    'estimation.total_estimation_amount'
                 )
                 ->get();
             $productDetails = $dataOutputByid->first();
@@ -320,6 +325,35 @@ class StoreRepository
                     'status' => 'error'
                 ];
             }
+
+            // ================== ESTIMATION LIMIT CHECK ==================
+
+            // Calculate total from request
+            $totalUsedAmount = 0;
+            foreach ($request->addmore as $row) {
+                $totalUsedAmount += (float) ($row['items_used_total_amount'] ?? 0);
+            }
+
+            // Get estimation amount from DB
+            $estimationAmount = EstimationModel::where('business_details_id', $business_details_id)
+                ->value('total_estimation_amount');
+
+            if ($estimationAmount === null) {
+                return [
+                    'status' => 'error',
+                    'message' => 'Estimation amount not found.'
+                ];
+            }
+
+            // If crossed → stop everything
+            if ($totalUsedAmount > $estimationAmount) {
+                return [
+                    'status' => 'error',
+                    'message' => "Total material amount (₹{$totalUsedAmount}) exceeds estimation amount (₹{$estimationAmount})."
+                ];
+            }
+
+            // ================== END ESTIMATION LIMIT CHECK ==================
 
             $errorMessages = [];
 

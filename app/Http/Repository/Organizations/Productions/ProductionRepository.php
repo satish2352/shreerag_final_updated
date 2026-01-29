@@ -14,7 +14,7 @@ use App\Models\{
     ProductionDetails,
     NotificationStatus,
     CustomerProductQuantityTracking,
-    PartItem
+    PartItem,
 };
 
 class ProductionRepository
@@ -368,6 +368,9 @@ class ProductionRepository
                 ->leftJoin('production_details as pd', function ($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'pd.business_details_id');
                 })
+                ->leftJoin('estimation', function ($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
+                })
                 ->leftJoin('tbl_unit', 'pd.unit', '=', 'tbl_unit.id')
                 ->leftJoin('tbl_part_item', 'pd.part_item_id', '=', 'tbl_part_item.id')
                 ->where('businesses_details.id', $id)
@@ -389,7 +392,8 @@ class ProductionRepository
                     'tbl_part_item.description as part_description',
                     'designs.bom_image',
                     'designs.design_image',
-                    'business_application_processes.store_material_sent_date'
+                    'business_application_processes.store_material_sent_date',
+                    'estimation.total_estimation_amount'
                 )
                 ->distinct()  // Ensure only distinct rows
                 ->get();
