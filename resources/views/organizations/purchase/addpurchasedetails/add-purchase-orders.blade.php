@@ -466,6 +466,7 @@
 
                         });
                     </script> --}}
+                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
                         <script>
                             $(document).ready(function() {
 
@@ -502,11 +503,24 @@
                                     let remaining = parseFloat($('#remaining_amount').val()) || 0;
 
                                     if (finalTotal > remaining) {
-                                        alert("PO amount exceeds remaining estimation amount!");
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Error!',
+                                            text: 'PO amount exceeds remaining estimation amount!',
+                                            confirmButtonText: 'OK'
+                                        });
+
                                         $('.login-submit-cs').prop('disabled', true);
                                     } else {
                                         $('.login-submit-cs').prop('disabled', false);
                                     }
+
+                                    // if (finalTotal > remaining) {
+                                    //     alert("PO amount exceeds remaining estimation amount!");
+                                    //     $('.login-submit-cs').prop('disabled', true);
+                                    // } else {
+                                    //     $('.login-submit-cs').prop('disabled', false);
+                                    // }
                                 }
                             });
                         </script>

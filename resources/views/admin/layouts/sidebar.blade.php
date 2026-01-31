@@ -1154,6 +1154,19 @@
                             <a href="{{ route('dashboard') }}"><i class="fa-solid fa-user-group icon-wrap"></i><span
                                     class="mini-click-non">Dashboard</span></a>
                         </li>
+                        <li class="{{ Request::is('list-employee-leave-report') ? 'active' : '' }}">
+                            <a class="has-arrow" href="{{ route('list-employee-leave-report') }}"
+                                aria-expanded="false"><i class="fa fa-chart-line icon-wrap"></i><span
+                                    class="mini-click-non">Report</span></a>
+                            <ul class="submenu-angle" aria-expanded="false">
+                                <li class="nav-item {{ Request::is('list-employee-leave-report') ? 'active' : '' }}">
+                                    <a href="{{ route('list-employee-leave-report') }}"> <i
+                                            class="fa fa-list-alt icon-wrap"></i> <span
+                                            class="mini-click-non">Employee Leave Report</span></a>
+                                </li>
+
+                            </ul>
+                        </li>
                         <li>
                             <a class="has-arrow" href="{{ route('list-employee') }}" aria-expanded="false"><i
                                     class="fa big-icon fa-user icon-wrap"></i> <span
@@ -1167,21 +1180,6 @@
                         <li><a href="{{ route('list-yearly-leave-management') }}"><i
                                     class="fas fa-calendar-alt icon-wrap"></i> <span class="mini-click-non">Add
                                     Yearly Leave</span></a></li>
-
-
-                        <li class="{{ Request::is('list-employee-leave-report') ? 'active' : '' }}">
-                            <a class="has-arrow" href="{{ route('list-employee-leave-report') }}"
-                                aria-expanded="false"><i class="fa fa-chart-line icon-wrap"></i><span
-                                    class="mini-click-non">Report</span></a>
-                            <ul class="submenu-angle" aria-expanded="false">
-                                <li class="nav-item {{ Request::is('list-employee-leave-report') ? 'active' : '' }}">
-                                    <a href="{{ route('list-employee-leave-report') }}"> <i
-                                            class="fa fa-list-alt icon-wrap"></i> <span
-                                            class="mini-click-non">Employee Leave Report</span></a></li>
-
-                            </ul>
-                        </li>
-
 
                         <li>
                             <a class="has-arrow" href="{{ route('list-leaves-acceptedby-hr') }}"

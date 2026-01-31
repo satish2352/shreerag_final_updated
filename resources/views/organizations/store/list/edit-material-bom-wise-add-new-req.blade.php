@@ -2,6 +2,20 @@
 @section('content')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <style>
+        /* Fix extra height in first row */
+        #purchase_order_table tbody tr:first-child td {
+            padding-top: 4px !important;
+            padding-bottom: 4px !important;
+        }
+
+        /* Prevent input from becoming multi-line */
+        #purchase_order_table input.form-control {
+            height: 34px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
         /* keep the inline input styled as before */
         .custom-dropdown {
             position: relative;
@@ -251,11 +265,16 @@
                                                                             $item->part_item_id,
                                                                         );
                                                                     @endphp
-
                                                                     <input type="text"
                                                                         class="dropdown-input form-control"
                                                                         value="{{ $selected ? $selected->description : '' }}"
-                                                                        readonly>
+                                                                        readonly
+                                                                        title="{{ $selected ? $selected->description : '' }}">
+
+                                                                    {{-- <input type="text"
+                                                                        class="dropdown-input form-control"
+                                                                        value="{{ $selected ? $selected->description : '' }}"
+                                                                        readonly> --}}
 
                                                                     <div class="dropdown-options dropdown-height"
                                                                         style="display:none; width: 750px !important;">
@@ -381,6 +400,30 @@
                                                                 </div>
                                                             </td>
                                                             <td>
+                                                                @if ($loop->first)
+                                                                    <!-- First row: delete disabled -->
+                                                                    <button type="button" class="btn btn-danger btn-sm"
+                                                                        disabled>
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </button>
+                                                                @else
+                                                                    @if ($item->material_send_production == 0)
+                                                                        <a data-id="{{ $item->id }}" type="button"
+                                                                            class="btn btn-danger btn-sm ajax-delete"
+                                                                            title="Delete">
+                                                                            <i class="fa fa-trash"></i>
+                                                                        </a>
+                                                                    @else
+                                                                        <button type="button"
+                                                                            class="delete-btn btn btn-sm btn-danger remove-row"
+                                                                            disabled>
+                                                                            <i class="fa fa-trash"></i>
+                                                                        </button>
+                                                                    @endif
+                                                                @endif
+                                                            </td>
+
+                                                            {{-- <td>
                                                                 @if ($item->material_send_production == 0)
                                                                     <a data-id="{{ $item->id }}" type="button"
                                                                         class="btn btn-danger btn-sm ajax-delete"
@@ -394,7 +437,7 @@
                                                                         <i class="fa fa-trash"></i>
                                                                     </button>
                                                                 @endif
-                                                            </td>
+                                                            </td> --}}
                                                         </tr>
                                                     @endforeach
                                                 @endforeach
@@ -611,7 +654,13 @@
                         $(this).toggle(text.includes(searchTerm));
                     });
                 });
-
+                purchaseOrderTable.on("click", ".remove-row", function() {
+                    if ($(this).closest('tr').index() === 0) {
+                        Swal.fire('Error', 'First row cannot be deleted', 'warning');
+                        return;
+                    }
+                    $(this).closest('tr').remove();
+                });
                 // Select option
                 // $(document).on('click', '.custom-dropdown .option', function () {
                 //     const selectedText = $(this).text();

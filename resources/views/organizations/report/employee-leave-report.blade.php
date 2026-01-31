@@ -89,6 +89,7 @@
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
+                                                <th rowspan="2">Sr. No.</th>
                                                 <th rowspan="2">Employee Name</th>
                                                 <th rowspan="2">Year</th>
                                                 <th colspan="3">Opening</th>
@@ -211,6 +212,7 @@
                             return `
 
                                 <tr>
+                                <td>${((currentPage - 1) * pageSize) + i + 1}</td>
        <td>${item.f_name ?? ''} ${item.m_name ?? ''} ${item.l_name ?? ''}</td>
 
         <td>${item.year ?? '-'}</td>
