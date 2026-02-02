@@ -1291,7 +1291,9 @@ class ReportRepository
                     $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_dispatch.quantity_tracking_id');
                 })
                 ->whereIn('tcqt1.quantity_tracking_status', $array_to_be_quantity_tracking)
-                ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
+                // ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
+                ->where('bap1.dispatch_status_id', 1154)
+                
                 ->where('businesses.is_active', true)
                 ->where('businesses.is_deleted', 0);
 
