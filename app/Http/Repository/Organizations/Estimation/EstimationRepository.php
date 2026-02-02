@@ -213,8 +213,7 @@ class EstimationRepository
                 // 'business_details_id' => $dataOutputNew->id
                 'business_details_id' => $decoded_business_id
             ]);
-            // dd($production_data_details);
-            // die();
+            
             $production_data_details->business_id = $dataOutputNew->business_id;
             $production_data_details->design_id = $dataOutputNew->design_id;
             $production_data_details->business_details_id = $dataOutputNew->business_details_id;

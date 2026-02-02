@@ -106,7 +106,7 @@ class ProductionRepository
             $business_application = BusinessApplicationProcesses::where('business_details_id', $business_details_id)->first();
 
             if (!$business_application) {
-                dd('No business_application found for ID: ' . $business_details_id);
+                // dd('No business_application found for ID: ' . $business_details_id);
             }
             //  Step 8: Update statuses if record is found
             $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.LIST_DESIGN_RECIEVED_FROM_PROD_DEPT_FOR_REVISED');
@@ -126,7 +126,7 @@ class ProductionRepository
             return response()->json(['status' => 'success', 'message' => 'Design rejected and updates completed.']);
         } catch (\Exception $e) {
             //  Step 10: Catch and debug any exception
-            dd('Caught Exception: ' . $e->getMessage());
+            // dd('Caught Exception: ' . $e->getMessage());
         }
     }
 

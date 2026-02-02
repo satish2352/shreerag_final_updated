@@ -231,7 +231,7 @@ class ReportServices
     {
         try {
             $data_output =  $this->repo->listStockDailyReport($request);
-            // dd($data_output);
+          
             return $data_output;
         } catch (\Exception $e) {
             throw $e;
