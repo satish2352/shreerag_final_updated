@@ -165,6 +165,7 @@
                                                                     class="form-control" readonly
                                                                     value="{{ $index + 1 }}">
                                                             </td>
+                                                            
                                                             {{-- <td>
                                                                 <div class="custom-dropdown">
                                                                     <input type="hidden"
@@ -253,7 +254,7 @@
                                                                     </div>
                                                                 </div>
                                                             </td> --}}
-                                                            <td>
+                                                            <!-- <td>
                                                                 <div class="custom-dropdown">
                                                                     <input type="hidden"
                                                                         name="addmore[{{ $index }}][part_item_id]"
@@ -265,16 +266,12 @@
                                                                             $item->part_item_id,
                                                                         );
                                                                     @endphp
-                                                                    <input type="text"
-                                                                        class="dropdown-input form-control"
-                                                                        value="{{ $selected ? $selected->description : '' }}"
-                                                                        readonly
-                                                                        title="{{ $selected ? $selected->description : '' }}">
+                                                                  
 
-                                                                    {{-- <input type="text"
+                                                                     <input type="text"
                                                                         class="dropdown-input form-control"
                                                                         value="{{ $selected ? $selected->description : '' }}"
-                                                                        readonly> --}}
+                                                                        readonly> 
 
                                                                     <div class="dropdown-options dropdown-height"
                                                                         style="display:none; width: 750px !important;">
@@ -290,7 +287,36 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </td>
+                                                            </td> -->
+
+                                                            <td>
+  <div class="custom-dropdown">
+    <input type="hidden"
+      name="addmore[{{ $index }}][part_item_id]"
+      class="part_no"
+      value="{{ $item->part_item_id }}">
+
+    @php
+      $selected = $dataOutputPartItem->firstWhere('id', $item->part_item_id);
+    @endphp
+
+    <input type="text"
+      class="dropdown-input form-control"
+      value="{{ $selected ? $selected->description : '' }}"
+      title="{{ $selected ? $selected->description : '' }}"
+      readonly>
+
+    <div class="dropdown-options dropdown-height" style="display:none; width: 750px;">
+      <input type="text" class="search-box form-control" placeholder="Search...">
+      <div class="options-list">
+        @foreach ($dataOutputPartItem as $data)
+          <div class="option" data-id="{{ $data->id }}">{{ $data->description }}</div>
+        @endforeach
+      </div>
+    </div>
+  </div>
+</td>
+
 
                                                             {{-- <td>
                                                                 <div class="custom-dropdown"
@@ -735,6 +761,19 @@
         </script>
         <script>
             $(document).ready(function() {
+
+            // 🔁 Calculate all row totals on page load
+$('#purchase_order_table tbody tr').each(function () {
+    let rate = parseFloat($(this).find('.basic_rate').val()) || 0;
+    let qty  = parseFloat($(this).find('.quantity').val()) || 0;
+    let total = rate * qty;
+
+    $(this).find('.total_amount').val(total.toFixed(2));
+});
+
+// 🔢 Then calculate grand total
+calculateGrandTotal();
+
                 // Initialize form validation
                 $("#addProductForm").validate({
                     submitHandler: function(form) {
