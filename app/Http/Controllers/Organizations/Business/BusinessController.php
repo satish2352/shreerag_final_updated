@@ -270,33 +270,84 @@ class BusinessController extends Controller
                 ->with('msg', 'Something went wrong. ' . $e->getMessage());
         }
     }
-    public function submitFinalPurchaseOrder($id)
-    {
-        try {
-            $data_output = $this->service->getPurchaseOrderBusinessWise($id);
+    // public function submitFinalPurchaseOrder($id)
+    // {
+    //     try {
+    //         $data_output = $this->service->getPurchaseOrderBusinessWise($id);
 
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->business_details_id;
+    //         if ($data_output->isNotEmpty()) {
+    //             foreach ($data_output as $data) {
+    //                 $business_id = $data->business_details_id;
 
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('business_details_id', $business_id)
-                            ->update($update_data);
-                    }
-                }
-            } else {
-                return view('organizations.business.list.list-purchase-order-particular-po', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
-            return view('organizations.business.list.list-purchase-order-particular-po', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
+    //                 if (!empty($business_id)) {
+    //                     $update_data['is_view'] = '1';
+    //                     AdminView::where('is_view', '0')
+    //                         ->where('business_details_id', $business_id)
+    //                         ->update($update_data);
+    //                 }
+    //             }
+    //         } else {
+    //             return view('organizations.business.list.list-purchase-order-particular-po', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found'
+    //             ]);
+    //         }
+    //         return view('organizations.business.list.list-purchase-order-particular-po', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+//     public function submitFinalPurchaseOrder($id)
+// {
+//     try {
+//         $data_output = $this->service->getPurchaseOrderBusinessWise($id);
+
+//         if ($data_output->isEmpty()) {
+//             return view('organizations.business.list.list-purchase-order-particular-po', [
+//                 'data_output' => [],
+//                 'message' => 'No data found'
+//             ]);
+//         }
+
+//         $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
+
+//         if ($bdIds->isNotEmpty()) {
+//             AdminView::where('is_view', 0)
+//                 ->whereIn('business_details_id', $bdIds)
+//                 ->update(['is_view' => 1]);
+//         }
+
+//         return view('organizations.business.list.list-purchase-order-particular-po', compact('data_output'));
+//     } catch (\Exception $e) {
+//         return $e;
+//     }
+// }
+public function submitFinalPurchaseOrder($id)
+{
+    try {
+        $data_output = collect($this->service->getPurchaseOrderBusinessWise($id));
+
+        if ($data_output->isEmpty()) {
+            return view('organizations.business.list.list-purchase-order-particular-po', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
         }
+
+        $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
+
+        if ($bdIds->isNotEmpty()) {
+            AdminView::where('is_view', 0)
+                ->whereIn('business_details_id', $bdIds)
+                ->update(['is_view' => 1]);
+        }
+
+        return view('organizations.business.list.list-purchase-order-particular-po', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
     }
+}
+
     public function getPurchaseOrderDetails($purchase_order_id)
     {
 

@@ -75,32 +75,57 @@ class AllListController extends Controller
         }
     }
 
-    public function getAllListBusinessReceivedFromLogistics()
-    {
-        try {
-            $data_output = $this->service->getAllListBusinessReceivedFromLogistics();
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_details_id = $data->business_details_id;
+    // public function getAllListBusinessReceivedFromLogistics()
+    // {
+    //     try {
+    //         $data_output = $this->service->getAllListBusinessReceivedFromLogistics();
+    //         if ($data_output->isNotEmpty()) {
+    //             foreach ($data_output as $data) {
+    //                 $business_details_id = $data->business_details_id;
 
-                    if (!empty($business_details_id)) {
-                        $update_data['logistics_to_fianance_visible'] = '1';
-                        NotificationStatus::where('logistics_to_fianance_visible', '0')
-                            ->where('business_details_id', $business_details_id)
-                            ->update($update_data);
-                    }
-                }
-            } else {
-                return view('organizations.finance.list.list-business-received-from-logistics', [
-                    'data_output' => [],
-                    'message' => 'No data found for designs received for correction'
-                ]);
-            }
-            return view('organizations.finance.list.list-business-received-from-logistics', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
+    //                 if (!empty($business_details_id)) {
+    //                     $update_data['logistics_to_fianance_visible'] = '1';
+    //                     NotificationStatus::where('logistics_to_fianance_visible', '0')
+    //                         ->where('business_details_id', $business_details_id)
+    //                         ->update($update_data);
+    //                 }
+    //             }
+    //         } else {
+    //             return view('organizations.finance.list.list-business-received-from-logistics', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found for designs received for correction'
+    //             ]);
+    //         }
+    //         return view('organizations.finance.list.list-business-received-from-logistics', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+public function getAllListBusinessReceivedFromLogistics()
+{
+    try {
+        $data_output = $this->service->getAllListBusinessReceivedFromLogistics();
+
+        if ($data_output->isEmpty()) {
+            return view('organizations.finance.list.list-business-received-from-logistics', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
         }
+
+        $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
+
+        if ($bdIds->isNotEmpty()) {
+            NotificationStatus::where('logistics_to_fianance_visible', 0)
+                ->whereIn('business_details_id', $bdIds)
+                ->update(['logistics_to_fianance_visible' => 1]);
+        }
+
+        return view('organizations.finance.list.list-business-received-from-logistics', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
     }
+}
 
     public function getAllListBusinessFianaceSendToDispatch()
     {

@@ -38,197 +38,374 @@ class AllListController extends Controller
         }
     }
 
-    public function getAllListCorrectionToDesignFromProduction(Request $request)
-    {
-        try {
-            $data_output = $this->service->getAllListCorrectionToDesignFromProduction();
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->business_id;
+    // public function getAllListCorrectionToDesignFromProduction(Request $request)
+    // {
+    //     try {
+    //         $data_output = $this->service->getAllListCorrectionToDesignFromProduction();
+    //         if ($data_output->isNotEmpty()) {
+    //             foreach ($data_output as $data) {
+    //                 $business_id = $data->business_id;
 
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('business_id', $business_id)
-                            ->update($update_data);
-                    }
-                }
-            } else {
-                return view('organizations.business.list.list-business-design-correction-from-prod', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
+    //                 if (!empty($business_id)) {
+    //                     $update_data['is_view'] = '1';
+    //                     AdminView::where('is_view', '0')
+    //                         ->where('business_id', $business_id)
+    //                         ->update($update_data);
+    //                 }
+    //             }
+    //         } else {
+    //             return view('organizations.business.list.list-business-design-correction-from-prod', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found'
+    //             ]);
+    //         }
 
-            return view('organizations.business.list.list-business-design-correction-from-prod', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
+    //         return view('organizations.business.list.list-business-design-correction-from-prod', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+public function getAllListCorrectionToDesignFromProduction(Request $request)
+{
+    try {
+        $data_output = $this->service->getAllListCorrectionToDesignFromProduction();
+
+        $ids = $data_output->pluck('business_id')->filter()->unique()->values();
+
+        if ($ids->isNotEmpty()) {
+            AdminView::where('is_view', 0)
+                ->whereIn('business_id', $ids)
+                ->update(['is_view' => 1]);
         }
+
+        return view('organizations.business.list.list-business-design-correction-from-prod', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
     }
+}
 
-    public function materialAskByProdToStore(Request $request)
-    {
-        try {
-            $data_output = $this->service->materialAskByProdToStore();
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->business_id;
+    // public function materialAskByProdToStore(Request $request)
+    // {
+    //     try {
+    //         $data_output = $this->service->materialAskByProdToStore();
+    //         if ($data_output->isNotEmpty()) {
+    //             foreach ($data_output as $data) {
+    //                 $business_id = $data->business_id;
 
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('business_id', $business_id)
-                            ->update($update_data);
-                    }
-                }
-            } else {
-                return view('organizations.business.list.list-material-ask-by-prod-to-store', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
-            return view('organizations.business.list.list-material-ask-by-prod-to-store', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
+    //                 if (!empty($business_id)) {
+    //                     $update_data['is_view'] = '1';
+    //                     AdminView::where('is_view', '0')
+    //                         ->where('business_id', $business_id)
+    //                         ->update($update_data);
+    //                 }
+    //             }
+    //         } else {
+    //             return view('organizations.business.list.list-material-ask-by-prod-to-store', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found'
+    //             ]);
+    //         }
+    //         return view('organizations.business.list.list-material-ask-by-prod-to-store', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+
+    // public function getAllStoreDeptSentForPurchaseMaterials(Request $request)
+    // {
+    //     try {
+    //         $data_output = $this->service->getAllStoreDeptSentForPurchaseMaterials();
+    //         if ($data_output->isNotEmpty()) {
+    //             foreach ($data_output as $data) {
+    //                 $business_id = $data->business_id;
+
+    //                 if (!empty($business_id)) {
+    //                     $update_data['is_view'] = '1';
+    //                     AdminView::where('is_view', '0')
+    //                         ->where('business_id', $business_id)
+    //                         ->update($update_data);
+    //                 }
+    //             }
+    //         } else {
+    //             return view('organizations.business.list.list-material-list-from-store-to-purchase', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found'
+    //             ]);
+    //         }
+    //         return view('organizations.business.list.list-material-list-from-store-to-purchase', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+
+    // public function getAllListPurchaseOrder(Request $request)
+    // {
+    //     try {
+    //         $data_output = $this->service->getAllListPurchaseOrder();
+    //         if ($data_output->isNotEmpty()) {
+    //             foreach ($data_output as $data) {
+    //                 $business_id = $data->id;
+
+    //                 if (!empty($business_id)) {
+    //                     $update_data['is_view'] = '1';
+    //                     AdminView::where('is_view', '0')
+    //                         ->where('id', $business_id)
+    //                         ->update($update_data);
+    //                 }
+    //             }
+    //         } else {
+    //             return view('organizations.business.list.list-purchase-order-need-to-check', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found'
+    //             ]);
+    //         }
+
+    //         return view('organizations.business.list.list-purchase-order-need-to-check', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+
+    // public function getAllListApprovedPurchaseOrderOwnerlogin(Request $request)
+    // {
+    //     try {
+    //         $data_output = $this->service->getAllListApprovedPurchaseOrderOwnerlogin();
+    //         if ($data_output->isNotEmpty()) {
+    //             foreach ($data_output as $data) {
+    //                 $business_id = $data->id;
+
+    //                 if (!empty($business_id)) {
+    //                     $update_data['is_view'] = '1';
+    //                     AdminView::where('is_view', '0')
+    //                         ->where('id', $business_id)
+    //                         ->update($update_data);
+    //                 }
+    //             }
+    //         } else {
+    //             return view('organizations.business.list.list-purchase-order-approved', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found'
+    //             ]);
+    //         }
+    //         return view('organizations.business.list.list-purchase-order-approved', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+public function materialAskByProdToStore(Request $request)
+{
+    try {
+        $data_output = $this->service->materialAskByProdToStore();
+
+        if ($data_output->isEmpty()) {
+            return view('organizations.business.list.list-material-ask-by-prod-to-store', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
         }
-    }
 
-    public function getAllStoreDeptSentForPurchaseMaterials(Request $request)
-    {
-        try {
-            $data_output = $this->service->getAllStoreDeptSentForPurchaseMaterials();
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->business_id;
+        $ids = $data_output->pluck('business_id')->filter()->unique()->values();
 
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('business_id', $business_id)
-                            ->update($update_data);
-                    }
-                }
-            } else {
-                return view('organizations.business.list.list-material-list-from-store-to-purchase', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
-            return view('organizations.business.list.list-material-list-from-store-to-purchase', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
+        if ($ids->isNotEmpty()) {
+            AdminView::where('is_view', 0)
+                ->whereIn('business_id', $ids)
+                ->update(['is_view' => 1]);
         }
+
+        return view('organizations.business.list.list-material-ask-by-prod-to-store', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
     }
+}
+public function getAllStoreDeptSentForPurchaseMaterials(Request $request)
+{
+    try {
+        $data_output = $this->service->getAllStoreDeptSentForPurchaseMaterials();
 
-    public function getAllListPurchaseOrder(Request $request)
-    {
-        try {
-            $data_output = $this->service->getAllListPurchaseOrder();
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->id;
-
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('id', $business_id)
-                            ->update($update_data);
-                    }
-                }
-            } else {
-                return view('organizations.business.list.list-purchase-order-need-to-check', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
-
-            return view('organizations.business.list.list-purchase-order-need-to-check', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
+        if ($data_output->isEmpty()) {
+            return view('organizations.business.list.list-material-list-from-store-to-purchase', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
         }
-    }
 
-    public function getAllListApprovedPurchaseOrderOwnerlogin(Request $request)
-    {
-        try {
-            $data_output = $this->service->getAllListApprovedPurchaseOrderOwnerlogin();
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->id;
+        $ids = $data_output->pluck('business_id')->filter()->unique()->values();
 
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('id', $business_id)
-                            ->update($update_data);
-                    }
-                }
-            } else {
-                return view('organizations.business.list.list-purchase-order-approved', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
-            return view('organizations.business.list.list-purchase-order-approved', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
+        if ($ids->isNotEmpty()) {
+            AdminView::where('is_view', 0)
+                ->whereIn('business_id', $ids)
+                ->update(['is_view' => 1]);
         }
+
+        return view('organizations.business.list.list-material-list-from-store-to-purchase', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
     }
+}
+public function getAllListPurchaseOrder(Request $request)
+{
+    try {
+        $data_output = $this->service->getAllListPurchaseOrder();
 
-    public function submitFinalPurchaseOrder($id)
-    {
-        try {
-            $data_output = $this->service->getPurchaseOrderBusinessWise($id);
-
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->business_details_id;
-
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('business_details_id', $business_id)
-                            ->update($update_data);
-                    }
-                }
-            } else {
-                return view('organizations.business.list.list-purchase-order-approved-bussinesswise', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
-            return view('organizations.business.list.list-purchase-order-approved-bussinesswise', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
+        if ($data_output->isEmpty()) {
+            return view('organizations.business.list.list-purchase-order-need-to-check', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
         }
-    }
 
-    public function getAllListRejectedPurchaseOrderOwnerlogin(Request $request)
-    {
-        try {
-            $data_output = $this->service->getAllListRejectedPurchaseOrderOwnerlogin();
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->id;
+        $poIds = $data_output->pluck('id')->filter()->unique()->values();
 
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('id', $business_id)
-                            ->update($update_data);
-                    }
-                }
-            } else {
-                return view('organizations.business.list.list-purchase-order-rejected', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
-            return view('organizations.business.list.list-purchase-order-rejected', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
+        if ($poIds->isNotEmpty()) {
+            AdminView::where('is_view', 0)
+    ->whereIn('id', $poIds)
+    ->update(['is_view' => 1]);
+
         }
+
+        return view('organizations.business.list.list-purchase-order-need-to-check', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
     }
+}
+
+public function getAllListApprovedPurchaseOrderOwnerlogin(Request $request)
+{
+    try {
+        $data_output = $this->service->getAllListApprovedPurchaseOrderOwnerlogin();
+
+        $data_output = collect($data_output); // safe even if array
+
+        if ($data_output->isEmpty()) {
+            return view('organizations.business.list.list-purchase-order-approved', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
+        }
+
+        $ids = $data_output->pluck('id')->filter()->unique()->values();
+
+        if ($ids->isNotEmpty()) {
+            AdminView::where('is_view', 0)
+                ->whereIn('id', $ids)          // ✅ FIX: use "id"
+                ->update(['is_view' => 1]);
+        }
+
+        return view('organizations.business.list.list-purchase-order-approved', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
+    }
+}
+
+
+
+
+    // public function submitFinalPurchaseOrder($id)
+    // {
+    //     try {
+    //         $data_output = $this->service->getPurchaseOrderBusinessWise($id);
+
+    //         if ($data_output->isNotEmpty()) {
+    //             foreach ($data_output as $data) {
+    //                 $business_id = $data->business_details_id;
+
+    //                 if (!empty($business_id)) {
+    //                     $update_data['is_view'] = '1';
+    //                     AdminView::where('is_view', '0')
+    //                         ->where('business_details_id', $business_id)
+    //                         ->update($update_data);
+    //                 }
+    //             }
+    //         } else {
+    //             return view('organizations.business.list.list-purchase-order-approved-bussinesswise', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found'
+    //             ]);
+    //         }
+    //         return view('organizations.business.list.list-purchase-order-approved-bussinesswise', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+
+    // public function getAllListRejectedPurchaseOrderOwnerlogin(Request $request)
+    // {
+    //     try {
+    //         $data_output = $this->service->getAllListRejectedPurchaseOrderOwnerlogin();
+    //         if ($data_output->isNotEmpty()) {
+    //             foreach ($data_output as $data) {
+    //                 $business_id = $data->id;
+
+    //                 if (!empty($business_id)) {
+    //                     $update_data['is_view'] = '1';
+    //                     AdminView::where('is_view', '0')
+    //                         ->where('id', $business_id)
+    //                         ->update($update_data);
+    //                 }
+    //             }
+    //         } else {
+    //             return view('organizations.business.list.list-purchase-order-rejected', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found'
+    //             ]);
+    //         }
+    //         return view('organizations.business.list.list-purchase-order-rejected', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+public function submitFinalPurchaseOrder($id)
+{
+    try {
+        $data_output = $this->service->getPurchaseOrderBusinessWise($id);
+
+        if ($data_output->isEmpty()) {
+            return view('organizations.business.list.list-purchase-order-approved-bussinesswise', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
+        }
+
+        $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
+
+        if ($bdIds->isNotEmpty()) {
+            AdminView::where('is_view', 0)
+                ->whereIn('business_details_id', $bdIds)
+                ->update(['is_view' => 1]);
+        }
+
+        return view('organizations.business.list.list-purchase-order-approved-bussinesswise', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
+    }
+}
+public function getAllListRejectedPurchaseOrderOwnerlogin(Request $request)
+{
+    try {
+        $data_output = $this->service->getAllListRejectedPurchaseOrderOwnerlogin();
+
+        if ($data_output->isEmpty()) {
+            return view('organizations.business.list.list-purchase-order-rejected', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
+        }
+
+        $ids = $data_output->pluck('id')->filter()->unique()->values();
+
+        if ($ids->isNotEmpty()) {
+            AdminView::where('is_view', 0)
+                ->whereIn('id', $ids)
+                ->update(['is_view' => 1]);
+        }
+
+        return view('organizations.business.list.list-purchase-order-rejected', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
+    }
+}
+
+
 
     public function getPurchaseOrderRejectedBusinessWise($id)
     {
@@ -259,32 +436,59 @@ class AllListController extends Controller
             return $e;
         }
     }
-    public function loadDesignSubmittedForEstimation()
-    { //checked
-        try {
-            $data_output = $this->service->loadDesignSubmittedForEstimation();
-            if (is_iterable($data_output) && count($data_output) > 0) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->business_id;
+    // public function loadDesignSubmittedForEstimation()
+    // { //checked
+    //     try {
+    //         $data_output = $this->service->loadDesignSubmittedForEstimation();
+    //         if (is_iterable($data_output) && count($data_output) > 0) {
+    //             foreach ($data_output as $data) {
+    //                 $business_id = $data->business_id;
 
-                    if (!empty($business_id)) {
-                        AdminView::where('is_view', '0')
-                            ->where('business_id', $business_id)
-                            ->update(['is_view' => '1']);
-                    }
-                }
-            } else {
-                return view('organizations.business.design.list-bom-received-estimation', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
+    //                 if (!empty($business_id)) {
+    //                     AdminView::where('is_view', '0')
+    //                         ->where('business_id', $business_id)
+    //                         ->update(['is_view' => '1']);
+    //                 }
+    //             }
+    //         } else {
+    //             return view('organizations.business.design.list-bom-received-estimation', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found'
+    //             ]);
+    //         }
 
-            return view('organizations.business.design.list-bom-received-estimation', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
+    //         return view('organizations.business.design.list-bom-received-estimation', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+public function loadDesignSubmittedForEstimation()
+{
+    try {
+        $data_output = $this->service->loadDesignSubmittedForEstimation();
+
+        // If service returns Collection, this is best:
+        if (empty($data_output) || (method_exists($data_output, 'isEmpty') && $data_output->isEmpty())) {
+            return view('organizations.business.design.list-bom-received-estimation', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
         }
+
+        // Works for Collection + array
+        $ids = collect($data_output)->pluck('business_id')->filter()->unique()->values();
+
+        if ($ids->isNotEmpty()) {
+            AdminView::where('is_view', 0)
+                ->whereIn('business_id', $ids)
+                ->update(['is_view' => 1]);
+        }
+
+        return view('organizations.business.design.list-bom-received-estimation', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
     }
+}
 
     public function loadDesignSubmittedForEstimationBusinessWise($business_details_id)
     {
@@ -305,32 +509,60 @@ class AllListController extends Controller
             return $e;
         }
     }
+    // public function getAcceptEstimationBOMBusinessWise($id)
+    // {
+    //     try {
+    //         $data_output = $this->service->getAcceptEstimationBOMBusinessWise($id);
+    //         if (is_iterable($data_output) && count($data_output) > 0) {
+    //             foreach ($data_output as $data) {
+    //                 $business_id = $data->id;
+
+    //                 if (!empty($business_id)) {
+    //                     NotificationStatus::where('accepted_bom_estimated', '0')
+    //                         ->where('id', $business_id)
+    //                         ->update(['accepted_bom_estimated' => '1']);
+    //                 }
+    //             }
+    //         } else {
+    //             return view('organizations.business.list.list-bom-accepted-business-wise', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found'
+    //             ]);
+    //         }
+
+    //         return view('organizations.business.list.list-bom-accepted-business-wise', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+
     public function getAcceptEstimationBOMBusinessWise($id)
-    {
-        try {
-            $data_output = $this->service->getAcceptEstimationBOMBusinessWise($id);
-            if (is_iterable($data_output) && count($data_output) > 0) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->id;
+{
+    try {
+        $data_output = $this->service->getAcceptEstimationBOMBusinessWise($id);
 
-                    if (!empty($business_id)) {
-                        NotificationStatus::where('accepted_bom_estimated', '0')
-                            ->where('id', $business_id)
-                            ->update(['accepted_bom_estimated' => '1']);
-                    }
-                }
-            } else {
-                return view('organizations.business.list.list-bom-accepted-business-wise', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
-
-            return view('organizations.business.list.list-bom-accepted-business-wise', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
+        if (empty($data_output) || (method_exists($data_output, 'isEmpty') && $data_output->isEmpty())) {
+            return view('organizations.business.list.list-bom-accepted-business-wise', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
         }
+
+        // if $data_output is collection/array of rows having id
+        $ids = collect($data_output)->pluck('id')->filter()->unique()->values();
+
+        if ($ids->isNotEmpty()) {
+            NotificationStatus::where('accepted_bom_estimated', 0)
+                ->whereIn('id', $ids)
+                ->update(['accepted_bom_estimated' => 1]);
+        }
+
+        return view('organizations.business.list.list-bom-accepted-business-wise', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
     }
+}
+
     public function getRejectEstimationBOM()
     { //checked
         try {
@@ -348,34 +580,59 @@ class AllListController extends Controller
     }
 
 
-    public function getRejectEstimationBOMBusinessWise($id)
-    {
-        try {
-            $data_output = $this->service->getRejectEstimationBOMBusinessWise($id);
+    // public function getRejectEstimationBOMBusinessWise($id)
+    // {
+    //     try {
+    //         $data_output = $this->service->getRejectEstimationBOMBusinessWise($id);
 
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->id;
+    //         if ($data_output->isNotEmpty()) {
+    //             foreach ($data_output as $data) {
+    //                 $business_id = $data->id;
 
-                    if (!empty($business_id)) {
-                        $update_data['rejected_bom_estimated'] = '11';
+    //                 if (!empty($business_id)) {
+    //                     $update_data['rejected_bom_estimated'] = '11';
 
-                        NotificationStatus::where('rejected_bom_estimated', '0')
-                            ->where('id', $business_id)
-                            ->update($update_data);
-                    }
-                }
-            } else {
-                return view('organizations.business.list.list-bom-rejected-business-wise', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
-            return view('organizations.business.list.list-bom-rejected-business-wise', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
+    //                     NotificationStatus::where('rejected_bom_estimated', '0')
+    //                         ->where('id', $business_id)
+    //                         ->update($update_data);
+    //                 }
+    //             }
+    //         } else {
+    //             return view('organizations.business.list.list-bom-rejected-business-wise', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found'
+    //             ]);
+    //         }
+    //         return view('organizations.business.list.list-bom-rejected-business-wise', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+public function getRejectEstimationBOMBusinessWise($id)
+{
+    try {
+        $data_output = $this->service->getRejectEstimationBOMBusinessWise($id);
+
+        if ($data_output->isEmpty()) {
+            return view('organizations.business.list.list-bom-rejected-business-wise', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
         }
+
+        $ids = $data_output->pluck('id')->filter()->unique()->values();
+
+        if ($ids->isNotEmpty()) {
+            NotificationStatus::where('rejected_bom_estimated', 0)
+                ->whereIn('id', $ids)
+                ->update(['rejected_bom_estimated' => 11]);
+        }
+
+        return view('organizations.business.list.list-bom-rejected-business-wise', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
     }
+}
 
     public function getRevisedEstimationBOM()
     { //checked
@@ -390,32 +647,58 @@ class AllListController extends Controller
             ]);
         }
     }
+    // public function getRevisedEstimationBOMBusinessWise($id)
+    // { //checked
+    //     try {
+    //         $data_output = $this->service->getRevisedEstimationBOMBusinessWise($id);
+    //         if (is_iterable($data_output) && count($data_output) > 0) {
+    //             foreach ($data_output as $data) {
+    //                 $business_id = $data->id;
+
+    //                 if (!empty($business_id)) {
+    //                     AdminView::where('is_view', '0')
+    //                         ->where('id', $business_id)
+    //                         ->update(['is_view' => '1']);
+    //                 }
+    //             }
+    //         } else {
+    //             return view('organizations.business.list.list-revised-bom-estimation-business-wise', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found'
+    //             ]);
+    //         }
+
+    //         return view('organizations.business.list.list-revised-bom-estimation-business-wise', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
     public function getRevisedEstimationBOMBusinessWise($id)
-    { //checked
-        try {
-            $data_output = $this->service->getRevisedEstimationBOMBusinessWise($id);
-            if (is_iterable($data_output) && count($data_output) > 0) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->id;
+{
+    try {
+        $data_output = $this->service->getRevisedEstimationBOMBusinessWise($id);
 
-                    if (!empty($business_id)) {
-                        AdminView::where('is_view', '0')
-                            ->where('id', $business_id)
-                            ->update(['is_view' => '1']);
-                    }
-                }
-            } else {
-                return view('organizations.business.list.list-revised-bom-estimation-business-wise', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
-
-            return view('organizations.business.list.list-revised-bom-estimation-business-wise', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
+        if (empty($data_output) || (method_exists($data_output, 'isEmpty') && $data_output->isEmpty())) {
+            return view('organizations.business.list.list-revised-bom-estimation-business-wise', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
         }
+
+        $ids = collect($data_output)->pluck('id')->filter()->unique()->values();
+
+        if ($ids->isNotEmpty()) {
+            AdminView::where('is_view', 0)
+                ->whereIn('id', $ids)
+                ->update(['is_view' => 1]);
+        }
+
+        return view('organizations.business.list.list-revised-bom-estimation-business-wise', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
     }
+}
+
     public function loadDesignSubmittedForProduction()
     {
         try {
@@ -426,85 +709,154 @@ class AllListController extends Controller
         }
     }
 
-    public function loadDesignSubmittedForProductionBusinessWise($business_id)
-    { //checked
-        try {
-            $data_output = $this->service->loadDesignSubmittedForProductionBusinessWise($business_id);
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->business_details_id;
+    // public function loadDesignSubmittedForProductionBusinessWise($business_id)
+    // { //checked
+    //     try {
+    //         $data_output = $this->service->loadDesignSubmittedForProductionBusinessWise($business_id);
+    //         if ($data_output->isNotEmpty()) {
+    //             foreach ($data_output as $data) {
+    //                 $business_id = $data->business_details_id;
 
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('business_details_id', $business_id)
-                            ->update($update_data);
-                    }
-                }
-            } else {
-                return view('organizations.business.design.list-design-uploaded-owner-business-wise', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
-            return view('organizations.business.design.list-design-uploaded-owner-business-wise', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
+    //                 if (!empty($business_id)) {
+    //                     $update_data['is_view'] = '1';
+    //                     AdminView::where('is_view', '0')
+    //                         ->where('business_details_id', $business_id)
+    //                         ->update($update_data);
+    //                 }
+    //             }
+    //         } else {
+    //             return view('organizations.business.design.list-design-uploaded-owner-business-wise', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found'
+    //             ]);
+    //         }
+    //         return view('organizations.business.design.list-design-uploaded-owner-business-wise', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+
+    // public function getAllListSubmitedPurchaeOrderByVendorOwnerside()
+    // {
+    //     try {
+    //         $data_output = $this->service->getAllListSubmitedPurchaeOrderByVendorOwnerside();
+    //         if ($data_output->isNotEmpty()) {
+    //             foreach ($data_output as $data) {
+    //                 $business_id = $data->business_id;
+
+    //                 if (!empty($business_id)) {
+    //                     $update_data['is_view'] = '1';
+    //                     AdminView::where('is_view', '0')
+    //                         ->where('business_id', $business_id)
+    //                         ->update($update_data);
+    //                 }
+    //             }
+    //         } else {
+    //             return view('organizations.business.design.list-design-upload', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found'
+    //             ]);
+    //         }
+    //         return view('organizations.business.list.list-owner-all-po-sent-to-vendor', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+
+    // public function getOwnerReceivedGatePass()
+    // {
+    //     try {
+    //         // Fetch data from the service layer
+    //         $all_gatepass = $this->service->getOwnerReceivedGatePass() ?? collect();
+    //         if ($all_gatepass->isNotEmpty()) {
+    //             foreach ($all_gatepass as $data) {
+    //                 $business_id = $data->business_details_id;
+    //                 if (!empty($business_id)) {
+    //                     $update_data['is_view'] = '1';
+    //                     AdminView::where('is_view', '0')
+    //                         ->where('business_details_id', $business_id)
+    //                         ->update($update_data);
+    //                 }
+    //             }
+    //         }
+
+    //         // Return the view with gate pass data (empty or not)
+    //         return view('organizations.business.list.list-owner-gatepass', compact('all_gatepass'));
+    //     } catch (\Exception $e) {
+    //         // Log the exception and handle it gracefully
+    //         Log::error($e->getMessage());
+    //         return back()->withErrors('Something went wrong! Please try again.');
+    //     }
+    // }
+public function loadDesignSubmittedForProductionBusinessWise($business_id)
+{
+    try {
+        $data_output = $this->service->loadDesignSubmittedForProductionBusinessWise($business_id);
+
+        if ($data_output->isEmpty()) {
+            return view('organizations.business.design.list-design-uploaded-owner-business-wise', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
         }
-    }
 
-    public function getAllListSubmitedPurchaeOrderByVendorOwnerside()
-    {
-        try {
-            $data_output = $this->service->getAllListSubmitedPurchaeOrderByVendorOwnerside();
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->business_id;
+        $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
 
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('business_id', $business_id)
-                            ->update($update_data);
-                    }
-                }
-            } else {
-                return view('organizations.business.design.list-design-upload', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
-            return view('organizations.business.list.list-owner-all-po-sent-to-vendor', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
+        if ($bdIds->isNotEmpty()) {
+            AdminView::where('is_view', 0)
+                ->whereIn('business_details_id', $bdIds)
+                ->update(['is_view' => 1]);
         }
+
+        return view('organizations.business.design.list-design-uploaded-owner-business-wise', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
     }
+}
+public function getAllListSubmitedPurchaeOrderByVendorOwnerside()
+{
+    try {
+        $data_output = $this->service->getAllListSubmitedPurchaeOrderByVendorOwnerside();
 
-    public function getOwnerReceivedGatePass()
-    {
-        try {
-            // Fetch data from the service layer
-            $all_gatepass = $this->service->getOwnerReceivedGatePass() ?? collect();
-            if ($all_gatepass->isNotEmpty()) {
-                foreach ($all_gatepass as $data) {
-                    $business_id = $data->business_details_id;
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('business_details_id', $business_id)
-                            ->update($update_data);
-                    }
-                }
-            }
-
-            // Return the view with gate pass data (empty or not)
-            return view('organizations.business.list.list-owner-gatepass', compact('all_gatepass'));
-        } catch (\Exception $e) {
-            // Log the exception and handle it gracefully
-            Log::error($e->getMessage());
-            return back()->withErrors('Something went wrong! Please try again.');
+        if ($data_output->isEmpty()) {
+            return view('organizations.business.design.list-design-upload', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
         }
+
+        $businessIds = $data_output->pluck('business_id')->filter()->unique()->values();
+
+        if ($businessIds->isNotEmpty()) {
+            AdminView::where('is_view', 0)
+                ->whereIn('business_id', $businessIds)
+                ->update(['is_view' => 1]);
+        }
+
+        return view('organizations.business.list.list-owner-all-po-sent-to-vendor', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
     }
+}
+public function getOwnerReceivedGatePass()
+{
+    try {
+        $all_gatepass = $this->service->getOwnerReceivedGatePass() ?? collect();
+
+        $bdIds = $all_gatepass->pluck('business_details_id')->filter()->unique()->values();
+
+        if ($bdIds->isNotEmpty()) {
+            AdminView::where('is_view', 0)
+                ->whereIn('business_details_id', $bdIds)
+                ->update(['is_view' => 1]);
+        }
+
+        return view('organizations.business.list.list-owner-gatepass', compact('all_gatepass'));
+    } catch (\Exception $e) {
+        Log::error($e->getMessage());
+        return back()->withErrors('Something went wrong! Please try again.');
+    }
+}
 
 
     public function getOwnerGRN()
@@ -525,31 +877,57 @@ class AllListController extends Controller
             return $e;
         }
     }
+    // public function getAllListMaterialSentFromQualityToStoreGeneratedGRNBusinessWise($id)
+    // {
+    //     try {
+    //         $data_output = $this->service->getAllListMaterialSentFromQualityToStoreGeneratedGRNBusinessWise($id);
+    //         if ($data_output->isNotEmpty()) {
+    //             foreach ($data_output as $data) {
+    //                 $business_id = $data->business_details_id;
+    //                 if (!empty($business_id)) {
+    //                     $update_data['is_view'] = '1';
+    //                     AdminView::where('is_view', '0')
+    //                         ->where('business_details_id', $business_id)
+    //                         ->update($update_data);
+    //                 }
+    //             }
+    //         } else {
+    //             return view('organizations.business.list.list-owner-checked-material-sent-to-store-businesswise', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found'
+    //             ]);
+    //         }
+    //         return view('organizations.business.list.list-owner-checked-material-sent-to-store-businesswise', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
     public function getAllListMaterialSentFromQualityToStoreGeneratedGRNBusinessWise($id)
-    {
-        try {
-            $data_output = $this->service->getAllListMaterialSentFromQualityToStoreGeneratedGRNBusinessWise($id);
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->business_details_id;
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('business_details_id', $business_id)
-                            ->update($update_data);
-                    }
-                }
-            } else {
-                return view('organizations.business.list.list-owner-checked-material-sent-to-store-businesswise', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
-            return view('organizations.business.list.list-owner-checked-material-sent-to-store-businesswise', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
+{
+    try {
+        $data_output = $this->service->getAllListMaterialSentFromQualityToStoreGeneratedGRNBusinessWise($id);
+
+        if ($data_output->isEmpty()) {
+            return view('organizations.business.list.list-owner-checked-material-sent-to-store-businesswise', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
         }
+
+        $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
+
+        if ($bdIds->isNotEmpty()) {
+            AdminView::where('is_view', 0)
+                ->whereIn('business_details_id', $bdIds)
+                ->update(['is_view' => 1]);
+        }
+
+        return view('organizations.business.list.list-owner-checked-material-sent-to-store-businesswise', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
     }
+}
+
     public function getOwnerAllListMaterialRecievedToProduction()
     {
         try {
@@ -569,107 +947,207 @@ class AllListController extends Controller
             return $e;
         }
     }
-    public function getOwnerFinalAllCompletedProductionLogistics()
-    {
-        try {
-            $data_output = $this->service->getOwnerFinalAllCompletedProductionLogistics();
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->business_details_id;
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('business_details_id', $business_id)
-                            ->update($update_data);
-                    }
-                }
-            } else {
-                return view('organizations.business.list.list-owner-production-completed-received-logistics', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
-            return view('organizations.business.list.list-owner-production-completed-received-logistics', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
-    public function getOwnerAllListBusinessReceivedFromLogistics()
-    {
-        try {
-            $data_output = $this->service->getOwnerAllListBusinessReceivedFromLogistics();
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->business_details_id;
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('business_details_id', $business_id)
-                            ->update($update_data);
-                    }
-                }
-            } else {
-                return view('organizations.business.list.list-owner-business-received-from-logistics', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
-            return view('organizations.business.list.list-owner-business-received-from-logistics', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
-    public function getOwnerAllListBusinessFianaceSendToDispatch()
-    {
-        try {
-            $data_output = $this->service->getOwnerAllListBusinessFianaceSendToDispatch();
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->business_details_id;
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('business_details_id', $business_id)
-                            ->update($update_data);
-                    }
-                }
-            } else {
-                return view('organizations.business.list.list-owner-business-send-to-dispatch', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
-            return view('organizations.business.list.list-owner-business-send-to-dispatch', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
-    public function listProductDispatchCompletedFromDispatch()
-    {
-        try {
-            $data_output = $this->service->listProductDispatchCompletedFromDispatch();
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->business_details_id;
-                    if (!empty($business_id)) {
-                        $update_data['is_view'] = '1';
-                        AdminView::where('is_view', '0')
-                            ->where('business_details_id', $business_id)
-                            ->update($update_data);
-                    }
-                }
-            } else {
-                return view('organizations.business.list.list-dispatch-completed', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
-            return view('organizations.business.list.list-dispatch-completed', compact('data_output'));
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
+    // public function getOwnerFinalAllCompletedProductionLogistics()
+    // {
+    //     try {
+    //         $data_output = $this->service->getOwnerFinalAllCompletedProductionLogistics();
+    //         if ($data_output->isNotEmpty()) {
+    //             foreach ($data_output as $data) {
+    //                 $business_id = $data->business_details_id;
+    //                 if (!empty($business_id)) {
+    //                     $update_data['is_view'] = '1';
+    //                     AdminView::where('is_view', '0')
+    //                         ->where('business_details_id', $business_id)
+    //                         ->update($update_data);
+    //                 }
+    //             }
+    //         } else {
+    //             return view('organizations.business.list.list-owner-production-completed-received-logistics', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found'
+    //             ]);
+    //         }
+    //         return view('organizations.business.list.list-owner-production-completed-received-logistics', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+    // public function getOwnerAllListBusinessReceivedFromLogistics()
+    // {
+    //     try {
+    //         $data_output = $this->service->getOwnerAllListBusinessReceivedFromLogistics();
+    //         if ($data_output->isNotEmpty()) {
+    //             foreach ($data_output as $data) {
+    //                 $business_id = $data->business_details_id;
+    //                 if (!empty($business_id)) {
+    //                     $update_data['is_view'] = '1';
+    //                     AdminView::where('is_view', '0')
+    //                         ->where('business_details_id', $business_id)
+    //                         ->update($update_data);
+    //                 }
+    //             }
+    //         } else {
+    //             return view('organizations.business.list.list-owner-business-received-from-logistics', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found'
+    //             ]);
+    //         }
+    //         return view('organizations.business.list.list-owner-business-received-from-logistics', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+    // public function getOwnerAllListBusinessFianaceSendToDispatch()
+    // {
+    //     try {
+    //         $data_output = $this->service->getOwnerAllListBusinessFianaceSendToDispatch();
+    //         if ($data_output->isNotEmpty()) {
+    //             foreach ($data_output as $data) {
+    //                 $business_id = $data->business_details_id;
+    //                 if (!empty($business_id)) {
+    //                     $update_data['is_view'] = '1';
+    //                     AdminView::where('is_view', '0')
+    //                         ->where('business_details_id', $business_id)
+    //                         ->update($update_data);
+    //                 }
+    //             }
+    //         } else {
+    //             return view('organizations.business.list.list-owner-business-send-to-dispatch', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found'
+    //             ]);
+    //         }
+    //         return view('organizations.business.list.list-owner-business-send-to-dispatch', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+    // public function listProductDispatchCompletedFromDispatch()
+    // {
+    //     try {
+    //         $data_output = $this->service->listProductDispatchCompletedFromDispatch();
+    //         if ($data_output->isNotEmpty()) {
+    //             foreach ($data_output as $data) {
+    //                 $business_id = $data->business_details_id;
+    //                 if (!empty($business_id)) {
+    //                     $update_data['is_view'] = '1';
+    //                     AdminView::where('is_view', '0')
+    //                         ->where('business_details_id', $business_id)
+    //                         ->update($update_data);
+    //                 }
+    //             }
+    //         } else {
+    //             return view('organizations.business.list.list-dispatch-completed', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found'
+    //             ]);
+    //         }
+    //         return view('organizations.business.list.list-dispatch-completed', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
 
+public function getOwnerFinalAllCompletedProductionLogistics()
+{
+    try {
+        $data_output = $this->service->getOwnerFinalAllCompletedProductionLogistics();
+
+        if ($data_output->isEmpty()) {
+            return view('organizations.business.list.list-owner-production-completed-received-logistics', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
+        }
+
+        $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
+
+        if ($bdIds->isNotEmpty()) {
+            AdminView::where('is_view', 0)
+                ->whereIn('business_details_id', $bdIds)
+                ->update(['is_view' => 1]);
+        }
+
+        return view('organizations.business.list.list-owner-production-completed-received-logistics', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
+    }
+}
+public function getOwnerAllListBusinessReceivedFromLogistics()
+{
+    try {
+        $data_output = $this->service->getOwnerAllListBusinessReceivedFromLogistics();
+
+        if ($data_output->isEmpty()) {
+            return view('organizations.business.list.list-owner-business-received-from-logistics', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
+        }
+
+        $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
+
+        if ($bdIds->isNotEmpty()) {
+            AdminView::where('is_view', 0)
+                ->whereIn('business_details_id', $bdIds)
+                ->update(['is_view' => 1]);
+        }
+
+        return view('organizations.business.list.list-owner-business-received-from-logistics', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
+    }
+}
+public function getOwnerAllListBusinessFianaceSendToDispatch()
+{
+    try {
+        $data_output = $this->service->getOwnerAllListBusinessFianaceSendToDispatch();
+
+        if ($data_output->isEmpty()) {
+            return view('organizations.business.list.list-owner-business-send-to-dispatch', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
+        }
+
+        $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
+
+        if ($bdIds->isNotEmpty()) {
+            AdminView::where('is_view', 0)
+                ->whereIn('business_details_id', $bdIds)
+                ->update(['is_view' => 1]);
+        }
+
+        return view('organizations.business.list.list-owner-business-send-to-dispatch', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
+    }
+}
+public function listProductDispatchCompletedFromDispatch()
+{
+    try {
+        $data_output = $this->service->listProductDispatchCompletedFromDispatch();
+
+        if ($data_output->isEmpty()) {
+            return view('organizations.business.list.list-dispatch-completed', [
+                'data_output' => [],
+                'message' => 'No data found'
+            ]);
+        }
+
+        $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
+
+        if ($bdIds->isNotEmpty()) {
+            AdminView::where('is_view', 0)
+                ->whereIn('business_details_id', $bdIds)
+                ->update(['is_view' => 1]);
+        }
+
+        return view('organizations.business.list.list-dispatch-completed', compact('data_output'));
+    } catch (\Exception $e) {
+        return $e;
+    }
+}
 
     public function listLoginHistory()
     {

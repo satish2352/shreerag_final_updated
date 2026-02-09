@@ -47,32 +47,58 @@ class AllListController extends Controller
             return $e;
         }
     }
-    public function getAllListDesignReceivedForCorrection(Request $request)
-    { //checked
-        try {
-            $data_output = $this->service->getAllListDesignRecievedForCorrection();
-            if ($data_output->isNotEmpty()) {
-                foreach ($data_output as $data) {
-                    $business_id = $data->id;
-                    if (!empty($business_id)) {
-                        $update_data['prod_design_rejected'] = '1';
-                        NotificationStatus::where('prod_design_rejected', '0')
-                            ->where('id', $business_id)
-                            ->update($update_data);
-                    }
-                }
-            } else {
-                return view('organizations.designer.list.list_design_received_from_production_for_correction', [
-                    'data_output' => [],
-                    'message' => 'No data found for designs received for correction'
-                ]);
-            }
-            return view('organizations.designer.list.list_design_received_from_production_for_correction', compact('data_output'));
-        } catch (\Exception $e) {
-            Log::error('Error in getting design corrections: ' . $e->getMessage());
-            return back()->withErrors('Something went wrong while fetching design corrections. Please try again later.');
+    // public function getAllListDesignReceivedForCorrection(Request $request)
+    // { //checked
+    //     try {
+    //         $data_output = $this->service->getAllListDesignRecievedForCorrection();
+    //         if ($data_output->isNotEmpty()) {
+    //             foreach ($data_output as $data) {
+    //                 $business_id = $data->id;
+    //                 if (!empty($business_id)) {
+    //                     $update_data['prod_design_rejected'] = '1';
+    //                     NotificationStatus::where('prod_design_rejected', '0')
+    //                         ->where('id', $business_id)
+    //                         ->update($update_data);
+    //                 }
+    //             }
+    //         } else {
+    //             return view('organizations.designer.list.list_design_received_from_production_for_correction', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found for designs received for correction'
+    //             ]);
+    //         }
+    //         return view('organizations.designer.list.list_design_received_from_production_for_correction', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         Log::error('Error in getting design corrections: ' . $e->getMessage());
+    //         return back()->withErrors('Something went wrong while fetching design corrections. Please try again later.');
+    //     }
+    // }
+public function getAllListDesignReceivedForCorrection(Request $request)
+{ 
+    try {
+        $data_output = $this->service->getAllListDesignRecievedForCorrection();
+
+        if ($data_output->isEmpty()) {
+            return view('organizations.designer.list.list_design_received_from_production_for_correction', [
+                'data_output' => [],
+                'message' => 'No data found for designs received for correction'
+            ]);
         }
+
+        $ids = $data_output->pluck('id')->filter()->unique()->values();
+
+        if ($ids->isNotEmpty()) {
+            NotificationStatus::where('prod_design_rejected', 0)
+                ->whereIn('id', $ids)
+                ->update(['prod_design_rejected' => 1]);
+        }
+
+        return view('organizations.designer.list.list_design_received_from_production_for_correction', compact('data_output'));
+    } catch (\Exception $e) {
+        Log::error('Error in getting design corrections: ' . $e->getMessage());
+        return back()->withErrors('Something went wrong while fetching design corrections. Please try again later.');
     }
+}
 
     public function getAllListCorrectedDesignSendToProduction()
     {
