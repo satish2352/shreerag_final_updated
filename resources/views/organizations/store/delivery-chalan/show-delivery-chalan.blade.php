@@ -155,16 +155,20 @@
                                                 {{ $getOrganizationData->gst_no ?? '27AAHCS6330F1ZE' }},</strong>
                                         </p>
                                     </td>
+                                 
                                     <td
                                         style="width: 44%; vertical-align: top; padding-top:0px; padding-left:0px; padding-right:0px; border: 1px solid black; ">
                                         <div class="top-spacing"
                                             style=" padding: 10px; width: 100%; display: flex; justify-content: space-between;">
                                             <span><strong>DC No. : </strong>
                                                 {{ $showData['purchaseOrder']->dc_number }}</span>
-                                            <span style="padding-right: 20px;">
+                                           <span style="padding-right: 20px;">
                                                 <strong>Date: </strong>
-                                                {{ $showData['purchaseOrder']->dc_date ? \Carbon\Carbon::parse($showData['purchaseOrder']->po_date)->format('d-m-Y') : 'N/A' }}
+                                                {{ $showData['purchaseOrder']->po_date 
+                                                    ? \Carbon\Carbon::parse($showData['purchaseOrder']->po_date)->format('d-m-Y') 
+                                                    : 'N/A' }}
                                             </span>
+
                                         </div>
 
                                         <p class="company-name-size"
