@@ -239,9 +239,9 @@
                                                                                     class="text-danger">*</span></label>
                                                                             <div class="cal-icon">
                                                                                 <input class="form-control datetimepicker"
-                                                                                    type="text" name="vehicle_number"
-                                                                                    id="vehicle_number"
-                                                                                    value="{{ $editDataNew->vehicle_number }}">
+                                                                                    type="text" name="lr_number"
+                                                                                    id="lr_number"
+                                                                                    value="{{ $editDataNew->lr_number }}">
                                                                             </div>
                                                                         </div>
                                                                     </div>

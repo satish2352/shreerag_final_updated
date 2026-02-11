@@ -31,7 +31,7 @@ class DeliveryChalanRepository
 
             $lastChalan = DeliveryChalan::orderBy('dc_number', 'desc')->first();
             $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
-            $dataOutput->lr_number = $request->lr_number;
+            // $dataOutput->lr_number = $request->lr_number;
             $dataOutput->tax_type = $request->tax_type;
             $dataOutput->tax_id = $request->tax_id;
             $dataOutput->remark = $request->remark;
@@ -40,6 +40,9 @@ class DeliveryChalanRepository
             }
             if ($request->has('vehicle_number')) {
                 $dataOutput->vehicle_number = $request->vehicle_number;
+            }
+            if ($request->has('lr_number')) {
+                $dataOutput->lr_number = $request->lr_number;
             }
             if ($request->has('business_id')) {
                 $dataOutput->business_id = $request->business_id;
@@ -107,7 +110,7 @@ class DeliveryChalanRepository
                     'tbl_delivery_chalan.customer_po_no',
                     'tbl_delivery_chalan.vehicle_number',
                     'tbl_delivery_chalan.plant_id',
-                    'tbl_delivery_chalan.vehicle_number',
+                    'tbl_delivery_chalan.lr_number',
                     'tbl_delivery_chalan.remark',
                     'tbl_delivery_chalan.id',
                     'hsn.name as hsn_name'
@@ -245,7 +248,7 @@ class DeliveryChalanRepository
             $dataOutput->plant_id = $request->plant_id;
             // $dataOutput->vehicle_number = $request->vehicle_number;
             $dataOutput->po_date = $request->po_date;
-            $dataOutput->lr_number = $request->lr_number;
+            // $dataOutput->lr_number = $request->lr_number;
             $dataOutput->remark = $request->remark;
             if ($request->has('transport_id')) {
                 $dataOutput->transport_id = $request->transport_id;
@@ -253,7 +256,9 @@ class DeliveryChalanRepository
             if ($request->has('vehicle_number')) {
                 $dataOutput->vehicle_number = $request->vehicle_number;
             }
-
+            if ($request->has('lr_number')) {
+                $dataOutput->lr_number = $request->lr_number;
+            }
             if ($request->has('business_id')) {
                 $dataOutput->business_id = $request->business_id;
             }
