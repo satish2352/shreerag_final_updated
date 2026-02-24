@@ -52,6 +52,7 @@
                                                 <th data-field="rate" data-editable="false">Rate</th>
                                                 <th data-field="discription" data-editable="false">Description</th>
                                                 <th data-field="remarks" data-editable="false">Remark</th>
+                                                <th data-field="business_pdf" data-editable="false">File</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -69,6 +70,17 @@
                                                     <td>{{ ucwords($data->rate) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
+                                                      <td>
+    @if(!empty($data->business_pdf))
+        <a href="{{ Config::get('FileConstant.BUSINESS_PDF_VIEW') }}{{ $data->business_pdf }}"
+           target="_blank"
+           class="btn btn-sm btn-info" style="color: #fff">
+            <i class="fa fa-file-pdf-o"></i> View PDF
+        </a>
+    @else
+        <span class="text-muted">No File</span>
+    @endif
+</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

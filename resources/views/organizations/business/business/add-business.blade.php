@@ -231,6 +231,15 @@ textarea.form-control {
                                                                         name="customer_terms_condition" placeholder="Enter Terms and Condition">{{ old('customer_terms_condition') }}</textarea>
                                                                 </div>
 
+                                                                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                        <label for="business_pdf">Upload File :</label>
+                                                        <input type="file" class="form-control" accept="application/pdf"
+                                                            id="business_pdf" name="business_pdf">
+                                                        @if ($errors->has('business_pdf'))
+                                                            <span class="red-text"><?php echo $errors->first('business_pdf', ':message'); ?></span>
+                                                        @endif
+                                                    </div>
+
                                                             </div>
                                                         </div>
                                                         <div class="login-btn-inner">

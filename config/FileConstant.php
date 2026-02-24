@@ -3,15 +3,20 @@
 namespace App\Constants;
 
 return [
-    'DESIGNS_ADD'	         => "/all_web_data/images/designs/",
-    'DESIGNS_DELETE'	         => '/all_web_data/images/designs/',
-    'DESIGNS_VIEW'	         => env("FILE_VIEW").'/all_web_data/images/designs/',
 
-    'REQUISITION_ADD'	         => "/all_web_data/documents/requisition/",
-    'REQUISITION_DELETE'	         => '/all_web_data/documents/requisition/',
-    'REQUISITION_VIEW'	         => env("FILE_VIEW").'/all_web_data/documents/requisition/',
-    
-   
+    'BUSINESS_PDF_ADD'             => "/all_web_data/images/businesspdf/",
+    'BUSINESS_PDF_DELETE'             => '/all_web_data/images/businesspdf/',
+    'BUSINESS_PDF_VIEW'             => env("FILE_VIEW") . '/all_web_data/images/businesspdf/',
+
+    'DESIGNS_ADD'             => "/all_web_data/images/designs/",
+    'DESIGNS_DELETE'             => '/all_web_data/images/designs/',
+    'DESIGNS_VIEW'             => env("FILE_VIEW") . '/all_web_data/images/designs/',
+
+    'REQUISITION_ADD'             => "/all_web_data/documents/requisition/",
+    'REQUISITION_DELETE'             => '/all_web_data/documents/requisition/',
+    'REQUISITION_VIEW'             => env("FILE_VIEW") . '/all_web_data/documents/requisition/',
+
+
     // 'ORGANIZATION_ADD'	         => "/all_web_data/images/organization/",
     // 'ORGANIZATION_DELETE'	         => '/all_web_data/images/organization/',
     // 'ORGANIZATION_VIEW'	         => env("FILE_VIEW").'/all_web_data/images/organization/',

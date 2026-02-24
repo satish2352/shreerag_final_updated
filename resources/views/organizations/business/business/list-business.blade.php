@@ -59,6 +59,7 @@
                                                 <th data-field="customer_terms_condition" data-editable="false">Terms
                                                     Condition</th>
                                                 <th data-field="remarks" data-editable="false">Remark</th>
+                                                 <th data-field="business_pdf" data-editable="false">File</th>
                                                 <th data-field="action">Action</th>
                                             </tr>
                                         </thead>
@@ -75,6 +76,17 @@
                                                     <td>{{ ucwords($data->customer_payment_terms) }}</td>
                                                     <td>{{ ucwords($data->customer_terms_condition) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
+                                                    <td>
+    @if(!empty($data->business_pdf))
+        <a href="{{ Config::get('FileConstant.BUSINESS_PDF_VIEW') }}{{ $data->business_pdf }}"
+           target="_blank"
+           class="btn btn-sm btn-info" style="color: #fff">
+            <i class="fa fa-file-pdf-o"></i> View PDF
+        </a>
+    @else
+        <span class="text-muted">No File</span>
+    @endif
+</td>
                                                     <td>
                                                         @if ($data->is_approved_production == 1)
                                                             <button data-toggle="tooltip" title="Edit"

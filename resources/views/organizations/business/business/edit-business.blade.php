@@ -232,6 +232,27 @@ textarea.form-control {
                                                                 <textarea class="form-control customer_terms_condition" name="customer_terms_condition" id="customer_terms_condition" placeholder="Enter the Description">@if (old('customer_terms_condition')){{ trim(old('customer_terms_condition')) }}@else{{ trim($editDataNew->customer_terms_condition) }}@endif</textarea>
                                                         </div>
                                                     </div>
+                                                    <div class="row mt-3">
+    <div class="col-lg-6 col-md-6 col-sm-6">
+        <label>Business PDF (optional)</label>
+
+        <input type="file"
+            name="business_pdf"
+            class="form-control"
+            accept=".pdf">
+
+        {{-- Show existing pdf --}}
+        @if(!empty($editData[0]->business_pdf))
+
+        <a class="btn btn-sm btn-info mt-2" target="_blank"
+                                                            href="{{ Config::get('FileConstant.BUSINESS_PDF_VIEW') }}{{ $editData[0]->business_pdf }}"
+                                                            alt="Design"> Click to view</a>
+
+
+          
+        @endif
+    </div>
+</div>
                                                     @endif
                                                 @endforeach
                                             </div>

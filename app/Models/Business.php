@@ -12,6 +12,7 @@ class Business extends Model
     protected $primaryKey = 'id';
     protected $fillable = [
         'is_deleted',
+        'business_pdf',
         'grand_total_amount',
     ];
 
@@ -111,5 +112,3 @@ class Business extends Model
     //     return $this->hasMany(RejectedChalan::class, 'purchase_orders_id');
     // }
 }
-
-

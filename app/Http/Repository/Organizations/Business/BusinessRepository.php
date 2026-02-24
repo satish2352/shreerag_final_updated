@@ -64,8 +64,18 @@ class BusinessRepository
             if (isset($request['customer_terms_condition'])) {
                 $business_data->customer_terms_condition = $request['customer_terms_condition'];
             }
+            $projectName = $business_data->project_name;
+            /*  FIX START */
+            if ($request->hasFile('business_pdf')) {
+                $formattedProjectName = preg_replace('/_+/', '_', $projectName);
+                $bomImageName = rand(100000, 999999) . '_' . $formattedProjectName . '_' .
+                    $request->file('business_pdf')->getClientOriginalExtension();
 
-
+                $business_data->business_pdf = $bomImageName;
+            } else {
+                $business_data->business_pdf = ''; // or null if allowed
+            }
+            /*  FIX END */
             $business_data->save();
             $last_insert_id = $business_data->id;
 
@@ -129,7 +139,9 @@ class BusinessRepository
             }
             return [
                 'msg' => 'This business send to Design Department Successfully',
-                'status' => 'success'
+                'status' => 'success',
+                'last_insert_id' => $last_insert_id,
+                'business_pdf' => $business_data->business_pdf
             ];
         } catch (\Exception $e) {
 
@@ -155,6 +167,7 @@ class BusinessRepository
                     'businesses.customer_payment_terms',
                     'businesses.customer_terms_condition',
                     'businesses.remarks',
+                    'businesses.business_pdf',
                     'businesses.grand_total_amount',
                     'business_application_processes.business_status_id',
                     'business_application_processes.design_status_id',
@@ -191,6 +204,20 @@ class BusinessRepository
     public function updateAll($request)
     {
         try {
+
+            $return_data = array();
+
+            $dataOutput = Business::find($request->business_main_id);
+
+            if (!$dataOutput) {
+                return [
+                    'msg' => 'Update Data not found.',
+                    'status' => 'error'
+                ];
+            }
+            // Store the previous image names
+            $previousEnglishImage = $dataOutput->business_pdf;
+
             Log::info('Request Data:', $request->all());
 
             $dataOutput = Business::findOrFail($request->business_main_id);
@@ -287,13 +314,15 @@ class BusinessRepository
 
             // Save total to business record
             $dataOutput->grand_total_amount = $grandTotal;
+            $return_data['business_pdf'] = $previousEnglishImage;
             $dataOutput->save();
 
             return [
                 'msg' => 'Data updated successfully.',
                 'status' => 'success',
                 'last_insert_id' => $dataOutput->id,
-                'total_amount' => $grandTotal
+                'total_amount' => $grandTotal,
+                'business_pdf' => $previousEnglishImage,
             ];
         } catch (\Exception $e) {
             Log::error('Update Failed: ' . $e->getMessage());
