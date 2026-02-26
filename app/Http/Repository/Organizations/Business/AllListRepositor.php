@@ -2,6 +2,7 @@
 
 namespace App\Http\Repository\Organizations\Business;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use App\Models\{
@@ -1818,20 +1819,26 @@ class AllListRepositor
     }
   }
 
+
   public function listLoginHistory()
   {
+    // Hard delete records older than 15 days
+    LoginHistory::where('created_at', '<', Carbon::now()->subDays(15))
+      ->delete();
+
+    // Fetch only last 15 days data
     $data_users = LoginHistory::leftJoin('users', function ($join) {
       $join->on('login_history.user_id', '=', 'users.id');
     })
       ->where('users.is_active', 1)
       ->where('users.is_deleted', 0)
+      ->where('login_history.created_at', '>=', Carbon::now()->subDays(15))
       ->orderBy('login_history.id', 'desc')
       ->select(
         'users.u_email',
         'users.f_name',
         'users.m_name',
         'users.l_name',
-        'users.u_email',
         'users.number',
         'users.id',
         'users.is_active',
@@ -1839,7 +1846,7 @@ class AllListRepositor
         'login_history.longitude',
         'login_history.location_address',
         'login_history.ip_address',
-        'login_history.updated_at',
+        'login_history.updated_at'
       )
       ->get();
 

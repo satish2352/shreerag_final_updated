@@ -293,11 +293,11 @@ class DesignsRepository
                 $designRevisionForProd->remark_by_design = $request->remark_by_design;
 
                 $designImageName = $designRevisionForProd->id . '_' . $formattedProductName . '_' . rand(100000, 999999) . '_re_design.' . $request->design_image->getClientOriginalExtension();
-                // $bomImageName = $designRevisionForProd->id . '_'. $formattedProductName . '_' . rand(100000, 999999) . '_re_bom.' . $request->bom_image->getClientOriginalExtension();
+                $bomImageName = $designRevisionForProd->id . '_' . $formattedProductName . '_' . rand(100000, 999999) . '_re_bom.' . $request->bom_image->getClientOriginalExtension();
 
                 // Update the design image and bom image fields in the DesignModel
                 $designRevisionForProd->design_image = $designImageName;
-                // $designRevisionForProd->bom_image = $bomImageName;
+                $designRevisionForProd->bom_image = $bomImageName;
 
                 $designRevisionForProd->save();
             }
@@ -327,7 +327,7 @@ class DesignsRepository
             }
 
             $return_data['designImageName'] = $designImageName;
-            // $return_data['bomImageName'] = $bomImageName;
+            $return_data['bomImageName'] = $bomImageName;
             $return_data['last_insert_id'] = $designRevisionForProd->business_id;
 
             return $return_data;

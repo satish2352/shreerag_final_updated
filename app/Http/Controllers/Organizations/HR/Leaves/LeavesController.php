@@ -114,230 +114,160 @@ class LeavesController extends Controller
             return $e;
         }
     }
-//     public function updateLabourStatus(Request $request)
-//     {
-//         try {
-//             $leaves_id = $request->input('active_id');
+    public function updateLabourStatus(Request $request)
+    {
+        try {
 
-//             $action = $request->input('action');
+            $validator = Validator::make($request->all(), [
+                'active_id' => 'required|exists:tbl_leaves,id',
+                'action' => 'required|in:approve,notapprove',
+            ]);
 
-//             $validator = Validator::make($request->all(), [
-//                 'active_id' => 'required|exists:tbl_leaves,id',
-//                 'action' => 'required|in:approve,notapprove',
-//             ]);
-
-//             if ($validator->fails()) {
-//                 return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 422);
-//             }
-
-//             $leaves = Leaves::find($leaves_id);
-
-
-//             $employeeId = $leaves->employee_id;
-//             $leaveType = $leaves->leave_type_id;
-
-//             if ($action === 'approve') {
-//                 if ($leaves->is_approved === 0) {
-//                     $leaves->is_approved = 2;
-//                     $financialRecord = FinancialYearLeaveRecord::where('tbl_financial_year_leave_record.user_id', $employeeId)
-//                         ->where('tbl_financial_year_leave_record.leave_management_id', $leaveType)
-//                         ->first();
-
-
-//                     if ($financialRecord) {
-//                         $financialRecord->leave_balance -= $leaves->leave_count;
-//                         $financialRecord->save();
-//                     }
-//                 } elseif ($leaves->is_approved === 1) {
-//                     $leaves->is_approved = 2;
-//                 }
-//             } elseif ($action === 'notapprove') {
-//                 if ($leaves->is_approved === 0) {
-//                     $leaves->is_approved = 1; // Update status to not approved
-//                 } elseif ($leaves->is_approved === 2) {
-//                     $leaves->is_approved = 1;
-//                 }
-//             }
-
-//             $leaves->save();
-
-//            if ($action === 'approve') {
-//     return response()->json([
-//         'status' => 'success',
-//         'redirect' => url('hr/list-leaves-approvedby-hr'),
-//         'message' => 'Leave approved successfully'
-//     ]);
-// }
-
-// if ($action === 'notapprove') {
-//     return response()->json([
-//         'status' => 'success',
-//         'redirect' => url('hr/list-leaves-not-approvedby-hr'),
-//         'message' => 'Leave rejected successfully'
-//     ]);
-// }
-
-//         } catch (\Exception $e) {
-//             return response()->json(['status' => 'false', 'message' => 'Update failed', 'error' => $e->getMessage()], 500);
-//         }
-//     }
-
-public function updateLabourStatus(Request $request)
-{
-    try {
-
-        $validator = Validator::make($request->all(), [
-            'active_id' => 'required|exists:tbl_leaves,id',
-            'action' => 'required|in:approve,notapprove',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Validation failed'
-            ], 422);
-        }
-
-        $leaves_id = $request->active_id;
-        $action = $request->action;
-
-        $leaves = Leaves::find($leaves_id);
-        $employeeId = $leaves->employee_id;
-        $leaveType = $leaves->leave_type_id;
-
-        /* ---------------------- APPROVE LEAVE ---------------------- */
-        if ($action === 'approve') {
-
-            if ($leaves->is_approved == 0) {
-                $leaves->is_approved = 2;
-
-                $financialRecord = FinancialYearLeaveRecord::where('user_id', $employeeId)
-                    ->where('leave_management_id', $leaveType)
-                    ->first();
-
-                if ($financialRecord) {
-                    $financialRecord->leave_balance -= $leaves->leave_count;
-                    $financialRecord->save();
-                }
-            } else {
-                $leaves->is_approved = 2;
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Validation failed'
+                ], 422);
             }
 
-            $leaves->save();
+            $leaves_id = $request->active_id;
+            $action = $request->action;
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Leave approved successfully',
-                'redirect' => url('hr/list-leaves-approvedby-hr')
-            ]);
-        }
+            $leaves = Leaves::find($leaves_id);
+            $employeeId = $leaves->employee_id;
+            $leaveType = $leaves->leave_type_id;
 
-        /* ---------------------- REJECT LEAVE ---------------------- */
-        if ($action === 'notapprove') {
+            /* ---------------------- APPROVE LEAVE ---------------------- */
+            if ($action === 'approve') {
 
-            if ($leaves->is_approved == 0 || $leaves->is_approved == 2) {
-                $leaves->is_approved = 1;
-            }
+                if ($leaves->is_approved == 0) {
+                    $leaves->is_approved = 2;
 
-            $leaves->save();
+                    $financialRecord = FinancialYearLeaveRecord::where('user_id', $employeeId)
+                        ->where('leave_management_id', $leaveType)
+                        ->first();
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Leave rejected successfully',
-                'redirect' => url('hr/list-leaves-not-approvedby-hr')
-            ]);
-        }
-
-    } catch (\Exception $e) {
-
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Error: ' . $e->getMessage()
-        ]);
-    }
-}
-public function updateLabourStatusRejected(Request $request)
-{
-    try {
-
-        // Validation
-        $validator = Validator::make($request->all(), [
-            'active_id' => 'required|exists:tbl_leaves,id',
-            'action' => 'required|in:approve,notapprove',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Validation failed'
-            ], 422);
-        }
-
-        $leaveId = $request->active_id;
-        $action = $request->action;
-
-        $leave = Leaves::find($leaveId);
-        $employeeId = $leave->employee_id;
-        $leaveType = $leave->leave_type_id;
-
-        /* ---------------------- APPROVE LEAVE FROM REJECTED LIST ---------------------- */
-        if ($action === 'approve') {
-
-            // Only approve if not already approved
-            if ($leave->is_approved != 2) {
-
-                $leave->is_approved = 2; // 2 = approved
-
-                // Update leave balance only once
-                $financialRecord = FinancialYearLeaveRecord::where('user_id', $employeeId)
-                    ->where('leave_management_id', $leaveType)
-                    ->first();
-
-                if ($financialRecord) {
-                    $financialRecord->leave_balance -= $leave->leave_count;
-
-                    if ($financialRecord->leave_balance < 0) {
-                        return response()->json([
-                            'status' => 'error',
-                            'message' => 'Insufficient leave balance for approval'
-                        ]);
+                    if ($financialRecord) {
+                        $financialRecord->leave_balance -= $leaves->leave_count;
+                        $financialRecord->save();
                     }
-
-                    $financialRecord->save();
+                } else {
+                    $leaves->is_approved = 2;
                 }
+
+                $leaves->save();
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Leave approved successfully',
+                    'redirect' => url('hr/list-leaves-approvedby-hr')
+                ]);
             }
 
-            $leave->save();
+            /* ---------------------- REJECT LEAVE ---------------------- */
+            if ($action === 'notapprove') {
+
+                if ($leaves->is_approved == 0 || $leaves->is_approved == 2) {
+                    $leaves->is_approved = 1;
+                }
+
+                $leaves->save();
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Leave rejected successfully',
+                    'redirect' => url('hr/list-leaves-not-approvedby-hr')
+                ]);
+            }
+        } catch (\Exception $e) {
 
             return response()->json([
-                'status' => 'success',
-                'message' => 'Leave approved successfully',
-                'redirect' => url('hr/list-leaves-approvedby-hr')
+                'status' => 'error',
+                'message' => 'Error: ' . $e->getMessage()
             ]);
         }
-
-        /* ---------------------- REJECT LEAVE ---------------------- */
-        if ($action === 'notapprove') {
-
-            // 1 = rejected
-            $leave->is_approved = 1;
-            $leave->save();
-
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Leave rejected successfully',
-                'redirect' => url('hr/list-leaves-not-approvedby-hr')
-            ]);
-        }
-
-    } catch (\Exception $e) {
-
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Error: ' . $e->getMessage()
-        ]);
     }
-}
+    public function updateLabourStatusRejected(Request $request)
+    {
+        try {
+
+            // Validation
+            $validator = Validator::make($request->all(), [
+                'active_id' => 'required|exists:tbl_leaves,id',
+                'action' => 'required|in:approve,notapprove',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Validation failed'
+                ], 422);
+            }
+
+            $leaveId = $request->active_id;
+            $action = $request->action;
+
+            $leave = Leaves::find($leaveId);
+            $employeeId = $leave->employee_id;
+            $leaveType = $leave->leave_type_id;
+
+            /* ---------------------- APPROVE LEAVE FROM REJECTED LIST ---------------------- */
+            if ($action === 'approve') {
+
+                // Only approve if not already approved
+                if ($leave->is_approved != 2) {
+
+                    $leave->is_approved = 2; // 2 = approved
+
+                    // Update leave balance only once
+                    $financialRecord = FinancialYearLeaveRecord::where('user_id', $employeeId)
+                        ->where('leave_management_id', $leaveType)
+                        ->first();
+
+                    if ($financialRecord) {
+                        $financialRecord->leave_balance -= $leave->leave_count;
+
+                        if ($financialRecord->leave_balance < 0) {
+                            return response()->json([
+                                'status' => 'error',
+                                'message' => 'Insufficient leave balance for approval'
+                            ]);
+                        }
+
+                        $financialRecord->save();
+                    }
+                }
+
+                $leave->save();
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Leave approved successfully',
+                    'redirect' => url('hr/list-leaves-approvedby-hr')
+                ]);
+            }
+
+            /* ---------------------- REJECT LEAVE ---------------------- */
+            if ($action === 'notapprove') {
+
+                // 1 = rejected
+                $leave->is_approved = 1;
+                $leave->save();
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Leave rejected successfully',
+                    'redirect' => url('hr/list-leaves-not-approvedby-hr')
+                ]);
+            }
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error: ' . $e->getMessage()
+            ]);
+        }
+    }
 
 
     public function add()
@@ -353,183 +283,152 @@ public function updateLabourStatusRejected(Request $request)
         $dept = DepartmentsModel::get();
         return view('organizations.hr.leaves.add-leaves', compact('dept', 'leaveManagment'));
     }
-public function store(Request $request)
-{
-    $rules = [
-        'other_employee_name' => 'required',
-        'leave_type_id'       => 'required',
-        'leave_day'           => 'required',
-        'leave_start_date'    => 'required|date',
-        'leave_end_date'      => 'required|date|after_or_equal:leave_start_date',
-        'reason'              => 'required'
-    ];
+    public function store(Request $request)
+    {
+        $rules = [
+            'other_employee_name' => 'required',
+            'leave_type_id'       => 'required',
+            'leave_day'           => 'required',
+            'leave_start_date'    => 'required|date',
+            'leave_end_date'      => 'required|date|after_or_equal:leave_start_date',
+            'reason'              => 'required'
+        ];
 
-    $messages = [
-        'other_employee_name.required' => 'Please enter full name.',
-        'leave_type_id.required'       => 'Please select leave type.',
-        'leave_day.required'           => 'Please select full / half day.',
-        'leave_start_date.required'    => 'Please select start date.',
-        'leave_end_date.required'      => 'Please select end date.',
-        'reason.required'              => 'Please enter reason.'
-    ];
+        $messages = [
+            'other_employee_name.required' => 'Please enter full name.',
+            'leave_type_id.required'       => 'Please select leave type.',
+            'leave_day.required'           => 'Please select full / half day.',
+            'leave_start_date.required'    => 'Please select start date.',
+            'leave_end_date.required'      => 'Please select end date.',
+            'reason.required'              => 'Please enter reason.'
+        ];
 
-    $validation = Validator::make($request->all(), $rules, $messages);
+        $validation = Validator::make($request->all(), $rules, $messages);
 
-    if ($validation->fails()) {
-        return back()->withErrors($validation)->withInput();
-    }
+        if ($validation->fails()) {
+            return back()->withErrors($validation)->withInput();
+        }
 
-    // CALL SERVICE
-    $response = $this->service->addAll($request);
+        // CALL SERVICE
+        $response = $this->service->addAll($request);
 
-    // SUCCESS ⇒ Redirect to list page
-    if ($response['status'] == 'success') {
-        return redirect()->route('list-leaves')->with([
-            'status' => 'success',
+        // SUCCESS ⇒ Redirect to list page
+        if ($response['status'] == 'success') {
+            return redirect()->route('list-leaves')->with([
+                'status' => 'success',
+                'msg'    => $response['msg']
+            ]);
+        }
+
+        // ERROR ⇒ Stay on same page
+        return back()->with([
+            'status' => 'error',
             'msg'    => $response['msg']
-        ]);
+        ])->withInput();
     }
 
-    // ERROR ⇒ Stay on same page
-    return back()->with([
-        'status' => 'error',
-        'msg'    => $response['msg']
-    ])->withInput();
-}
+    public function checkLeaveBalance(Request $request)
+    {
+        $leaveTypeId = $request->leave_type_id;
+        $employeeId  = session()->get('user_id');
+        $currentYear = date('Y');
+        $previousYear = $currentYear - 1;
 
-// public function checkLeaveBalance(Request $request)
-// {
-//     $leaveTypeId = $request->leave_type_id;
-//     $employeeId = session()->get('user_id');
-//     $currentYear = date('Y');
-
-//     $leaveData = DB::table('tbl_leave_management')
-//         ->leftJoin('tbl_leaves', function ($join) use ($employeeId) {
-//             $join->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
-//                 ->where('tbl_leaves.employee_id', $employeeId)
-//                 ->where('tbl_leaves.is_approved', 2);
-//         })
-//         ->where('tbl_leave_management.id', $leaveTypeId)
-//         ->where('tbl_leave_management.leave_year', $currentYear)
-//         ->select(
-//             'tbl_leave_management.leave_count',
-//             DB::raw('COALESCE(SUM(tbl_leaves.leave_count), 0) as taken')
-//         )
-//         ->groupBy('tbl_leave_management.leave_count')
-//         ->first();
-
-//     if (!$leaveData) {
-//         return response()->json(['available' => 0]);
-//     }
-
-//     $available = $leaveData->leave_count - $leaveData->taken;
-
-//     return response()->json([
-//         'available' => $available
-//     ]);
-// }
-public function checkLeaveBalance(Request $request)
-{
-    $leaveTypeId = $request->leave_type_id;
-    $employeeId  = session()->get('user_id');
-    $currentYear = date('Y');
-    $previousYear = $currentYear - 1;
-
-    /* =============================
+        /* =============================
        1️⃣ GET CURRENT YEAR LEAVES
     ============================= */
-    $current = DB::table('tbl_leave_management')
-        ->leftJoin('tbl_leaves', function ($join) use ($employeeId) {
-            $join->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
-                ->where('tbl_leaves.employee_id', $employeeId)
-                ->where('tbl_leaves.is_approved', 2);
-        })
-        ->where('tbl_leave_management.id', $leaveTypeId)
-        ->where('tbl_leave_management.leave_year', $currentYear)
-        ->select(
-            'tbl_leave_management.leave_count',
-            DB::raw('COALESCE(SUM(tbl_leaves.leave_count),0) as taken')
-        )
-        ->groupBy('tbl_leave_management.leave_count')
-        ->first();
+        $current = DB::table('tbl_leave_management')
+            ->leftJoin('tbl_leaves', function ($join) use ($employeeId) {
+                $join->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
+                    ->where('tbl_leaves.employee_id', $employeeId)
+                    ->where('tbl_leaves.is_approved', 2);
+            })
+            ->where('tbl_leave_management.id', $leaveTypeId)
+            ->where('tbl_leave_management.leave_year', $currentYear)
+            ->select(
+                'tbl_leave_management.leave_count',
+                DB::raw('COALESCE(SUM(tbl_leaves.leave_count),0) as taken')
+            )
+            ->groupBy('tbl_leave_management.leave_count')
+            ->first();
 
-    if (!$current) {
-        return response()->json(['available' => 0]);
-    }
+        if (!$current) {
+            return response()->json(['available' => 0]);
+        }
 
-    $currentLeaveCount = $current->leave_count;
-    $currentTaken      = $current->taken;
-    $currentAvailable  = $currentLeaveCount - $currentTaken;
+        $currentLeaveCount = $current->leave_count;
+        $currentTaken      = $current->taken;
+        $currentAvailable  = $currentLeaveCount - $currentTaken;
 
 
-    /* =============================
+        /* =============================
        2️⃣ GET PREVIOUS YEAR UNUSED
     ============================= */
-    $previous = DB::table('tbl_leave_management')
-        ->leftJoin('tbl_leaves', function ($join) use ($employeeId) {
-            $join->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
-                ->where('tbl_leaves.employee_id', $employeeId)
-                ->where('tbl_leaves.is_approved', 2);
-        })
-        ->where('tbl_leave_management.name', function ($q) use ($leaveTypeId) {
-            $q->select('name')
-                ->from('tbl_leave_management')
-                ->where('id', $leaveTypeId);
-        })
-        ->where('tbl_leave_management.leave_year', $previousYear)
-        ->select(
-            'tbl_leave_management.leave_count',
-            DB::raw('COALESCE(SUM(tbl_leaves.leave_count),0) as taken')
-        )
-        ->groupBy('tbl_leave_management.leave_count')
-        ->first();
+        $previous = DB::table('tbl_leave_management')
+            ->leftJoin('tbl_leaves', function ($join) use ($employeeId) {
+                $join->on('tbl_leave_management.id', '=', 'tbl_leaves.leave_type_id')
+                    ->where('tbl_leaves.employee_id', $employeeId)
+                    ->where('tbl_leaves.is_approved', 2);
+            })
+            ->where('tbl_leave_management.name', function ($q) use ($leaveTypeId) {
+                $q->select('name')
+                    ->from('tbl_leave_management')
+                    ->where('id', $leaveTypeId);
+            })
+            ->where('tbl_leave_management.leave_year', $previousYear)
+            ->select(
+                'tbl_leave_management.leave_count',
+                DB::raw('COALESCE(SUM(tbl_leaves.leave_count),0) as taken')
+            )
+            ->groupBy('tbl_leave_management.leave_count')
+            ->first();
 
-    $previousUnused = 0;
+        $previousUnused = 0;
 
-    if ($previous) {
-        $previousUnused = $previous->leave_count - $previous->taken;
-        if ($previousUnused < 0) $previousUnused = 0;
-    }
+        if ($previous) {
+            $previousUnused = $previous->leave_count - $previous->taken;
+            if ($previousUnused < 0) $previousUnused = 0;
+        }
 
 
-    /* =============================
+        /* =============================
        3️⃣ FINAL AVAILABLE LEAVES
     ============================= */
-    $finalAvailable = $currentAvailable + $previousUnused;
+        $finalAvailable = $currentAvailable + $previousUnused;
 
-    return response()->json([
-        'available' => $finalAvailable
-    ]);
-}
+        return response()->json([
+            'available' => $finalAvailable
+        ]);
+    }
 
 
 
     public function checkDates(Request $request)
-{
-    $employeeId = session()->get('user_id');
+    {
+        $employeeId = session()->get('user_id');
 
-    $exists = Leaves::where('employee_id', $employeeId)
-        ->where(function ($query) use ($request) {
+        $exists = Leaves::where('employee_id', $employeeId)
+            ->where(function ($query) use ($request) {
 
-            $query->whereBetween('leave_start_date', [
+                $query->whereBetween('leave_start_date', [
                     $request->leave_start_date,
                     $request->leave_end_date
                 ])
-                ->orWhereBetween('leave_end_date', [
-                    $request->leave_start_date,
-                    $request->leave_end_date
-                ])
-                ->orWhere(function ($q) use ($request) {
-                    $q->where('leave_start_date', '<=', $request->leave_start_date)
-                        ->where('leave_end_date', '>=', $request->leave_end_date);
-                });
-        })
-        ->exists();
+                    ->orWhereBetween('leave_end_date', [
+                        $request->leave_start_date,
+                        $request->leave_end_date
+                    ])
+                    ->orWhere(function ($q) use ($request) {
+                        $q->where('leave_start_date', '<=', $request->leave_start_date)
+                            ->where('leave_end_date', '>=', $request->leave_end_date);
+                    });
+            })
+            ->exists();
 
-    return response()->json([
-        'exists' => $exists
-    ]);
-}
+        return response()->json([
+            'exists' => $exists
+        ]);
+    }
 
 
     public function edit(Request $request)
@@ -634,27 +533,6 @@ public function checkLeaveBalance(Request $request)
                 ->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
-
-    // public function destroy(Request $request){
-    //     $delete_data_id = base64_decode($request->id);
-    //     try {
-    //         $delete_record = $this->service->deleteById($delete_data_id);
-    //         if ($delete_record) {
-    //             $msg = $delete_record['msg'];
-    //             $status = $delete_record['status'];
-    //             if ($status == 'success') {
-    //                 return redirect('hr/list-leaves')->with(compact('msg', 'status'));
-    //             } else {
-    //                 return redirect()->back()
-    //                     ->withInput()
-    //                     ->with(compact('msg', 'status'));
-    //             }
-    //         }
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // } 
-
     public function destroy($id)
     {
         $delete_data_id = base64_decode($id);

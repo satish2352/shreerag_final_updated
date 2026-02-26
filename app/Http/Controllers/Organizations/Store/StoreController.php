@@ -182,73 +182,6 @@ class StoreController extends Controller
             ], 500);
         }
     }
-    // public function checkStockQuantity(Request $request)
-    // {
-    //     try {
-    //         $partItemId = $request->input('part_item_id');
-    //         $quantity = $request->input('quantity');
-    //         $materialSendProduction = $request->input('material_send_production');
-    //         $quantityMinusStatus = $request->input('quantity_minus_status');
-
-    //         \Log::info('Checking stock quantity', [
-    //             'part_item_id' => $partItemId,
-    //             'quantity' => $quantity,
-    //             'material_send_production' => $materialSendProduction,
-    //             'quantity_minus_status' => $quantityMinusStatus
-    //         ]);
-
-    //         // If already processed, SKIP checking stock
-    //         if ($materialSendProduction == 1 && $quantityMinusStatus == 'done') {
-    //             return response()->json([
-    //                 'status' => 'success',
-    //                 'message' => 'Stock check skipped (already processed)',
-    //             ]);
-    //         }
-
-    //         // Validate inputs
-    //         if (!$partItemId || !$quantity) {
-    //             return response()->json([
-    //                 'status' => 'error',
-    //                 'message' => 'Invalid inputs. Please provide both part_item_id and quantity.',
-    //             ], 400);
-    //         }
-
-    //         // Fetch the part item stock
-    //         $partItem = ItemStock::find($partItemId);
-
-    //         if (!$partItem) {
-    //             return response()->json([
-    //                 'status' => 'error',
-    //                 'message' => 'Part Item not found',
-    //             ], 404);
-    //         }
-
-    //         // Get the available quantity
-    //         $availableQuantity = $partItem->quantity ?? 0;
-
-    //         if ($quantity > $availableQuantity) {
-    //             return response()->json([
-    //                 'status' => 'error',
-    //                 'available_quantity' => $availableQuantity,
-    //                 'message' => 'Insufficient stock',
-    //             ]);
-    //         }
-
-    //         // Sufficient stock
-    //         return response()->json([
-    //             'status' => 'success',
-    //             'available_quantity' => $availableQuantity,
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         \Log::error('Error in checkStockQuantity:', ['error' => $e->getMessage()]);
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => 'Internal Server Error',
-    //         ], 500);
-    //     }
-    // }
-
-
     public function updateProductMaterialWiseAddNewReq(Request $request)
     {
         $rules = [];
@@ -363,27 +296,7 @@ class StoreController extends Controller
             return redirect()->back()->with('error', 'An error occurred while updating GRN.');
         }
     }
-    // public function destroyAddmoreStoreItem(Request $request)
-    // {
 
-    //     $delete_data_id = $request->delete_id;
-    //     // Get the delete ID from the request
-
-    //     try {
-    //         $delete_record = $this->service->destroyAddmoreStoreItem($delete_data_id);
-    //         if ($delete_record) {
-    //             $msg = $delete_record['msg'];
-    //             $status = $delete_record['status'];
-    //             if ($status == 'success') {
-    //                 return redirect('storedept/list-accepted-design-from-prod')->with(compact('msg', 'status'));
-    //             } else {
-    //                 return redirect()->back()->withInput()->with(compact('msg', 'status'));
-    //             }
-    //         }
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
 
     public function destroyAddmoreStoreItem(Request $request)
     {

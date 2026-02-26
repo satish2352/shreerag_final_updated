@@ -60,24 +60,6 @@ class ReportController extends Controller
     {
         try {
             $data_output = $this->service->getCompletedProductList($request);
-            // $getProjectName = Business::whereNotNull('project_name')
-            //     ->where('is_deleted', 0)
-            //     ->where('is_active', 1)
-            //     ->pluck('project_name', 'id');
-
-
-            // $getProjectName = Business::where('is_deleted', 0)
-            // ->where('is_active', 1)
-            // ->whereNotNull('project_name')
-            // ->where('project_name', '!=', '')
-            // ->pluck('project_name', 'id');
-
-
-            // $getProductName = BusinessDetails::whereNotNull('product_name')
-            //     ->where('is_deleted', 0)
-            //     ->where('is_active', 1)
-            //     ->pluck('product_name', 'id');
-
 
             $getProjectName = Business::leftJoin('business_application_processes', function ($join) {
                 $join->on('businesses.id', '=', 'business_application_processes.business_id');

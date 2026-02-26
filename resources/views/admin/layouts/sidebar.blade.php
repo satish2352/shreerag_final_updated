@@ -1237,6 +1237,13 @@
                                             Vendor List</span></a></li>
                             </ul>
                         </li>
+                        <li
+                            class="nav-item {{ request()->is('list-business-details-for-finance') ? 'active' : '' }}">
+                            <a href="{{ route('list-business-details-for-finance') }}">
+                                <i class="fa fa-briefcase icon-wrap"></i>
+                                <span class="mini-click-non">Business Details</span>
+                            </a>
+                        </li>
                         <li class="nav-item {{ request()->is('list-sr-and-gr-genrated-business') ? 'active' : '' }}">
                             <a href="{{ route('list-sr-and-gr-genrated-business') }}">
                                 <i class="fa fa-wallet icon-wrap"></i>

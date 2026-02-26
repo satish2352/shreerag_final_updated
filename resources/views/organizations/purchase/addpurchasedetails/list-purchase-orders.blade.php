@@ -100,7 +100,7 @@
                                                 <th data-field="gst_number" data-editable="false">Vendor GST Number</th>
                                                 <th data-field="payment_terms" data-editable="false">Payment Terms</th>
                                                 <th data-field="invoice_date" data-editable="false">Purchase Order Date</th>
-                                                <th data-field="po_grand_total_amount" data-editable="false">Grand Total
+                                                <th data-field="po_grand_total_amount" data-editable="false">Total
                                                 </th>
                                                 {{-- <th data-field="total" data-editable="false">Total Amount</th> --}}
                                                 <th data-field="quote_no" data-editable="false">Quote Number</th>

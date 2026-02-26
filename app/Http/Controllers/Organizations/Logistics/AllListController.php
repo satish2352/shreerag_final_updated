@@ -18,60 +18,31 @@ class AllListController extends Controller
     {
         $this->service = new AllListServices();
     }
+    public function getAllCompletedProduction()
+    {
+        try {
+            $data_output = $this->service->getAllCompletedProduction();
 
-    // public function getAllCompletedProduction()
-    // {
-    //     try {
-    //         $data_output = $this->service->getAllCompletedProduction();
+            if ($data_output->isEmpty()) {
+                return view('organizations.logistics.logisticsdept.list-production-completed', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
 
-    //         if ($data_output->isNotEmpty()) {
-    //             foreach ($data_output as $data) {
-    //                 $business_details_id = $data->business_details_id;
+            $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
 
-    //                 if (!empty($business_details_id)) {
-    //                     $update_data['production_completed'] = '1';
-    //                     NotificationStatus::where('production_completed', '0')
-    //                         ->where('business_details_id', $business_details_id)
-    //                         ->update($update_data);
-    //                 }
-    //             }
-    //         } else {
-    //             return view('organizations.logistics.logisticsdept.list-production-completed', [
-    //                 'data_output' => [],
-    //                 'message' => 'No data found for designs received for correction'
-    //             ]);
-    //         }
+            if ($bdIds->isNotEmpty()) {
+                NotificationStatus::where('production_completed', 0)
+                    ->whereIn('business_details_id', $bdIds)
+                    ->update(['production_completed' => 1]);
+            }
 
-    //         return view('organizations.logistics.logisticsdept.list-production-completed', compact('data_output'));
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
-public function getAllCompletedProduction()
-{
-    try {
-        $data_output = $this->service->getAllCompletedProduction();
-
-        if ($data_output->isEmpty()) {
-            return view('organizations.logistics.logisticsdept.list-production-completed', [
-                'data_output' => [],
-                'message' => 'No data found'
-            ]);
+            return view('organizations.logistics.logisticsdept.list-production-completed', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
         }
-
-        $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
-
-        if ($bdIds->isNotEmpty()) {
-            NotificationStatus::where('production_completed', 0)
-                ->whereIn('business_details_id', $bdIds)
-                ->update(['production_completed' => 1]);
-        }
-
-        return view('organizations.logistics.logisticsdept.list-production-completed', compact('data_output'));
-    } catch (\Exception $e) {
-        return $e;
     }
-}
 
     public function getAllLogistics()
     {

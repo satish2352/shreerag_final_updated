@@ -39,7 +39,7 @@
                                             <div class="col-md-4">
                                                 <label>Estimation Amount</label>
                                                 <input type="text" class="form-control"
-                                                    value="{{ number_format($estimation_amount, 2) }}" readonly>
+                                                    value="{{ number_format($grand_total_amount, 2) }}" readonly>
                                             </div>
                                             <div class="col-md-4">
                                                 <label>Used PO Amount</label>

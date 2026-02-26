@@ -34,101 +34,52 @@ class AllListController extends Controller
             return $e;
         }
     }
-    // public function getAllListDesignRecievedForMaterialBusinessWise($business_id, Request $request)
-    // {
-    //     try {
-    //         $data_output = $this->service->getAllListDesignRecievedForMaterialBusinessWise($business_id);
 
-    //         if ($data_output->isNotEmpty()) {
-    //             foreach ($data_output as $data) {
-    //                 $business_details_id = $data->business_details_id;
-    //                 if (!empty($business_details_id)) {
-    //                     $update_data['issue_material_send_req_to_store'] = '1';
-    //                     NotificationStatus::where('issue_material_send_req_to_store', '0')
-    //                         ->where('business_details_id', $business_details_id)
-    //                         ->update($update_data);
-    //                 }
-    //             }
-    //         }
-    //         return view('organizations.store.list.list-accepted-design-business-wise', compact('data_output'));
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
+    public function getAllListDesignRecievedForMaterialBusinessWise($business_id, Request $request)
+    {
+        try {
+            $data_output = $this->service->getAllListDesignRecievedForMaterialBusinessWise($business_id);
 
+            if ($data_output->isNotEmpty()) {
+                $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
 
-    // public function getAllListMaterialSentToProduction(Request $request)
-    // {
-    //     try {
-    //         $data_output = $this->service->getAllListMaterialSentToProduction();
+                if ($bdIds->isNotEmpty()) {
+                    NotificationStatus::where('issue_material_send_req_to_store', 0)
+                        ->whereIn('business_details_id', $bdIds)
+                        ->update(['issue_material_send_req_to_store' => 1]);
+                }
+            }
 
-    //         if ($data_output->isNotEmpty()) {
-    //             foreach ($data_output as $data) {
-    //                 $business_details_id = $data->id;
-    //                 if (!empty($business_details_id)) {
-    //                     $update_data['material_received_from_store'] = '1';
-    //                     NotificationStatus::where('material_received_from_store', '0')
-    //                         ->where('business_details_id', $business_details_id)
-    //                         ->update($update_data);
-    //                 }
-    //             }
-    //         } else {
-    //             return view('organizations.store.list.list-material-sent-to-prod', [
-    //                 'data_output' => [],
-    //                 'message' => 'No data found for designs received for correction'
-    //             ]);
-    //         }
+            return view('organizations.store.list.list-accepted-design-business-wise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getAllListMaterialSentToProduction(Request $request)
+    {
+        try {
+            $data_output = $this->service->getAllListMaterialSentToProduction();
 
-    //         return view('organizations.store.list.list-material-sent-to-prod', compact('data_output'));
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
-public function getAllListDesignRecievedForMaterialBusinessWise($business_id, Request $request)
-{
-    try {
-        $data_output = $this->service->getAllListDesignRecievedForMaterialBusinessWise($business_id);
+            if ($data_output->isEmpty()) {
+                return view('organizations.store.list.list-material-sent-to-prod', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
 
-        if ($data_output->isNotEmpty()) {
             $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
 
             if ($bdIds->isNotEmpty()) {
-                NotificationStatus::where('issue_material_send_req_to_store', 0)
+                NotificationStatus::where('material_received_from_store', 0)
                     ->whereIn('business_details_id', $bdIds)
-                    ->update(['issue_material_send_req_to_store' => 1]);
+                    ->update(['material_received_from_store' => 1]);
             }
-        }
 
-        return view('organizations.store.list.list-accepted-design-business-wise', compact('data_output'));
-    } catch (\Exception $e) {
-        return $e;
+            return view('organizations.store.list.list-material-sent-to-prod', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
     }
-}
-public function getAllListMaterialSentToProduction(Request $request)
-{
-    try {
-        $data_output = $this->service->getAllListMaterialSentToProduction();
-
-        if ($data_output->isEmpty()) {
-            return view('organizations.store.list.list-material-sent-to-prod', [
-                'data_output' => [],
-                'message' => 'No data found'
-            ]);
-        }
-
-        $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
-
-        if ($bdIds->isNotEmpty()) {
-            NotificationStatus::where('material_received_from_store', 0)
-                ->whereIn('business_details_id', $bdIds)
-                ->update(['material_received_from_store' => 1]);
-        }
-
-        return view('organizations.store.list.list-material-sent-to-prod', compact('data_output'));
-    } catch (\Exception $e) {
-        return $e;
-    }
-}
 
 
 
@@ -152,68 +103,41 @@ public function getAllListMaterialSentToProduction(Request $request)
         }
     }
 
+    public function submitFinalPurchaseOrder()
+    {
+        try {
+            $result = $this->service->getPurchaseOrderBusinessWise();
 
-    // public function submitFinalPurchaseOrder()
-    // {
-    //     try {
-    //         $data_output = $this->service->getPurchaseOrderBusinessWise();
-    //         if (is_array($data_output) && count($data_output) > 0 || $data_output instanceof \Illuminate\Support\Collection && $data_output->isNotEmpty()) {
-    //             foreach ($data_output as $data) {
-    //                 $business_id = $data->business_details_id;
-    //                 if (!empty($business_id)) {
-    //                     $update_data['quality_create_grn'] = '1';
-    //                     NotificationStatus::where('quality_create_grn', '0')
-    //                         ->where('business_details_id', $business_id)
-    //                         ->update($update_data);
-    //                 }
-    //             }
-    //         } else {
-    //             return view('organizations.store.list.list-material-received-from-quality-businesswise', [
-    //                 'data_output' => [],
-    //                 'message' => 'No data found'
-    //             ]);
-    //         }
+            // ✅ Make sure view always gets a Collection
+            if ($result instanceof Collection) {
+                $data_output = $result;
+            } elseif (is_array($result)) {
+                $data_output = collect($result);
+            } else {
+                // if service returned string / null / anything else
+                $data_output = collect();
+            }
 
-    //         return view('organizations.store.list.list-material-received-from-quality-businesswise', compact('data_output'));
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
-   public function submitFinalPurchaseOrder()
-{
-    try {
-        $result = $this->service->getPurchaseOrderBusinessWise();
+            if ($data_output->isEmpty()) {
+                return view('organizations.store.list.list-material-received-from-quality-businesswise', [
+                    'data_output' => $data_output,
+                    'message' => 'No data found'
+                ]);
+            }
 
-        // ✅ Make sure view always gets a Collection
-        if ($result instanceof Collection) {
-            $data_output = $result;
-        } elseif (is_array($result)) {
-            $data_output = collect($result);
-        } else {
-            // if service returned string / null / anything else
-            $data_output = collect();
+            $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
+
+            if ($bdIds->isNotEmpty()) {
+                NotificationStatus::where('quality_create_grn', 0)
+                    ->whereIn('business_details_id', $bdIds)
+                    ->update(['quality_create_grn' => 1]);
+            }
+
+            return view('organizations.store.list.list-material-received-from-quality-businesswise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
         }
-
-        if ($data_output->isEmpty()) {
-            return view('organizations.store.list.list-material-received-from-quality-businesswise', [
-                'data_output' => $data_output,
-                'message' => 'No data found'
-            ]);
-        }
-
-        $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
-
-        if ($bdIds->isNotEmpty()) {
-            NotificationStatus::where('quality_create_grn', 0)
-                ->whereIn('business_details_id', $bdIds)
-                ->update(['quality_create_grn' => 1]);
-        }
-
-        return view('organizations.store.list.list-material-received-from-quality-businesswise', compact('data_output'));
-    } catch (\Exception $e) {
-        return $e;
     }
-}
     public function getAllListMaterialReceivedFromQualityPOTracking()
     {
 

@@ -1,4 +1,12 @@
 @extends('admin.layouts.master')
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 @section('content')
     <style>
         /* Control select box */
@@ -6,10 +14,15 @@
             width: 100% !important;
         }
 
-        /* Control dropdown list width */
         .select2-dropdown {
-            max-width: 100% !important;
-            width: auto !important;
+            width: 500px !important;
+            /* wider than select */
+        }
+
+
+        /* allow full text */
+        .select2-results__option {
+            white-space: nowrap;
         }
 
         /* Prevent long text breaking layout */
@@ -21,6 +34,30 @@
 
         .option-width {
             width: 100px !important;
+        }
+
+        .select2-container--default .select2-selection--single {
+            background-color: #fff;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+        }
+
+        .select2-container .select2-selection--single {
+            height: 40px !important;
+            width: 100% !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: #444;
+            line-height: 38px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 36px;
+            position: absolute;
+            top: 1px;
+            right: 9px;
+            width: 20px;
         }
     </style>
     <div class="data-table-area mg-tb-15">
@@ -43,8 +80,8 @@
                                     <div class="row mb-5">
                                         <div class="col-md-2">
                                             <label>Part Item</label>
-                                            <select class="form-control select2 " name="description">
-                                                <option value="" class="option-width">All Part Item</option>
+                                            <select class="form-control select2" name="description">
+                                                <option value="">All Part Item</option>
                                                 @foreach ($getPartItemName as $id => $name)
                                                     <option value="{{ $id }}">{{ $name }}</option>
                                                 @endforeach
@@ -130,7 +167,7 @@
 
                                                 <th data-field="id">Sr.No.</th>
                                                 <!-- <th data-field="received_updated_at" data-editable="false">Received Date
-                                                                                                                        </th> -->
+                                                                                                                                                                            </th> -->
                                                 <th data-field="issue_updated_at" data-editable="false">Transaction Date
                                                 </th>
                                                 <th data-field="description" data-editable="false">Entry No/Particulars</th>
@@ -169,7 +206,9 @@
     <script>
         $('.select2').select2({
             width: '100%',
-            dropdownAutoWidth: false
+            placeholder: "Search Part Item",
+
+            minimumResultsForSearch: 0 // always show search box
         });
     </script>
 

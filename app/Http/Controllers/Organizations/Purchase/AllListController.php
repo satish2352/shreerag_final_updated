@@ -28,97 +28,72 @@ class AllListController extends Controller
     {
         $this->service = new AllListServices();
     }
-      private function timeStamp()
-        {
-            return now()->format('Y-m-d_H-i-s');
+    private function timeStamp()
+    {
+        return now()->format('Y-m-d_H-i-s');
+    }
+
+    public function getAllListMaterialReceivedForPurchase()
+    {
+        try {
+            $data_output = $this->service->getAllListMaterialReceivedForPurchase();
+
+            if ($data_output->isNotEmpty()) {
+                $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
+
+                if ($bdIds->isNotEmpty()) {
+                    NotificationStatus::where('purchase_is_view', 0)
+                        ->whereIn('business_details_id', $bdIds)
+                        ->update(['purchase_is_view' => 1]);
+                }
+            }
+
+            return view('organizations.purchase.list.list-bom-material-recived-for-purchase', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
         }
-    // public function getAllListMaterialReceivedForPurchase()
-    // {
+    }
+    public function getAllListApprovedPurchaseOrder(Request $request)
+    {
+        try {
+            $data_output = $this->service->getAllListApprovedPurchaseOrder();
 
-    //     try {
-    //         $data_output = $this->service->getAllListMaterialReceivedForPurchase();
+            if (!($data_output instanceof \Illuminate\Support\Collection) || $data_output->isEmpty()) {
+                return view('organizations.purchase.list.list-purchase-order-approved-need-to-check', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
 
-    //         if ($data_output->isNotEmpty()) {
-    //             foreach ($data_output as $data) {
-    //                 $business_details = $data->business_details_id;
+            // Prefer business_details_id if present in result set
+            $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
 
-    //                 if (!empty($business_details)) {
-    //                     $update_data['purchase_is_view'] = '1';
-    //                     NotificationStatus::where('purchase_is_view', '0')
-    //                         ->where('business_details_id', $business_details)
-    //                         ->update($update_data);
-    //                 }
-    //             }
-    //         }
+            // Fallback: if your service really returns id as business_details_id
+            // $bdIds = $data_output->pluck('id')->filter()->unique()->values();
 
-    //         return view('organizations.purchase.list.list-bom-material-recived-for-purchase', compact('data_output'));
-    //         // return view( 'organizations.purchase.forms.send-vendor-details-for-purchase', compact( 'data_output' ) );
-    //     } catch (\Exception $e) {
+            if ($bdIds->isNotEmpty()) {
+                NotificationStatus::where('purchase_order_is_accepted_by_view', 0)
+                    ->whereIn('business_details_id', $bdIds)
+                    ->update(['purchase_order_is_accepted_by_view' => 1]);
+            }
 
-    //         return $e;
-    //     }
-    // }
+            return view('organizations.purchase.list.list-purchase-order-approved-need-to-check', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getPurchaseOrderSentToOwnerForApprovalBusinesWise($id)
+    {
+        try {
+            $data_output = $this->service->getPurchaseOrderSentToOwnerForApprovalBusinesWise($id);
 
-    // public function getAllListApprovedPurchaseOrder(Request $request)
-    // {
-    //     try {
-    //         $data_output = $this->service->getAllListApprovedPurchaseOrder();
-    //         if ($data_output instanceof \Illuminate\Support\Collection && $data_output->isNotEmpty()) {
-    //             foreach ($data_output as $data) {
-    //                 $business_id = $data->id;
+            if (!($data_output instanceof \Illuminate\Support\Collection) || $data_output->isEmpty()) {
+                return view('organizations.purchase.list.list-purchase-order-need-to-check', [
+                    'data_output' => [],
+                    'message' => 'No data found',
+                ]);
+            }
 
-    //                 if (!empty($business_id)) {
-    //                     $update_data['purchase_order_is_accepted_by_view'] = '1';
-    //                     NotificationStatus::where('purchase_order_is_accepted_by_view', '0')
-    //                         ->where('business_details_id', $business_id)
-    //                         ->update($update_data);
-    //                 }
-    //             }
-    //         } else {
-    //             return view('organizations.purchase.list.list-purchase-order-approved-need-to-check', [
-    //                 'data_output' => [],
-    //                 'message' => 'No data found'
-    //             ]);
-    //         }
-    //         return view('organizations.purchase.list.list-purchase-order-approved-need-to-check', compact('data_output'));
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
-
-    // public function getPurchaseOrderSentToOwnerForApprovalBusinesWise($id)
-    // {
-    //     try {
-    //         $data_output = $this->service->getPurchaseOrderSentToOwnerForApprovalBusinesWise($id);
-
-    //         if ($data_output instanceof \Illuminate\Support\Collection && $data_output->isNotEmpty()) {
-    //             foreach ($data_output as $data) {
-    //                 $business_details_id = $data->business_details_id;
-
-    //                 if (!empty($business_details_id)) {
-    //                     $update_data['purchase_is_view'] = '1';
-    //                     NotificationStatus::where('purchase_is_view', '0')
-    //                         ->where('business_details_id', $business_details_id)
-    //                         ->update($update_data);
-    //                 }
-    //             }
-    //         } else {
-    //             return view('organizations.purchase.list.list-purchase-order-need-to-check', [
-    //                 'data_output' => [],
-    //                 'message' => 'No data found for designs received for correction',
-    //             ]);
-    //         }
-    //         return view('organizations.purchase.list.list-purchase-order-approved-need-to-check-businesswise', compact('data_output'));
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
-public function getAllListMaterialReceivedForPurchase()
-{
-    try {
-        $data_output = $this->service->getAllListMaterialReceivedForPurchase();
-
-        if ($data_output->isNotEmpty()) {
             $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
 
             if ($bdIds->isNotEmpty()) {
@@ -126,67 +101,12 @@ public function getAllListMaterialReceivedForPurchase()
                     ->whereIn('business_details_id', $bdIds)
                     ->update(['purchase_is_view' => 1]);
             }
-        }
 
-        return view('organizations.purchase.list.list-bom-material-recived-for-purchase', compact('data_output'));
-    } catch (\Exception $e) {
-        return $e;
+            return view('organizations.purchase.list.list-purchase-order-approved-need-to-check-businesswise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
     }
-}
-public function getAllListApprovedPurchaseOrder(Request $request)
-{
-    try {
-        $data_output = $this->service->getAllListApprovedPurchaseOrder();
-
-        if (!($data_output instanceof \Illuminate\Support\Collection) || $data_output->isEmpty()) {
-            return view('organizations.purchase.list.list-purchase-order-approved-need-to-check', [
-                'data_output' => [],
-                'message' => 'No data found'
-            ]);
-        }
-
-        // Prefer business_details_id if present in result set
-        $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
-
-        // Fallback: if your service really returns id as business_details_id
-        // $bdIds = $data_output->pluck('id')->filter()->unique()->values();
-
-        if ($bdIds->isNotEmpty()) {
-            NotificationStatus::where('purchase_order_is_accepted_by_view', 0)
-                ->whereIn('business_details_id', $bdIds)
-                ->update(['purchase_order_is_accepted_by_view' => 1]);
-        }
-
-        return view('organizations.purchase.list.list-purchase-order-approved-need-to-check', compact('data_output'));
-    } catch (\Exception $e) {
-        return $e;
-    }
-}
-public function getPurchaseOrderSentToOwnerForApprovalBusinesWise($id)
-{
-    try {
-        $data_output = $this->service->getPurchaseOrderSentToOwnerForApprovalBusinesWise($id);
-
-        if (!($data_output instanceof \Illuminate\Support\Collection) || $data_output->isEmpty()) {
-            return view('organizations.purchase.list.list-purchase-order-need-to-check', [
-                'data_output' => [],
-                'message' => 'No data found',
-            ]);
-        }
-
-        $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
-
-        if ($bdIds->isNotEmpty()) {
-            NotificationStatus::where('purchase_is_view', 0)
-                ->whereIn('business_details_id', $bdIds)
-                ->update(['purchase_is_view' => 1]);
-        }
-
-        return view('organizations.purchase.list.list-purchase-order-approved-need-to-check-businesswise', compact('data_output'));
-    } catch (\Exception $e) {
-        return $e;
-    }
-}
 
     public function getAllListPurchaseOrderMailSentToVendor(Request $request)
     {
@@ -224,61 +144,33 @@ public function getPurchaseOrderSentToOwnerForApprovalBusinesWise($id)
         }
     }
 
-    // public function getAllListSubmitedPurchaeOrderByVendorBusinessWise($id)
-    // {
-    //     try {
-    //         $data_output = $this->service->getAllListSubmitedPurchaeOrderByVendorBusinessWise($id);
-    //         if ($data_output instanceof \Illuminate\Support\Collection && $data_output->isNotEmpty()) {
-    //             foreach ($data_output as $data) {
-    //                 $business_id = $data->id;
 
-    //                 if (!empty($business_id)) {
-    //                     $update_data['po_send_to_vendor'] = '1';
-    //                     NotificationStatus::where('po_send_to_vendor', '0')
-    //                         ->where('business_details_id', $business_id)
-    //                         ->update($update_data);
-    //                 }
-    //             }
-    //         } else {
-    //             return view('organizations.purchase.list.list-all-po-sent-to-vendor-businesswise', [
-    //                 'data_output' => [],
-    //                 'message' => 'No data found'
-    //             ]);
-    //         }
-    //         return view('organizations.purchase.list.list-all-po-sent-to-vendor-businesswise', compact('data_output'));
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
-public function getAllListSubmitedPurchaeOrderByVendorBusinessWise($id)
-{
-    try {
-        $data_output = $this->service->getAllListSubmitedPurchaeOrderByVendorBusinessWise($id);
+    public function getAllListSubmitedPurchaeOrderByVendorBusinessWise($id)
+    {
+        try {
+            $data_output = $this->service->getAllListSubmitedPurchaeOrderByVendorBusinessWise($id);
 
-        if (!($data_output instanceof \Illuminate\Support\Collection) || $data_output->isEmpty()) {
-            return view('organizations.purchase.list.list-all-po-sent-to-vendor-businesswise', [
-                'data_output' => [],
-                'message' => 'No data found'
-            ]);
+            if (!($data_output instanceof \Illuminate\Support\Collection) || $data_output->isEmpty()) {
+                return view('organizations.purchase.list.list-all-po-sent-to-vendor-businesswise', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
+
+            // Prefer business_details_id if your service returns it
+            $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
+
+            if ($bdIds->isNotEmpty()) {
+                NotificationStatus::where('po_send_to_vendor', 0)
+                    ->whereIn('business_details_id', $bdIds)
+                    ->update(['po_send_to_vendor' => 1]);
+            }
+
+            return view('organizations.purchase.list.list-all-po-sent-to-vendor-businesswise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
         }
-
-        // Prefer business_details_id if your service returns it
-        $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
-
-        // If your service DOES NOT have business_details_id and id actually equals business_details_id, then use:
-        // $bdIds = $data_output->pluck('id')->filter()->unique()->values();
-
-        if ($bdIds->isNotEmpty()) {
-            NotificationStatus::where('po_send_to_vendor', 0)
-                ->whereIn('business_details_id', $bdIds)
-                ->update(['po_send_to_vendor' => 1]);
-        }
-
-        return view('organizations.purchase.list.list-all-po-sent-to-vendor-businesswise', compact('data_output'));
-    } catch (\Exception $e) {
-        return $e;
     }
-}
 
     public function getAllListPurchaseOrderTowardsOwner(Request $request)
     {

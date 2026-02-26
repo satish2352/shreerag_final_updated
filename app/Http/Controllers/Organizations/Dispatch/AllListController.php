@@ -18,58 +18,31 @@ class AllListController extends Controller
     {
         $this->service = new AllListServices();
     }
+    public function getAllReceivedFromFianance()
+    {
+        try {
+            $data_output = $this->service->getAllReceivedFromFianance();
 
-    // public function getAllReceivedFromFianance()
-    // {
-    //     try {
-    //         $data_output = $this->service->getAllReceivedFromFianance();
-    //         if ($data_output->isNotEmpty()) {
-    //             foreach ($data_output as $data) {
-    //                 $business_details_id = $data->business_details_id;
+            if ($data_output->isEmpty()) {
+                return view('organizations.dispatch.dispatchdept.list-business-received-from-fianance', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
 
-    //                 if (!empty($business_details_id)) {
-    //                     $update_data['fianance_to_dispatch_visible'] = '1';
-    //                     NotificationStatus::where('fianance_to_dispatch_visible', '0')
-    //                         ->where('business_details_id', $business_details_id)
-    //                         ->update($update_data);
-    //                 }
-    //             }
-    //         } else {
-    //             return view('organizations.dispatch.dispatchdept.list-business-received-from-fianance', [
-    //                 'data_output' => [],
-    //                 'message' => 'No data found for designs received for correction'
-    //             ]);
-    //         }
-    //         return view('organizations.dispatch.dispatchdept.list-business-received-from-fianance', compact('data_output'));
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
-public function getAllReceivedFromFianance()
-{
-    try {
-        $data_output = $this->service->getAllReceivedFromFianance();
+            $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
 
-        if ($data_output->isEmpty()) {
-            return view('organizations.dispatch.dispatchdept.list-business-received-from-fianance', [
-                'data_output' => [],
-                'message' => 'No data found'
-            ]);
+            if ($bdIds->isNotEmpty()) {
+                NotificationStatus::where('fianance_to_dispatch_visible', 0)
+                    ->whereIn('business_details_id', $bdIds)
+                    ->update(['fianance_to_dispatch_visible' => 1]);
+            }
+
+            return view('organizations.dispatch.dispatchdept.list-business-received-from-fianance', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
         }
-
-        $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
-
-        if ($bdIds->isNotEmpty()) {
-            NotificationStatus::where('fianance_to_dispatch_visible', 0)
-                ->whereIn('business_details_id', $bdIds)
-                ->update(['fianance_to_dispatch_visible' => 1]);
-        }
-
-        return view('organizations.dispatch.dispatchdept.list-business-received-from-fianance', compact('data_output'));
-    } catch (\Exception $e) {
-        return $e;
     }
-}
 
     public function getAllDispatch()
     {

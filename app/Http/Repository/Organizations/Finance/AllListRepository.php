@@ -13,6 +13,62 @@ use App\Models\{
 
 class AllListRepository
 {
+  public function getAllListBusinessDetails()
+  {
+    try {
+      $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN')];
+
+      $data_output = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
+        $join->on('business_application_processes.business_id', '=', 'businesses.id');
+      })
+        ->leftJoin('businesses_details', function ($join) {
+          $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+        })
+        ->where('businesses_details.is_active', true)
+        ->where('businesses_details.is_deleted', 0)
+        ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
+        ->groupBy(
+          'businesses.id',
+          'businesses.project_name',
+          'businesses.customer_po_number',
+          'businesses.title',
+          'businesses.business_pdf',
+          'businesses_details.id',
+          'businesses_details.product_name',
+          'businesses.remarks',
+          'businesses_details.description',
+          'businesses_details.quantity',
+          'businesses_details.rate',
+          'businesses_details.total_amount',
+          'businesses.created_at',
+          'businesses.updated_at'
+        )
+        ->select(
+          'businesses.id',
+          'businesses.project_name',
+          'businesses_details.id',
+          'businesses.title',
+          'businesses.business_pdf',
+          'businesses.customer_po_number',
+          'businesses.remarks',
+          'businesses_details.product_name',
+          'businesses_details.description',
+          'businesses_details.quantity',
+          'businesses_details.rate',
+          'businesses_details.total_amount',
+          'businesses.created_at',
+          'businesses.updated_at',
+        )
+        ->orderBy('updated_at', 'desc')
+        ->distinct()
+        ->get();
+
+      return $data_output;
+    } catch (\Exception $e) {
+      return $e;
+    }
+  }
+
 
   public function getAllListSRAndGRNGeanrated()
   {

@@ -39,61 +39,36 @@ class AllListController extends Controller
             return $e;
         }
     }
-    // public function getAllNewRequirementBusinessWise($business_id)
-    // { //checked
-    //     try {
-    //         $data_output = $this->service->getAllNewRequirementBusinessWise($business_id);
-    //         if ($data_output->isNotEmpty()) {
-    //             foreach ($data_output as $data) {
-    //                 if (isset($data->business_details_id)) {
-    //                     NotificationStatus::where('estimation_view', '0')
-    //                         ->where('business_details_id', $data->business_details_id)
-    //                         ->update(['estimation_view' => '1']);
-    //                     AdminView::where('is_view', '0')
-    //                         ->where('business_details_id', $data->business_details_id)
-    //                         ->update(['is_view' => '1']);
-    //                 }
-    //             }
-    //         } else {
-    //             return view('organizations.estimation.list.list_design_received_for_estimation_business_wise', [
-    //                 'data_output' => [],
-    //                 'message' => 'No data found for designs received for correction'
-    //             ]);
-    //         }
-    //         return view('organizations.estimation.list.list_design_received_for_estimation_business_wise', compact('data_output'));
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
+
     public function getAllNewRequirementBusinessWise($business_id)
-{
-    try {
-        $data_output = $this->service->getAllNewRequirementBusinessWise($business_id);
+    {
+        try {
+            $data_output = $this->service->getAllNewRequirementBusinessWise($business_id);
 
-        if ($data_output->isEmpty()) {
-            return view('organizations.estimation.list.list_design_received_for_estimation_business_wise', [
-                'data_output' => [],
-                'message' => 'No data found'
-            ]);
+            if ($data_output->isEmpty()) {
+                return view('organizations.estimation.list.list_design_received_for_estimation_business_wise', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
+
+            $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
+
+            if ($bdIds->isNotEmpty()) {
+                NotificationStatus::where('estimation_view', 0)
+                    ->whereIn('business_details_id', $bdIds)
+                    ->update(['estimation_view' => 1]);
+
+                AdminView::where('is_view', 0)
+                    ->whereIn('business_details_id', $bdIds)
+                    ->update(['is_view' => 1]);
+            }
+
+            return view('organizations.estimation.list.list_design_received_for_estimation_business_wise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
         }
-
-        $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
-
-        if ($bdIds->isNotEmpty()) {
-            NotificationStatus::where('estimation_view', 0)
-                ->whereIn('business_details_id', $bdIds)
-                ->update(['estimation_view' => 1]);
-
-            AdminView::where('is_view', 0)
-                ->whereIn('business_details_id', $bdIds)
-                ->update(['is_view' => 1]);
-        }
-
-        return view('organizations.estimation.list.list_design_received_for_estimation_business_wise', compact('data_output'));
-    } catch (\Exception $e) {
-        return $e;
     }
-}
 
     public function getAllEstimationSendToOwnerForApproval(Request $request)
     { //checked
@@ -106,181 +81,61 @@ class AllListController extends Controller
         }
     }
 
-    // public function getAllEstimationSendToOwnerForApprovalBusinessWise($business_id)
-    // { //checked
-    //     try {
-    //         $data_output = $this->service->getAllEstimationSendToOwnerForApprovalBusinessWise($business_id);
-    //         if ($data_output->isNotEmpty()) {
-    //             foreach ($data_output as $data) {
-    //                 $business_details_id = $data->business_details_id;
 
-    //                 if (!empty($business_details_id)) {
-    //                     $update_data['estimation_view'] = '1';
-    //                     NotificationStatus::where('estimation_view', '0')
-    //                         ->where('business_details_id', $business_details_id)
-    //                         ->update($update_data);
-    //                 }
-    //             }
-    //         } else {
-    //             return view('organizations.estimation.list.list-updated-estimation-send-to-owner_business_wise', [
-    //                 'data_output' => [],
-    //                 'message' => 'No data found for designs received for correction'
-    //             ]);
-    //         }
+    public function getAllEstimationSendToOwnerForApprovalBusinessWise($business_id)
+    {
+        try {
+            $data_output = $this->service->getAllEstimationSendToOwnerForApprovalBusinessWise($business_id);
 
-    //         return view('organizations.estimation.list.list-updated-estimation-send-to-owner_business_wise', compact('data_output'));
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
-public function getAllEstimationSendToOwnerForApprovalBusinessWise($business_id)
-{
-    try {
-        $data_output = $this->service->getAllEstimationSendToOwnerForApprovalBusinessWise($business_id);
+            if ($data_output->isEmpty()) {
+                return view('organizations.estimation.list.list-updated-estimation-send-to-owner_business_wise', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
 
-        if ($data_output->isEmpty()) {
-            return view('organizations.estimation.list.list-updated-estimation-send-to-owner_business_wise', [
-                'data_output' => [],
-                'message' => 'No data found'
-            ]);
+            $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
+
+            if ($bdIds->isNotEmpty()) {
+                NotificationStatus::where('estimation_view', 0)
+                    ->whereIn('business_details_id', $bdIds)
+                    ->update(['estimation_view' => 1]);
+            }
+
+            return view('organizations.estimation.list.list-updated-estimation-send-to-owner_business_wise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
         }
-
-        $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
-
-        if ($bdIds->isNotEmpty()) {
-            NotificationStatus::where('estimation_view', 0)
-                ->whereIn('business_details_id', $bdIds)
-                ->update(['estimation_view' => 1]);
-        }
-
-        return view('organizations.estimation.list.list-updated-estimation-send-to-owner_business_wise', compact('data_output'));
-    } catch (\Exception $e) {
-        return $e;
     }
-}
 
-    // public function acceptBOMlist() {
-    //     try {
-    //         $data_output = $this->service->acceptBOMlist();
-    //         if ( $data_output->isNotEmpty() ) {
-    //             foreach ( $data_output as $data ) {
-    //                 $business_details_id = $data->id;
 
-    //                 if ( !empty( $business_details_id ) ) {
-    //                     $update_data[ 'add_bom_estimation' ] = '1';
-    //                     NotificationStatus::where( 'add_bom_estimation', '0' )
-    //                     ->where( 'business_details_id', $business_details_id )
-    //                     ->update( $update_data );
-    //                 }
-    //             }
-    //         } else {
-    //             return view( 'organizations.estimation.list.list-bom-accepted', [
-    //                 'data_output' => [],
-    //                 'message' => 'No data found for designs received for correction'
-    //             ] );
-    //         }
-    //         //     $first_business_id = optional( $data_output->first() )->id;
-    //         //     if ( $first_business_id ) {
-    //         //     $update_data[ 'prod_design_accepted' ] = '1';
-    //         //     NotificationStatus::where( 'prod_design_accepted', '0' )
-    //         //         ->where( 'business_id', $first_business_id )
-    //         //         ->update( $update_data );
-    //         // }
-    //         return view( 'organizations.estimation.list.list-bom-accepted', compact( 'data_output' ) );
-    //     } catch ( \Exception $e ) {
-    //         return $e;
-    //     }
-    // }
-
-    // public function acceptBOMlistBusinessWise( $business_id ) {
-    //     try {
-    //         $data_output = $this->service->acceptBOMlistBusinessWise( $business_id );
-    //         if ( $data_output->isNotEmpty() ) {
-    //             foreach ( $data_output as $data ) {
-    //                 $business_id = $data->business_details_id;
-
-    //                 if ( !empty( $business_id ) ) {
-    //                     $update_data[ 'prod_is_view' ] = '1';
-    //                     NotificationStatus::where( 'prod_is_view', '0' )
-    //                     ->where( 'id', $business_id )
-    //                     ->update( $update_data );
-    //                 }
-    //             }
-    //         } else {
-    //             return view( 'organizations.estimation.list.list-bom-accepted-business-wise', [
-    //                 'data_output' => [],
-    //                 'message' => 'No data found'
-    //             ] );
-    //         }
-    //         return view( 'organizations.estimation.list.list-bom-accepted-business-wise', compact( 'data_output' ) );
-    //     } catch ( \Exception $e ) {
-    //         return $e;
-    //     }
-    // }
-
-    // public function rejectdesignlist() {
-    //     try {
-    //         $data_output = $this->service->getAllrejectdesign();
-
-    //         return view( 'organizations.productions.product.list-design-rejected', compact( 'data_output' ) );
-    //     } catch ( \Exception $e ) {
-    //         return $e;
-    //     }
-    // }
-
-    // public function reviseddesignlist()
-    // {
-    //     try {
-    //         $data_output = $this->service->getAllreviseddesign();
-    //         if ($data_output->isNotEmpty()) {
-    //             foreach ($data_output as $data) {
-    //                 $business_details_id = $data->id;
-
-    //                 if (!empty($business_details_id)) {
-    //                     $update_data['prod_is_view_revised'] = '1';
-    //                     NotificationStatus::where('prod_is_view_revised', '0')
-    //                         ->where('business_details_id', $business_details_id)
-    //                         ->update($update_data);
-    //                 }
-    //             }
-    //         } else {
-    //             return view('organizations.productions.product.list-design-revised', [
-    //                 'data_output' => [],
-    //                 'message' => 'No data found for designs received for correction'
-    //             ]);
-    //         }
-    //         return view('organizations.productions.product.list-design-revised', compact('data_output'));
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
     public function reviseddesignlist()
-{
-    try {
-        $data_output = $this->service->getAllreviseddesign();
+    {
+        try {
+            $data_output = $this->service->getAllreviseddesign();
 
-        if ($data_output->isEmpty()) {
-            return view('organizations.productions.product.list-design-revised', [
-                'data_output' => [],
-                'message' => 'No data found'
-            ]);
+            if ($data_output->isEmpty()) {
+                return view('organizations.productions.product.list-design-revised', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
+
+            // NOTE: In your current code you use $data->id as business_details_id
+            // Make sure $data->id really represents business_details_id.
+            $bdIds = $data_output->pluck('id')->filter()->unique()->values();
+
+            if ($bdIds->isNotEmpty()) {
+                NotificationStatus::where('prod_is_view_revised', 0)
+                    ->whereIn('business_details_id', $bdIds)
+                    ->update(['prod_is_view_revised' => 1]);
+            }
+
+            return view('organizations.productions.product.list-design-revised', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
         }
-
-        // NOTE: In your current code you use $data->id as business_details_id
-        // Make sure $data->id really represents business_details_id.
-        $bdIds = $data_output->pluck('id')->filter()->unique()->values();
-
-        if ($bdIds->isNotEmpty()) {
-            NotificationStatus::where('prod_is_view_revised', 0)
-                ->whereIn('business_details_id', $bdIds)
-                ->update(['prod_is_view_revised' => 1]);
-        }
-
-        return view('organizations.productions.product.list-design-revised', compact('data_output'));
-    } catch (\Exception $e) {
-        return $e;
     }
-}
 
     public function getSendToProductionList()
     {
@@ -302,89 +157,30 @@ public function getAllEstimationSendToOwnerForApprovalBusinessWise($business_id)
             return $e;
         }
     }
-    // public function getAllListMaterialRecievedToProductionBusinessWise($id)
-    // {
-    //     try {
-    //         $data_output = $this->service->getAllListMaterialRecievedToProductionBusinessWise($id);
 
-    //         if ($data_output->isNotEmpty()) {
-    //             foreach ($data_output as $data) {
-    //                 if (!empty($data->business_details_id)) {
-    //                     NotificationStatus::where('material_received_from_store', '0')
-    //                         ->where('business_details_id', $data->business_details_id)
-    //                         ->update(['material_received_from_store' => '1']);
-    //                 }
-    //             }
-    //         } else {
-    //             return view('organizations.productions.product.list-recived-bussinesswise', [
-    //                 'data_output' => [],
-    //                 'message' => 'No data found for designs received for correction'
-    //             ]);
-    //         }
-
-    //         return view('organizations.productions.product.list-recived-bussinesswise', compact('data_output'));
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
     public function getAllListMaterialRecievedToProductionBusinessWise($id)
-{
-    try {
-        $data_output = $this->service->getAllListMaterialRecievedToProductionBusinessWise($id);
+    {
+        try {
+            $data_output = $this->service->getAllListMaterialRecievedToProductionBusinessWise($id);
 
-        if ($data_output->isEmpty()) {
-            return view('organizations.productions.product.list-recived-bussinesswise', [
-                'data_output' => [],
-                'message' => 'No data found'
-            ]);
+            if ($data_output->isEmpty()) {
+                return view('organizations.productions.product.list-recived-bussinesswise', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
+
+            $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
+
+            if ($bdIds->isNotEmpty()) {
+                NotificationStatus::where('material_received_from_store', 0)
+                    ->whereIn('business_details_id', $bdIds)
+                    ->update(['material_received_from_store' => 1]);
+            }
+
+            return view('organizations.productions.product.list-recived-bussinesswise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
         }
-
-        $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
-
-        if ($bdIds->isNotEmpty()) {
-            NotificationStatus::where('material_received_from_store', 0)
-                ->whereIn('business_details_id', $bdIds)
-                ->update(['material_received_from_store' => 1]);
-        }
-
-        return view('organizations.productions.product.list-recived-bussinesswise', compact('data_output'));
-    } catch (\Exception $e) {
-        return $e;
     }
-}
-
-    // public function getAllCompletedProduction() {
-    //     try {
-    //         $data_output = $this->service->getAllCompletedProduction();
-    //         return view( 'organizations.productions.product.list-production-completed', compact( 'data_output' ) );
-    //     } catch ( \Exception $e ) {
-    //         return $e;
-    //     }
-    // }
-
-    // public function getAllCompletedProductionSendToLogistics() {
-    //     try {
-    //         $data_output = $this->service->getAllCompletedProductionSendToLogistics();
-    //         return view( 'organizations.productions.product.list-production-completed-send-to-logistics-tracking', compact( 'data_output' ) );
-    //     } catch ( \Exception $e ) {
-    //         return $e;
-    //     }
-    // }
-
-    // public function getAllCompletedProductionSendToLogisticsProductWise( $id ) {
-    //     try {
-    //         $editData = $this->service->getAllCompletedProductionSendToLogisticsProductWise( $id );
-    //         $dataOutputPartItem = PartItem::where( 'is_active', true )->get();
-    //         $dataOutputUnitMaster = UnitMaster::where( 'is_active', true )->get();
-    //         return view( 'organizations.productions.product.list-production-completed-send-to-logistics-tracking-business-wise', [
-    //             'productDetails' => $editData[ 'productDetails' ],
-    //             'dataGroupedById' => $editData[ 'dataGroupedById' ],
-    //             'dataOutputPartItem' => $dataOutputPartItem,
-    //             'dataOutputUnitMaster'=>$dataOutputUnitMaster,
-    //             'id' => $id
-    //         ] );
-    //     } catch ( \Exception $e ) {
-    //         return redirect()->back()->with( [ 'status' => 'error', 'msg' => $e->getMessage() ] );
-    //     }
-    // }
 }

@@ -123,7 +123,7 @@ class DesignUploadController extends Controller
 
         $rules = [
             'design_image' => 'required|mimes:pdf|max:' . Config::get("AllFileValidation.DESIGNS_PDF_MAX_SIZE") . '|min:' . Config::get("AllFileValidation.DESIGNS_PDF_MIN_SIZE") . '',
-            // 'bom_image' => 'required|mimes:xls,xlsx|max:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'|min:'.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'',
+            'bom_image' => 'required|mimes:xls,xlsx|max:' . Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE") . '|min:' . Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE") . '',
 
         ];
 
@@ -132,10 +132,10 @@ class DesignUploadController extends Controller
             'design_image.mimes' => 'The design file must be in PDF format.',
             'design_image.max' => 'The design file size must not exceed' . Config::get("AllFileValidation.DESIGNS_PDF_MAX_SIZE") . 'KB .',
             'design_image.min' => 'The design file size must not be less than' . Config::get("AllFileValidation.DESIGNS_PDF_MIN_SIZE") . 'KB .',
-            // 'bom_image.required' => 'The BOM file is required.',
-            // 'bom_image.mimes' => 'The BOM file must be in XLS or XLSX format.',
-            // 'bom_image.max' => 'The BOM file size must not exceed'.Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE").'KB .',
-            // 'bom_image.min' => 'The BOM file size must not be less than'.Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE").'KB .',
+            'bom_image.required' => 'The BOM file is required.',
+            'bom_image.mimes' => 'The BOM file must be in XLS or XLSX format.',
+            'bom_image.max' => 'The BOM file size must not exceed' . Config::get("AllFileValidation.DESIGNS_IMAGE_MAX_SIZE") . 'KB .',
+            'bom_image.min' => 'The BOM file size must not be less than' . Config::get("AllFileValidation.DESIGNS_IMAGE_MIN_SIZE") . 'KB .',
         ];
 
         try {

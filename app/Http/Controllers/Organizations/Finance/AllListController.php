@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Services\Organizations\Finance\AllListServices;
 use Exception;
 use App\Models\{
-    NotificationStatus
+    NotificationStatus,
+    AdminView
 };
 
 class AllListController extends Controller
@@ -19,7 +20,20 @@ class AllListController extends Controller
     {
         $this->service = new AllListServices();
     }
+    public function getAllListBusinessDetails(Request $request)
+    {
+        try {
+            $data_output = $this->service->getAllListBusinessDetails();
 
+            $update_data_admin['is_view'] = '1';
+            AdminView::where('off_canvas_status', 11)
+                ->where('is_view', '0')
+                ->update($update_data_admin);
+            return view('organizations.finance.list.list-business-for-finance', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
     public function getAllListSRAndGRNGeanrated(Request $request)
     {
         try {
@@ -75,57 +89,31 @@ class AllListController extends Controller
         }
     }
 
-    // public function getAllListBusinessReceivedFromLogistics()
-    // {
-    //     try {
-    //         $data_output = $this->service->getAllListBusinessReceivedFromLogistics();
-    //         if ($data_output->isNotEmpty()) {
-    //             foreach ($data_output as $data) {
-    //                 $business_details_id = $data->business_details_id;
+    public function getAllListBusinessReceivedFromLogistics()
+    {
+        try {
+            $data_output = $this->service->getAllListBusinessReceivedFromLogistics();
 
-    //                 if (!empty($business_details_id)) {
-    //                     $update_data['logistics_to_fianance_visible'] = '1';
-    //                     NotificationStatus::where('logistics_to_fianance_visible', '0')
-    //                         ->where('business_details_id', $business_details_id)
-    //                         ->update($update_data);
-    //                 }
-    //             }
-    //         } else {
-    //             return view('organizations.finance.list.list-business-received-from-logistics', [
-    //                 'data_output' => [],
-    //                 'message' => 'No data found for designs received for correction'
-    //             ]);
-    //         }
-    //         return view('organizations.finance.list.list-business-received-from-logistics', compact('data_output'));
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
-public function getAllListBusinessReceivedFromLogistics()
-{
-    try {
-        $data_output = $this->service->getAllListBusinessReceivedFromLogistics();
+            if ($data_output->isEmpty()) {
+                return view('organizations.finance.list.list-business-received-from-logistics', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
 
-        if ($data_output->isEmpty()) {
-            return view('organizations.finance.list.list-business-received-from-logistics', [
-                'data_output' => [],
-                'message' => 'No data found'
-            ]);
+            $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
+
+            if ($bdIds->isNotEmpty()) {
+                NotificationStatus::where('logistics_to_fianance_visible', 0)
+                    ->whereIn('business_details_id', $bdIds)
+                    ->update(['logistics_to_fianance_visible' => 1]);
+            }
+
+            return view('organizations.finance.list.list-business-received-from-logistics', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
         }
-
-        $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
-
-        if ($bdIds->isNotEmpty()) {
-            NotificationStatus::where('logistics_to_fianance_visible', 0)
-                ->whereIn('business_details_id', $bdIds)
-                ->update(['logistics_to_fianance_visible' => 1]);
-        }
-
-        return view('organizations.finance.list.list-business-received-from-logistics', compact('data_output'));
-    } catch (\Exception $e) {
-        return $e;
     }
-}
 
     public function getAllListBusinessFianaceSendToDispatch()
     {

@@ -1,10 +1,11 @@
 <?php
+
 namespace App\Http\Controllers\Exports;
 
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class ConsumptionReportExport implements FromCollection, WithHeadings
+class ConsumptionReport implements FromCollection, WithHeadings
 {
     protected $data;
 

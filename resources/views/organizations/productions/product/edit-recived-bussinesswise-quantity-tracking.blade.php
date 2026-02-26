@@ -166,7 +166,7 @@
                         number: true,
                         min: 1,
                         max: function() {
-                            return parseInt($("#quantity").val());
+                           return parseInt($("#remaining_quantity").val());
                         }
                     }
                 },

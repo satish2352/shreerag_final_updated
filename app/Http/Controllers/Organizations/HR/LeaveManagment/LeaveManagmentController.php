@@ -39,51 +39,6 @@ class LeaveManagmentController extends Controller
         $roles = RolesModel::get();
         return view('organizations.hr.yearly-leave-management.add-yearly-leave-management', compact('dept', 'roles'));
     }
-
-    // public function store( Request $request ) {
-    //     $rules = [
-    //         'name' => 'required|unique:tbl_leave_management|regex:/^[a-zA-Z\s]+$/u|max:255',
-    //         'leave_year' => 'required',
-    //         'leave_count' => 'required|integer',
-
-    //     ];
-
-    //     $messages = [
-    //         'name.required' => 'Please enter name.',
-    //         'name.regex' => 'Please  enter text only.',
-    //         'name.max' => 'Please  enter text length upto 255 character only.',
-    //         'name.unique' => 'Name already exist.',
-    //         'leave_year.required' => 'Please select year.',
-    //         'leave_count.required' => 'Please enter leave count.',
-    //         'leave_count.integer' => 'Please enter a valid number for leave count.',
-
-    //     ];
-
-    //     try {
-    //         $validation = Validator::make( $request->all(), $rules, $messages );
-
-    //         if ( $validation->fails() ) {
-    //             return redirect( 'hr/add-yearly-leave-management' )
-    //             ->withInput()
-    //             ->withErrors( $validation );
-    //         } else {
-    //             $add_record = $this->service->addAll( $request );
-
-    //             if ( $add_record ) {
-    //                 $msg = $add_record[ 'msg' ];
-    //                 $status = $add_record[ 'status' ];
-
-    //                 if ( $status == 'success' ) {
-    //                     return redirect( 'hr/list-yearly-leave-management' )->with( compact( 'msg', 'status' ) );
-    //                 } else {
-    //                     return redirect( 'hr/add-yearly-leave-management' )->withInput()->with( compact( 'msg', 'status' ) );
-    //                 }
-    //             }
-    //         }
-    //     } catch ( Exception $e ) {
-    //         return redirect( 'hr/add-yearly-leave-management' )->withInput()->with( [ 'msg' => $e->getMessage(), 'status' => 'error' ] );
-    //     }
-    // }
     public function store(Request $request)
     {
         $rules = [

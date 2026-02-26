@@ -15,6 +15,16 @@ class AllListServices
 
         $this->repo = new AllListRepository();
     }
+    public function getAllListBusinessDetails()
+    {
+        try {
+            $data_output = $this->repo->getAllListBusinessDetails();
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
     public function getAllListSRAndGRNGeanrated()
     {
         try {

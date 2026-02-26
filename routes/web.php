@@ -686,7 +686,11 @@
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('finance.dashboard');
         Route::get('/forward-the-purchase-order-to-the-owner-for-sanction/{purchase_orders_id}/{business_id}', [FinanceController::class, 'forwardPurchaseOrderToTheOwnerForSanction'])->name('forward-the-purchase-order-to-the-owner-for-sanction');
         Route::get('/list-accepted-grn-srn-finance/{purchase_orders_id}', [FinanceAllListController::class, 'listAcceptedGrnSrnFinance'])->name('list-accepted-grn-srn-finance');
+
+        Route::get('/list-business-details-for-finance', [FinanceAllListController::class, 'getAllListBusinessDetails'])->name('list-business-details-for-finance');
+
         Route::get('/list-sr-and-gr-genrated-business', [FinanceAllListController::class, 'getAllListSRAndGRNGeanrated'])->name('list-sr-and-gr-genrated-business');
+
         Route::get('/list-sr-and-gr-genrated-business-wise/{id}', [FinanceAllListController::class, 'getAllListSRAndGRNGeanratedBusinessWise'])->name('list-sr-and-gr-genrated-business-wise');
         Route::get('/list-po-sent-for-approval', [FinanceAllListController::class, 'listPOSentForApprovaTowardsOwner'])->name('list-po-sent-for-approval');
         Route::get('/list-po-sanction-and-need-to-do-payment-to-vendor', [FinanceAllListController::class, 'listPOSanctionAndNeedToDoPaymentToVendor'])->name('list-po-sanction-and-need-to-do-payment-to-vendor');

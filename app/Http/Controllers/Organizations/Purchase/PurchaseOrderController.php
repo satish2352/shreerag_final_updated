@@ -6,6 +6,7 @@ use App\Models\PurchaseOrdersModel;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
 use setasign\Fpdi\Fpdi;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -25,7 +26,8 @@ use App\Models\{
     PurchaseOrderDetailsModel,
     NotificationStatus,
     VendorType,
-    EstimationModel
+    EstimationModel,
+    Business
 };
 use App\Http\Controllers\Organizations\CommanController;
 
@@ -143,33 +145,91 @@ class PurchaseOrderController extends Controller
             )
         );
     }
+    // public function create(Request $request)
+    // {
+    //     $requistition_id = $request->requistition_id;
+    //     $business_detailsId = $request->business_details_id;
+    //     $requistitionId = base64_decode($request->requistition_id);
+    //     $title = 'create invoice';
+
+    //     $dataPurchaseOrder = PurchaseOrdersModel::where('requisition_id', $requistitionId)->first();
+    //     $dataOutputVendor = Vendors::where('is_active', true)->get();
+    //     $dataOutputTax = Tax::where('is_active', true)->get();
+    //     $dataOutputPartItem = PartItem::where('is_active', true)->get();
+    //     $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
+    //     $dataOutputHSNMaster = HSNMaster::where('is_active', true)->get();
+    //     $dataOutputVendorTyper = VendorType::where('is_active', true)->get();
+
+    //     // ✅ GET ESTIMATION AMOUNT
+    //     $estimation = EstimationModel::where('business_details_id', base64_decode($business_detailsId))
+    //         ->first();
+
+    //     $estimation_amount = $estimation ? $estimation->total_estimation_amount : 0;
+
+    //     // ✅ USED PO AMOUNT
+    //     $used_po_amount = PurchaseOrdersModel::where('requisition_id', $requistitionId)
+    //         ->sum('po_grand_total_amount');
+
+    //     // ✅ REMAINING AMOUNT
+    //     $remaining_amount = $estimation_amount - $used_po_amount;
+    //     return view(
+    //         'organizations.purchase.addpurchasedetails.add-purchase-orders',
+    //         compact(
+    //             'title',
+    //             'requistition_id',
+    //             'dataOutputVendor',
+    //             'dataOutputTax',
+    //             'dataOutputPartItem',
+    //             'dataOutputUnitMaster',
+    //             'dataOutputHSNMaster',
+    //             'dataPurchaseOrder',
+    //             'business_detailsId',
+    //             'dataOutputVendorTyper',
+    //             'estimation_amount',   // 👈 new
+    //             'used_po_amount',      // 👈 new
+    //             'remaining_amount'     // 👈 new
+    //         )
+    //     );
+    // }
     public function create(Request $request)
     {
-        $requistition_id = $request->requistition_id;
+        $requistition_id   = $request->requistition_id;
         $business_detailsId = $request->business_details_id;
-        $requistitionId = base64_decode($request->requistition_id);
+        $requistitionId    = base64_decode($requistition_id);
+
         $title = 'create invoice';
 
-        $dataPurchaseOrder = PurchaseOrdersModel::where('requisition_id', $requistitionId)->first();
-        $dataOutputVendor = Vendors::where('is_active', true)->get();
-        $dataOutputTax = Tax::where('is_active', true)->get();
-        $dataOutputPartItem = PartItem::where('is_active', true)->get();
-        $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
-        $dataOutputHSNMaster = HSNMaster::where('is_active', true)->get();
-        $dataOutputVendorTyper = VendorType::where('is_active', true)->get();
-
-        // ✅ GET ESTIMATION AMOUNT
-        $estimation = EstimationModel::where('business_details_id', base64_decode($business_detailsId))
+        /* ================= GET REQUISITION ================= */
+        $requisition = DB::table('requisition')
+            ->where('id', $requistitionId)
             ->first();
 
-        $estimation_amount = $estimation ? $estimation->total_estimation_amount : 0;
+        /* ================= GET BUSINESS ID ================= */
+        $businessId = $requisition ? $requisition->business_id : null;
 
-        // ✅ USED PO AMOUNT
-        $used_po_amount = PurchaseOrdersModel::where('requisition_id', $requistitionId)
+        /* ================= GET BUSINESS ================= */
+        $business = Business::find($businessId);
+
+        /* ================= GRAND TOTAL ================= */
+        $grand_total_amount = $business ? $business->grand_total_amount : 0;
+
+        /* ================= MASTER DATA ================= */
+        $dataPurchaseOrder = PurchaseOrdersModel::where('requisition_id', $requistitionId)->first();
+
+        $dataOutputVendor       = Vendors::where('is_active', true)->get();
+        $dataOutputTax          = Tax::where('is_active', true)->get();
+        $dataOutputPartItem     = PartItem::where('is_active', true)->get();
+        $dataOutputUnitMaster   = UnitMaster::where('is_active', true)->get();
+        $dataOutputHSNMaster    = HSNMaster::where('is_active', true)->get();
+        $dataOutputVendorTyper  = VendorType::where('is_active', true)->get();
+
+        /* ================= USED PO AMOUNT ================= */
+        $used_po_amount = PurchaseOrdersModel::where('business_id', $businessId)
             ->sum('po_grand_total_amount');
 
-        // ✅ REMAINING AMOUNT
-        $remaining_amount = $estimation_amount - $used_po_amount;
+        /* ================= REMAINING ================= */
+        $remaining_amount = $grand_total_amount - $used_po_amount;
+
         return view(
             'organizations.purchase.addpurchasedetails.add-purchase-orders',
             compact(
@@ -183,75 +243,18 @@ class PurchaseOrderController extends Controller
                 'dataPurchaseOrder',
                 'business_detailsId',
                 'dataOutputVendorTyper',
-                'estimation_amount',   // 👈 new
-                'used_po_amount',      // 👈 new
-                'remaining_amount'     // 👈 new
+                'grand_total_amount',
+                'used_po_amount',
+                'remaining_amount'
             )
         );
     }
-
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
-    // public function store(Request $request)
-    // {
-    //     $rules = [
-    //         'vendor_id' => 'required',
-    //         'vendor_type_id' => 'required',
-    //         'tax_id' => 'required',
-    //         'invoice_date' => 'required',
-    //         'payment_terms' => 'required',
-    //         'contact_person_name' => 'required',
-    //         'contact_person_number' => 'required',
-    //         // 'status' => 'required',
-    //         'note' => 'required',
-    //         'transport_dispatch' => 'required',
-    //     ];
-
-    //     $messages = [
-    //         'vendor_id.required' => 'The select vendor comapny name is required.',
-    //         'vendor_type_id.required' => 'The select vendor type is required.',
-    //         'tax_id.required' => 'The Tax is required.',
-    //         'invoice_date.required' => 'The Invoice Date is required.',
-    //         'payment_terms.required' => 'The Payment Terms is required.',
-    //         'contact_person_name.required' => 'Enter the contact person name is required.',
-    //         'contact_person_number.required' => 'Enter the contact person number is required.',
-    //         // 'status.required' => 'The Status is required.',
-    //         'note.required' => 'The Note is required.',
-    //         'transport_dispatch.required' => 'The transport dispatch is required.',
-    //     ];
-
-    //     try {
-    //         $validation = Validator::make($request->all(), $rules, $messages);
-
-    //         if ($validation->fails()) {
-    //             return redirect('purchase/add-purchase-order')
-    //                 ->withInput()
-    //                 ->withErrors($validation);
-    //         } else {
-    //             $requi_id = $request->requistition_id;
-    //             $businessId = $request->business_details_id;
-    //             $add_record = $this->service->submitBOMToOwner($request);
-    //             if ($add_record) {
-    //                 $msg = $add_record['msg'];
-    //                 $status = $add_record['status'];
-    //                 if ($status == 'success') {
-    //                     return redirect('purchase/list-purchase-order/' . $requi_id . '/' . $businessId)
-    //                         ->with(['msg' => $msg, 'status' => $status]);
-    //                 } else {
-    //                     return redirect('purchase/add-purchase-order')->withInput()->with(compact('msg', 'status'));
-    //                 }
-    //             }
-    //         }
-    //     } catch (Exception $e) {
-    //         return redirect('purchase/add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
-    //     }
-    // }
-
     public function store(Request $request)
     {
         $rules = [
@@ -274,16 +277,37 @@ class PurchaseOrderController extends Controller
         }
 
         // ================= ESTIMATION LIMIT CHECK =================
-        $businessDetailsId = base64_decode($request->business_details_id);
-        $requisitionId     = base64_decode($request->requistition_id);
+        // $businessDetailsId = base64_decode($request->business_details_id);
 
-        $estimation = EstimationModel::where('business_details_id', $businessDetailsId)->first();
-        $estimation_amount = $estimation ? $estimation->total_estimation_amount : 0;
+        // $requisitionId     = base64_decode($request->requistition_id);
 
-        $used_po_amount = PurchaseOrdersModel::where('requisition_id', $requisitionId)
+        // $estimation = EstimationModel::where('business_details_id', $businessDetailsId)->first();
+        // $estimation_amount = $estimation ? $estimation->total_estimation_amount : 0;
+
+        /* ================= GET REQUISITION ================= */
+        $requistition_id   = $request->requistition_id;
+        $requistitionId    = base64_decode($requistition_id);
+
+        $requisition = DB::table('requisition')
+            ->where('id', $requistitionId)
+            ->first();
+
+        /* ================= GET BUSINESS ID ================= */
+        $businessId = $requisition ? $requisition->business_id : null;
+
+        /* ================= GET BUSINESS ================= */
+        $business = Business::find($businessId);
+        $grand_total_amount = $business ? $business->grand_total_amount : 0;
+        $used_po_amount = PurchaseOrdersModel::where('business_id', $businessId)
             ->sum('po_grand_total_amount');
 
-        $remaining_amount = $estimation_amount - $used_po_amount;
+        /* ================= REMAINING ================= */
+        $remaining_amount = $grand_total_amount - $used_po_amount;
+        // $used_po_amount = PurchaseOrdersModel::where('requisition_id', $requistitionId)
+        //     ->sum('po_grand_total_amount');
+
+
+        // $remaining_amount = $estimation_amount - $used_po_amount;
 
         if ($request->po_grand_total_amount > $remaining_amount) {
             return redirect()->back()
@@ -347,65 +371,6 @@ class PurchaseOrderController extends Controller
         }
     }
 
-
-    // public function store_old(Request $request)
-    // {
-    //     $rules = [
-    //         // 'client_name' => 'required',
-    //         // 'phone_number' => 'required',
-    //         // 'email' => 'required',
-    //         'tax_id' => 'required',
-    //         'invoice_date' => 'required',
-    //         // 'gst_number' => 'required',
-    //         'payment_terms' => 'required',
-    //         // 'client_address' => 'required',
-    //         'discount' => 'required',
-    //         'quote_no' => 'required',
-    //         // 'status' => 'required',
-    //         'note' => 'nullable',
-    //     ];
-
-
-    //     $amount = 0;
-    //     foreach ($request->items as $item) {
-    //         $amount += $item['amount'];
-    //     }
-
-    //     $itemsJson = json_encode($request->items);
-
-
-    //     $invoice = new PurchaseOrdersModel([
-    //         // 'client_name' => $request->client_name,
-    //         // 'phone_number' => $request->phone_number,
-    //         'tax_id' => $request->tax_id,
-    //         // 'email' => $request->email,
-    //         // 'client_address' => $request->client_address,
-    //         // 'gst_number' => $request->gst_number,
-    //         'invoice_date' => $request->invoice_date,
-    //         'payment_terms' => $request->payment_terms,
-    //         'items' => $itemsJson,
-    //         'discount' => $request->discount,
-    //         'total' => $amount,
-    //         'note' => $request->note,
-    //         'quote_no' => $request->quote_no,
-    //         // 'status' => $request->status,
-    //     ]);
-
-    //     if ($invoice->save()) {
-    //         $msg = 'Invoice has been created';
-    //         $status = 'success';
-
-    //         return redirect('purchase/list-purchase-order')->with(compact('msg', 'status'));
-    //     } else {
-    //         $msg = 'Failed to create invoice';
-    //         $status = 'error';
-
-    //         return redirect('purchase/add-purchase-order')->withInput()->with(compact('msg', 'status'));
-    //     }
-    // }
-
-
-
     public function show(Request $request)
     {
         $show_data_id = base64_decode($request->id);
@@ -429,20 +394,6 @@ class PurchaseOrderController extends Controller
         $title = 'view invoice';
         return view('organizations.purchase.addpurchasedetails.show-purchase-orders1', compact('invoice', 'title'));
     }
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $request)
-    {
-        Invoice::findOrFail($request->id)->delete();
-        $notification = notify('Invoice has been deleted successfully');
-        return back()->with($notification);
-    }
-
-
     public function submitPurchaseOrderToOwnerForReview(Request $request)
     {
         try {
@@ -574,18 +525,30 @@ class PurchaseOrderController extends Controller
         $currentPoAmount   = $currentPO->po_grand_total_amount;
 
         // ESTIMATION
-        $estimation = EstimationModel::where('business_details_id', $businessDetailsId)->first();
-        $estimation_amount = $estimation ? $estimation->total_estimation_amount : 0;
+        // $estimation = EstimationModel::where('business_details_id', $businessDetailsId)->first();
+        // $estimation_amount = $estimation ? $estimation->total_estimation_amount : 0;
 
-        // USED PO (EXCEPT CURRENT PO)
-        $used_po_amount = PurchaseOrdersModel::where('requisition_id', $requisitionId)
-            // ->where('purchase_orders_id', '!=', $edit_data_id)   // 👈 IMPORTANT
-            ->where('id', '<=', $currentPoAmount)
+        // $used_po_amount = PurchaseOrdersModel::where('requisition_id', $requisitionId)
+        //     ->where('id', '<=', $currentPoAmount)
+        //     ->sum('po_grand_total_amount');
+
+        // $remaining_amount = $estimation_amount - $used_po_amount;
+
+        /* ================= GET REQUISITION ================= */
+        $businessId = $currentPO->business_id;
+
+        $business = Business::find($businessId);
+
+        $grand_total_amount = $business
+            ? $business->grand_total_amount
+            : 0;
+
+        /* EXCLUDE CURRENT PO IN EDIT MODE */
+        $used_po_amount = PurchaseOrdersModel::where('business_id', $businessId)
+            ->where('id', '!=', $currentPO->id)
             ->sum('po_grand_total_amount');
 
-        // REMAINING
-        $remaining_amount = $estimation_amount - $used_po_amount;
-
+        $remaining_amount = $grand_total_amount - $used_po_amount;
 
         return view('organizations.purchase.addpurchasedetails.edit-purchase-orders', compact(
             'editData',
@@ -595,81 +558,11 @@ class PurchaseOrderController extends Controller
             'dataOutputUnitMaster',
             'dataOutputHSNMaster',
             'dataOutputVendorType',
-            'estimation_amount',
+            'grand_total_amount',
             'used_po_amount',
             'remaining_amount'
         ));
     }
-
-
-
-
-
-
-
-    // public function update(Request $request)
-    // {
-
-    //     $rules = [
-    //         // 'design_name' => 'required|string|max:255',
-    //         // 'design_page' => 'required|max:255',
-    //         // 'project_name' => 'required|string|max:20',
-    //         // 'time_allocation' => 'required|string|max:255',
-    //         // 'image' => 'image|mimes:jpeg,png,jpg|max:10240|min:5',
-    //     ];
-
-    //     $messages = [
-    //         // 'design_name.required' => 'The design name is required.',
-    //         // 'design_name.string' => 'The design name must be a valid string.',
-    //         // 'design_name.max' => 'The design name must not exceed 255 characters.',
-
-    //         // 'design_page.required' => 'The design page is required.',
-    //         // 'design_page.max' => 'The design page must not exceed 255 characters.',
-
-    //         // 'project_name.required' => 'The project name is required.',
-    //         // 'project_name.string' => 'The project name must be a valid string.',
-    //         // 'project_name.max' => 'The project name must not exceed 20 characters.',
-
-    //         // 'time_allocation.required' => 'The time allocation is required.',
-    //         // 'time_allocation.string' => 'The time allocation must be a valid string.',
-    //         // 'time_allocation.max' => 'The time allocation must not exceed 255 characters.',
-
-    //         // 'image.required' => 'The image is required.',
-    //         // 'image.image' => 'The image must be a valid image file.',
-    //         // 'image.mimes' => 'The image must be in JPEG, PNG, JPG format.',
-    //         // 'image.max' => 'The image size must not exceed 10MB.',
-    //         // 'image.min' => 'The image size must not be less than 5KB.',
-    //     ];
-
-    //     try {
-    //         $validation = Validator::make($request->all(), $rules, $messages);
-    //         if ($validation->fails()) {
-    //             return redirect()->back()
-    //                 ->withInput()
-    //                 ->withErrors($validation);
-    //         } else {
-
-    //             $update_data = $this->service->updateAll($request);
-    //             // $requisition_id = $request->input('requisition_id');
-
-    //             if ($update_data) {
-    //                 $msg = $update_data['msg'];
-    //                 $status = $update_data['status'];
-    //                 if ($status == 'success') {
-    //                     return redirect('purchase/list-purchase')->with(compact('msg', 'status'));
-    //                 } else {
-    //                     return redirect()->back()
-    //                         ->withInput()
-    //                         ->with(compact('msg', 'status'));
-    //                 }
-    //             }
-    //         }
-    //     } catch (Exception $e) {
-    //         return redirect()->back()
-    //             ->withInput()
-    //             ->with(['msg' => $e->getMessage(), 'status' => 'error']);
-    //     }
-    // }
     public function update(Request $request)
     {
         $rules = [
@@ -767,157 +660,6 @@ class PurchaseOrderController extends Controller
             return $e;
         }
     }
-    // public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id)
-    // {
-    //     try {
-    //         // Fetch purchase order details
-    //         $purchaseOrder = $this->service->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id);
-
-    //         $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
-
-    //         $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
-    //         $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
-    //         $business_id = $data['purchaseOrder']->business_id;
-    //         $purchaseOrder = $data['purchaseOrder'];
-    //         $purchaseOrderDetails = $data['purchaseOrderDetails'];
-
-    //         if (!$purchaseOrder) {
-    //             return response()->json(['status' => 'error', 'message' => 'Purchase order not found'], 404);
-    //         }
-
-    //         // Generate PDF with specific settings
-    //         $pdf = Pdf::loadView('organizations.common-pages.purchase-order-view', [
-    //             'purchase_order_id' => $purchase_order_id,
-    //             'purchaseOrder' => $purchaseOrder,
-    //             'purchaseOrderDetails' => $purchaseOrderDetails,
-    //             'getOrganizationData' => $getOrganizationData,
-    //             'getAllRulesAndRegulations' => $getAllRulesAndRegulations,
-    //             'business_id' => $business_id,
-    //             // 'staticContent' => $this->getStaticContent(),
-    //         ])
-    //         ->setPaper('a4', 'portrait') // You can change to 'landscape' if needed
-    //         ->setWarnings(false) // Disable warnings (optional)
-    //         ->setOptions([
-    //             'margin-top' => 10,     // Adjust top margin
-    //             'margin-right' => 400,   // Adjust right margin
-    //             'margin-bottom' => 10,  // Adjust bottom margin
-    //             'margin-left' => 10,    // Adjust left margin
-    //         ])
-    //         ->save(storage_path('app/public/purchase_order_' . $purchase_order_id . '.pdf')); // Save the PDF
-
-    //         $pdfPath = storage_path('app/public/purchase_order_' . $purchase_order_id . '.pdf');
-
-    //         // Send email with PDF attachment
-    //         // Mail::send([], [], function ($message) use ($purchaseOrder, $pdfPath) {
-    //         //     $message->to($purchaseOrder->vendor_email)
-    //         //         ->subject('Purchase Order Notification')
-    //         //         ->attach($pdfPath);
-    //         //     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-    //         // });
-    //         $vendorName = $purchaseOrder->vendor_name;
-    //         Mail::send([], [], function ($message) use ($purchaseOrder, $pdfPath, $vendorName) {
-    //             $message->to($purchaseOrder->vendor_email)
-    //                 ->subject('Purchase Order Notification')
-    //                 ->attach($pdfPath)
-    //                 ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-
-    //             // Set plain text body
-    //             $message->text("Respected $vendorName, \n\n I hope this message finds you well.\n\nWe would like to place a purchase order with your company for the following items. Please find the details of the purchase order below:\n\nThank you!");
-
-    //             // \Log::info($this->getStaticContent());
-
-    //         });
-
-    //         return redirect('purchase/list-purchase-order-approved-sent-to-vendor')->with('status', 'success')->with('msg', 'Purchase order mail sent to vendor.');
-
-    //     } catch (\Exception $e) {
-    //         \Log::error($e->getMessage());
-    //         return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
-    //     }
-    // }
-    // public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id)
-    // {
-    //     try {
-    //         // Fetch purchase order details
-    //         $purchaseOrder = $this->service->submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id);
-
-    //         $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
-    //         $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
-    //         $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
-    //         $business_id = $data['purchaseOrder']->business_id;
-    //         $purchaseOrder = $data['purchaseOrder'];
-    //         $purchaseOrderDetails = $data['purchaseOrderDetails'];
-
-    //         if (!$purchaseOrder) {
-    //             return response()->json(['status' => 'error', 'message' => 'Purchase order not found'], 404);
-    //         }
-
-    //         // Generate PDF for purchase order
-    //         $purchaseOrderPdf = Pdf::loadView('organizations.common-pages.purchase-order-view', [
-    //             'purchase_order_id' => $purchase_order_id,
-    //             'purchaseOrder' => $purchaseOrder,
-    //             'purchaseOrderDetails' => $purchaseOrderDetails,
-    //             'getOrganizationData' => $getOrganizationData,
-    //             'getAllRulesAndRegulations' => $getAllRulesAndRegulations,
-    //             'business_id' => $business_id,
-    //             'is_pdf' => true, // Pass this flag
-    //         ])
-    //         ->setPaper('a4', 'portrait')
-    //         ->setWarnings(false)
-    //         ->setOptions([
-    //             'margin-top' => 0,
-    //             'margin-right' => 5,
-    //             'margin-bottom' => 10,
-    //             'margin-left' => 5,
-    //             'isRemoteEnabled' => true,
-    //             'enable-local-file-access' => true,
-
-
-    //         ]);
-
-    //         // Generate PDF for static terms and conditions page
-    //         $termsPdf = Pdf::loadView('organizations.common-pages.static-terms-condition')
-    //             ->setPaper('a4', 'portrait')
-    //             ->setWarnings(false);
-
-    //         // Combine the two PDFs
-    //         $purchaseOrderPath = storage_path('app/public/purchase_order_' . $purchase_order_id . '.pdf');
-    //         $termsPath = storage_path('app/public/terms_conditions.pdf');
-    //         $finalPdfPath = storage_path('app/public/final_purchase_order_' . $purchase_order_id . '.pdf');
-
-    //         // Save individual PDFs
-    //         $purchaseOrderPdf->save($purchaseOrderPath);
-    //         $termsPdf->save($termsPath);
-
-    //         // Merge PDFs using PDFMerger
-    //         // $pdfMerger = new \Clegginabox\PDFMerger\PDFMerger;
-    //     //  $pdfMerger = new \LynX39\LaraPdfMerger\PdfMerger();
-    //     $pdfMerger = new Fpdi();
-    //         $pdfMerger->addPDF($purchaseOrderPath, 'all');
-    //         $pdfMerger->addPDF($termsPath, 'all');
-    //         $pdfMerger->merge('file', $finalPdfPath);
-
-    //         // Send email with the merged PDF as an attachment
-    //         $vendorName = $purchaseOrder->vendor_name;
-    //         Mail::send([], [], function ($message) use ($purchaseOrder, $finalPdfPath, $vendorName) {
-    //             $message->to($purchaseOrder->vendor_email)
-    //                  ->cc('purchase@shreeragengg.com')
-    //                 ->subject('Purchase Order Notification')
-    //                 ->attach($finalPdfPath)
-    //                 ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-
-    //             $message->text("Respected $vendorName, \n\nI hope this message finds you well.\n\nWe would like to place a purchase order with your company for the following items. Please find the details of the purchase order below:\n\nThank you!");
-    //         });
-
-    //         return redirect('purchase/list-submited-po-to-vendor')
-    //             ->with('status', 'success')
-    //             ->with('msg', 'Purchase order mail sent to vendor.');
-
-    //     } catch (\Exception $e) {
-    //         \Log::error($e->getMessage());
-    //         return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
-    //     }
-    // }
 
     public function submitAndSentEmailToTheVendorFinalPurchaseOrder($purchase_order_id, $business_id)
     {

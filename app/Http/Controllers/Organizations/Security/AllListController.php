@@ -66,38 +66,22 @@ class AllListController extends Controller
                 ->get();
 
 
-            // if ($data_output->isNotEmpty()) {
-            //     foreach ($data_output as $data) {
-            //         $business_id = $data->business_details_id;
-            //         if (!empty($business_id)) {
-            //             $update_data['po_send_to_vendor_visible_security'] = '1';
-            //             NotificationStatus::where('po_send_to_vendor_visible_security', '0')
-            //                 ->where('business_details_id', $business_id)
-            //                 ->update($update_data);
-            //         }
-            //     }
-            // } else {
-            //     return view('organizations.security.list.list-recived-material', [
-            //         'data_output' => [],
-            //         'message' => 'No data found'
-            //     ]);
-            // }
-if ($data_output->isNotEmpty()) {
 
-    $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
+            if ($data_output->isNotEmpty()) {
 
-    if ($bdIds->isNotEmpty()) {
-        NotificationStatus::where('po_send_to_vendor_visible_security', 0)
-            ->whereIn('business_details_id', $bdIds)
-            ->update(['po_send_to_vendor_visible_security' => 1]);
-    }
+                $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
 
-} else {
-    return view('organizations.security.list.list-recived-material', [
-        'data_output' => [],
-        'message' => 'No data found'
-    ]);
-}
+                if ($bdIds->isNotEmpty()) {
+                    NotificationStatus::where('po_send_to_vendor_visible_security', 0)
+                        ->whereIn('business_details_id', $bdIds)
+                        ->update(['po_send_to_vendor_visible_security' => 1]);
+                }
+            } else {
+                return view('organizations.security.list.list-recived-material', [
+                    'data_output' => [],
+                    'message' => 'No data found'
+                ]);
+            }
 
             return view('organizations.security.list.list-recived-material', compact('data_output'));
         } catch (\Exception $e) {
