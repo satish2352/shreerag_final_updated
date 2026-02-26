@@ -104,16 +104,16 @@ class LeavesController extends Controller
 
 
 
-    public function updateOne(Request $request)
-    {
-        try {
-            $active_id = $request->active_id;
-            $result = $this->service->updateOne($active_id);
-            return redirect('hr/list-leaves-accepted')->with('flash_message', 'Updated!');
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
+    // public function updateOne(Request $request)
+    // {
+    //     try {
+    //         $active_id = $request->active_id;
+    //         $result = $this->service->updateOne($active_id);
+    //         return redirect('hr/list-leaves-accepted')->with('flash_message', 'Updated!');
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
     public function updateLabourStatus(Request $request)
     {
         try {
