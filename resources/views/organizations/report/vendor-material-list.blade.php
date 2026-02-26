@@ -15,7 +15,7 @@
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6 show-btn-position">
                                 <a href="{{ route('list-vendor-through-taken-material') }}" class=" ml-3"> <button
-                                        type="submit" class="btn btn-primary filterbg mr-3">Back</button>
+                                        type="submit" class="btn btn-primary filterbg ">Back</button>
                                 </a>
                             </div>
                         </div>
@@ -53,7 +53,7 @@
                             </div>
                             <div class="row mt-3">
                                 <div class="col-md-6 d-flex gap-2">
-                                    <button type="submit" class="btn btn-primary filterbg">Filter</button>
+                                    <button type="submit" class="btn btn-primary filterbg mr-3">Filter</button>
                                     <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
                                 </div>
 

@@ -24,18 +24,19 @@
                     <div class="main-sparkline12-hd">
 
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex justify-content-center">
-                <div class="col-lg-6 col-md-6 col-sm-6 d-flex justify-content-start align-items-center">
-                    <h5 class="page-title">
-                        Product Consumption Material List
-                    </h5>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-6 show-btn-position">
-                     <a href="{{ route('list-consumption-report') }}" class=" ml-3"> <button type="submit" class="btn btn-primary filterbg">Back</button>
-                   </a>
-                </div>
-            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 d-flex justify-content-start align-items-center">
+                                <h5 class="page-title">
+                                    Product Consumption Material List
+                                </h5>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 show-btn-position">
+                                <a href="{{ route('list-consumption-report') }}" class=" ml-3"> <button type="submit"
+                                        class="btn btn-primary filterbg">Back</button>
+                                </a>
+                            </div>
+                        </div>
 
-                        
+
                     </div>
                 </div>
                 <div class="sparkline12-graph">
@@ -77,7 +78,8 @@
                                     </div>
 
                                     <div class="table-responsive">
-                                        <table class="table table-hover table-white repeater" id="purchase_order_table">
+                                        <table class="table table-hover table-white repeater" id="purchase_order_table"
+                                            style="margin-top: 30px;">
                                             <thead>
                                                 <tr>
                                                     <th>Sr. No.</th>
@@ -93,7 +95,6 @@
                                             <tbody>
                                                 @foreach ($dataGroupedById as $key => $items)
                                                     @foreach ($items as $index => $item)
-                                                  
                                                         <tr class="item-row">
                                                             <td>
                                                                 <input type="text"
@@ -124,14 +125,14 @@
                                                                     name="addmore[{{ $index }}][unit]"
                                                                     value="{{ $item->unit }}">
                                                             </td>
-                                                               <td>
+                                                            <td>
                                                                 <input class="form-control basic_rate" readonly
                                                                     name="addmore[{{ $index }}][basic_rate]"
                                                                     type="text" step="any" required
                                                                     value="{{ $item->basic_rate }}">
                                                                 <span class="stock-available"></span>
                                                             </td>
-                                                              <td>
+                                                            <td>
                                                                 <input class="form-control items_used_total_amount" readonly
                                                                     name="addmore[{{ $index }}][items_used_total_amount]"
                                                                     type="text" step="any" required
@@ -139,7 +140,6 @@
                                                                 <span class="stock-available"></span>
                                                             </td>
                                                         </tr>
-                                                       
                                                     @endforeach
                                                 @endforeach
                                                 <tr>
