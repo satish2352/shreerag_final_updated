@@ -49,10 +49,6 @@ class BusinessController extends Controller
             'po_validity' => 'required',
             'remarks' => 'required',
             'business_pdf' => 'required|mimes:pdf|max:' . Config::get("AllFileValidation.DESIGNS_PDF_MAX_SIZE") . '|min:' . Config::get("AllFileValidation.DESIGNS_PDF_MIN_SIZE"),
-            // 'addmore.*.product_name' => 'required|string',
-            // 'addmore.*.description' => 'required|string',
-            // 'addmore.*.quantity' => 'required|integer|min:1',
-            // 'addmore.*.rate' => 'required|numeric|min:0',
         ];
 
         $messages = [
@@ -71,11 +67,6 @@ class BusinessController extends Controller
             'business_pdf.mimes' => 'The business PDF must be in PDF format.',
             'business_pdf.max' => 'The business PDF size must not exceed ' . Config::get("AllFileValidation.DESIGNS_PDF_MAX_SIZE") . ' KB.',
             'business_pdf.min' => 'The business PDF size must not be less than ' . Config::get("AllFileValidation.DESIGNS_PDF_MIN_SIZE") . ' KB.',
-
-            //  'addmore.*.product_name.required' => 'Product name is required in all rows.',
-            // 'addmore.*.description.required' => 'Description is required in all rows.',
-            // 'addmore.*.quantity.required' => 'Quantity is required in all rows.',
-            // 'addmore.*.rate.required' => 'Rate is required in all rows.',
         ];
 
         try {
@@ -277,58 +268,7 @@ class BusinessController extends Controller
                 ->with('msg', 'Something went wrong. ' . $e->getMessage());
         }
     }
-    // public function submitFinalPurchaseOrder($id)
-    // {
-    //     try {
-    //         $data_output = $this->service->getPurchaseOrderBusinessWise($id);
 
-    //         if ($data_output->isNotEmpty()) {
-    //             foreach ($data_output as $data) {
-    //                 $business_id = $data->business_details_id;
-
-    //                 if (!empty($business_id)) {
-    //                     $update_data['is_view'] = '1';
-    //                     AdminView::where('is_view', '0')
-    //                         ->where('business_details_id', $business_id)
-    //                         ->update($update_data);
-    //                 }
-    //             }
-    //         } else {
-    //             return view('organizations.business.list.list-purchase-order-particular-po', [
-    //                 'data_output' => [],
-    //                 'message' => 'No data found'
-    //             ]);
-    //         }
-    //         return view('organizations.business.list.list-purchase-order-particular-po', compact('data_output'));
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
-    //     public function submitFinalPurchaseOrder($id)
-    // {
-    //     try {
-    //         $data_output = $this->service->getPurchaseOrderBusinessWise($id);
-
-    //         if ($data_output->isEmpty()) {
-    //             return view('organizations.business.list.list-purchase-order-particular-po', [
-    //                 'data_output' => [],
-    //                 'message' => 'No data found'
-    //             ]);
-    //         }
-
-    //         $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
-
-    //         if ($bdIds->isNotEmpty()) {
-    //             AdminView::where('is_view', 0)
-    //                 ->whereIn('business_details_id', $bdIds)
-    //                 ->update(['is_view' => 1]);
-    //         }
-
-    //         return view('organizations.business.list.list-purchase-order-particular-po', compact('data_output'));
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
     public function submitFinalPurchaseOrder($id)
     {
         try {

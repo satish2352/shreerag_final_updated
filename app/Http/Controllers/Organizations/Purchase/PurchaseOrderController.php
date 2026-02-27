@@ -27,7 +27,8 @@ use App\Models\{
     NotificationStatus,
     VendorType,
     EstimationModel,
-    Business
+    Business,
+    BusinessDetails
 };
 use App\Http\Controllers\Organizations\CommanController;
 
@@ -145,89 +146,57 @@ class PurchaseOrderController extends Controller
             )
         );
     }
-    // public function create(Request $request)
-    // {
-    //     $requistition_id = $request->requistition_id;
-    //     $business_detailsId = $request->business_details_id;
-    //     $requistitionId = base64_decode($request->requistition_id);
-    //     $title = 'create invoice';
-
-    //     $dataPurchaseOrder = PurchaseOrdersModel::where('requisition_id', $requistitionId)->first();
-    //     $dataOutputVendor = Vendors::where('is_active', true)->get();
-    //     $dataOutputTax = Tax::where('is_active', true)->get();
-    //     $dataOutputPartItem = PartItem::where('is_active', true)->get();
-    //     $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
-    //     $dataOutputHSNMaster = HSNMaster::where('is_active', true)->get();
-    //     $dataOutputVendorTyper = VendorType::where('is_active', true)->get();
-
-    //     // ✅ GET ESTIMATION AMOUNT
-    //     $estimation = EstimationModel::where('business_details_id', base64_decode($business_detailsId))
-    //         ->first();
-
-    //     $estimation_amount = $estimation ? $estimation->total_estimation_amount : 0;
-
-    //     // ✅ USED PO AMOUNT
-    //     $used_po_amount = PurchaseOrdersModel::where('requisition_id', $requistitionId)
-    //         ->sum('po_grand_total_amount');
-
-    //     // ✅ REMAINING AMOUNT
-    //     $remaining_amount = $estimation_amount - $used_po_amount;
-    //     return view(
-    //         'organizations.purchase.addpurchasedetails.add-purchase-orders',
-    //         compact(
-    //             'title',
-    //             'requistition_id',
-    //             'dataOutputVendor',
-    //             'dataOutputTax',
-    //             'dataOutputPartItem',
-    //             'dataOutputUnitMaster',
-    //             'dataOutputHSNMaster',
-    //             'dataPurchaseOrder',
-    //             'business_detailsId',
-    //             'dataOutputVendorTyper',
-    //             'estimation_amount',   // 👈 new
-    //             'used_po_amount',      // 👈 new
-    //             'remaining_amount'     // 👈 new
-    //         )
-    //     );
-    // }
     public function create(Request $request)
     {
-        $requistition_id   = $request->requistition_id;
+        $requistition_id = $request->requistition_id;
         $business_detailsId = $request->business_details_id;
-        $requistitionId    = base64_decode($requistition_id);
-
+        $requistitionId = base64_decode($request->requistition_id);
         $title = 'create invoice';
 
-        /* ================= GET REQUISITION ================= */
-        $requisition = DB::table('requisition')
-            ->where('id', $requistitionId)
-            ->first();
-
-        /* ================= GET BUSINESS ID ================= */
-        $businessId = $requisition ? $requisition->business_id : null;
-
-        /* ================= GET BUSINESS ================= */
-        $business = Business::find($businessId);
-
-        /* ================= GRAND TOTAL ================= */
-        $grand_total_amount = $business ? $business->grand_total_amount : 0;
-
-        /* ================= MASTER DATA ================= */
         $dataPurchaseOrder = PurchaseOrdersModel::where('requisition_id', $requistitionId)->first();
+        $dataOutputVendor = Vendors::where('is_active', true)->get();
+        $dataOutputTax = Tax::where('is_active', true)->get();
+        $dataOutputPartItem = PartItem::where('is_active', true)->get();
+        $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
+        $dataOutputHSNMaster = HSNMaster::where('is_active', true)->get();
+        $dataOutputVendorTyper = VendorType::where('is_active', true)->get();
 
-        $dataOutputVendor       = Vendors::where('is_active', true)->get();
-        $dataOutputTax          = Tax::where('is_active', true)->get();
-        $dataOutputPartItem     = PartItem::where('is_active', true)->get();
-        $dataOutputUnitMaster   = UnitMaster::where('is_active', true)->get();
-        $dataOutputHSNMaster    = HSNMaster::where('is_active', true)->get();
-        $dataOutputVendorTyper  = VendorType::where('is_active', true)->get();
+        // ✅ GET ESTIMATION AMOUNT
+        // $estimation = EstimationModel::where('business_details_id', base64_decode($business_detailsId))
+        //     ->first();
 
-        /* ================= USED PO AMOUNT ================= */
-        $used_po_amount = PurchaseOrdersModel::where('business_id', $businessId)
+        // $grand_total_amount = $estimation ? $estimation->total_estimation_amount : 0;
+
+        // // ✅ USED PO AMOUNT
+        // $used_po_amount = PurchaseOrdersModel::where('requisition_id', $requistitionId)
+        //     ->sum('po_grand_total_amount');
+
+        // // ✅ REMAINING AMOUNT
+        // $remaining_amount = $grand_total_amount - $used_po_amount;
+
+        // ============================
+        // GET BUSINESS ID FIRST
+        // ============================
+        $business_details_id = base64_decode($business_detailsId);
+
+        $business_id = BusinessDetails::where('id', $business_details_id)
+            ->value('business_id');
+
+        // ============================
+        // TOTAL ESTIMATION AMOUNT (SUM)
+        // ============================
+        $grand_total_amount = EstimationModel::where('business_id', $business_id)
+            ->sum('total_estimation_amount');
+
+        // ============================
+        // USED PO AMOUNT
+        // ============================
+        $used_po_amount = PurchaseOrdersModel::where('business_id', $business_id)
             ->sum('po_grand_total_amount');
 
-        /* ================= REMAINING ================= */
+        // ============================
+        // REMAINING
+        // ============================
         $remaining_amount = $grand_total_amount - $used_po_amount;
 
         return view(
@@ -243,12 +212,70 @@ class PurchaseOrderController extends Controller
                 'dataPurchaseOrder',
                 'business_detailsId',
                 'dataOutputVendorTyper',
-                'grand_total_amount',
-                'used_po_amount',
-                'remaining_amount'
+                'grand_total_amount',   // 👈 new
+                'used_po_amount',      // 👈 new
+                'remaining_amount'     // 👈 new
             )
         );
     }
+    // public function create(Request $request)
+    // {
+    //     $requistition_id   = $request->requistition_id;
+    //     $business_detailsId = $request->business_details_id;
+    //     $requistitionId    = base64_decode($requistition_id);
+
+    //     $title = 'create invoice';
+
+    //     /* ================= GET REQUISITION ================= */
+    //     $requisition = DB::table('requisition')
+    //         ->where('id', $requistitionId)
+    //         ->first();
+
+    //     /* ================= GET BUSINESS ID ================= */
+    //     $businessId = $requisition ? $requisition->business_id : null;
+
+    //     /* ================= GET BUSINESS ================= */
+    //     $business = Business::find($businessId);
+
+    //     /* ================= GRAND TOTAL ================= */
+    //     $grand_total_amount = $business ? $business->grand_total_amount : 0;
+
+    //     /* ================= MASTER DATA ================= */
+    //     $dataPurchaseOrder = PurchaseOrdersModel::where('requisition_id', $requistitionId)->first();
+
+    //     $dataOutputVendor       = Vendors::where('is_active', true)->get();
+    //     $dataOutputTax          = Tax::where('is_active', true)->get();
+    //     $dataOutputPartItem     = PartItem::where('is_active', true)->get();
+    //     $dataOutputUnitMaster   = UnitMaster::where('is_active', true)->get();
+    //     $dataOutputHSNMaster    = HSNMaster::where('is_active', true)->get();
+    //     $dataOutputVendorTyper  = VendorType::where('is_active', true)->get();
+
+    //     /* ================= USED PO AMOUNT ================= */
+    //     $used_po_amount = PurchaseOrdersModel::where('business_id', $businessId)
+    //         ->sum('po_grand_total_amount');
+
+    //     /* ================= REMAINING ================= */
+    //     $remaining_amount = $grand_total_amount - $used_po_amount;
+
+    //     return view(
+    //         'organizations.purchase.addpurchasedetails.add-purchase-orders',
+    //         compact(
+    //             'title',
+    //             'requistition_id',
+    //             'dataOutputVendor',
+    //             'dataOutputTax',
+    //             'dataOutputPartItem',
+    //             'dataOutputUnitMaster',
+    //             'dataOutputHSNMaster',
+    //             'dataPurchaseOrder',
+    //             'business_detailsId',
+    //             'dataOutputVendorTyper',
+    //             'grand_total_amount',
+    //             'used_po_amount',
+    //             'remaining_amount'
+    //         )
+    //     );
+    // }
     /**
      * Store a newly created resource in storage.
      *
@@ -287,22 +314,45 @@ class PurchaseOrderController extends Controller
         /* ================= GET REQUISITION ================= */
         $requistition_id   = $request->requistition_id;
         $requistitionId    = base64_decode($requistition_id);
+        $business_detailsId = $request->business_details_id;
+        // $requisition = DB::table('requisition')
+        //     ->where('id', $requistitionId)
+        //     ->first();
 
-        $requisition = DB::table('requisition')
-            ->where('id', $requistitionId)
-            ->first();
+        // /* ================= GET BUSINESS ID ================= */
+        // $businessId = $requisition ? $requisition->business_id : null;
 
-        /* ================= GET BUSINESS ID ================= */
-        $businessId = $requisition ? $requisition->business_id : null;
+        // /* ================= GET BUSINESS ================= */
+        // $business = Business::find($businessId);
+        // $grand_total_amount = $business ? $business->grand_total_amount : 0;
+        // $used_po_amount = PurchaseOrdersModel::where('business_id', $businessId)
+        //     ->sum('po_grand_total_amount');
 
-        /* ================= GET BUSINESS ================= */
-        $business = Business::find($businessId);
-        $grand_total_amount = $business ? $business->grand_total_amount : 0;
-        $used_po_amount = PurchaseOrdersModel::where('business_id', $businessId)
+        // /* ================= REMAINING ================= */
+        // $remaining_amount = $grand_total_amount - $used_po_amount;
+
+        $business_details_id = base64_decode($business_detailsId);
+
+        $business_id = BusinessDetails::where('id', $business_details_id)
+            ->value('business_id');
+
+        // ============================
+        // TOTAL ESTIMATION AMOUNT (SUM)
+        // ============================
+        $grand_total_amount = EstimationModel::where('business_id', $business_id)
+            ->sum('total_estimation_amount');
+
+        // ============================
+        // USED PO AMOUNT
+        // ============================
+        $used_po_amount = PurchaseOrdersModel::where('requisition_id', $requistitionId)
             ->sum('po_grand_total_amount');
 
-        /* ================= REMAINING ================= */
+        // ============================
+        // REMAINING
+        // ============================
         $remaining_amount = $grand_total_amount - $used_po_amount;
+
         // $used_po_amount = PurchaseOrdersModel::where('requisition_id', $requistitionId)
         //     ->sum('po_grand_total_amount');
 
@@ -525,30 +575,35 @@ class PurchaseOrderController extends Controller
         $currentPoAmount   = $currentPO->po_grand_total_amount;
 
         // ESTIMATION
-        // $estimation = EstimationModel::where('business_details_id', $businessDetailsId)->first();
-        // $estimation_amount = $estimation ? $estimation->total_estimation_amount : 0;
+        $estimation = EstimationModel::where('business_details_id', $businessDetailsId)->first();
 
-        // $used_po_amount = PurchaseOrdersModel::where('requisition_id', $requisitionId)
-        //     ->where('id', '<=', $currentPoAmount)
-        //     ->sum('po_grand_total_amount');
+        $grand_total_amount = $estimation ? $estimation->total_estimation_amount : 0;
 
-        // $remaining_amount = $estimation_amount - $used_po_amount;
-
-        /* ================= GET REQUISITION ================= */
-        $businessId = $currentPO->business_id;
-
-        $business = Business::find($businessId);
-
-        $grand_total_amount = $business
-            ? $business->grand_total_amount
-            : 0;
-
-        /* EXCLUDE CURRENT PO IN EDIT MODE */
-        $used_po_amount = PurchaseOrdersModel::where('business_id', $businessId)
-            ->where('id', '!=', $currentPO->id)
+        $used_po_amount = PurchaseOrdersModel::where('requisition_id', $requisitionId)
+            ->where('id', '<=', $currentPoAmount)
             ->sum('po_grand_total_amount');
 
+
         $remaining_amount = $grand_total_amount - $used_po_amount;
+
+        /* ================= GET REQUISITION ================= */
+        // $businessId = $currentPO->business_id;
+
+
+
+
+        // $business = Business::find($businessId);
+
+        // $grand_total_amount = $business
+        //     ? $business->grand_total_amount
+        //     : 0;
+
+        // /* EXCLUDE CURRENT PO IN EDIT MODE */
+        // $used_po_amount = PurchaseOrdersModel::where('business_id', $businessId)
+        //     ->where('id', '!=', $currentPO->id)
+        //     ->sum('po_grand_total_amount');
+
+        // $remaining_amount = $grand_total_amount - $used_po_amount;
 
         return view('organizations.purchase.addpurchasedetails.edit-purchase-orders', compact(
             'editData',
@@ -598,6 +653,7 @@ class PurchaseOrderController extends Controller
         $requisitionId     = $currentPO->requisition_id;
 
         $estimation = EstimationModel::where('business_details_id', $businessDetailsId)->first();
+
         $estimation_amount = $estimation ? $estimation->total_estimation_amount : 0;
 
         // Used amount EXCEPT current PO

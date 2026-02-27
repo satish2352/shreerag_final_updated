@@ -30,159 +30,173 @@
 
                 <div class="row g-6 mb-6">
 
-      <div class="col-xl-8 col-md-8 col-lg-8">
-                    {{-- =============================================== --}}
-                    <div class="row"> 
-                    <div class="col-xl-4 col-sm-4 col-12 mb-2">
-                        <div class="card shadow border-0">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col mb-2 font-size-dashboard">
-                                        <span class="font-semibold text-muted text-sm d-block mb-2 ">Total Estimation
-                                        </span>
-                                        <span class="h5 font-bold mb-0">
-                                             ₹ {{ number_format($business_total_amount['total_revenu_count'], 2) }}
-                                                                                   </span>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                            <i class="fa-solid fa-user-tie"></i>
+                    <div class="col-xl-8 col-md-8 col-lg-8">
+                        {{-- =============================================== --}}
+                        <div class="row">
+                            <div class="col-xl-4 col-sm-4 col-12 mb-2">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col mb-2 font-size-dashboard">
+                                                <span class="font-semibold text-muted text-sm d-block mb-2 ">Total
+                                                    Estimation
+                                                </span>
+                                                <span class="h5 font-bold mb-0">
+                                                    ₹
+                                                    {{ number_format($business_total_amount['total_revenu_count'], 2) }}
+                                                </span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-user-tie"></i>
+                                                </div>
+                                            </div>
                                         </div>
+
                                     </div>
                                 </div>
-
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-sm-4 col-12 mb-2">
-                        <div class="card shadow border-0">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col mb-2 font-size-dashboard"> 
-                                        <span class="font-semibold text-muted text-sm d-block mb-2 " >Total utilize
-                                        </span>
-                                        <span class="h5 font-bold mb-0">
-                                            {{-- ₹ {{ $business_total_amount['total_utilize_materila_amount'] }} --}}
-                                           ₹ {{ number_format($business_total_amount['total_utilize_materila_amount'], 2) }}
-                                        </span>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                            <i class="fa-solid fa-user-tie"></i>
+                            <div class="col-xl-4 col-sm-4 col-12 mb-2">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col mb-2 font-size-dashboard">
+                                                <span class="font-semibold text-muted text-sm d-block mb-2 ">Total
+                                                    utilize
+                                                </span>
+                                                <span class="h5 font-bold mb-0">
+                                                    {{-- ₹ {{ $business_total_amount['total_utilize_materila_amount'] }} --}}
+                                                    ₹
+                                                    {{ number_format($business_total_amount['total_utilize_materila_amount'], 2) }}
+                                                </span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-user-tie"></i>
+                                                </div>
+                                            </div>
                                         </div>
+
                                     </div>
                                 </div>
-
                             </div>
-                        </div>
-                    </div>
-                      <div class="col-xl-4 col-sm-4 col-12 mb-2">
-                        <div class="card shadow border-0">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col mb-2 font-size-dashboard">
-                                        <span class="font-semibold text-muted text-sm d-block mb-2">Total Profit
-                                        </span>
-                                        <span class="h5 font-bold mb-0">₹ {{ number_format($business_total_amount['profit'], 2) }}
-                                        </span>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                            <i class="fa-solid fa-user-tie"></i>
+                            <div class="col-xl-4 col-sm-4 col-12 mb-2">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col mb-2 font-size-dashboard">
+                                                <span class="font-semibold text-muted text-sm d-block mb-2">Total Profit
+                                                </span>
+                                                <span class="h5 font-bold mb-0">₹
+                                                    {{ number_format($business_total_amount['profit'], 2) }}
+                                                </span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-user-tie"></i>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
 
-                            </div>
-                        </div>
-                    </div>
-</div>
-                    {{-- ======================================================= --}}
-                    <div class="row"> 
-                    <div class="col-xl-4 col-sm-4 col-12 mb-2">
-                        <div class="card shadow border-0">
-                            <div class="card-body">
-                                <div class="row border-bottom">
-                                    <div class="col mb-2  font-size-dashboard">
-                                        <span class="font-semibold text-muted text-sm d-block mb-2">Total Project
-                                        </span>
-                                        <span class="h5 font-bold mb-0">{{ $return_data['active_businesses'] }}
-
-                                        </span>
                                     </div>
-                                    <div class="col-auto">
-                                        <div class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                            <i class="fa-solid fa-user-tie"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt-2 mb-0 text-sm">
-                                    <a href="{{ route('list-business') }}">
-                                        <span class="badge badge-pill bg-soft-success text-success me-2">
-                                            <i class="fa-solid fa-arrow-right"></i> </span>
-                                        <span class="text-nowrap text-xs text-muted">View
-                                            Details</span>
-                                    </a>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="ccol-xl-4 col-sm-4 col-12 mb-2">
-                        <div class="card shadow border-0">
-                            <div class="card-body">
-                                <div class="row border-bottom">
-                                    <div class="col mb-2 font-size-dashboard">
-                                        <span class="font-semibold text-muted text-sm d-block mb-2">Total
-                                            Product</span>
-                                        <span class="h5 font-bold mb-0">{{ $return_data['business_details'] }}</span>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                            <i class="fa-solid fa-paint-brush"></i>
+                        {{-- ======================================================= --}}
+                        <div class="row">
+                            <div class="col-xl-4 col-sm-4 col-12 mb-2">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2  font-size-dashboard">
+                                                <span class="font-semibold text-muted text-sm d-block mb-2">Total
+                                                    Project
+                                                </span>
+                                                <span class="h5 font-bold mb-0">{{ $return_data['active_businesses'] }}
 
+                                                </span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-user-tie"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-business') }}">
+                                                <span class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="mt-2 mb-0 text-sm">
-                                    <a href="{{ route('list-business') }}">
-                                        <span class="badge badge-pill bg-soft-success text-success me-2">
-                                            <i class="fa-solid fa-arrow-right"></i> </span>
-                                        <span class="text-nowrap text-xs text-muted">View
-                                            Details</span>
-                                    </a>
-                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="ccol-xl-4 col-sm-4 col-12 mb-2">
-                        <div class="card shadow border-0">
-                            <div class="card-body">
-                                <div class="row border-bottom">
-                                    <div class="col mb-2  font-size-dashboard">
-                                        <span class="font-semibold text-muted text-sm d-block mb-2">Total
-                                            PO Order</span>
-                                        <span class="h5 font-bold mb-0">{{ $purchase_dept_counts['purchase_order_submited_by_vendor'] }}</span>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                            <i class="fa-solid fa-paint-brush"></i>
+                            <div class="ccol-xl-4 col-sm-4 col-12 mb-2">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2 font-size-dashboard">
+                                                <span class="font-semibold text-muted text-sm d-block mb-2">Total
+                                                    Product</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $return_data['business_details'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
 
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-business') }}">
+                                                <span class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="mt-2 mb-0 text-sm">
-                                    <a href="{{ route('list-business') }}">
-                                        <span class="badge badge-pill bg-soft-success text-success me-2">
-                                            <i class="fa-solid fa-arrow-right"></i> </span>
-                                        <span class="text-nowrap text-xs text-muted">View
-                                            Details</span>
-                                    </a>
+                            </div>
+                            <div class="ccol-xl-4 col-sm-4 col-12 mb-2">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row border-bottom">
+                                            <div class="col mb-2  font-size-dashboard">
+                                                <span class="font-semibold text-muted text-sm d-block mb-2">Total
+                                                    PO Order</span>
+                                                <span
+                                                    class="h5 font-bold mb-0">{{ $purchase_dept_counts['purchase_order_submited_by_vendor'] }}</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div
+                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 mb-0 text-sm">
+                                            <a href="{{ route('list-business') }}">
+                                                <span class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i> </span>
+                                                <span class="text-nowrap text-xs text-muted">View
+                                                    Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-</div>
-                    {{-- <div class="col-xl-4 col-sm-4 col-12 mb-2">
+                        {{-- <div class="col-xl-4 col-sm-4 col-12 mb-2">
                         <div class="card shadow border-0">
                             <div class="card-body">
                                 <div class="row border-bottom">
@@ -265,7 +279,7 @@
                             </div>
                         </div>
                     </div> --}}
-                    {{-- <div class="col-xl-4 col-sm-4 col-12 mb-2">
+                        {{-- <div class="col-xl-4 col-sm-4 col-12 mb-2">
                         <div class="card shadow border-0">
                             <div class="card-body">
                                 <div class="row border-bottom">
@@ -292,86 +306,90 @@
                             </div>
                         </div>
                     </div> --}}
-      </div>
-       <div class="col-xl-4 col-md-4 col-lg-4">
-        <div class="card shadow border-0">
-             <canvas id="myDonutChart" width="300" height="300" class=""></canvas>
-        </div>
-       
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const ctx = document.getElementById('myDonutChart').getContext('2d');
-
-    // Get Laravel data
-    const counts = @json($return_data);
-
-    // Labels must match the meaning of your data
-    const labels = [
-        "Business Completed",
-        "Business In Process",
-        "Product Completed",
-        "Product In Process"
-    ];
-
-    // Values must match the keys in $owner_counts
-    const data = [
-        counts.business_completed ?? 0,
-        counts.business_inprocess ?? 0,
-        counts.product_completed ?? 0,
-        counts.product_inprocess ?? 0
-    ];
-
-    const backgroundColors = [
-        '#2D4E59', // Deep Blue-Teal
-        '#33B78C', // Emerald Green
-        '#34BAB8', // Aqua Blue
-        '#199CC2'  // Sky Blue
-    ];
-
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: labels,
-            datasets: [{
-                data: data,
-                backgroundColor: backgroundColors
-            }]
-        },
-        options: {
-            cutout: '80%',
-            borderWidth: 2,
-            plugins: {
-                legend: { position: 'right' },
-                title: {
-                    display: true,
-                    text: 'Project Details',
-                    font: { size: 18 }
-                }
-            },
-            responsive: true,
-            maintainAspectRatio: false
-        }
-    });
-});
-</script>
-
-<style>
-#myDonutChart {
-    max-width: 400px;
-    height: 235px;
-    padding: 30px;
-}
-</style>
+                    </div>
+                    <div class="col-xl-4 col-md-4 col-lg-4">
+                        <div class="card shadow border-0">
+                            <canvas id="myDonutChart" width="300" height="300" class=""></canvas>
+                        </div>
 
 
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                const ctx = document.getElementById('myDonutChart').getContext('2d');
+
+                                // Get Laravel data
+                                const counts = @json($return_data);
+
+                                // Labels must match the meaning of your data
+                                const labels = [
+                                    "Business Completed",
+                                    "Business In Process",
+                                    "Product Completed",
+                                    "Product In Process"
+                                ];
+
+                                // Values must match the keys in $owner_counts
+                                const data = [
+                                    counts.business_completed ?? 0,
+                                    counts.business_inprocess ?? 0,
+                                    counts.product_completed ?? 0,
+                                    counts.product_inprocess ?? 0
+                                ];
+
+                                const backgroundColors = [
+                                    '#2D4E59', // Deep Blue-Teal
+                                    '#33B78C', // Emerald Green
+                                    '#34BAB8', // Aqua Blue
+                                    '#199CC2' // Sky Blue
+                                ];
+
+                                new Chart(ctx, {
+                                    type: 'doughnut',
+                                    data: {
+                                        labels: labels,
+                                        datasets: [{
+                                            data: data,
+                                            backgroundColor: backgroundColors
+                                        }]
+                                    },
+                                    options: {
+                                        cutout: '80%',
+                                        borderWidth: 2,
+                                        plugins: {
+                                            legend: {
+                                                position: 'right'
+                                            },
+                                            title: {
+                                                display: true,
+                                                text: 'Project Details',
+                                                font: {
+                                                    size: 18
+                                                }
+                                            }
+                                        },
+                                        responsive: true,
+                                        maintainAspectRatio: false
+                                    }
+                                });
+                            });
+                        </script>
+
+                        <style>
+                            #myDonutChart {
+                                max-width: 400px;
+                                height: 235px;
+                                padding: 30px;
+                            }
+                        </style>
 
 
 
 
-{{-- =============== --}}
 
-       </div>
+
+                        {{-- =============== --}}
+
+                    </div>
                 </div>
             </div>
         </main>
@@ -432,54 +450,62 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
         </script> --}}
-<style>
-#myPieChart {
-    max-width: 400px;  /* limit width */
-    max-height: 400px; /* limit height */
-}
-</style>
-<script>
-var ctx = document.getElementById('myPieChart').getContext('2d');
-
-// Pass PHP data to JavaScript
-var counts = @json($return_data);
-
-var backgroundColors = [
-      '#1E3A5F', // Dark Navy
-    '#3FB8AF', // Teal
-    '#7FC7D9', // Aqua
-    '#4A90E2', // Sky Blue
-    '#5D7290', // Steel Blue
-    '#A9B8C9'  // Light Gray-Blue
-];
-
-var labels = Object.keys(counts);
-var data = Object.values(counts);
-
-var myPieChart = new Chart(ctx, {
-    type: 'pie',
-    data: {
-        labels: labels,
-        datasets: [{
-            data: data,
-            backgroundColor: backgroundColors
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false, // allow custom size
-        plugins: {
-            tooltip: { enabled: true },
-            legend: { position: 'right' },
-            title: {
-                display: true,
-                text: 'Product Pie Chart',
-                font: { size: 16 }
+        <style>
+            #myPieChart {
+                max-width: 400px;
+                /* limit width */
+                max-height: 400px;
+                /* limit height */
             }
-        }
-    }
-});
-</script>
+        </style>
+        <script>
+            var ctx = document.getElementById('myPieChart').getContext('2d');
+
+            // Pass PHP data to JavaScript
+            var counts = @json($return_data);
+
+            var backgroundColors = [
+                '#1E3A5F', // Dark Navy
+                '#3FB8AF', // Teal
+                '#7FC7D9', // Aqua
+                '#4A90E2', // Sky Blue
+                '#5D7290', // Steel Blue
+                '#A9B8C9' // Light Gray-Blue
+            ];
+
+            var labels = Object.keys(counts);
+            var data = Object.values(counts);
+
+            var myPieChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: backgroundColors
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // allow custom size
+                    plugins: {
+                        tooltip: {
+                            enabled: true
+                        },
+                        legend: {
+                            position: 'right'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Product Pie Chart',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         {{-- <script>
             var ctx = document.getElementById('myBarChart').getContext('2d');
@@ -541,56 +567,62 @@ var myPieChart = new Chart(ctx, {
         </script> --}}
 
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-var ctx = document.getElementById('myBarChart').getContext('2d');
-var counts = @json($return_data);
-var labels = Object.keys(counts);
-var dataValues = Object.values(counts);
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            var ctx = document.getElementById('myBarChart').getContext('2d');
+            var counts = @json($return_data);
+            var labels = Object.keys(counts);
+            var dataValues = Object.values(counts);
 
-// Create gradient for each bar
-function createGradient(ctx, color1, color2) {
-    let gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, color1);
-    gradient.addColorStop(1, color2);
-    return gradient;
-}
-
-var myBarChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: labels,
-        datasets: [{
-            label: 'Products',
-            data: dataValues,
-            backgroundColor: [
-                createGradient(ctx, 'rgba(45,78,89,0.8)', 'rgba(45,78,89,0.2)'),
-                createGradient(ctx, 'rgba(51,183,140,0.8)', 'rgba(51,183,140,0.2)'),
-                createGradient(ctx, 'rgba(52,186,184,0.8)', 'rgba(52,186,184,0.2)'),
-                createGradient(ctx, 'rgba(25,156,194,0.8)', 'rgba(25,156,194,0.2)'),
-                createGradient(ctx, 'rgba(53,133,178,0.8)', 'rgba(53,133,178,0.2)'),
-                createGradient(ctx, 'rgba(109,155,170,0.8)', 'rgba(109,155,170,0.2)')
-            ],
-            borderRadius: 8, // Rounded bars
-            borderSkipped: false
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: { display: false },
-            title: {
-                display: true,
-                text: 'Product Bar Chart',
-                font: { size: 20 }
+            // Create gradient for each bar
+            function createGradient(ctx, color1, color2) {
+                let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, color1);
+                gradient.addColorStop(1, color2);
+                return gradient;
             }
-        },
-        scales: {
-            y: { beginAtZero: true }
-        }
-    }
-});
-</script>
+
+            var myBarChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Products',
+                        data: dataValues,
+                        backgroundColor: [
+                            createGradient(ctx, 'rgba(45,78,89,0.8)', 'rgba(45,78,89,0.2)'),
+                            createGradient(ctx, 'rgba(51,183,140,0.8)', 'rgba(51,183,140,0.2)'),
+                            createGradient(ctx, 'rgba(52,186,184,0.8)', 'rgba(52,186,184,0.2)'),
+                            createGradient(ctx, 'rgba(25,156,194,0.8)', 'rgba(25,156,194,0.2)'),
+                            createGradient(ctx, 'rgba(53,133,178,0.8)', 'rgba(53,133,178,0.2)'),
+                            createGradient(ctx, 'rgba(109,155,170,0.8)', 'rgba(109,155,170,0.2)')
+                        ],
+                        borderRadius: 8, // Rounded bars
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Product Bar Chart',
+                            font: {
+                                size: 20
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
     </div>
 </div>
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
@@ -618,12 +650,12 @@ var myBarChart = new Chart(ctx, {
                                         style="color:#{{ str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) . str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) . str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) }};">
                                         <b>{{ $data->product_name }}</b> :
                                         @switch(true)
-                                        @case($data->quantity_tracking_status == 3005 &&  $data->dispatch_status_id == 1154 )
-                                              Product Dispatch Completed
+                                            @case($data->quantity_tracking_status == 3005 && $data->dispatch_status_id == 1154)
+                                                Product Dispatch Completed
                                                 {{-- {{ $data->completed_quantity }} --}}
                                             @break
 
-                                            @case($data->quantity_tracking_status == 3005  )
+                                            @case($data->quantity_tracking_status == 3005)
                                                 Dispatch Department Product Dispatch Completed Quantity
                                                 {{ $data->completed_quantity }}
                                             @break
@@ -671,7 +703,8 @@ var myBarChart = new Chart(ctx, {
                                             @case($data->off_canvas_status == 23)
                                                 Purchase Department
                                             @break
-                                              @case($data->off_canvas_status == 17)
+
+                                            @case($data->off_canvas_status == 17)
                                                 Store Department Issue Material Send to Production Dept
                                             @break
 
@@ -690,24 +723,24 @@ var myBarChart = new Chart(ctx, {
                                             @case($data->off_canvas_status == 13)
                                                 Rejected Design in Production Department
                                             @break
-                                            
-                                              @case($data->off_canvas_status == 33)
-                                                Estimation Department Estimation  Send Production Department
+
+                                            @case($data->off_canvas_status == 33)
+                                                Estimation Department Estimation Send Production Department
                                             @break
 
-                                              @case($data->off_canvas_status == 32)
+                                            @case($data->off_canvas_status == 32)
                                                 Owner Department Estimation Accepted and Send Estimation Department
                                             @break
 
-                                             @case($data->off_canvas_status == 31)
-                                             Owner Department Revised Estimation Received
+                                            @case($data->off_canvas_status == 31)
+                                                Owner Department Revised Estimation Received
                                             @break
-                                                                                                                                
+
                                             @case($data->off_canvas_status == 30)
                                                 Owner Department Estimation Rejected and Send Estimation Department
                                             @break
 
-                                              @case($data->off_canvas_status == 28)
+                                            @case($data->off_canvas_status == 28)
                                                 Owner Department Received Estimation for Accept or Reject
                                             @break
 
