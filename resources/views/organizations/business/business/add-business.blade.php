@@ -179,7 +179,7 @@
                                                                                 <td>
                                                                                     <input
                                                                                         class="form-control total_amount"
-                                                                                        name="addmore[${i}][total]"
+                                                                                        name="addmore[0][total]"
                                                                                         type="text" readonly>
                                                                                 </td>
                                                                                 <td>
@@ -439,15 +439,7 @@
 
                     // Add more rows when the "Add More" button is clicked
                     $("#add_more_btn").click(function() {
-                        var i_count = $('#i_id').val();
-                        var i = parseInt(i_count) + 1;
-                        $('#i_id').val(i);
-
-                        if (i_count === "0") {
-                            i = 2;
-                        }
-
-                        $('#i_id').val(i);
+                        var i = $("#purchase_order_table tbody tr").length + 1;
                         var newRow = `
                     <tr>
                         <td>
@@ -484,9 +476,21 @@
                     });
 
                     // Remove a row when the "Remove" button is clicked
+                    // $(document).on("click", ".remove-row", function() {
+                    //     $(this).closest("tr").remove();
+                    //     validator.resetForm(); // Reset validation state after removing a row
+                    // });
+
                     $(document).on("click", ".remove-row", function() {
+
                         $(this).closest("tr").remove();
-                        validator.resetForm(); // Reset validation state after removing a row
+
+                        $("#purchase_order_table tbody tr").each(function(index) {
+                            $(this).find("td:first input").val(index + 1);
+                        });
+
+                        calculateGrandTotal();
+                        validator.resetForm();
                     });
                 });
             </script>
@@ -524,11 +528,11 @@
                 });
 
                 // Also recalculate on row remove
-                $(document).on("click", ".remove-row", function() {
-                    $(this).closest("tr").remove();
-                    validator.resetForm();
-                    calculateGrandTotal();
-                });
+                // $(document).on("click", ".remove-row", function() {
+                //     $(this).closest("tr").remove();
+                //     validator.resetForm();
+                //     calculateGrandTotal();
+                // });
             </script>
         @endpush
     @endsection
