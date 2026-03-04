@@ -45,7 +45,8 @@ class BusinessController extends Controller
         $rules = [
             'title' => 'required|string|max:255',
             'project_name' => 'required',
-            'customer_po_number' => 'required|unique:businesses|string|min:10|max:16',
+            // 'customer_po_number' => 'required|unique:businesses|string|min:10|max:16',
+            'customer_po_number' => 'required|string|min:10|max:16|unique:businesses,customer_po_number,NULL,id,is_deleted,0',
             'po_validity' => 'required',
             'remarks' => 'required',
             'business_pdf' => 'required|mimes:pdf|max:' . Config::get("AllFileValidation.DESIGNS_PDF_MAX_SIZE") . '|min:' . Config::get("AllFileValidation.DESIGNS_PDF_MIN_SIZE"),
@@ -62,6 +63,7 @@ class BusinessController extends Controller
             'po_validity.required' => 'The po validity is required.',
             'remarks.required' => 'The remarks is required.',
             'customer_po_number.unique' => 'PO number already exist.',
+            'customer_po_number' => 'required|string|min:10|max:16|unique:businesses,customer_po_number,NULL,id,is_deleted,0',
 
             'business_pdf.required' => 'The business PDF is required.',
             'business_pdf.mimes' => 'The business PDF must be in PDF format.',
@@ -117,7 +119,8 @@ class BusinessController extends Controller
         $rules = [
             'design_count' => 'required|integer',
             'business_main_id' => 'required|integer|exists:businesses,id',
-            'customer_po_number' => 'required|string',
+            // 'customer_po_number' => 'required|string',
+            'customer_po_number' => 'required|string|min:10|max:16|unique:businesses,customer_po_number,' . $request->business_main_id . ',id,is_deleted,0',
             'title' => 'required|string',
             'po_validity' => 'required|date',
             'remarks' => 'nullable|string',
@@ -134,6 +137,7 @@ class BusinessController extends Controller
             'design_count.required' => 'Design count is required.',
             'business_main_id.required' => 'Business main ID is required.',
             'customer_po_number.required' => 'Customer PO number is required.',
+            'customer_po_number.unique' => 'PO number already exist.',
             'title.required' => 'Title is required.',
             'po_validity.required' => 'PO validity date is required.',
 
