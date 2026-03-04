@@ -481,16 +481,36 @@
                     //     validator.resetForm(); // Reset validation state after removing a row
                     // });
 
-                    $(document).on("click", ".remove-row", function() {
+                    $(document).on("click", ".remove-row", function(e) {
 
-                        $(this).closest("tr").remove();
+                        e.preventDefault();
 
-                        $("#purchase_order_table tbody tr").each(function(index) {
-                            $(this).find("td:first input").val(index + 1);
+                        let row = $(this).closest("tr");
+
+                        Swal.fire({
+                            title: "Are you sure?",
+                            text: "This row will be removed!",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "Yes, delete it!",
+                            cancelButtonText: "Cancel"
+                        }).then((result) => {
+
+                            if (result.isConfirmed) {
+
+                                row.remove();
+
+                                $("#purchase_order_table tbody tr").each(function(index) {
+                                    $(this).find("td:first input").val(index + 1);
+                                });
+
+                                calculateGrandTotal();
+                                validator.resetForm();
+
+                            }
+
                         });
 
-                        calculateGrandTotal();
-                        validator.resetForm();
                     });
                 });
             </script>
