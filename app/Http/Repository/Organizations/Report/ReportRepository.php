@@ -1293,7 +1293,7 @@ class ReportRepository
                 ->whereIn('tcqt1.quantity_tracking_status', $array_to_be_quantity_tracking)
                 // ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
                 ->where('bap1.dispatch_status_id', 1154)
-                
+
                 ->where('businesses.is_active', true)
                 ->where('businesses.is_deleted', 0);
 
@@ -2989,35 +2989,45 @@ class ReportRepository
            1. RECEIVED TRANSACTIONS (GRN)
         ------------------------------------------*/
             // tbl_grn_po_quantity_tracking.quantity AS received_qty,
-            $received = DB::table('tbl_grn_po_quantity_tracking')
-                ->join('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_grn_po_quantity_tracking.part_no_id')
-                ->join('grn_tbl', 'grn_tbl.id', '=', 'tbl_grn_po_quantity_tracking.grn_id')
-                ->leftJoin('purchase_orders', 'purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id')
-                ->leftJoin('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
+            // $received = DB::table('tbl_grn_po_quantity_tracking')
+            //     ->join('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_grn_po_quantity_tracking.part_no_id')
+            //     ->join('grn_tbl', 'grn_tbl.id', '=', 'tbl_grn_po_quantity_tracking.grn_id')
+            //     ->leftJoin('purchase_orders', 'purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id')
+            //     ->leftJoin('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
+            //     ->selectRaw("
+            //     tbl_grn_po_quantity_tracking.updated_at AS date,
+            //     tbl_part_item.description AS part_name,
+            //     IFNULL(tbl_grn_po_quantity_tracking.accepted_quantity, 0) AS received_qty,
+            //     0 AS issue_qty,
+            //     grn_tbl.grn_no_generate AS grn_no,
+            //     vendors.vendor_name AS vendor_name,
+            //     '' AS product_name
+            // ");
+            $received = DB::table('tbl_item_stock')
+                ->leftJoin('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_item_stock.part_item_id')
                 ->selectRaw("
-                tbl_grn_po_quantity_tracking.updated_at AS date,
-                tbl_part_item.description AS part_name,
-                IFNULL(tbl_grn_po_quantity_tracking.accepted_quantity, 0) AS received_qty,
-                0 AS issue_qty,
-                grn_tbl.grn_no_generate AS grn_no,
-                vendors.vendor_name AS vendor_name,
-                '' AS product_name
-            ");
-
+        tbl_item_stock.created_at AS date,
+        tbl_part_item.description AS part_name,
+        IFNULL(tbl_item_stock.quantity,0) AS received_qty,
+        0 AS issue_qty,
+        '' AS grn_no,
+        '' AS vendor_name,
+        '' AS product_name
+    ");
             if ($partId) {
                 $received->where('tbl_part_item.id', $partId);
             }
             if ($request->filled('from_date')) {
-                $received->whereDate('tbl_grn_po_quantity_tracking.updated_at', '>=', $request->from_date);
+                $received->whereDate('tbl_item_stock.updated_at', '>=', $request->from_date);
             }
             if ($request->filled('to_date')) {
-                $received->whereDate('tbl_grn_po_quantity_tracking.updated_at', '<=', $request->to_date);
+                $received->whereDate('tbl_item_stock.updated_at', '<=', $request->to_date);
             }
             if ($request->filled('year')) {
-                $received->whereYear('tbl_grn_po_quantity_tracking.updated_at', $request->year);
+                $received->whereYear('tbl_item_stock.updated_at', $request->year);
             }
             if ($request->filled('month')) {
-                $received->whereMonth('tbl_grn_po_quantity_tracking.updated_at', $request->month);
+                $received->whereMonth('tbl_item_stock.updated_at', $request->month);
             }
 
             /* -----------------------------------------
