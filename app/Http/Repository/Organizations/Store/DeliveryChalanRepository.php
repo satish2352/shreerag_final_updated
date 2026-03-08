@@ -227,7 +227,20 @@ class DeliveryChalanRepository
                 $designId = $request->input("design_id_" . $i);
                 if ($designId) {
                     $designDetails = DeliveryChalanItemDetails::findOrFail($designId);
-                    $designDetails->part_item_id = $request->input("part_item_id_" . $i);
+
+                    $oldQty = $designDetails->quantity;
+                    $newQty = $request->input("quantity_" . $i);
+
+                    $stock = ItemStock::where('part_item_id', $designDetails->part_item_id)->first();
+
+                    if ($stock) {
+                        $stock->quantity = $stock->quantity + $oldQty - $newQty;
+                        $stock->save();
+                    }
+
+                    $designDetails->quantity = $newQty;
+                    // $designDetails = DeliveryChalanItemDetails::findOrFail($designId);
+                    // $designDetails->part_item_id = $request->input("part_item_id_" . $i);
                     $designDetails->hsn_id = $request->input("hsn_id_" . $i);
                     $designDetails->process_id = $request->input("process_id_" . $i);
                     $designDetails->quantity = $request->input("quantity_" . $i);

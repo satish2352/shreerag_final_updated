@@ -2985,25 +2985,59 @@ class ReportRepository
 
             $partId = $request->description ?? null;
 
+            $opening = DB::table('tbl_part_item')
+                ->selectRaw("
+        created_at as date,
+        description as part_name,
+        opening_stock as received_qty,
+        0 as issue_qty,
+        'Opening Stock' as grn_no,
+        '' as vendor_name,
+        '' as product_name
+    ");
+
+            if ($partId) {
+                $opening->where('id', $partId);
+            }
+
             /* -----------------------------------------
            1. RECEIVED TRANSACTIONS (GRN)
         ------------------------------------------*/
             // tbl_grn_po_quantity_tracking.quantity AS received_qty,
+            // $received = DB::table('tbl_grn_po_quantity_tracking')
+            //     ->join('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_grn_po_quantity_tracking.part_no_id')
+            //     ->join('grn_tbl', 'grn_tbl.id', '=', 'tbl_grn_po_quantity_tracking.grn_id')
+            //     ->leftJoin('purchase_orders', 'purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id')
+            //     ->leftJoin('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
+            //     ->selectRaw("
+            //     tbl_grn_po_quantity_tracking.updated_at AS date,
+            //     tbl_part_item.description AS part_name,
+            //     IFNULL(tbl_grn_po_quantity_tracking.accepted_quantity, 0) AS received_qty,
+            //     0 AS issue_qty,
+            //     grn_tbl.grn_no_generate AS grn_no,
+            //     vendors.vendor_name AS vendor_name,
+            //     '' AS product_name
+            // ");
             $received = DB::table('tbl_grn_po_quantity_tracking')
                 ->join('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_grn_po_quantity_tracking.part_no_id')
                 ->join('grn_tbl', 'grn_tbl.id', '=', 'tbl_grn_po_quantity_tracking.grn_id')
                 ->leftJoin('purchase_orders', 'purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id')
                 ->leftJoin('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
                 ->selectRaw("
-                tbl_grn_po_quantity_tracking.updated_at AS date,
-                tbl_part_item.description AS part_name,
-                IFNULL(tbl_grn_po_quantity_tracking.accepted_quantity, 0) AS received_qty,
-                0 AS issue_qty,
-                grn_tbl.grn_no_generate AS grn_no,
-                vendors.vendor_name AS vendor_name,
-                '' AS product_name
-            ");
+        tbl_grn_po_quantity_tracking.updated_at as date,
+        tbl_part_item.description as part_name,
+        IFNULL(tbl_grn_po_quantity_tracking.accepted_quantity,0) as received_qty,
+        0 as issue_qty,
+        grn_tbl.grn_no_generate as grn_no,
+        vendors.vendor_name as vendor_name,
+        '' as product_name
+    ")
+                ->where('tbl_grn_po_quantity_tracking.is_deleted', 0)
+                ->where('tbl_grn_po_quantity_tracking.is_active', 1);
 
+            if ($partId) {
+                $received->where('tbl_part_item.id', $partId);
+            }
             if ($partId) {
                 $received->where('tbl_part_item.id', $partId);
             }
@@ -3034,19 +3068,36 @@ class ReportRepository
             //         '' AS grn_no,
             //         businesses_details.product_name AS product_name 
             //     ");
+            //         $issued = DB::table('production_details')
+            //             ->leftJoin('tbl_part_item', 'tbl_part_item.id', '=', 'production_details.part_item_id')
+            //             ->leftJoin('businesses_details', 'businesses_details.id', '=', 'production_details.business_details_id')
+            //             ->selectRaw("
+            //     production_details.updated_at AS date,
+            //     tbl_part_item.description AS part_name,
+            //     0 AS received_qty,
+            //     production_details.quantity AS issue_qty,
+            //     '' AS grn_no,
+            //      '' AS vendor_name,   -- required for UNION,
+            //     businesses_details.product_name AS product_name
+            // ");
             $issued = DB::table('production_details')
                 ->leftJoin('tbl_part_item', 'tbl_part_item.id', '=', 'production_details.part_item_id')
                 ->leftJoin('businesses_details', 'businesses_details.id', '=', 'production_details.business_details_id')
                 ->selectRaw("
-        production_details.updated_at AS date,
-        tbl_part_item.description AS part_name,
-        0 AS received_qty,
-        production_details.quantity AS issue_qty,
-        '' AS grn_no,
-         '' AS vendor_name,   -- required for UNION,
-        businesses_details.product_name AS product_name
-    ");
+        production_details.updated_at as date,
+        tbl_part_item.description as part_name,
+        0 as received_qty,
+        production_details.quantity as issue_qty,
+        '' as grn_no,
+        '' as vendor_name,
+        businesses_details.product_name as product_name
+    ")
+                ->where('production_details.is_deleted', 0)
+                ->where('production_details.is_active', 1);
 
+            if ($partId) {
+                $issued->where('tbl_part_item.id', $partId);
+            }
 
             if ($partId) {
                 $issued->where('tbl_part_item.id', $partId);
@@ -3064,13 +3115,57 @@ class ReportRepository
                 $issued->whereMonth('production_details.updated_at', $request->month);
             }
 
+
+            $delivery = DB::table('tbl_delivery_chalan_item_details')
+                ->leftJoin('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_delivery_chalan_item_details.part_item_id')
+                ->leftJoin('tbl_delivery_chalan', 'tbl_delivery_chalan.id', '=', 'tbl_delivery_chalan_item_details.delivery_chalan_id')
+                ->selectRaw("
+        tbl_delivery_chalan_item_details.updated_at as date,
+        tbl_part_item.description as part_name,
+        0 as received_qty,
+        tbl_delivery_chalan_item_details.quantity as issue_qty,
+        '' as grn_no,
+        '' as vendor_name,
+        'Delivery Challan No.' as product_name
+    ")
+                ->where('tbl_delivery_chalan_item_details.is_deleted', 0)
+                ->where('tbl_delivery_chalan_item_details.is_active', 1);
+
+            if ($partId) {
+                $delivery->where('tbl_part_item.id', $partId);
+            }
+
+            if ($request->filled('from_date')) {
+                $delivery->whereDate('tbl_delivery_chalan_item_details.updated_at', '>=', $request->from_date);
+            }
+
+            if ($request->filled('to_date')) {
+                $delivery->whereDate('tbl_delivery_chalan_item_details.updated_at', '<=', $request->to_date);
+            }
+
+            if ($request->filled('year')) {
+                $delivery->whereYear('tbl_delivery_chalan_item_details.updated_at', $request->year);
+            }
+
+            if ($request->filled('month')) {
+                $delivery->whereMonth('tbl_delivery_chalan_item_details.updated_at', $request->month);
+            }
             /* -----------------------------------------
            3. MERGE BOTH (UNION ALL)
         ------------------------------------------*/
-            $ledger = $received->unionAll($issued)
+            // $ledger = $received->unionAll($issued)
+            $ledger = $opening
+                ->unionAll($received)
+                ->unionAll($issued)
+                ->unionAll($delivery);
 
+            $ledger = DB::query()
+                ->fromSub($ledger, 'ledger')
                 ->orderBy('date', 'asc')
                 ->get();
+
+            // ->orderBy('date', 'asc')
+            // ->get();
 
             /* -----------------------------------------
            4. RUNNING BALANCE LOGIC

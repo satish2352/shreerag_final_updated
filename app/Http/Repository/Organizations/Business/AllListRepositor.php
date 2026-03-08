@@ -308,7 +308,7 @@ class AllListRepositor
           // 'designs.design_image',
           'businesses_details.updated_at'
         )
-        ->distinct()->orderBy('businesses_details.updated_at', 'desc')->get();
+        ->distinct()->orderBy('purchase_orders.updated_at', 'desc')->get();
 
       return $data_output;
     } catch (\Exception $e) {

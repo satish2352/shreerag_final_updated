@@ -25,34 +25,52 @@ class ItemStockReportExport implements FromCollection, WithHeadings, WithStyles
 
         foreach ($this->data as $index => $item) {
 
-            // Format date properly
+            // Date Format
             $formattedDate = $item->date
-                ? Carbon::parse($item->date)->format('d/m/Y h:i:s A')
+                ? Carbon::parse($item->date)->format('d/m/Y')
                 : '-';
 
-            // Proper minus balance
-            $balance = isset($item->balance)
-                ? ($item->balance < 0 ? '-' . abs($item->balance) : $item->balance)
-                : 0;
+            // Particulars logic (same as Blade)
+            $particulars = '-';
+
+            if ($item->received_qty > 0) {
+
+                if ($item->grn_no === 'Opening Stock') {
+                    $particulars = "Opening Stock | " . $item->part_name;
+                } else {
+                    $particulars = "Supplier GRN No." . $item->grn_no .
+                        " | " . $item->vendor_name .
+                        " | " . $item->part_name;
+                }
+            } elseif ($item->issue_qty > 0) {
+
+                if ($item->product_name === 'Delivery Challan No.') {
+                    $particulars = "DELIVERY CHALLAN ISSUE | " . $item->part_name;
+                } else {
+                    $particulars = "FOR PRODUCTION ISSUE " .
+                        $item->product_name . " " .
+                        $item->part_name;
+                }
+            }
 
             $rows->push([
                 $index + 1,
                 $formattedDate,
-                ucwords($item->part_name),
-                $item->received_qty,
-                $item->issue_qty,
-                $balance,
+                $particulars,
+                number_format($item->received_qty, 2),
+                number_format($item->issue_qty, 2),
+                number_format($item->balance, 2),
             ]);
         }
 
-        // Add TOTAL row
+        // TOTAL ROW
         $rows->push([
             '',
             '',
             'TOTAL',
-            $this->totals['received'],
-            $this->totals['issue'],
-            $this->totals['balance'],
+            number_format($this->totals['received'], 2),
+            number_format($this->totals['issue'], 2),
+            number_format($this->totals['balance'], 2),
         ]);
 
         return $rows;
@@ -72,18 +90,19 @@ class ItemStockReportExport implements FromCollection, WithHeadings, WithStyles
 
     public function styles(Worksheet $sheet)
     {
-        // USE HELPER FUNCTION FOR COMMON STYLING
+        // Apply your helper style
         applyExcelCommonStyles(
             $sheet,
             $this->headings(),
-            $this->data->count() + 1  // +1 because we also added TOTAL row
+            $this->data->count() + 1
         );
 
-        // Make TOTAL row bold
+        // TOTAL row bold
         $totalRow = $this->data->count() + 2;
+
         $sheet->getStyle("A{$totalRow}:F{$totalRow}")
-              ->getFont()
-              ->setBold(true);
+            ->getFont()
+            ->setBold(true);
 
         return [];
     }
