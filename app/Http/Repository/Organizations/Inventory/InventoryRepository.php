@@ -2,6 +2,7 @@
 
 namespace App\Http\Repository\Organizations\Inventory;
 
+use Illuminate\Support\Facades\Config;
 use App\Models\{
     PartItem,
     ItemStock,
@@ -15,6 +16,8 @@ class InventoryRepository
     public function getAll()
     {
         try {
+            $perPage = Config::get('AllFileValidation.PAGINATION');
+            $search = request()->search;
             $data_output = ItemStock::leftJoin('tbl_part_item', function ($join) {
                 $join->on('tbl_item_stock.part_item_id', '=', 'tbl_part_item.id');
             })
@@ -30,6 +33,14 @@ class InventoryRepository
                 ->leftJoin('tbl_rack_master', function ($join) {
                     $join->on('tbl_part_item.rack_id', '=', 'tbl_rack_master.id');
                 })
+                ->when($search, function ($query) use ($search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('tbl_part_item.description', 'LIKE', "%{$search}%")
+                            ->orWhere('tbl_part_item.part_number', 'LIKE', "%{$search}%")
+                            ->orWhere('tbl_part_item.opening_stock', 'LIKE', "%{$search}%");
+                    });
+                })
+
                 ->select(
                     'tbl_item_stock.id',
                     'tbl_part_item.id',
@@ -49,7 +60,8 @@ class InventoryRepository
                     'tbl_group_master.name as group_name',
                 )
                 // ->whereNotNull('tbl_item_stock.quantity')
-                ->get();
+                ->paginate($perPage)
+                ->withQueryString();
 
             return $data_output;
         } catch (\Exception $e) {

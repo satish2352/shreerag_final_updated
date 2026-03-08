@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Organizations\Store;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Http\Request;
 use App\Http\Services\Organizations\Store\DeliveryChalanServices;
 use App\Http\Controllers\Controller;
@@ -36,6 +37,8 @@ class DeliveryChalanController extends Controller
     }
     public function index()
     {
+        $search = request()->search;
+        $perPage = Config::get('AllFileValidation.PAGINATION');
         $getOutput = DeliveryChalan::leftJoin('vendors', function ($join) {
             $join->on('tbl_delivery_chalan.vendor_id', '=', 'vendors.id');
         })
@@ -49,6 +52,13 @@ class DeliveryChalanController extends Controller
                 $join->on('tbl_delivery_chalan.vehicle_id', '=', 'tbl_vehicle_type.id');
             })
             ->where('tbl_delivery_chalan.is_deleted', 0)
+            ->when($search, function ($getOutput) use ($search) {
+                $getOutput->where(function ($q) use ($search) {
+                    $q->where('vendors.vendor_name', 'LIKE', "%{$search}%")
+                        ->orWhere('businesses.customer_po_number', 'LIKE', "%{$search}%")
+                        ->orWhere('tbl_vehicle_type.name', 'LIKE', "%{$search}%");
+                });
+            })
             ->select(
                 'tbl_delivery_chalan.id',
                 'tbl_delivery_chalan.vendor_id',
@@ -64,7 +74,9 @@ class DeliveryChalanController extends Controller
                 'tbl_delivery_chalan.dc_number',
                 'tbl_delivery_chalan.po_date',
                 'tbl_delivery_chalan.updated_at'
-            )->orderBy('tbl_delivery_chalan.updated_at', 'desc')->get();
+            )->orderBy('tbl_delivery_chalan.updated_at', 'desc')
+            ->paginate($perPage)
+            ->withQueryString();
         return view(
             'organizations.store.delivery-chalan.list-delivery-chalan',
             compact(

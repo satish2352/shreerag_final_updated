@@ -106,36 +106,31 @@ class AllListController extends Controller
     public function submitFinalPurchaseOrder()
     {
         try {
-            $result = $this->service->getPurchaseOrderBusinessWise();
 
-            // ✅ Make sure view always gets a Collection
-            if ($result instanceof Collection) {
-                $data_output = $result;
-            } elseif (is_array($result)) {
-                $data_output = collect($result);
-            } else {
-                // if service returned string / null / anything else
-                $data_output = collect();
+            $data_output = $this->service->getPurchaseOrderBusinessWise();
+
+            // only run if paginator returned
+            if ($data_output instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+
+                $bdIds = collect($data_output->items())
+                    ->pluck('business_details_id')
+                    ->filter()
+                    ->unique()
+                    ->values();
+
+                if ($bdIds->isNotEmpty()) {
+                    NotificationStatus::where('quality_create_grn', 0)
+                        ->whereIn('business_details_id', $bdIds)
+                        ->update(['quality_create_grn' => 1]);
+                }
             }
 
-            if ($data_output->isEmpty()) {
-                return view('organizations.store.list.list-material-received-from-quality-businesswise', [
-                    'data_output' => $data_output,
-                    'message' => 'No data found'
-                ]);
-            }
-
-            $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
-
-            if ($bdIds->isNotEmpty()) {
-                NotificationStatus::where('quality_create_grn', 0)
-                    ->whereIn('business_details_id', $bdIds)
-                    ->update(['quality_create_grn' => 1]);
-            }
-
-            return view('organizations.store.list.list-material-received-from-quality-businesswise', compact('data_output'));
+            return view(
+                'organizations.store.list.list-material-received-from-quality-businesswise',
+                compact('data_output')
+            );
         } catch (\Exception $e) {
-            return $e;
+            dd($e->getMessage()); // show real SQL error
         }
     }
     public function getAllListMaterialReceivedFromQualityPOTracking()

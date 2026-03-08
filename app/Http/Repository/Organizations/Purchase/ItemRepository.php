@@ -17,7 +17,7 @@ class ItemRepository
     {
         try {
             $perPage = Config::get('AllFileValidation.PAGINATION');
-
+            $search = request()->search;
             $data_output = PartItem::leftJoin('tbl_unit', function ($join) {
                 $join->on('tbl_part_item.unit_id', '=', 'tbl_unit.id');
             })
@@ -29,6 +29,13 @@ class ItemRepository
                 })
                 ->leftJoin('tbl_rack_master', function ($join) {
                     $join->on('tbl_part_item.rack_id', '=', 'tbl_rack_master.id');
+                })
+                ->when($search, function ($query) use ($search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('tbl_part_item.description', 'LIKE', "%{$search}%")
+                            ->orWhere('tbl_part_item.part_number', 'LIKE', "%{$search}%")
+                            ->orWhere('tbl_part_item.opening_stock', 'LIKE', "%{$search}%");
+                    });
                 })
                 ->select(
                     'tbl_part_item.id',

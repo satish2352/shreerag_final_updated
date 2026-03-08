@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Organizations\Store;
 
-
+use Illuminate\Support\Facades\Config;
 use Illuminate\Http\Request;
 use App\Http\Services\Organizations\Store\ReturnableChalanServices;
 use App\Http\Controllers\Controller;
@@ -41,6 +41,8 @@ class ReturnableChalanController extends Controller
 
     public function index()
     {
+        $search = request()->search;
+        $perPage = Config::get('AllFileValidation.PAGINATION');
         $getOutput = ReturnableChalan::leftJoin('vendors', function ($join) {
             $join->on('tbl_returnable_chalan.vendor_id', '=', 'vendors.id');
         })
@@ -54,6 +56,13 @@ class ReturnableChalanController extends Controller
                 $join->on('tbl_returnable_chalan.vehicle_id', '=', 'tbl_vehicle_type.id');
             })
             ->where('tbl_returnable_chalan.is_deleted', 0)
+            ->when($search, function ($getOutput) use ($search) {
+                $getOutput->where(function ($q) use ($search) {
+                    $q->where('vendors.vendor_name', 'LIKE', "%{$search}%")
+                        ->orWhere('purchase_orders.purchase_orders_id', 'LIKE', "%{$search}%")
+                        ->orWhere('tbl_vehicle_type.name', 'LIKE', "%{$search}%");
+                });
+            })
             ->select(
                 'tbl_returnable_chalan.id',
                 'tbl_returnable_chalan.vendor_id',
@@ -68,7 +77,8 @@ class ReturnableChalanController extends Controller
                 'tbl_vehicle_type.name as vehicle_name',
                 'tbl_returnable_chalan.customer_po_no'
             )->orderBy('tbl_returnable_chalan.updated_at', 'desc')
-            ->get();
+            ->paginate($perPage)
+            ->withQueryString();
         return view(
             'organizations.store.returnable-chalan.list-returnable-chalan',
             compact(

@@ -44,6 +44,19 @@
                             <div class="datatable-dashv1-list custom-datatable-overright">
 
                                 <div class="table-responsive">
+                                    <form method="GET" action="{{ url()->current() }}">
+                                        <div class="d-flex justify-content-end mb-3">
+                                            <div class="col-md-4">
+                                                <input type="text" name="search" value="{{ request('search') }}"
+                                                    class="form-control"
+                                                    placeholder="Search  Description / Part No. / Opening Stock">
+                                            </div>
+                                            <div class="col-md-2 ">
+                                                <button class="btn btn-primary filterbg">Search</button>
+                                                <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
+                                            </div>
+                                        </div>
+                                    </form>
                                     <table class="table table-bordered table-striped">
                                         {{-- <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                     data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="false"
@@ -68,10 +81,11 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($getOutput as $data)
+                                            @forelse ($getOutput as $data)
                                                 <tr>
                                                     {{-- <td>{{ $loop->iteration }}</td> --}}
-                                                    <td>{{ $getOutput->firstItem() + $loop->index }}</td>
+                                                    <td>{{ ($getOutput->currentPage() - 1) * $getOutput->perPage() + $loop->iteration }}
+                                                    </td>
                                                     <td>{{ ucwords($data->part_number) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->extra_description) }}</td>
@@ -100,11 +114,17 @@
                                                         </div>
                                                     </td>
                                                 </tr>
-                                            @endforeach
+                                            @empty
+                                                <tr>
+                                                    <td colspan="9" class="text-center">
+                                                        No Record Found
+                                                    </td>
+                                                </tr>
+                                            @endforelse
                                         </tbody>
                                     </table>
                                     <div class="d-flex justify-content-end mt-3">
-                                        {{ $getOutput->onEachSide(1)->links() }}
+                                        {{ $getOutput->links() }}
                                     </div>
                                 </div>
                             </div>

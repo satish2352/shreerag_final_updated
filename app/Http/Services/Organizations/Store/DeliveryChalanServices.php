@@ -22,14 +22,14 @@ class DeliveryChalanServices
             return $e;
         }
     }
-    public function getAll()
-    {
-        try {
-            return $this->repo->getAll();
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
+    // public function getAll()
+    // {
+    //     try {
+    //         return $this->repo->getAll();
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
     public function submitBOMToOwner($request)
     {
         try {

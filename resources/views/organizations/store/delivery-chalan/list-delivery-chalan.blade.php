@@ -48,14 +48,28 @@
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
                                 <div class="table-responsive">
-                                    <table id="table" data-toggle="table" data-pagination="true" data-search="true"
+                                    <form method="GET" action="{{ url()->current() }}">
+                                        <div class="d-flex justify-content-end mb-3">
+                                            <div class="col-md-4">
+                                                <input type="text" name="search" value="{{ request('search') }}"
+                                                    class="form-control"
+                                                    placeholder="Search Vendor Name / Customer PO Number / Vehicle Name">
+                                            </div>
+                                            <div class="col-md-2 ">
+                                                <button class="btn btn-primary filterbg">Search</button>
+                                                <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <table class="table table-bordered table-striped">
+                                        {{-- <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true"
                                         data-show-refresh="false" data-key-events="true" data-show-toggle="true"
                                         data-resizable="true" data-cookie="true" data-cookie-id-table="saveId"
-                                        data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
+                                        data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar"> --}}
                                         <thead>
                                             <tr>
-                                                <th data-field="#">#</th>
+                                                <th data-field="#">Sr. No.</th>
                                                 <th data-field="updated_at" data-editable="false">Date</th>
                                                 <th data-field="dc_number" data-editable="false">DC No.</th>
                                                 <th data-field="customer_po_number" data-editable="false"> PO Number</th>
@@ -72,10 +86,11 @@
                                         </thead>
                                         <tbody>
 
-                                            @foreach ($getOutput as $data)
+                                            @forelse ($getOutput as $data)
                                                 <tr>
 
-                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ ($getOutput->currentPage() - 1) * $getOutput->perPage() + $loop->iteration }}
+                                                    </td>
                                                     {{-- <td>{{ucwords($data->customer_po_number)}}</td> --}}
                                                     <td> {{ \Carbon\Carbon::parse($data->po_date)->format('d-m-Y h:i:s A') }}
                                                     </td>
@@ -115,9 +130,18 @@
                                                                     aria-hidden="true"></i></button></a>
                                                     </td>
                                                 </tr>
-                                            @endforeach
+                                            @empty
+                                                <tr>
+                                                    <td colspan="9" class="text-center">
+                                                        No Record Found
+                                                    </td>
+                                                </tr>
+                                            @endforelse
                                         </tbody>
                                     </table>
+                                    <div class="d-flex justify-content-end mt-3">
+                                        {{ $getOutput->onEachSide(1)->links() }}
+                                    </div>
                                 </div>
                             </div>
                         </div>

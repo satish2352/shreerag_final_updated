@@ -11,9 +11,10 @@
         .error {
             color: red;
         }
-        .remaining_quantity{
-        background-color: #8cd9b3 !important;
-    }
+
+        .remaining_quantity {
+            background-color: #8cd9b3 !important;
+        }
     </style>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -157,27 +158,29 @@
                                                         <tr>
                                                             <th>Description</th>
                                                             <th style="width: 100px;">Part No.</th>
-                                                            <th style="width: 100px;">PO Quantity</th>
+                                                            <th style="width: 100px;">PO Qty</th>
                                                             <th style="width: 70px;">Unit</th>
                                                             {{-- <th style="width: 100px;">HSN</th> --}}
                                                             <th style="width: 70px;">Rate</th>
-                                                            <th style="width: 80px;">Discount</th>
-                                                            <th style="width: 100px;">Actual Quantity</th>
-                                                            <th style="width: 100px;">Accepted Quantity</th>
-                                                            <th style="width: 100px;">Rejected Quantity</th>
-                                                            <th style="width: 100px;">Balance Quantity</th>
+                                                            <th style="width: 80px;">Dis.</th>
+                                                            <th style="width: 100px;">Actual Qty</th>
+                                                            <th style="width: 100px;">Accepted Qty</th>
+                                                            <th style="width: 100px;">Rej Qty</th>
+                                                            <th style="width: 100px;">Bal Qty</th>
                                                         </tr>
                                                         @foreach ($purchase_order_details_data as $item)
                                                             <tr>
                                                                 <input type="hidden" name="addmore[0][edit_id]"
                                                                     placeholder="Enter Description" class="form-control"
                                                                     value="{{ $item->id }}" readonly />
-                                                                <td><input type="text" name="addmore[0][part_description]"
+                                                                <td><input type="text"
+                                                                        name="addmore[0][part_description]"
                                                                         placeholder="Enter Description"
                                                                         class="form-control"
                                                                         value="{{ $item->part_description }}" readonly />
                                                                 </td>
-                                                                <td><input type="text" name="addmore[0][po_description]"
+                                                                <td><input type="text"
+                                                                        name="addmore[0][po_description]"
                                                                         placeholder="Enter description"
                                                                         class="form-control"
                                                                         value="{{ $item->po_description }}" readonly />
@@ -211,26 +214,30 @@
                                                                         name="addmore[0][actual_quantity]"
                                                                         placeholder="Enter Actual Qty"
                                                                         class="form-control actual_quantity"
-                                                                        value="{{ $item->sum_actual_quantity }}" readonly />
+                                                                        value="{{ $item->sum_actual_quantity }}"
+                                                                        readonly />
                                                                 </td>
                                                                 <td><input type="text"
                                                                         name="addmore[0][accepted_quantity]"
                                                                         placeholder="Enter Accepted Qty"
                                                                         class="form-control accepted_quantity"
-                                                                        value="{{ $item->tracking_accepted_quantity }}" readonly />
+                                                                        value="{{ $item->tracking_accepted_quantity }}"
+                                                                        readonly />
                                                                 </td>
                                                                 <td><input type="text"
                                                                         name="addmore[0][rejected_quantity]"
                                                                         placeholder="Enter Rejected Qty"
                                                                         class="form-control rejected_quantity"
-                                                                        value="{{ $item->tracking_rejected_quantity }}" readonly />
+                                                                        value="{{ $item->tracking_rejected_quantity }}"
+                                                                        readonly />
                                                                 </td>
 
                                                                 <td><input type="text"
-                                                                    name="addmore[0][remaining_quantity]"
-                                                                    placeholder="Balance Qty" value="{{ $item->remaining_quantity }}"
-                                                                    class="form-control remaining_quantity" readonly />
-                                                            </td>
+                                                                        name="addmore[0][remaining_quantity]"
+                                                                        placeholder="Balance Qty"
+                                                                        value="{{ $item->remaining_quantity }}"
+                                                                        class="form-control remaining_quantity" readonly />
+                                                                </td>
                                                                 {{-- <td><button type="button" name="add" id="add"
                                                                         class="btn btn-success">Add More</button></td> --}}
                                                             </tr>
@@ -320,7 +327,7 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    
+
     </script>
     <script>
         jQuery.noConflict();
@@ -339,7 +346,7 @@
             });
         });
     </script>
-     <script>
+    <script>
         function printGRN() {
             var contentToPrint = document.getElementById("printableArea").innerHTML;
             var printWindow = window.open('', '', 'height=800,width=1200');
