@@ -10,11 +10,24 @@ class VendorRepository
 {
 
 
-    public function getAll()
+    public function getAll($request)
     {
         try {
-            $data_output = Vendors::get();
-            return $data_output;
+
+            $query = Vendors::query();
+
+            // Search
+            if ($request->search) {
+                $query->where(function ($q) use ($request) {
+                    $q->where('vendor_name', 'like', '%' . $request->search . '%')
+                        ->orWhere('vendor_company_name', 'like', '%' . $request->search . '%')
+                        ->orWhere('vendor_email', 'like', '%' . $request->search . '%')
+                        ->orWhere('contact_no', 'like', '%' . $request->search . '%')
+                        ->orWhere('gst_no', 'like', '%' . $request->search . '%');
+                });
+            }
+
+            return $query->paginate(10);
         } catch (\Exception $e) {
             return $e;
         }

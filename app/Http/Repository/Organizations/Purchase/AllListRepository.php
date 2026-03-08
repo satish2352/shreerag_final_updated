@@ -2,6 +2,7 @@
 
 namespace App\Http\Repository\Organizations\Purchase;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use App\Models\{
   BusinessApplicationProcesses,
@@ -14,6 +15,8 @@ class AllListRepository
   {
     try {
       $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE')];
+      $search = request()->search;
+      $perPage = Config::get('AllFileValidation.PAGINATION');
       $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
         $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
       })
@@ -38,6 +41,13 @@ class AllListRepository
         ->whereIn('business_application_processes.store_status_id', $array_to_be_check)
         ->where('businesses_details.is_active', true)
         ->where('businesses_details.is_deleted', 0)
+        ->when($search, function ($query) use ($search) {
+          $query->where(function ($q) use ($search) {
+            $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+              ->orWhere('businesses_details.product_name', 'LIKE', "%{$search}%")
+              ->orWhere('businesses.grand_total_amount', 'LIKE', "%{$search}%");
+          });
+        })
         ->groupBy(
           // 'businesses.id',
           'production.business_details_id',
@@ -52,7 +62,7 @@ class AllListRepository
           'estimation.total_estimation_amount',
           'businesses_details.is_active',
           'production.business_id',
-          'production.id',
+          // 'production.id',
           'req2.id',
           'req2.bom_file',
           'req2.updated_at'
@@ -70,17 +80,18 @@ class AllListRepository
           'businesses_details.quantity',
           'estimation.total_estimation_amount',
           'businesses_details.is_active',
-          'production.id',
-          'production.id as productionId',
+          // 'production.id',
+          // 'production.id as productionId',
           'req2.id as requistition_id',
           'req2.bom_file',
           'req2.updated_at'
         )->distinct('businesses_details.id')->orderBy('req2.updated_at', 'desc')
-        ->get();
+        ->paginate($perPage)
+        ->withQueryString();
 
       return $data_output;
     } catch (\Exception $e) {
-      return $e;
+      throw $e;
     }
   }
 
@@ -289,8 +300,10 @@ class AllListRepository
     try {
 
       $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')];
-
       $array_to_be_check_owner = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')];
+      $search = request()->search;
+      $perPage = Config::get('AllFileValidation.PAGINATION');
+
       $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
         $join->on('business_application_processes.business_id', '=', 'production.business_id');
       })
@@ -310,7 +323,11 @@ class AllListRepository
         // ->distinct('businesses.id')
         ->where('businesses.is_active', true)
         ->where('businesses.is_deleted', 0)
-
+        ->when($search, function ($query) use ($search) {
+          $query->where(function ($q) use ($search) {
+            $q->where('businesses_details.product_name', 'LIKE', "%{$search}%");
+          });
+        })
         ->groupBy(
           'businesses_details.id',
           'businesses_details.product_name',
@@ -325,7 +342,8 @@ class AllListRepository
           DB::raw('MAX(purchase_orders.updated_at) as latest_update') // Aggregate function
         )
         ->orderBy('latest_update', 'desc')
-        ->get();
+        ->paginate($perPage)
+        ->withQueryString();
 
       return $data_output;
     } catch (\Exception $e) {
@@ -339,7 +357,8 @@ class AllListRepository
 
       $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')];
       $array_to_be_check_owner = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')];
-
+      $search = request()->search;
+      $perPage = Config::get('AllFileValidation.PAGINATION');
       $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
         $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
       })
@@ -361,6 +380,12 @@ class AllListRepository
 
         ->where('businesses.is_active', true)
         ->where('businesses.is_deleted', 0)
+        ->when($search, function ($query) use ($search) {
+          $query->where(function ($q) use ($search) {
+            $q->where('businesses_details.product_name', 'LIKE', "%{$search}%")
+              ->orWhere('vendors.vendor_company_name', 'LIKE', "%{$search}%");
+          });
+        })
         // ->distinct('business_application_processes.id')
         ->select(
           'purchase_orders.purchase_orders_id as purchase_order_id',
@@ -380,7 +405,8 @@ class AllListRepository
           'vendors.gst_no',
           'purchase_orders.updated_at',
         )->orderBy('purchase_orders.updated_at', 'desc')
-        ->get();
+        ->paginate($perPage)
+        ->withQueryString();
 
 
       return $data_output;

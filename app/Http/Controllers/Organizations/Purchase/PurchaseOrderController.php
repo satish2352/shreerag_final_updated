@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Organizations\Purchase;
 
+use Illuminate\Support\Facades\Config;
 use App\Models\PurchaseOrdersModel;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -89,6 +90,8 @@ class PurchaseOrderController extends Controller
 
     public function rejectedPurchaseOrder()
     {
+        $search = request()->search;
+        $perPage = Config::get('AllFileValidation.PAGINATION');
         $array_to_be_check = [config('constants.HIGHER_AUTHORITY.REJECTED_PO_FROM_OWNER')];
         $getOutput = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
             // ->whereNull('purchase_status_from_owner')
@@ -96,6 +99,13 @@ class PurchaseOrderController extends Controller
             // ->where('businesses_details.id', $id)
             // ->where('requisition_id', base64_decode($requistition_id))
             // ->where('business_details_id', base64_decode($business_details_id))
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+                        ->orWhere('businesses_details.product_name', 'LIKE', "%{$search}%")
+                        ->orWhere('businesses.grand_total_amount', 'LIKE', "%{$search}%");
+                });
+            })
             ->select(
                 'purchase_orders.id',
                 'purchase_orders.purchase_orders_id',
@@ -120,8 +130,10 @@ class PurchaseOrderController extends Controller
                 'vendors.gst_no'
             )
             ->orderBy('purchase_orders.updated_at', 'desc')
-            ->get();
-        if ($getOutput instanceof \Illuminate\Support\Collection && $getOutput->isNotEmpty()) {
+            ->paginate($perPage)
+            ->withQueryString();
+        // if ($getOutput instanceof \Illuminate\Support\Collection && $getOutput->isNotEmpty()) {
+        if ($getOutput && $getOutput->count() > 0) {
             foreach ($getOutput as $data) {
                 $business_id = $data->business_details_id;
                 if (!empty($business_id)) {
@@ -132,7 +144,7 @@ class PurchaseOrderController extends Controller
                 }
             }
         } else {
-            return view('organizations.purchase.list.list-all-po-sent-to-vendor-businesswise', [
+            return view('organizations.purchase.addpurchasedetails.list-purchase-order-rejected', [
                 'data_output' => [],
                 'message' => 'No data found'
             ]);

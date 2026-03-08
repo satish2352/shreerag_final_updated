@@ -13,35 +13,50 @@
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
                                 <div class="table-responsive">
-                                    <table id="table" data-toggle="table" data-pagination="true" data-search="true"
+                                    <form method="GET" action="{{ url()->current() }}">
+                                        <div class="d-flex justify-content-end mb-3">
+                                            <div class="col-md-4">
+                                                <input type="text" name="search" value="{{ request('search') }}"
+                                                    class="form-control" placeholder="Search Project / Product / PO">
+                                            </div>
+                                            <div class="col-md-2 ">
+                                                <button class="btn btn-primary filterbg">Search</button>
+                                                <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <table class="table table-bordered table-striped">
+                                        {{-- <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true"
                                         data-show-refresh="false" data-key-events="true" data-show-toggle="true"
                                         data-resizable="true" data-cookie="true" data-cookie-id-table="saveId"
-                                        data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
+                                        data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar"> --}}
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
                                                 <th data-field="date" data-editable="false">Sent Date</th>
-                                                  <th data-field="bom" data-editable="false">Action</th>
-                                                   <th data-field="bom_file" data-editable="false">Requisition BOM</th>
+                                                <th data-field="bom" data-editable="false">Action</th>
+                                                <th data-field="bom_file" data-editable="false">Requisition BOM</th>
                                                 <th data-field="project_name" data-editable="false">Project Name</th>
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
-                                                 <th data-field="grand_total_amount" data-editable="false">Grand Total Amount</th>
+                                                <th data-field="grand_total_amount" data-editable="false">Grand Total Amount
+                                                </th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
                                                 <th data-field="grn_date" data-editable="false">Description</th>
                                                 <th data-field="total_estimation_amount" data-editable="false"> <span
                                                         style="margin-right:20px">Estimation
                                                         Amount</span></th>
-                                               
 
-                                              
+
+
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($data_output as $data)
+                                            @forelse ($data_output as $data)
                                                 <tr>
-                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ ($data_output->currentPage() - 1) * $data_output->perPage() + $loop->iteration }}
+                                                    </td>
                                                     <td> {{ $data->created_at ? $data->created_at->format('d-m-Y') : 'N/A' }}
                                                     </td>
                                                     <td>
@@ -57,24 +72,33 @@
                                                                     Purchase </button></a>
                                                         </div>
                                                     </td>
-                                                      <td> <a class="img-size"
+                                                    <td> <a class="img-size"
                                                             href="{{ Config::get('FileConstant.REQUISITION_VIEW') }}{{ $data['bom_file'] }}"
                                                             alt="bill of material">Click to download</a>
                                                     </td>
                                                     <td>{{ ucwords($data->project_name) }}</td>
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
-                                                      <td><b>{{ ucwords($data->grand_total_amount) }}</b></td>
+                                                    <td><b>{{ ucwords($data->grand_total_amount) }}</b></td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td><b>{{ ucwords($data->total_estimation_amount) }}</b></td>
-                                                  
 
-                                                    
+
+
                                                 </tr>
-                                            @endforeach
+                                            @empty
+                                                <tr>
+                                                    <td colspan="9" class="text-center">
+                                                        No Record Found
+                                                    </td>
+                                                </tr>
+                                            @endforelse
                                         </tbody>
                                     </table>
+                                    <div class="d-flex justify-content-end mt-3">
+                                        {{ $data_output->links() }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -83,4 +107,4 @@
             </div>
         </div>
     </div>
-   @endsection
+@endsection

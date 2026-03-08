@@ -18,10 +18,9 @@ class AllListServices
     public function getAllListMaterialReceivedForPurchase()
     {
         try {
-            $data_output = $this->repo->getAllListMaterialReceivedForPurchase();
-            return $data_output;
+            return $this->repo->getAllListMaterialReceivedForPurchase();
         } catch (\Exception $e) {
-            return $e;
+            throw $e;
         }
     }
     public function getAllListApprovedPurchaseOrder()

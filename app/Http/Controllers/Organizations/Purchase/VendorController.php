@@ -26,12 +26,16 @@ class VendorController extends Controller
         $this->service = new VendorServices();
     }
 
-    public function index()
+    public function index(Request $request)
     {
         try {
 
-            $data_output = $this->service->getAll();
-            return view('organizations.purchase.vendor.list-vendor', compact('data_output'));
+            $data_output = $this->service->getAll($request);
+
+            return view(
+                'organizations.purchase.vendor.list-vendor',
+                compact('data_output')
+            );
         } catch (\Exception $e) {
             return $e;
         }

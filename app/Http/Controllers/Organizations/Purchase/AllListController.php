@@ -36,12 +36,18 @@ class AllListController extends Controller
     public function getAllListMaterialReceivedForPurchase()
     {
         try {
+
             $data_output = $this->service->getAllListMaterialReceivedForPurchase();
 
-            if ($data_output->isNotEmpty()) {
-                $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
+            if ($data_output && $data_output->total() > 0) {
 
-                if ($bdIds->isNotEmpty()) {
+                $bdIds = collect($data_output->items())
+                    ->pluck('business_details_id')
+                    ->filter()
+                    ->unique()
+                    ->values();
+
+                if ($bdIds->count() > 0) {
                     NotificationStatus::where('purchase_is_view', 0)
                         ->whereIn('business_details_id', $bdIds)
                         ->update(['purchase_is_view' => 1]);
@@ -50,7 +56,8 @@ class AllListController extends Controller
 
             return view('organizations.purchase.list.list-bom-material-recived-for-purchase', compact('data_output'));
         } catch (\Exception $e) {
-            return $e;
+            // dd($e->getMessage());
+            $e->getMessage(); // debugging
         }
     }
     public function getAllListApprovedPurchaseOrder(Request $request)
@@ -150,13 +157,12 @@ class AllListController extends Controller
         try {
             $data_output = $this->service->getAllListSubmitedPurchaeOrderByVendorBusinessWise($id);
 
-            if (!($data_output instanceof \Illuminate\Support\Collection) || $data_output->isEmpty()) {
+            if ($data_output->isEmpty()) {
                 return view('organizations.purchase.list.list-all-po-sent-to-vendor-businesswise', [
-                    'data_output' => [],
+                    'data_output' => $data_output,
                     'message' => 'No data found'
                 ]);
             }
-
             // Prefer business_details_id if your service returns it
             $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
 

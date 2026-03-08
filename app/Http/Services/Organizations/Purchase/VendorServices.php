@@ -14,10 +14,10 @@ class VendorServices
     {
         $this->repo = new VendorRepository();
     }
-    public function getAll()
+    public function getAll($request)
     {
         try {
-            return $this->repo->getAll();
+            return $this->repo->getAll($request);
         } catch (\Exception $e) {
             return $e;
         }
