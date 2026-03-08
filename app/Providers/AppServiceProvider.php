@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Providers;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Pagination\Paginator;
 use App\Models\User;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // ✅ Use Bootstrap pagination
+        Paginator::useBootstrap();
         view()->composer('*', function ($view) {
             $email = session()->get('u_email');
 

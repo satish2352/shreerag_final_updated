@@ -9135,26 +9135,27 @@ ul.comment-list li ul.children {
 }
 
 @media only screen and (min-width: 1038px) {
-	
-	 
-		.logo img{
-		 max-width: 220px;
-		
-	 }
-	 ul{
-		margin-bottom: 100px;
-	 }
+
+
+	.logo img {
+		max-width: 220px;
+
 	}
+
+	ul {
+		margin-bottom: 100px;
+	}
+}
 
 @media only screen and (max-width: 1199.98px) {
 	.page-title-box {
 		display: none;
 	}
-	 
-		.logo img{
-		 max-width: 200px;
-		
-	 }
+
+	.logo img {
+		max-width: 200px;
+
+	}
 
 	.file-wrap .file-sidebar {
 		left: -331px;
@@ -9175,7 +9176,7 @@ ul.comment-list li ul.children {
 	.file-side-close {
 		display: inline-block;
 	}
-	
+
 }
 
 @media only screen and (max-width: 991.98px) {
@@ -9733,3 +9734,17 @@ ul.comment-list li ul.children {
 	}
 }
 
+.pagination {
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.pagination li {
+	margin: 2px;
+}
+
+.pagination li a,
+.pagination li span {
+	padding: 6px 12px;
+	font-size: 14px;
+}

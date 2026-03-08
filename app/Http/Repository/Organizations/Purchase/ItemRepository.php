@@ -2,6 +2,7 @@
 
 namespace App\Http\Repository\Organizations\Purchase;
 
+use Illuminate\Support\Facades\Config;
 use App\Models\{
     PartItem,
     ItemStock,
@@ -15,6 +16,8 @@ class ItemRepository
     public function getAll()
     {
         try {
+            $perPage = Config::get('AllFileValidation.PAGINATION');
+
             $data_output = PartItem::leftJoin('tbl_unit', function ($join) {
                 $join->on('tbl_part_item.unit_id', '=', 'tbl_unit.id');
             })
@@ -35,7 +38,6 @@ class ItemRepository
                     'tbl_part_item.image',
                     'tbl_part_item.description',
                     'tbl_part_item.extra_description',
-                    'tbl_part_item.image',
                     'tbl_part_item.unit_id',
                     'tbl_unit.name',
                     'tbl_part_item.hsn_id',
@@ -44,7 +46,9 @@ class ItemRepository
                     'tbl_group_master.name as group_name',
                     'tbl_rack_master.name as rack_name'
                 )->orderBy('tbl_part_item.updated_at', 'desc')
-                ->get();
+                // ->get();
+                ->paginate($perPage);
+
 
             return $data_output;
         } catch (\Exception $e) {

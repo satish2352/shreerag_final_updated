@@ -73,119 +73,119 @@
 <!-- ========================= YOUR FUNCTIONAL SCRIPTS ========================= -->
 
 <script>
-$(document).ready(() => {
+    $(document).ready(() => {
 
-    /* Image Preview */
-    $("#image").change(function () {
-        $('#english').hide();
-        $("#english_imgPreview").show();
+        /* Image Preview */
+        $("#image").change(function() {
+            $('#english').hide();
+            $("#english_imgPreview").show();
 
-        const file = this.files[0];
-        if (file) {
-            let reader = new FileReader();
-            reader.onload = e => $("#english_imgPreview").attr("src", e.target.result);
-            reader.readAsDataURL(file);
-        }
+            const file = this.files[0];
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = e => $("#english_imgPreview").attr("src", e.target.result);
+                reader.readAsDataURL(file);
+            }
+        });
+
     });
-
-});
 </script>
 
 <!-- DELETE BUTTON SCRIPT -->
 <script>
-$(document).on('click', '.remove-row', function () {
+    $(document).on('click', '.remove-row', function() {
 
-    let id = $(this).data('id');  
-    console.log("Deleting ID = ", id);
+        let id = $(this).data('id');
+        console.log("Deleting ID = ", id);
 
-    // New row: delete only in frontend
-    if (id == 0) {
-        $(this).closest("tr").remove();
-        return;
-    }
-
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "This row will be permanently deleted.",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $("#delete_id").val(id);
-            $("#deleteform").submit();
+        // New row: delete only in frontend
+        if (id == 0) {
+            $(this).closest("tr").remove();
+            return;
         }
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This row will be permanently deleted.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $("#delete_id").val(id);
+                $("#deleteform").submit();
+            }
+        });
+
     });
-
-});
-
 </script>
 
 <!-- SHOW BUTTON -->
-<script>
-$(document).on('click', '.show-btn', function () {
-    $("#show_id").val($(this).data('id'));
-    $("#showform").submit();
-});
-</script>
+{{-- <script>
+    $(document).on('click', '.show-btn', function() {
+        $("#show_id").val($(this).data('id'));
+        $("#showform").submit();
+    });
+</script> --}}
 
 <!-- EDIT BUTTON -->
 <script>
-$(document).on('click', '.edit-btn', function () {
-    $("#edit_id").val($(this).data('id'));
-    $("#editform").submit();
-});
+    $(document).on('click', '.edit-btn', function() {
+        $("#edit_id").val($(this).data('id'));
+        $("#editform").submit();
+    });
 </script>
 
 <!-- EDIT USER BUTTON -->
 <script>
-$(document).on('click', '.edit-user-btn', function () {
-    $("#edit_user_id").val($(this).data('id'));
-    $("#edituserform").submit();
-});
+    $(document).on('click', '.edit-user-btn', function() {
+        $("#edit_user_id").val($(this).data('id'));
+        $("#edituserform").submit();
+    });
 </script>
 
 <!-- ACTIVE BUTTON -->
 <script>
-$(document).on('click', '.active-btn', function () {
-    $("#active_id").val($(this).data('id'));
-    $("#activeform").submit();
-});
+    $(document).on('click', '.active-btn', function() {
+        $("#active_id").val($(this).data('id'));
+        $("#activeform").submit();
+    });
 </script>
 
 <!-- AUTO CLOSE ALERT -->
 <script>
-setTimeout(() => {
-    $(".alert").alert('close');
-}, 1000);
+    setTimeout(() => {
+        $(".alert").alert('close');
+    }, 1000);
 </script>
 
 <!-- NOTIFICATION SYSTEM -->
 <script>
+    var previousNotificationCount = parseInt(localStorage.getItem('previousNotificationCount')) || 0;
+    var userId = '{{ session('user_id') }}';
 
-var previousNotificationCount = parseInt(localStorage.getItem('previousNotificationCount')) || 0;
-var userId = '{{ session('user_id') }}';
+    function playNotificationSound() {
+        const sound = document.getElementById('notificationSound');
+        sound.play().catch(err => console.log("Sound play blocked:", err));
+    }
 
-function playNotificationSound() {
-    const sound = document.getElementById('notificationSound');
-    sound.play().catch(err => console.log("Sound play blocked:", err));
-}
+    function fetch_new_hold() {
 
-function fetch_new_hold() {
+        $.ajax({
+            url: '{{ route('get-notification') }}',
+            type: 'GET',
+            data: {
+                userId: userId
+            },
 
-    $.ajax({
-        url: '{{ route('get-notification') }}',
-        type: 'GET',
-        data: { userId: userId },
+            success: function(response) {
 
-        success: function (response) {
+                $('#notification-count').text(response.notification_count);
 
-            $('#notification-count').text(response.notification_count);
-
-            let messages = "";
-            $.each(response.notifications, function (i, n) {
-                if (n.admin_count > 0) {
-                    messages += `
+                let messages = "";
+                $.each(response.notifications, function(i, n) {
+                    if (n.admin_count > 0) {
+                        messages += `
                     <li class="bullet-list">
                         <a href="${n.url}">
                             <div class="notification-content d-flex" >
@@ -193,37 +193,35 @@ function fetch_new_hold() {
                             </div>
                         </a>
                     </li>`;
+                    }
+                });
+
+                $('#notification-messages').html(messages);
+
+                if (response.notification_count > previousNotificationCount) {
+                    playNotificationSound();
                 }
-            });
 
-            $('#notification-messages').html(messages);
-
-            if (response.notification_count > previousNotificationCount) {
-                playNotificationSound();
+                previousNotificationCount = response.notification_count;
+                localStorage.setItem('previousNotificationCount', previousNotificationCount);
             }
+        });
 
-            previousNotificationCount = response.notification_count;
-            localStorage.setItem('previousNotificationCount', previousNotificationCount);
-        }
+    }
+
+    $(document).ready(function() {
+        fetch_new_hold();
+        setInterval(fetch_new_hold, 60000);
     });
-
-}
-
-$(document).ready(function () {
-    fetch_new_hold();
-    setInterval(fetch_new_hold, 2000);
-});
-
 </script>
 
 
 
 <script>
     $(document).on('click', '.show-btn', function(e) {
-    $("#show_id").val($(this).attr("data-id"));
-    $("#showform").submit();
-});
-
+        $("#show_id").val($(this).attr("data-id"));
+        $("#showform").submit();
+    });
 </script>
 
 
@@ -231,75 +229,72 @@ $(document).ready(function () {
     $('.edit-btn').click(function(e) {
         $("#edit_id").val($(this).attr("data-id"));
         $("#editform").submit();
-     })
- </script>
+    })
+</script>
 <script>
-  
-        $(document).on('click', '.edit-user-btn', function(e) {
+    $(document).on('click', '.edit-user-btn', function(e) {
         $("#edit_user_id").val($(this).attr("data-id"));
         $("#edituserform").submit();
     })
 </script>
 
 <script>
-        $(document).on('click', '.active-btn', function(e) {
+    $(document).on('click', '.active-btn', function(e) {
         $("#active_id").val($(this).attr("data-id"));
         $("#activeform").submit();
     })
 </script>
 <script>
     setTimeout(function() {
-            $(".alert").alert('close');
-        }, 1000); // 1000 milliseconds = 1 second
-    </script>
+        $(".alert").alert('close');
+    }, 1000); // 1000 milliseconds = 1 second
+</script>
 
 {{-- report reset button code --}}
-    <script>
-         document.getElementById('resetFilters').addEventListener('click', function () {
+<script>
+    document.getElementById('resetFilters').addEventListener('click', function() {
 
-    // Reset all form fields
-    document.getElementById('filterForm').reset();
+        // Reset all form fields
+        document.getElementById('filterForm').reset();
 
-    // Clear Select2 dropdowns
-    $('#project_name').val('').trigger('change');
-    $('#business_details_id').val('').trigger('change');
+        // Clear Select2 dropdowns
+        $('#project_name').val('').trigger('change');
+        $('#business_details_id').val('').trigger('change');
 
-    // Clear search input
-    document.getElementById('searchKeyword').value = '';
+        // Clear search input
+        document.getElementById('searchKeyword').value = '';
 
-    // Reset pagination
-    currentPage = 1;
+        // Reset pagination
+        currentPage = 1;
 
-    // Load default report
-    fetchReport(true);
-});
+        // Load default report
+        fetchReport(true);
+    });
+</script>
+<script>
+    // Validate date range before applying filter
+    document.getElementById('filterForm').addEventListener('submit', function(e) {
 
-    </script>
-    <script>
-        // Validate date range before applying filter
-document.getElementById('filterForm').addEventListener('submit', function (e) {
-
-    // Skip validation when exporting
-    if (document.getElementById('export_type').value) {
-        return;
-    }
-
-    let from = document.querySelector('input[name="from_date"]').value;
-    let to = document.querySelector('input[name="to_date"]').value;
-
-    if (from && to) {
-        let fromDate = new Date(from);
-        let toDate = new Date(to);
-
-        if (fromDate > toDate) {
-            e.preventDefault();
-            alert("❗ 'From Date' cannot be greater than 'To Date'.");
-            return false;
+        // Skip validation when exporting
+        if (document.getElementById('export_type').value) {
+            return;
         }
-    }
-});
 
-    </script>
+        let from = document.querySelector('input[name="from_date"]').value;
+        let to = document.querySelector('input[name="to_date"]').value;
+
+        if (from && to) {
+            let fromDate = new Date(from);
+            let toDate = new Date(to);
+
+            if (fromDate > toDate) {
+                e.preventDefault();
+                alert("❗ 'From Date' cannot be greater than 'To Date'.");
+                return false;
+            }
+        }
+    });
+</script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <!-- ========================= FOOTER END ========================= -->
@@ -307,14 +302,14 @@ document.getElementById('filterForm').addEventListener('submit', function (e) {
 <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
 <script>
-$(document).ready(function () {
-    $('#descriptionsumernote').summernote({
-        height: 200,           // Set height
-        minHeight: 150,        // Minimum height
-        maxHeight: null,       
-        focus: true
+    $(document).ready(function() {
+        $('#descriptionsumernote').summernote({
+            height: 200, // Set height
+            minHeight: 150, // Minimum height
+            maxHeight: null,
+            focus: true
+        });
     });
-});
 </script>
 
 @stack('scripts')

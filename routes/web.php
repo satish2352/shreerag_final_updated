@@ -278,7 +278,8 @@
     Route::group(['prefix' => 'designdept', 'middleware' => 'admin'], function () {
 
         // Dashboard
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('design.dashboard');
 
         // Design Upload Routes
         Route::get('/list-new-requirements-received-for-design', [DesignUploadController::class, 'getAllNewRequirement'])->name('list-new-requirements-received-for-design');
@@ -443,7 +444,7 @@
     });
 
     Route::group(['prefix' => 'storedept', 'middleware' => 'admin'], function () {
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('store.dashboard');
         Route::get('/list-requisition', [RequistionController::class, 'index'])->name('list-requisition');
         Route::get('/add-requisition', [RequistionController::class, 'add'])->name('add-requisition');
         Route::get('/edit-requisition', [RequistionController::class, 'edit'])->name('edit-requisition');
@@ -567,7 +568,7 @@
         // Reports
         Route::get('/list-purchase', [PurchaseAllListController::class, 'getAllListMaterialReceivedForPurchase'])->name('list-purchase');
         Route::get('/purchase-report', [PurchaseAllListController::class, 'getPurchaseReport'])->name('purchase-report');
-        Route::get('/ajax', [PurchaseAllListController::class, 'getPurchaseReportAjax'])->name('ajax');
+        Route::get('/purchase-report-ajax', [PurchaseAllListController::class, 'getPurchaseReportAjax'])->name('purchase-report-ajax');
         Route::get('/party-report', [PurchaseAllListController::class, 'getPurchasePartyReport'])->name('party-report');
         Route::get('/party-ajax', [PurchaseAllListController::class, 'getPurchasePartyReportAjax'])->name('party-ajax');
         Route::get('/follow-up-report', [PurchaseAllListController::class, 'FollowUpReport'])->name('follow-up-report');
@@ -747,7 +748,7 @@
 
     // ================= HR MODULE =================
     Route::group(['prefix' => 'hr', 'middleware' => 'admin'], function () {
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('hsr.dashboard');
 
         // Users
 
